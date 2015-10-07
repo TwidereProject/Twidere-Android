@@ -48,6 +48,7 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseThemedActivity
 
     private KeyboardShortcutSpec mKeySpec;
     private Button mButtonPositive, mButtonNegative, mButtonNeutral;
+    private int mMetaState;
 
     @Override
     public String getThemeBackgroundOption() {
@@ -98,10 +99,22 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseThemedActivity
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (KeyEvent.isModifierKey(keyCode)) {
+            mMetaState |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+        if (KeyEvent.isModifierKey(keyCode)) {
+            mMetaState &= ~KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+        }
         final String keyAction = getKeyAction();
         if (keyAction == null) return false;
-        final KeyboardShortcutSpec spec = KeyboardShortcutsHandler.getKeyboardShortcutSpec(getContextTag(), keyCode, event);
+        final KeyboardShortcutSpec spec = KeyboardShortcutsHandler.getKeyboardShortcutSpec(getContextTag(),
+                keyCode, event, KeyEvent.normalizeMetaState(mMetaState | event.getMetaState()));
         if (spec == null || !spec.isValid()) {
             return super.onKeyUp(keyCode, event);
         }

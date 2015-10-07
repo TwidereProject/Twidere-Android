@@ -120,14 +120,14 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
     @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
                                                 final int keyCode, final int repeatCount,
-                                                @NonNull final KeyEvent event) {
-        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+                                                @NonNull final KeyEvent event, int metaState) {
+        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull final KeyboardShortcutsHandler handler,
-                                                final int keyCode, @NonNull final KeyEvent event) {
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+                                                final int keyCode, @NonNull final KeyEvent event, int metaState) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (ACTION_NAVIGATION_REFRESH.equals(action)) {
             triggerRefresh();
             return true;
@@ -136,9 +136,9 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
-        return ACTION_NAVIGATION_REFRESH.equals(action) || mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
+        return ACTION_NAVIGATION_REFRESH.equals(action) || mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState);
     }
 
 

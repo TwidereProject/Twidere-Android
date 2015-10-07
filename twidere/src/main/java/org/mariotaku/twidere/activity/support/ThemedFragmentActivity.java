@@ -68,6 +68,7 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
     private String mCurrentThemeFontFamily;
+    private int mMetaState;
 
     @NonNull
     @Override
@@ -166,31 +167,37 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         return false;
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
         return false;
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         return false;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
-        handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event);
-        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event) || super.onKeyUp(keyCode, event);
+        if (KeyEvent.isModifierKey(keyCode)) {
+            mMetaState &= ~KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+        }
+        handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event, mMetaState);
+        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mMetaState) || super.onKeyUp(keyCode, event);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event))
+        if (KeyEvent.isModifierKey(keyCode)) {
+            mMetaState |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+        }
+        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event, mMetaState))
             return true;
-        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event) || super.onKeyDown(keyCode, event);
+        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mMetaState) || super.onKeyDown(keyCode, event);
     }
 
     @Override

@@ -192,8 +192,8 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (ACTION_NAVIGATION_BACK.equals(action) && mSearchQuery.length() == 0) {
             if (!mTextChanged) {
                 onBackPressed();
@@ -202,7 +202,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             }
             return true;
         }
-        return super.handleKeyboardShortcutSingle(handler, keyCode, event);
+        return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
     }
 
     @Override

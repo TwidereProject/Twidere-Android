@@ -184,8 +184,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (action != null) {
             switch (action) {
                 case ACTION_NAVIGATION_PREVIOUS_TAB: {
@@ -210,7 +210,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 }
             }
         }
-        return super.handleKeyboardShortcutSingle(handler, keyCode, event);
+        return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
     }
 
     @Override

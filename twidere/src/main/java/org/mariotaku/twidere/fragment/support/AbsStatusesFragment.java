@@ -144,8 +144,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
     public abstract boolean getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (ACTION_NAVIGATION_REFRESH.equals(action)) {
             triggerRefresh();
             return true;
@@ -153,56 +153,56 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
         if (recyclerView == null || layoutManager == null) return false;
-        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView, layoutManager.getFocusedChild());
-        final int position;
+        final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView,
+                layoutManager.getFocusedChild());
+        int position = -1;
         if (focusedChild != null && focusedChild.getParent() == recyclerView) {
             position = recyclerView.getChildLayoutPosition(focusedChild);
-        } else {
-            return false;
         }
-        if (position == -1) return false;
-        final ParcelableStatus status = getAdapter().getStatus(position);
-        if (status == null) return false;
-        if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            Utils.openStatus(getActivity(), status, null);
-            return true;
-        }
-        if (action == null) {
-            action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event);
-        }
-        if (action == null) return false;
-        switch (action) {
-            case ACTION_STATUS_REPLY: {
-                final Intent intent = new Intent(INTENT_ACTION_REPLY);
-                intent.putExtra(EXTRA_STATUS, status);
-                startActivity(intent);
+        if (position != -1) {
+            final ParcelableStatus status = getAdapter().getStatus(position);
+            if (status == null) return false;
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                Utils.openStatus(getActivity(), status, null);
                 return true;
             }
-            case ACTION_STATUS_RETWEET: {
-                RetweetQuoteDialogFragment.show(getFragmentManager(), status);
-                return true;
+            if (action == null) {
+                action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState);
             }
-            case ACTION_STATUS_FAVORITE: {
-                final AsyncTwitterWrapper twitter = mTwitterWrapper;
-                if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status.account_id, status.id);
-                } else {
-                    twitter.createFavoriteAsync(status.account_id, status.id);
+            if (action == null) return false;
+            switch (action) {
+                case ACTION_STATUS_REPLY: {
+                    final Intent intent = new Intent(INTENT_ACTION_REPLY);
+                    intent.putExtra(EXTRA_STATUS, status);
+                    startActivity(intent);
+                    return true;
                 }
-                return true;
+                case ACTION_STATUS_RETWEET: {
+                    RetweetQuoteDialogFragment.show(getFragmentManager(), status);
+                    return true;
+                }
+                case ACTION_STATUS_FAVORITE: {
+                    final AsyncTwitterWrapper twitter = mTwitterWrapper;
+                    if (status.is_favorite) {
+                        twitter.destroyFavoriteAsync(status.account_id, status.id);
+                    } else {
+                        twitter.createFavoriteAsync(status.account_id, status.id);
+                    }
+                    return true;
+                }
             }
         }
-        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event);
+        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (ACTION_NAVIGATION_REFRESH.equals(action)) {
             return true;
         }
         if (action == null) {
-            action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event);
+            action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState);
         }
         if (action == null) return false;
         switch (action) {
@@ -211,13 +211,13 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
             case ACTION_STATUS_FAVORITE:
                 return true;
         }
-        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
+        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState);
     }
 
     @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, final int keyCode, final int repeatCount,
-                                                @NonNull final KeyEvent event) {
-        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+                                                @NonNull final KeyEvent event, int metaState) {
+        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
     @Override

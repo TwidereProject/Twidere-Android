@@ -15,6 +15,8 @@ public interface IControlBarActivity {
 
     void setControlBarVisibleAnimate(boolean visible);
 
+    void setControlBarVisibleAnimate(boolean visible, ControlBarShowHideHelper.ControlBarAnimationListener listener);
+
     float getControlBarOffset();
 
     int getControlBarHeight();
@@ -58,7 +60,15 @@ public interface IControlBarActivity {
             }
         }
 
+        public interface ControlBarAnimationListener {
+            void onControlBarVisibleAnimationFinish(boolean visible);
+        }
+
         public void setControlBarVisibleAnimate(boolean visible) {
+            setControlBarVisibleAnimate(visible, null);
+        }
+
+        public void setControlBarVisibleAnimate(final boolean visible, final ControlBarAnimationListener listener) {
             if (mControlAnimationDirection != 0) return;
             final ObjectAnimator animator;
             final float offset = mActivity.getControlBarOffset();
@@ -78,6 +88,9 @@ public interface IControlBarActivity {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mControlAnimationDirection = 0;
+                    if (listener != null) {
+                        listener.onControlBarVisibleAnimationFinish(visible);
+                    }
                 }
 
                 @Override

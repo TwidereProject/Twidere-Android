@@ -68,6 +68,7 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     private String mCurrentThemeFontFamily;
     @Inject
     protected ActivityTracker mActivityTracker;
+    private int mMetaState;
 
     @Override
     protected void onStart() {
@@ -147,12 +148,12 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         return false;
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
         return false;
     }
 
@@ -170,13 +171,20 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
 
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
-        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event)) return true;
+        if (KeyEvent.isModifierKey(keyCode)) {
+            mMetaState &= ~KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+        }
+        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event, mMetaState))
+            return true;
         return super.onKeyUp(keyCode, event);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
-        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event))
+        if (KeyEvent.isModifierKey(keyCode)) {
+            mMetaState |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+        }
+        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event, mMetaState))
             return true;
         return super.onKeyDown(keyCode, event);
     }

@@ -208,6 +208,11 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @Override
+    public void setControlBarVisibleAnimate(boolean visible, ControlBarShowHideHelper.ControlBarAnimationListener listener) {
+        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
@@ -235,9 +240,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
-        String action = handler.getKeyAction(CONTEXT_TAG_HOME, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState)) return true;
+        String action = handler.getKeyAction(CONTEXT_TAG_HOME, keyCode, event, metaState);
         if (action != null) {
             switch (action) {
                 case ACTION_HOME_ACCOUNTS_DASHBOARD: {
@@ -251,7 +256,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
             }
         }
-        action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (action != null) {
             switch (action) {
                 case ACTION_NAVIGATION_PREVIOUS_TAB: {
@@ -284,19 +289,20 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
             }
         }
-        return handler.handleKey(this, null, keyCode, event);
+        return handler.handleKey(this, null, keyCode, event, metaState);
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event)) return true;
-        return super.isKeyboardShortcutHandled(handler, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event, metaState)) return true;
+        return super.isKeyboardShortcutHandled(handler, keyCode, event, metaState);
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
+        if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState))
+            return true;
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
     @Override
@@ -643,28 +649,32 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     private boolean handleFragmentKeyboardShortcutRepeat(final KeyboardShortcutsHandler handler,
                                                          final int keyCode, final int repeatCount,
-                                                         @NonNull final KeyEvent event) {
+                                                         @NonNull final KeyEvent event, int metaState) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode,
+                    repeatCount, event, metaState);
         }
         return false;
     }
 
     private boolean handleFragmentKeyboardShortcutSingle(final KeyboardShortcutsHandler handler,
-                                                         final int keyCode, @NonNull final KeyEvent event) {
+                                                         final int keyCode, @NonNull final KeyEvent event,
+                                                         int metaState) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode,
+                    event, metaState);
         }
         return false;
     }
 
     private boolean isFragmentKeyboardShortcutHandled(final KeyboardShortcutsHandler handler,
-                                                      final int keyCode, @NonNull final KeyEvent event) {
+                                                      final int keyCode, @NonNull final KeyEvent event, int metaState) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event);
+            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode,
+                    event, metaState);
         }
         return false;
     }

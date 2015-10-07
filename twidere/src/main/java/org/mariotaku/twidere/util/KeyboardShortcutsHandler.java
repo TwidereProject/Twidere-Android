@@ -23,6 +23,12 @@ import java.util.Map.Entry;
 
 public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutConstants {
 
+    public static final int MODIFIER_FLAG_CTRL = 0x00000001;
+    public static final int MODIFIER_FLAG_SHIFT = 0x00000002;
+    public static final int MODIFIER_FLAG_ALT = 0x00000004;
+    public static final int MODIFIER_FLAG_META = 0x00000008;
+    public static final int MODIFIER_FLAG_FN = 0x000000010;
+
     private static final String KEYCODE_STRING_PREFIX = "KEYCODE_";
 
     private static final HashMap<String, Integer> sActionLabelMap = new HashMap<>();
@@ -80,23 +86,23 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
     }
 
     @Nullable
-    public String getKeyAction(final String contextTag, final int keyCode, final KeyEvent event) {
+    public String getKeyAction(final String contextTag, final int keyCode, final KeyEvent event, int metaState) {
         if (!isValidForHotkey(keyCode, event)) return null;
-        final String key = getKeyEventKey(contextTag, keyCode, event);
+        final String key = getKeyEventKey(contextTag, keyCode, event, metaState);
         return mPreferences.getString(key, null);
     }
 
-    public static String getKeyEventKey(String contextTag, int keyCode, KeyEvent event) {
+    public static String getKeyEventKey(String contextTag, int keyCode, KeyEvent event, int metaState) {
         if (!isValidForHotkey(keyCode, event)) return null;
         final StringBuilder keyNameBuilder = new StringBuilder();
         if (!TextUtils.isEmpty(contextTag)) {
             keyNameBuilder.append(contextTag);
             keyNameBuilder.append(".");
         }
-        final int metaState = KeyEvent.normalizeMetaState(event.getMetaState());
+        final int normalizedMetaState = KeyEvent.normalizeMetaState(metaState | event.getMetaState());
 
         for (int i = 0, j = sMetaNameMap.size(); i < j; i++) {
-            if ((sMetaNameMap.keyAt(i) & metaState) != 0) {
+            if ((sMetaNameMap.keyAt(i) & normalizedMetaState) != 0) {
                 keyNameBuilder.append(sMetaNameMap.valueAt(i));
                 keyNameBuilder.append("+");
             }
@@ -132,9 +138,8 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         return 0;
     }
 
-    public static KeyboardShortcutSpec getKeyboardShortcutSpec(String contextTag, int keyCode, KeyEvent event) {
+    public static KeyboardShortcutSpec getKeyboardShortcutSpec(String contextTag, int keyCode, KeyEvent event, int metaState) {
         if (!isValidForHotkey(keyCode, event)) return null;
-        final int metaState = KeyEvent.normalizeMetaState(event.getMetaState());
         int metaStateNormalized = 0;
         for (int i = 0, j = sMetaNameMap.size(); i < j; i++) {
             if ((sMetaNameMap.keyAt(i) & metaState) != 0) {
@@ -149,8 +154,8 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         return null;
     }
 
-    public boolean handleKey(final Context context, final String contextTag, final int keyCode, final KeyEvent event) {
-        final String action = getKeyAction(contextTag, keyCode, event);
+    public boolean handleKey(final Context context, final String contextTag, final int keyCode, final KeyEvent event, int metaState) {
+        final String action = getKeyAction(contextTag, keyCode, event, metaState);
         if (action == null) return false;
         switch (action) {
             case ACTION_COMPOSE: {
@@ -250,13 +255,40 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
         mPreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
+    public static int getMetaStateForKeyCode(int keyCode) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_CTRL_LEFT:
+                return KeyEvent.META_CTRL_LEFT_ON;
+            case KeyEvent.KEYCODE_CTRL_RIGHT:
+                return KeyEvent.META_CTRL_RIGHT_ON;
+            case KeyEvent.KEYCODE_SHIFT_LEFT:
+                return KeyEvent.META_SHIFT_LEFT_ON;
+            case KeyEvent.KEYCODE_SHIFT_RIGHT:
+                return KeyEvent.META_SHIFT_RIGHT_ON;
+            case KeyEvent.KEYCODE_ALT_LEFT:
+                return KeyEvent.META_ALT_LEFT_ON;
+            case KeyEvent.KEYCODE_ALT_RIGHT:
+                return KeyEvent.META_ALT_RIGHT_ON;
+            case KeyEvent.KEYCODE_META_LEFT:
+                return KeyEvent.META_META_LEFT_ON;
+            case KeyEvent.KEYCODE_META_RIGHT:
+                return KeyEvent.META_META_RIGHT_ON;
+            case KeyEvent.KEYCODE_FUNCTION:
+                return KeyEvent.META_FUNCTION_ON;
+        }
+        return 0;
+    }
+
     public interface KeyboardShortcutCallback extends KeyboardShortcutConstants {
 
-        boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event);
+        boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode,
+                                             int repeatCount, @NonNull KeyEvent event, int metaState);
 
-        boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event);
+        boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode,
+                                             @NonNull KeyEvent event, int metaState);
 
-        boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event);
+        boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode,
+                                          @NonNull KeyEvent event, int metaState);
     }
 
     public interface TakeAllKeyboardShortcut {

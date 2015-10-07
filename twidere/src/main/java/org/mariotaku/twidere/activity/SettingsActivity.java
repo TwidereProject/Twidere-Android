@@ -235,24 +235,24 @@ public class SettingsActivity extends BasePreferenceActivity {
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (ACTION_NAVIGATION_BACK.equals(action)) {
             navigateUp();
             return true;
         }
-        return super.handleKeyboardShortcutSingle(handler, keyCode, event);
+        return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         return ACTION_NAVIGATION_BACK.equals(action);
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
     @Override

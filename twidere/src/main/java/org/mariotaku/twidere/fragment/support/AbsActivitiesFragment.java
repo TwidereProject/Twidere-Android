@@ -73,19 +73,19 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerView
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
     }
 
     @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, final int keyCode, final int repeatCount,
-                                                @NonNull final KeyEvent event) {
-        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+                                                @NonNull final KeyEvent event, int metaState) {
+        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, final int keyCode, @NonNull final KeyEvent event) {
-        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, final int keyCode, @NonNull final KeyEvent event, int metaState) {
+        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState);
     }
 
     public SharedPreferences getSharedPreferences() {

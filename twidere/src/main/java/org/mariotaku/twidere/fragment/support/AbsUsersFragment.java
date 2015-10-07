@@ -52,18 +52,18 @@ abstract class AbsUsersFragment<Data> extends AbsContentRecyclerViewFragment<Abs
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
-        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
+        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState);
     }
 
     @Override

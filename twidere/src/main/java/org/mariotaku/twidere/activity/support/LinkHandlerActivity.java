@@ -165,17 +165,17 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         if (shouldFragmentTakeAllKeyboardShortcuts()) {
-            return handleFragmentKeyboardShortcutSingle(handler, keyCode, event);
+            return handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState);
         }
-        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState)) return true;
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (ACTION_NAVIGATION_BACK.equals(action)) {
             onBackPressed();
             return true;
         }
-        return handler.handleKey(this, null, keyCode, event);
+        return handler.handleKey(this, null, keyCode, event, metaState);
     }
 
     private boolean shouldFragmentTakeAllKeyboardShortcuts() {
@@ -184,25 +184,26 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
         if (shouldFragmentTakeAllKeyboardShortcuts()) {
-            handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+            handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
         }
-        if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event)) return true;
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+        if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState))
+            return true;
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event)) return true;
-        return super.isKeyboardShortcutHandled(handler, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event, metaState)) return true;
+        return super.isKeyboardShortcutHandled(handler, keyCode, event, metaState);
     }
 
     private boolean isFragmentKeyboardShortcutHandled(final KeyboardShortcutsHandler handler,
-                                                      final int keyCode, @NonNull final KeyEvent event) {
+                                                      final int keyCode, @NonNull final KeyEvent event, int metaState) {
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event);
+            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event, metaState);
         }
         return false;
     }
@@ -301,20 +302,21 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     private boolean handleFragmentKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode,
-                                                         int repeatCount, @NonNull KeyEvent event) {
+                                                         int repeatCount, @NonNull KeyEvent event, int metaState) {
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof KeyboardShortcutCallback) {
             return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode,
-                    repeatCount, event);
+                    repeatCount, event, metaState);
         }
         return false;
     }
 
     private boolean handleFragmentKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode,
-                                                         @NonNull KeyEvent event) {
+                                                         @NonNull KeyEvent event, int metaState) {
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof KeyboardShortcutCallback) {
-            if (((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event)) {
+            if (((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode,
+                    event, metaState)) {
                 return true;
             }
         }
@@ -556,6 +558,13 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         // Currently only search page needs this pattern, so we only enable this feature for it.
         if (!(getCurrentVisibleFragment() instanceof SearchFragment)) return;
         mControlBarShowHideHelper.setControlBarVisibleAnimate(visible);
+    }
+
+    @Override
+    public void setControlBarVisibleAnimate(boolean visible, ControlBarShowHideHelper.ControlBarAnimationListener listener) {
+        // Currently only search page needs this pattern, so we only enable this feature for it.
+        if (!(getCurrentVisibleFragment() instanceof SearchFragment)) return;
+        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener);
     }
 
     @Override

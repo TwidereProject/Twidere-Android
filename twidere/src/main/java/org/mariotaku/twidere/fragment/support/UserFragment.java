@@ -1116,9 +1116,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event)) return true;
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState)) return true;
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (action != null) {
             switch (action) {
                 case ACTION_NAVIGATION_PREVIOUS_TAB: {
@@ -1137,13 +1137,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 }
             }
         }
-        return handler.handleKey(getActivity(), null, keyCode, event);
+        return handler.handleKey(getActivity(), null, keyCode, event, metaState);
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event)) return true;
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event, metaState)) return true;
+        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (action != null) {
             switch (action) {
                 case ACTION_NAVIGATION_PREVIOUS_TAB:
@@ -1157,30 +1157,33 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
                                                 final int keyCode, final int repeatCount,
-                                                @NonNull final KeyEvent event) {
-        return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+                                                @NonNull final KeyEvent event, int metaState) {
+        return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
-    private boolean handleFragmentKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    private boolean handleFragmentKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler,
+                                                         int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
         }
         return false;
     }
 
-    private boolean handleFragmentKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    private boolean handleFragmentKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler,
+                                                         int keyCode, @NonNull KeyEvent event, int metaState) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event);
+            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
         }
         return false;
     }
 
-    private boolean isFragmentKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    private boolean isFragmentKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler,
+                                                      int keyCode, @NonNull KeyEvent event, int metaState) {
         final Fragment fragment = getKeyboardShortcutRecipient();
         if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event);
+            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode, event, metaState);
         }
         return false;
     }

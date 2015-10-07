@@ -147,6 +147,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         private final OnSharedPreferenceChangeListener mPreferencesChangeListener;
         private TextView mKeysLabel, mConflictLabel;
         private KeyboardShortcutSpec mKeySpec;
+        private int mModifierStates;
 
         public KeyboardShortcutPreference(final Context context, final KeyboardShortcutsHandler handler,
                                           @Nullable final String contextTag, @NonNull final String action) {
@@ -170,8 +171,18 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
 
         @Override
         public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-            if (event.getAction() != KeyEvent.ACTION_UP) return false;
-            final KeyboardShortcutSpec spec = KeyboardShortcutsHandler.getKeyboardShortcutSpec(mContextTag, keyCode, event);
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (KeyEvent.isModifierKey(keyCode)) {
+                    mModifierStates |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+                }
+            } else if (event.getAction() != KeyEvent.ACTION_UP) {
+                return false;
+            }
+            if (KeyEvent.isModifierKey(keyCode)) {
+                mModifierStates &= ~KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+            }
+            final KeyboardShortcutSpec spec = KeyboardShortcutsHandler.getKeyboardShortcutSpec(mContextTag,
+                    keyCode, event, KeyEvent.normalizeMetaState(mModifierStates | event.getMetaState()));
             if (spec == null || !spec.isValid()) {
                 Log.d(LOGTAG, String.format("Invalid key %s", event), new Exception());
                 return false;

@@ -71,6 +71,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     private boolean mInstanceStateSaved;
     private boolean mIsVisible;
     private Rect mSystemWindowsInsets;
+    private int mMetaState;
 
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
@@ -109,15 +110,22 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
 
     @Override
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
-        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event)) return true;
-        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event) || super.onKeyUp(keyCode, event);
+        if (KeyEvent.isModifierKey(keyCode)) {
+            mMetaState &= ~KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+        }
+        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event, mMetaState))
+            return true;
+        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mMetaState) || super.onKeyUp(keyCode, event);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event))
+        if (KeyEvent.isModifierKey(keyCode)) {
+            mMetaState |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+        }
+        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event, mMetaState))
             return true;
-        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event) || super.onKeyDown(keyCode, event);
+        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mMetaState) || super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -137,17 +145,17 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         return false;
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         return false;
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
         return false;
     }
 
@@ -202,6 +210,11 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
 
     @Override
     public void setControlBarVisibleAnimate(boolean visible) {
+
+    }
+
+    @Override
+    public void setControlBarVisibleAnimate(boolean visible, ControlBarShowHideHelper.ControlBarAnimationListener listener) {
 
     }
 

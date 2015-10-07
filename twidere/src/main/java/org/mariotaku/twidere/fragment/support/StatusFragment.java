@@ -386,7 +386,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
         final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(mRecyclerView, mLayoutManager.getFocusedChild());
         final int position;
@@ -398,7 +398,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (position == -1) return false;
         final ParcelableStatus status = getAdapter().getStatus(position);
         if (status == null) return false;
-        String action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event);
+        String action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState);
         if (action == null) return false;
         switch (action) {
             case ACTION_STATUS_REPLY: {
@@ -425,8 +425,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event) {
-        final String action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event);
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        final String action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState);
         if (action == null) return false;
         switch (action) {
             case ACTION_STATUS_REPLY:
@@ -434,15 +434,15 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             case ACTION_STATUS_FAVORITE:
                 return true;
         }
-        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event);
+        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState);
     }
 
     @Override
     public boolean handleKeyboardShortcutRepeat(@NonNull final KeyboardShortcutsHandler handler,
                                                 final int keyCode, final int repeatCount,
-                                                @NonNull final KeyEvent event) {
+                                                @NonNull final KeyEvent event, int metaState) {
         return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode,
-                repeatCount, event);
+                repeatCount, event, metaState);
     }
 
 
