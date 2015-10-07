@@ -27,4 +27,9 @@
         <item name="android:height">?actionBarSize</item>
     </style>
 
+
+    <style name="Widget.Base.TextView.Light" parent="android:Widget.Holo.TextView" />
+
+    <style name="Widget.Base.TextView.Dark" parent="android:Widget.Holo.Light.TextView" />
+
 </resources>

@@ -83,4 +83,24 @@
         <!--<item name="android:background"></item>-->
         <!--<item name="android:backgroundSplit"></item>-->
     </style>
+
+
+    <style name="Widget.Dark.TextView.ListSeparator" parent="Widget.Base.TextView.Dark">
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/element_spacing_normal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Widget.Light.TextView.ListSeparator" parent="Widget.Base.TextView.Light">
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/element_spacing_normal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

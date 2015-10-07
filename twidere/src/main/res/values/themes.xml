@@ -12,6 +12,10 @@
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/background_color_window_dark</item>
 
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
+        </item>
+
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.ProfileImage</item>
@@ -30,6 +34,10 @@
 
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/background_color_window_light</item>
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
@@ -50,6 +58,10 @@
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/background_color_window_dark</item>
 
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
+        </item>
+
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.ProfileImage</item>
@@ -68,6 +80,10 @@
 
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/background_color_window_light</item>
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
@@ -88,6 +104,11 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
+        </item>
+
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.ProfileImage</item>
@@ -107,6 +128,11 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
@@ -124,6 +150,10 @@
     <style name="Theme.Twidere.Dark.Dialog" parent="Theme.Compat.Base.Dialog">
 
         <!-- Custom view styles -->
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
+        </item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
@@ -143,6 +173,10 @@
     <style name="Theme.Twidere.Light.Dialog" parent="Theme.Compat.Base.Light.Dialog">
 
         <!-- Custom view styles -->
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
@@ -174,6 +208,10 @@
 
         <!-- Custom view styles -->
 
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
+        </item>
+
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.ProfileImage</item>
@@ -202,6 +240,10 @@
         <item name="android:windowActionModeOverlay">false</item>
 
         <!-- Custom view styles -->
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
@@ -246,6 +288,10 @@
         <item name="actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>
         <item name="actionModeShareDrawable">@drawable/ic_action_share</item>
 
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
+        </item>
+
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
@@ -276,7 +322,7 @@
     </style>
 
     <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Twidere.Dark.NoActionBar">
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
@@ -285,7 +331,7 @@
     </style>
 
     <style name="Theme.Twidere.Light.NoDisplay" parent="Theme.Twidere.Light.NoActionBar">
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
@@ -293,7 +339,7 @@
         <item name="android:windowNoDisplay">true</item>
     </style>
 
-    <style name="Theme.Test" parent="Theme.Compat.Base"/>
+    <style name="Theme.Test" parent="Theme.Compat.Base" />
 
     <style name="Theme.Nyan" parent="Theme.Compat.Base.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>
