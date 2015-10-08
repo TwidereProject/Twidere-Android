@@ -233,8 +233,14 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
         EditTextEnterHandler.attach(mSearchQuery, new EnterListener() {
             @Override
-            public void onHitEnter() {
+            public boolean shouldCallListener() {
+                return true;
+            }
+
+            @Override
+            public boolean onHitEnter() {
                 doSearch();
+                return true;
             }
         }, true);
         mSearchQuery.addTextChangedListener(new TextWatcher() {

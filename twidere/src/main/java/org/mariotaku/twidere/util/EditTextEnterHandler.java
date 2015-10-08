@@ -41,6 +41,7 @@ public class EditTextEnterHandler implements View.OnKeyListener, OnEditorActionL
     private EnterListener listener;
     private boolean enabled;
     private ArrayList<TextWatcher> textWatchers;
+    private boolean appendText;
 
     public EditTextEnterHandler(@Nullable EnterListener listener, boolean enabled) {
         this.listener = listener;
@@ -64,27 +65,30 @@ public class EditTextEnterHandler implements View.OnKeyListener, OnEditorActionL
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        if (textWatchers == null) return;
-        for (TextWatcher textWatcher : textWatchers) {
-            textWatcher.beforeTextChanged(s, start, count, after);
+        if (textWatchers != null) {
+            for (TextWatcher textWatcher : textWatchers) {
+                textWatcher.beforeTextChanged(s, start, count, after);
+            }
         }
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (textWatchers == null) return;
-        for (TextWatcher textWatcher : textWatchers) {
-            textWatcher.onTextChanged(s, start, before, count);
+        if (textWatchers != null) {
+            for (TextWatcher textWatcher : textWatchers) {
+                textWatcher.onTextChanged(s, start, before, count);
+            }
         }
+        appendText = count > before;
     }
 
     @Override
     public void afterTextChanged(final Editable s) {
         final int length = s.length();
-        if (enabled && length > 0 && s.charAt(length - 1) == '\n') {
-            s.delete(length - 1, length);
-            if (listener != null) {
-                listener.onHitEnter();
+        if (enabled && length > 0 && s.charAt(length - 1) == '\n' && appendText) {
+            if (shouldCallListener()) {
+                s.delete(length - 1, length);
+                dispatchHitEnter();
             }
         } else if (textWatchers != null) {
             for (TextWatcher textWatcher : textWatchers) {
@@ -97,10 +101,7 @@ public class EditTextEnterHandler implements View.OnKeyListener, OnEditorActionL
     public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
         if (!enabled) return false;
         if (event != null && actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (listener != null) {
-                listener.onHitEnter();
-            }
-            return true;
+            if (shouldCallListener()) return dispatchHitEnter();
         }
         return false;
     }
@@ -108,12 +109,17 @@ public class EditTextEnterHandler implements View.OnKeyListener, OnEditorActionL
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && enabled && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (listener != null) {
-                listener.onHitEnter();
-            }
-            return true;
+            if (shouldCallListener()) return dispatchHitEnter();
         }
         return false;
+    }
+
+    private boolean dispatchHitEnter() {
+        return listener != null && listener.onHitEnter();
+    }
+
+    private boolean shouldCallListener() {
+        return listener != null && listener.shouldCallListener();
     }
 
     public void setEnabled(boolean enabled) {
@@ -125,7 +131,9 @@ public class EditTextEnterHandler implements View.OnKeyListener, OnEditorActionL
     }
 
     public interface EnterListener {
-        void onHitEnter();
+        boolean shouldCallListener();
+
+        boolean onHitEnter();
     }
 
 }

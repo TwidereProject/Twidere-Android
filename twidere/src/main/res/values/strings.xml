@@ -768,6 +768,8 @@
     <string name="dark_theme">Dark theme</string>
     <string name="wizard_hint_title_location_requirement">Location permission</string>
     <string name="wizard_hint_summary_location_requirement">Twidere needs location permission when you send tweet containing location.</string>
+    <string name="wizard_hint_title_storage_requirement">Storage permission</string>
+    <string name="wizard_hint_summary_storage_requirement">Twidere needs storage permission when you access documents.</string>
     <string name="scrapyard">Scrapyard</string>
     <string name="crop_image">Crop image</string>
     <string name="usage_label_sent">Sent</string>

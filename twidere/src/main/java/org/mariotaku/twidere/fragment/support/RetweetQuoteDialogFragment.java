@@ -130,12 +130,18 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
         final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(mEditComment, new EditTextEnterHandler.EnterListener() {
             @Override
-            public void onHitEnter() {
+            public boolean shouldCallListener() {
+                return true;
+            }
+
+            @Override
+            public boolean onHitEnter() {
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 final ParcelableStatus status = getStatus();
-                if (twitter == null || status == null) return;
+                if (twitter == null || status == null) return false;
                 retweetOrQuote(twitter, status);
                 dismiss();
+                return true;
             }
         }, sendByEnter);
         enterHandler.addTextChangedListener(new TextWatcher() {

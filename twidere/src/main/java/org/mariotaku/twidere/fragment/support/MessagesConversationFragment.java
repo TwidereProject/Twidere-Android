@@ -654,11 +654,17 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     private void setupEditQuery() {
         final EditTextEnterHandler queryEnterHandler = EditTextEnterHandler.attach(mEditUserQuery, new EnterListener() {
             @Override
-            public void onHitEnter() {
+            public boolean shouldCallListener() {
+                return true;
+            }
+
+            @Override
+            public boolean onHitEnter() {
                 final ParcelableCredentials account = (ParcelableCredentials) mAccountSpinner.getSelectedItem();
-                if (account == null) return;
+                if (account == null) return false;
                 mEditText.setAccountId(account.account_id);
                 searchUsers(account.account_id, ParseUtils.parseString(mEditUserQuery.getText()), false);
+                return true;
             }
         }, true);
         queryEnterHandler.addTextChangedListener(new TextWatcher() {
@@ -701,8 +707,14 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     private void setupEditText() {
         EditTextEnterHandler.attach(mEditText, new EnterListener() {
             @Override
-            public void onHitEnter() {
+            public boolean shouldCallListener() {
+                return true;
+            }
+
+            @Override
+            public boolean onHitEnter() {
                 sendDirectMessage();
+                return true;
             }
         }, mPreferences.getBoolean(KEY_QUICK_SEND, false));
         mEditText.addTextChangedListener(new TextWatcher() {

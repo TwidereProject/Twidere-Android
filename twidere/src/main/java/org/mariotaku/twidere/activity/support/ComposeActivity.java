@@ -200,6 +200,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private boolean mTextChanged;
     private SetProgressVisibleRunnable mSetProgressVisibleRunnable;
     private boolean mFragmentResumed;
+    private int mKeyMetaState;
 
     @Override
     public int getThemeColor() {
@@ -311,12 +312,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.send: {
-                if (isQuotingProtectedStatus()) {
-                    new RetweetProtectedStatusWarnFragment().show(getSupportFragmentManager(),
-                            "retweet_protected_status_warning_message");
-                } else {
-                    updateStatus();
-                }
+                confirmAndUpdateStatus();
                 break;
             }
             case R.id.account_selector_container: {
@@ -332,6 +328,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                 toggleLocation();
                 break;
             }
+        }
+    }
+
+    private void confirmAndUpdateStatus() {
+        if (isQuotingProtectedStatus()) {
+            new RetweetProtectedStatusWarnFragment().show(getSupportFragmentManager(),
+                    "retweet_protected_status_warning_message");
+        } else {
+            updateStatus();
         }
     }
 
@@ -717,12 +722,32 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         mTextChanged = false;
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        final int keyCode = event.getKeyCode();
+        if (KeyEvent.isModifierKey(keyCode)) {
+            final int action = event.getAction();
+            if (action == MotionEvent.ACTION_DOWN) {
+                mKeyMetaState |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                mKeyMetaState &= ~KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
     private void setupEditText() {
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
         EditTextEnterHandler.attach(mEditText, new EnterListener() {
             @Override
-            public void onHitEnter() {
-                updateStatus();
+            public boolean shouldCallListener() {
+                return mKeyMetaState == 0;
+            }
+
+            @Override
+            public boolean onHitEnter() {
+                confirmAndUpdateStatus();
+                return true;
             }
         }, sendByEnter);
         mEditText.addTextChangedListener(new TextWatcher() {
