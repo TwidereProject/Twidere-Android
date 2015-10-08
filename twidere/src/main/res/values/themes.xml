@@ -321,22 +321,26 @@
         <item name="textColorDrawerNameSecondary">?android:textColorSecondaryInverse</item>
     </style>
 
-    <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Twidere.Dark.NoActionBar">
+    <style name="Theme.Twidere.Dark.NoDisplay" parent="Theme.Twidere.Dark.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
+        <!--<item name="android:backgroundDimEnabled">false</item>-->
+        <item name="android:windowFrame">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowNoDisplay">true</item>
+        <!--<item name="android:windowNoDisplay">true</item>-->
     </style>
 
-    <style name="Theme.Twidere.Light.NoDisplay" parent="Theme.Twidere.Light.NoActionBar">
+    <style name="Theme.Twidere.Light.NoDisplay" parent="Theme.Twidere.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
+        <!--<item name="android:backgroundDimEnabled">false</item>-->
+        <item name="android:windowFrame">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowNoDisplay">true</item>
+        <!--<item name="android:windowNoDisplay">true</item>-->
     </style>
 
     <style name="Theme.Test" parent="Theme.Compat.Base" />

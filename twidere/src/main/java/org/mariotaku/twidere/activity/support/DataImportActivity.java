@@ -1,8 +1,8 @@
 package org.mariotaku.twidere.activity.support;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,18 +10,17 @@ import android.support.v4.app.FragmentManager;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.fragment.support.DataExportImportTypeSelectorDialogFragment;
-import org.mariotaku.twidere.fragment.support.FileSelectorDialogFragment;
 import org.mariotaku.twidere.util.DataImportExportUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 import java.io.File;
 import java.io.IOException;
 
-public class DataImportActivity extends ThemedFragmentActivity implements FileSelectorDialogFragment.Callback,
-        DataExportImportTypeSelectorDialogFragment.Callback {
+public class DataImportActivity extends ThemedFragmentActivity implements DataExportImportTypeSelectorDialogFragment.Callback {
 
     private ImportSettingsTask mImportSettingsTask;
     private OpenImportTypeTask mOpenImportTypeTask;
+    private Runnable mResumeFragmentsRunnable;
 
     @Override
     public int getThemeColor() {
@@ -48,15 +47,37 @@ public class DataImportActivity extends ThemedFragmentActivity implements FileSe
     }
 
     @Override
-    public void onFilePicked(final File file) {
-        if (file == null) {
-            finish();
-            return;
+    protected void onActivityResult(int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case REQUEST_PICK_FILE: {
+                mResumeFragmentsRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (resultCode == RESULT_OK) {
+                            final String path = data.getData().getPath();
+                            if (mOpenImportTypeTask == null || mOpenImportTypeTask.getStatus() != AsyncTask.Status.RUNNING) {
+                                mOpenImportTypeTask = new OpenImportTypeTask(DataImportActivity.this, path);
+                                mOpenImportTypeTask.execute();
+                            }
+                        } else {
+                            if (!isFinishing()) {
+                                finish();
+                            }
+                        }
+                    }
+                };
+                return;
+            }
         }
-        final String path = file.getAbsolutePath();
-        if (mOpenImportTypeTask == null || mOpenImportTypeTask.getStatus() != AsyncTask.Status.RUNNING) {
-            mOpenImportTypeTask = new OpenImportTypeTask(this, path);
-            mOpenImportTypeTask.execute();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (mResumeFragmentsRunnable != null) {
+            mResumeFragmentsRunnable.run();
         }
     }
 
@@ -82,14 +103,9 @@ public class DataImportActivity extends ThemedFragmentActivity implements FileSe
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            final File extStorage = Environment.getExternalStorageDirectory();
-            final String storagePath = extStorage != null ? extStorage.getAbsolutePath() : "/";
-            final FileSelectorDialogFragment f = new FileSelectorDialogFragment();
-            final Bundle args = new Bundle();
-            args.putString(EXTRA_ACTION, INTENT_ACTION_PICK_FILE);
-            args.putString(EXTRA_PATH, storagePath);
-            f.setArguments(args);
-            f.show(getSupportFragmentManager(), "select_file");
+            final Intent intent = new Intent(this, FileSelectorActivity.class);
+            intent.setAction(INTENT_ACTION_PICK_FILE);
+            startActivityForResult(intent, REQUEST_PICK_FILE);
         }
     }
 
