@@ -97,8 +97,7 @@ public class MessageViewHolder extends ViewHolder implements OnMediaClickListene
 
     @Override
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
-        //TODO open media animation
-        Bundle options = null;
+        final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(adapter.getContext(), adapter.getDirectMessage(getAdapterPosition()), media, options);
     }
 

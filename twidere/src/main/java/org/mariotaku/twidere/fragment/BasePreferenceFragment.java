@@ -19,12 +19,30 @@
 
 package org.mariotaku.twidere.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.UserColorNameManager;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+
+import javax.inject.Inject;
 
 public class BasePreferenceFragment extends PreferenceFragment implements Constants {
+
+    @Inject
+    protected KeyboardShortcutsHandler mKeyboardShortcutHandler;
+    @Inject
+    protected UserColorNameManager mUserColorNameManager;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {

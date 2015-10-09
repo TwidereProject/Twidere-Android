@@ -87,7 +87,6 @@ import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.menu.support.AccountToggleProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -102,11 +101,15 @@ import org.mariotaku.twidere.util.TransitionUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.view.ShapedImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class AccountsDashboardFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
         OnSharedPreferenceChangeListener, ImageLoadingListener, OnClickListener, KeyboardShortcutCallback, AdapterView.OnItemClickListener {
@@ -140,8 +143,11 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             final ContentResolver cr = getContentResolver();
             if (cr == null) return;
             final Cursor c = cr.query(Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, Accounts.SORT_POSITION);
-            updateAccountProviderData(c);
-            c.close();
+            try {
+                updateAccountProviderData(c);
+            } finally {
+                Utils.closeSilently(c);
+            }
             super.onChange(selfChange, uri);
         }
     };
@@ -255,7 +261,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         updateAccountProviderData(data);
     }
 
-    private void updateAccountProviderData(final Cursor cursor) {
+    private void updateAccountProviderData(@Nullable final Cursor cursor) {
+        if (cursor == null) return;
         final Menu menu = mAccountsToggleMenu.getMenu();
         mAccountActionProvider = (AccountToggleProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account));
         final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(cursor);
@@ -655,19 +662,14 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private void updateDefaultAccountState() {
     }
 
-    private static final class AccountOptionsAdapter extends OptionItemsAdapter {
+    public static final class AccountOptionsAdapter extends OptionItemsAdapter {
 
         private final boolean mNameFirst;
-        private final UserColorNameManager mUserColorNameManager;
         private ParcelableAccount mSelectedAccount;
 
-        public AccountOptionsAdapter(final Context context) {
+        AccountOptionsAdapter(final Context context) {
             super(context);
-            mUserColorNameManager = UserColorNameManager.getInstance(context);
-            final SharedPreferencesWrapper wrapper = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
-                    Context.MODE_PRIVATE, SharedPreferenceConstants.class);
-            assert wrapper != null;
-            mNameFirst = wrapper.getBoolean(KEY_NAME_FIRST);
+            mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
         }
 
         public void setSelectedAccount(ParcelableAccount account) {
@@ -849,7 +851,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     }
 
-    private static class OptionItem {
+    public static class OptionItem {
 
         private final int name, icon, id;
 
@@ -887,12 +889,17 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     }
 
-    private static abstract class OptionItemsAdapter extends ArrayAdapter<OptionItem> {
+    public static abstract class OptionItemsAdapter extends ArrayAdapter<OptionItem> {
 
+        @Inject
+        UserColorNameManager mUserColorNameManager;
+        @Inject
+        SharedPreferencesWrapper mPreferences;
         private final int mActionIconColor;
 
-        public OptionItemsAdapter(final Context context) {
+        OptionItemsAdapter(final Context context) {
             super(context, R.layout.list_item_dashboard_menu);
+            DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
             mActionIconColor = ThemeUtils.getThemeForegroundColor(context);
         }
 

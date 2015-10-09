@@ -453,13 +453,14 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         private final Context context;
         private final SharedPreferencesWrapper preferences;
-        @Inject
-        MediaLoaderWrapper loader;
+        private final TwidereLinkify linkify;
         private final MediaLoadingHandler handler;
         @Inject
+        MediaLoaderWrapper loader;
+        @Inject
         AsyncTwitterWrapper twitter;
-        private final TwidereLinkify linkify;
-        private final UserColorNameManager manager;
+        @Inject
+        UserColorNameManager manager;
 
         private int profileImageStyle;
         private int mediaPreviewStyle;
@@ -478,7 +479,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             preferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             final TwidereApplication app = TwidereApplication.getInstance(context);
             handler = new MediaLoadingHandler(R.id.media_preview_progress);
-            manager = app.getUserColorNameManager();
             linkify = new TwidereLinkify(null);
             updateOptions();
         }

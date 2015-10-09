@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.ActivityTracker;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -46,6 +47,8 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     private int mProfileImageStyle;
     @Inject
     protected ActivityTracker mActivityTracker;
+    @Inject
+    protected KeyboardShortcutsHandler mKeyboardShortcutHandler;
 
     @Override
     protected void onStart() {

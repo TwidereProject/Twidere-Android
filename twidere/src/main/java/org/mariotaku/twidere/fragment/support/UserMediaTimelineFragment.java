@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.BaseAdapter;
+import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -156,7 +156,7 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
         mAdapter.setData(null);
     }
 
-    private static class MediaTimelineAdapter extends BaseAdapter<MediaTimelineViewHolder> {
+    private static class MediaTimelineAdapter extends BaseRecyclerViewAdapter<MediaTimelineViewHolder> {
 
         private final LayoutInflater mInflater;
         private final MediaLoadingHandler mLoadingHandler;

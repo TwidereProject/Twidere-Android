@@ -98,7 +98,6 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
@@ -122,13 +121,11 @@ import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
@@ -172,9 +169,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private static final String TAB_TYPE_STATUSES = "statuses";
     private static final String TAB_TYPE_MEDIA = "media";
     private static final String TAB_TYPE_FAVORITES = "favorites";
-
-    private UserColorNameManager mUserColorNameManager;
-    private SharedPreferencesWrapper mPreferences;
 
     private ShapedImageView mProfileImageView;
     private ImageView mProfileTypeView;
@@ -483,7 +477,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final FragmentActivity activity = getActivity();
         if (user == null || user.id <= 0 || activity == null) return;
         final Resources resources = getResources();
-        final UserColorNameManager manager = UserColorNameManager.getInstance(activity);
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
@@ -492,10 +485,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mHeaderErrorContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
-        final int userColor = manager.getUserColor(user.id, true);
+        final int userColor = mUserColorNameManager.getUserColor(user.id, true);
         mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
         mProfileNameContainer.drawEnd(Utils.getAccountColor(activity, user.account_id));
-        final String nick = manager.getUserNickname(user.id, true);
+        final String nick = mUserColorNameManager.getUserNickname(user.id, true);
         mNameView.setText(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick));
         final int typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected);
         if (typeIconRes != 0) {
@@ -538,7 +531,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (relationship == null || relationship.getTargetUserId() != user.id) {
             getFriendship();
         }
-        activity.setTitle(manager.getDisplayName(user, mNameFirst, true));
+        activity.setTitle(mUserColorNameManager.getDisplayName(user, mNameFirst, true));
 
         Calendar cal = Calendar.getInstance();
         final int currentMonth = cal.get(Calendar.MONTH), currentDay = cal.get(Calendar.DAY_OF_MONTH);
@@ -625,16 +618,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         final ParcelableUser user = getUser();
-        final UserColorNameManager manager = UserColorNameManager.getInstance(getActivity());
         switch (requestCode) {
             case REQUEST_SET_COLOR: {
                 if (user == null) return;
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null) return;
                     final int color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT);
-                    manager.setUserColor(mUser.id, color);
+                    mUserColorNameManager.setUserColor(mUser.id, color);
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
-                    manager.clearUserColor(mUser.id);
+                    mUserColorNameManager.clearUserColor(mUser.id);
                 }
                 break;
             }
@@ -662,9 +654,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mTintedStatusContent = (TintedStatusFrameLayout) activity.findViewById(R.id.main_content);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentActivity) {
+            mTintedStatusContent = (TintedStatusFrameLayout) ((FragmentActivity) context).findViewById(R.id.main_content);
+        }
     }
 
     @Override
@@ -681,8 +675,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 .registerOnSharedPreferenceChangeListener(this);
         getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .registerOnSharedPreferenceChangeListener(this);
-        mUserColorNameManager = UserColorNameManager.getInstance(activity);
-        mPreferences = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
         mLocale = getResources().getConfiguration().locale;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
@@ -982,8 +974,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.clear_nickname: {
-                final UserColorNameManager manager = UserColorNameManager.getInstance(getActivity());
-                manager.clearUserNickname(user.id);
+                mUserColorNameManager.clearUserNickname(user.id);
                 break;
             }
             case R.id.set_nickname: {

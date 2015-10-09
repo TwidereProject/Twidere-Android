@@ -165,7 +165,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     private TwidereValidator mValidator;
     private SharedPreferencesWrapper mPreferences;
     private SharedPreferences mMessageDrafts;
-    private UserColorNameManager mUserColorNameManager;
     private EffectViewHelper mEffectHelper;
 
     // Views
@@ -231,7 +230,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final BaseAppCompatActivity activity = (BaseAppCompatActivity) getActivity();
         mPreferences = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
-        mUserColorNameManager = UserColorNameManager.getInstance(activity);
         mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mValidator = new TwidereValidator(activity);
 
@@ -804,7 +802,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 //        if (twitter == null || !getUserVisibleHint()) return;
 //        final boolean refreshing = twitter.isReceivedDirectMessagesRefreshing()
 //                || twitter.isSentDirectMessagesRefreshing();
-//        setProgressBarIndeterminateVisibility(refreshing);
 //        setRefreshing(refreshing);
     }
 

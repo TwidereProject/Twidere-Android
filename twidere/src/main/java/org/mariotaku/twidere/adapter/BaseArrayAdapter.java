@@ -26,8 +26,10 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
@@ -39,6 +41,8 @@ import javax.inject.Inject;
 public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter, OnSharedPreferenceChangeListener {
 
     private final TwidereLinkify mLinkify;
+    @Inject
+    protected UserColorNameManager mUserColorNameManager;
 
     private float mTextSize;
     private int mLinkHighlightOption;
@@ -48,6 +52,8 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
     private final SharedPreferences mNicknamePrefs, mColorPrefs;
     @Inject
     protected MediaLoaderWrapper mImageLoader;
+    @Inject
+    protected MultiSelectManager mMultiSelectManager;
 
     public BaseArrayAdapter(final Context context, final int layoutRes) {
         this(context, layoutRes, null);
@@ -58,7 +64,7 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
         //noinspection unchecked
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject((BaseArrayAdapter<Object>) this);
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mLinkify = new TwidereLinkify(new OnLinkClickHandler(context, app.getMultiSelectManager()));
+        mLinkify = new TwidereLinkify(new OnLinkClickHandler(context, mMultiSelectManager));
         mNicknamePrefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mColorPrefs = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mNicknamePrefs.registerOnSharedPreferenceChangeListener(this);

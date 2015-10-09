@@ -27,12 +27,16 @@ import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.activity.support.ThemedFragmentActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
-import org.mariotaku.twidere.adapter.BaseAdapter;
 import org.mariotaku.twidere.adapter.BaseArrayAdapter;
+import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
+import org.mariotaku.twidere.fragment.BaseDialogFragment;
+import org.mariotaku.twidere.fragment.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BaseListFragment;
+import org.mariotaku.twidere.fragment.BasePreferenceFragment;
+import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.provider.TwidereCommandProvider;
@@ -78,7 +82,7 @@ public interface GeneralComponent {
 
     void inject(BackgroundOperationService object);
 
-    void inject(BaseAdapter<RecyclerView.ViewHolder> object);
+    void inject(BaseRecyclerViewAdapter<RecyclerView.ViewHolder> object);
 
     void inject(AccountsAdapter object);
 
@@ -91,4 +95,12 @@ public interface GeneralComponent {
     void inject(DraftsAdapter object);
 
     void inject(ManagedAsyncTask<Object, Object, Object> object);
+
+    void inject(BasePreferenceFragment object);
+
+    void inject(BaseDialogFragment object);
+
+    void inject(BaseFiltersFragment.FilteredUsersFragment.FilterUsersListAdapter object);
+
+    void inject(AccountsDashboardFragment.OptionItemsAdapter object);
 }

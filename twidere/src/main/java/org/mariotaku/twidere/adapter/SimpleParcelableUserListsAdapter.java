@@ -25,9 +25,7 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
 import java.util.List;
@@ -37,13 +35,10 @@ import static org.mariotaku.twidere.util.Utils.configBaseAdapter;
 public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<ParcelableUserList> implements IBaseAdapter {
 
     private final Context mContext;
-    private UserColorNameManager mUserColorNameManager;
 
     public SimpleParcelableUserListsAdapter(final Context context) {
         super(context, R.layout.list_item_two_line);
         mContext = context;
-        final TwidereApplication app = TwidereApplication.getInstance(context);
-        mUserColorNameManager = app.getUserColorNameManager();
         configBaseAdapter(context, this);
     }
 

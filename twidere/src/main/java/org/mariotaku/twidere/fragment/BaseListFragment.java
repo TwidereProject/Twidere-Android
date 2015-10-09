@@ -60,10 +60,6 @@ public class BaseListFragment extends ListFragment implements Constants, OnScrol
         return null;
     }
 
-    public final MultiSelectManager getMultiSelectManager() {
-        return getApplication().getMultiSelectManager();
-    }
-
     public final SharedPreferences getSharedPreferences(final String name, final int mode) {
         final Activity activity = getActivity();
         if (activity != null) return activity.getSharedPreferences(name, mode);

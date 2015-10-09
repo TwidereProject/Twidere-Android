@@ -25,7 +25,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
@@ -39,9 +38,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.util.UserColorNameManager;
 
-public abstract class BaseAccountPreferenceFragment extends PreferenceFragment implements Constants,
+public abstract class BaseAccountPreferenceFragment extends BasePreferenceFragment implements Constants,
         OnCheckedChangeListener, OnSharedPreferenceChangeListener {
 
     @Override
@@ -59,9 +57,8 @@ public abstract class BaseAccountPreferenceFragment extends PreferenceFragment i
         final Activity activity = getActivity();
         final Intent intent = activity.getIntent();
         if (account != null && intent.hasExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)) {
-            final UserColorNameManager manager = UserColorNameManager.getInstance(activity);
             final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
-            final String name = manager.getDisplayName(account.account_id, account.name,
+            final String name = mUserColorNameManager.getDisplayName(account.account_id, account.name,
                     account.screen_name, nameFirst, false);
             activity.setTitle(name);
         }

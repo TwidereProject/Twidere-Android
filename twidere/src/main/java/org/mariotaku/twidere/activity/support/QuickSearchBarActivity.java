@@ -60,7 +60,6 @@ import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.QuickSearchBarActivity.SuggestionItem;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -428,9 +427,8 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         SuggestionsAdapter(QuickSearchBarActivity activity) {
             mActivity = activity;
             mImageLoader = activity.mImageLoader;
+            mUserColorNameManager = activity.mUserColorNameManager;
             mInflater = LayoutInflater.from(activity);
-            final TwidereApplication application = TwidereApplication.getInstance(activity);
-            mUserColorNameManager = application.getUserColorNameManager();
         }
 
         public boolean canDismiss(int position) {
@@ -526,11 +524,13 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
         private static final Pattern PATTERN_SCREEN_NAME = Pattern.compile("(?i)[@\uFF20]?([a-z0-9_]{1,20})");
 
+        private final UserColorNameManager mUserColorNameManager;
         private final long mAccountId;
         private final String mQuery;
 
-        public SuggestionsLoader(Context context, long accountId, String query) {
+        public SuggestionsLoader(QuickSearchBarActivity context, long accountId, String query) {
             super(context);
+            mUserColorNameManager = context.mUserColorNameManager;
             mAccountId = accountId;
             mQuery = query;
         }
@@ -551,8 +551,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             historyCursor.close();
             if (!emptyQuery) {
                 final String queryEscaped = mQuery.replace("_", "^_");
-                final UserColorNameManager nicknamePrefs = UserColorNameManager.getInstance(context);
-                final long[] nicknameIds = Utils.getMatchedNicknameIds(mQuery, nicknamePrefs);
+                final long[] nicknameIds = Utils.getMatchedNicknameIds(mQuery, mUserColorNameManager);
                 final Expression selection = Expression.or(
                         Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                         Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),

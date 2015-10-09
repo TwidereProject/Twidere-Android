@@ -153,12 +153,15 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private PermissionsManager mPermissionsManager;
     @Nullable
     private NotificationManager mNotificationManager;
-    private SharedPreferencesWrapper mPreferences;
+    @Inject
+    SharedPreferencesWrapper mPreferences;
     private ImagePreloader mImagePreloader;
     @Inject
     Network mNetwork;
     @Inject
     Bus mBus;
+    @Inject
+    UserColorNameManager mUserColorNameManager;
     private Handler mHandler;
 
     private boolean mHomeActivityInBackground;
@@ -559,10 +562,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Override
     public boolean onCreate() {
         final Context context = getContext();
+        assert context != null;
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
         mHandler = new Handler(Looper.getMainLooper());
         mDatabaseWrapper = new SQLiteDatabaseWrapper(this);
-        mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         updatePreferences();
         mPermissionsManager = new PermissionsManager(context);
@@ -1118,20 +1121,19 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     statusesCount, statusesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final UserColorNameManager manager = UserColorNameManager.getInstance(context);
-            final String displayName = manager.getUserNickname(userCursor.getLong(idxUserId),
+            final String displayName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
                     mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.from_name, displayName);
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1);
-                final String othersName = manager.getUserNickname(userCursor.getLong(idxUserId),
+                final String othersName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
                         mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
                 notificationContent = resources.getQuantityString(R.plurals.from_name_and_N_others,
                         usersCount - 1, othersName, usersCount - 1);
             } else {
                 userCursor.moveToPosition(1);
-                final String othersName = manager.getUserNickname(userCursor.getLong(idxUserId),
+                final String othersName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
                         mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
                 notificationContent = resources.getString(R.string.from_name_and_N_others, othersName, usersCount - 1);
             }

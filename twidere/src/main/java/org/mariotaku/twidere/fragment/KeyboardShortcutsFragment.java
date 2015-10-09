@@ -50,7 +50,6 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.KeyboardShortcutPreferenceCompatActivity;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
@@ -60,14 +59,11 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
  */
 public class KeyboardShortcutsFragment extends BasePreferenceFragment implements KeyboardShortcutConstants {
 
-    private KeyboardShortcutsHandler mKeyboardShortcutHandler;
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         final Activity activity = getActivity();
-        mKeyboardShortcutHandler = TwidereApplication.getInstance(activity).getKeyboardShortcutsHandler();
         final PreferenceScreen defaultScreen = getPreferenceScreen();
         final PreferenceScreen preferenceScreen;
         if (defaultScreen != null) {
@@ -312,13 +308,12 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
 
     }
 
-    public static class ResetKeyboardShortcutConfirmDialogFragment extends DialogFragment implements OnClickListener {
+    public static class ResetKeyboardShortcutConfirmDialogFragment extends BaseDialogFragment implements OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    TwidereApplication app = TwidereApplication.getInstance(getActivity());
-                    app.getKeyboardShortcutsHandler().reset();
+                    mKeyboardShortcutsHandler.reset();
                     break;
                 }
             }

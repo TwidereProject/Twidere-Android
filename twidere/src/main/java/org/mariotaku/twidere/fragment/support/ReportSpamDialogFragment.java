@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,14 +26,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.UserColorNameManager;
 
 public class ReportSpamDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
 
@@ -62,12 +59,8 @@ public class ReportSpamDialogFragment extends BaseSupportDialogFragment implemen
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
         final ParcelableUser user = getUser();
         if (user != null) {
-            final UserColorNameManager manager = UserColorNameManager.getInstance(activity);
-            final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(activity,
-                    SharedPreferencesWrapper.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE,
-                    SharedPreferenceConstants.class);
-            final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST);
-            final String displayName = manager.getDisplayName(user, nameFirst, false);
+            final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
+            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst, false);
             builder.setTitle(getString(R.string.report_user, displayName));
             builder.setMessage(getString(R.string.report_user_confirm_message, displayName));
         }

@@ -26,15 +26,14 @@ import android.graphics.Color;
 import android.support.v4.util.LongSparseArray;
 
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
 import java.util.Map;
 import java.util.Set;
-
-import org.mariotaku.twidere.api.twitter.model.User;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -65,8 +64,7 @@ public class UserColorNameManager implements TwidereConstants {
     }
 
     public static UserColorNameManager getInstance(Context context) {
-        final TwidereApplication application = TwidereApplication.getInstance(context);
-        return application.getUserColorNameManager();
+        return ApplicationModule.get(context).getUserColorNameManager();
     }
 
     public void clearUserColor(final long userId) {
@@ -105,7 +103,6 @@ public class UserColorNameManager implements TwidereConstants {
         return getDisplayName(user.id, user.name, user.screen_name, nameFirst, ignoreCache);
     }
 
-    @Deprecated
     public String getDisplayName(final User user, final boolean nameFirst, final boolean ignoreCache) {
         return getDisplayName(user.getId(), user.getName(), user.getScreenName(), nameFirst, ignoreCache);
     }

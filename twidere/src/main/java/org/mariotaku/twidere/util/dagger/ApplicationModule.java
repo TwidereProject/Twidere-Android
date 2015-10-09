@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.dagger;
 
 import android.content.Context;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -35,13 +36,17 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 import org.mariotaku.twidere.util.net.OkHttpRestClient;
@@ -49,6 +54,7 @@ import org.mariotaku.twidere.util.net.TwidereNetwork;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.tsinghua.hotmobi.HotMobiLogger;
 
 /**
  * Created by mariotaku on 15/10/5.
@@ -69,12 +75,17 @@ public class ApplicationModule {
     private final Network network;
     private final RestHttpClient restHttpClient;
     private final Bus bus;
+    private final MultiSelectManager multiSelectManager;
+    private final UserColorNameManager userColorNameManager;
+    private final KeyboardShortcutsHandler keyboardShortcutsHandler;
+    private final HotMobiLogger hotMobiLogger;
 
     public ApplicationModule(TwidereApplication application) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
             throw new RuntimeException("Module must be created inside main thread");
         }
-        sharedPreferences = SharedPreferencesWrapper.getInstance(application, Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = SharedPreferencesWrapper.getInstance(application, Constants.SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         activityTracker = new ActivityTracker();
         bus = new Bus(ThreadEnforcer.MAIN);
         asyncTaskManager = AsyncTaskManager.getInstance();
@@ -82,15 +93,19 @@ public class ApplicationModule {
         network = new TwidereNetwork(application);
 
 
-        asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager, bus);
+        asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager, sharedPreferences, bus);
         restHttpClient = TwitterAPIFactory.getDefaultHttpClient(application, network);
         imageDownloader = new TwidereImageDownloader(application, restHttpClient, true);
         imageLoader = createImageLoader(application, imageDownloader);
         videoLoader = new VideoLoader(application, restHttpClient, asyncTaskManager, bus);
         mediaLoaderWrapper = new MediaLoaderWrapper(imageLoader, videoLoader);
+        multiSelectManager = new MultiSelectManager();
+        userColorNameManager = new UserColorNameManager(application);
+        keyboardShortcutsHandler = new KeyboardShortcutsHandler(application);
+        hotMobiLogger = new HotMobiLogger(application);
     }
 
-    public static ApplicationModule get(Context context) {
+    public static ApplicationModule get(@NonNull Context context) {
         return TwidereApplication.getInstance(context).getApplicationModule();
     }
 
@@ -106,6 +121,26 @@ public class ApplicationModule {
         L.writeDebugLogs(BuildConfig.DEBUG);
         loader.init(cb.build());
         return loader;
+    }
+
+    @Provides
+    public KeyboardShortcutsHandler getKeyboardShortcutsHandler() {
+        return keyboardShortcutsHandler;
+    }
+
+    @Provides
+    public SharedPreferencesWrapper getSharedPreferences() {
+        return sharedPreferences;
+    }
+
+    @Provides
+    public UserColorNameManager getUserColorNameManager() {
+        return userColorNameManager;
+    }
+
+    @Provides
+    public MultiSelectManager getMultiSelectManager() {
+        return multiSelectManager;
     }
 
     @Provides
@@ -174,5 +209,9 @@ public class ApplicationModule {
 
     public void onLowMemory() {
         mediaLoaderWrapper.clearMemoryCache();
+    }
+
+    public HotMobiLogger getHotMobiLogger() {
+        return hotMobiLogger;
     }
 }

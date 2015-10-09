@@ -34,15 +34,16 @@ import android.view.View;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
@@ -54,13 +55,18 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         IThemedActivity, KeyboardShortcutCallback {
 
     // Utility classes
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    @Inject
+    protected KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     @Inject
     protected AsyncTwitterWrapper mTwitterWrapper;
     @Inject
     protected ActivityTracker mActivityTracker;
     @Inject
     protected MediaLoaderWrapper mImageLoader;
+    @Inject
+    protected UserColorNameManager mUserColorNameManager;
+    @Inject
+    protected SharedPreferencesWrapper mPreferences;
 
     // Data fields
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
@@ -144,7 +150,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         }
         super.onCreate(savedInstanceState);
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(this)).build().inject(this);
-        mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 
     @Override

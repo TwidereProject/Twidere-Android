@@ -95,7 +95,6 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     private View mListContainer, mProgressContainer;
     private TextView mEmptyText;
     private ImageView mEmptyIcon;
-    private SharedPreferencesWrapper mPreferences;
 
 
     @Override
@@ -115,7 +114,6 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPreferences = SharedPreferencesWrapper.getInstance(getActivity(), SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         setHasOptionsMenu(true);
         mResolver = getContentResolver();
         final View view = getView();

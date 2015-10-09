@@ -48,7 +48,9 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
@@ -57,6 +59,7 @@ import javax.inject.Inject;
 
 public class BaseSupportFragment extends Fragment implements IBaseFragment, Constants {
 
+    // Utility classes
     @Inject
     protected AsyncTwitterWrapper mTwitterWrapper;
     @Inject
@@ -69,6 +72,12 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected Bus mBus;
     @Inject
     protected AsyncTaskManager mAsyncTaskManager;
+    @Inject
+    protected MultiSelectManager mMultiSelectManager;
+    @Inject
+    protected UserColorNameManager mUserColorNameManager;
+    @Inject
+    protected SharedPreferencesWrapper mPreferences;
 
     public BaseSupportFragment() {
 
@@ -98,10 +107,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
         final Activity activity = getActivity();
         if (activity != null) return activity.getContentResolver();
         return null;
-    }
-
-    public MultiSelectManager getMultiSelectManager() {
-        return getApplication() != null ? getApplication().getMultiSelectManager() : null;
     }
 
     public SharedPreferences getSharedPreferences(final String name, final int mode) {

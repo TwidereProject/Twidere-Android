@@ -61,7 +61,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.AbsContentListViewFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -71,6 +70,10 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+
+import javax.inject.Inject;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 
@@ -401,19 +404,20 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
             }
         }
 
-        private static final class FilterUsersListAdapter extends SimpleCursorAdapter {
+        public static final class FilterUsersListAdapter extends SimpleCursorAdapter {
 
-            private final UserColorNameManager mUserColorNameManager;
+            @Inject
+            UserColorNameManager mUserColorNameManager;
 
             private final boolean mNameFirst;
             private int mUserIdIdx, mNameIdx, mScreenNameIdx;
 
-            public FilterUsersListAdapter(final Context context) {
+            FilterUsersListAdapter(final Context context) {
                 super(context, android.R.layout.simple_list_item_activated_1, null, new String[0], new int[0], 0);
+                DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
                 final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                         Context.MODE_PRIVATE);
                 mNameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
-                mUserColorNameManager = TwidereApplication.getInstance(context).getUserColorNameManager();
             }
 
             @Override

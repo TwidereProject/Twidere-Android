@@ -31,14 +31,11 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IDirectMessagesAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
-import org.mariotaku.twidere.util.MultiSelectManager;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
@@ -46,7 +43,7 @@ import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.holder.IncomingMessageViewHolder;
 import org.mariotaku.twidere.view.holder.MessageViewHolder;
 
-public class MessageConversationAdapter extends BaseAdapter<ViewHolder> implements Constants,
+public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHolder> implements Constants,
         IDirectMessagesAdapter, OnClickListener {
 
     private static final int ITEM_VIEW_TYPE_MESSAGE_OUTGOING = 1;
@@ -61,7 +58,6 @@ public class MessageConversationAdapter extends BaseAdapter<ViewHolder> implemen
 
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private final MultiSelectManager mMultiSelectManager;
     private final MediaLoadingHandler mMediaLoadingHandler;
 
     private Cursor mCursor;
@@ -72,14 +68,10 @@ public class MessageConversationAdapter extends BaseAdapter<ViewHolder> implemen
         super(context);
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        final TwidereApplication app = TwidereApplication.getInstance(context);
         mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null));
-        mMultiSelectManager = app.getMultiSelectManager();
-        final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
-                SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-        mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+        mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mIncomingMessageColor = ThemeUtils.getUserAccentColor(context);
         mOutgoingMessageColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
@@ -193,8 +185,7 @@ public class MessageConversationAdapter extends BaseAdapter<ViewHolder> implemen
             case R.id.media_preview: {
                 final ParcelableDirectMessage message = getDirectMessage(position);
                 if (message == null || message.media == null) return;
-                //TODO open media animation
-                Bundle options = null;
+                final Bundle options = Utils.createMediaViewerActivityOption(view);
                 Utils.openMedia(mContext, message, null, options);
             }
         }

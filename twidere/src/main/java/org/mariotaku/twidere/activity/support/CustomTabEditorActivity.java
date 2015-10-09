@@ -49,17 +49,14 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.UserColorNameManager;
 
 import java.text.Collator;
 import java.util.Comparator;
@@ -218,20 +215,19 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
         final boolean displayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         final boolean displayName = mPreferences.getBoolean(KEY_NAME_FIRST, true);
-        final UserColorNameManager manager = UserColorNameManager.getInstance(this);
         text1.setVisibility(View.VISIBLE);
         text2.setVisibility(View.VISIBLE);
         icon.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
         if (value instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) value;
-            text1.setText(manager.getUserNickname(user.id, user.name, false));
+            text1.setText(mUserColorNameManager.getUserNickname(user.id, user.name, false));
             text2.setText("@" + user.screen_name);
             if (displayProfileImage) {
                 mImageLoader.displayProfileImage(icon, user.profile_image_url);
             }
         } else if (value instanceof ParcelableUserList) {
             final ParcelableUserList userList = (ParcelableUserList) value;
-            final String createdBy = manager.getDisplayName(userList, displayName, false);
+            final String createdBy = mUserColorNameManager.getDisplayName(userList, displayName, false);
             text1.setText(userList.name);
             text2.setText(getString(R.string.created_by, createdBy));
             if (displayProfileImage) {

@@ -34,7 +34,6 @@ import com.twitter.Extractor;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.menu.AccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -60,12 +59,11 @@ import static org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert
 @SuppressLint("Registered")
 public class MultiSelectEventHandler implements Constants, ActionMode.Callback, MultiSelectManager.Callback {
 
-    private TwidereApplication mApplication;
-
     @Inject
     AsyncTwitterWrapper mTwitterWrapper;
 
-    private MultiSelectManager mMultiSelectManager;
+    @Inject
+    MultiSelectManager mMultiSelectManager;
 
     private ActionMode mActionMode;
 
@@ -84,8 +82,6 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
      * Call before super.onCreate
      */
     public void dispatchOnCreate() {
-        mApplication = mActivity.getTwidereApplication();
-        mMultiSelectManager = mApplication.getMultiSelectManager();
     }
 
     /**

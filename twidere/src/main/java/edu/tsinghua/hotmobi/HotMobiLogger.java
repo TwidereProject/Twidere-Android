@@ -29,8 +29,8 @@ import android.os.BatteryManager;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -114,7 +114,7 @@ public class HotMobiLogger {
     }
 
     public static HotMobiLogger getInstance(Context context) {
-        return ((TwidereApplication) context.getApplicationContext()).getHotMobiLogger();
+        return ApplicationModule.get(context).getHotMobiLogger();
     }
 
     public static LatLng getCachedLatLng(Context context) {

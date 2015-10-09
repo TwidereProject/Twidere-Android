@@ -122,8 +122,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
 
     public void gotoLastPage() {
         if (mViewPager == null || mAdapter == null) return;
-        final int last = mAdapter.getCount() - 2;
-        mViewPager.setCurrentItem(Math.max(last, 0));
+        gotoPage(getPageCount() - 2);
     }
 
     public void gotoNextPage() {
@@ -622,9 +621,18 @@ public class SettingsWizardActivity extends Activity implements Constants {
 
         @Override
         protected void nextStep() {
-            getActivity().gotoLastPage();
+            final SettingsWizardActivity activity = getActivity();
+            activity.gotoPage(activity.getPageCount() - 3);
         }
 
+    }
+
+    private void gotoPage(int page) {
+        mViewPager.setCurrentItem(MathUtils.clamp(page, 0, getPageCount() - 1));
+    }
+
+    private int getPageCount() {
+        return mAdapter.getCount();
     }
 
     static class InitialTabSettingsTask extends AbsInitialSettingsTask {

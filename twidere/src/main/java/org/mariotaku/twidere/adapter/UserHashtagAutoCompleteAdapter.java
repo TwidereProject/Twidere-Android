@@ -66,10 +66,10 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     private final SQLiteDatabase mDatabase;
     @Inject
     MediaLoaderWrapper mProfileImageLoader;
-    @NonNull
-    private final SharedPreferencesWrapper mPreferences;
-    @NonNull
-    private final UserColorNameManager mUserColorNameManager;
+    @Inject
+    SharedPreferencesWrapper mPreferences;
+    @Inject
+    UserColorNameManager mUserColorNameManager;
 
     private final EditText mEditText;
 
@@ -88,8 +88,6 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
         mEditText = view;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mUserColorNameManager = app.getUserColorNameManager();
         mResolver = context.getContentResolver();
         mDatabase = app.getSQLiteDatabase();
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);

@@ -30,7 +30,6 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -43,7 +42,6 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseThemedActivity
     public static final String EXTRA_CONTEXT_TAG = "context_tag";
     public static final String EXTRA_KEY_ACTION = "key_action";
 
-    private KeyboardShortcutsHandler mKeyboardShortcutHandler;
     private TextView mKeysLabel, mConflictLabel;
 
     private KeyboardShortcutSpec mKeySpec;
@@ -68,7 +66,6 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseThemedActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mKeyboardShortcutHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
         setContentView(R.layout.activity_keyboard_shortcut_input);
         setTitle(KeyboardShortcutsHandler.getActionLabel(this, getKeyAction()));
 

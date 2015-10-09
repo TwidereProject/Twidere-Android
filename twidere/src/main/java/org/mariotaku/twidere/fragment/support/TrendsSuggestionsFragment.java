@@ -37,7 +37,6 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.adapter.TrendsAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
@@ -47,7 +46,6 @@ import static org.mariotaku.twidere.util.Utils.openTweetSearch;
 public class TrendsSuggestionsFragment extends AbsContentListViewFragment<TrendsAdapter>
         implements LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
-    private MultiSelectManager mMultiSelectManager;
     private SharedPreferences mPreferences;
 
 
@@ -57,7 +55,6 @@ public class TrendsSuggestionsFragment extends AbsContentListViewFragment<Trends
     public void onActivityCreated(final Bundle savedInstanceState) {
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         super.onActivityCreated(savedInstanceState);
-        mMultiSelectManager = getMultiSelectManager();
         mAccountId = getDefaultAccountId(getActivity());
         getListView().setOnItemClickListener(this);
         getLoaderManager().initLoader(0, null, this);

@@ -50,6 +50,8 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
 
     @Inject
     MediaLoaderWrapper mImageLoader;
+    @Inject
+    SharedPreferencesWrapper mPreferences;
     private final MediaLoadingHandler mMediaLoadingHandler;
     private final int mMediaPreviewStyle;
 
@@ -60,9 +62,7 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
         super(context, R.layout.list_item_draft, null, new String[0], new int[0], 0);
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
         mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
-        final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
-                SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
     }
 
     @Override

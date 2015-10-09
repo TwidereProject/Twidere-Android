@@ -26,10 +26,13 @@ import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.system.ErrnoException;
+import android.system.OsConstants;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
@@ -91,6 +94,7 @@ public class SaveFileTask extends AsyncTask<Object, Object, File> implements Con
             }
             return saveFile;
         } catch (final IOException e) {
+            final int errno = Utils.getErrorNo(e.getCause());
             Log.w(LOGTAG, "Failed to save file", e);
             return null;
         } finally {

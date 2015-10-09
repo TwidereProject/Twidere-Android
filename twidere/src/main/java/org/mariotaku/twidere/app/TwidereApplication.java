@@ -46,9 +46,7 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.AbsLogger;
 import org.mariotaku.twidere.util.DebugModeUtils;
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MathUtils;
-import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereLogger;
 import org.mariotaku.twidere.util.UserColorNameManager;
@@ -61,8 +59,6 @@ import org.mariotaku.twidere.util.net.TwidereNetwork;
 
 import java.io.File;
 import java.io.IOException;
-
-import edu.tsinghua.hotmobi.HotMobiLogger;
 
 import static org.mariotaku.twidere.util.Utils.getBestCacheDir;
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
@@ -80,15 +76,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     private Handler mHandler;
     private SharedPreferences mPreferences;
-    private MultiSelectManager mMultiSelectManager;
     private DiskCache mDiskCache, mFullDiskCache;
     private SQLiteOpenHelper mSQLiteOpenHelper;
     private Network mNetwork;
     private SQLiteDatabase mDatabase;
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
-    private UserColorNameManager mUserColorNameManager;
 
-    private HotMobiLogger mHotMobiLogger;
     private ApplicationModule mApplicationModule;
 
     @NonNull
@@ -106,10 +98,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mFullDiskCache = createDiskCache(DIR_NAME_FULL_IMAGE_CACHE);
     }
 
-    public UserColorNameManager getUserColorNameManager() {
-        if (mUserColorNameManager != null) return mUserColorNameManager;
-        return mUserColorNameManager = new UserColorNameManager(this);
-    }
 
     public Handler getHandler() {
         return mHandler;
@@ -120,21 +108,14 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mNetwork = new TwidereNetwork(this);
     }
 
-    public KeyboardShortcutsHandler getKeyboardShortcutsHandler() {
-        if (mKeyboardShortcutsHandler != null) return mKeyboardShortcutsHandler;
-        mKeyboardShortcutsHandler = new KeyboardShortcutsHandler(this);
+    public void initKeyboardShortcuts() {
         final SharedPreferences preferences = getSharedPreferences();
         if (!preferences.getBoolean(KEY_KEYBOARD_SHORTCUT_INITIALIZED, false)) {
-            mKeyboardShortcutsHandler.reset();
+            getApplicationModule().getKeyboardShortcutsHandler().reset();
             preferences.edit().putBoolean(KEY_KEYBOARD_SHORTCUT_INITIALIZED, true).apply();
         }
-        return mKeyboardShortcutsHandler;
     }
 
-    public MultiSelectManager getMultiSelectManager() {
-        if (mMultiSelectManager != null) return mMultiSelectManager;
-        return mMultiSelectManager = new MultiSelectManager();
-    }
 
     public SQLiteDatabase getSQLiteDatabase() {
         if (mDatabase != null) return mDatabase;
@@ -270,14 +251,9 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         }
     }
 
-    @NonNull
-    public HotMobiLogger getHotMobiLogger() {
-        if (mHotMobiLogger != null) return mHotMobiLogger;
-        return mHotMobiLogger = new HotMobiLogger(this);
-    }
-
     public ApplicationModule getApplicationModule() {
         if (mApplicationModule != null) return mApplicationModule;
         return mApplicationModule = new ApplicationModule(this);
     }
+
 }

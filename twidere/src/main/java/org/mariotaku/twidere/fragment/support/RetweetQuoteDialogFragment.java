@@ -64,7 +64,6 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
     public static final String FRAGMENT_TAG = "retweet_quote";
     private PopupMenu mPopupMenu;
     private TwidereValidator mValidator;
-    private SharedPreferencesWrapper mPreferences;
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
@@ -98,7 +97,6 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
         final Context context = builder.getContext();
         mValidator = new TwidereValidator(context);
-        mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         final LayoutInflater inflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_status_quote_retweet, null);
         final DummyStatusHolderAdapter adapter = new DummyStatusHolderAdapter(context);

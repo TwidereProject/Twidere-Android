@@ -25,9 +25,7 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
 import java.util.List;
@@ -38,7 +36,6 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> implements IBaseAdapter {
 
     private final Context mContext;
-    private final UserColorNameManager mUserColorNameManager;
 
     public SimpleParcelableUsersAdapter(final Context context) {
         this(context, R.layout.list_item_user);
@@ -47,8 +44,6 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
     public SimpleParcelableUsersAdapter(final Context context, final int layoutRes) {
         super(context, layoutRes);
         mContext = context;
-        final TwidereApplication app = TwidereApplication.getInstance(context);
-        mUserColorNameManager = app.getUserColorNameManager();
         configBaseAdapter(context, this);
     }
 

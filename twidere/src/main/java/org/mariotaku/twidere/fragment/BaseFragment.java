@@ -28,10 +28,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
@@ -41,6 +40,8 @@ public class BaseFragment extends Fragment implements Constants {
 
     @Inject
     protected AsyncTwitterWrapper mTwitterWrapper;
+    @Inject
+    protected SharedPreferencesWrapper mPreferences;
 
     @Override
     public void onAttach(Context context) {
@@ -60,11 +61,6 @@ public class BaseFragment extends Fragment implements Constants {
         return null;
     }
 
-    public MultiSelectManager getMultiSelectManager() {
-        final TwidereApplication app = getApplication();
-        return app != null ? app.getMultiSelectManager() : null;
-    }
-
     public SharedPreferences getSharedPreferences(final String name, final int mode) {
         final Activity activity = getActivity();
         if (activity != null) return activity.getSharedPreferences(name, mode);
@@ -81,13 +77,6 @@ public class BaseFragment extends Fragment implements Constants {
         final Activity activity = getActivity();
         if (activity == null) return;
         activity.registerReceiver(receiver, filter);
-    }
-
-    public void setProgressBarIndeterminateVisibility(final boolean visible) {
-        final Activity activity = getActivity();
-        if (activity instanceof BaseAppCompatActivity) {
-            activity.setProgressBarIndeterminateVisibility(visible);
-        }
     }
 
     public void unregisterReceiver(final BroadcastReceiver receiver) {

@@ -69,6 +69,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 
 public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<MessageEntriesAdapter>
@@ -78,8 +80,6 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this);
 
-    // Utility classes
-    private MultiSelectManager mMultiSelectManager;
     private RemoveUnreadCountsTask mRemoveUnreadCountsTask;
     private RecyclerViewNavigationHelper mNavigationHelper;
 
@@ -247,7 +247,6 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
         final View view = getView();
         if (view == null) throw new AssertionError();
         final Context viewContext = view.getContext();
-        mMultiSelectManager = getMultiSelectManager();
         final MessageEntriesAdapter adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();

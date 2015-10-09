@@ -24,7 +24,10 @@ import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 
@@ -33,19 +36,25 @@ import javax.inject.Inject;
 /**
  * Created by mariotaku on 15/10/5.
  */
-public abstract class BaseAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     @Inject
     protected AsyncTwitterWrapper mTwitterWrapper;
     @Inject
     protected ReadStateManager mReadStateManager;
     @Inject
     protected MediaLoaderWrapper mMediaLoader;
+    @Inject
+    protected MultiSelectManager mMultiSelectManager;
+    @Inject
+    protected UserColorNameManager mUserColorNameManager;
+    @Inject
+    protected SharedPreferencesWrapper mPreferences;
 
-    public BaseAdapter(Context context) {
+    public BaseRecyclerViewAdapter(Context context) {
         //noinspection unchecked
         DaggerGeneralComponent.builder()
                 .applicationModule(ApplicationModule.get(context))
                 .build()
-                .inject((BaseAdapter<RecyclerView.ViewHolder>) this);
+                .inject((BaseRecyclerViewAdapter<RecyclerView.ViewHolder>) this);
     }
 }

@@ -41,7 +41,6 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.StrictModeUtils;
@@ -64,7 +63,8 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     @ShapeStyle
     private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    @Inject
+    protected KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     private String mCurrentThemeFontFamily;
     @Inject
     protected ActivityTracker mActivityTracker;
@@ -166,7 +166,6 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         setupWindow();
         super.onCreate(savedInstanceState);
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(this)).build().inject(this);
-        mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 
     @Override

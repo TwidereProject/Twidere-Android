@@ -73,13 +73,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
-import org.mariotaku.twidere.adapter.BaseAdapter;
+import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
 import org.mariotaku.twidere.loader.support.StatusRepliesLoader;
@@ -100,7 +99,6 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusActionModeCallback;
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
@@ -1038,7 +1036,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
     }
 
-    private static class StatusAdapter extends BaseAdapter<ViewHolder> implements IStatusesAdapter<List<ParcelableStatus>> {
+    private static class StatusAdapter extends BaseRecyclerViewAdapter<ViewHolder> implements IStatusesAdapter<List<ParcelableStatus>> {
 
         private static final int VIEW_TYPE_LIST_STATUS = 0;
         private static final int VIEW_TYPE_DETAIL_STATUS = 1;
@@ -1076,7 +1074,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final boolean mDisplayProfileImage;
         private final boolean mSensitiveContentEnabled;
         private final boolean mHideCardActions;
-        private final UserColorNameManager mUserColorNameManager;
         private boolean mLoadMoreSupported;
         private boolean mLoadMoreIndicatorVisible;
         private boolean mDetailMediaExpanded;
@@ -1092,27 +1089,24 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             setHasStableIds(true);
             final Context context = fragment.getActivity();
             final Resources res = context.getResources();
-            final SharedPreferencesWrapper preferences = SharedPreferencesWrapper.getInstance(context,
-                    SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             mItemCounts = new int[ITEM_TYPES_SUM];
             // There's always a space at the end of the list
             mItemCounts[ITEM_IDX_SPACE] = 1;
             mFragment = fragment;
             mContext = context;
             mInflater = LayoutInflater.from(context);
-            mUserColorNameManager = TwidereApplication.getInstance(context).getUserColorNameManager();
             mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
             mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
-            mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
-            mTextSize = preferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
-            mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-            mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
-            mLinkHighlightingStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
+            mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST, true);
+            mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size));
+            mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+            mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+            mLinkHighlightingStyle = Utils.getLinkHighlightingStyleInt(mPreferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
             mIsCompact = compact;
-            mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-            mDisplayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
-            mSensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
-            mHideCardActions = preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
+            mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+            mDisplayMediaPreview = mPreferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+            mSensitiveContentEnabled = mPreferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
+            mHideCardActions = mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
             if (compact) {
                 mCardLayoutResource = R.layout.card_item_status_compact;
             } else {

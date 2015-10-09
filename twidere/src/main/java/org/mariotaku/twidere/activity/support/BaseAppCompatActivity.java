@@ -54,7 +54,8 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
         KeyboardShortcutCallback {
 
     // Utility classes
-    private KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+    @Inject
+    protected KeyboardShortcutsHandler mKeyboardShortcutsHandler;
     @Inject
     protected ActivityTracker mActivityTracker;
     @Inject
@@ -163,7 +164,6 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(this)).build().inject(this);
-        mKeyboardShortcutsHandler = TwidereApplication.getInstance(this).getKeyboardShortcutsHandler();
     }
 
 
