@@ -57,6 +57,10 @@ public abstract class AbsLogger {
         error(null, throwable);
     }
 
+    public static void logIfFalse(boolean expression, String message) {
+        if (!expression) error(message);
+    }
+
     protected abstract void logImpl(@Nullable String message, @Nullable Throwable throwable);
 
     protected abstract void errorImpl(@Nullable String message, @Nullable Throwable throwable);

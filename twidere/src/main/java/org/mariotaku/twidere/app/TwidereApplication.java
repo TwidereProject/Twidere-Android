@@ -49,7 +49,6 @@ import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereLogger;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
@@ -60,7 +59,6 @@ import org.mariotaku.twidere.util.net.TwidereNetwork;
 import java.io.File;
 import java.io.IOException;
 
-import static org.mariotaku.twidere.util.Utils.getBestCacheDir;
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
@@ -229,14 +227,16 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     }
 
     private DiskCache createDiskCache(final String dirName) {
-        final File cacheDir = getBestCacheDir(this, dirName);
+        final File cacheDir = Utils.getExternalCacheDir(this, dirName);
         final File fallbackCacheDir = getInternalCacheDir(this, dirName);
         final URLFileNameGenerator fileNameGenerator = new URLFileNameGenerator();
         final SharedPreferences preferences = getSharedPreferences();
         final int cacheSize = MathUtils.clamp(preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300), 100, 500);
         try {
-            return new LruDiskCache(cacheDir, fallbackCacheDir, fileNameGenerator,
-                    cacheSize * 1024 * 1024, 0);
+            final int cacheMaxSizeBytes = cacheSize * 1024 * 1024;
+            if (cacheDir != null)
+                return new LruDiskCache(cacheDir, fallbackCacheDir, fileNameGenerator, cacheMaxSizeBytes, 0);
+            return new LruDiskCache(fallbackCacheDir, null, fileNameGenerator, cacheMaxSizeBytes, 0);
         } catch (IOException e) {
             return new ReadOnlyDiskLRUNameCache(cacheDir, fallbackCacheDir, fileNameGenerator);
         }

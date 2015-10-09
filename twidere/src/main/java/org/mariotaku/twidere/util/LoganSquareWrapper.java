@@ -55,12 +55,12 @@ public class LoganSquareWrapper extends LoganSquare {
 
     public static File getSerializationFile(final Context context, final Object... args) throws IOException {
         if (context == null || args == null || args.length == 0) return null;
-        final File cache_dir = Utils.getBestCacheDir(context, JSON_CACHE_DIR);
-        if (!cache_dir.exists()) {
-            cache_dir.mkdirs();
+        final File cacheDir = Utils.getBestCacheDir(context, JSON_CACHE_DIR);
+        if (!cacheDir.exists()) {
+            AbsLogger.logIfFalse(cacheDir.mkdirs(), "Unable to create cache dir");
         }
         final String filename = Utils.encodeQueryParams(TwidereArrayUtils.toString(args, '.', false));
-        return new File(cache_dir, filename + ".json");
+        return new File(cacheDir, filename + ".json");
     }
 
 

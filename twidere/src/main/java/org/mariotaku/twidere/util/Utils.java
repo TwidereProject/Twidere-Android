@@ -1876,6 +1876,16 @@ public final class Utils implements Constants {
         return new File(context.getCacheDir(), cacheDirName);
     }
 
+    @Nullable
+    public static File getExternalCacheDir(final Context context, final String cacheDirName) {
+        if (context == null) throw new NullPointerException();
+        final File externalCacheDir = context.getExternalCacheDir();
+        if (externalCacheDir == null) return null;
+        final File cacheDir = new File(externalCacheDir, cacheDirName);
+        if (cacheDir.isDirectory() || cacheDir.mkdirs()) return cacheDir;
+        return new File(context.getCacheDir(), cacheDirName);
+    }
+
     public static CharSequence getKeywordBoldedText(final CharSequence orig, final String... keywords) {
         return getKeywordHighlightedText(orig, new StyleSpan(Typeface.BOLD), keywords);
     }
