@@ -199,6 +199,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     }
 
     @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+    }
+
+    @Override
     public void onLowMemory() {
         final ApplicationModule module = getApplicationModule();
         module.onLowMemory();

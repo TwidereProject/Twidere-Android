@@ -44,6 +44,7 @@
   <string name="password">Kata Sandi</string>
   <string name="label_data_provider">Penyedia jasa basis data Twidere</string>
   <string name="label_refresh_service">Segarkan layanan</string>
+  <string name="label_streaming_service">Layanan streaming</string>
   <string name="label_background_operation_service">Latar Belakang layanan operasi</string>
   <string name="open_in_browser">Buka di Browser</string>
   <string name="tap_to_load_more">Ketuk untuk memuat lebih</string>
@@ -162,8 +163,8 @@
   <string name="report_for_spam">Laporkan sebagai spam</string>
   <string name="twitter_mute_user">Bungkam pengguna</string>
   <string name="twitter_muted_users">Pengguna yang dibungkam</string>
-  <string name="message_user_muted">Menambahkan pengguna ini ke daftar saring. Anda tidak akan melihat kicauan dari pengguna ini pada home/timeline/daftar mention.</string>
-  <string name="message_users_muted">Pengguna telah ditambah ke daftar saringan. Anda tidak akan melihat kicauannya di timeline/mention.</string>
+  <string name="message_user_muted">Pengguna telah ditambah ke daftar saringan. Anda tidak akan melihat tweet dari pengguna ini di beranda timeline/mention.</string>
+  <string name="message_users_muted">Pengguna telah ditambah ke daftar saringan. Anda tidak akan melihat tweet para pengguna ini di beranda timeline/mention.</string>
   <string name="message_user_unmuted">Hapus pengguna ini dari daftar saring.</string>
   <string name="inbox">Kotak masuk</string>
   <string name="load_images">Memuat gambar</string>
@@ -239,7 +240,7 @@
   <string name="error_message_image_uploader_not_found">Penggunggah gambar tidak ditemukan, mungkin belum terinstal.</string>
   <string name="image_upload_format">Tweet format dengan gambar</string>
   <string name="image_upload_format_summary">\"[LINK]\" = Tautan gambar\n\"[TEXT]\" = Isi tweet\n(Ekstensi saja)</string>
-  <string name="status_shortener">Penyingkat kicauan</string>
+  <string name="status_shortener">Penyingkat tweet</string>
   <string name="status_shortener_default">Tidak ada (Batal mengirim)</string>
   <string name="error_message_status_too_long">Kicauan terlalu panjang.</string>
   <string name="error_message_message_too_long">Pesan terlalu panjang.</string>
@@ -269,18 +270,31 @@
   <string name="activities_by_friends">Aktivitas oleh teman-teman</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> memfavoriti tweet anda.</string>
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> Tweet anda difavoritkan.</string>
-  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> memfavoriti tweet anda.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> memfavoritkan tweet anda.</string>
   <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g>dan<xliff:g id="other">%2$s</xliff:g> memfavoritkan retweet.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> mengikuti Anda.</string>
   <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> dan<xliff:g id="other">%2$s</xliff:g> mengikuti Anda.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> me-retweet tweet anda.</string>
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> dan<xliff:g id="other">%2$s</xliff:g> me-retweet tweet Anda.</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> me-retweet tweet anda.</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> dan<xliff:g id="other">%2$s</xliff:g> me-retweet tweet Anda.</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> me-retweet tweet yang menyebut nama Anda.</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> me-retweet tweet yang menyebut nama Anda.</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> memfavoritkan tweet yang menyebut nama Anda.</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> memfavoritkan tweet yang menyebut nama Anda.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> menambahkan Anda ke dalam daftar.</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> menambahkan anda ke dalam daftar "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="other">%2$s</xliff:g> menambahkan Anda ke dalam daftar mereka.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> memfavoritkan kicauan <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> memfavoritkan kicauan <xliff:g id="target">%2$s</xliff:g> dan <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> mengikuti <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> mengikuti <xliff:g id="target">%2$s</xliff:g> dan <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> me-retweet kicauan <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g> me-retweet kicauan <xliff:g id="target">%2$s</xliff:g> dan kicauan <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> menambahkan <xliff:g id="target">%2$s</xliff:g> ke daftar.</string>
+  <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> menambahkan <xliff:g id="target">%2$s</xliff:g> dan <xliff:g id="other">%1$s</xliff:g> ke dalam daftar.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> membuat daftar <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> membuat daftar <xliff:g id="target">%2$s</xliff:g> dan <xliff:g id="other">%1$s</xliff:g>.</string>
   <string name="status_not_updated">Kicauan tidak terkirim.</string>
   <string name="status_not_updated_summary">Kicauan tidak terkirim, dan disimpan di draf.</string>
   <string name="incoming_friendships">Permintaan mengikuti ditahan</string>
@@ -372,6 +386,7 @@
   <string name="preview_images">Pratinjau gambar</string>
   <string name="preload_wifi_only">Preload menggunakan Wi-Fi saja</string>
   <string name="sign_in_method_introduction_title">Bagaimana cara kerjanya?</string>
+  <string name="sign_in_method_introduction">Kebanyakan klien membuka halaman web untuk mengotorisasi ke Twitter, ini bisa merepotkan jika menggunakan API khusus, atau pada jaringan yang lambat. Twidere mensimulasikan browser normal untuk membantu masuk ke Twitter. Jangan khawatir, password Anda tidak akan pernah disimpan atau bocor.</string>
   <string name="quote_protected_status_notice">Tidak direkomendasikan untuk mengutip twit terproteksi.</string>
   <string name="edit_draft">Ubah draf</string>
   <string name="profile_image">Gambar Profil</string>
@@ -389,7 +404,7 @@
   <string name="status_favorited">Twit difavoritkan.</string>
   <string name="status_unfavorited">Twit batal difavoritkan.</string>
   <string name="status_retweeted">Di-retweet.</string>
-  <string name="retweet_cancelled">Reetweet digagalkan.</string>
+  <string name="retweet_cancelled">Retweet dibatalkan.</string>
   <string name="direct_message_sent">Direct meesage terkirim.</string>
   <string name="direct_message_deleted">Direct message dihapus.</string>
   <string name="search_saved">Pencarian tersimpan.</string>
@@ -524,6 +539,7 @@
   <string name="theme_background_solid">Putih/hitam murni</string>
   <string name="theme_background_transparent">Transparan</string>
   <string name="theme_dark_actionbar">Bar aksi gelap</string>
+  <string name="wizard_hint_compose_select_account">Klik gambar profil untuk memilih akun ketika menulis tweet.</string>
   <string name="wizard_hint_quote_format">Atur format kutipan anda di \"Pengaturan\" - \"Isi &amp; Penyimpanan\"</string>
   <string name="wizard_hint_filters">Anda dapat menyembunyikan twit yang tidak diinginkan pada linimasa dan pemberitahuan dengan menggunakan \"Filters\".</string>
   <string name="view_replies">Lihat balasan</string>
@@ -634,7 +650,11 @@
   <string name="state_blocking">Memblokir</string>
   <string name="load_more">Memuat lainnya</string>
   <string name="photo">Foto</string>
+  <string name="camera">Kamera</string>
   <string name="gallery">Galeri</string>
+  <string name="source_camera">Kamera</string>
+  <string name="source_gallery">Galeri</string>
+  <string name="source_clipboard">Clipboard</string>
   <string name="remove">Hapus</string>
   <string name="load_media">Masukan Media</string>
   <string name="profile_text_color">Warna Teks</string>
@@ -671,28 +691,93 @@
   <string name="getting_location">Mendapatkan lokasi</string>
   <string name="save_to_gallery">Simpan ke galeri</string>
   <string name="usage_statistics">Statistik penggunaan</string>
+  <string name="research_hot_mobile">Penelitian Data-Driven Jaringan Mobile</string>
   <string name="unknown_location">Lokasi tidak diketahui</string>
   <string name="ellipsis">...</string>
   <string name="import_export_settings">Impor/Ekspor pengaturan</string>
   <string name="usage_statistics_header_summary">Twidere mengambil bagian dalam beberapa proyek penelitian, bergabung dengan proyek ini akan membuat Twidere dan beberapa aplikasi lain menjadi lebih baik.</string>
   <string name="no_tab">Tidak ada tab</string>
+  <string name="user_protected_summary">Anda perlu mengirim permintaan mengikuti kepada pengguna yang diproteksi ini untuk melihat tweetnya</string>
   <string name="no_account">Tidak ada akun</string>
+  <string name="permission_description_shorten_status">Aplikasi dapat mempersingkat tweet untuk Twidere, sehingga dapat mengakses tweet Anda untuk mengirim.</string>
+  <string name="permission_description_upload_media">Aplikasi dapat meng-upload media untuk Twidere, sehingga dapat mengakses media dalam tweet Anda untuk mengirim.</string>
+  <string name="permission_description_sync_timeline">Aplikasi dapat menyelaraskan posisi membaca untuk Twidere, sehingga dapat mengakses posisi membaca Anda.</string>
+  <string name="usage_statistics_notification_summary">Bantu kami memperbaiki Twidere!</string>
+  <string name="from_name">Dari <xliff:g id="name">%1$s</xliff:g></string>
+  <string name="from_name_and_name">Dari <xliff:g id="name">%1$s</xliff:g> dan <xliff:g id="name">%2$s</xliff:g></string>
+  <string name="from_name_and_N_others">Dari <xliff:g id="name">%1$s</xliff:g> dan <xliff:g id="name">%2$d</xliff:g> lainnya</string>
+  <string name="projects_we_took_part">Proyek kami mengambil bagian</string>
   <string name="activated_accounts">Akun diaktifkan</string>
   <string name="search">Pencarian</string>
+  <string name="crop">Potong</string>
+  <string name="scale">Skala</string>
   <string name="user_type_verified">Diverifikasi</string>
   <string name="user_type_protected">Dilindungi</string>
   <string name="tweet_hashtag">Tweet #<xliff:g id="text">%1$s</xliff:g></string>
   <string name="share_status">Bagikan tweet</string>
+  <string name="pebble_notifications">Notifikasi Pebble</string>
+  <string name="pebble_notifications_summary">Kirimkan notifikasi ke Pebble Anda</string>
+  <string name="tweet_from_name">Tweet dari <xliff:g id="text">%1$s</xliff:g></string>
   <string name="permission_label_shorten_status">Mempersingkat tweet</string>
+  <string name="permission_label_upload_media">Unggah media</string>
+  <string name="permission_label_sync_timeline">Sinkronkan timeline</string>
+  <string name="thumbor_integration">Integrasi dengan Thumbor</string>
+  <string name="server_address">Alamat server</string>
+  <string name="security_key">Kunci keamanan</string>
+  <string name="hide_card_actions">Tindakan menyembunyikan kartu</string>
+  <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweet</string>
+  <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweet</string>
+  <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favorit</string>
+  <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favorit</string>
+  <string name="drafts_hint_messages">Tweet Anda yang belum terkirim akan tersimpan disini</string>
+  <string name="keyboard_shortcuts">Jalan pintas keyboard</string>
+  <string name="keyboard_shortcut_hint">Tekan tombol</string>
+  <string name="conflicts_with_name">Konflik dengan <xliff:g id="name">%s</xliff:g></string>
+  <string name="overwrite">Timpa</string>
+  <string name="navigation">Navigasi</string>
+  <string name="reset_to_default">Reset ke default</string>
+  <string name="reset_keyboard_shortcuts_confirm">Atur ulang jalan pintas keyboard ke pengaturan semula?</string>
+  <string name="open_accounts_dashboard">Membuka dasbor akun</string>
+  <string name="previous_tab">Tab sebelumnya</string>
+  <string name="next_tab">Tab berikutnya</string>
+  <string name="keyboard_shortcut_back">Kembali</string>
+  <string name="press_again_to_close">Tekan sekali lagi untuk keluar</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> tidak diatur</string>
+  <string name="swipe_down_to_refresh">Gesek ke bawah untuk menyegarkan</string>
+  <string name="app_restart_confirm">Twidere akan memulai ulang untuk menerapkan pengaturan.</string>
+  <string name="dont_restart">Jangan memulai ulang</string>
   <string name="user_list_details">Daftar rincian</string>
   <string name="invalid_list_name">Harus dimulai dengan huruf dan dapat terdiri dari huruf, angka, \"-\", atau \"_\".</string>
   <string name="delete_conversation">Hapus percakapan</string>
   <string name="delete_conversation_confirm_message">Hapus semua pesan pada percakapan ini?</string>
   <string name="name_first_summary_on">Tampilkan nama lebih dahulu</string>
+  <string name="name_first_summary_off">Tampilkan @screenname dahulu</string>
   <string name="comment_hint">Komentar...</string>
   <string name="comment">Komentar</string>
   <string name="enable_retweets">Aktifkan retweets</string>
   <string name="disable_retweets">Nonaktifkan retweets</string>
   <string name="play">Mainkan</string>
   <string name="pause">Jeda</string>
+  <string name="jump_to_top">Lompat ke atas</string>
+  <string name="timeline_streaming_running">Timeline streaming yang berjalan</string>
+  <string name="streaming">Streaming</string>
+  <string name="enable_streaming">Aktifkan Streaming</string>
+  <string name="dark_theme">Tema gelap</string>
+  <string name="wizard_hint_title_location_requirement">Ijin lokasi</string>
+  <string name="wizard_hint_summary_location_requirement">Twidere memerlukan izin lokasi ketika Anda mengirimkan tweet yang berisi lokasi.</string>
+  <string name="scrapyard">Scrapyard</string>
+  <string name="crop_image">Potong gambar</string>
+  <string name="usage_label_sent">Dikirim</string>
+  <string name="usage_label_received">Diterima</string>
+  <string name="this_month">Bulan ini</string>
+  <string name="media_preload">Media preload</string>
+  <string name="on_mobile_network">Pada jaringan selular</string>
+  <string name="set_consumer_key_secret_message">Twidere mencapai batas token, Anda harus membuat sebuah aplikasi di https://apps.twitter.com/ kemudian menempelkan consumer key dan consumer secret dibawah ini.\nJika Anda tetap menggunakan kunci bawaan, Anda mungkin tidak dapat masuk.</string>
+  <string name="send_at">Kirim pada</string>
+  <string name="scheduled_statuses">Tweet terjadwal</string>
+  <string name="report_usage_statistics_now">Laporkan statistik penggunaan sekarang</string>
+  <string name="cache_size_limit">Batas ukuran cache</string>
+  <string name="bug_reports">Laporan kesalahan</string>
+  <string name="invalid_consumer_key">Consumer key tidak valid</string>
+  <string name="invalid_consumer_secret">Consumer secret tidak valid</string>
 </resources>

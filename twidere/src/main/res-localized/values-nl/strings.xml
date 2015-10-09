@@ -245,6 +245,8 @@
   <string name="Nitems_selected_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> items geselecteerd</string>
   <string name="custom_host_mapping">Aangepaste host toewijzingen</string>
   <string name="custom_host_mapping_summary">Host toewijzingen zoals /etc/hosts, maar heeft geen aanvullende rechten nodig.</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Adres (Kan een ander host adres zijn)</string>
   <string name="add_host_mapping">Voeg host toewijzing toe</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Gebruik TCP Protocol om DNS aanvragen te doen. Dit kan DNS Cache Poisoning vermijden.</string>
@@ -253,11 +255,21 @@
   <string name="activities_about_me">Activiteiten over mij</string>
   <string name="activities_by_friends">Activiteiten van vrienden</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> heeft jouw tweet gefavoriet.</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> en <xliff:g id="other">%2$s</xliff:g> hebben je tweet toegevoegd aan hun favorieten.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> heeft je retweet toegevoegd aan hun favorieten.</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> en <xliff:g id="other">%2$s</xliff:g> hebben je retweet toegevoegd aan hun favorieten.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> volgt jouw.</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> en <xliff:g id="other">%2$s</xliff:g> volgen je.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> heeft jouw tweet ge-retweet.</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> en <xliff:g id="other">%2$s</xliff:g> hebben je tweet geretweet.</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> heeft je retweet geretweet.</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> en <xliff:g id="other">%2$s</xliff:g> hebben je retweet geretweet.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> heeft jouw toegevoegt aan een lijst.</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> heeft je toegevoegd aan de lijst <xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> en <xliff:g id="other">%2$s</xliff:g> hebben je toegevoegd aan hun lijsten.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> heeft <xliff:g id="target">%2$s</xliff:g>\'s tweet gefavoriet.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> volgt <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> volgt nu <xliff:g id="target">%2$s</xliff:g> en <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> heeft <xliff:g id="target">%2$s</xliff:g>\'s tweet ge-retweet.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> heeft <xliff:g id="target">%2$s</xliff:g> toegevoegt aan zijn lijst.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> heeft lijst <xliff:g id="target">%2$s</xliff:g> aangemaakt.</string>
@@ -376,6 +388,7 @@
   <string name="search_name_deleted">Zoekopdracht \"<xliff:g id="name">%s</xliff:g>\" verwijderd.</string>
   <string name="import_from">Importeren uit&#8230;</string>
   <string name="link_to_quoted_status">Link naar geciteerde tweet</string>
+  <string name="quote_original_status">Quote originele tweet</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> gevolgt.</string>
   <string name="sent_follow_request_to_user">Verstuur volg verzoek naar <xliff:g id="user">%s</xliff:g>.</string>
   <string name="unfollowed_user"><xliff:g id="user">%s</xliff:g> ontvolgt.</string>
@@ -578,6 +591,7 @@
   <string name="from_gallery">Uit galerij</string>
   <string name="from_camera">Uit camera</string>
   <string name="excluded">Exclusief</string>
+  <string name="edit_media">Bewerk media</string>
   <string name="media">Media</string>
   <string name="color">Kleur</string>
   <string name="profile">Profiel</string>

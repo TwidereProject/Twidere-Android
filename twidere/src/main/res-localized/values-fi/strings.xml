@@ -11,6 +11,7 @@
   <string name="remove_location">Poista sijainti</string>
   <string name="remove_image">Poista kuva</string>
   <string name="remove_photo">Poista valokuva</string>
+  <string name="status_hint">Mitä tapahtuu?</string>
   <string name="sign_up">Rekisteröidy</string>
   <string name="sign_in">Kirjaudu</string>
   <string name="rest_base_url">REST Base URL</string>
@@ -41,7 +42,9 @@
   <string name="select_account">Valitse tili</string>
   <string name="username">Käyttäjätunnus</string>
   <string name="password">Salasana</string>
+  <string name="label_data_provider">Twideren tietokannan tarjoaja</string>
   <string name="label_refresh_service">Päivitä palvelu</string>
+  <string name="label_streaming_service">Streamaus palvelu</string>
   <string name="label_background_operation_service">Taustatoimintojen palvelu</string>
   <string name="open_in_browser">Avaa selaimessa</string>
   <string name="tap_to_load_more">Lataa lisää napauttamalla</string>
@@ -96,6 +99,8 @@
   <string name="users_favorited_this">Käyttäjä lisäsi tämän suosikkeihinsa</string>
   <string name="reply_to">Vastaa käyttäjälle <xliff:g id="user_name">%s</xliff:g></string>
   <string name="quote_user">Lainaa käyttäjää <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, via <xliff:g id="source">%2$s</xliff:g></string>
+  <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="filters">Suodattimet</string>
   <string name="users">Käyttäjät</string>
   <string name="user">Käyttäjä</string>
@@ -238,6 +243,7 @@
   <string name="status_shortener">Twiitinlyhentäjä</string>
   <string name="status_shortener_default">Älä lyhennä (keskeytä lähetys)</string>
   <string name="error_message_status_too_long">Twiitti on liian pitkä.</string>
+  <string name="error_message_message_too_long">Viesti liian pitkä.</string>
   <string name="error_message_no_content">Ei sisältöä</string>
   <string name="error_message_tweet_shorten_failed">Twiitin lyhennys epäonnistui.</string>
   <string name="error_message_tweet_shortener_not_found">Twiitinlyhentäjää ei ole. Se on mahdollisesti poistettu.</string>
@@ -253,6 +259,8 @@
   <string name="Nitems_selected_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> kohtaa valittu</string>
   <string name="custom_host_mapping">Mukautettu Host Mapping -määrittely</string>
   <string name="custom_host_mapping_summary">Verkkonimet määritellään kuten /etc/hosts -tiedostossa, mutta ylimääräisiä oikeuksia ei tarvita.</string>
+  <string name="host_mapping_host">Host</string>
+  <string name="host_mapping_address">Osoite (voi olla toinen host-osoite)</string>
   <string name="add_host_mapping">Lisää host mapping</string>
   <string name="tcp_dns_query">TCP DNS -kysely</string>
   <string name="tcp_dns_query_summary">Käytä TCP-yhteyskäytäntöä DNS-pyyntöihin, jotta vältyttäisiin DNS Cache Poisoning -verkkohuijauksilta.</string>
@@ -261,14 +269,26 @@
   <string name="activities_about_me">Aktiviteettini</string>
   <string name="activities_by_friends">Ystävieni aktiviteetit</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> lisäsi twiittisi suosikkeihinsa.</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ja <xliff:g id="other">%2$s</xliff:g> lisäsivät twiittisi suosikkeihinsa.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> lisäsi twiittisi suosikkeihinsa.</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ja <xliff:g id="other">%2$s</xliff:g> lisäsivät uudelleentwiittauksesi suosikkeihinsa.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> seuraa sinua.</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> ja <xliff:g id="other">%2$s</xliff:g> seuraavat sinua.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> uudelleentwiittasi viestisi.</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ja <xliff:g id="other">%2$s</xliff:g> uudelleentwiittasivat twiittisi.</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> uudelleentwiittasi uudelleentwiittauksesi.</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ja <xliff:g id="other">%2$s</xliff:g> uudelleentwiittasivat uudelleentwiittauksesi.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> lisäsi sinut listaansa.</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> lisäsi sinut listalle "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> ja <xliff:g id="other">%2$s</xliff:g> lisäsivät sinut heidän listoilleen.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> lisäsi suosikkeihinsa twiitin käyttäjältä <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> lisäsi käyttäjien <xliff:g id="target">%2$s</xliff:g> ja <xliff:g id="other">%3$s</xliff:g> twiitit suosikkeihinsa.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> seuraa kohdetta <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> seuraa käyttäjiä <xliff:g id="target">%2$s</xliff:g> ja <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> uudelleentwiittasi twiitin käyttäjältä <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> lisäsi käyttäjän <xliff:g id="target">%2$s</xliff:g> listaansa.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> loi listan <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> loi listat <xliff:g id="target">%2$s</xliff:g> ja <xliff:g id="other">%1$s</xliff:g>.</string>
   <string name="status_not_updated">Twiittiä ei lähetetty.</string>
   <string name="status_not_updated_summary">Twiittiä ei lähetetty, vaan se tallennettiin luonnoksiin.</string>
   <string name="incoming_friendships">Käsiteltävät seurauspyynnöt</string>
@@ -325,6 +345,7 @@
   <string name="hashtag">Hashtag</string>
   <string name="links">Linkit</string>
   <string name="edit_profile">Muokkaa profiilia</string>
+  <string name="edit_details">Muokkaa lisätietoja</string>
   <string name="display_sensitive_contents">Näytä arkaluontoinen materiaali</string>
   <string name="display_sensitive_contents_summary">Näytä arkaluontoinen sisältö ilman aikajanan varoituksia</string>
   <string name="sensitive_content_warning">Tämä twiitti saattaa sisältää arkaluontoista sisältöä. Haluatko jatkaa?</string>
@@ -359,6 +380,7 @@
   <string name="preview_images">Esikatsele kuvia</string>
   <string name="preload_wifi_only">Lataa etukäteen vain Wi-Fi-yhteydellä</string>
   <string name="sign_in_method_introduction_title">Kuinka se toimii?</string>
+  <string name="sign_in_method_introduction">Suurin osa Twitter sovelluksista avaa sivuston antaakseen sovellukselle luvan käyttää Twitter-tiliäsi, tämä voi tuntua hankalalta, jos sovellus käyttää sille räätälöityä ohjelmointirajapintaa, tai jos yhteys on huono. Twidere simuloi tavallista selainta helpottaakseen käyttäjää kirjautumaan Twitter-tililleen. Salasanaasi ei tulla koskaan tallentamaan eikä sitä tulla vuotamaan.</string>
   <string name="quote_protected_status_notice">Ei ole suositeltavaa lainata suojattua twiittiä.</string>
   <string name="edit_draft">Muokkaa luonnosta</string>
   <string name="profile_image">Profiilikuva</string>
@@ -385,6 +407,7 @@
   <string name="search_name_deleted">Haku \"<xliff:g id="name">%s</xliff:g>\" poistettu.</string>
   <string name="import_from">Tuo kohteesta&#8230;</string>
   <string name="link_to_quoted_status">Linkki lainattuun twiittiin</string>
+  <string name="quote_original_status">Lainaa alkuperäistä twiittiä</string>
   <string name="followed_user">Seurataan käyttäjää <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">Seurauspyyntö lähetetty käyttäjälle <xliff:g id="user">%s</xliff:g>.</string>
   <string name="unfollowed_user">Lopetettiin käyttäjän <xliff:g id="user">%s</xliff:g> seuraus.</string>
@@ -446,6 +469,9 @@
   <string name="users_statuses">Käyttäjän twiitit</string>
   <string name="card_animation">Korttianimaatio</string>
   <string name="name_first">Näytä ensin nimi</string>
+  <string name="next_step">Seuraava</string>
+  <string name="previous_item">Edellinen</string>
+  <string name="next_item">Seuraava</string>
   <string name="settings_wizard">Ohjatut asetukset</string>
   <string name="wizard_page_welcome_title">Tervetuloa</string>
   <string name="wizard_page_welcome_text">Kiitos, että valitsit Twideren\nHaluatko määrittää asetukset heti?</string>
@@ -457,6 +483,7 @@
   <string name="wizard_page_tabs_unchanged_message">Voit lisätä välilehtiä kohdasta \"Asetukset\" ja \"Välilehdet\"</string>
   <string name="wizard_page_cards_text">Määritä kortit.</string>
   <string name="wizard_page_hints_text">Tässä on joitakin hyödyllisiä vinkkejä.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere otti osaa erääseen tutkimukseen, joka tarvitsee jonkin verran käyttötietoja.</string>
   <string name="wizard_page_finished_title">Valmis</string>
   <string name="wizard_page_finished_text">Twidere on nyt valmis käyttöön.</string>
   <string name="invalid_tab">Virheellinen välilehti</string>
@@ -506,6 +533,7 @@
   <string name="theme_background_solid">Pelkkä valkoinen/musta</string>
   <string name="theme_background_transparent">Läpinäkyvä</string>
   <string name="theme_dark_actionbar">Tumma ActionBar</string>
+  <string name="wizard_hint_compose_select_account">Kosketa käyttäjäkuvaa valitaksesi tilin, jolla twiitti lähetetään.</string>
   <string name="wizard_hint_quote_format">Määritä haluamasi lainausmuoto kohdasta \"Asetukset\" - \"Sisältö &amp; säilytys\"</string>
   <string name="wizard_hint_filters">Suodattimilla voit piilottaa aikajanasta ja ilmoituksista twiitit, joita et halua nähdä.</string>
   <string name="view_replies">Näytä vastaukset</string>
@@ -517,6 +545,8 @@
   <string name="N_new_mentions_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> uutta mainintaa</string>
   <string name="N_new_messages_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> uusi keskustelu</string>
   <string name="N_new_messages_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> uutta keskustelua</string>
+  <string name="status_share_subject_format_with_time">Twiitti käyttäjältä <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), klo <xliff:g id="time">%3$s</xliff:g></string>
+  <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
   <string name="rate_limit">Määrärajoitus</string>
   <string name="wizard_hint_rate_limit">Jos törmäsit määrärajoitukseen liittyvään ongelmaan, älä syytä meitä. Rajoitukset kuuluvat Twitterin toimintatapoihin.</string>
   <string name="preparing_database">Valmistellaan tietokantaa</string>
@@ -614,6 +644,51 @@
   <string name="state_blocking">Estetään</string>
   <string name="load_more">Lataa lisää</string>
   <string name="photo">Valokuva</string>
+  <string name="camera">Kamera</string>
   <string name="gallery">Galleria</string>
+  <string name="source_camera">Kamera</string>
+  <string name="source_gallery">Galleria</string>
+  <string name="source_clipboard">Leikepöytä</string>
   <string name="remove">Poista</string>
+  <string name="load_media">Lataa mediaa</string>
+  <string name="profile_text_color">Tekstin väri</string>
+  <string name="profile_background_color">Taustan väri</string>
+  <string name="profile_link_color_main_color">Linkkitekstin väri (pääväri)</string>
+  <string name="retweet_quote_confirm_title">Haluatko uudelleentwiitata seuraajillesi?</string>
+  <string name="font">Fontti</string>
+  <string name="size">Koko</string>
+  <string name="just_now">Nyt</string>
+  <string name="requested">Pyydetty</string>
+  <string name="round">Pyöreä</string>
+  <string name="square">Neliö</string>
+  <string name="profile_image_style">Profiilin kuvan tyyli</string>
+  <string name="media_preview_style">Median esikatselutyyli</string>
+  <string name="draft_saved">Luonnos tallennettu</string>
+  <string name="open_twitter_links">Avaa Twitter linkit</string>
+  <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">toinen</string>
+  <string name="N_others_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> muuta</string>
+  <string name="type_name_to_search">Kirjoita nimi hakeaksesi</string>
+  <string name="no_user_found">Käyttäjää ei löytynyt</string>
+  <string name="members">Jäsenet</string>
+  <string name="subscribers">Tilaaja</string>
+  <string name="read_from_bottom">Lue alhaalta ylös</string>
+  <string name="read_from_bottom_summary_off">Hyppää viimeisimpään twiittiin sivun päivittämisen jälkeen</string>
+  <string name="read_from_bottom_summary_on">Pidä kohta, johon jäit, sivun päivittämisen jälkeen</string>
+  <string name="register">Rekistöröidy</string>
+  <string name="follows">Seuraajia</string>
+  <string name="belongs_to">Kuuluu käyttäjälle</string>
+  <string name="overwrite">Korvaa</string>
+  <string name="navigation">Navigointi</string>
+  <string name="reset_to_default">Resetoi oletuksiin</string>
+  <string name="reset_keyboard_shortcuts_confirm">Resetoidaanko näppäimistöoikotiet oletuksiin?</string>
+  <string name="open_accounts_dashboard">Avaa tilien näkymä</string>
+  <string name="previous_tab">Edellinen välilehti</string>
+  <string name="next_tab">Seuraava välilehti</string>
+  <string name="keyboard_shortcut_back">Takaisin</string>
+  <string name="press_again_to_close">Paina uudelleen sulkeaksesi</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g> ei ole asetettu</string>
+  <string name="swipe_down_to_refresh">Liiu\'uta alas päivittääksesi</string>
+  <string name="app_restart_confirm">Twidere käynnistyy uudelleen käyttääkseen asetuksia.</string>
+  <string name="dont_restart">Älä käynnistä uudelleen</string>
+  <string name="user_list_details">Listaa lisätiedot</string>
 </resources>

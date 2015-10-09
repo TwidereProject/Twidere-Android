@@ -19,7 +19,7 @@
   <string name="signing_oauth_base_url">Signing OAuth Base URL</string>
   <string name="signing_rest_base_url">Signing REST Base URL</string>
   <string name="api_url_format">API URLの形式</string>
-  <string name="same_oauth_signing_url">OAuthサインにもこのURLを使う</string>
+  <string name="same_oauth_signing_url">OAuthサインにもこのURLを使う。</string>
   <string name="auth_type">認証タイプ</string>
   <string name="oauth">OAuth</string>
   <string name="xauth">xAuth</string>
@@ -87,14 +87,14 @@
   <string name="display_profile_image">プロフィール画像を表示</string>
   <string name="image_load_summary">無効にするとリストのスクロール速度が速くなり、データ通信量を抑えられます。</string>
   <string name="in_reply_to_name"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
-  <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> さんがリツイートしました</string>
+  <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> さんがリツイート</string>
   <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> さんと他のユーザーがリツイート</string>
   <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> と他 <xliff:g id="retweet_count">%2$d</xliff:g> 人がリツイート</string>
-  <string name="N_retweeted_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> 回のリツイート</string>
-  <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> 回のリツイート</string>
-  <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g>によってリツイートされました</string>
-  <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> さんと <xliff:g id="retweet_count">%2$d</xliff:g>人によってリツイートしました</string>
-  <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> 人によってリツイートされました</string>
+  <string name="N_retweeted_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g>リツイート</string>
+  <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> リツイート</string>
+  <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g>さんによってリツイート</string>
+  <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> さんと <xliff:g id="retweet_count">%2$d</xliff:g>人がリツイート</string>
+  <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> 人によってリツイート</string>
   <string name="users_retweeted_this">リツイートしたユーザーを表示</string>
   <string name="users_favorited_this">お気に入りに登録したユーザーを表示</string>
   <string name="reply_to"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
@@ -119,11 +119,11 @@
   <string name="load_item_limit">ツイートの読み込み上限</string>
   <string name="load_item_limit_summary">一度に読み込むツイートの数を制限します。</string>
   <string name="load_more_automatically">ツイートの自動読み込み</string>
-  <string name="load_more_automatically_summary">コンテンツ（写真やマップ、ツイート）を自動で読み込みます。</string>
+  <string name="load_more_automatically_summary">コンテンツ（写真、マップ、ツイート）を自動で読み込みます。</string>
   <string name="quote">引用</string>
   <string name="add_rule">ルールを追加</string>
   <string name="text_size">フォントサイズ</string>
-  <string name="text_size_summary">ツイートのテキストサイズ</string>
+  <string name="text_size_summary">ツイートの文字数</string>
   <string name="cannot_get_location">位置情報が取得できません。</string>
   <string name="drafts">下書き</string>
   <string name="description">自己紹介</string>
@@ -364,7 +364,7 @@
   <string name="permission_description_accounts">アカウント情報の読み込み</string>
   <string name="permission_description_preferences">設定の読み込み</string>
   <string name="permissions_request">権限の要求</string>
-  <string name="permissions_request_message">アプリは以下の権限を要求しています</string>
+  <string name="permissions_request_message">アプリは以下の権限を要求しています。</string>
   <string name="accept_permission_request">許可</string>
   <string name="no_thanks">拒否</string>
   <string name="revoke_permissions">許可を取り消す</string>
@@ -380,6 +380,7 @@
   <string name="preview_images">プレビュー画像</string>
   <string name="preload_wifi_only">Wi-Fi接続時のみ先読み</string>
   <string name="sign_in_method_introduction_title">どんなふうに動作するの?</string>
+  <string name="sign_in_method_introduction">ほとんどのツイッタークライアントは認証するためにウェブページを開きます。これはカスタムAPIを使っている時や回線速度が遅い時に不便です。しかしTwidereはブラウザでのログインをシミュレートするのでウェブページを開く必要がありません。パスワードが盗まれたり漏れたりすることはないのでご安心ください。</string>
   <string name="quote_protected_status_notice">非公開ツイートを引用するのはおすすめできません。</string>
   <string name="edit_draft">下書きを編集</string>
   <string name="profile_image">プロフィール画像</string>
@@ -494,7 +495,7 @@
   <string name="block_user"><xliff:g id="name">%s</xliff:g>をブロック</string>
   <string name="block_user_confirm_message"><xliff:g id="name">%s</xliff:g>さんをブロックしますか? このユーザーがあなたをフォローしたり@ツイートやDMを送信したり出来ないようにします。</string>
   <string name="unfollow_user"><xliff:g id="name">%s</xliff:g>のフォローを解除</string>
-  <string name="unfollow_user_confirm_message"><xliff:g id="name">%s</xliff:g>さんのフォローを解除しますか? このユーザーのツイートをTLで表示しないようにします。</string>
+  <string name="unfollow_user_confirm_message"><xliff:g id="name">%s</xliff:g>さんのフォローを解除しますか? このユーザーのツイートをタイムラインで表示しないようにします。</string>
   <string name="delete_user_list">リスト<xliff:g id="name">%s</xliff:g>を削除</string>
   <string name="delete_user_list_confirm_message">リスト<xliff:g id="name">%s</xliff:g>を削除しますか? 復元はできません。</string>
   <string name="unsubscribe_from_user_list">リスト<xliff:g id="name">%s</xliff:g>の保存を解除</string>
@@ -684,6 +685,7 @@
   <string name="getting_location">位置を取得しています。</string>
   <string name="save_to_gallery">ギャラリーに保存</string>
   <string name="usage_statistics">匿名利用状況データ</string>
+  <string name="research_hot_mobile">データ駆動型モバイルネットワーク研究</string>
   <string name="unknown_location">場所不明</string>
   <string name="ellipsis">&#8230;</string>
   <string name="import_export_settings">設定の保存/読み込み</string>
@@ -765,4 +767,9 @@
   <string name="media_preload">画像先読み</string>
   <string name="on_mobile_network">モバイルネットワークでの通信</string>
   <string name="set_consumer_key_secret_message">Twidere はトークン規制が迫っているので、 https://apps.twitter.com/ でアプリを作成し、コンシューマーキーとシークレットを下に貼り付けて規制を回避してください。\nもしこのまま Twidere のキーを使い続けると、サインインできないかもしれません。</string>
+  <string name="send_at">送信</string>
+  <string name="scheduled_statuses">定期ツイート</string>
+  <string name="report_usage_statistics_now">現在の使用状況を報告する。</string>
+  <string name="cache_size_limit">キャッシュサイズ制限</string>
+  <string name="bug_reports">バグレポート</string>
 </resources>

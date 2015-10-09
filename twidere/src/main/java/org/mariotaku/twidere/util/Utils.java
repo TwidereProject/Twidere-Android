@@ -3936,6 +3936,14 @@ public final class Utils implements Constants {
         return UtilsL.getErrorNo(t);
     }
 
+    public static boolean isOutOfMemory(Throwable ex) {
+        if (ex == null) return false;
+        final Throwable cause = ex.getCause();
+        if (cause == null || cause == ex) return false;
+        if (cause instanceof OutOfMemoryError) return true;
+        return isOutOfMemory(cause);
+    }
+
     static class UtilsL {
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)

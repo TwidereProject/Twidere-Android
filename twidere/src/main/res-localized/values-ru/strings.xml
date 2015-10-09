@@ -80,7 +80,7 @@
   <string name="database_item_limit">Ограничение размера базы данных</string>
   <string name="database_item_limit_summary">Уменьшить лимит записей для каждого аккаунта, чтобы сохранить больше места и увеличить скорость загрузки.</string>
   <string name="clear_cache">Очистить кэш</string>
-  <string name="clear_cache_summary">Очистить кэш изображений профиля.</string>
+  <string name="clear_cache_summary">Очистит хранящийся кэш изображений профиля.</string>
   <string name="clear_databases">Очистить базы данных</string>
   <string name="clear_databases_summary">Очистить все твиты, профили, сообщения. Данные вашего аккаунта не будут потеряны.</string>
   <string name="look_and_feel">Внешний вид</string>
@@ -380,6 +380,7 @@
   <string name="preview_images">Предпросмотр изображений</string>
   <string name="preload_wifi_only">Предзагружать только по Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Как это работает?</string>
+  <string name="sign_in_method_introduction">Большинство клиентов открывает веб-страницу чтобы войти в Твиттер, это может быть неудобно при использовании стороннего API, или при медленном подключении сети. Twidere имитирует нормальный браузер, чтобы помочь войти в Твиттер. Не волнуйтесь, ваш пароль не сохраниться и не утечет.</string>
   <string name="quote_protected_status_notice">Не рекомендуется цитировать защищенный твит.</string>
   <string name="edit_draft">Редактировать черновик</string>
   <string name="profile_image">Изображение пользователя</string>
@@ -593,7 +594,7 @@
   <string name="card_highlight_option_line">Линия</string>
   <string name="timeline_sync_service">Сервис синхронизации ленты</string>
   <string name="image_preview_scale_type">Тип превью изображений</string>
-  <string name="image_preview_scale_type_crop">Подогнать</string>
+  <string name="image_preview_scale_type_crop">Адаптировать</string>
   <string name="image_preview_scale_type_fit_center">Растянуть по центру</string>
   <string name="quote_protected_status_warning_message">Этот твит закрыт.\n\nЗакрытые пользователи обычно не хотят, чтобы их твиты становились общедоступны.</string>
   <string name="send_anyway">Все равно послать</string>
@@ -684,6 +685,7 @@
   <string name="getting_location">Определение местонахождения</string>
   <string name="save_to_gallery">Сохранить в галерею</string>
   <string name="usage_statistics">Статистика использования</string>
+  <string name="research_hot_mobile">Исследования мобильной сети управляемых данных</string>
   <string name="unknown_location">Неизвестное местоположение</string>
   <string name="ellipsis">...</string>
   <string name="import_export_settings">Импорт/Экспорт настроек</string>
@@ -757,7 +759,7 @@
   <string name="dark_theme">Темная тема</string>
   <string name="wizard_hint_title_location_requirement">Запрос локации</string>
   <string name="wizard_hint_summary_location_requirement">Twidere нужно разрешение местоположения, когда вы отправляете твит, содержащий локацию.</string>
-  <string name="scrapyard">Прочая настройка вида</string>
+  <string name="scrapyard">Прочие настройки вида</string>
   <string name="crop_image">Обрезать изображение</string>
   <string name="usage_label_sent">Отправлено</string>
   <string name="usage_label_received">Получено</string>
@@ -765,4 +767,9 @@
   <string name="media_preload">Предзагрузка медиа</string>
   <string name="on_mobile_network">По мобильной сети</string>
   <string name="set_consumer_key_secret_message">Twidere достигла лимит токенов, вы должны создать токен на https://apps.twitter.com/ и вставить персональный ключ в секретную секцию.\nЕсли вы продолжите использовать стандартный ключ, то вы не сможете войти.</string>
+  <string name="send_at">Отправить в</string>
+  <string name="scheduled_statuses">Запланированные твиты</string>
+  <string name="report_usage_statistics_now">Сообщить статистику использования</string>
+  <string name="cache_size_limit">Ограничение размера кэша</string>
+  <string name="bug_reports">Сообщения об ошибках</string>
 </resources>

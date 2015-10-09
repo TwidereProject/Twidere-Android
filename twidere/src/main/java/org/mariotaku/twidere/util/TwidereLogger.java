@@ -25,7 +25,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.acra.ACRA;
-import org.acra.ErrorReporter;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 
@@ -41,7 +40,6 @@ public class TwidereLogger extends AbsLogger implements Constants {
 
     @Override
     protected void errorImpl(@Nullable String message, @Nullable Throwable throwable) {
-        final ErrorReporter errorReporter = ACRA.getErrorReporter();
         if (throwable == null && message == null) {
             throw new NullPointerException("Message and Throwable can't be both null");
         }
@@ -69,8 +67,20 @@ public class TwidereLogger extends AbsLogger implements Constants {
     }
 
     @Override
-    protected void initImpl(Application application) {
+    protected void initImpl(final Application application) {
+        // ACRA sets it self as DefaultUncaughtExceptionHandler, we hijack it to suppress some errors
         ACRA.init(application);
+        // handler should be ACRA's ErrorReporter now
+        final Thread.UncaughtExceptionHandler handler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex) {
+                // We can't fix OOM, so just don't report it and try to save VM
+                if (!Utils.isOutOfMemory(ex)) {
+                    handler.uncaughtException(thread, ex);
+                }
+            }
+        });
     }
 
 }

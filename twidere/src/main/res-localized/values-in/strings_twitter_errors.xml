@@ -9,6 +9,8 @@
   <string name="error_twitter_130">Twitter sedang kelebihan kapasitas.</string>
   <string name="error_twitter_131">Server twitter sedang \"down\", coba lagi nanti.</string>
   <string name="error_twitter_135">Periksa pengaturan jam pada system anda.</string>
+  <string name="error_twitter_136">Anda diblokir oleh pengguna ini.</string>
+  <string name="error_twitter_139">Anda sudah memfavoritkan tweet ini.</string>
   <string name="error_twitter_161">Anda sudah meminta untuk mengikuti pengguna ini.</string>
   <string name="error_twitter_162">Anda diblokir oleh pengguna ini.</string>
   <string name="error_twitter_172">Anda sudah pernah menyimpan pencarian ini.</string>

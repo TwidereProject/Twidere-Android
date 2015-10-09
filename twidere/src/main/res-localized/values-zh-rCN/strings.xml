@@ -91,9 +91,9 @@
   <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g>和另一人转推了</string>
   <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g>和其他<xliff:g id="retweet_count">%2$d</xliff:g>人转推了</string>
   <string name="N_retweeted_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g>转推</string>
-  <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g>转推</string>
+  <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g>条转推</string>
   <string name="retweeted_by_name">由<xliff:g id="user_name">%s</xliff:g>转推</string>
-  <string name="retweeted_by_name_with_count">由<xliff:g id="user_name">%1$s</xliff:g>和其他<xliff:g id="retweet_count">%2$d</xliff:g>人转推</string>
+  <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g>和其他<xliff:g id="retweet_count">%2$d</xliff:g>人已转推</string>
   <string name="retweeted_by_count">由<xliff:g id="retweet_count">%d</xliff:g>人转推</string>
   <string name="users_retweeted_this">转推了这条推文的用户</string>
   <string name="users_favorited_this">收藏这条推文的用户</string>
@@ -278,6 +278,10 @@
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>转了你的推文</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g>转了你的转推</string>
   <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>转了你的转推</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g>转推了一条提及你的推文</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>转推了一条提及你的推文</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g>收藏了一条提及你的推文</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>收藏了一条提及你的推文</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> 把你添加到了列表</string>
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g>把你添加到了列表<xliff:g id="list">%2$s</xliff:g>中</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>把你添加到了他们的列表</string>
@@ -286,7 +290,9 @@
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g>关注了<xliff:g id="target">%2$s</xliff:g></string>
   <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g>正在关注<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%3$s</xliff:g></string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g>转推了<xliff:g id="target">%2$s</xliff:g>的推文</string>
+  <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g>转推了<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%3$s</xliff:g>的推文</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g>把<xliff:g id="target">%2$s</xliff:g>加入了列表</string>
+  <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g>添加了<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%1$s</xliff:g>到列表</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> 创建了列表 <xliff:g id="target">%2$s</xliff:g></string>
   <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g>创建了列表<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%1$s</xliff:g></string>
   <string name="status_not_updated">推文未发送</string>
@@ -685,6 +691,7 @@
   <string name="getting_location">获取位置</string>
   <string name="save_to_gallery">保存到相册</string>
   <string name="usage_statistics">使用信息统计</string>
+  <string name="research_hot_mobile">Data-Driven Mobile Network Research</string>
   <string name="unknown_location">未知位置</string>
   <string name="ellipsis">&#8230;</string>
   <string name="import_export_settings">导入/导出设定</string>
@@ -767,7 +774,10 @@
   <string name="on_mobile_network">使用移动网络</string>
   <string name="set_consumer_key_secret_message">Twidere 的令牌将要用完了。你需要在 https://apps.twitter.com/ 创建一个应用并把 consumer key and secret 粘贴在下面。\n如果你继续使用默认的key，可能会没法登录。</string>
   <string name="send_at">发送于</string>
+  <string name="scheduled_statuses">被排期推文</string>
   <string name="report_usage_statistics_now">立即汇报使用情况</string>
   <string name="cache_size_limit">缓存空间限制</string>
   <string name="bug_reports">错误报告</string>
+  <string name="invalid_consumer_key">无效的Consumer key</string>
+  <string name="invalid_consumer_secret">无效的Consumer secret</string>
 </resources>

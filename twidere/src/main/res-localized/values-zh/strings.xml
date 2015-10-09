@@ -44,6 +44,7 @@
   <string name="password">密碼</string>
   <string name="label_data_provider">Twidere 資料庫存儲</string>
   <string name="label_refresh_service">刷新服務</string>
+  <string name="label_streaming_service">實時流服務</string>
   <string name="label_background_operation_service">後台操作服務</string>
   <string name="open_in_browser">在瀏覽器中打開</string>
   <string name="tap_to_load_more">輕按以加載更多</string>
@@ -92,7 +93,7 @@
   <string name="N_retweeted_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g>轉推</string>
   <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g>轉推</string>
   <string name="retweeted_by_name">由<xliff:g id="user_name">%s</xliff:g>轉推</string>
-  <string name="retweeted_by_name_with_count">由<xliff:g id="user_name">%1$s</xliff:g>和其他<xliff:g id="retweet_count">%2$d</xliff:g>人轉推</string>
+  <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g>和其他<xliff:g id="retweet_count">%2$d</xliff:g>人已轉推</string>
   <string name="retweeted_by_count">由<xliff:g id="retweet_count">%d</xliff:g>人轉推</string>
   <string name="users_retweeted_this">轉推了這條推文的用戶</string>
   <string name="users_favorited_this">收藏這條推文的用戶</string>
@@ -242,7 +243,7 @@
   <string name="status_shortener">推文縮短服務</string>
   <string name="status_shortener_default">無（不發送過長推文）</string>
   <string name="error_message_status_too_long">推文太長</string>
-  <string name="error_message_message_too_long">訊息過長</string>
+  <string name="error_message_message_too_long">資訊太長</string>
   <string name="error_message_no_content">沒有內容</string>
   <string name="error_message_tweet_shorten_failed">推文縮短失敗</string>
   <string name="error_message_tweet_shortener_not_found">未找到推文縮短擴展，它可能已經被移除</string>
@@ -277,6 +278,10 @@
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>轉了你的推文</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g>轉了你的轉推</string>
   <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>轉了你的轉推</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g>轉推了一條提及你的推文</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>轉推了一條提及你的推文</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g>收藏了一條提及你的推文</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>收藏了一條提及你的推文</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> 把您新增到了列表</string>
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g>把你添加到了列表<xliff:g id="list">%2$s</xliff:g>中</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>把你添加到了他們的列表</string>
@@ -285,7 +290,9 @@
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g>關注了<xliff:g id="target">%2$s</xliff:g></string>
   <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g>正在關注<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%3$s</xliff:g></string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g>轉推了<xliff:g id="target">%2$s</xliff:g>的推文</string>
+  <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g>轉推了<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%3$s</xliff:g>的推文</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g>把<xliff:g id="target">%2$s</xliff:g>加入了列表</string>
+  <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g>添加了<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%1$s</xliff:g>到列表</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> 建立了列表 <xliff:g id="target">%2$s</xliff:g></string>
   <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g>創建了列表<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%1$s</xliff:g></string>
   <string name="status_not_updated">推文未發送</string>
@@ -344,7 +351,7 @@
   <string name="hashtag">話題標籤</string>
   <string name="links">連結</string>
   <string name="edit_profile">編輯個人資料</string>
-  <string name="edit_details">編輯細節</string>
+  <string name="edit_details">編輯詳情</string>
   <string name="display_sensitive_contents">顯示敏感內容</string>
   <string name="display_sensitive_contents_summary">顯示色情等敏感內容而不發出提示</string>
   <string name="sensitive_content_warning">這條推文可能有敏感內容，繼續？</string>
@@ -379,6 +386,7 @@
   <string name="preview_images">推文預覽圖片</string>
   <string name="preload_wifi_only">僅使用 Wi-Fi 預加載</string>
   <string name="sign_in_method_introduction_title">輸入密碼登錄是怎樣工作的？</string>
+  <string name="sign_in_method_introduction">很多客戶端打開網頁登錄到Twitter。這在使用自定義API或是網速緩慢時可能會有所不便。Twidere模擬普通的瀏覽器幫助登錄到Twitter。毋須擔心，你的密碼永遠不會被儲存或者被洩露。</string>
   <string name="quote_protected_status_notice">不建議引用受保護的推文</string>
   <string name="edit_draft">編輯草稿</string>
   <string name="profile_image">個人資料圖片</string>
@@ -405,7 +413,7 @@
   <string name="search_name_deleted">搜尋 \"<xliff:g id="name">%s</xliff:g>\" 已刪除</string>
   <string name="import_from">匯入從&#8230;</string>
   <string name="link_to_quoted_status">連結到引用的推文</string>
-  <string name="quote_original_status">引用原推</string>
+  <string name="quote_original_status">引用原推文</string>
   <string name="followed_user">關注了 <xliff:g id="user">%s</xliff:g></string>
   <string name="sent_follow_request_to_user">向 <xliff:g id="user">%s</xliff:g> 送出了關注請求</string>
   <string name="unfollowed_user">取消關注了 <xliff:g id="user">%s</xliff:g></string>
@@ -468,8 +476,8 @@
   <string name="card_animation">卡片動畫</string>
   <string name="name_first">優先顯示名字</string>
   <string name="next_step">下一步</string>
-  <string name="previous_item">前一個</string>
-  <string name="next_item">下一個</string>
+  <string name="previous_item">上一條</string>
+  <string name="next_item">下一條</string>
   <string name="settings_wizard">設定精靈</string>
   <string name="wizard_page_welcome_title">歡迎</string>
   <string name="wizard_page_welcome_text">感謝您選擇 Twidere。\n您想現在設定它嗎？</string>
@@ -531,6 +539,7 @@
   <string name="theme_background_solid">純白/純黑</string>
   <string name="theme_background_transparent">透明</string>
   <string name="theme_dark_actionbar">深色 ActionBar</string>
+  <string name="wizard_hint_compose_select_account">寫推文時點擊個人資料圖片選擇帳號</string>
   <string name="wizard_hint_quote_format">在\"設定\"-\"內容與存儲\"設定您喜歡的引用格式</string>
   <string name="wizard_hint_filters">你可以透過使用\"過濾\"功能隱藏不想看到的推文和通知</string>
   <string name="view_replies">檢視回應</string>
@@ -641,7 +650,11 @@
   <string name="state_blocking">正在阻止</string>
   <string name="load_more">載入更多</string>
   <string name="photo">照片</string>
+  <string name="camera">相機</string>
   <string name="gallery">相冊</string>
+  <string name="source_camera">相機</string>
+  <string name="source_gallery">相冊</string>
+  <string name="source_clipboard">剪貼板</string>
   <string name="remove">移除</string>
   <string name="load_media">載入媒體</string>
   <string name="profile_text_color">文字顏色</string>
@@ -665,12 +678,12 @@
   <string name="members">成員</string>
   <string name="subscribers">訂閱者</string>
   <string name="read_from_bottom">從底部閱讀</string>
-  <string name="read_from_bottom_summary_off">更新後跳至最新推</string>
-  <string name="read_from_bottom_summary_on">更新後保持在目前位置</string>
+  <string name="read_from_bottom_summary_off">刷新後跳到最近的推文</string>
+  <string name="read_from_bottom_summary_on">刷新後保留閱讀位置</string>
   <string name="register">註冊</string>
   <string name="follows">關注</string>
   <string name="belongs_to">屬於</string>
-  <string name="blocked_by_user_summary">你被<xliff:g id="name">%s</xliff:g>阻止關注</string>
+  <string name="blocked_by_user_summary">因為<xliff:g id="name">%s</xliff:g>太傻逼看不懂你在說什麼，所以阻止了你的關注</string>
   <string name="select_accounts">選擇帳號</string>
   <string name="media_preview">媒體預覽</string>
   <string name="edit_tabs">編輯標籤頁</string>
@@ -694,19 +707,76 @@
   <string name="from_name_and_N_others">來自<xliff:g id="name">%1$s</xliff:g>和其他<xliff:g id="name">%2$d</xliff:g>人</string>
   <string name="projects_we_took_part">我們參與的項目</string>
   <string name="activated_accounts">已啟用的帳號</string>
-  <string name="search">搜尋</string>
+  <string name="search">搜索</string>
   <string name="crop">裁剪</string>
   <string name="scale">縮放</string>
-  <string name="user_type_verified">已認證</string>
-  <string name="user_type_protected">鎖推</string>
+  <string name="user_type_verified">驗證用戶</string>
+  <string name="user_type_protected">受保護用戶</string>
+  <string name="tweet_hashtag">發推 #<xliff:g id="text">%1$s</xliff:g></string>
+  <string name="share_status">分享推文</string>
+  <string name="pebble_notifications">Pebble通知</string>
+  <string name="pebble_notifications_summary">發送通知到你的Pebble</string>
+  <string name="tweet_from_name">用<xliff:g id="text">%1$s</xliff:g>發推</string>
+  <string name="permission_label_shorten_status">縮短推文</string>
   <string name="permission_label_upload_media">上傳媒體</string>
-  <string name="permission_label_sync_timeline">更新河道</string>
-  <string name="server_address">伺服器位址</string>
-  <string name="security_key">安全金鑰</string>
-  <string name="drafts_hint_messages">未被送出的推將被儲存於此處</string>
+  <string name="permission_label_sync_timeline">同步時間軸</string>
+  <string name="thumbor_integration">Thumbor集成</string>
+  <string name="server_address">伺服器地址</string>
+  <string name="security_key">密鑰</string>
+  <string name="hide_card_actions">隱藏卡片動作按鈕</string>
+  <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>推文</string>
+  <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>推文</string>
+  <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>收藏</string>
+  <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>收藏</string>
+  <string name="drafts_hint_messages">你未發送的推文會被儲存在這裡</string>
   <string name="keyboard_shortcuts">快捷鍵</string>
-  <string name="overwrite">覆寫</string>
-  <string name="navigation">引導</string>
-  <string name="reset_to_default">還原初始值</string>
-  <string name="reset_keyboard_shortcuts_confirm">還原快捷鍵設定</string>
+  <string name="keyboard_shortcut_hint">按下按鍵</string>
+  <string name="conflicts_with_name">與<xliff:g id="name">%s</xliff:g>衝突</string>
+  <string name="overwrite">覆蓋</string>
+  <string name="navigation">導航</string>
+  <string name="reset_to_default">重置</string>
+  <string name="reset_keyboard_shortcuts_confirm">重置快捷鍵到默認？</string>
+  <string name="open_accounts_dashboard">打開帳號面板</string>
+  <string name="previous_tab">前一個標籤頁</string>
+  <string name="next_tab">後一個標籤頁</string>
+  <string name="keyboard_shortcut_back">返回</string>
+  <string name="press_again_to_close">再次按下以關閉</string>
+  <string name="name_not_set"><xliff:g id="name">%s</xliff:g>沒有設定</string>
+  <string name="swipe_down_to_refresh">下拉以刷新</string>
+  <string name="app_restart_confirm">Twidere將重啟以應用設定</string>
+  <string name="dont_restart">不重啟</string>
+  <string name="user_list_details">列表詳情</string>
+  <string name="invalid_list_name">只能包含字母、數字、“-”和“_”且必須以字母開始</string>
+  <string name="delete_conversation">刪除對話</string>
+  <string name="delete_conversation_confirm_message">刪除此對話的所有資訊？</string>
+  <string name="name_first_summary_on">優先顯示名字</string>
+  <string name="name_first_summary_off">優先顯示 \@screenname</string>
+  <string name="comment_hint">評論&#8230;</string>
+  <string name="comment">評論</string>
+  <string name="enable_retweets">啟用轉推</string>
+  <string name="disable_retweets">禁用轉推</string>
+  <string name="play">播放</string>
+  <string name="pause">暫停</string>
+  <string name="jump_to_top">跳到頂部</string>
+  <string name="timeline_streaming_running">時間軸實時流正在運行</string>
+  <string name="streaming">實時流</string>
+  <string name="enable_streaming">啟用實時流</string>
+  <string name="dark_theme">暗色主題</string>
+  <string name="wizard_hint_title_location_requirement">位置許可權</string>
+  <string name="wizard_hint_summary_location_requirement">在你發送含有位置的推文時，Twidere需要位置許可權</string>
+  <string name="scrapyard">垃圾場</string>
+  <string name="crop_image">裁剪圖像</string>
+  <string name="usage_label_sent">已發送</string>
+  <string name="usage_label_received">已接收</string>
+  <string name="this_month">本月</string>
+  <string name="media_preload">媒體預載入</string>
+  <string name="on_mobile_network">使用移動網絡</string>
+  <string name="set_consumer_key_secret_message">Twidere 的令牌將要用完了。你需要在 https://apps.twitter.com/ 創建一個應用並把 consumer key and secret 粘貼在下面。\n如果你繼續使用默認的key，可能會沒法登錄。</string>
+  <string name="send_at">發送於</string>
+  <string name="scheduled_statuses">被排期推文</string>
+  <string name="report_usage_statistics_now">立即彙報使用情況</string>
+  <string name="cache_size_limit">緩存空間限制</string>
+  <string name="bug_reports">錯誤報告</string>
+  <string name="invalid_consumer_key">無效的Consumer key</string>
+  <string name="invalid_consumer_secret">無效的Consumer secret</string>
 </resources>

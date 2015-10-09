@@ -12,7 +12,7 @@
   <string name="remove_image">Видалити зображення</string>
   <string name="remove_photo">Видалити світлину</string>
   <string name="status_hint">Що трапилося?</string>
-  <string name="sign_up">Зареєструватися</string>
+  <string name="sign_up">Реєстрація</string>
   <string name="sign_in">Увійти</string>
   <string name="rest_base_url">REST Base URL</string>
   <string name="oauth_base_url">OAuth Base URL</string>
@@ -380,6 +380,7 @@
   <string name="preview_images">Перегляд зображень</string>
   <string name="preload_wifi_only">Попереднє завантаження лише через wi-fi</string>
   <string name="sign_in_method_introduction_title">Як це працює?</string>
+  <string name="sign_in_method_introduction">Більшість клієнтів відкривають веб-сторінку, щоб увійти до Твіттеру. Але це викликає незручності, якщо викристовується стороннє API або повільне з\'єднання. Twidere імітує звичайний переглядач, що спрощує вхід до Твіттеру. Не хвилюйтеся, ваш пароль не зберігається і не витече.</string>
   <string name="quote_protected_status_notice">Не рекомендується цитувати захищений твіт.</string>
   <string name="edit_draft">Редагувати чернетку</string>
   <string name="profile_image">Зображення профілю</string>
@@ -482,7 +483,7 @@
   <string name="wizard_page_tabs_unchanged_message">Ви можете додати вкладки у \"Налаштування\" - \"Вкладки\"</string>
   <string name="wizard_page_cards_text">Налаштуємо картки.</string>
   <string name="wizard_page_hints_text">Ось декілька корисних порад.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere приймає участь у дослідницькому проекті, який потребує збору деяких даних о використанні програми.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere взяв участь у дослідницькому проекті, який потребує збору деяких даних о використанні програми.</string>
   <string name="wizard_page_finished_title">Завершено</string>
   <string name="wizard_page_finished_text">Тепер Twidere готовий до використання.</string>
   <string name="invalid_tab">Невірна вкладка</string>
@@ -684,10 +685,11 @@
   <string name="getting_location">Визначення місцеположення</string>
   <string name="save_to_gallery">Зберегти в галерею</string>
   <string name="usage_statistics">Статистика  використання</string>
+  <string name="research_hot_mobile">Керовані даними дослідження мобільної мережі</string>
   <string name="unknown_location">Невідоме місцеположення</string>
   <string name="ellipsis">&#8230;</string>
   <string name="import_export_settings">Імпорт/Експорт налаштувань</string>
-  <string name="usage_statistics_header_summary">Twidere приймає участь у деяких дослідницких проектах. Долучившись до них, ви покращите Twidere та деякі інші програми.</string>
+  <string name="usage_statistics_header_summary">Twidere взяв участь у деяких дослідницких проектах. Долучившись до них, ви покращите Twidere та деякі інші програми.</string>
   <string name="no_tab">Нема вкладок</string>
   <string name="user_protected_summary">Треба відправити запит цьому захищеному користувачу, щоб побачити його твіти</string>
   <string name="no_account">Немає облікового запису</string>
@@ -698,7 +700,7 @@
   <string name="from_name">Від <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Від <xliff:g id="name">%1$s</xliff:g> і <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">Від <xliff:g id="name">%1$s</xliff:g> і ще <xliff:g id="name">%2$d</xliff:g> інших</string>
-  <string name="projects_we_took_part">Проєкти, в яких ми приймаємо участь</string>
+  <string name="projects_we_took_part">Проекти, в яких ми приймаємо участь</string>
   <string name="activated_accounts">Активовані профілі</string>
   <string name="search">Пошук</string>
   <string name="crop">Обрізати</string>
@@ -765,4 +767,9 @@
   <string name="media_preload">Предзавантаження медіа</string>
   <string name="on_mobile_network">В мобільній мережі</string>
   <string name="set_consumer_key_secret_message">Twidere доходить до обмеження за токеном, вам потрібно створти додаток за адресою https://apps.twitter.com/ і ввести код та cекретний ключ користувача нижче.\nПри подальшому використанні усталеного токену ви не зможете увійти.</string>
+  <string name="send_at">Надіслати о</string>
+  <string name="scheduled_statuses">Заплановані твіти</string>
+  <string name="report_usage_statistics_now">Надіслати звіт про використання</string>
+  <string name="cache_size_limit">Обмеження розміру кешу</string>
+  <string name="bug_reports">Повідомлення про помилки</string>
 </resources>

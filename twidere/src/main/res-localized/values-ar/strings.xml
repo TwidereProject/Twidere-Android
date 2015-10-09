@@ -42,6 +42,7 @@
   <string name="select_account">اختيار حساب</string>
   <string name="username">اسم المستخدم</string>
   <string name="password">كلمة المرور</string>
+  <string name="label_data_provider">مزود قاعدة بيانات Twidere</string>
   <string name="label_refresh_service">تحديث الخدمة</string>
   <string name="label_background_operation_service">خدمة التشغيل في الخلفية</string>
   <string name="open_in_browser">فتح بالمستعرض</string>

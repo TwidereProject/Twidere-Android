@@ -7,7 +7,7 @@
   <string name="error_twitter_89">Je inloggegevens zijn onjuist of verlopen, probeer het nog eens.</string>
   <string name="error_twitter_64">Je account is opgeschort en er is daarom geen toegang tot deze functie.</string>
   <string name="error_twitter_130">Twitter is tijdelijk overbelast.</string>
-  <string name="error_twitter_131">De server van Twitter is tijdelijk uit de lucht, probeer het later nog eens.</string>
+  <string name="error_twitter_131">De server van Twitter is tijdelijk niet beschikbaar, probeer het later nog eens.</string>
   <string name="error_twitter_135">Controleer je systeemklok.</string>
   <string name="error_twitter_161">Je hebt al gevraagd om deze gebruiker te volgen.</string>
   <string name="error_twitter_162">Je bent geblokkeerd door deze gebruiker.</string>
@@ -15,5 +15,5 @@
   <string name="error_twitter_179">Je kunt deze beschermde gebruiker\'s tweet niet zien.</string>
   <string name="error_twitter_187">Je hebt deze tweet al verzonden.</string>
   <string name="error_twitter_193">Deze foto is te groot om te uploaden.</string>
-  <string name="error_twitter_215">U moet waarschijnlijk opnieuw inloggen.</string>
+  <string name="error_twitter_215">U moet mogelijk opnieuw inloggen.</string>
 </resources>

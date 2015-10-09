@@ -9,6 +9,8 @@
   <string name="error_twitter_130">Twitter 暫時無法使用。</string>
   <string name="error_twitter_131">Twitter 的伺服器可能當機了，請稍後再試。</string>
   <string name="error_twitter_135">請檢查您的系統時間設定。</string>
+  <string name="error_twitter_136">您被這個使用者封鎖了。</string>
+  <string name="error_twitter_139">您已經收藏了這條推文</string>
   <string name="error_twitter_161">您已經發送過關注請求。</string>
   <string name="error_twitter_162">您被這個使用者封鎖了。</string>
   <string name="error_twitter_172">您已經儲存這個搜尋了。</string>
