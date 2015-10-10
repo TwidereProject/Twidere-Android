@@ -115,6 +115,12 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
         finish();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setVisible(true);
+    }
+
     @NonNull
     private Pair<Intent, Boolean> getHandledIntent(final Uri uri) {
         final List<String> pathSegments = uri.getPathSegments();
@@ -213,7 +219,7 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
                 }
             }
-        } else if (segsSize > 3) {
+        } else if (segsSize >= 3) {
             if ("status".equals(pathSegments.get(1)) && ParseUtils.parseLong(pathSegments.get(2), -1) != -1) {
                 final Uri.Builder builder = new Uri.Builder();
                 builder.scheme(SCHEME_TWIDERE);

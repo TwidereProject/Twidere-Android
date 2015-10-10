@@ -1200,12 +1200,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
      */
     private boolean startLocationUpdateIfEnabled() {
         final LocationManager lm = mLocationManager;
+        try {
+            lm.removeUpdates(this);
+        } catch (SecurityException ignore) {
+        }
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
         if (!attachLocation) {
-            try {
-                lm.removeUpdates(this);
-            } catch (SecurityException ignore) {
-            }
             return false;
         }
         final Criteria criteria = new Criteria();

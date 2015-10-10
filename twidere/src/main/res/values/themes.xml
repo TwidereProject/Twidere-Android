@@ -3,7 +3,7 @@
 
     <style name="Theme" />
 
-    <style name="Theme.Launcher" parent="android:Theme.NoDisplay">
+    <style name="Theme.Launcher" parent="Theme.Twidere.Dark.NoDisplay">
         <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
     </style>
 
