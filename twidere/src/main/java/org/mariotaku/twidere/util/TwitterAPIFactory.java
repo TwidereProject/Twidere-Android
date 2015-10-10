@@ -139,7 +139,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         if (enableProxy) {
             client.setProxy(getProxy(prefs));
         } else {
-            client.setProxy(Proxy.NO_PROXY);
+            client.setProxy(null);
         }
     }
 

@@ -787,4 +787,8 @@
     <string name="invalid_consumer_secret">Invalid consumer secret</string>
     <string name="page_up">Page up</string>
     <string name="page_down">Page down</string>
+    <string name="combined_notifications">Combined notifications</string>
+    <string name="combined_notifications_summary_on">Notifications will be grouped</string>
+    <string name="combined_notifications_summary_off">Notifications will be displayed separately</string>
+    <string name="save_media_no_storage_permission_message">Storage permission is needed to save media.</string>
 </resources>

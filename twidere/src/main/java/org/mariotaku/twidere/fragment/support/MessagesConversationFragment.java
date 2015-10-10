@@ -120,7 +120,6 @@ import java.util.Locale;
 import me.uucky.colorpicker.internal.EffectViewHelper;
 
 import static org.mariotaku.twidere.util.Utils.buildDirectMessageConversationUri;
-import static org.mariotaku.twidere.util.Utils.showOkMessage;
 
 public class MessagesConversationFragment extends BaseSupportFragment implements
         LoaderCallbacks<Cursor>, OnClickListener, OnItemSelectedListener, MenuButtonClickListener,
@@ -503,7 +502,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 }
                 case R.id.copy: {
                     if (ClipboardUtils.setText(getActivity(), mSelectedDirectMessage.text_plain)) {
-                        showOkMessage(getActivity(), R.string.text_copied, false);
+                        Utils.showOkMessage(getActivity(), R.string.text_copied, false);
                     }
                     break;
                 }
@@ -653,11 +652,16 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final EditTextEnterHandler queryEnterHandler = EditTextEnterHandler.attach(mEditUserQuery, new EnterListener() {
             @Override
             public boolean shouldCallListener() {
-                return true;
+                final FragmentActivity activity = getActivity();
+                if (!(activity instanceof BaseAppCompatActivity)) return false;
+                return ((BaseAppCompatActivity) activity).getKeyMetaState() == 0;
             }
 
             @Override
             public boolean onHitEnter() {
+                final FragmentActivity activity = getActivity();
+                if (!(activity instanceof BaseAppCompatActivity)) return false;
+                if (((BaseAppCompatActivity) activity).getKeyMetaState() != 0) return false;
                 final ParcelableCredentials account = (ParcelableCredentials) mAccountSpinner.getSelectedItem();
                 if (account == null) return false;
                 mEditText.setAccountId(account.account_id);

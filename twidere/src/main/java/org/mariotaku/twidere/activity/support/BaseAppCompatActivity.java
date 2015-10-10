@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
 import com.squareup.otto.Bus;
 
@@ -72,7 +73,7 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     private boolean mInstanceStateSaved;
     private boolean mIsVisible;
     private Rect mSystemWindowsInsets;
-    private int mMetaState;
+    private int mKeyMetaState;
 
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
@@ -110,23 +111,31 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     }
 
     @Override
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        final int keyCode = event.getKeyCode();
         if (KeyEvent.isModifierKey(keyCode)) {
-            mMetaState &= ~KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+            final int action = event.getAction();
+            if (action == MotionEvent.ACTION_DOWN) {
+                mKeyMetaState |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                mKeyMetaState &= ~KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
+            }
         }
-        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event, mMetaState))
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+        if (handleKeyboardShortcutSingle(mKeyboardShortcutsHandler, keyCode, event, mKeyMetaState))
             return true;
-        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mMetaState) || super.onKeyUp(keyCode, event);
+        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mKeyMetaState) || super.onKeyUp(keyCode, event);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (KeyEvent.isModifierKey(keyCode)) {
-            mMetaState |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
-        }
-        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event, mMetaState))
+        if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event, mKeyMetaState))
             return true;
-        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mMetaState) || super.onKeyDown(keyCode, event);
+        return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mKeyMetaState) || super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -244,6 +253,10 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     public void unregisterControlBarOffsetListener(ControlBarOffsetListener listener) {
         mControlBarOffsetListeners.remove(listener);
+    }
+
+    public int getKeyMetaState() {
+        return mKeyMetaState;
     }
 
 }

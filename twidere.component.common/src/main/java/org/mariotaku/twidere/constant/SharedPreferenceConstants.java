@@ -309,4 +309,6 @@ public interface SharedPreferenceConstants {
     String KEY_CACHE_SIZE_LIMIT = "cache_size_limit";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_BUG_REPORTS = "bug_reports";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
+    String COMBINED_NOTIFICATIONS = "combined_notifications";
 }

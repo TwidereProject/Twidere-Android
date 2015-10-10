@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/notifications">
 
@@ -8,7 +7,7 @@
         android:key="cat_accounts"
         android:title="@string/accounts"
         app:switchDefault="true"
-        app:switchKey="notification"/>
+        app:switchKey="notification" />
 
     <PreferenceCategory
         android:key="cat_general"
@@ -16,13 +15,20 @@
         <org.mariotaku.twidere.preference.SilentNotificationsPreference
             android:key="silent_notifications"
             android:summary="@string/silent_notifications_summary"
-            android:title="@string/silent_notifications"/>
+            android:title="@string/silent_notifications" />
+
+        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+            android:defaultValue="false"
+            android:key="combined_notifications"
+            android:summaryOff="@string/combined_notifications_summary_off"
+            android:summaryOn="@string/combined_notifications_summary_on"
+            android:title="@string/combined_notifications" />
 
         <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
             android:defaultValue="false"
             android:key="pebble_notifications"
             android:summary="@string/pebble_notifications_summary"
-            android:title="@string/pebble_notifications"/>
+            android:title="@string/pebble_notifications" />
     </PreferenceCategory>
 
 </PreferenceScreen>
