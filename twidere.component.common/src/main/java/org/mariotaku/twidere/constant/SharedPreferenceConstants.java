@@ -310,5 +310,5 @@ public interface SharedPreferenceConstants {
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_BUG_REPORTS = "bug_reports";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String COMBINED_NOTIFICATIONS = "combined_notifications";
+    String KEY_COMBINED_NOTIFICATIONS = "combined_notifications";
 }

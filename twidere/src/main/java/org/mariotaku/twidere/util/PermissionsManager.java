@@ -48,10 +48,10 @@ public class PermissionsManager implements Constants {
 		mPackageManager = context.getPackageManager();
 	}
 
-	public boolean accept(final String package_name, final String[] permissions) {
-		if (package_name == null || permissions == null) return false;
+	public boolean accept(final String packageName, final String[] permissions) {
+		if (packageName == null || permissions == null) return false;
 		final SharedPreferences.Editor editor = mPreferences.edit();
-		editor.putString(package_name, TwidereArrayUtils.toString(permissions, '|', false));
+		editor.putString(packageName, TwidereArrayUtils.toString(permissions, '|', false));
 		return editor.commit();
 	}
 

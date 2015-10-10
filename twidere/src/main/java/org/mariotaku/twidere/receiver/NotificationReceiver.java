@@ -33,6 +33,9 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.NotificationEvent;
+
 /**
  * Created by mariotaku on 15/4/4.
  */
@@ -45,12 +48,19 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
             case BROADCAST_NOTIFICATION_DELETED: {
                 final Uri uri = intent.getData();
                 if (uri == null) return;
-                final String tag = getPositionTag(uri.getLastPathSegment());
-                if (tag == null) return;
+                final String type = uri.getLastPathSegment();
                 final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
-                final ReadStateManager manager = ApplicationModule.get(context).getReadStateManager();
+                final long extraId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_EXTRA_ID), -1);
+                final long timestamp = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
+                final ApplicationModule module = ApplicationModule.get(context);
+                if (AUTHORITY_MENTIONS.equals(type) && accountId != -1 && extraId != -1 && timestamp != -1) {
+                    final HotMobiLogger logger = module.getHotMobiLogger();
+                    logger.log(accountId, NotificationEvent.deleted(context, timestamp, type, accountId, extraId));
+                }
+                final ReadStateManager manager = module.getReadStateManager();
                 final String paramReadPosition, paramReadPositions;
-                if (!TextUtils.isEmpty(paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION))) {
+                final String tag = getPositionTag(type);
+                if (tag != null && !TextUtils.isEmpty(paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION))) {
                     manager.setPosition(Utils.getReadPositionTagWithAccounts(tag, accountId),
                             ParseUtils.parseLong(paramReadPosition, -1));
                 } else if (!TextUtils.isEmpty(paramReadPositions = uri.getQueryParameter(QUERY_PARAM_READ_POSITIONS))) {

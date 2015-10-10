@@ -238,6 +238,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         mMainContent.setOnFitSystemWindowsListener(this);
         setStatusBarColor(linkId, data);
         setTaskInfo(linkId, data);
+        Utils.logOpenNotificationFromUri(this, data);
         if (!showFragment(linkId, data)) {
             finish();
         }

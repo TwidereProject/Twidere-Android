@@ -115,9 +115,7 @@ import android.widget.Toast;
 import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestClient;
 import org.mariotaku.restfu.http.Authorization;
@@ -199,6 +197,7 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.PebbleMessage;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -228,6 +227,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
+import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
@@ -248,7 +248,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -257,6 +256,9 @@ import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 
 import javax.net.ssl.SSLException;
+
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.NotificationEvent;
 
 import static android.text.TextUtils.isEmpty;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
@@ -3944,6 +3946,21 @@ public final class Utils implements Constants {
         return isOutOfMemory(cause);
     }
 
+    public static void logOpenNotificationFromUri(Context context, Uri uri) {
+        if (!uri.getBooleanQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, false)) return;
+        String type = uri.getLastPathSegment();
+        if (type == null) {
+            type = uri.getAuthority();
+        }
+        final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
+        final long extraId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_EXTRA_ID), -1);
+        final long timestamp = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
+        if (!AUTHORITY_STATUS.equals(type) || accountId < 0 || extraId < 0 || timestamp < 0) return;
+        final ApplicationModule module = ApplicationModule.get(context);
+        final HotMobiLogger logger = module.getHotMobiLogger();
+        logger.log(accountId, NotificationEvent.open(context, timestamp, type, accountId, extraId));
+    }
+
     static class UtilsL {
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -3995,20 +4012,15 @@ public final class Utils implements Constants {
 
         if (prefs.getBoolean(KEY_PEBBLE_NOTIFICATIONS, false)) {
 
-            final String app_name = context.getString(R.string.app_name);
+            final String appName = context.getString(R.string.app_name);
 
-            final HashMap<String, String> data = new HashMap<>();
-            data.put("title", app_name);
-            data.put("body", message);
-
-            final JSONObject jsonData = new JSONObject(data);
-
-            final String notificationData = new JSONArray().put(jsonData).toString();
+            final List<PebbleMessage> messages = new ArrayList<>();
+            messages.add(new PebbleMessage(appName, message));
 
             final Intent intent = new Intent(INTENT_ACTION_PEBBLE_NOTIFICATION);
             intent.putExtra("messageType", "PEBBLE_ALERT");
-            intent.putExtra("sender", app_name);
-            intent.putExtra("notificationData", notificationData);
+            intent.putExtra("sender", appName);
+            intent.putExtra("notificationData", JsonSerializer.serialize(messages, PebbleMessage.class));
 
             context.getApplicationContext().sendBroadcast(intent);
         }

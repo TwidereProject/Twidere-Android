@@ -48,6 +48,7 @@ import edu.tsinghua.hotmobi.model.LatLng;
 import edu.tsinghua.hotmobi.model.LinkEvent;
 import edu.tsinghua.hotmobi.model.MediaEvent;
 import edu.tsinghua.hotmobi.model.NetworkEvent;
+import edu.tsinghua.hotmobi.model.NotificationEvent;
 import edu.tsinghua.hotmobi.model.RefreshEvent;
 import edu.tsinghua.hotmobi.model.ScrollRecord;
 import edu.tsinghua.hotmobi.model.SessionEvent;
@@ -95,6 +96,8 @@ public class HotMobiLogger {
             return "scroll";
         } else if (event instanceof BatteryRecord) {
             return "battery";
+        } else if (event instanceof NotificationEvent) {
+            return "notification";
         }
         throw new UnsupportedOperationException("Unknown event type " + event);
     }

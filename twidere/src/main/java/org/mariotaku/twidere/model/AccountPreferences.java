@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -147,9 +148,9 @@ public class AccountPreferences implements Constants {
         return enabledIds;
     }
 
-    @Nullable
+    @NonNull
     public static AccountPreferences[] getNotificationEnabledPreferences(final Context context, final long[] accountIds) {
-        if (context == null || accountIds == null) return null;
+        if (context == null || accountIds == null) return new AccountPreferences[0];
         final AccountPreferences[] temp = new AccountPreferences[accountIds.length];
         int i = 0;
         for (final long accountId : accountIds) {
