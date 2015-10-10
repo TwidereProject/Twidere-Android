@@ -64,7 +64,8 @@ import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 
 @ReportsCrashes(formUri = "https://twidere-bugreport.herokuapp.com/reports",
-        buildConfigClass = BuildConfig.class)
+        buildConfigClass = BuildConfig.class, sendReportsInDevMode = false,
+        sendReportsAtShutdown = false)
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
 
@@ -170,9 +171,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private void initBugReport() {
         final SharedPreferences preferences = getSharedPreferences();
         if (!preferences.getBoolean(KEY_BUG_REPORTS, true)) return;
-        if (!BuildConfig.DEBUG) {
-            AbsLogger.setImplementation(new TwidereLogger());
-        }
+        AbsLogger.setImplementation(new TwidereLogger());
         AbsLogger.init(this);
     }
 

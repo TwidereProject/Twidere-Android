@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.fragment;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
@@ -38,10 +38,11 @@ public class BasePreferenceFragment extends PreferenceFragment implements Consta
     @Inject
     protected UserColorNameManager mUserColorNameManager;
 
+    @SuppressWarnings("deprecated")
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(activity)).build().inject(this);
     }
 
     @Override

@@ -86,6 +86,11 @@ public class ApplicationModule {
         }
         sharedPreferences = SharedPreferencesWrapper.getInstance(application, Constants.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+
+        if (sharedPreferences == null) {
+            throw new RuntimeException("SharedPreferences must not be null");
+        }
+
         activityTracker = new ActivityTracker();
         bus = new Bus(ThreadEnforcer.MAIN);
         asyncTaskManager = AsyncTaskManager.getInstance();

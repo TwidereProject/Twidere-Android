@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
@@ -43,10 +42,12 @@ public class BaseFragment extends Fragment implements Constants {
     @Inject
     protected SharedPreferencesWrapper mPreferences;
 
+
+    @SuppressWarnings("deprecated")
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(activity)).build().inject(this);
     }
 
     public TwidereApplication getApplication() {

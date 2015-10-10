@@ -424,7 +424,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         if (Utils.isStreamingEnabled()) {
             startService(new Intent(this, StreamingService.class));
         }
-
     }
 
     @Override

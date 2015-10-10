@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 
@@ -70,15 +71,16 @@ public class TwidereLogger extends AbsLogger implements Constants {
     protected void initImpl(final Application application) {
         // ACRA sets it self as DefaultUncaughtExceptionHandler, we hijack it to suppress some errors
         ACRA.init(application);
+        final ACRAConfiguration conf = ACRA.getNewDefaultConfig(application);
+        ACRA.setConfig(conf);
         // handler should be ACRA's ErrorReporter now
         final Thread.UncaughtExceptionHandler handler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
                 // We can't fix OOM, so just don't report it and try to save VM
-                if (!Utils.isOutOfMemory(ex)) {
-                    handler.uncaughtException(thread, ex);
-                }
+                if (Utils.isOutOfMemory(ex)) return;
+                handler.uncaughtException(thread, ex);
             }
         });
     }
