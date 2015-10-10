@@ -251,7 +251,7 @@
         <activity
             android:name=".activity.support.ColorPickerDialogActivity"
             android:label="@string/set_color"
-            android:theme="@style/Theme.Twidere.Light.NoDisplay" />
+            android:theme="@style/Theme.Twidere.Dark.NoDisplay" />
         <activity
             android:name=".activity.support.LinkHandlerActivity"
             android:theme="@style/Theme.Twidere.Dark.DialogWhenLarge.NoActionBar"
@@ -291,7 +291,7 @@
             android:name=".activity.support.FileSelectorActivity"
             android:exported="false"
             android:label="@string/pick_file"
-            android:theme="@style/Theme.Twidere.Light.NoDisplay"
+            android:theme="@style/Theme.Twidere.Dark.NoDisplay"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.PICK_FILE" />
@@ -303,7 +303,7 @@
         <activity
             android:name=".activity.support.ThemedImagePickerActivity"
             android:exported="false"
-            android:theme="@style/Theme.Twidere.Light.NoDisplay"
+            android:theme="@style/Theme.Twidere.Dark.NoDisplay"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -364,11 +364,11 @@
         <activity
             android:name=".activity.support.DataExportActivity"
             android:label="@string/export_settings"
-            android:theme="@android:style/Theme.NoDisplay" />
+            android:theme="@style/Theme.Twidere.Dark.NoDisplay" />
         <activity
             android:name=".activity.support.DataImportActivity"
             android:label="@string/import_settings"
-            android:theme="@android:style/Theme.NoDisplay" />
+            android:theme="@style/Theme.Twidere.Dark.NoDisplay" />
         <activity
             android:name=".activity.support.ActivityPickerActivity"
             android:theme="@style/Theme.Twidere.Dark.Dialog">
@@ -455,7 +455,7 @@
         <activity
             android:name=".activity.UsageStatisticsActivity"
             android:label="@string/usage_statistics"
-            android:theme="@android:style/Theme.NoDisplay" />
+            android:theme="@style/Theme.Twidere.Dark.NoDisplay" />
         <activity
             android:name=".activity.ImageCropperActivity"
             android:label="@string/crop_image"
