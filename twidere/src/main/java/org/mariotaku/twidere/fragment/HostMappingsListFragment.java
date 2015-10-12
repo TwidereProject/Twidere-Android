@@ -50,6 +50,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -62,15 +63,18 @@ import static android.text.TextUtils.isEmpty;
 public class HostMappingsListFragment extends BaseListFragment implements MultiChoiceModeListener,
         OnSharedPreferenceChangeListener {
 
+    private static final String EXTRA_EDIT_MODE = "edit_mode";
+    private static final String EXTRA_HOST = "host";
+    private static final String EXTRA_ADDRESS = "address";
+    private static final String EXTRA_EXCLUDED = "excluded";
+
     private ListView mListView;
     private HostMappingAdapter mAdapter;
-    private SharedPreferences mPreferences;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        mPreferences = getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         mAdapter = new HostMappingAdapter(getActivity());
         setListAdapter(mAdapter);
@@ -127,12 +131,27 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
     }
 
     @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        final String host = mAdapter.getItem(position);
+        final String address = mAdapter.getAddress(host);
+        final Bundle args = new Bundle();
+        args.putString(EXTRA_HOST, host);
+        args.putString(EXTRA_ADDRESS, address);
+        args.putBoolean(EXTRA_EXCLUDED, StringUtils.equals(host, address));
+        args.putBoolean(EXTRA_EDIT_MODE, true);
+        final DialogFragment df = new AddMappingDialogFragment();
+        df.setArguments(args);
+        df.show(getFragmentManager(), "add_mapping");
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add:
+            case R.id.add: {
                 final DialogFragment df = new AddMappingDialogFragment();
                 df.show(getFragmentManager(), "add_mapping");
                 break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -162,9 +181,6 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
     public static class AddMappingDialogFragment extends BaseDialogFragment implements OnClickListener,
             OnShowListener, TextWatcher, OnCheckedChangeListener {
 
-        private static final String EXTRA_HOST = "host";
-        private static final String EXTRA_ADDRESS = "address";
-        private static final String EXTRA_EXCLUDED = "excluded";
 
         private EditText mEditHost, mEditAddress;
         private CheckBox mCheckExclude;
@@ -222,7 +238,8 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
             mEditAddress.addTextChangedListener(this);
             mCheckExclude.setOnCheckedChangeListener(this);
             final Bundle args = getArguments();
-            if (savedInstanceState == null && args != null) {
+            mEditHost.setEnabled(!args.getBoolean(EXTRA_EDIT_MODE, false));
+            if (savedInstanceState == null) {
                 mEditHost.setText(args.getCharSequence(EXTRA_HOST));
                 mEditAddress.setText(args.getCharSequence(EXTRA_ADDRESS));
                 mCheckExclude.setChecked(args.getBoolean(EXTRA_EXCLUDED));
@@ -264,11 +281,11 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
 
     static class HostMappingAdapter extends ArrayAdapter<String> {
 
-        private final SharedPreferences mPreferences;
+        private final SharedPreferences mHostMapping;
 
         public HostMappingAdapter(final Context context) {
             super(context, android.R.layout.simple_list_item_activated_2);
-            mPreferences = context.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            mHostMapping = context.getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
         }
 
         @Override
@@ -278,8 +295,8 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
             final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
             final String key = getItem(position);
             text1.setText(key);
-            final String value = mPreferences.getString(key, null);
-            if (key.equals(value)) {
+            final String value = getAddress(key);
+            if (StringUtils.equals(key, value)) {
                 text2.setText(R.string.excluded);
             } else {
                 text2.setText(value);
@@ -289,10 +306,13 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
 
         public void reload() {
             clear();
-            final Map<String, ?> all = mPreferences.getAll();
+            final Map<String, ?> all = mHostMapping.getAll();
             addAll(all.keySet());
         }
 
+        public String getAddress(String key) {
+            return mHostMapping.getString(key, null);
+        }
     }
 
 }

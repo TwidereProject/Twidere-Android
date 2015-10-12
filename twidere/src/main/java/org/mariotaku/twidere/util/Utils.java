@@ -3948,10 +3948,7 @@ public final class Utils implements Constants {
 
     public static void logOpenNotificationFromUri(Context context, Uri uri) {
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, false)) return;
-        String type = uri.getLastPathSegment();
-        if (type == null) {
-            type = uri.getAuthority();
-        }
+        final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
         final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
         final long extraId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_EXTRA_ID), -1);
         final long timestamp = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
@@ -3959,6 +3956,11 @@ public final class Utils implements Constants {
         final ApplicationModule module = ApplicationModule.get(context);
         final HotMobiLogger logger = module.getHotMobiLogger();
         logger.log(accountId, NotificationEvent.open(context, timestamp, type, accountId, extraId));
+    }
+
+    public static boolean hasOfficialAPIAccess(Context context, SharedPreferences preferences, ParcelableCredentials account) {
+        if (preferences.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false)) return true;
+        return isOfficialCredentials(context, account);
     }
 
     static class UtilsL {

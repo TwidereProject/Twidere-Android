@@ -30,6 +30,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.mariotaku.twidere.activity.iface.IAppCompatActivity;
+
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
  * to be used with AppCompat.
@@ -37,9 +39,11 @@ import android.view.ViewGroup;
  * This technique can be used with an {@link android.app.Activity} class, not just
  * {@link android.preference.PreferenceActivity}.
  */
-public abstract class AppCompatPreferenceActivity extends PreferenceActivity implements AppCompatCallback {
+public abstract class AppCompatPreferenceActivity extends PreferenceActivity
+        implements AppCompatCallback, IAppCompatActivity {
     private AppCompatDelegate mDelegate;
 
+    @Override
     public ActionBar getSupportActionBar() {
         return getDelegate().getSupportActionBar();
     }

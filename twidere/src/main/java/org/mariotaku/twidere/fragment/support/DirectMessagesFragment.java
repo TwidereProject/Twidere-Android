@@ -59,7 +59,6 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
-import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
@@ -68,8 +67,6 @@ import org.mariotaku.twidere.util.message.GetMessagesTaskEvent;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.inject.Inject;
 
 import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 
@@ -95,7 +92,7 @@ public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<Messa
     }
 
     @Override
-    public void onLoadMoreContents() {
+    public void onLoadMoreContents(boolean fromStart) {
         loadMoreMessages();
     }
 

@@ -57,7 +57,7 @@ public abstract class ParcelableActivitiesFragment extends AbsActivitiesFragment
     }
 
     @Override
-    public void onLoadMoreContents() {
+    public void onLoadMoreContents(boolean fromStart) {
         final IActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
         final long[] maxIds = new long[]{adapter.getActivity(adapter.getActivityCount() - 1).min_position};
         getActivities(getAccountIds(), maxIds, null);

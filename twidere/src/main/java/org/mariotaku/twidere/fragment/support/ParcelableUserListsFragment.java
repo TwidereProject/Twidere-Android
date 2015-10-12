@@ -63,8 +63,10 @@ public abstract class ParcelableUserListsFragment extends AbsUserListsFragment<L
     }
 
     @Override
-    public void onLoadMoreContents() {
-        super.onLoadMoreContents();
+    public void onLoadMoreContents(boolean fromStart) {
+        if (fromStart) return;
+        //noinspection ConstantConditions
+        super.onLoadMoreContents(fromStart);
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         loaderArgs.putLong(EXTRA_NEXT_CURSOR, getNextCursor());

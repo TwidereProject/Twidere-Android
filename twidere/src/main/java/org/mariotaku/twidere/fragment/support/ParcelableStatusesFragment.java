@@ -47,19 +47,19 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     private long mLastId;
 
     public final void deleteStatus(final long statusId) {
-        final List<ParcelableStatus> data = getAdapterData();
-        if (statusId <= 0 || data == null) return;
+        final List<ParcelableStatus> list = getAdapterData();
+        if (statusId <= 0 || list == null) return;
         final Set<ParcelableStatus> dataToRemove = new HashSet<>();
-        for (int i = 0, j = data.size(); i < j; i++) {
-            final ParcelableStatus status = data.get(i);
+        for (int i = 0, j = list.size(); i < j; i++) {
+            final ParcelableStatus status = list.get(i);
             if (status.id == statusId || status.retweet_id > 0 && status.retweet_id == statusId) {
                 dataToRemove.add(status);
             } else if (status.my_retweet_id == statusId) {
-                data.set(i, new ParcelableStatus(status, -1, status.retweet_count - 1));
+                list.set(i, new ParcelableStatus(status, -1, status.retweet_count - 1));
             }
         }
-        data.removeAll(dataToRemove);
-        setAdapterData(data);
+        list.removeAll(dataToRemove);
+        setAdapterData(list);
     }
 
     @Override
@@ -90,9 +90,9 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     }
 
     @Override
-    protected boolean hasMoreData(List<ParcelableStatus> data) {
-        if (data == null || data.isEmpty()) return false;
-        return (mLastId != (mLastId = data.get(data.size() - 1).id));
+    protected boolean hasMoreData(List<ParcelableStatus> list) {
+        if (list == null || list.isEmpty()) return false;
+        return (mLastId != (mLastId = list.get(list.size() - 1).id));
     }
 
     @Override
@@ -121,8 +121,10 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
 
 
     @Override
-    public void onLoadMoreContents() {
-        super.onLoadMoreContents();
+    public void onLoadMoreContents(boolean fromStart) {
+        if (fromStart) return;
+        //noinspection ConstantConditions
+        super.onLoadMoreContents(fromStart);
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final long[] maxIds = new long[]{adapter.getStatusId(adapter.getStatusesCount() - 1)};
         getStatuses(null, maxIds, null);
@@ -130,7 +132,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
 
     public final void replaceStatus(final ParcelableStatus status) {
         final List<ParcelableStatus> data = getAdapterData();
-        if (status == null || data == null) return;
+        if (status == null || data == null || data.isEmpty()) return;
         for (int i = 0, j = data.size(); i < j; i++) {
             if (status.equals(data.get(i))) {
                 data.set(i, status);

@@ -186,32 +186,34 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, String type, long accountId, long position, long extraId) {
         // Setup delete intent
-        final Intent recvIntent = new Intent(context, NotificationReceiver.class);
-        recvIntent.setAction(BROADCAST_NOTIFICATION_DELETED);
-        final Uri.Builder recvLinkBuilder = new Uri.Builder();
-        recvLinkBuilder.scheme(SCHEME_TWIDERE);
-        recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
-        recvLinkBuilder.appendPath(type);
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, String.valueOf(position));
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA_ID, String.valueOf(extraId));
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
-        recvIntent.setData(recvLinkBuilder.build());
-        return PendingIntent.getBroadcast(context, 0, recvIntent, 0);
+        final Intent intent = new Intent(context, NotificationReceiver.class);
+        intent.setAction(BROADCAST_NOTIFICATION_DELETED);
+        final Uri.Builder linkBuilder = new Uri.Builder();
+        linkBuilder.scheme(SCHEME_TWIDERE);
+        linkBuilder.authority(AUTHORITY_NOTIFICATIONS);
+        linkBuilder.appendPath(type);
+        linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, String.valueOf(position));
+        linkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA_ID, String.valueOf(extraId));
+        linkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
+        linkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);
+        intent.setData(linkBuilder.build());
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, String type, long accountId, StringLongPair[] positions) {
         // Setup delete intent
-        final Intent recvIntent = new Intent(context, NotificationReceiver.class);
-        final Uri.Builder recvLinkBuilder = new Uri.Builder();
-        recvLinkBuilder.scheme(SCHEME_TWIDERE);
-        recvLinkBuilder.authority(AUTHORITY_NOTIFICATIONS);
-        recvLinkBuilder.appendPath(type);
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITIONS, StringLongPair.toString(positions));
-        recvLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
-        recvIntent.setData(recvLinkBuilder.build());
-        return PendingIntent.getBroadcast(context, 0, recvIntent, 0);
+        final Intent intent = new Intent(context, NotificationReceiver.class);
+        final Uri.Builder linkBuilder = new Uri.Builder();
+        linkBuilder.scheme(SCHEME_TWIDERE);
+        linkBuilder.authority(AUTHORITY_NOTIFICATIONS);
+        linkBuilder.appendPath(type);
+        linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITIONS, StringLongPair.toString(positions));
+        linkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
+        linkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);
+        intent.setData(linkBuilder.build());
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
     private static Cursor getPreferencesCursor(final SharedPreferencesWrapper preferences, final String key) {
@@ -1238,7 +1240,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                             mNameFirst, false)));
             builder.setContentText(text);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
-            builder.setContentIntent(getStatusContentIntent(context, accountId, statusId));
+            builder.setContentIntent(getStatusContentIntent(context, AUTHORITY_MENTIONS, accountId,
+                    statusId));
             builder.setDeleteIntent(getMarkReadDeleteIntent(context, AUTHORITY_MENTIONS, accountId,
                     statusId, statusId));
             builder.setWhen(statusCursor.getLong(indices.status_timestamp));
@@ -1355,11 +1358,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, String.valueOf(true));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
+        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);
         homeIntent.setData(homeLinkBuilder.build());
         return PendingIntent.getActivity(context, 0, homeIntent, 0);
     }
 
-    private PendingIntent getStatusContentIntent(Context context, long accountId, long statusId) {
+    private PendingIntent getStatusContentIntent(Context context, String type, long accountId, long statusId) {
         // Setup click intent
         final Intent homeIntent = new Intent(Intent.ACTION_VIEW);
         homeIntent.setPackage(BuildConfig.APPLICATION_ID);
@@ -1371,6 +1375,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA_ID, String.valueOf(statusId));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, String.valueOf(true));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
+        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);
         homeIntent.setData(homeLinkBuilder.build());
         return PendingIntent.getActivity(context, 0, homeIntent, 0);
     }

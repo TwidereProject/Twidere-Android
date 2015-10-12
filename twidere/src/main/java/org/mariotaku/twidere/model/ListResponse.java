@@ -20,21 +20,28 @@
 package org.mariotaku.twidere.model;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import java.util.AbstractList;
+import java.util.Collections;
 import java.util.List;
 
-public class ListResponse<Data> extends SingleResponse<List<Data>> {
+public class ListResponse<Data> extends AbstractList<Data> implements Response<List<Data>>, List<Data> {
 
-    public final List<Data> list;
+    @Nullable
+    private final List<Data> list;
+    private final Exception exception;
+    private final Bundle extras;
 
     public ListResponse(final List<Data> list, final Exception exception) {
-        super(list, exception);
-        this.list = list;
+        this(list, exception, new Bundle());
     }
 
-    public ListResponse(final List<Data> list, final Exception exception, final Bundle extras) {
-        super(list, exception, extras);
+    public ListResponse(@Nullable final List<Data> list, final Exception exception, @NonNull final Bundle extras) {
         this.list = list;
+        this.exception = exception;
+        this.extras = extras;
     }
 
     public static <Data> ListResponse<Data> getListInstance(Exception exception) {
@@ -45,4 +52,72 @@ public class ListResponse<Data> extends SingleResponse<List<Data>> {
         return new ListResponse<>(data, null);
     }
 
+    public static <Data> ListResponse<Data> emptyListInstance() {
+        return new ListResponse<>(Collections.<Data>emptyList(), null);
+    }
+
+    public static <Data> ListResponse<Data> getListInstance(List<Data> list, Exception e) {
+        return new ListResponse<>(list, e);
+    }
+
+    @Override
+    public int size() {
+        if (list == null) throw new NullPointerException();
+        return list.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return list != null && list.isEmpty();
+    }
+
+    @Override
+    public Data remove(int location) {
+        if (list == null) throw new NullPointerException();
+        return list.remove(location);
+    }
+
+    @Override
+    public Data set(int location, Data object) {
+        if (list == null) throw new NullPointerException();
+        return list.set(location, object);
+    }
+
+    @Override
+    public void add(int location, Data object) {
+        if (list == null) throw new NullPointerException();
+        list.add(location, object);
+    }
+
+    @Override
+    public Data get(int location) {
+        if (list == null) throw new NullPointerException();
+        return list.get(location);
+    }
+
+    @Override
+    public List<Data> getData() {
+        return list;
+    }
+
+    @Override
+    public Exception getException() {
+        return exception;
+    }
+
+    @NonNull
+    @Override
+    public Bundle getExtras() {
+        return extras;
+    }
+
+    @Override
+    public boolean hasData() {
+        return list != null;
+    }
+
+    @Override
+    public boolean hasException() {
+        return exception != null;
+    }
 }

@@ -35,8 +35,8 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
 
     @Override
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
-                                                                 final Bundle args,
-                                                                 final boolean fromUser) {
+                                                                    final Bundle args,
+                                                                    final boolean fromUser) {
         setRefreshing(true);
         if (args == null) return null;
         final long listId = args.getLong(EXTRA_LIST_ID, -1);

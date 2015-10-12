@@ -217,8 +217,10 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     @Override
-    public void onLoadMoreContents() {
-        super.onLoadMoreContents();
+    public void onLoadMoreContents(boolean fromStart) {
+        if (fromStart) return;
+        //noinspection ConstantConditions
+        super.onLoadMoreContents(fromStart);
         AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorStatusesFragment>() {
             @Override
             public long[][] doLongOperation(Object o) throws InterruptedException {

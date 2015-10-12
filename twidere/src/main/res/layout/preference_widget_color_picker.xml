@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,13 +17,13 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.SquareShapedImageView
-    android:id="@+id/color"
+<org.mariotaku.twidere.view.ShapedImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/color"
     android:layout_width="@dimen/element_size_small"
     android:layout_height="@dimen/element_size_small"
     android:layout_gravity="center"
     android:adjustViewBounds="true"
     android:scaleType="centerCrop"
-    app:sivShape="circle"/>
+    app:sivShape="circle" />

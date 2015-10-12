@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.LoaderTrojan;
 
+import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ObjectCursor;
 
 import java.io.FileDescriptor;

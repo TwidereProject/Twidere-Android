@@ -50,7 +50,6 @@ public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
     @NonNull
     @Override
     public ResponseList<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        if (twitter == null) return null;
         if (mUserId != -1)
             return twitter.getFavorites(mUserId, paging);
         else if (mUserScreenName != null) return twitter.getFavorites(mUserScreenName, paging);

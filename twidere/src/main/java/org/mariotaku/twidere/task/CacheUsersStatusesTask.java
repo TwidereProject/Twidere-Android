@@ -59,10 +59,10 @@ public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<Status
         final Extractor extractor = new Extractor();
 
         for (final TwitterListResponse<org.mariotaku.twidere.api.twitter.model.Status> response : args) {
-            if (response == null || response.list == null) {
+            if (response == null || !response.hasData()) {
                 continue;
             }
-            final List<org.mariotaku.twidere.api.twitter.model.Status> list = response.list;
+            final List<org.mariotaku.twidere.api.twitter.model.Status> list = response.getData();
             for (int bulkIdx = 0, totalSize = list.size(); bulkIdx < totalSize; bulkIdx += 100) {
                 for (int idx = bulkIdx, end = Math.min(totalSize, bulkIdx + ContentResolverUtils.MAX_BULK_COUNT); idx < end; idx++) {
                     final org.mariotaku.twidere.api.twitter.model.Status status = list.get(idx);

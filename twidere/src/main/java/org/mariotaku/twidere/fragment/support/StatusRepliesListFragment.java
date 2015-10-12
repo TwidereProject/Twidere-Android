@@ -32,8 +32,8 @@ public class StatusRepliesListFragment extends StatusesSearchFragment {
 
     @Override
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
-                                                                 final Bundle args,
-                                                                 final boolean fromUser) {
+                                                                    final Bundle args,
+                                                                    final boolean fromUser) {
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final long statusId = args.getLong(EXTRA_STATUS_ID, -1);

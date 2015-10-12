@@ -115,7 +115,7 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
     }
 
     @Override
-    public void onLoadMoreContents() {
+    public void onLoadMoreContents(boolean fromStart) {
         setRefreshEnabled(false);
     }
 

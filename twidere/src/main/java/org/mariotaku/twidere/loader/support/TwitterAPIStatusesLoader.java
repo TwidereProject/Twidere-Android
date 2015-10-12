@@ -34,6 +34,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.LoganSquareWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -70,7 +71,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
 
     @SuppressWarnings("unchecked")
     @Override
-    public final List<ParcelableStatus> loadInBackground() {
+    public final ListResponse<ParcelableStatus> loadInBackground() {
         final File serializationFile = getSerializationFile();
         List<ParcelableStatus> data = getData();
         if (data == null) {
@@ -85,10 +86,10 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 } else {
                     Collections.sort(data);
                 }
-                return new CopyOnWriteArrayList<>(data);
+                return ListResponse.getListInstance(new CopyOnWriteArrayList<>(data));
             }
         }
-        if (!isFromUser()) return data;
+        if (!isFromUser()) return ListResponse.getListInstance(data);
         final Twitter twitter = getTwitter();
         if (twitter == null) return null;
         final List<Status> statuses;
@@ -114,7 +115,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         } catch (final TwitterException e) {
             // mHandler.post(new ShowErrorRunnable(e));
             Log.w(LOGTAG, e);
-            return new CopyOnWriteArrayList<>(data);
+            return ListResponse.getListInstance(new CopyOnWriteArrayList<>(data), e);
         }
 
         final long[] statusIds = new long[statuses.size()];
@@ -159,7 +160,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             Collections.sort(data);
         }
         saveCachedData(serializationFile, data);
-        return new CopyOnWriteArrayList<>(data);
+        return ListResponse.getListInstance(new CopyOnWriteArrayList<>(data));
     }
 
     public final void setComparator(Comparator<ParcelableStatus> comparator) {

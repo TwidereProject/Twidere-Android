@@ -54,9 +54,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -180,11 +184,37 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public void onLoadFinished(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
-            mStatusAdapter.setRepliesLoading(false);
             mStatusAdapter.updateItemDecoration();
-            final Pair<Long, Integer> readPosition = saveReadPosition();
             setReplies(data);
-            restoreReadPosition(readPosition);
+            final ParcelableCredentials account = mStatusAdapter.getStatusAccount();
+            if (Utils.hasOfficialAPIAccess(loader.getContext(), mPreferences, account)) {
+                mStatusAdapter.setReplyError(null);
+            } else {
+                final SpannableStringBuilder error = SpannableStringBuilder.valueOf(Html.fromHtml(getString(R.string.cant_load_all_replies_message)));
+                ClickableSpan dialogSpan = null;
+                for (URLSpan span : error.getSpans(0, error.length(), URLSpan.class)) {
+                    if ("#dialog".equals(span.getURL())) {
+                        dialogSpan = span;
+                        break;
+                    }
+                }
+                if (dialogSpan != null) {
+                    final int spanStart = error.getSpanStart(dialogSpan), spanEnd = error.getSpanEnd(dialogSpan);
+                    error.removeSpan(dialogSpan);
+                    error.setSpan(new ClickableSpan() {
+                        @Override
+                        public void onClick(View widget) {
+                            final FragmentActivity activity = getActivity();
+                            if (activity == null) return;
+                            SupportMessageDialogFragment.show(activity,
+                                    getString(R.string.cant_load_all_replies_explanation),
+                                    "cant_load_all_replies_explanation");
+                        }
+                    }, spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                }
+                mStatusAdapter.setReplyError(error);
+            }
+            mStatusAdapter.setRepliesLoading(false);
         }
 
         @Override
@@ -492,21 +522,25 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     private void restoreReadPosition(@Nullable Pair<Long, Integer> position) {
         if (position == null) return;
-        final int adapterPosition = mStatusAdapter.findPositionById(position.first);
-        if (adapterPosition == RecyclerView.NO_POSITION) return;
+        // FIXME We don't know why we need to -1 here, but only -1 works.
+        final int adapterPosition = mStatusAdapter.findPositionById(position.first) - 1;
+        if (adapterPosition < 0) return;
+        //TODO maintain read position
         mLayoutManager.scrollToPositionWithOffset(adapterPosition, position.second);
     }
 
     @Nullable
     private Pair<Long, Integer> saveReadPosition() {
         final int position = mLayoutManager.findFirstVisibleItemPosition();
-        if (position == RecyclerView.NO_POSITION) return null;
+        if (position < 0) return null;
+        final int itemType = mStatusAdapter.getItemType(position);
         long itemId = mStatusAdapter.getItemId(position);
         final View positionView;
-        if (itemId == StatusAdapter.VIEW_TYPE_CONVERSATION_LOAD_INDICATOR) {
+        if (itemType == StatusAdapter.ITEM_IDX_CONVERSATION_LOAD_MORE) {
             // Should be next item
-            positionView = mLayoutManager.findViewByPosition(position + 1);
-            itemId = mStatusAdapter.getItemId(position + 1);
+            final int statusPosition = mStatusAdapter.getFirstPositionOfItem(StatusAdapter.ITEM_IDX_STATUS);
+            positionView = mLayoutManager.findViewByPosition(statusPosition);
+            itemId = mStatusAdapter.getItemId(statusPosition);
         } else {
             positionView = mLayoutManager.findViewByPosition(position);
         }
@@ -517,25 +551,26 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onLoadFinished(final Loader<SingleResponse<ParcelableStatus>> loader,
                                final SingleResponse<ParcelableStatus> data) {
         if (data.hasData()) {
-            final int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+            final Pair<Long, Integer> readPosition = saveReadPosition();
             final ParcelableStatus status = data.getData();
             final Bundle dataExtra = data.getExtras();
             final ParcelableCredentials credentials = dataExtra.getParcelable(EXTRA_ACCOUNT);
             if (mStatusAdapter.setStatus(status, credentials)) {
-                mLayoutManager.scrollToPositionWithOffset(1, 0);
                 mStatusAdapter.setConversation(null);
                 mStatusAdapter.setReplies(null);
-                loadReplies(status);
                 loadConversation(status);
+                loadReplies(status);
+
+                final int position = mStatusAdapter.getFirstPositionOfItem(StatusAdapter.ITEM_IDX_STATUS);
+                if (position != RecyclerView.NO_POSITION) {
+                    mLayoutManager.scrollToPositionWithOffset(position, 0);
+                }
+
                 final TweetEvent event = TweetEvent.create(getActivity(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.OPEN);
                 mStatusEvent = event;
-            } else if (firstVisibleItemPosition >= 0) {
-                final long itemId = mStatusAdapter.getItemId(firstVisibleItemPosition);
-                final View firstChild = mLayoutManager.getChildAt(0);
-                final int top = firstChild != null ? firstChild.getTop() : 0;
-                final int position = mStatusAdapter.findPositionById(itemId);
-                mLayoutManager.scrollToPositionWithOffset(position, top);
+            } else if (readPosition != null) {
+                restoreReadPosition(readPosition);
             }
             setState(STATE_LOADED);
         } else {
@@ -551,15 +586,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     private void setReplies(List<ParcelableStatus> data) {
-        if (mLayoutManager.getChildCount() != 0) {
-            final long itemId = mStatusAdapter.getItemId(mLayoutManager.findFirstVisibleItemPosition());
-            final int top = mLayoutManager.getChildAt(0).getTop();
-            mStatusAdapter.setReplies(data);
-            final int position = mStatusAdapter.findPositionById(itemId);
-            mLayoutManager.scrollToPositionWithOffset(position, top);
-        } else {
-            mStatusAdapter.setReplies(data);
-        }
+        final Pair<Long, Integer> readPosition = saveReadPosition();
+        mStatusAdapter.setReplies(data);
+        //TODO maintain read position
+        restoreReadPosition(readPosition);
     }
 
     private void setState(int state) {
@@ -574,6 +604,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (event == null) return;
         event.markEnd();
         HotMobiLogger.getInstance(getActivity()).log(event.getAccountId(), event);
+    }
+
+    private void showConversationError(Exception exception) {
+
     }
 
     private static class DetailStatusViewHolder extends ViewHolder implements OnClickListener,
@@ -977,12 +1011,15 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         protected void onPostExecute(final ListResponse<ParcelableStatus> data) {
-            fragment.getAdapter().setConversationsLoading(false);
+            final StatusAdapter adapter = fragment.getAdapter();
             if (data.hasData()) {
                 fragment.setConversation(data.getData());
+            } else if (data.hasException()) {
+                fragment.showConversationError(data.getException());
             } else {
                 Utils.showErrorMessage(context, context.getString(R.string.action_getting_status), data.getException(), true);
             }
+            adapter.setConversationsLoading(false);
         }
 
         @Override
@@ -1042,14 +1079,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private static final int VIEW_TYPE_DETAIL_STATUS = 1;
         private static final int VIEW_TYPE_CONVERSATION_LOAD_INDICATOR = 2;
         private static final int VIEW_TYPE_REPLIES_LOAD_INDICATOR = 3;
-        private static final int VIEW_TYPE_SPACE = 4;
-
-        private final Context mContext;
-        private final StatusFragment mFragment;
-        private final LayoutInflater mInflater;
-        private final MediaLoadingHandler mMediaLoadingHandler;
-        private final TwidereLinkify mTwidereLinkify;
-
+        private static final int VIEW_TYPE_REPLY_ERROR = 4;
+        private static final int VIEW_TYPE_SPACE = 5;
         private static final int ITEM_IDX_CONVERSATION_ERROR = 0;
         private static final int ITEM_IDX_CONVERSATION_LOAD_MORE = 1;
         private static final int ITEM_IDX_CONVERSATION = 2;
@@ -1059,7 +1090,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private static final int ITEM_IDX_REPLY_ERROR = 6;
         private static final int ITEM_IDX_SPACE = 7;
         private static final int ITEM_TYPES_SUM = 8;
-
+        private final Context mContext;
+        private final StatusFragment mFragment;
+        private final LayoutInflater mInflater;
+        private final MediaLoadingHandler mMediaLoadingHandler;
+        private final TwidereLinkify mTwidereLinkify;
         private final int[] mItemCounts;
 
         private final boolean mNameFirst;
@@ -1083,6 +1118,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private StatusAdapterListener mStatusAdapterListener;
         private RecyclerView mRecyclerView;
         private DetailStatusViewHolder mStatusViewHolder;
+        private CharSequence mReplyError;
 
         public StatusAdapter(StatusFragment fragment, boolean compact) {
             super(fragment.getContext());
@@ -1334,6 +1370,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mLoadMoreIndicatorVisible = false;
             }
             notifyDataSetChanged();
+            updateItemDecoration();
         }
 
         @Override
@@ -1375,6 +1412,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 case VIEW_TYPE_SPACE: {
                     return new SpaceViewHolder(new Space(mContext));
                 }
+                case VIEW_TYPE_REPLY_ERROR: {
+                    final View view = mInflater.inflate(R.layout.adapter_item_status_error, parent,
+                            false);
+                    return new StatusErrorItemViewHolder(view);
+                }
             }
             return null;
         }
@@ -1400,6 +1442,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                             && (position - getItemTypeStart(position)) == 0);
                     break;
                 }
+                case VIEW_TYPE_REPLY_ERROR: {
+                    final StatusErrorItemViewHolder errorHolder = (StatusErrorItemViewHolder) holder;
+                    errorHolder.showError(mReplyError);
+                    break;
+                }
             }
         }
 
@@ -1421,6 +1468,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     return VIEW_TYPE_DETAIL_STATUS;
                 case ITEM_IDX_SPACE:
                     return VIEW_TYPE_SPACE;
+                case ITEM_IDX_REPLY_ERROR:
+                    return VIEW_TYPE_REPLY_ERROR;
             }
             throw new IllegalStateException();
         }
@@ -1433,7 +1482,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (position >= typeStart && position < typeEnd) return type;
                 typeStart = typeEnd;
             }
-            throw new IllegalStateException();
+            throw new IllegalStateException("Unknown position " + position);
         }
 
         private int getItemTypeStart(int position) {
@@ -1531,6 +1580,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mStatusAdapterListener = listener;
         }
 
+        public void setReplyError(CharSequence error) {
+            mReplyError = error;
+            mItemCounts[ITEM_IDX_REPLY_ERROR] = error != null ? 1 : 0;
+            notifyDataSetChanged();
+            updateItemDecoration();
+        }
+
         public void setReplies(List<ParcelableStatus> replies) {
             mReplies = replies;
             mItemCounts[ITEM_IDX_REPLY] = replies != null ? replies.size() : 0;
@@ -1548,18 +1604,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return !CompareUtils.objectEquals(old, status);
         }
 
-        private int getConversationCount() {
-            return mConversation != null ? mConversation.size() : 1;
-        }
-
-        private int getRepliesCount() {
-            return mReplies != null ? mReplies.size() : 1;
-        }
-
-        private int getStatusPosition() {
-            return getConversationCount();
-        }
-
         private void updateItemDecoration() {
             if (mRecyclerView == null) return;
             final DividerItemDecoration decoration = mFragment.getItemDecoration();
@@ -1575,11 +1619,37 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public void setRepliesLoading(boolean loading) {
             mItemCounts[ITEM_IDX_REPLY_LOAD_MORE] = loading ? 1 : 0;
             notifyDataSetChanged();
+            updateItemDecoration();
         }
 
         public void setConversationsLoading(boolean loading) {
             mItemCounts[ITEM_IDX_CONVERSATION_LOAD_MORE] = loading ? 1 : 0;
             notifyDataSetChanged();
+            updateItemDecoration();
+        }
+
+        public int getFirstPositionOfItem(int itemIdx) {
+            int position = 0;
+            for (int i = 0; i < ITEM_TYPES_SUM; i++) {
+                if (itemIdx == i) return position;
+                position += mItemCounts[i];
+            }
+            return RecyclerView.NO_POSITION;
+        }
+
+        public static class StatusErrorItemViewHolder extends ViewHolder {
+            private final TextView textView;
+
+            public StatusErrorItemViewHolder(View itemView) {
+                super(itemView);
+                textView = (TextView) itemView.findViewById(android.R.id.text1);
+                textView.setMovementMethod(LinkMovementMethod.getInstance());
+                textView.setLinksClickable(true);
+            }
+
+            public void showError(CharSequence text) {
+                textView.setText(text);
+            }
         }
     }
 
@@ -1602,12 +1672,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     final View childToMeasure = getChildAt(i);
                     final LayoutParams paramsToMeasure = (LayoutParams) childToMeasure.getLayoutParams();
                     final int typeToMeasure = getItemViewType(childToMeasure);
+                    if (typeToMeasure == StatusAdapter.VIEW_TYPE_SPACE) {
+                        break;
+                    }
                     if (typeToMeasure == StatusAdapter.VIEW_TYPE_DETAIL_STATUS || heightBeforeSpace != 0) {
                         heightBeforeSpace += super.getDecoratedMeasuredHeight(childToMeasure)
                                 + paramsToMeasure.topMargin + paramsToMeasure.bottomMargin;
-                    }
-                    if (typeToMeasure == StatusAdapter.VIEW_TYPE_REPLIES_LOAD_INDICATOR) {
-                        break;
                     }
                 }
                 if (heightBeforeSpace != 0) {
@@ -1626,6 +1696,5 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
     }
-
 
 }

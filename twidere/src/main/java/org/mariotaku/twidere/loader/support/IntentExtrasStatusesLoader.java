@@ -22,6 +22,7 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.os.Bundle;
 
+import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.Collections;
@@ -38,14 +39,16 @@ public class IntentExtrasStatusesLoader extends ParcelableStatusesLoader {
     }
 
     @Override
-    public List<ParcelableStatus> loadInBackground() {
+    public ListResponse<ParcelableStatus> loadInBackground() {
         final List<ParcelableStatus> data = getData();
         if (mExtras != null && mExtras.containsKey(EXTRA_STATUSES)) {
             final List<ParcelableStatus> users = mExtras.getParcelableArrayList(EXTRA_STATUSES);
-            data.addAll(users);
-            Collections.sort(data);
+            if (data != null && users != null) {
+                data.addAll(users);
+                Collections.sort(data);
+            }
         }
-        return data;
+        return ListResponse.getListInstance(data);
     }
 
 }

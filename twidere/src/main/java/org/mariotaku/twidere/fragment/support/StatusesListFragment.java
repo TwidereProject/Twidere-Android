@@ -32,8 +32,8 @@ public class StatusesListFragment extends ParcelableStatusesFragment {
 
     @Override
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
-                                                                 final Bundle args,
-                                                                 final boolean fromUser) {
+                                                                    final Bundle args,
+                                                                    final boolean fromUser) {
         return new IntentExtrasStatusesLoader(context, getArguments(), getAdapterData(), fromUser);
     }
 

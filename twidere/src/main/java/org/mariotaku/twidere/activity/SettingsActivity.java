@@ -238,7 +238,7 @@ public class SettingsActivity extends BasePreferenceActivity {
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
         if (ACTION_NAVIGATION_BACK.equals(action)) {
-            navigateUp();
+            onBackPressed();
             return true;
         }
         return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
@@ -286,7 +286,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigateUp();
+                onBackPressed();
             }
         });
 
@@ -332,15 +332,11 @@ public class SettingsActivity extends BasePreferenceActivity {
         return mShouldNotifyChange;
     }
 
-    private void navigateUp() {
+    @Override
+    public void onBackPressed() {
         if (mTwidereActionModeForChildListener.finishExisting()) {
             return;
         }
-        onBackPressed();
-    }
-
-    @Override
-    public void onBackPressed() {
         if (isTopSettings() && shouldNotifyChange()) {
             final RestartConfirmDialogFragment df = new RestartConfirmDialogFragment();
             df.show(getFragmentManager().beginTransaction(), "restart_confirm");

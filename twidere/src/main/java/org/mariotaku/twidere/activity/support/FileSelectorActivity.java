@@ -28,7 +28,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.widget.Toast;
 
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.FileSelectorDialogFragment;
 import org.mariotaku.twidere.util.PermissionUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -125,6 +127,7 @@ public class FileSelectorActivity extends BaseSupportDialogActivity implements F
 
     private void finishWithDeniedMessage() {
         if (isFinishing()) return;
+        Toast.makeText(this, R.string.select_file_no_storage_permission_message, Toast.LENGTH_SHORT).show();
         finish();
     }
 

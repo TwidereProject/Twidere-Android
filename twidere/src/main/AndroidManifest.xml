@@ -64,6 +64,8 @@
         android:name=".app.TwidereApplication"
         android:allowBackup="true"
         android:backupAgent=".backup.TwidereBackupAgentHelper"
+        android:description="@string/app_description"
+        android:fullBackupContent="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

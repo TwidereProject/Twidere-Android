@@ -288,7 +288,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         super.onStart();
         mImageUploaderUsed = !ServicePickerPreference.isNoneValue(mPreferences.getString(KEY_MEDIA_UPLOADER, null));
         mStatusShortenerUsed = !ServicePickerPreference.isNoneValue(mPreferences.getString(KEY_STATUS_SHORTENER, null));
-        startLocationUpdateIfEnabled();
+        requestOrUpdateLocation();
         setMenu();
         updateTextCount();
         final int textSize = mPreferences.getInt(KEY_TEXT_SIZE, Utils.getDefaultTextSize(this));
@@ -351,6 +351,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                     contentView.getPaddingRight(), contentView.getPaddingBottom());
             return true;
         }
+        // Offset content view
         final int statusBarHeight = rect.top;
         contentView.getWindowVisibleDisplayFrame(rect);
         final int paddingTop = statusBarHeight + actionBarHeight - rect.top;
@@ -578,6 +579,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
             mProfileImageView.setImageDrawable(null);
             mProfileImageView.setBorderColors(Utils.getAccountColors(accounts));
         }
+    }
+
+    @Override
+    public void onActionModeStarted(ActionMode mode) {
+        super.onActionModeStarted(mode);
+        ThemeUtils.applyColorFilterToMenuIcon(mode.getMenu(), ThemeUtils.getContrastActionBarItemColor(this),
+                0, 0, Mode.MULTIPLY);
     }
 
     @Override

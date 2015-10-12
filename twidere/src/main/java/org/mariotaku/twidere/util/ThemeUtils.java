@@ -124,9 +124,11 @@ public class ThemeUtils implements Constants {
                 icon.mutate();
                 if (info instanceof TwidereMenuInfo) {
                     final TwidereMenuInfo sInfo = (TwidereMenuInfo) info;
-                    icon.setColorFilter(sInfo.isHighlight() ?
-                            sInfo.getHighlightColor(highlightColor) : color, mode);
-                } else {
+                    final int stateColor = sInfo.isHighlight() ? sInfo.getHighlightColor(highlightColor) : color;
+                    if (stateColor != 0) {
+                        icon.setColorFilter(stateColor, mode);
+                    }
+                } else if (color != 0) {
                     icon.setColorFilter(color, mode);
                 }
             }

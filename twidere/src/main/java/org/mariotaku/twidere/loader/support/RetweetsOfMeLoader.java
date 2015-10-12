@@ -23,22 +23,18 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
 
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
-
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
 public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
-
-    private long mTotalItemsCount;
 
     public RetweetsOfMeLoader(final Context context, final long accountId, final long sinceId, final long maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
@@ -46,22 +42,10 @@ public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
         super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
     }
 
-    public long getTotalItemsCount() {
-        return mTotalItemsCount;
-    }
-
     @NonNull
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        if (twitter == null) return null;
-        final ResponseList<Status> statuses = twitter.getRetweetsOfMe(paging);
-        if (mTotalItemsCount == -1 && !statuses.isEmpty()) {
-            final User user = statuses.get(0).getUser();
-            if (user != null) {
-                mTotalItemsCount = user.getStatusesCount();
-            }
-        }
-        return statuses;
+        return twitter.getRetweetsOfMe(paging);
     }
 
     @Override

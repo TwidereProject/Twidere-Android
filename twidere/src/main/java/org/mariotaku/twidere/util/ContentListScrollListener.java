@@ -75,9 +75,12 @@ public class ContentListScrollListener extends OnScrollListener {
         final ILoadMoreSupportAdapter loadMoreAdapter = (ILoadMoreSupportAdapter) adapter;
         final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         if (!mContentListSupport.isRefreshing() && loadMoreAdapter.isLoadMoreSupported()
-                && !loadMoreAdapter.isLoadMoreIndicatorVisible()
-                && layoutManager.findLastVisibleItemPosition() == layoutManager.getItemCount() - 1) {
-            mContentListSupport.onLoadMoreContents();
+                && !loadMoreAdapter.isLoadMoreIndicatorVisible()) {
+            if (layoutManager.findLastVisibleItemPosition() == layoutManager.getItemCount() - 1) {
+                mContentListSupport.onLoadMoreContents(false);
+            } else if (layoutManager.findFirstVisibleItemPosition() == 0) {
+                mContentListSupport.onLoadMoreContents(true);
+            }
         }
     }
 
@@ -87,7 +90,7 @@ public class ContentListScrollListener extends OnScrollListener {
 
         boolean isRefreshing();
 
-        void onLoadMoreContents();
+        void onLoadMoreContents(boolean fromStart);
 
         void setControlVisible(boolean visible);
 

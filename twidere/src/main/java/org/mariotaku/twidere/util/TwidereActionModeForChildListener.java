@@ -23,11 +23,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.internal.view.StandaloneActionMode;
 import android.support.v7.internal.view.SupportActionModeWrapper;
 import android.support.v7.internal.widget.ActionBarContextView;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -38,8 +40,9 @@ import android.view.Window;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.PopupWindow;
 
+import org.mariotaku.twidere.activity.iface.IAppCompatActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.fragment.iface.IBaseFragment;
+import org.mariotaku.twidere.view.AppCompatUtils;
 import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 
 /**
@@ -110,7 +113,6 @@ public class TwidereActionModeForChildListener implements TintedStatusNativeActi
             mActionModePopup = new PopupWindow(actionBarContext, null,
                     android.support.v7.appcompat.R.attr.actionModePopupWindowStyle);
             mActionModePopup.setContentView(mActionModeView);
-            mActionModePopup.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 
             final TypedValue outValue = new TypedValue();
             actionBarContext.getTheme().resolveAttribute(
@@ -122,13 +124,21 @@ public class TwidereActionModeForChildListener implements TintedStatusNativeActi
                     mThemed.getCurrentThemeResourceId(), mThemed.getCurrentThemeColor(),
                     mThemed.getCurrentThemeBackgroundOption(), false);
             mActionModePopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-            final int actionModeOffset = getActionModeOffset();
+            final Rect actionModeBounds = getActionModeBounds();
+            if (actionModeBounds != null) {
+                mActionModePopup.setWidth(actionModeBounds.width());
+            } else {
+                mActionModePopup.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+            }
             mShowActionModePopup = new Runnable() {
                 @Override
                 public void run() {
-                    mActionModePopup.showAtLocation(
-                            mWindow.getDecorView(),
-                            Gravity.TOP | Gravity.FILL_HORIZONTAL, 0, actionModeOffset);
+                    if (actionModeBounds != null) {
+                        mActionModePopup.showAtLocation(mWindow.getDecorView(), Gravity.TOP | Gravity.LEFT,
+                                actionModeBounds.left, actionModeBounds.top);
+                    } else {
+                        mActionModePopup.showAtLocation(mWindow.getDecorView(), Gravity.TOP | Gravity.LEFT, 0, 0);
+                    }
                 }
             };
         }
@@ -162,14 +172,22 @@ public class TwidereActionModeForChildListener implements TintedStatusNativeActi
         return mActionMode;
     }
 
-    private int getActionModeOffset() {
-        if (mActivity instanceof IBaseFragment.SystemWindowsInsetsCallback) {
-            final Rect insets = new Rect();
-            if (((IBaseFragment.SystemWindowsInsetsCallback) mActivity).getSystemWindowsInsets(insets)) {
-                return Utils.getInsetsTopWithoutActionBarHeight(mActivity, insets.top);
+    private Rect getActionModeBounds() {
+        if (mActivity instanceof IAppCompatActivity) {
+            final Rect bounds = new Rect();
+            final int[] location = new int[2];
+            final ActionBar actionBar = ((IAppCompatActivity) mActivity).getSupportActionBar();
+            final Toolbar toolbar = AppCompatUtils.findToolbarForActionBar(actionBar);
+            if (toolbar != null) {
+                toolbar.getLocationInWindow(location);
+                bounds.left = location[0];
+                bounds.top = location[1];
+                bounds.right = bounds.left + toolbar.getWidth();
+                bounds.bottom = bounds.top + toolbar.getHeight();
+                return bounds;
             }
         }
-        return 0;
+        return null;
     }
 
     public boolean finishExisting() {

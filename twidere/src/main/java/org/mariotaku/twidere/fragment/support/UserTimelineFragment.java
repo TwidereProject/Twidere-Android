@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.UserTimelineLoader;
+import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
 
     @Override
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
-                                                                 final Bundle args,
-                                                                 final boolean fromUser) {
+                                                                    final Bundle args,
+                                                                    final boolean fromUser) {
         setRefreshing(true);
         final List<ParcelableStatus> data = getAdapterData();
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);

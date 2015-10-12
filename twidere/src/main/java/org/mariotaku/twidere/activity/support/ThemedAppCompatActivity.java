@@ -30,13 +30,15 @@ import android.view.View;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.activity.iface.IAppCompatActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
-public abstract class ThemedAppCompatActivity extends AppCompatActivity implements Constants, IThemedActivity {
+public abstract class ThemedAppCompatActivity extends AppCompatActivity implements Constants,
+        IThemedActivity, IAppCompatActivity {
 
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
     @ShapeStyle
