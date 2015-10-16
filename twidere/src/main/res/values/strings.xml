@@ -796,4 +796,5 @@
     <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g> mentioned you</string>
     <string name="cant_load_all_replies_message">Can\'t load all replies. &lt;a href=\"#dialog\";&gt;Why?&lt;/a&gt;</string>
     <string name="cant_load_all_replies_explanation">Due to Twitter\'s limitation to third party twitter apps, Twidere has no access to replies to a tweet, there\'s no guarantee that Twidere can load all replies to a tweet.</string>
+    <string name="current_status">Current tweet</string>
 </resources>

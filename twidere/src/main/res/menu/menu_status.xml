@@ -1,56 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~                 Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@id/reply"
-        android:icon="@drawable/ic_action_reply"
-        android:title="@string/reply"
-        app:showAsAction="always"/>
-    <item
-        android:id="@id/retweet"
-        android:icon="@drawable/ic_action_retweet"
-        android:title="@string/retweet"
-        app:showAsAction="always"/>
-    <item
-        android:id="@id/favorite"
-        android:icon="@drawable/ic_action_star"
-        android:title="@string/favorite"
-        app:showAsAction="always"/>
-    <item
-        android:id="@id/share"
-        android:icon="@drawable/ic_action_share"
-        android:title="@string/share"
-        app:actionProviderClass="org.mariotaku.twidere.menu.SupportStatusShareProvider"
-        app:showAsAction="always"/>
-    <item
-        android:id="@id/copy"
-        android:icon="@drawable/ic_action_copy"
-        android:title="@android:string/copy"/>
-    <item
-        android:id="@id/translate"
-        android:icon="@drawable/ic_action_translate"
-        android:title="@string/translate"/>
-    <item
-        android:id="@id/add_to_filter"
-        android:icon="@drawable/ic_action_speaker_muted"
-        android:title="@string/add_to_filter"/>
-    <item
-        android:id="@id/set_color"
-        android:icon="@drawable/ic_action_color_palette"
-        android:title="@string/set_color"/>
-    <item
-        android:id="@id/set_nickname"
-        android:icon="@drawable/ic_action_edit"
-        android:title="@string/set_nickname"/>
-    <item
-        android:id="@id/delete"
-        android:icon="@drawable/ic_action_delete"
-        android:title="@string/delete"
-        android:visible="false"/>
-    <item
-        android:id="@id/open_with_account"
-        android:icon="@drawable/ic_action_accounts"
-        android:title="@string/open_with_account"/>
-
+        android:id="@+id/current_status"
+        android:icon="@drawable/ic_action_twitter"
+        android:title="@string/current_status"
+        app:showAsAction="always" />
 </menu>

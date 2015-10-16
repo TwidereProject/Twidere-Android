@@ -64,6 +64,7 @@ import android.text.style.URLSpan;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -101,6 +102,7 @@ import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.StatusActionModeCallback;
@@ -272,6 +274,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         final View view = getView();
         if (view == null) throw new AssertionError();
         final Context context = view.getContext();
@@ -577,6 +580,32 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             //TODO show errors
             setState(STATE_ERROR);
         }
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.current_status: {
+                if (mStatusAdapter.getStatus() != null) {
+                    final int position = mStatusAdapter.getFirstPositionOfItem(StatusAdapter.ITEM_IDX_STATUS);
+                    mRecyclerView.smoothScrollToPosition(position);
+                }
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuUtils.setMenuItemAvailability(menu, R.id.current_status, mStatusAdapter.getStatus() != null);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_status, menu);
     }
 
     private void setConversation(List<ParcelableStatus> data) {
@@ -923,7 +952,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final StatusFragment fragment = adapter.getFragment();
             final FragmentActivity activity = fragment.getActivity();
             final MenuInflater inflater = activity.getMenuInflater();
-            inflater.inflate(R.menu.menu_status, menuBar.getMenu());
+            inflater.inflate(R.menu.menu_detail_status, menuBar.getMenu());
             ThemeUtils.wrapMenuIcon(menuBar, MENU_GROUP_STATUS_SHARE);
             mediaPreviewLoad.setOnClickListener(this);
             profileContainer.setOnClickListener(this);

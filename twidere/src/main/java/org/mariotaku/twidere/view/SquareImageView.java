@@ -43,20 +43,20 @@ public class SquareImageView extends ImageView {
         final int width = MeasureSpec.getSize(widthMeasureSpec), height = MeasureSpec.getSize(heightMeasureSpec);
         final ViewGroup.LayoutParams lp = getLayoutParams();
         if (lp.height == ViewGroup.LayoutParams.MATCH_PARENT && lp.width == ViewGroup.LayoutParams.WRAP_CONTENT) {
-            super.onMeasure(heightMeasureSpec, heightMeasureSpec);
-            setMeasuredDimension(height, height);
+            super.onMeasure(makeSpec(heightMeasureSpec, MeasureSpec.EXACTLY), makeSpec(heightMeasureSpec, MeasureSpec.EXACTLY));
         } else if (lp.width == ViewGroup.LayoutParams.MATCH_PARENT && lp.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
-            super.onMeasure(widthMeasureSpec, widthMeasureSpec);
-            setMeasuredDimension(width, width);
+            super.onMeasure(makeSpec(widthMeasureSpec, MeasureSpec.EXACTLY), makeSpec(widthMeasureSpec, MeasureSpec.EXACTLY));
         } else {
             if (width > height) {
-                super.onMeasure(heightMeasureSpec, heightMeasureSpec);
-                setMeasuredDimension(height, height);
+                super.onMeasure(makeSpec(heightMeasureSpec, MeasureSpec.EXACTLY), makeSpec(heightMeasureSpec, MeasureSpec.EXACTLY));
             } else {
-                super.onMeasure(widthMeasureSpec, widthMeasureSpec);
-                setMeasuredDimension(width, width);
+                super.onMeasure(makeSpec(widthMeasureSpec, MeasureSpec.EXACTLY), makeSpec(widthMeasureSpec, MeasureSpec.EXACTLY));
             }
         }
+    }
+
+    private static int makeSpec(int spec, int mode) {
+        return MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(spec), mode);
     }
 
 }
