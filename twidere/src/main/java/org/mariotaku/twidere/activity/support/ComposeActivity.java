@@ -983,7 +983,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         if (TextUtils.isEmpty(myScreenName)) return false;
         int selectionStart = 0;
         mEditText.append("@" + status.user_screen_name + " ");
-        selectionStart = mEditText.length();
+        // If status is not sent by our self, just include our screen name into selection.
+        if (status.account_id != status.user_id) {
+            selectionStart = mEditText.length();
+        }
         if (status.is_retweet) {
             mEditText.append("@" + status.retweeted_by_user_screen_name + " ");
         }
@@ -1164,7 +1167,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                 PermissionUtils.getPermission(permissions, grantResults, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startLocationUpdateIfEnabled();
         } else {
-            //TODO show permission denied message
+            Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -71,18 +71,6 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     private int mMetaState;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mActivityTracker.dispatchStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        mActivityTracker.dispatchStop(this);
-        super.onStop();
-    }
-
-    @Override
     public String getCurrentThemeFontFamily() {
         return mCurrentThemeFontFamily;
     }

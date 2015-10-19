@@ -19,10 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.twidere.util.AbsLogger;
+
 import java.util.Date;
 
 public interface Activity extends TwitterResponse, Comparable<Activity> {
 
+    int ACTION_UNKNOWN = 0x00;
     int ACTION_FAVORITE = 0x01;
     int ACTION_FOLLOW = 0x02;
     int ACTION_MENTION = 0x03;
@@ -36,6 +39,9 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
     int ACTION_RETWEETED_MENTION = 0x0B;
     int ACTION_FAVORITED_MENTION = 0x0C;
     int ACTION_JOINED_TWITTER = 0x0D;
+    int ACTION_MEDIA_TAGGED = 0x0E;
+    int ACTION_FAVORITED_MEDIA_TAGGED = 0x0F;
+    int ACTION_RETWEETED_MEDIA_TAGGED = 0x10;
 
     Action getAction();
 
@@ -71,7 +77,9 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
         RETWEET(ACTION_RETWEET), LIST_MEMBER_ADDED(ACTION_LIST_MEMBER_ADDED), LIST_CREATED(ACTION_LIST_CREATED),
         FAVORITED_RETWEET(ACTION_FAVORITED_RETWEET), RETWEETED_RETWEET(ACTION_RETWEETED_RETWEET),
         QUOTE(ACTION_QUOTE), RETWEETED_MENTION(ACTION_RETWEETED_MENTION),
-        FAVORITED_MENTION(ACTION_FAVORITED_MENTION), JOINED_TWITTER(ACTION_JOINED_TWITTER);
+        FAVORITED_MENTION(ACTION_FAVORITED_MENTION), JOINED_TWITTER(ACTION_JOINED_TWITTER),
+        MEDIA_TAGGED(ACTION_MEDIA_TAGGED), FAVORITED_MEDIA_TAGGED(ACTION_FAVORITED_MEDIA_TAGGED),
+        RETWEETED_MEDIA_TAGGED(ACTION_RETWEETED_MEDIA_TAGGED), UNKNOWN(ACTION_UNKNOWN);
 
         private final int actionId;
 
@@ -93,7 +101,11 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
             if ("retweeted_mention".equalsIgnoreCase(string)) return RETWEETED_MENTION;
             if ("favorited_mention".equalsIgnoreCase(string)) return FAVORITED_MENTION;
             if ("joined_twitter".equalsIgnoreCase(string)) return JOINED_TWITTER;
-            throw new IllegalArgumentException("Unknown action " + string);
+            if ("media_tagged".equalsIgnoreCase(string)) return MEDIA_TAGGED;
+            if ("favorited_media_tagged".equalsIgnoreCase(string)) return FAVORITED_MEDIA_TAGGED;
+            if ("retweeted_media_tagged".equalsIgnoreCase(string)) return RETWEETED_MEDIA_TAGGED;
+            AbsLogger.error("Unknown Twitter activity action " + string);
+            return UNKNOWN;
         }
 
         public int getActionId() {

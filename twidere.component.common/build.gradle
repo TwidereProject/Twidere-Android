@@ -45,6 +45,6 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.github.mariotaku:RestFu:0.9.2'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
-    compile 'com.github.mariotaku:SQLiteQB:ef3f596199'
+    compile 'com.github.mariotaku:SQLiteQB:901dd5e72f'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

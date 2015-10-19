@@ -1010,7 +1010,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             }
             // I bet you don't want to see these users in your auto complete list.
             //TODO insert to blocked users data
-//            bulkDelete(mResolver, CachedUsers.CONTENT_URI, CachedUsers.USER_ID, list, null, false);
+            final ContentValues values = new ContentValues();
+            values.put(CachedRelationships.BLOCKING, true);
+            values.put(CachedRelationships.FOLLOWING, false);
+            values.put(CachedRelationships.FOLLOWED_BY, false);
+            mResolver.update(CachedRelationships.CONTENT_URI, values,
+                    Expression.inArgs(CachedRelationships.USER_ID, list.size()).getSQL(),
+                    TwidereArrayUtils.toStringArray(list));
         }
 
         @Override

@@ -29,6 +29,7 @@ import android.os.BatteryManager;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
@@ -151,7 +152,8 @@ public class HotMobiLogger {
     }
 
     public static void logPowerBroadcast(Context context) {
-        logPowerBroadcast(context, context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED)));
+        final TwidereApplication app = TwidereApplication.getInstance(context);
+        logPowerBroadcast(context, app.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED)));
     }
 
     public static void logPowerBroadcast(Context context, Intent intent) {

@@ -214,15 +214,4 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         return true;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mActivityTracker.dispatchStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        mActivityTracker.dispatchStop(this);
-        super.onStop();
-    }
 }

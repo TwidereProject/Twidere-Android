@@ -31,6 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Deprecated
 public final class AsyncTaskManager {
 
     private final CopyOnWriteArrayList<ManagedAsyncTask<?, ?, ?>> mTasks = new CopyOnWriteArrayList<>();
@@ -84,7 +85,7 @@ public final class AsyncTaskManager {
     @SuppressWarnings("unchecked")
     public final <T> boolean execute(final int hashCode, final T... params) {
         final ManagedAsyncTask<T, ?, ?> task = (ManagedAsyncTask<T, ?, ?>) findTask(hashCode);
-        if (task != null) {
+        if (task != null && task.getStatus() == AsyncTask.Status.PENDING) {
             task.executeOnExecutor(mExecutor, params);
             return true;
         }
@@ -97,13 +98,6 @@ public final class AsyncTaskManager {
 
     public ArrayList<ManagedAsyncTask<?, ?, ?>> getTaskSpecList() {
         return new ArrayList<>(mTasks);
-    }
-
-    public boolean hasRunningTask() {
-        for (final ManagedAsyncTask<?, ?, ?> task : getTaskSpecList()) {
-            if (task.getStatus() == ManagedAsyncTask.Status.RUNNING) return true;
-        }
-        return false;
     }
 
     public boolean hasRunningTasksForTag(final String tag) {

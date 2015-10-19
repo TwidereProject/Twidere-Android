@@ -110,7 +110,10 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
                     case FAVORITED_RETWEET:
                     case RETWEETED_RETWEET:
                     case RETWEETED_MENTION:
-                    case FAVORITED_MENTION: {
+                    case FAVORITED_MENTION:
+                    case MEDIA_TAGGED:
+                    case FAVORITED_MEDIA_TAGGED:
+                    case RETWEETED_MEDIA_TAGGED: {
                         instance.targetStatuses = LoganSquare.mapperFor(Status.class).parseList(jsonParser).toArray(new Status[instance.targetsSize]);
                         break;
                     }
@@ -145,7 +148,10 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
                     case FAVORITED_RETWEET:
                     case RETWEETED_RETWEET:
                     case RETWEETED_MENTION:
-                    case FAVORITED_MENTION: {
+                    case FAVORITED_MENTION:
+                    case MEDIA_TAGGED:
+                    case FAVORITED_MEDIA_TAGGED:
+                    case RETWEETED_MEDIA_TAGGED: {
                         instance.targetObjectUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetObjectsSize]);
                         break;
                     }

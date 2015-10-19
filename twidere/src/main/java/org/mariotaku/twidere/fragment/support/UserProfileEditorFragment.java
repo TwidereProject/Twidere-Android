@@ -105,6 +105,8 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private ParcelableUser mUser;
     private boolean mUserInfoLoaderInitialized;
     private boolean mGetUserInfoCalled;
+    private boolean mFragmentsResumed;
+    private Runnable mResumeFragmentRunnable;
 
     @Override
     public void beforeTextChanged(final CharSequence s, final int length, final int start, final int end) {
@@ -205,13 +207,6 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mTask != null && mTask.getStatus() == Status.PENDING) {
-            AsyncTaskUtils.executeTask(mTask);
-        }
-    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -364,15 +359,58 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mTask != null && mTask.getStatus() == Status.PENDING) {
+            AsyncTaskUtils.executeTask(mTask);
+        }
+        if (!mFragmentsResumed && mResumeFragmentRunnable != null) {
+            mResumeFragmentRunnable.run();
+        }
+        mFragmentsResumed = true;
+    }
+
+    @Override
+    public void onPause() {
+        mFragmentsResumed = false;
+        super.onPause();
+    }
+
+    private void dismissDialogFragment(final String tag) {
+        mResumeFragmentRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final FragmentManager fm = getChildFragmentManager();
+                final Fragment f = fm.findFragmentByTag(tag);
+                if (f instanceof DialogFragment) {
+                    ((DialogFragment) f).dismiss();
+                }
+                mResumeFragmentRunnable = null;
+            }
+        };
+        if (mFragmentsResumed) {
+            mResumeFragmentRunnable.run();
+        }
+    }
+
     private void setUpdateState(final boolean start) {
-        final FragmentManager fm = getChildFragmentManager();
-        final Fragment f = fm.findFragmentByTag(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
-        if (!start && f instanceof DialogFragment) {
-            ((DialogFragment) f).dismiss();
-        } else if (start) {
-            SupportProgressDialogFragment df = new SupportProgressDialogFragment();
-            df.show(fm, UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
-            df.setCancelable(false);
+        if (!start) {
+            dismissDialogFragment(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
+            return;
+        }
+        mResumeFragmentRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final FragmentManager fm = getChildFragmentManager();
+                SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+                df.show(fm, UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
+                df.setCancelable(false);
+                mResumeFragmentRunnable = null;
+            }
+        };
+        if (mFragmentsResumed) {
+            mResumeFragmentRunnable.run();
         }
     }
 

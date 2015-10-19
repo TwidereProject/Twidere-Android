@@ -162,6 +162,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         startRefreshServiceIfNeeded(this);
 
         reloadConnectivitySettings();
+
+        registerActivityLifecycleCallbacks(getApplicationModule().getActivityTracker());
     }
 
     private void initDebugMode() {

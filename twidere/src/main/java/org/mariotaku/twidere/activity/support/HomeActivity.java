@@ -320,10 +320,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 final DrawerLayout drawer = mDrawerLayout;
                 if (isDrawerOpen()) {
                     drawer.closeDrawers();
-                } else {
-                    onBackPressed();
+                    return true;
                 }
-                return true;
             }
         }
         return super.onKeyUp(keyCode, event);

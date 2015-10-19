@@ -66,7 +66,6 @@
     <item name="add_to_filter" type="id"/>
     <item name="follow" type="id"/>
     <item name="unfollow" type="id"/>
-    <item name="back" type="id"/>
     <item name="translate" type="id"/>
     <item name="accept" type="id"/>
     <item name="deny" type="id"/>

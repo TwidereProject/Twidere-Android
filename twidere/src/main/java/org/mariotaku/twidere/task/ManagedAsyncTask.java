@@ -32,6 +32,7 @@ import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import javax.inject.Inject;
 
+@Deprecated
 public abstract class ManagedAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> implements
         Constants {
 

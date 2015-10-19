@@ -128,6 +128,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     private ContentResolver mResolver;
     private AbstractSignInTask mTask;
     private TintedStatusLayout mMainContent;
+    private Runnable mResumeFragmentRunnable;
+    private boolean mFragmentsResumed;
 
     @Override
     public void afterTextChanged(final Editable s) {
@@ -433,11 +435,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     }
 
     void onSignInResult(final SignInResponse result) {
-        final FragmentManager fm = getSupportFragmentManager();
-        final Fragment f = fm.findFragmentByTag(FRAGMENT_TAG_SIGN_IN_PROGRESS);
-        if (f instanceof DialogFragment) {
-            ((DialogFragment) f).dismiss();
-        }
+        dismissDialogFragment(FRAGMENT_TAG_SIGN_IN_PROGRESS);
         if (result != null) {
             if (result.alreadyLoggedIn) {
                 final ContentValues values = result.toContentValues();
@@ -472,8 +470,40 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         setSignInButton();
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (!mFragmentsResumed && mResumeFragmentRunnable != null) {
+            mResumeFragmentRunnable.run();
+        }
+        mFragmentsResumed = true;
+    }
+
+    @Override
+    protected void onPause() {
+        mFragmentsResumed = false;
+        super.onPause();
+    }
+
+    private void dismissDialogFragment(final String tag) {
+        mResumeFragmentRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final FragmentManager fm = getSupportFragmentManager();
+                final Fragment f = fm.findFragmentByTag(tag);
+                if (f instanceof DialogFragment) {
+                    ((DialogFragment) f).dismiss();
+                }
+                mResumeFragmentRunnable = null;
+            }
+        };
+        if (mFragmentsResumed) {
+            mResumeFragmentRunnable.run();
+        }
+    }
+
     void onSignInStart() {
-        mHandler.post(new Runnable() {
+        mResumeFragmentRunnable = new Runnable() {
             @Override
             public void run() {
                 if (isFinishing()) return;
@@ -482,8 +512,12 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 final SupportProgressDialogFragment fragment = new SupportProgressDialogFragment();
                 fragment.setCancelable(false);
                 fragment.show(ft, FRAGMENT_TAG_SIGN_IN_PROGRESS);
+                mResumeFragmentRunnable = null;
             }
-        });
+        };
+        if (mFragmentsResumed) {
+            mResumeFragmentRunnable.run();
+        }
     }
 
     protected boolean isActionBarOutlineEnabled() {

@@ -21,6 +21,8 @@ package org.mariotaku.twidere.util;
 
 
 import android.app.Activity;
+import android.app.Application;
+import android.os.Bundle;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
@@ -31,12 +33,30 @@ import edu.tsinghua.hotmobi.model.SessionEvent;
 /**
  * Created by mariotaku on 15/10/5.
  */
-public class ActivityTracker {
+public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
 
     private final IntList mInternalStack = new ArrayIntList();
     private SessionEvent mSessionEvent;
 
-    public void dispatchStart(Activity activity) {
+    private boolean isSwitchingInSameTask(int hashCode) {
+        return mInternalStack.lastIndexOf(hashCode) < mInternalStack.size() - 1;
+    }
+
+    public int size() {
+        return mInternalStack.size();
+    }
+
+    public boolean isEmpty() {
+        return mInternalStack.isEmpty();
+    }
+
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
         mInternalStack.add(System.identityHashCode(activity));
         // BEGIN HotMobi
         if (mSessionEvent == null) {
@@ -45,8 +65,18 @@ public class ActivityTracker {
         // END HotMobi
     }
 
-    public void dispatchStop(Activity activity) {
+    @Override
+    public void onActivityResumed(Activity activity) {
 
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
         final int hashCode = System.identityHashCode(activity);
 
         // BEGIN HotMobi
@@ -62,16 +92,13 @@ public class ActivityTracker {
         mInternalStack.removeElement(hashCode);
     }
 
-    private boolean isSwitchingInSameTask(int hashCode) {
-        return mInternalStack.lastIndexOf(hashCode) < mInternalStack.size() - 1;
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
     }
 
-    public int size() {
-        return mInternalStack.size();
-    }
+    @Override
+    public void onActivityDestroyed(Activity activity) {
 
-    public boolean isEmpty() {
-        return mInternalStack.isEmpty();
     }
-
 }

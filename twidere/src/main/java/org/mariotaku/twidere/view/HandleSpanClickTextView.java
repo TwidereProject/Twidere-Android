@@ -62,7 +62,13 @@ public class HandleSpanClickTextView extends ThemedTextView {
 
             final Layout layout = getLayout();
             final int line = layout.getLineForVertical(y);
-            final int off = layout.getOffsetForHorizontal(line, x);
+            final int off;
+            try {
+                off = layout.getOffsetForHorizontal(line, x);
+            } catch (IndexOutOfBoundsException e) {
+                throw new IndexOutOfBoundsException("Line count " + layout.getLineCount() +
+                        ", line for y " + y + " is " + line + ", x is " + x);
+            }
             final float lineWidth = layout.getLineWidth(line);
 
             final ClickableSpan[] links = buffer.getSpans(off, off, ClickableSpan.class);

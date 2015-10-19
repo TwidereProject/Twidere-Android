@@ -325,14 +325,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             }
         }
         mEditText.setSelection(mEditText.length());
-//        mEditText.setMaxCharacters(mValidator.getMaxTweetLength());
-//        mEditText.setLengthChecker(new METLengthChecker() {
-//            @Override
-//            public int getLength(CharSequence text) {
-//                return mValidator.getTweetLength(String.valueOf(text));
-//            }
-//        });
-        // TODO show text length
         final boolean isValid = mAccount != null && mRecipient != null;
         mConversationContainer.setVisibility(isValid ? View.VISIBLE : View.GONE);
         mRecipientSelectorContainer.setVisibility(isValid ? View.GONE : View.VISIBLE);

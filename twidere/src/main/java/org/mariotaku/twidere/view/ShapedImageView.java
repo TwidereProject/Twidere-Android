@@ -475,6 +475,7 @@ public class ShapedImageView extends ImageView {
         final float radius = mShadowRadius, dy = radius * 1.5f / 2;
         final int size = Math.round(Math.min(contentWidth, contentHeight) + radius * 2);
         mShadowBitmap = Bitmap.createBitmap(size, Math.round(size + dy), Config.ARGB_8888);
+        if (mShadowBitmap == null) return;
         Canvas canvas = new Canvas(mShadowBitmap);
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(0xFF000000 | mBackgroundPaint.getColor());

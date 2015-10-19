@@ -776,13 +776,15 @@ public final class Utils implements Constants {
         }
     }
 
-    public static Bundle createMediaViewerActivityOption(View view) {
+    public static Bundle createMediaViewerActivityOption(@NonNull View view) {
         view.buildDrawingCache();
         try {
             final Bitmap viewDrawingCache = view.getDrawingCache();
             if (viewDrawingCache == null) return null;
             final Bitmap drawingCache = Bitmap.createBitmap(viewDrawingCache);
             return ActivityOptionsCompat.makeThumbnailScaleUpAnimation(view, drawingCache, 0, 0).toBundle();
+        } catch (NullPointerException e) {
+            return null;
         } finally {
             view.destroyDrawingCache();
         }
@@ -1600,7 +1602,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean isComposeNowSupported(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return false;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN || context == null) return false;
         return hasNavBar(context);
     }
 
@@ -1624,11 +1626,15 @@ public final class Utils implements Constants {
 
     public static boolean removeLineBreaks(Editable s) {
         boolean deleted = false;
-        for (int i = s.length() - 1; i >= 0; i--) {
-            if (s.charAt(i) == '\n') {
-                s.delete(i, i + 1);
-                deleted |= true;
+        try {
+            for (int i = s.length() - 1; i >= 0; i--) {
+                if (s.charAt(i) == '\n') {
+                    s.delete(i, i + 1);
+                    deleted |= true;
+                }
             }
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException("Error processing " + s + ", original message: " + e.getMessage());
         }
         return deleted;
     }
@@ -2277,24 +2283,14 @@ public final class Utils implements Constants {
         return getTableNameById(getTableId(uri));
     }
 
-    public static int getTextCount(final String string) {
-        if (string == null) return 0;
-        return TwidereArrayUtils.toStringArray(string).length;
-    }
-
-    public static int getTextCount(final TextView view) {
-        if (view == null) return 0;
-        final String string = ParseUtils.parseString(view.getText());
-        return getTextCount(string);
-    }
-
     public static long getTimestampFromDate(final Date date) {
         if (date == null) return -1;
         return date.getTime();
     }
 
-    public static boolean hasNavBar(Context context) {
+    public static boolean hasNavBar(@NonNull Context context) {
         final Resources resources = context.getResources();
+        if (resources == null) return false;
         int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
         if (id > 0) {
             return resources.getBoolean(id);

@@ -320,7 +320,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
         int result = 0;
         final long[] newIds = new long[valuesArray.length];
-        if (table != null) {
+        if (table != null && valuesArray.length > 0) {
             mDatabaseWrapper.beginTransaction();
             if (tableId == TABLE_ID_CACHED_USERS) {
                 for (final ContentValues values : valuesArray) {

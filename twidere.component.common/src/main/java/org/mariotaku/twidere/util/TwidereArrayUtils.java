@@ -213,9 +213,15 @@ public final class TwidereArrayUtils {
         return string_array;
     }
 
-    public static String[] toStringArray(final String s) {
-        if (s == null) return null;
-        return s.split("(?!^)");
+
+    public static String[] toStringArray(final List<?> list) {
+        if (list == null) return null;
+        final int length = list.size();
+        final String[] stringArray = new String[length];
+        for (int i = 0; i < length; i++) {
+            stringArray[i] = ParseUtils.parseString(list.get(i));
+        }
+        return stringArray;
     }
 
     public static String toStringForSQL(final String[] array) {

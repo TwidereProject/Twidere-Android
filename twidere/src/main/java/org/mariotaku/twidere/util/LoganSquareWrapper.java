@@ -57,7 +57,7 @@ public class LoganSquareWrapper extends LoganSquare {
         if (context == null || args == null || args.length == 0) return null;
         final File cacheDir = Utils.getBestCacheDir(context, JSON_CACHE_DIR);
         if (!cacheDir.exists()) {
-            AbsLogger.logIfFalse(cacheDir.mkdirs(), "Unable to create cache dir");
+            AbsLogger.logIfFalse(cacheDir.mkdirs(), "Unable to create cache dir " + cacheDir);
         }
         final String filename = Utils.encodeQueryParams(TwidereArrayUtils.toString(args, '.', false));
         return new File(cacheDir, filename + ".json");
