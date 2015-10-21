@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import java.io.Serializable;
-import java.net.URL;
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.UrlEntityImpl;
 
 /**
  * A data interface representing one single URL entity.
@@ -28,6 +28,7 @@ import java.net.URL;
  * @author Mocel - mocel at guma.jp
  * @since Twitter4J 2.1.9
  */
+@Implementation(UrlEntityImpl.class)
 public interface UrlEntity  {
 
 	/**

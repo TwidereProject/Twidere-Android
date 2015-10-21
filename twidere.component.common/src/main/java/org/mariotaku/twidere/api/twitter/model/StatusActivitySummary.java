@@ -19,6 +19,10 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.StatusActivitySummaryImpl;
+
+@Implementation(StatusActivitySummaryImpl.class)
 public interface StatusActivitySummary extends TwitterResponse {
 
 	long getDescendentReplyCount();

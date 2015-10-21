@@ -36,7 +36,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.LoganSquareWrapper;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -185,7 +185,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     private List<ParcelableStatus> getCachedData(final File file) {
         if (file == null) return null;
         try {
-            return LoganSquareWrapper.parseList(file, ParcelableStatus.class);
+            return JsonSerializer.parseList(file, ParcelableStatus.class);
         } catch (final IOException e) {
             Log.w(LOGTAG, e);
         }
@@ -195,7 +195,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     private File getSerializationFile() {
         if (mSavedStatusesFileArgs == null) return null;
         try {
-            return LoganSquareWrapper.getSerializationFile(mContext, mSavedStatusesFileArgs);
+            return JsonSerializer.getSerializationFile(mContext, mSavedStatusesFileArgs);
         } catch (final IOException e) {
             e.printStackTrace();
         }

@@ -19,12 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.ErrorInfoImpl;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
+@Implementation(ErrorInfoImpl.class)
 public interface ErrorInfo {
 
     int getCode();

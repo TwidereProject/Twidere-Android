@@ -30,6 +30,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.UriExtraUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
@@ -50,12 +51,14 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
                 if (uri == null) return;
                 final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
                 final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
-                final long extraId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_EXTRA_ID), -1);
+                final long itemId = ParseUtils.parseLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
+                final long itemUserId = ParseUtils.parseLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
                 final long timestamp = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
                 final ApplicationModule module = ApplicationModule.get(context);
-                if (AUTHORITY_MENTIONS.equals(type) && accountId != -1 && extraId != -1 && timestamp != -1) {
+                if (AUTHORITY_MENTIONS.equals(type) && accountId != -1 && itemId != -1 && timestamp != -1) {
                     final HotMobiLogger logger = module.getHotMobiLogger();
-                    logger.log(accountId, NotificationEvent.deleted(context, timestamp, type, accountId, extraId));
+                    logger.log(accountId, NotificationEvent.deleted(context, timestamp, type, accountId,
+                            itemId, itemUserId));
                 }
                 final ReadStateManager manager = module.getReadStateManager();
                 final String paramReadPosition, paramReadPositions;

@@ -31,7 +31,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public class QueryResultWrapper extends TwitterResponseImpl implements Wrapper<QueryResult> {
+public class QueryResultWrapper extends TwitterResponseImpl implements TwitterModelWrapper<QueryResult> {
 
     @JsonField(name = "previous_cursor")
     long previousCursor;

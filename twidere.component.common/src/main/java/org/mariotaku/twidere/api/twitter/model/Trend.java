@@ -19,12 +19,16 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.TrendImpl;
+
 /**
  * A data interface representing Trend.
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.0.2
  */
+@Implementation(TrendImpl.class)
 public interface Trend {
 
     String getName();

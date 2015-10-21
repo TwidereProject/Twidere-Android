@@ -19,16 +19,12 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-
-import java.io.IOException;
+import org.mariotaku.library.logansquare.extension.annotation.Mapper;
 
 /**
  * Created by mariotaku on 15/3/31.
  */
+@Mapper(IndicesMapper.class)
 public class Indices {
 
     private int start, end;
@@ -41,13 +37,10 @@ public class Indices {
         return start;
     }
 
-    public Indices(JsonParser reader) throws IOException {
-        if (!reader.isExpectedStartArrayToken()) throw new IOException("Malformed indices");
-        start = reader.nextIntValue(-1);
-        end = reader.nextIntValue(-1);
-        if (reader.nextToken() != JsonToken.END_ARRAY) throw new IOException("Malformed indices");
+    public Indices(int start, int end) {
+        this.start = start;
+        this.end = end;
     }
-
 
     @Override
     public String toString() {
@@ -57,15 +50,4 @@ public class Indices {
                 '}';
     }
 
-    public static final TypeConverter<Indices> CONVERTER = new TypeConverter<Indices>() {
-        @Override
-        public Indices parse(JsonParser jsonParser) throws IOException {
-            return new Indices(jsonParser);
-        }
-
-        @Override
-        public void serialize(Indices object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
-            throw new UnsupportedOperationException();
-        }
-    };
 }

@@ -19,6 +19,10 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.MediaUploadResponseImpl;
+
+@Implementation(MediaUploadResponseImpl.class)
 public interface MediaUploadResponse extends TwitterResponse {
 
     long getId();
@@ -27,6 +31,7 @@ public interface MediaUploadResponse extends TwitterResponse {
 
     long getSize();
 
+    @Implementation(MediaUploadResponseImpl.ImageImpl.class)
     interface Image {
 
         int getHeight();

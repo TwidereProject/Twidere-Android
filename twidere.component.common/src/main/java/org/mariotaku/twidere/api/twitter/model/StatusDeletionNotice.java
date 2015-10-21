@@ -19,9 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.StatusDeletionNoticeImpl;
+
 /**
  * Created by mariotaku on 15/5/26.
  */
+@Implementation(StatusDeletionNoticeImpl.class)
 public interface StatusDeletionNotice {
     long getStatusId();
 }

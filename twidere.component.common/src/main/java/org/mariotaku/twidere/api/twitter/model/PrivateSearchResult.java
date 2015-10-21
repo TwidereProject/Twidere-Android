@@ -19,20 +19,8 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.TranslationResultImpl;
-
-@Implementation(TranslationResultImpl.class)
-public interface TranslationResult extends TwitterResponse {
-
-	public long getId();
-
-	public String getLang();
-
-	public String getText();
-
-	public String getTranslatedLang();
-
-	public String getTranslationType();
-
+/**
+ * Created by mariotaku on 15/10/21.
+ */
+public interface PrivateSearchResult {
 }

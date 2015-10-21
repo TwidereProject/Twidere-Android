@@ -21,9 +21,14 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.EnumClass;
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.MediaEntityImpl;
+
 import java.util.Map;
 
 
+@Implementation(MediaEntityImpl.class)
 public interface MediaEntity extends UrlEntity {
 
     long getId();
@@ -42,6 +47,7 @@ public interface MediaEntity extends UrlEntity {
 
     Type getType();
 
+    @EnumClass
     enum Type {
         PHOTO, VIDEO, ANIMATED_GIF, UNKNOWN;
 
@@ -59,6 +65,7 @@ public interface MediaEntity extends UrlEntity {
 
     VideoInfo getVideoInfo();
 
+    @Implementation(MediaEntityImpl.VideoInfoImpl.class)
     interface VideoInfo {
 
         Variant[] getVariants();
@@ -67,6 +74,7 @@ public interface MediaEntity extends UrlEntity {
 
         long getDuration();
 
+        @Implementation(MediaEntityImpl.VideoInfoImpl.VariantImpl.class)
         interface Variant {
 
             String getContentType();
@@ -78,6 +86,7 @@ public interface MediaEntity extends UrlEntity {
 
     }
 
+    @Implementation(MediaEntityImpl.SizeImpl.class)
     interface Size {
         String THUMB = "thumb";
         String SMALL = "small";
@@ -96,8 +105,10 @@ public interface MediaEntity extends UrlEntity {
     /**
      * Created by mariotaku on 15/3/31.
      */
+    @Implementation(MediaEntityImpl.FeatureImpl.class)
     interface Feature {
 
+        @Implementation(MediaEntityImpl.FeatureImpl.FaceImpl.class)
         interface Face {
 
             int getX();

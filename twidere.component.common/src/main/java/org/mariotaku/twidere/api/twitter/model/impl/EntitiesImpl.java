@@ -22,12 +22,12 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import java.util.Arrays;
-
 import org.mariotaku.twidere.api.twitter.model.HashtagEntity;
 import org.mariotaku.twidere.api.twitter.model.MediaEntity;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
+
+import java.util.Arrays;
 
 /**
  * Created by mariotaku on 15/3/31.
@@ -35,16 +35,16 @@ import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 @JsonObject
 public class EntitiesImpl {
     @JsonField(name = "hashtags")
-    HashtagEntity[] hashtags;
+    HashtagEntityImpl[] hashtags;
 
     @JsonField(name = "user_mentions")
-    UserMentionEntity[] userMentions;
+    UserMentionEntityImpl[] userMentions;
 
     @JsonField(name = "urls")
-    UrlEntity[] urls;
+    UrlEntityImpl[] urls;
 
     @JsonField(name = "media")
-    MediaEntity[] media;
+    MediaEntityImpl[] media;
 
     public HashtagEntity[] getHashtags() {
         return hashtags;

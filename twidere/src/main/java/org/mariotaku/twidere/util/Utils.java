@@ -3946,12 +3946,14 @@ public final class Utils implements Constants {
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, false)) return;
         final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
         final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
-        final long extraId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_EXTRA_ID), -1);
+
+        final long itemId = ParseUtils.parseLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
+        final long itemUserId = ParseUtils.parseLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
         final long timestamp = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
-        if (!AUTHORITY_STATUS.equals(type) || accountId < 0 || extraId < 0 || timestamp < 0) return;
+        if (!AUTHORITY_STATUS.equals(type) || accountId < 0 || itemId < 0 || timestamp < 0) return;
         final ApplicationModule module = ApplicationModule.get(context);
         final HotMobiLogger logger = module.getHotMobiLogger();
-        logger.log(accountId, NotificationEvent.open(context, timestamp, type, accountId, extraId));
+        logger.log(accountId, NotificationEvent.open(context, timestamp, type, accountId, itemId, itemUserId));
     }
 
     public static boolean hasOfficialAPIAccess(Context context, SharedPreferences preferences, ParcelableCredentials account) {

@@ -19,6 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.library.logansquare.extension.annotation.Wrapper;
+import org.mariotaku.twidere.api.twitter.model.impl.RelationshipImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.RelationshipWrapper;
+
+@Wrapper(RelationshipWrapper.class)
+@Implementation(RelationshipImpl.class)
 public interface Relationship extends TwitterResponse {
     boolean canSourceDMTarget();
 

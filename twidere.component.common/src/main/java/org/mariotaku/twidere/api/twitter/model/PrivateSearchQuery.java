@@ -17,15 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
+import org.mariotaku.restfu.http.SimpleValueMap;
 
 /**
- * Created by mariotaku on 15/5/7.
+ * Created by mariotaku on 15/10/21.
  */
-public interface Wrapper<T> extends TwitterResponse {
-
-    T getWrapped(Object extra);
-
+public class PrivateSearchQuery extends SimpleValueMap {
+    public void setQuery(String query) {
+        put("q", query);
+    }
 }

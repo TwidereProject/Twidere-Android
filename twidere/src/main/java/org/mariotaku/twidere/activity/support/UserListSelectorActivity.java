@@ -25,9 +25,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -81,6 +81,8 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
             }
         }
     };
+    private Runnable mResumeFragmentRunnable;
+    private boolean mFragmentsResumed;
 
     @Override
     public void onClick(final View v) {
@@ -230,18 +232,61 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
         mCreateUserListContainer.setVisibility(isMyAccount ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (!mFragmentsResumed && mResumeFragmentRunnable != null) {
+            mResumeFragmentRunnable.run();
+        }
+        mFragmentsResumed = true;
+    }
+
+    @Override
+    protected void onPause() {
+        mFragmentsResumed = false;
+        super.onPause();
+    }
+
+    private void dismissDialogFragment(final String tag) {
+        mResumeFragmentRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final FragmentManager fm = getSupportFragmentManager();
+                final Fragment f = fm.findFragmentByTag(tag);
+                if (f instanceof DialogFragment) {
+                    ((DialogFragment) f).dismiss();
+                }
+                mResumeFragmentRunnable = null;
+            }
+        };
+        if (mFragmentsResumed) {
+            mResumeFragmentRunnable.run();
+        }
+    }
+
+    private void showDialogFragment(final DialogFragment df, final String tag) {
+        mResumeFragmentRunnable = new Runnable() {
+            @Override
+            public void run() {
+                df.show(getSupportFragmentManager(), tag);
+                mResumeFragmentRunnable = null;
+            }
+        };
+        if (mFragmentsResumed) {
+            mResumeFragmentRunnable.run();
+        }
+    }
+
     private static class GetUserListsTask extends AsyncTask<Object, Object, SingleResponse<List<ParcelableUserList>>> {
 
         private static final String FRAGMENT_TAG_GET_USER_LISTS = "get_user_lists";
 
         private final UserListSelectorActivity mActivity;
-        private final Handler mHandler;
         private final long mAccountId;
         private final String mScreenName;
 
         GetUserListsTask(final UserListSelectorActivity activity, final long accountId, final String screenName) {
             mActivity = activity;
-            mHandler = new Handler(activity.getMainLooper());
             mAccountId = accountId;
             mScreenName = screenName;
         }
@@ -274,10 +319,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected void onPostExecute(final SingleResponse<List<ParcelableUserList>> result) {
-            final Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_GET_USER_LISTS);
-            if (f instanceof DialogFragment) {
-                ((DialogFragment) f).dismiss();
-            }
+            mActivity.dismissDialogFragment(FRAGMENT_TAG_GET_USER_LISTS);
             if (result.getData() != null) {
                 mActivity.setUserListsData(result.getData(), result.getExtras().getBoolean(EXTRA_IS_MY_ACCOUNT));
             } else if (result.getException() instanceof TwitterException) {
@@ -290,13 +332,9 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected void onPreExecute() {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    final SupportProgressDialogFragment df = SupportProgressDialogFragment.show(mActivity, FRAGMENT_TAG_GET_USER_LISTS);
-                    df.setCancelable(false);
-                }
-            });
+            final SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+            df.setCancelable(false);
+            mActivity.showDialogFragment(df, FRAGMENT_TAG_GET_USER_LISTS);
         }
 
     }
@@ -305,14 +343,12 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         private static final String FRAGMENT_TAG_SEARCH_USERS = "search_users";
         private final UserListSelectorActivity mActivity;
-        private final Handler mHandler;
 
         private final long mAccountId;
         private final String mName;
 
         SearchUsersTask(final UserListSelectorActivity activity, final long accountId, final String name) {
             mActivity = activity;
-            mHandler = new Handler(activity.getMainLooper());
             mAccountId = accountId;
             mName = name;
         }
@@ -337,10 +373,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected void onPostExecute(final SingleResponse<List<ParcelableUser>> result) {
-            final Fragment f = mActivity.getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_SEARCH_USERS);
-            if (f instanceof DialogFragment) {
-                ((DialogFragment) f).dismiss();
-            }
+            mActivity.dismissDialogFragment(FRAGMENT_TAG_SEARCH_USERS);
             if (result.getData() != null) {
                 mActivity.setUsersData(result.getData());
             }
@@ -348,15 +381,12 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected void onPreExecute() {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    final SupportProgressDialogFragment df = SupportProgressDialogFragment.show(mActivity, FRAGMENT_TAG_SEARCH_USERS);
-                    df.setCancelable(false);
-                }
-            });
+            final SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+            df.setCancelable(false);
+            mActivity.showDialogFragment(df, FRAGMENT_TAG_SEARCH_USERS);
         }
 
     }
+
 
 }

@@ -19,19 +19,14 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.User;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -141,21 +136,7 @@ public class CardEntityImpl implements CardEntity {
     }
 
     @JsonObject
-    public static class BindingValueWrapper implements Wrapper<BindingValue> {
-
-        public static final TypeConverter<BindingValue> CONVERTER = new TypeConverter<BindingValue>() {
-            @Override
-            public BindingValue parse(JsonParser jsonParser) throws IOException {
-                final BindingValueWrapper wrapper = LoganSquare.mapperFor(BindingValueWrapper.class).parse(jsonParser);
-                if (wrapper == null) return null;
-                return wrapper.getWrapped(null);
-            }
-
-            @Override
-            public void serialize(BindingValue object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
-                throw new UnsupportedOperationException();
-            }
-        };
+    public static class BindingValueWrapper implements TwitterModelWrapper<BindingValue> {
 
         @JsonField(name = "type")
         String type;

@@ -19,49 +19,30 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
+import com.bluelinelabs.logansquare.JsonMapper;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-
-import org.mariotaku.library.logansquare.extension.LoganSquareWrapper;
-import org.mariotaku.twidere.api.twitter.model.IDs;
-import org.mariotaku.library.logansquare.extension.annotation.Mapper;
+import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.IOException;
 
 /**
- * Created by mariotaku on 15/5/10.
+ * Created by mariotaku on 15/10/21.
  */
-@Mapper(IDsImplMapper.class)
-public class IDsImpl extends TwitterResponseImpl implements IDs {
-
-    long previousCursor;
-    long nextCursor;
-    long[] ids;
-
+public class IndicesMapper extends JsonMapper<Indices> {
     @Override
-    public long getNextCursor() {
-        return nextCursor;
+    public Indices parse(JsonParser jsonParser) throws IOException {
+        final int start, end;
+        if (!jsonParser.isExpectedStartArrayToken()) throw new IOException("Malformed indices");
+        start = jsonParser.nextIntValue(-1);
+        end = jsonParser.nextIntValue(-1);
+        if (jsonParser.nextToken() != JsonToken.END_ARRAY)
+            throw new IOException("Malformed indices");
+        return new Indices(start, end);
     }
 
     @Override
-    public long getPreviousCursor() {
-        return previousCursor;
+    public void serialize(Indices object, JsonGenerator generator, boolean writeStartAndEnd) throws IOException {
+        throw new UnsupportedOperationException();
     }
-
-    @Override
-    public boolean hasNext() {
-        return nextCursor != 0;
-    }
-
-    @Override
-    public boolean hasPrevious() {
-        return previousCursor != 0;
-    }
-
-    @Override
-    public long[] getIDs() {
-        return ids;
-    }
-
 }

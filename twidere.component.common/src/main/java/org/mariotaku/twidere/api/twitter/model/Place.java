@@ -19,10 +19,14 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.PlaceImpl;
+
 /**
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.1.1
  */
+@Implementation(PlaceImpl.class)
 public interface Place extends TwitterResponse, Comparable<Place> {
 	GeoLocation[][] getBoundingBoxCoordinates();
 

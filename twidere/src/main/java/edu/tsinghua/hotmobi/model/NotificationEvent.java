@@ -54,6 +54,9 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "item_id")
     long itemId;
     @ParcelableThisPlease
+    @JsonField(name = "item_user_id")
+    long itemUserId;
+    @ParcelableThisPlease
     @JsonField(name = "account_id")
     long accountId;
     @ParcelableThisPlease
@@ -69,6 +72,28 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
     public NotificationEvent(Parcel in) {
         super(in);
         NotificationEventParcelablePlease.readFromParcel(this, in);
+    }
+
+    public static NotificationEvent create(Context context, Action action, long postTime, long respondTime, String type, long accountId, long itemId, long itemUserId) {
+        final NotificationEvent event = new NotificationEvent();
+        event.setAction(action);
+        event.setStartTime(postTime);
+        event.setEndTime(respondTime);
+        event.setTimeOffset(TimeZone.getDefault().getOffset(postTime));
+        event.setLocation(HotMobiLogger.getCachedLatLng(context));
+        event.setType(type);
+        event.setAccountId(accountId);
+        event.setItemId(itemId);
+        event.setItemUserId(itemUserId);
+        return event;
+    }
+
+    public static NotificationEvent deleted(Context context, long postTime, String type, long accountId, long itemId, long itemUserId) {
+        return create(context, Action.DELETE, System.currentTimeMillis(), postTime, type, accountId, itemId, itemUserId);
+    }
+
+    public static NotificationEvent open(Context context, long postTime, String type, long accountId, long itemId, long itemUserId) {
+        return create(context, Action.OPEN, System.currentTimeMillis(), postTime, type, accountId, itemId, itemUserId);
     }
 
     public Action getAction() {
@@ -114,25 +139,12 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         NotificationEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static NotificationEvent create(Context context, Action action, long postTime, long respondTime, String type, long accountId, long itemId) {
-        final NotificationEvent event = new NotificationEvent();
-        event.setAction(action);
-        event.setStartTime(postTime);
-        event.setEndTime(respondTime);
-        event.setTimeOffset(TimeZone.getDefault().getOffset(postTime));
-        event.setLocation(HotMobiLogger.getCachedLatLng(context));
-        event.setType(type);
-        event.setAccountId(accountId);
-        event.setItemId(itemId);
-        return event;
+    public long getItemUserId() {
+        return itemUserId;
     }
 
-    public static NotificationEvent deleted(Context context, long postTime, String type, long accountId, long itemId) {
-        return create(context, Action.DELETE, System.currentTimeMillis(), postTime, type, accountId, itemId);
-    }
-
-    public static NotificationEvent open(Context context, long postTime, String type, long accountId, long itemId) {
-        return create(context, Action.OPEN, System.currentTimeMillis(), postTime, type, accountId, itemId);
+    public void setItemUserId(long itemUserId) {
+        this.itemUserId = itemUserId;
     }
 
     public enum Action {

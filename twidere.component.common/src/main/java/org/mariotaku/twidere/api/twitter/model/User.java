@@ -19,6 +19,9 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.UserImpl;
+
 import java.util.Date;
 
 /**
@@ -26,6 +29,7 @@ import java.util.Date;
  * 
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
+@Implementation(UserImpl.class)
 public interface User extends Comparable<User>, TwitterResponse {
 	Date getCreatedAt();
 

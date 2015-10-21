@@ -111,6 +111,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwidereQueryBuilder.CachedUsersQueryBuilder;
 import org.mariotaku.twidere.util.TwidereQueryBuilder.ConversationQueryBuilder;
+import org.mariotaku.twidere.util.UriExtraUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
@@ -181,10 +182,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private boolean mNameFirst;
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, String type, long accountId, long position) {
-        return getMarkReadDeleteIntent(context, type, accountId, position, -1);
+        return getMarkReadDeleteIntent(context, type, accountId, position, -1, -1);
     }
 
-    private static PendingIntent getMarkReadDeleteIntent(Context context, String type, long accountId, long position, long extraId) {
+    private static PendingIntent getMarkReadDeleteIntent(Context context, String type, long accountId, long position, long extraId, long extraUserId) {
         // Setup delete intent
         final Intent intent = new Intent(context, NotificationReceiver.class);
         intent.setAction(BROADCAST_NOTIFICATION_DELETED);
@@ -194,9 +195,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         linkBuilder.appendPath(type);
         linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, String.valueOf(position));
-        linkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA_ID, String.valueOf(extraId));
         linkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
         linkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);
+
+        UriExtraUtils.addExtra(linkBuilder, "item_id", extraId);
+        UriExtraUtils.addExtra(linkBuilder, "item_user_id", extraUserId);
         intent.setData(linkBuilder.build());
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
@@ -1230,6 +1233,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         // Add rich notification and get latest tweet timestamp
         for (int i = 0, j = Math.min(statusCursor.getCount(), 5); statusCursor.moveToPosition(i) && i < j; i++) {
             final long statusId = statusCursor.getLong(indices.status_id);
+            final long userId = statusCursor.getLong(indices.user_id);
             final String text = statusCursor.getString(indices.text_unescaped);
             final NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
             builder.setTicker(text);
@@ -1241,9 +1245,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setContentText(text);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
             builder.setContentIntent(getStatusContentIntent(context, AUTHORITY_MENTIONS, accountId,
-                    statusId));
+                    statusId, userId));
             builder.setDeleteIntent(getMarkReadDeleteIntent(context, AUTHORITY_MENTIONS, accountId,
-                    statusId, statusId));
+                    statusId, statusId, userId));
             builder.setWhen(statusCursor.getLong(indices.status_timestamp));
             builder.setStyle(style);
             style.bigText(text);
@@ -1363,7 +1367,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         return PendingIntent.getActivity(context, 0, homeIntent, 0);
     }
 
-    private PendingIntent getStatusContentIntent(Context context, String type, long accountId, long statusId) {
+    private PendingIntent getStatusContentIntent(Context context, String type, long accountId,
+                                                 long statusId, long userId) {
         // Setup click intent
         final Intent homeIntent = new Intent(Intent.ACTION_VIEW);
         homeIntent.setPackage(BuildConfig.APPLICATION_ID);
@@ -1372,7 +1377,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         homeLinkBuilder.authority(AUTHORITY_STATUS);
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
-        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA_ID, String.valueOf(statusId));
+        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA, "item_id=" + String.valueOf(statusId));
+        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA, "item_user_id=" + String.valueOf(userId));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, String.valueOf(true));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);

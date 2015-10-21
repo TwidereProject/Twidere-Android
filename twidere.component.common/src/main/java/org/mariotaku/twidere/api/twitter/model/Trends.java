@@ -19,6 +19,9 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.TrendsImpl;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,7 +31,7 @@ import java.util.Date;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.0.2
  */
-
+@Implementation(TrendsImpl.class)
 public interface Trends extends TwitterResponse, Comparable<Trends>, Serializable {
     Date getAsOf();
 

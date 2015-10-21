@@ -19,12 +19,16 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.UserMentionEntityImpl;
+
 /**
  * A data interface representing one single user mention entity.
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.1.9
  */
+@Implementation(UserMentionEntityImpl.class)
 public interface UserMentionEntity {
     /**
      * Returns the index of the end character of the user mention.

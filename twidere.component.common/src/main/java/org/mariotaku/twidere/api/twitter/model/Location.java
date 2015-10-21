@@ -19,9 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.LocationImpl;
+
 /**
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
+@Implementation(LocationImpl.class)
 public interface Location {
 	String getCountryCode();
 
@@ -35,6 +39,7 @@ public interface Location {
 
 	PlaceType getPlaceType();
 
+	@Implementation(LocationImpl.PlaceTypeImpl.class)
 	interface PlaceType {
 
 		int getCode();

@@ -19,8 +19,12 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Wrapper;
+import org.mariotaku.twidere.api.twitter.model.impl.ScheduledStatusesListWrapper;
+
 /**
  * Created by mariotaku on 15/7/9.
  */
+@Wrapper(ScheduledStatusesListWrapper.class)
 public interface ScheduledStatusesList extends ResponseList<ScheduledStatus> {
 }

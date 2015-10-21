@@ -19,11 +19,16 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.library.logansquare.extension.annotation.Wrapper;
+import org.mariotaku.twidere.api.twitter.model.impl.CardEntityImpl;
+
 import java.util.Map;
 
 /**
  * Created by mariotaku on 14/12/31.
  */
+@Implementation(CardEntityImpl.class)
 public interface CardEntity {
 
     String getName();
@@ -36,6 +41,7 @@ public interface CardEntity {
 
     Map<String, BindingValue> getBindingValues();
 
+    @Wrapper(CardEntityImpl.BindingValueWrapper.class)
     interface BindingValue {
 
         String TYPE_STRING = "STRING";

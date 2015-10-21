@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public class PageableResponseListWrapper extends TwitterResponseImpl implements Wrapper<PageableResponseList<?>> {
+public class PageableResponseListWrapper extends TwitterResponseImpl implements TwitterModelWrapper<PageableResponseList<?>> {
 
     @JsonField(name = "previous_cursor")
     long previousCursor;

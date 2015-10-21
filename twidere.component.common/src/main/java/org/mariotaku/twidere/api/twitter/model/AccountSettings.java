@@ -19,10 +19,14 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.AccountSettingsImpl;
+
 /**
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.1.9
  */
+@Implementation(AccountSettingsImpl.class)
 public interface AccountSettings extends TwitterResponse {
 	/**
 	 * Returns the language used to render Twitter's UII for this user.

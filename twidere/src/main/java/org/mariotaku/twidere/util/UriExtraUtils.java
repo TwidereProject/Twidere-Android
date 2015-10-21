@@ -17,24 +17,35 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.util;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import android.net.Uri;
 
-import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.twidere.Constants;
+
+import java.util.List;
 
 /**
- * Created by mariotaku on 15/5/7.
+ * Created by mariotaku on 15/10/20.
  */
-@JsonObject
-public class RelationshipWrapper extends TwitterResponseImpl implements TwitterModelWrapper<Relationship> {
+public class UriExtraUtils implements Constants {
 
-    @JsonField(name = "relationship")
-    RelationshipImpl relationship;
-
-    @Override
-    public Relationship getWrapped(Object extra) {
-        return relationship;
+    public static void addExtra(Uri.Builder builder, String key, Object value) {
+        builder.appendQueryParameter(QUERY_PARAM_EXTRA, key + "=" + String.valueOf(value));
     }
+
+    public static String getExtra(Uri uri, String key) {
+        return getExtra(uri.getQueryParameters(QUERY_PARAM_EXTRA), key);
+    }
+
+    public static String getExtra(List<String> extras, String key) {
+        for (String extra : extras) {
+            final int i = extra.indexOf(key + "=");
+            if (i == 0) {
+                return extra.substring(i);
+            }
+        }
+        return null;
+    }
+
 }

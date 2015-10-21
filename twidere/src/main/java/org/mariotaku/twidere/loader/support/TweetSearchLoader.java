@@ -57,7 +57,7 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
     }
 
     protected String processQuery(final String query) {
-        return String.format("%s", query);
+        return String.format("%s -RT", query);
     }
 
     @Override

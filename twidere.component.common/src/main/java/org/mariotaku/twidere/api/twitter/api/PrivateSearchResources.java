@@ -17,22 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package org.mariotaku.twidere.api.twitter.api;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.TranslationResultImpl;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.PrivateSearchQuery;
+import org.mariotaku.twidere.api.twitter.model.PrivateSearchResult;
 
-@Implementation(TranslationResultImpl.class)
-public interface TranslationResult extends TwitterResponse {
+/**
+ * Created by mariotaku on 15/10/21.
+ */
+public interface PrivateSearchResources {
 
-	public long getId();
-
-	public String getLang();
-
-	public String getText();
-
-	public String getTranslatedLang();
-
-	public String getTranslationType();
+    @GET("/search/universal.json")
+    PrivateSearchResult searchTweets(PrivateSearchQuery query) throws TwitterException;
 
 }

@@ -32,6 +32,6 @@ public interface ResponseList<T> extends TwitterResponse, List<T> {
      * {@inheritDoc}
      */
     @Override
-    public RateLimitStatus getRateLimitStatus();
+    RateLimitStatus getRateLimitStatus();
 
 }

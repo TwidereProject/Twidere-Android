@@ -19,10 +19,14 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.EnumClass;
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.ActivityImpl;
 import org.mariotaku.twidere.util.AbsLogger;
 
 import java.util.Date;
 
+@Implementation(ActivityImpl.class)
 public interface Activity extends TwitterResponse, Comparable<Activity> {
 
     int ACTION_UNKNOWN = 0x00;
@@ -72,6 +76,7 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
     User[] getTargetObjectUsers();
 
 
+    @EnumClass
     enum Action {
         FAVORITE(ACTION_FAVORITE), FOLLOW(ACTION_FOLLOW), MENTION(ACTION_MENTION), REPLY(ACTION_REPLY),
         RETWEET(ACTION_RETWEET), LIST_MEMBER_ADDED(ACTION_LIST_MEMBER_ADDED), LIST_CREATED(ACTION_LIST_CREATED),

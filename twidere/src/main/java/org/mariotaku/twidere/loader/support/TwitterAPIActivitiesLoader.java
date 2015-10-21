@@ -33,7 +33,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.util.LoganSquareWrapper;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.io.File;
@@ -151,7 +151,7 @@ public abstract class TwitterAPIActivitiesLoader extends ParcelableActivitiesLoa
     private List<ParcelableActivity> getCachedData(final File file) {
         if (file == null) return null;
         try {
-            return LoganSquareWrapper.parseList(file, ParcelableActivity.class);
+            return JsonSerializer.parseList(file, ParcelableActivity.class);
         } catch (final IOException e) {
             if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);
@@ -168,7 +168,7 @@ public abstract class TwitterAPIActivitiesLoader extends ParcelableActivitiesLoa
     private File getSerializationFile() {
         if (mSavedStatusesFileArgs == null) return null;
         try {
-            return LoganSquareWrapper.getSerializationFile(mContext, mSavedStatusesFileArgs);
+            return JsonSerializer.getSerializationFile(mContext, mSavedStatusesFileArgs);
         } catch (final IOException e) {
             e.printStackTrace();
         }

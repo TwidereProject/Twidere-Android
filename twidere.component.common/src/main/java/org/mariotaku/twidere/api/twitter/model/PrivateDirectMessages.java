@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.EnumClass;
+
 /**
  * Created by mariotaku on 15/7/5.
  */
@@ -37,6 +39,7 @@ public interface PrivateDirectMessages {
 
     interface UserEvents {
         String getCursor();
+
         long getLastSeenEventId();
     }
 
@@ -78,11 +81,13 @@ public interface PrivateDirectMessages {
             long getUserId();
         }
 
+        @EnumClass
         enum Type {
             ONE_TO_ONE, GROUP_DM
         }
     }
 
+    @EnumClass
     enum Status {
         HAS_MORE, AT_END
     }

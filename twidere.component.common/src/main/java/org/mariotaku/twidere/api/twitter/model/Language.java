@@ -19,9 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.LanguageImpl;
+
 /**
  * Created by mariotaku on 15/5/10.
  */
+@Implementation(LanguageImpl.class)
 public interface Language {
     String getCode();
 

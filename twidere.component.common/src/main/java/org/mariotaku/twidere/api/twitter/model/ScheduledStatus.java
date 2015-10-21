@@ -19,11 +19,16 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.EnumClass;
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.ScheduledStatusImpl;
+
 import java.util.Date;
 
 /**
  * Created by mariotaku on 15/7/6.
  */
+@Implementation(ScheduledStatusImpl.class)
 public interface ScheduledStatus {
 
     long getUserId();
@@ -44,6 +49,7 @@ public interface ScheduledStatus {
 
     State getState();
 
+    @EnumClass
     enum State {
         SCHEDULED("scheduled"), FAILED("failed"), CANCELED("canceled");
 

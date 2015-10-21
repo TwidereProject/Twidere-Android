@@ -19,12 +19,28 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.WarningImpl;
+import com.bluelinelabs.logansquare.JsonMapper;
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+
+import org.mariotaku.twidere.api.twitter.model.impl.GeoPoint;
+
+import java.io.IOException;
 
 /**
- * Created by mariotaku on 15/5/26.
+ * Created by mariotaku on 15/10/21.
  */
-@Implementation(WarningImpl.class)
-public interface Warning {
+public class GeoLocationMapper extends JsonMapper<GeoLocation> {
+    @Override
+    public GeoLocation parse(JsonParser jsonParser) throws IOException {
+        final GeoPoint geoPoint = LoganSquare.mapperFor(GeoPoint.class).parse(jsonParser);
+        if (geoPoint == null) return null;
+        return geoPoint.getGeoLocation();
+    }
+
+    @Override
+    public void serialize(GeoLocation object, JsonGenerator generator, boolean writeStartAndEnd) throws IOException {
+        throw new UnsupportedOperationException();
+    }
 }

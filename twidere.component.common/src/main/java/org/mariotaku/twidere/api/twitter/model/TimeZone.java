@@ -19,9 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.TimeZoneImpl;
+
 /**
  * @author Alessandro Bahgat - ale.bahgat at gmail.com
  */
+@Implementation(TimeZoneImpl.class)
 public interface TimeZone {
     String getName();
 

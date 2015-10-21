@@ -19,8 +19,12 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.UserListImpl;
+
 import java.util.Date;
 
+@Implementation(UserListImpl.class)
 public interface UserList extends Comparable<UserList>, TwitterResponse {
     Mode getMode();
 

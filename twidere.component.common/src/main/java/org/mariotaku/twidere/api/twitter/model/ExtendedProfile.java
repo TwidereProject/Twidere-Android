@@ -19,9 +19,14 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.EnumClass;
+import org.mariotaku.library.logansquare.extension.annotation.Implementation;
+import org.mariotaku.twidere.api.twitter.model.impl.ExtendedProfileImpl;
+
 /**
  * Created by mariotaku on 15/7/8.
  */
+@Implementation(ExtendedProfileImpl.class)
 public interface ExtendedProfile {
 
     long getId();
@@ -39,6 +44,7 @@ public interface ExtendedProfile {
 
         Visibility getYearVisibility();
 
+        @EnumClass
         enum Visibility {
             MUTUALFOLLOW, PUBLIC, UNKNOWN;
 

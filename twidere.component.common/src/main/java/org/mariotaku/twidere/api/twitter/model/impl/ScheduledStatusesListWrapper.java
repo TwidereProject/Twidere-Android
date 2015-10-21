@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * Created by mariotaku on 15/7/9.
  */
 @JsonObject
-public class ScheduledStatusesListWrapper implements Wrapper<ScheduledStatusesList> {
+public class ScheduledStatusesListWrapper implements TwitterModelWrapper<ScheduledStatusesList> {
 
     @JsonField(name = "results")
     ArrayList<ScheduledStatus> list;

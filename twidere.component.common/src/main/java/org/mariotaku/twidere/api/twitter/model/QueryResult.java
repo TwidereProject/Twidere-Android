@@ -19,11 +19,15 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.library.logansquare.extension.annotation.Wrapper;
+import org.mariotaku.twidere.api.twitter.model.impl.QueryResultWrapper;
+
 /**
  * A data interface representing search API response
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
+@Wrapper(QueryResultWrapper.class)
 public interface QueryResult extends ResponseList<Status> {
     double getCompletedIn();
 
