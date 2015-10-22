@@ -238,11 +238,13 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
             mEditAddress.addTextChangedListener(this);
             mCheckExclude.setOnCheckedChangeListener(this);
             final Bundle args = getArguments();
-            mEditHost.setEnabled(!args.getBoolean(EXTRA_EDIT_MODE, false));
-            if (savedInstanceState == null) {
-                mEditHost.setText(args.getCharSequence(EXTRA_HOST));
-                mEditAddress.setText(args.getCharSequence(EXTRA_ADDRESS));
-                mCheckExclude.setChecked(args.getBoolean(EXTRA_EXCLUDED));
+            if (args != null) {
+                mEditHost.setEnabled(!args.getBoolean(EXTRA_EDIT_MODE, false));
+                if (savedInstanceState == null) {
+                    mEditHost.setText(args.getCharSequence(EXTRA_HOST));
+                    mEditAddress.setText(args.getCharSequence(EXTRA_ADDRESS));
+                    mCheckExclude.setChecked(args.getBoolean(EXTRA_EXCLUDED));
+                }
             }
             builder.setTitle(R.string.add_host_mapping);
             builder.setPositiveButton(android.R.string.ok, this);
