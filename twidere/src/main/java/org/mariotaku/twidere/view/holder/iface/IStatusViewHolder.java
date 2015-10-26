@@ -45,10 +45,6 @@ public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListen
     @Nullable
     ImageView getProfileTypeView();
 
-    void onClick(View v);
-
-    boolean onLongClick(View v);
-
     @Override
     void onMediaClick(View view, ParcelableMedia media, long accountId);
 

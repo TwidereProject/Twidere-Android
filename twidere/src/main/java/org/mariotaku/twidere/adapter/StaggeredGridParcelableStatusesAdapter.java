@@ -57,10 +57,14 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
     @Override
     protected IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent, boolean compact) {
         final View view = getInflater().inflate(R.layout.adapter_item_media_status, parent, false);
-        return new MediaTimelineViewHolder(this, view);
+        final MediaStatusViewHolder holder = new MediaStatusViewHolder(this, view);
+        holder.setOnClickListeners();
+        holder.setupViewOptions();
+        return holder;
     }
 
-    public static class MediaTimelineViewHolder extends RecyclerView.ViewHolder implements IStatusViewHolder {
+    public static class MediaStatusViewHolder extends RecyclerView.ViewHolder
+            implements IStatusViewHolder, View.OnClickListener, View.OnLongClickListener {
         private final SimpleAspectRatioSource aspectRatioSource = new SimpleAspectRatioSource();
 
         private final AspectLockedFrameLayout mediaImageContainer;
@@ -68,8 +72,9 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
         private final ImageView mediaProfileImageView;
         private final TextView mediaTextView;
         private final IStatusesAdapter<?> adapter;
+        private StatusClickListener listener;
 
-        public MediaTimelineViewHolder(IStatusesAdapter<?> adapter, View itemView) {
+        public MediaStatusViewHolder(IStatusesAdapter<?> adapter, View itemView) {
             super(itemView);
             this.adapter = adapter;
             mediaImageContainer = (AspectLockedFrameLayout) itemView.findViewById(R.id.media_image_container);
@@ -117,27 +122,40 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
 
         @Override
         public void onClick(View v) {
-
+            if (listener == null) return;
+            switch (v.getId()) {
+                case R.id.item_content: {
+                    listener.onStatusClick(this, getLayoutPosition());
+                    break;
+                }
+            }
         }
 
-        @Override
         public boolean onLongClick(View v) {
             return false;
         }
 
         @Override
         public void onMediaClick(View view, ParcelableMedia media, long accountId) {
-
         }
 
         @Override
         public void setStatusClickListener(StatusClickListener listener) {
-
+            this.listener = listener;
+            itemView.findViewById(R.id.item_content).setOnClickListener(this);
         }
 
         @Override
         public void setTextSize(float textSize) {
 
+        }
+
+        public void setOnClickListeners() {
+            setStatusClickListener(adapter);
+        }
+
+        public void setupViewOptions() {
+            setTextSize(adapter.getTextSize());
         }
 
 

@@ -12,12 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
+import org.mariotaku.twidere.view.holder.GapViewHolder;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.util.List;
 
@@ -25,7 +30,7 @@ import java.util.List;
  * Created by mariotaku on 14/11/5.
  */
 public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<StaggeredGridParcelableStatusesAdapter, StaggeredGridLayoutManager>
-        implements LoaderCallbacks<List<ParcelableStatus>>, DrawerCallback {
+        implements LoaderCallbacks<List<ParcelableStatus>>, DrawerCallback, AbsStatusesAdapter.StatusAdapterListener {
 
 
     @Override
@@ -36,14 +41,16 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
 
     @Override
     public boolean isRefreshing() {
-        //TODO detect loader refreshing
-        return false;
+        final Loader<Object> loader = getLoaderManager().getLoader(0);
+        return loader != null && loader.isStarted();
     }
 
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+        adapter.setListener(this);
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().initLoader(0, loaderArgs, this);
@@ -144,5 +151,40 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final long maxId = adapter.getStatusId(adapter.getStatusesCount() - 1);
         getStatuses(maxId, -1);
+    }
+
+    @Override
+    public void onGapClick(GapViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
+
+    }
+
+    @Override
+    public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {
+
+    }
+
+    @Override
+    public void onStatusClick(IStatusViewHolder holder, int position) {
+        Utils.openStatus(getContext(), getAdapter().getStatus(position), null);
+    }
+
+    @Override
+    public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
+        return false;
+    }
+
+    @Override
+    public void onStatusMenuClick(IStatusViewHolder holder, View menuView, int position) {
+
+    }
+
+    @Override
+    public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
+
     }
 }
