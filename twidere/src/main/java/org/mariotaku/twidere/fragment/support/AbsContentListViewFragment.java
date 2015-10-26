@@ -247,4 +247,19 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
         final int swipeDistance = Math.round(64 * density);
         mSwipeRefreshLayout.setProgressViewOffset(false, swipeStart, swipeStart + swipeDistance);
     }
+
+    @Override
+    public int[] findLastVisibleItemPositions() {
+        return new int[]{mListView.getLastVisiblePosition()};
+    }
+
+    @Override
+    public int[] findFirstVisibleItemPositions() {
+        return new int[]{mListView.getFirstVisiblePosition()};
+    }
+
+    @Override
+    public int getItemCount() {
+        return mListView.getCount();
+    }
 }

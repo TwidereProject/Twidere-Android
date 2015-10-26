@@ -2,7 +2,6 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 /**
  * Created by mariotaku on 14/11/19.
@@ -36,13 +35,9 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
 
     public static final int ITEM_VIEW_TYPE_STATUS = 2;
 
-    private final Context mContext;
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
     private final TwidereLinkify mLinkify;
-
-    private StatusAdapterListener mStatusAdapterListener;
-
     private final int mCardBackgroundColor;
     private final int mTextSize;
     @ShapeStyle
@@ -51,23 +46,21 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     private final int mMediaPreviewStyle;
     @HighlightStyle
     private final int mLinkHighlightingStyle;
-
     private final boolean mCompactCards;
     private final boolean mNameFirst;
     private final boolean mDisplayMediaPreview;
     private final boolean mDisplayProfileImage;
     private final boolean mSensitiveContentEnabled;
     private final boolean mHideCardActions;
-
+    private StatusAdapterListener mStatusAdapterListener;
     private boolean mShowInReplyTo;
     private boolean mShowAccountsColor;
 
     public AbsStatusesAdapter(Context context, boolean compact) {
         super(context);
-        mContext = context;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
-        mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
+        mLoadingHandler = new MediaLoadingHandler(getProgressViewIds());
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
@@ -81,6 +74,8 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         mLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this));
         setShowInReplyTo(true);
     }
+
+    protected abstract int[] getProgressViewIds();
 
     public abstract D getData();
 
@@ -96,12 +91,6 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     @Override
     public final MediaLoaderWrapper getMediaLoader() {
         return mMediaLoader;
-    }
-
-    @NonNull
-    @Override
-    public final Context getContext() {
-        return mContext;
     }
 
     @Override
@@ -172,24 +161,24 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     }
 
     @Override
-    public boolean onStatusLongClick(StatusViewHolder holder, int position) {
+    public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
         return mStatusAdapterListener != null && mStatusAdapterListener.onStatusLongClick(holder, position);
     }
 
     @Override
-    public final void onStatusClick(StatusViewHolder holder, int position) {
+    public final void onStatusClick(IStatusViewHolder holder, int position) {
         if (mStatusAdapterListener == null) return;
         mStatusAdapterListener.onStatusClick(holder, position);
     }
 
     @Override
-    public void onMediaClick(StatusViewHolder holder, View view, final ParcelableMedia media, int position) {
+    public void onMediaClick(IStatusViewHolder holder, View view, final ParcelableMedia media, int position) {
         if (mStatusAdapterListener == null) return;
         mStatusAdapterListener.onMediaClick(holder, view, media, position);
     }
 
     @Override
-    public void onUserProfileClick(final StatusViewHolder holder, final int position) {
+    public void onUserProfileClick(final IStatusViewHolder holder, final int position) {
         if (mStatusAdapterListener == null) return;
         final ParcelableStatus status = getStatus(position);
         if (status == null) return;
@@ -214,20 +203,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW_TYPE_STATUS: {
-                final View view;
-                if (mCompactCards) {
-                    view = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
-                    final View itemContent = view.findViewById(R.id.item_content);
-                    itemContent.setBackgroundColor(mCardBackgroundColor);
-                } else {
-                    view = mInflater.inflate(R.layout.card_item_status, parent, false);
-                    final CardView cardView = (CardView) view.findViewById(R.id.card);
-                    cardView.setCardBackgroundColor(mCardBackgroundColor);
-                }
-                final StatusViewHolder holder = new StatusViewHolder(this, view);
-                holder.setOnClickListeners();
-                holder.setupViewOptions();
-                return holder;
+                return (ViewHolder) onCreateStatusViewHolder(parent, mCompactCards);
             }
             case ITEM_VIEW_TYPE_GAP: {
                 final View view = mInflater.inflate(R.layout.card_item_gap, parent, false);
@@ -241,11 +217,22 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         throw new IllegalStateException("Unknown view type " + viewType);
     }
 
+    protected LayoutInflater getInflater() {
+        return mInflater;
+    }
+
+    protected int getCardBackgroundColor() {
+        return mCardBackgroundColor;
+    }
+
+    @NonNull
+    protected abstract IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent, boolean compact);
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case ITEM_VIEW_TYPE_STATUS: {
-                bindStatus(((StatusViewHolder) holder), position);
+                bindStatus(((IStatusViewHolder) holder), position);
                 break;
             }
         }
@@ -275,13 +262,13 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     @Override
     public void onItemActionClick(ViewHolder holder, int id, int position) {
         if (mStatusAdapterListener == null) return;
-        mStatusAdapterListener.onStatusActionClick((StatusViewHolder) holder, id, position);
+        mStatusAdapterListener.onStatusActionClick((IStatusViewHolder) holder, id, position);
     }
 
     @Override
     public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
         if (mStatusAdapterListener == null) return;
-        mStatusAdapterListener.onStatusMenuClick((StatusViewHolder) holder, menuView, position);
+        mStatusAdapterListener.onStatusMenuClick((IStatusViewHolder) holder, menuView, position);
     }
 
     public void setListener(StatusAdapterListener listener) {
@@ -294,22 +281,24 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         notifyDataSetChanged();
     }
 
-    protected abstract void bindStatus(StatusViewHolder holder, int position);
+    protected void bindStatus(IStatusViewHolder holder, int position) {
+        holder.displayStatus(getStatus(position), isShowInReplyTo());
+    }
 
     public interface StatusAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
 
-        void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position);
+        void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position);
 
-        void onStatusActionClick(StatusViewHolder holder, int id, int position);
+        void onStatusActionClick(IStatusViewHolder holder, int id, int position);
 
-        void onStatusClick(StatusViewHolder holder, int position);
+        void onStatusClick(IStatusViewHolder holder, int position);
 
-        boolean onStatusLongClick(StatusViewHolder holder, int position);
+        boolean onStatusLongClick(IStatusViewHolder holder, int position);
 
-        void onStatusMenuClick(StatusViewHolder holder, View menuView, int position);
+        void onStatusMenuClick(IStatusViewHolder holder, View menuView, int position);
 
-        void onUserProfileClick(StatusViewHolder holder, ParcelableStatus status, int position);
+        void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position);
     }
 
 }

@@ -37,6 +37,8 @@ import javax.inject.Inject;
  * Created by mariotaku on 15/10/5.
  */
 public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+
+    private final Context mContext;
     @Inject
     protected AsyncTwitterWrapper mTwitterWrapper;
     @Inject
@@ -49,12 +51,16 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     protected UserColorNameManager mUserColorNameManager;
     @Inject
     protected SharedPreferencesWrapper mPreferences;
-
     public BaseRecyclerViewAdapter(Context context) {
+        mContext = context;
         //noinspection unchecked
         DaggerGeneralComponent.builder()
                 .applicationModule(ApplicationModule.get(context))
                 .build()
                 .inject((BaseRecyclerViewAdapter<RecyclerView.ViewHolder>) this);
+    }
+
+    public final Context getContext() {
+        return mContext;
     }
 }

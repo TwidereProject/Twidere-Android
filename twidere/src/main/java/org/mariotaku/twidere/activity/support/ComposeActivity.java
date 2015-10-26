@@ -54,6 +54,7 @@ import android.support.v4.util.LongSparseArray;
 import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -615,46 +616,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         linearLayoutManager.setStackFromEnd(true);
         mAccountSelector.setLayoutManager(linearLayoutManager);
         mAccountSelector.addItemDecoration(new SpacingItemDecoration(this));
-        mAccountSelector.setItemAnimator(new RecyclerView.ItemAnimator() {
-            @Override
-            public void runPendingAnimations() {
-
-            }
-
-            @Override
-            public boolean animateRemove(ViewHolder holder) {
-                return false;
-            }
-
-            @Override
-            public boolean animateAdd(ViewHolder holder) {
-                return false;
-            }
-
-            @Override
-            public boolean animateMove(ViewHolder holder, int fromX, int fromY, int toX, int toY) {
-                return false;
-            }
-
-            @Override
-            public boolean animateChange(ViewHolder oldHolder, ViewHolder newHolder, int fromLeft, int fromTop, int toLeft, int toTop) {
-                return false;
-            }
-
-            @Override
-            public void endAnimation(ViewHolder item) {
-            }
-
-            @Override
-            public void endAnimations() {
-
-            }
-
-            @Override
-            public boolean isRunning() {
-                return false;
-            }
-        });
+        mAccountSelector.setItemAnimator(new DefaultItemAnimator());
         mAccountsAdapter = new AccountIconsAdapter(this);
         mAccountSelector.setAdapter(mAccountsAdapter);
         mAccountsAdapter.setAccounts(ParcelableCredentials.getCredentialsArray(this, false, false));

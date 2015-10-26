@@ -43,7 +43,6 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     public static final int ITEM_VIEW_TYPE_USER = 2;
 
-    private final Context mContext;
     private final LayoutInflater mInflater;
 
     private final int mCardBackgroundColor;
@@ -54,19 +53,12 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     public AbsUsersAdapter(final Context context, final boolean compact) {
         super(context);
-        mContext = context;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mCompactCards = compact;
-    }
-
-    @NonNull
-    @Override
-    public Context getContext() {
-        return mContext;
     }
 
     @Override

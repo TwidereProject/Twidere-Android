@@ -4,12 +4,12 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
-import org.mariotaku.twidere.view.holder.StatusViewHolder.StatusClickListener;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 /**
  * Created by mariotaku on 14/11/18.
  */
-public interface IStatusesAdapter<Data> extends IContentCardAdapter, StatusClickListener,
+public interface IStatusesAdapter<Data> extends IContentCardAdapter, IStatusViewHolder.StatusClickListener,
         IGapSupportedAdapter, ContentCardClickListener {
 
     int getLinkHighlightingStyle();

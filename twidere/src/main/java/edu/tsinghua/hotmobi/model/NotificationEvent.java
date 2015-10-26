@@ -20,6 +20,7 @@
 package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -65,6 +66,9 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
     @ParcelableThisPlease
     @JsonField(name = "action", typeConverter = Action.NotificationActionConverter.class)
     Action action;
+    @ParcelableThisPlease
+    @JsonField(name = "ringer_mode")
+    int ringerMode;
 
     public NotificationEvent() {
     }
@@ -81,6 +85,7 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         event.setEndTime(respondTime);
         event.setTimeOffset(TimeZone.getDefault().getOffset(postTime));
         event.setLocation(HotMobiLogger.getCachedLatLng(context));
+        event.setRingerMode(((AudioManager) context.getSystemService(Context.AUDIO_SERVICE)).getRingerMode());
         event.setType(type);
         event.setAccountId(accountId);
         event.setItemId(itemId);
@@ -145,6 +150,26 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
 
     public void setItemUserId(long itemUserId) {
         this.itemUserId = itemUserId;
+    }
+
+    public void setRingerMode(int ringerMode) {
+        this.ringerMode = ringerMode;
+    }
+
+    public int getRingerMode() {
+        return ringerMode;
+    }
+
+    public static boolean isSupported(String type) {
+        if (type == null) return false;
+        switch (type) {
+            case "status":
+            case "statuses":
+            case "mention":
+            case "mentions":
+                return true;
+        }
+        return false;
     }
 
     public enum Action {

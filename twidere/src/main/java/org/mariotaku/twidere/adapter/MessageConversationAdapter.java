@@ -56,7 +56,6 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
     private final int mProfileImageStyle;
     private final int mMediaPreviewStyle;
 
-    private final Context mContext;
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mMediaLoadingHandler;
 
@@ -66,7 +65,6 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
 
     public MessageConversationAdapter(final Context context) {
         super(context);
-        mContext = context;
         mInflater = LayoutInflater.from(context);
         mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null));
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
@@ -75,11 +73,6 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mIncomingMessageColor = ThemeUtils.getUserAccentColor(context);
         mOutgoingMessageColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
-    }
-
-
-    public Context getContext() {
-        return mContext;
     }
 
     @Override
@@ -172,7 +165,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         c.moveToPosition(position);
         final long account_id = c.getLong(mIndices.account_id);
         final long message_id = c.getLong(mIndices.message_id);
-        return Utils.findDirectMessageInDatabases(mContext, account_id, message_id);
+        return Utils.findDirectMessageInDatabases(getContext(), account_id, message_id);
     }
 
     @Override
@@ -186,7 +179,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
                 final ParcelableDirectMessage message = getDirectMessage(position);
                 if (message == null || message.media == null) return;
                 final Bundle options = Utils.createMediaViewerActivityOption(view);
-                Utils.openMedia(mContext, message, null, options);
+                Utils.openMedia(getContext(), message, null, options);
             }
         }
     }

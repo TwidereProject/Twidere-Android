@@ -59,7 +59,6 @@ public class ParcelableMedia implements Parcelable {
             return new ParcelableMedia[size];
         }
     };
-    @NonNull
     @JsonField(name = "media_url")
     public String media_url;
     @Nullable

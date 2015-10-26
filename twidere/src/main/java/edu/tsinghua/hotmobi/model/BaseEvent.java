@@ -28,6 +28,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.twidere.BuildConfig;
+
 import java.util.TimeZone;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -51,6 +53,9 @@ public class BaseEvent implements Parcelable {
         }
     };
 
+    @ParcelableThisPlease
+    @JsonField(name = "app_version")
+    int appVersion = BuildConfig.VERSION_CODE;
     @ParcelableThisPlease
     @JsonField(name = "start_time")
     long startTime;

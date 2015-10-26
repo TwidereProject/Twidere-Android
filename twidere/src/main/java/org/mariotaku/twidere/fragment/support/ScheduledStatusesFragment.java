@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/7/10.
  */
-public class ScheduledStatusesFragment extends AbsContentRecyclerViewFragment<ScheduledStatusesFragment.ScheduledStatusesAdapter>
+public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragment<ScheduledStatusesFragment.ScheduledStatusesAdapter>
         implements LoaderManager.LoaderCallbacks<List<ScheduledStatus>> {
 
     @Override

@@ -40,7 +40,7 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.imageloader.PauseRecyclerViewOnScrollListener;
 import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
 /**
  * Created by mariotaku on 14/11/5.
  */
-public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFragment<AbsStatusesAdapter<Data>>
+public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerViewFragment<AbsStatusesAdapter<Data>>
         implements LoaderCallbacks<Data>, StatusAdapterListener, KeyboardShortcutCallback {
 
     private final Object mStatusesBusCallback;
@@ -312,7 +312,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
     }
 
     @Override
-    public void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position) {
+    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
@@ -326,7 +326,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
     }
 
     @Override
-    public void onStatusActionClick(StatusViewHolder holder, int id, int position) {
+    public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
@@ -357,19 +357,19 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
     }
 
     @Override
-    public void onStatusClick(StatusViewHolder holder, int position) {
+    public void onStatusClick(IStatusViewHolder holder, int position) {
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         Utils.openStatus(getActivity(), adapter.getStatus(position), null);
     }
 
     @Override
-    public boolean onStatusLongClick(StatusViewHolder holder, int position) {
+    public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
         //TODO handle long click event
         return true;
     }
 
     @Override
-    public void onStatusMenuClick(StatusViewHolder holder, View menuView, int position) {
+    public void onStatusMenuClick(IStatusViewHolder holder, View menuView, int position) {
         if (mPopupMenu != null) {
             mPopupMenu.dismiss();
         }
@@ -386,7 +386,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentRecyclerViewFr
     }
 
     @Override
-    public void onUserProfileClick(StatusViewHolder holder, ParcelableStatus status, int position) {
+    public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
         final View profileImageView = holder.getProfileImageView();
         final View profileTypeView = holder.getProfileTypeView();

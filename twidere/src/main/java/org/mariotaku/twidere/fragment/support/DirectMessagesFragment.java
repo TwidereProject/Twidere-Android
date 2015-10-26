@@ -70,7 +70,7 @@ import java.util.Set;
 
 import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 
-public class DirectMessagesFragment extends AbsContentRecyclerViewFragment<MessageEntriesAdapter>
+public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<MessageEntriesAdapter>
         implements LoaderCallbacks<Cursor>, MessageEntriesAdapterListener, KeyboardShortcutCallback {
 
     // Listeners

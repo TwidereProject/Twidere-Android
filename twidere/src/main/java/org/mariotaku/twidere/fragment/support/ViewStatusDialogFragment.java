@@ -30,6 +30,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 /**
  * Created by mariotaku on 15/3/17.
@@ -37,7 +38,7 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapt
 public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
 
     private DummyStatusHolderAdapter mAdapter;
-    private StatusViewHolder mHolder;
+    private IStatusViewHolder mHolder;
     private View mStatusContainer;
 
     public ViewStatusDialogFragment() {

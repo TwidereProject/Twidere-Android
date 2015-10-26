@@ -1377,8 +1377,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         homeLinkBuilder.authority(AUTHORITY_STATUS);
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
-        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA, "item_id=" + String.valueOf(statusId));
-        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_EXTRA, "item_user_id=" + String.valueOf(userId));
+        UriExtraUtils.addExtra(homeLinkBuilder, "item_id", statusId);
+        UriExtraUtils.addExtra(homeLinkBuilder, "item_user_id", userId);
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, String.valueOf(true));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);

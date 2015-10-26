@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -26,9 +26,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.FixedLinearLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,27 +37,23 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
-import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.util.ContentListScrollListener;
-import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
+import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView;
 import org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout;
 
 /**
- * Comment, blah, blah, blah.
- * Created by mariotaku on 15/4/16.
+ * Created by mariotaku on 15/10/26.
  */
-public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAdapter> extends BaseSupportFragment
-        implements OnRefreshListener, DrawerCallback, RefreshScrollTopInterface, ControlBarOffsetListener,
-        ContentListSupport, IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener {
+public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAdapter, L extends RecyclerView.LayoutManager> extends BaseSupportFragment
+        implements SwipeRefreshLayout.OnRefreshListener, HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
+        ContentListScrollListener.ContentListSupport, IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener {
 
     private View mProgressContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -69,7 +62,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     private ImageView mErrorIconView;
     private TextView mErrorTextView;
 
-    private LinearLayoutManager mLayoutManager;
+    private L mLayoutManager;
     private A mAdapter;
 
     // Callbacks and listeners
@@ -78,7 +71,6 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
     // Data fields
     private Rect mSystemWindowsInsets = new Rect();
-    private DividerItemDecoration mItemDecoration;
 
     @Override
     public boolean canScroll(float dy) {
@@ -123,11 +115,13 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
     @Override
     public boolean scrollToStart() {
-        mLayoutManager.scrollToPositionWithOffset(0, 0);
+        scrollToPositionWithOffset(0, 0);
         mRecyclerView.stopScroll();
         setControlVisible(true);
         return true;
     }
+
+    protected abstract void scrollToPositionWithOffset(int position, int offset);
 
     @Override
     public void onControlBarVisibleAnimationFinish(boolean visible) {
@@ -160,7 +154,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     @Override
     public abstract boolean isRefreshing();
 
-    public LinearLayoutManager getLayoutManager() {
+    public L getLayoutManager() {
         return mLayoutManager;
     }
 
@@ -212,8 +206,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(colorRes);
         mAdapter = onCreateAdapter(context, compact);
-        mLayoutManager = new FixedLinearLayoutManager(context);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mLayoutManager = onCreateLayoutManager(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         if (mSwipeRefreshLayout instanceof AccentSwipeRefreshLayout) {
@@ -238,15 +231,17 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
             });
         }
-        if (compact) {
-            mItemDecoration = new DividerItemDecoration(context, mLayoutManager.getOrientation());
-            mRecyclerView.addItemDecoration(mItemDecoration);
-        }
+        setupRecyclerView(context, compact);
         mRecyclerView.setAdapter(mAdapter);
 
         mScrollListener = new ContentListScrollListener(this);
         mScrollListener.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());
     }
+
+    protected abstract void setupRecyclerView(Context context, boolean compact);
+
+    @NonNull
+    protected abstract L onCreateLayoutManager(Context context);
 
     @Override
     public void onStart() {
@@ -297,9 +292,6 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     }
 
     public void setLoadMoreIndicatorVisible(boolean visible) {
-        if (mItemDecoration != null) {
-            mItemDecoration.setDecorationEndOffset(visible ? 1 : 0);
-        }
         mAdapter.setLoadMoreIndicatorVisible(visible);
     }
 

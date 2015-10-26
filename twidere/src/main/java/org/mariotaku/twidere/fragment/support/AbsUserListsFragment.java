@@ -40,7 +40,7 @@ import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.UserListViewHolder;
 
-abstract class AbsUserListsFragment<Data> extends AbsContentRecyclerViewFragment<AbsUserListsAdapter<Data>>
+abstract class AbsUserListsFragment<Data> extends AbsContentListRecyclerViewFragment<AbsUserListsAdapter<Data>>
         implements LoaderCallbacks<Data>, AbsUserListsAdapter.UserListAdapterListener, KeyboardShortcutCallback {
 
     private RecyclerViewNavigationHelper mNavigationHelper;

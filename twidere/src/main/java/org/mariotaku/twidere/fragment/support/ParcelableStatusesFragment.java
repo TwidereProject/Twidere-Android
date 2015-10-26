@@ -26,7 +26,7 @@ import android.support.v4.app.LoaderManager;
 
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
@@ -107,8 +107,8 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
 
     @NonNull
     @Override
-    protected ParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ParcelableStatusesAdapter(context, compact);
+    protected ListParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
+        return new ListParcelableStatusesAdapter(context, compact);
     }
 
     @Override

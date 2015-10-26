@@ -40,7 +40,7 @@ import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
-import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.loader.support.ObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -207,8 +207,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
 
     @NonNull
     @Override
-    protected ParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ParcelableStatusesAdapter(context, compact);
+    protected ListParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
+        return new ListParcelableStatusesAdapter(context, compact);
     }
 
     @Override

@@ -1,130 +1,82 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
+import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
-import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
-import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
-import org.mariotaku.twidere.view.MediaSizeImageView;
 
 import java.util.List;
 
 /**
  * Created by mariotaku on 14/11/5.
  */
-public class UserMediaTimelineFragment extends BaseSupportFragment
+public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<StaggeredGridParcelableStatusesAdapter, StaggeredGridLayoutManager>
         implements LoaderCallbacks<List<ParcelableStatus>>, DrawerCallback {
 
-    private View mProgressContainer;
-    private RecyclerView mRecyclerView;
-
-    private MediaTimelineAdapter mAdapter;
 
     @Override
-    public void fling(float velocity) {
-        mDrawerCallback.fling(velocity);
+    protected void scrollToPositionWithOffset(int position, int offset) {
+        getLayoutManager().scrollToPositionWithOffset(position, offset);
     }
+
 
     @Override
-    public void scrollBy(float dy) {
-        mDrawerCallback.scrollBy(dy);
+    public boolean isRefreshing() {
+        //TODO detect loader refreshing
+        return false;
     }
 
-    @Override
-    public boolean shouldLayoutHeaderBottom() {
-        return mDrawerCallback.shouldLayoutHeaderBottom();
-    }
-
-    @Override
-    public boolean canScroll(float dy) {
-        return mDrawerCallback.canScroll(dy);
-    }
-
-    @Override
-    public boolean isScrollContent(float x, float y) {
-        return mDrawerCallback.isScrollContent(x, y);
-    }
-
-    @Override
-    public void cancelTouch() {
-        mDrawerCallback.cancelTouch();
-    }
-
-    @Override
-    public void topChanged(int offset) {
-        mDrawerCallback.topChanged(offset);
-    }
-
-    private SimpleDrawerCallback mDrawerCallback;
-
-    private final OnScrollListener mOnScrollListener = new OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        }
-    };
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final View view = getView();
-        if (view == null) throw new AssertionError();
-        final Context context = view.getContext();
-        mAdapter = new MediaTimelineAdapter(context);
-        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mDrawerCallback = new SimpleDrawerCallback(mRecyclerView);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setOnScrollListener(mOnScrollListener);
-        getLoaderManager().initLoader(0, getArguments(), this);
-        setListShown(false);
+        final Bundle loaderArgs = new Bundle(getArguments());
+        loaderArgs.putBoolean(EXTRA_FROM_USER, true);
+        getLoaderManager().initLoader(0, loaderArgs, this);
+        showProgress();
     }
 
-    public void setListShown(boolean shown) {
-        mRecyclerView.setVisibility(shown ? View.VISIBLE : View.GONE);
-        mProgressContainer.setVisibility(shown ? View.GONE : View.VISIBLE);
+    @Override
+    protected void setupRecyclerView(Context context, boolean compact) {
+
     }
+
+    @NonNull
+    @Override
+    protected StaggeredGridLayoutManager onCreateLayoutManager(Context context) {
+        return new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+    }
+
 
     public int getStatuses(final long maxId, final long sinceId) {
         final Bundle args = new Bundle(getArguments());
+        args.putBoolean(EXTRA_MAKE_GAP, false);
         args.putLong(EXTRA_MAX_ID, maxId);
         args.putLong(EXTRA_SINCE_ID, sinceId);
+        args.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().restartLoader(0, args, this);
         return -1;
     }
 
-    @Override
-    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
-        mProgressContainer = view.findViewById(R.id.progress_container);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-    }
 
+    @NonNull
     @Override
-    protected void fitSystemWindows(Rect insets) {
-        if (mRecyclerView != null) {
-            mRecyclerView.setClipToPadding(false);
-            mRecyclerView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        }
+    protected StaggeredGridParcelableStatusesAdapter onCreateAdapter(Context context, boolean compact) {
+        return new StaggeredGridParcelableStatusesAdapter(context, compact);
     }
 
     @Override
@@ -141,82 +93,56 @@ public class UserMediaTimelineFragment extends BaseSupportFragment
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
-        return new MediaTimelineLoader(context, accountId, userId, screenName, sinceId, maxId, null,
-                null, tabPosition, true);
+        final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
+        return new MediaTimelineLoader(context, accountId, userId, screenName, sinceId, maxId,
+                getAdapter().getData(), null, tabPosition, fromUser);
     }
 
     @Override
     public void onLoadFinished(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
-        mAdapter.setData(data);
-        setListShown(true);
+        final StaggeredGridParcelableStatusesAdapter adapter = getAdapter();
+        adapter.setData(data);
+        if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
+            adapter.setLoadMoreSupported(hasMoreData(data));
+        }
+        if (loader instanceof IExtendedLoader) {
+            ((IExtendedLoader) loader).setFromUser(false);
+        }
+        showContent();
+        setLoadMoreIndicatorVisible(false);
+    }
+
+    private boolean hasMoreData(List<ParcelableStatus> data) {
+        return true;
     }
 
     @Override
     public void onLoaderReset(Loader<List<ParcelableStatus>> loader) {
-        mAdapter.setData(null);
+        getAdapter().setData(null);
     }
 
-    private static class MediaTimelineAdapter extends BaseRecyclerViewAdapter<MediaTimelineViewHolder> {
-
-        private final LayoutInflater mInflater;
-        private final MediaLoadingHandler mLoadingHandler;
-        private List<ParcelableStatus> mData;
-
-        MediaTimelineAdapter(Context context) {
-            super(context);
-            mInflater = LayoutInflater.from(context);
-            mLoadingHandler = new MediaLoadingHandler(R.id.media_image_progress);
-        }
-
-        @Override
-        public MediaTimelineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            final View view = mInflater.inflate(R.layout.adapter_item_media_status, parent, false);
-            return new MediaTimelineViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(MediaTimelineViewHolder holder, int position) {
-            if (mData == null) return;
-            holder.setMedia(mMediaLoader, mLoadingHandler, mData.get(position));
-        }
-
-        public void setData(List<ParcelableStatus> data) {
-            mData = data;
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mData == null) return 0;
-            return mData.size();
-        }
+    @Override
+    public int[] findLastVisibleItemPositions() {
+        return getLayoutManager().findLastVisibleItemPositions(null);
     }
 
-    private static class MediaTimelineViewHolder extends ViewHolder {
+    @Override
+    public int[] findFirstVisibleItemPositions() {
+        return getLayoutManager().findFirstVisibleItemPositions(null);
+    }
 
-        private final MediaSizeImageView mediaImageView;
-        private final ImageView mediaProfileImageView;
-        private final TextView mediaTextView;
+    @Override
+    public int getItemCount() {
+        return getLayoutManager().getItemCount();
+    }
 
-        public MediaTimelineViewHolder(View itemView) {
-            super(itemView);
-            mediaImageView = (MediaSizeImageView) itemView.findViewById(R.id.media_image);
-            mediaProfileImageView = (ImageView) itemView.findViewById(R.id.media_profile_image);
-            mediaTextView = (TextView) itemView.findViewById(R.id.media_text);
-        }
-
-        public void setMedia(MediaLoaderWrapper loader, MediaLoadingHandler loadingHandler, ParcelableStatus status) {
-            final ParcelableMedia[] media = status.media;
-            if (media == null || media.length < 1) return;
-            final ParcelableMedia firstMedia = media[0];
-            if (status.text_plain.codePointCount(0, status.text_plain.length()) == firstMedia.end) {
-                mediaTextView.setText(status.text_unescaped.substring(0, firstMedia.start));
-            } else {
-                mediaTextView.setText(status.text_unescaped);
-            }
-            loader.displayProfileImage(mediaProfileImageView, status.user_profile_image_url);
-            mediaImageView.setMediaSize(firstMedia.width, firstMedia.height);
-            loader.displayPreviewImageWithCredentials(mediaImageView, firstMedia.media_url, status.account_id, loadingHandler);
-        }
+    @Override
+    public void onLoadMoreContents(boolean fromStart) {
+        if (fromStart) return;
+        //noinspection ConstantConditions
+        super.onLoadMoreContents(fromStart);
+        final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+        final long maxId = adapter.getStatusId(adapter.getStatusesCount() - 1);
+        getStatuses(maxId, -1);
     }
 }

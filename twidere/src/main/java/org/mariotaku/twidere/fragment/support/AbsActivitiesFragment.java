@@ -47,7 +47,7 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 /**
  * Created by mariotaku on 14/11/5.
  */
-public abstract class AbsActivitiesFragment<Data> extends AbsContentRecyclerViewFragment<AbsActivitiesAdapter<Data>>
+public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecyclerViewFragment<AbsActivitiesAdapter<Data>>
         implements LoaderCallbacks<Data>, OnRefreshListener, DrawerCallback, RefreshScrollTopInterface,
         ActivityAdapterListener, KeyboardShortcutsHandler.KeyboardShortcutCallback {
 

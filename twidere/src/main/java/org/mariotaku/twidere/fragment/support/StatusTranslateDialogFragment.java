@@ -44,11 +44,12 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 public class StatusTranslateDialogFragment extends BaseSupportDialogFragment implements
         LoaderCallbacks<SingleResponse<TranslationResult>> {
 
-    private StatusViewHolder mHolder;
+    private IStatusViewHolder mHolder;
 
     private View mProgress;
     private TextView mMessageView;

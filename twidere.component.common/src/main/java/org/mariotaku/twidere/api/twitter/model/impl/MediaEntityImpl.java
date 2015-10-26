@@ -22,11 +22,11 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.twidere.api.twitter.model.MediaEntity;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.mariotaku.twidere.api.twitter.model.MediaEntity;
 
 /**
  * Created by mariotaku on 15/3/31.
@@ -60,15 +60,87 @@ public class MediaEntityImpl implements MediaEntity {
     long sourceUserId;
     @JsonField(name = "video_info")
     VideoInfo videoInfo;
+    @JsonField(name = "features")
+    HashMap<String, Feature> features;
 
     @Override
     public Map<String, Feature> getFeatures() {
         return features;
     }
 
-    @JsonField(name = "features")
-    HashMap<String, Feature> features;
+    @Override
+    public String toString() {
+        return "MediaEntityImpl{" +
+                "id=" + id +
+                ", indices=" + indices +
+                ", mediaUrl='" + mediaUrl + '\'' +
+                ", mediaUrlHttps='" + mediaUrlHttps + '\'' +
+                ", url='" + url + '\'' +
+                ", displayUrl='" + displayUrl + '\'' +
+                ", expandedUrl='" + expandedUrl + '\'' +
+                ", type=" + type +
+                ", sizes=" + sizes +
+                ", sourceStatusId=" + sourceStatusId +
+                ", sourceUserId=" + sourceUserId +
+                ", videoInfo=" + videoInfo +
+                ", features=" + features +
+                '}';
+    }
 
+    @Override
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    @Override
+    public VideoInfo getVideoInfo() {
+        return videoInfo;
+    }
+
+    @Override
+    public String getMediaUrlHttps() {
+        return mediaUrlHttps;
+    }
+
+    @Override
+    public String getExpandedUrl() {
+        return expandedUrl;
+    }
+
+    @Override
+    public String getDisplayUrl() {
+        return displayUrl;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    public Map<String, Size> getSizes() {
+        return sizes;
+    }
+
+    @Override
+    public int getEnd() {
+        return indices.getEnd();
+    }
+
+    @Override
+    public int getStart() {
+        return indices.getStart();
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
 
     @JsonObject
     public static class FeatureImpl implements Feature {
@@ -124,83 +196,6 @@ public class MediaEntityImpl implements MediaEntity {
             }
         }
 
-    }
-
-    @Override
-    public String toString() {
-        return "MediaEntityImpl{" +
-                "id=" + id +
-                ", indices=" + indices +
-                ", mediaUrl='" + mediaUrl + '\'' +
-                ", mediaUrlHttps='" + mediaUrlHttps + '\'' +
-                ", url='" + url + '\'' +
-                ", displayUrl='" + displayUrl + '\'' +
-                ", expandedUrl='" + expandedUrl + '\'' +
-                ", type=" + type +
-                ", sizes=" + sizes +
-                ", sourceStatusId=" + sourceStatusId +
-                ", sourceUserId=" + sourceUserId +
-                ", videoInfo=" + videoInfo +
-                ", features=" + features +
-                '}';
-    }
-
-    @Override
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    @Override
-    public VideoInfo getVideoInfo() {
-        return videoInfo;
-    }
-
-    @Override
-    public String getMediaUrlHttps() {
-        return mediaUrlHttps;
-    }
-
-    @Override
-    public String getExpandedUrl() {
-        return expandedUrl;
-    }
-
-    @Override
-    public String getDisplayUrl() {
-
-        return displayUrl;
-    }
-
-    @Override
-    public String getUrl() {
-
-        return url;
-    }
-
-    @Override
-    public Type getType() {
-
-        return type;
-    }
-
-    @Override
-    public Map<String, Size> getSizes() {
-        return sizes;
-    }
-
-    @Override
-    public int getEnd() {
-        return indices.getEnd();
-    }
-
-    @Override
-    public int getStart() {
-        return indices.getStart();
-    }
-
-    @Override
-    public long getId() {
-        return id;
     }
 
     @JsonObject
@@ -276,9 +271,9 @@ public class MediaEntityImpl implements MediaEntity {
     @JsonObject
     public static class SizeImpl implements Size {
 
-        @JsonField(name = "width")
+        @JsonField(name = "w")
         int width;
-        @JsonField(name = "height")
+        @JsonField(name = "h")
         int height;
         @JsonField(name = "resize")
         String resize;

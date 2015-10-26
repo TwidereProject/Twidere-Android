@@ -16,7 +16,6 @@ import android.widget.TextView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -34,10 +33,10 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
 import org.mariotaku.twidere.view.CardMediaContainer;
-import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.NameView;
 import org.mariotaku.twidere.view.ShortTimeView;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.Locale;
@@ -53,7 +52,7 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
  * Created by mariotaku on 14/11/19.
  */
 public class StatusViewHolder extends ViewHolder implements Constants, OnClickListener,
-        OnMediaClickListener, OnLongClickListener {
+        OnLongClickListener, IStatusViewHolder {
 
     @NonNull
     private final IStatusesAdapter<?> adapter;
@@ -129,10 +128,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         extraTypeView.setImageResource(R.drawable.ic_action_gallery);
     }
 
+    @Override
     public void displayStatus(final ParcelableStatus status, final boolean displayInReplyTo) {
         displayStatus(status, null, displayInReplyTo, true);
     }
 
+    @Override
     public void displayStatus(@NonNull final ParcelableStatus status, @Nullable final TranslationResult translation,
                               final boolean displayInReplyTo, final boolean shouldDisplayExtraType) {
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
@@ -309,10 +310,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         quotedNameView.updateText();
     }
 
+    @Override
     public ImageView getProfileImageView() {
         return profileImageView;
     }
 
+    @Override
     public ImageView getProfileTypeView() {
         return profileTypeView;
     }
@@ -366,6 +369,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         setStatusClickListener(adapter);
     }
 
+    @Override
     public void setStatusClickListener(StatusClickListener listener) {
         statusClickListener = listener;
         ((View) itemContent).setOnClickListener(this);
@@ -378,6 +382,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         favoriteCountView.setOnClickListener(this);
     }
 
+    @Override
     public void setTextSize(final float textSize) {
         nameView.setPrimaryTextSize(textSize);
         quotedNameView.setPrimaryTextSize(textSize);
@@ -436,17 +441,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
                 return true;
         }
         return false;
-    }
-
-    public interface StatusClickListener extends ContentCardClickListener {
-
-        void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position);
-
-        void onStatusClick(StatusViewHolder holder, int position);
-
-        boolean onStatusLongClick(StatusViewHolder holder, int position);
-
-        void onUserProfileClick(StatusViewHolder holder, int position);
     }
 
     public static final class DummyStatusHolderAdapter implements IStatusesAdapter<Object> {
@@ -631,22 +625,22 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
 
         @Override
-        public void onStatusClick(StatusViewHolder holder, int position) {
+        public void onStatusClick(IStatusViewHolder holder, int position) {
 
         }
 
         @Override
-        public boolean onStatusLongClick(StatusViewHolder holder, int position) {
+        public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
             return false;
         }
 
         @Override
-        public void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position) {
+        public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
 
         }
 
         @Override
-        public void onUserProfileClick(StatusViewHolder holder, int position) {
+        public void onUserProfileClick(IStatusViewHolder holder, int position) {
 
         }
 

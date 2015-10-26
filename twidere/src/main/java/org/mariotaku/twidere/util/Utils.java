@@ -3950,7 +3950,8 @@ public final class Utils implements Constants {
         final long itemId = ParseUtils.parseLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
         final long itemUserId = ParseUtils.parseLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
         final long timestamp = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
-        if (!AUTHORITY_STATUS.equals(type) || accountId < 0 || itemId < 0 || timestamp < 0) return;
+        if (!NotificationEvent.isSupported(type) || accountId < 0 || itemId < 0 || timestamp < 0)
+            return;
         final ApplicationModule module = ApplicationModule.get(context);
         final HotMobiLogger logger = module.getHotMobiLogger();
         logger.log(accountId, NotificationEvent.open(context, timestamp, type, accountId, itemId, itemUserId));

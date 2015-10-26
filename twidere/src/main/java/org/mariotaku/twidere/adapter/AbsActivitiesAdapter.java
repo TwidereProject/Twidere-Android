@@ -52,13 +52,13 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
-import org.mariotaku.twidere.view.holder.StatusViewHolder.StatusClickListener;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 /**
  * Created by mariotaku on 15/1/3.
  */
 public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
-        IActivitiesAdapter<Data>, StatusClickListener, OnLinkClickListener, ActivityTitleSummaryViewHolder.ActivityClickListener {
+        IActivitiesAdapter<Data>, IStatusViewHolder.StatusClickListener, OnLinkClickListener, ActivityTitleSummaryViewHolder.ActivityClickListener {
 
     private static final int ITEM_VIEW_TYPE_STUB = 0;
     private static final int ITEM_VIEW_TYPE_GAP = 1;
@@ -66,7 +66,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     private static final int ITEM_VIEW_TYPE_TITLE_SUMMARY = 3;
     private static final int ITEM_VIEW_TYPE_STATUS = 4;
 
-    private final Context mContext;
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
     private final int mCardBackgroundColor;
@@ -82,7 +81,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         super(context);
-        mContext = context;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
@@ -115,12 +113,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     @Override
     public MediaLoaderWrapper getMediaLoader() {
         return mMediaLoader;
-    }
-
-    @NonNull
-    @Override
-    public Context getContext() {
-        return mContext;
     }
 
     @Override
@@ -167,7 +159,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
     @Override
-    public void onStatusClick(StatusViewHolder holder, int position) {
+    public void onStatusClick(IStatusViewHolder holder, int position) {
         final ParcelableActivity activity = getActivity(position);
         final ParcelableStatus status;
         if (activity.action == Activity.ACTION_MENTION) {
@@ -179,12 +171,12 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
     @Override
-    public void onMediaClick(StatusViewHolder holder, View view, ParcelableMedia media, int position) {
+    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
 
     }
 
     @Override
-    public void onUserProfileClick(StatusViewHolder holder, int position) {
+    public void onUserProfileClick(IStatusViewHolder holder, int position) {
         final Context context = getContext();
         final ParcelableActivity activity = getActivity(position);
         final ParcelableStatus status;
@@ -264,8 +256,8 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
                 } else {
                     status = activity.target_statuses[0];
                 }
-                final StatusViewHolder statusViewHolder = (StatusViewHolder) holder;
-                statusViewHolder.displayStatus(status, null, true, true);
+                final IStatusViewHolder IStatusViewHolder = (IStatusViewHolder) holder;
+                IStatusViewHolder.displayStatus(status, null, true, true);
                 break;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {
@@ -280,7 +272,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
     @Override
-    public boolean onStatusLongClick(StatusViewHolder holder, int position) {
+    public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
         return false;
     }
 

@@ -42,19 +42,18 @@ import android.widget.EditText;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.view.ComposeMaterialEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
 
@@ -101,7 +100,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_status_quote_retweet, null);
         final DummyStatusHolderAdapter adapter = new DummyStatusHolderAdapter(context);
         adapter.setShouldShowAccountsColor(true);
-        final StatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
+        final IStatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
 
         assert status != null;

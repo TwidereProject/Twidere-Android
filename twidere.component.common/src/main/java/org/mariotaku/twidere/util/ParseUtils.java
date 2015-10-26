@@ -21,13 +21,17 @@ package org.mariotaku.twidere.util;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.JsonWriter;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mariotaku.restfu.Utils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.constant.IntentConstants;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,29 +46,41 @@ public final class ParseUtils {
 
     public static String bundleToJSON(final Bundle args) {
         final Set<String> keys = args.keySet();
-        final JSONObject json = new JSONObject();
-        for (final String key : keys) {
-            final Object value = args.get(key);
-            if (value == null) {
-                continue;
-            }
-            try {
-                if (value instanceof Boolean) {
-                    json.put(key, args.getBoolean(key));
+        final StringWriter sw = new StringWriter();
+        final JsonWriter json = new JsonWriter(sw);
+        try {
+            json.beginObject();
+            for (final String key : keys) {
+                json.name(key);
+                final Object value = args.get(key);
+                if (value == null) {
+                    json.nullValue();
+                } else if (value instanceof Boolean) {
+                    json.value((Boolean) value);
                 } else if (value instanceof Integer) {
-                    json.put(key, args.getInt(key));
+                    json.value((Integer) value);
                 } else if (value instanceof Long) {
-                    json.put(key, args.getLong(key));
+                    json.value((Long) value);
                 } else if (value instanceof String) {
-                    json.put(key, args.getString(key));
+                    json.value((String) value);
+                } else if (value instanceof Float) {
+                    json.value((Float) value);
+                } else if (value instanceof Double) {
+                    json.value((Double) value);
                 } else {
                     Log.w(TwidereConstants.LOGTAG, "Unknown type " + value.getClass().getSimpleName() + " in arguments key " + key);
                 }
-            } catch (final JSONException e) {
-                e.printStackTrace();
             }
+            json.endObject();
+            json.flush();
+            sw.flush();
+            return sw.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Utils.closeSilently(json);
         }
-        return json.toString();
     }
 
     public static Bundle jsonToBundle(final String string) {

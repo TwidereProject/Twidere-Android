@@ -25,7 +25,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
-import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
@@ -41,8 +41,8 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
 
     @NonNull
     @Override
-    protected ParcelableStatusesAdapter onCreateAdapter(Context context, boolean compact) {
-        final ParcelableStatusesAdapter adapter = super.onCreateAdapter(context, compact);
+    protected ListParcelableStatusesAdapter onCreateAdapter(Context context, boolean compact) {
+        final ListParcelableStatusesAdapter adapter = super.onCreateAdapter(context, compact);
         adapter.setShowInReplyTo(false);
         return adapter;
     }
