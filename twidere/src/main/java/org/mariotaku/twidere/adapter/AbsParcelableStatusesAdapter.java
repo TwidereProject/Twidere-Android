@@ -33,6 +33,7 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
 
     public AbsParcelableStatusesAdapter(Context context, boolean compact) {
         super(context, compact);
+        setHasStableIds(true);
     }
 
     @Override

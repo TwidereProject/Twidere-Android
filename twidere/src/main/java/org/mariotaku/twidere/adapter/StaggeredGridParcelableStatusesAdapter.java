@@ -45,7 +45,6 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
 
     public StaggeredGridParcelableStatusesAdapter(Context context, boolean compact) {
         super(context, compact);
-        setHasStableIds(true);
     }
 
     @Override
