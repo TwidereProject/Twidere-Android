@@ -70,8 +70,16 @@ public class TwitterCardUtils {
     }
 
     public static boolean isCardSupported(ParcelableCardEntity card) {
-        if (card == null) return false;
-        return CARD_NAME_PLAYER.equals(card.name) || CARD_NAME_AUDIO.equals(card.name);
+        if (card == null || card.name == null) return false;
+        switch (card.name) {
+            case CARD_NAME_PLAYER: {
+                return ParcelableCardEntity.getValue(card, "player_stream_url") == null;
+            }
+            case CARD_NAME_AUDIO: {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

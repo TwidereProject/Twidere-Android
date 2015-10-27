@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util.support;
 
+import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
@@ -34,7 +35,7 @@ public class DrawableSupport {
         DrawableSupportLollipop.getOutline(drawable, outlineCompat);
     }
 
-
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static class DrawableSupportLollipop {
 
         public static void getOutline(Drawable drawable, OutlineCompat outlineCompat) {

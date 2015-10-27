@@ -259,7 +259,8 @@ public class ParcelableMedia implements Parcelable {
     @Nullable
     private static ParcelableMedia[] fromCard(@Nullable CardEntity card, @Nullable UrlEntity[] entities) {
         if (card == null) return null;
-        if ("animated_gif".equals(card.getName())) {
+        final String name = card.getName();
+        if ("animated_gif".equals(name) || "player".equals(name)) {
             final BindingValue player_stream_url = card.getBindingValue("player_stream_url");
             if (!(player_stream_url instanceof StringValue))
                 return null;
