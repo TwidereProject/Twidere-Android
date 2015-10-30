@@ -36,10 +36,8 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.BitmapUtils;
-import org.mariotaku.twidere.util.Exif;
 import org.mariotaku.twidere.util.ImageValidator;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.imageloader.AccountExtra;
 import org.mariotaku.twidere.util.imageloader.AccountFullImageExtra;
 
 import java.io.File;
@@ -144,7 +142,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
         o.inJustDecodeBounds = false;
         o.inSampleSize = BitmapUtils.computeSampleSize(mFallbackSize / Math.max(width, height));
         final Bitmap bitmap = BitmapFactory.decodeFile(path, o);
-        return Result.getInstance(useDecoder, bitmap, o, Exif.getOrientation(file), file);
+        return Result.getInstance(useDecoder, bitmap, o, ImageValidator.getOrientation(file.getAbsolutePath()), file);
     }
 
     @Override

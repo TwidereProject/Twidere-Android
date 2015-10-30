@@ -24,7 +24,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class MediaViewPager extends ViewPager {
+public class MediaViewPager extends ExtendedViewPager {
 
 
     public MediaViewPager(Context context) {

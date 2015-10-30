@@ -23,54 +23,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
 public class BitmapDecodeHelper {
-
-	public static Bitmap decode(final FileDescriptor fd, final BitmapFactory.Options opts) {
-		if (fd == null) return null;
-		final int orientation = Exif.getOrientation(new FileInputStream(fd));
-		final Bitmap bm = BitmapFactory.decodeFileDescriptor(fd, null, opts);
-		final Matrix m = new Matrix();
-		switch (orientation) {
-			case 270:
-			case 90:
-				m.postRotate(orientation);
-				return Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
-			case 180:
-				m.postRotate(orientation);
-				m.postScale(bm.getWidth(), bm.getHeight());
-				return Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
-		}
-		return bm;
-	}
-
-	public static Bitmap decode(final InputStream is, final BitmapFactory.Options opts) {
-		if (is == null) return null;
-		final int orientation = Exif.getOrientation(is);
-		final Bitmap bm = BitmapFactory.decodeStream(is, null, opts);
-		final Matrix m = new Matrix();
-		switch (orientation) {
-			case 270:
-			case 90:
-				m.postRotate(orientation);
-				return Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
-			case 180:
-				m.postRotate(orientation);
-				m.postScale(bm.getWidth(), bm.getHeight());
-				return Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
-		}
-		return bm;
-	}
 
 	public static Bitmap decode(final String path, final BitmapFactory.Options opts) {
 		if (path == null || opts == null) return null;
 		final Bitmap bm = BitmapFactory.decodeFile(path, opts);
 		if (bm == null) return null;
 		final Matrix m = new Matrix();
-		final int orientation = Exif.getOrientation(path);
+		final int orientation = ImageValidator.getOrientation(path);
 		switch (orientation) {
 			case 270:
 			case 90:
