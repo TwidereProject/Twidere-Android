@@ -54,6 +54,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.util.ParseUtils;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 import java.util.Map;
@@ -70,12 +71,15 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
 
     private ListView mListView;
     private HostMappingAdapter mAdapter;
+    private SharedPreferencesWrapper mHostMapping;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        mPreferences.registerOnSharedPreferenceChangeListener(this);
+        mHostMapping = SharedPreferencesWrapper.getInstance(getActivity(),
+                HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mHostMapping.registerOnSharedPreferenceChangeListener(this);
         mAdapter = new HostMappingAdapter(getActivity());
         setListAdapter(mAdapter);
         mListView = getListView();
@@ -100,7 +104,7 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete: {
-                final SharedPreferences.Editor editor = mPreferences.edit();
+                final SharedPreferences.Editor editor = mHostMapping.edit();
                 final SparseBooleanArray array = mListView.getCheckedItemPositions();
                 if (array == null) return false;
                 for (int i = 0, size = array.size(); i < size; i++) {
