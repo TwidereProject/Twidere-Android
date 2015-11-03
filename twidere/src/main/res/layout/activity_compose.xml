@@ -61,6 +61,7 @@
                 android:completionThreshold="1"
                 android:gravity="top"
                 android:hint="@string/status_hint"
+                android:inputType="text|textLongMessage|textAutoComplete|textMultiLine"
                 android:minLines="6"
                 android:padding="@dimen/element_spacing_normal"
                 android:scrollbars="vertical" />

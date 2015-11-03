@@ -30,6 +30,7 @@ import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
@@ -65,6 +66,7 @@ public class HotMobiLogger {
     public static final String LOGTAG = "HotMobiLogger";
     public static final long UPLOAD_INTERVAL_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
     public static final String LAST_UPLOAD_TIME = "last_upload_time";
+    public static final String FALLBACK_CACHED_LOCATION = "fallback_cached_location";
     final static SimpleDateFormat DATE_FORMAT;
 
     static {
@@ -123,8 +125,18 @@ public class HotMobiLogger {
 
     public static LatLng getCachedLatLng(Context context) {
         final Location location = Utils.getCachedLocation(context);
-        if (location == null) return null;
-        return new LatLng(location.getLatitude(), location.getLongitude());
+        if (location == null) {
+            return getFallbackCachedLocation(context);
+        }
+        final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
+        prefs.edit().putString(FALLBACK_CACHED_LOCATION, JsonSerializer.serialize(latLng, LatLng.class)).apply();
+        return latLng;
+    }
+
+    private static LatLng getFallbackCachedLocation(Context context) {
+        final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
+        return JsonSerializer.parse(prefs.getString(FALLBACK_CACHED_LOCATION, null), LatLng.class);
     }
 
     public static File getLogFile(Context context, long accountId, String type) {

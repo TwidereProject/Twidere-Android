@@ -286,6 +286,16 @@ public interface TwidereDataStore {
 
     }
 
+    interface Suggestions extends BaseColumns {
+        String TYPE = "type";
+        String VALUE1 = "value1";
+        String VALUE2 = "value2";
+
+        interface Compose extends Suggestions {
+
+        }
+    }
+
     interface CachedValues extends BaseColumns {
 
         String NAME = "name";

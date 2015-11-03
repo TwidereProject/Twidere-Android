@@ -21,15 +21,12 @@ package org.mariotaku.twidere.view;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
-import android.text.InputType;
 import android.text.method.ArrowKeyMovementMethod;
 import android.util.AttributeSet;
 
-import com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView;
-
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
-import org.mariotaku.twidere.util.widget.ScreenNameTokenizer;
+import org.mariotaku.twidere.util.widget.StatusTextTokenizer;
 
 public class ComposeEditText extends AppCompatMultiAutoCompleteTextView {
 
@@ -46,15 +43,8 @@ public class ComposeEditText extends AppCompatMultiAutoCompleteTextView {
 
     public ComposeEditText(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        setTokenizer(new ScreenNameTokenizer());
+        setTokenizer(new StatusTextTokenizer());
         setMovementMethod(ArrowKeyMovementMethod.getInstance());
-        setupComposeInputType();
-    }
-
-    private void setupComposeInputType() {
-        int rawInputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
-        rawInputType |= InputType.TYPE_TEXT_FLAG_MULTI_LINE;
-        setRawInputType(rawInputType);
     }
 
     @Override
@@ -85,11 +75,4 @@ public class ComposeEditText extends AppCompatMultiAutoCompleteTextView {
         if (mAdapter == null) return;
         mAdapter.setAccountId(mAccountId);
     }
-
-    @Override
-    protected void replaceText(final CharSequence text) {
-        super.replaceText(text);
-        append(" ");
-    }
-
 }

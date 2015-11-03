@@ -29,7 +29,7 @@ import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
-import org.mariotaku.twidere.util.widget.ScreenNameTokenizer;
+import org.mariotaku.twidere.util.widget.StatusTextTokenizer;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
 public class ComposeMaterialEditText extends AppCompatMultiAutoCompleteTextView implements IThemeBackgroundTintView {
@@ -47,7 +47,7 @@ public class ComposeMaterialEditText extends AppCompatMultiAutoCompleteTextView 
 
     public ComposeMaterialEditText(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        setTokenizer(new ScreenNameTokenizer());
+        setTokenizer(new StatusTextTokenizer());
         setMovementMethod(ArrowKeyMovementMethod.getInstance());
         setupComposeInputType();
     }
