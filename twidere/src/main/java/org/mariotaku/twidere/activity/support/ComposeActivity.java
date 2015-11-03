@@ -945,7 +945,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         if (TextUtils.isEmpty(myScreenName)) return false;
         int selectionStart = 0;
         mEditText.append("@" + status.user_screen_name + " ");
-        // If status is not sent by our self, just include our screen name into selection.
+        // If replying status from current user, just exclude it's screen name from selection.
         if (status.account_id != status.user_id) {
             selectionStart = mEditText.length();
         }
