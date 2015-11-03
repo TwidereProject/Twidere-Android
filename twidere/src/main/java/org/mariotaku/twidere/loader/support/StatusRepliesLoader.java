@@ -41,9 +41,10 @@ public class StatusRepliesLoader extends UserMentionsLoader {
 
     public StatusRepliesLoader(final Context context, final long accountId, final String screenName,
                                final long statusId, final long maxId, final long sinceId, final List<ParcelableStatus> data,
-                               final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
+                               final String[] savedStatusesArgs, final int tabPosition, boolean fromUser,
+                               boolean twitterOptimizedSearches) {
         super(context, accountId, screenName, maxId, sinceId, data, savedStatusesArgs, tabPosition,
-                fromUser, false);
+                fromUser, false, twitterOptimizedSearches);
         mInReplyToStatusId = statusId;
     }
 

@@ -21,7 +21,6 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
@@ -281,8 +280,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     protected abstract void updateRefreshState();
 
     private String getSortOrder() {
-        final SharedPreferences preferences = getSharedPreferences();
-        final boolean sortById = preferences.getBoolean(KEY_SORT_TIMELINE_BY_ID, false);
+        final boolean sortById = mPreferences.getBoolean(KEY_SORT_TIMELINE_BY_ID, false);
         return sortById ? Statuses.SORT_ORDER_STATUS_ID_DESC : Statuses.SORT_ORDER_TIMESTAMP_DESC;
     }
 }

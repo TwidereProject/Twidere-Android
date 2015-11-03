@@ -178,9 +178,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
             final long maxId = args.getLong(EXTRA_MAX_ID, -1);
             final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
+            final boolean twitterOptimizedSearches = mPreferences.getBoolean(TWITTER_OPTIMIZED_SEARCHES);
 
             final StatusRepliesLoader loader = new StatusRepliesLoader(getActivity(), accountId,
-                    screenName, statusId, maxId, sinceId, null, null, 0, true);
+                    screenName, statusId, maxId, sinceId, null, null, 0, true, twitterOptimizedSearches);
             loader.setComparator(ParcelableStatus.REVERSE_ID_COMPARATOR);
             return loader;
         }

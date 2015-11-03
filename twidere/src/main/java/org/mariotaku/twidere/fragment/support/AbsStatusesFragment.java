@@ -102,7 +102,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
             }
         }
     };
-    private SharedPreferences mPreferences;
     private PopupMenu mPopupMenu;
     private final OnScrollListener mOnScrollListener = new OnScrollListener() {
         @Override
@@ -134,11 +133,6 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     protected AbsStatusesFragment() {
         mStatusesBusCallback = createMessageBusCallback();
-    }
-
-    public SharedPreferences getSharedPreferences() {
-        if (mPreferences != null) return mPreferences;
-        return mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     public abstract boolean getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
@@ -242,9 +236,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     @Override
     public final void onLoadFinished(Loader<Data> loader, Data data) {
         final AbsStatusesAdapter<Data> adapter = getAdapter();
-        final SharedPreferences preferences = getSharedPreferences();
-        final boolean rememberPosition = preferences.getBoolean(KEY_REMEMBER_POSITION, false);
-        final boolean readFromBottom = preferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
+        final boolean rememberPosition = mPreferences.getBoolean(KEY_REMEMBER_POSITION, false);
+        final boolean readFromBottom = mPreferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
         final long lastReadId;
         final int lastVisiblePos, lastVisibleTop;
         final String tag = getCurrentReadPositionTag();

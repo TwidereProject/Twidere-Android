@@ -55,19 +55,25 @@
         <Preference
             android:fragment="org.mariotaku.twidere.fragment.KeyboardShortcutsFragment"
             android:title="@string/keyboard_shortcuts" />
+
+        <org.mariotaku.twidere.preference.MediaUploaderPreference
+            android:defaultValue=""
+            android:key="media_uploader"
+            android:summary="%s"
+            android:title="@string/image_uploader" />
+
+        <org.mariotaku.twidere.preference.TimelineSyncPreference
+            android:defaultValue=""
+            android:key="timeline_sync_service"
+            android:summary="%s"
+            android:title="@string/timeline_sync_service" />
+
+        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+            android:defaultValue="true"
+            android:key="twitter_optimized_searches"
+            android:summary="@string/twitter_optimized_searches_summary"
+            android:title="@string/twitter_optimized_searches" />
     </PreferenceCategory>
-
-    <org.mariotaku.twidere.preference.MediaUploaderPreference
-        android:defaultValue=""
-        android:key="media_uploader"
-        android:summary="%s"
-        android:title="@string/image_uploader" />
-
-    <org.mariotaku.twidere.preference.TimelineSyncPreference
-        android:defaultValue=""
-        android:key="timeline_sync_service"
-        android:summary="%s"
-        android:title="@string/timeline_sync_service" />
 
     <PreferenceCategory
         android:key="category_safety"

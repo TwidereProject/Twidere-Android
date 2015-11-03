@@ -40,8 +40,10 @@ public class StatusRepliesListFragment extends StatusesSearchFragment {
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
+        final boolean twitterOptimizedSearches = mPreferences.getBoolean(TWITTER_OPTIMIZED_SEARCHES);
         return new StatusRepliesLoader(getActivity(), accountId, screenName, statusId, maxId,
-                sinceId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser);
+                sinceId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser,
+                twitterOptimizedSearches);
     }
 
     @Override
