@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.CheckBoxPreference;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.TextView;
 
 public class AutoFixCheckBoxPreference extends CheckBoxPreference {
 
@@ -31,4 +33,13 @@ public class AutoFixCheckBoxPreference extends CheckBoxPreference {
 		}
 	}
 
+	@Override
+	protected void onBindView(View view) {
+		super.onBindView(view);
+
+		TextView textView = (TextView) view.findViewById(android.R.id.title);
+		if (textView != null) {
+			textView.setSingleLine(false);
+		}
+	}
 }
