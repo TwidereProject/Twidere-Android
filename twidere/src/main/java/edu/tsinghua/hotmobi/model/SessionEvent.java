@@ -19,8 +19,10 @@
 
 package edu.tsinghua.hotmobi.model;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -59,6 +61,9 @@ public class SessionEvent extends BaseEvent implements Parcelable {
     @ParcelableThisPlease
     @JsonField(name = "preferences")
     HashMap<String, String> preferences;
+    @ParcelableThisPlease
+    @JsonField(name = "device_preferences")
+    HashMap<String, String> devicePreferences;
 
     protected SessionEvent(Parcel in) {
         super(in);
@@ -90,6 +95,14 @@ public class SessionEvent extends BaseEvent implements Parcelable {
         this.preferences = preferences;
     }
 
+    public HashMap<String, String> getDevicePreferences() {
+        return devicePreferences;
+    }
+
+    public void setDevicePreferences(HashMap<String, String> devicePreferences) {
+        this.devicePreferences = devicePreferences;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
@@ -104,6 +117,20 @@ public class SessionEvent extends BaseEvent implements Parcelable {
             preferences.put("notification_" + accountId + "_interactions", String.valueOf(pref.isMentionsNotificationEnabled()));
         }
         setPreferences(preferences);
+        final HashMap<String, String> devicePreferences = new HashMap<>();
+        devicePreferences.put("device_secure", isDeviceSecure(context));
+        setDevicePreferences(devicePreferences);
+    }
+
+    private static String isDeviceSecure(Context context) {
+        KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            return String.valueOf(false);
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return String.valueOf(km.isKeyguardSecure());
+        } else {
+            return String.valueOf(km.isDeviceSecure());
+        }
     }
 
     @Override

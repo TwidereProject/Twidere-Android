@@ -96,6 +96,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.CompareUtils;
+import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
@@ -906,7 +907,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
-            textView.setText(Html.fromHtml(status.text_html));
+            textView.setText(HtmlSpanBuilder.fromHtml(status.text_html));
             linkify.applyAllLinks(textView, status.account_id, layoutPosition, status.is_possibly_sensitive);
             ThemeUtils.applyParagraphSpacing(textView, 1.1f);
 

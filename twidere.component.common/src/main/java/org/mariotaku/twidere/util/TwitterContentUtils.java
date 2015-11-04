@@ -24,6 +24,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
+import org.apache.commons.lang3.text.translate.EntityArrays;
+import org.apache.commons.lang3.text.translate.LookupTranslator;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
@@ -59,7 +62,7 @@ public class TwitterContentUtils {
         if (message == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, true);
         TwitterContentUtils.parseEntities(builder, message);
-        return builder.build().replace("\n", "<br/>");
+        return builder.build();
     }
 
     public static String formatExpandedUserDescription(final User user) {
@@ -76,14 +79,14 @@ public class TwitterContentUtils {
                 }
             }
         }
-        return toPlainText(builder.build().replace("\n", "<br/>"));
+        return toPlainText(builder.build());
     }
 
     public static String formatStatusText(final Status status) {
         if (status == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, true);
         TwitterContentUtils.parseEntities(builder, status);
-        return builder.build().replace("\n", "<br/>");
+        return builder.build();
     }
 
     public static String formatUserDescription(final User user) {
@@ -100,7 +103,7 @@ public class TwitterContentUtils {
                 }
             }
         }
-        return builder.build().replace("\n", "<br/>");
+        return builder.build();
     }
 
     @NonNull
@@ -167,9 +170,11 @@ public class TwitterContentUtils {
         return ConsumerKeyType.UNKNOWN;
     }
 
-    public static String unescapeTwitterStatusText(final String str) {
-        if (str == null) return null;
-        return str.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">");
+    private static final CharSequenceTranslator UNESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_UNESCAPE());
+
+    public static String unescapeTwitterStatusText(final CharSequence text) {
+        if (text == null) return null;
+        return UNESCAPE_TWITTER_RAW_TEXT.translate(text);
     }
 
     public static <T extends List<Status>> T getStatusesWithQuoteData(Twitter twitter, @NonNull T list) throws TwitterException {

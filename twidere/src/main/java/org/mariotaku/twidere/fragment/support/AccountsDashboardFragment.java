@@ -516,7 +516,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 //        if (accounts.length > 1) {
 //            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, R.id.compose));
 //        }
-        mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star, R.id.favorites));
+        mAccountOptionsAdapter.add(new OptionItem(R.string.likes, R.drawable.ic_action_heart, R.id.favorites));
         mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, R.id.lists));
     }
 

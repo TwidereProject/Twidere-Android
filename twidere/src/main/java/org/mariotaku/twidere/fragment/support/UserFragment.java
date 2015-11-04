@@ -1449,7 +1449,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (Utils.isOfficialKeyAccount(context, accountId)) {
             mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), R.drawable.ic_action_gallery, TAB_TYPE_MEDIA, TAB_POSITION_MEDIA, null);
         }
-        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites), R.drawable.ic_action_star, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null);
+        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.likes), R.drawable.ic_action_heart, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null);
     }
 
     private void updateFollowProgressState() {

@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 /**
  * Created by mariotaku on 14/12/23.
  */
-public class StringUtils {
+public class TwidereStringUtils {
     public static boolean regionMatchesIgnoreCase(@NonNull final String string, final int thisStart,
                                                   @NonNull final String match, final int start,
                                                   final int length) {

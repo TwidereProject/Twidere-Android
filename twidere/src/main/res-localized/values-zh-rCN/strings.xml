@@ -780,4 +780,6 @@
   <string name="bug_reports">错误报告</string>
   <string name="invalid_consumer_key">无效的Consumer key</string>
   <string name="invalid_consumer_secret">无效的Consumer secret</string>
+  <string name="like">喜欢</string>
+  <string name="likes">喜欢</string>
 </resources>

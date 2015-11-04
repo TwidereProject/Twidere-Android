@@ -434,7 +434,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="@string/favorites"
+                android:text="@string/likes"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorSecondary" />
         </LinearLayout>

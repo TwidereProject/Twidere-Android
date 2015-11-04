@@ -103,7 +103,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
             }
             case Activity.ACTION_FAVORITE: {
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
                 if (byFriends) {
                     titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
                             R.string.activity_by_friends_favorite_multi, activity.sources, activity.target_statuses));
@@ -136,7 +136,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                     return;
                 }
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
                 titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
                         R.string.activity_about_me_favorited_retweet_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
@@ -178,9 +178,9 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                     return;
                 }
                 activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_mention,
-                        R.string.activity_about_me_favorited_mention_multi, activity.sources));
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_mention,
+                        R.string.activity_about_me_liked_mention_multi, activity.sources));
                 displayUserProfileImages(activity.sources);
                 summaryView.setText(activity.target_statuses[0].text_unescaped);
                 summaryView.setVisibility(View.VISIBLE);

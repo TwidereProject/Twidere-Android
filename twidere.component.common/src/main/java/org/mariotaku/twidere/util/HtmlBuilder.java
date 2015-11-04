@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
 
@@ -34,7 +33,7 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.unescape;
 public class HtmlBuilder {
 
     private final String source;
-    private final int[] codePoints;
+    private final CodePointArray codePoints;
     private final int codePointsLength;
     private final boolean throwExceptions, sourceIsEscaped, shouldReEscape;
 
@@ -44,20 +43,11 @@ public class HtmlBuilder {
                        final boolean shouldReEscape) {
         if (source == null) throw new NullPointerException();
         this.source = source;
-        final int length = source.length();
-        final int[] codepointsTemp = new int[length];
-        int codePointsLength = 0;
-        for (int offset = 0; offset < length; ) {
-            final int codepoint = source.codePointAt(offset);
-            codepointsTemp[codePointsLength++] = codepoint;
-            offset += Character.charCount(codepoint);
-        }
-        codePoints = new int[codePointsLength];
-        System.arraycopy(codepointsTemp, 0, codePoints, 0, codePointsLength);
-        throwExceptions = strict;
+        this.codePoints = new CodePointArray(source);
+        this.throwExceptions = strict;
         this.sourceIsEscaped = sourceIsEscaped;
         this.shouldReEscape = shouldReEscape;
-        this.codePointsLength = codePointsLength;
+        this.codePointsLength = codePoints.length();
     }
 
     public boolean addLink(final String link, final String display, final int start, final int end) {
@@ -107,7 +97,7 @@ public class HtmlBuilder {
             builder.append(spec.link);
             builder.append("\">");
             if (start >= 0 && start <= end && end <= codePointsLength) {
-                builder.append(!isEmpty(spec.display) ? spec.display_is_html ? spec.display : toHtml(spec.display)
+                builder.append(!isEmpty(spec.display) ? spec.displayIsHtml ? spec.display : toHtml(spec.display)
                         : spec.link);
             }
             builder.append("</a>");
@@ -128,20 +118,26 @@ public class HtmlBuilder {
 
     @Override
     public String toString() {
-        return "HtmlBuilder{orig=" + source + ", codePoints=" + Arrays.toString(codePoints) + ", string_length="
-                + codePointsLength + ", throw_exceptions=" + throwExceptions + ", source_is_escaped=" + sourceIsEscaped
-                + ", should_re_escape=" + shouldReEscape + ", links=" + links + "}";
+        return "HtmlBuilder{" +
+                "source='" + source + '\'' +
+                ", codePoints=" + codePoints +
+                ", codePointsLength=" + codePointsLength +
+                ", throwExceptions=" + throwExceptions +
+                ", sourceIsEscaped=" + sourceIsEscaped +
+                ", shouldReEscape=" + shouldReEscape +
+                ", links=" + links +
+                '}';
     }
 
     private void appendSource(final StringBuilder builder, final int start, final int end) {
         if (sourceIsEscaped == shouldReEscape) {
             for (int i = start; i < end; i++) {
-                builder.appendCodePoint(codePoints[i]);
+                builder.appendCodePoint(codePoints.get(i));
             }
         } else if (shouldReEscape) {
-            builder.append(escape(subString(start, end)));
+            builder.append(escape(codePoints.substring(start, end)));
         } else {
-            builder.append(unescape(subString(start, end)));
+            builder.append(unescape(codePoints.substring(start, end)));
         }
     }
 
@@ -150,26 +146,18 @@ public class HtmlBuilder {
         return shouldReEscape ? escape(source) : unescape(source);
     }
 
-    private String subString(final int start, final int end) {
-        final StringBuilder sb = new StringBuilder();
-        for (int i = start; i < end; i++) {
-            sb.appendCodePoint(codePoints[i]);
-        }
-        return sb.toString();
-    }
-
     static final class LinkSpec implements Comparable<LinkSpec> {
 
         final String link, display;
         final int start, end;
-        final boolean display_is_html;
+        final boolean displayIsHtml;
 
-        LinkSpec(final String link, final String display, final int start, final int end, final boolean display_is_html) {
+        LinkSpec(final String link, final String display, final int start, final int end, final boolean displayIsHtml) {
             this.link = link;
             this.display = display;
             this.start = start;
             this.end = end;
-            this.display_is_html = display_is_html;
+            this.displayIsHtml = displayIsHtml;
         }
 
         @Override
@@ -186,7 +174,7 @@ public class HtmlBuilder {
             if (display == null) {
                 if (other.display != null) return false;
             } else if (!display.equals(other.display)) return false;
-            if (display_is_html != other.display_is_html) return false;
+            if (displayIsHtml != other.displayIsHtml) return false;
             if (end != other.end) return false;
             if (link == null) {
                 if (other.link != null) return false;
@@ -200,7 +188,7 @@ public class HtmlBuilder {
             final int prime = 31;
             int result = 1;
             result = prime * result + (display == null ? 0 : display.hashCode());
-            result = prime * result + (display_is_html ? 1231 : 1237);
+            result = prime * result + (displayIsHtml ? 1231 : 1237);
             result = prime * result + end;
             result = prime * result + (link == null ? 0 : link.hashCode());
             result = prime * result + start;
@@ -209,8 +197,13 @@ public class HtmlBuilder {
 
         @Override
         public String toString() {
-            return "LinkSpec{link=" + link + ", display=" + display + ", start=" + start + ", end=" + end
-                    + ", display_is_html=" + display_is_html + "}";
+            return "LinkSpec{" +
+                    "link='" + link + '\'' +
+                    ", display='" + display + '\'' +
+                    ", start=" + start +
+                    ", end=" + end +
+                    ", displayIsHtml=" + displayIsHtml +
+                    '}';
         }
     }
 

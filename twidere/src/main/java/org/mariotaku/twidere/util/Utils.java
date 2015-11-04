@@ -74,6 +74,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ActionProvider;
@@ -1727,13 +1728,13 @@ public final class Utils implements Constants {
         return def;
     }
 
-    public static int getCardHighlightColor(final Resources res, final boolean isMention, final boolean isFavorite,
-                                            final boolean isRetweet) {
+    public static int getCardHighlightColor(final Context context, final boolean isMention,
+                                            final boolean isFavorite, final boolean isRetweet) {
         if (isMention)
-            return res.getColor(R.color.highlight_reply);
+            return ContextCompat.getColor(context, R.color.highlight_reply);
         else if (isFavorite)
-            return res.getColor(R.color.highlight_favorite);
-        else if (isRetweet) res.getColor(R.color.highlight_retweet);
+            return ContextCompat.getColor(context, R.color.highlight_like);
+        else if (isRetweet) ContextCompat.getColor(context, R.color.highlight_retweet);
         return Color.TRANSPARENT;
     }
 
@@ -1955,7 +1956,7 @@ public final class Utils implements Constants {
             if (key == -1 || isEmpty(value)) {
                 continue;
             }
-            if (StringUtils.startsWithIgnoreCase(value, str)) {
+            if (TwidereStringUtils.startsWithIgnoreCase(value, str)) {
                 list.add(key);
             }
         }
@@ -3332,8 +3333,8 @@ public final class Utils implements Constants {
                                         final ParcelableCredentials account) {
         if (context == null || menu == null || status == null || account == null) return;
         final Resources resources = context.getResources();
-        final int retweetHighlight = resources.getColor(R.color.highlight_retweet);
-        final int favoriteHighlight = resources.getColor(R.color.highlight_favorite);
+        final int retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet);
+        final int likeHighlight = ContextCompat.getColor(context, R.color.highlight_like);
         final boolean isMyRetweet = isMyRetweet(status);
         final MenuItem delete = menu.findItem(R.id.delete);
         if (delete != null) {
@@ -3346,8 +3347,8 @@ public final class Utils implements Constants {
         }
         final MenuItem favorite = menu.findItem(R.id.favorite);
         if (favorite != null) {
-            ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, favoriteHighlight));
-            favorite.setTitle(status.is_favorite ? R.string.unfavorite : R.string.favorite);
+            ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, likeHighlight));
+            favorite.setTitle(status.is_favorite ? R.string.undo_like : R.string.like);
         }
         final MenuItem translate = menu.findItem(R.id.translate);
         if (translate != null) {

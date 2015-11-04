@@ -272,14 +272,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/button_size_content_card"
                 android:layout_weight="0"
-                android:drawableLeft="@drawable/ic_action_star"
-                android:drawableStart="@drawable/ic_action_star"
+                android:drawableLeft="@drawable/ic_action_heart"
+                android:drawableStart="@drawable/ic_action_heart"
                 android:focusable="false"
                 android:gravity="center"
                 android:paddingLeft="@dimen/element_spacing_normal"
                 android:paddingRight="@dimen/element_spacing_normal"
                 android:textAppearance="?android:textAppearanceSmall"
-                app:iabActivatedColor="@color/highlight_favorite"
+                app:iabActivatedColor="@color/highlight_like"
                 app:iabColor="?android:textColorTertiary" />
 
         </LinearLayout>

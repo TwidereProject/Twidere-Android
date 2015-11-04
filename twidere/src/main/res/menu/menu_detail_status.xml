@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AlwaysShowAction">
 
     <item
         android:id="@id/reply"
@@ -14,8 +16,8 @@
         app:showAsAction="always" />
     <item
         android:id="@id/favorite"
-        android:icon="@drawable/ic_action_star"
-        android:title="@string/favorite"
+        android:icon="@drawable/ic_action_heart"
+        android:title="@string/like"
         app:showAsAction="always" />
     <item
         android:id="@id/share"

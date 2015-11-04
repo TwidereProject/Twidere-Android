@@ -96,6 +96,7 @@ dependencies {
     compile 'com.diogobernardino:williamchart:2.0.1'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.0.1'
+    compile 'org.attoparser:attoparser:1.4.0.RELEASE'
     googleCompile 'com.google.android.gms:play-services-maps:8.1.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4'
     fdroidCompile 'org.osmdroid:osmdroid-android:4.3'

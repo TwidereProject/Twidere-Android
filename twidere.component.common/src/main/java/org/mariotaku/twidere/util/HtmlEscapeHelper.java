@@ -20,27 +20,51 @@
 package org.mariotaku.twidere.util;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.text.translate.AggregateTranslator;
+import org.apache.commons.lang3.text.translate.CodePointTranslator;
+
+import java.io.IOException;
+import java.io.Writer;
 
 public class HtmlEscapeHelper {
 
-	public static String escape(final String string) {
-		if (string == null) return null;
-		return StringEscapeUtils.escapeHtml4(string);
-	}
+    public static final AggregateTranslator ESCAPE_HTML = new AggregateTranslator(StringEscapeUtils.ESCAPE_HTML4,
+            new UnicodeControlCharacterToHtmlTranslator());
 
-	public static String toHtml(final String string) {
-		if (string == null) return null;
-		return escape(string).replace("\n", "<br/>");
-	}
+    public static String escape(final CharSequence text) {
+        if (text == null) return null;
+        return ESCAPE_HTML.translate(text);
+    }
 
-	public static String toPlainText(final String string) {
-		if (string == null) return null;
-		return unescape(string.replace("<br/>", "\n").replaceAll("<!--.*?-->|<[^>]+>", ""));
-	}
+    public static String toHtml(final String string) {
+        if (string == null) return null;
+        return escape(string).replace("\n", "<br/>");
+    }
 
-	public static String unescape(final String string) {
-		if (string == null) return null;
-		return StringEscapeUtils.unescapeHtml4(string);
-	}
+    public static String toPlainText(final String string) {
+        if (string == null) return null;
+        return unescape(string.replace("<br/>", "\n").replaceAll("<!--.*?-->|<[^>]+>", ""));
+    }
 
+    public static String unescape(final String string) {
+        if (string == null) return null;
+        return StringEscapeUtils.unescapeHtml4(string);
+    }
+
+    private static class UnicodeControlCharacterToHtmlTranslator extends CodePointTranslator {
+
+        @Override
+        public boolean translate(int codePoint, Writer out) throws IOException {
+            if (Character.isISOControl(codePoint)) {
+                out.append("&#x");
+                final char[] chars = Character.toChars(codePoint);
+                for (char c : chars) {
+                    out.append(Integer.toHexString(c));
+                }
+                out.append(';');
+                return true;
+            }
+            return false;
+        }
+    }
 }
