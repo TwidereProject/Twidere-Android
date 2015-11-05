@@ -3323,17 +3323,19 @@ public final class Utils implements Constants {
         scrollListToPosition(list, 0);
     }
 
-    public static void setMenuForStatus(final Context context, final Menu menu, final ParcelableStatus status) {
+    public static void setMenuForStatus(final Context context, final SharedPreferencesWrapper preferences,
+                                        final Menu menu, final ParcelableStatus status) {
         if (status == null) return;
         final ParcelableCredentials account = ParcelableAccount.getCredentials(context, status.account_id);
-        setMenuForStatus(context, menu, status, account);
+        setMenuForStatus(context, preferences, menu, status, account);
     }
 
-    public static void setMenuForStatus(final Context context, final Menu menu, final ParcelableStatus status,
-                                        final ParcelableCredentials account) {
+    public static void setMenuForStatus(final Context context, final SharedPreferencesWrapper preferences,
+                                        final Menu menu, final ParcelableStatus status, final ParcelableCredentials account) {
         if (context == null || menu == null || status == null || account == null) return;
         final Resources resources = context.getResources();
         final int retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet);
+        final int favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite);
         final int likeHighlight = ContextCompat.getColor(context, R.color.highlight_like);
         final boolean isMyRetweet = isMyRetweet(status);
         final MenuItem delete = menu.findItem(R.id.delete);
@@ -3347,8 +3349,13 @@ public final class Utils implements Constants {
         }
         final MenuItem favorite = menu.findItem(R.id.favorite);
         if (favorite != null) {
-            ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, likeHighlight));
-            favorite.setTitle(status.is_favorite ? R.string.undo_like : R.string.like);
+            if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+                ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, favoriteHighlight));
+                favorite.setTitle(status.is_favorite ? R.string.unfavorite : R.string.favorite);
+            } else {
+                ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, likeHighlight));
+                favorite.setTitle(status.is_favorite ? R.string.undo_like : R.string.like);
+            }
         }
         final MenuItem translate = menu.findItem(R.id.translate);
         if (translate != null) {

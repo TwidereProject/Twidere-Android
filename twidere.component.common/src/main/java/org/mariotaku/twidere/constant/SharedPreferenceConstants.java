@@ -312,5 +312,7 @@ public interface SharedPreferenceConstants {
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_COMBINED_NOTIFICATIONS = "combined_notifications";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
-    String TWITTER_OPTIMIZED_SEARCHES = "twitter_optimized_searches";
+    String KEY_TWITTER_OPTIMIZED_SEARCHES = "twitter_optimized_searches";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    String KEY_I_WANT_MY_STARS_BACK = "i_want_my_stars_back";
 }

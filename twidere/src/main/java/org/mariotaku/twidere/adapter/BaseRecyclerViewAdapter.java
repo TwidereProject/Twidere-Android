@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -60,6 +61,7 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
                 .inject((BaseRecyclerViewAdapter<RecyclerView.ViewHolder>) this);
     }
 
+    @NonNull
     public final Context getContext() {
         return mContext;
     }

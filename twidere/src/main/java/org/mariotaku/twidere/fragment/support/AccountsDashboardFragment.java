@@ -116,7 +116,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     private final Rect mSystemWindowsInsets = new Rect();
     private ContentResolver mResolver;
-    private SharedPreferences mPreferences;
     private MergeAdapter mAdapter;
 
     private AccountSelectorAdapter mAccountsAdapter;
@@ -410,7 +409,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mResolver = getContentResolver();
         final View view = getView();
         if (view == null) throw new AssertionError();
@@ -512,11 +510,15 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     void initAccountActionsAdapter(ParcelableAccount[] accounts) {
         mAccountOptionsAdapter.clear();
-        mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search, R.id.search));
-//        if (accounts.length > 1) {
-//            mAccountOptionsAdapter.add(new OptionItem(R.string.compose, R.drawable.ic_action_status_compose, R.id.compose));
-//        }
-        mAccountOptionsAdapter.add(new OptionItem(R.string.likes, R.drawable.ic_action_heart, R.id.favorites));
+        mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search,
+                R.id.search));
+        if (mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+            mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star,
+                    R.id.favorites));
+        } else {
+            mAccountOptionsAdapter.add(new OptionItem(R.string.likes, R.drawable.ic_action_heart,
+                    R.id.favorites));
+        }
         mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, R.id.lists));
     }
 

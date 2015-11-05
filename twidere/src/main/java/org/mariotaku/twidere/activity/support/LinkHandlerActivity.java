@@ -430,7 +430,11 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 break;
             }
             case LINK_ID_USER_FAVORITES: {
-                setTitle(R.string.likes);
+                if (mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+                    setTitle(R.string.favorites);
+                } else {
+                    setTitle(R.string.likes);
+                }
                 break;
             }
             case LINK_ID_USER_FOLLOWERS: {

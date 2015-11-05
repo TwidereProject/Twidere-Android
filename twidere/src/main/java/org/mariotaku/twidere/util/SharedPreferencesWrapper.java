@@ -15,10 +15,12 @@ import java.util.Set;
 
 public class SharedPreferencesWrapper implements Constants, SharedPreferences {
 
+    private final Context mContext;
     private final SharedPreferences mPreferences;
     private final HashMap<String, Preference> mMap;
 
-    private SharedPreferencesWrapper(final SharedPreferences preferences, final Class<?> keysClass) {
+    private SharedPreferencesWrapper(final Context context, SharedPreferences preferences, final Class<?> keysClass) {
+        mContext = context;
         mPreferences = preferences;
         mMap = new HashMap<>();
         if (keysClass != null) {
@@ -60,9 +62,15 @@ public class SharedPreferencesWrapper implements Constants, SharedPreferences {
     }
 
     public boolean getBoolean(final String key) {
-        final Preference preference = mMap.get(key);
-        if (preference == null || !preference.hasDefault()) return getBoolean(key, false);
-        return getBoolean(key, preference.defaultBoolean());
+        return getBoolean(key, getDefaultBoolean(key));
+    }
+
+    private boolean getDefaultBoolean(String key) {
+        final Preference annotation = mMap.get(key);
+        if (annotation == null || !annotation.hasDefault()) return false;
+        final int resId = annotation.defaultResource();
+        if (resId != 0) return mContext.getResources().getBoolean(resId);
+        return annotation.defaultBoolean();
     }
 
     @Override
@@ -140,9 +148,10 @@ public class SharedPreferencesWrapper implements Constants, SharedPreferences {
 
     public static SharedPreferencesWrapper getInstance(final Context context, final String name, final int mode,
                                                        final Class<?> keysClass) {
-        final SharedPreferences prefs = context.getSharedPreferences(name, mode);
+        final Context app = context.getApplicationContext();
+        final SharedPreferences prefs = app.getSharedPreferences(name, mode);
         if (prefs == null) return null;
-        return new SharedPreferencesWrapper(prefs, keysClass);
+        return new SharedPreferencesWrapper(app, prefs, keysClass);
     }
 
 }

@@ -3,6 +3,8 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.text.Spanned;
@@ -18,7 +20,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.api.twitter.model.TranslationResult;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -32,6 +33,7 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.view.ActionIconThemedTextView;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ForegroundColorView;
 import org.mariotaku.twidere.view.NameView;
@@ -68,7 +70,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     private final TextView replyRetweetView;
     private final ShortTimeView timeView;
     private final CardMediaContainer mediaPreview;
-    private final TextView replyCountView, retweetCountView, favoriteCountView;
+    private final ActionIconThemedTextView replyCountView, retweetCountView, favoriteCountView;
     private final IColorLabelView itemContent;
     private final ForegroundColorView quoteIndicator;
     private final View actionButtons;
@@ -98,9 +100,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         itemMenu = itemView.findViewById(R.id.item_menu);
         actionButtons = itemView.findViewById(R.id.action_buttons);
 
-        replyCountView = (TextView) itemView.findViewById(R.id.reply_count);
-        retweetCountView = (TextView) itemView.findViewById(R.id.retweet_count);
-        favoriteCountView = (TextView) itemView.findViewById(R.id.favorite_count);
+        replyCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.reply_count);
+        retweetCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.retweet_count);
+        favoriteCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.favorite_count);
         //TODO
         // profileImageView.setSelectorColor(ThemeUtils.getUserHighlightColor(itemView.getContext()));
 
@@ -407,6 +409,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final boolean nameFirst = adapter.isNameFirst();
         nameView.setNameFirst(nameFirst);
         quotedNameView.setNameFirst(nameFirst);
+
+        if (adapter.shouldUseStarsForLikes()) {
+            favoriteCountView.setActivatedColor(ContextCompat.getColor(adapter.getContext(),
+                    R.color.highlight_favorite));
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(favoriteCountView,
+                    R.drawable.ic_action_star, 0, 0, 0);
+        }
     }
 
     private void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location, String placeFullName, boolean sensitive) {
@@ -466,12 +475,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         private boolean hideCardActions;
         private boolean displayMediaPreview;
         private boolean shouldShowAccountsColor;
+        private boolean useStarsForLikes;
 
         public DummyStatusHolderAdapter(Context context) {
             DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
             this.context = context;
             preferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            final TwidereApplication app = TwidereApplication.getInstance(context);
             handler = new MediaLoadingHandler(R.id.media_preview_progress);
             linkify = new TwidereLinkify(null);
             updateOptions();
@@ -602,6 +611,15 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         @Override
         public void setData(Object o) {
 
+        }
+
+        @Override
+        public boolean shouldUseStarsForLikes() {
+            return useStarsForLikes;
+        }
+
+        public void setUseStarsForLikes(boolean useStarsForLikes) {
+            this.useStarsForLikes = useStarsForLikes;
         }
 
         @Override

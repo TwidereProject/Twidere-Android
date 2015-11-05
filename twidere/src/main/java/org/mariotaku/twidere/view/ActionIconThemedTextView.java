@@ -24,6 +24,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
@@ -36,7 +37,12 @@ import org.mariotaku.twidere.util.support.TextViewSupport;
 public class ActionIconThemedTextView extends AppCompatTextView {
 
     private final int mIconWidth, mIconHeight;
-    private int mColor, mDisabledColor, mActivatedColor;
+    @ColorInt
+    private int mColor;
+    @ColorInt
+    private int mDisabledColor;
+    @ColorInt
+    private int mActivatedColor;
 
     public ActionIconThemedTextView(Context context) {
         this(context, null);
@@ -58,11 +64,16 @@ public class ActionIconThemedTextView extends AppCompatTextView {
         updateCompoundDrawables();
     }
 
+    @ColorInt
     public int getActivatedColor() {
         if (mActivatedColor != 0) return mActivatedColor;
         final ColorStateList colors = getLinkTextColors();
         if (colors != null) return colors.getDefaultColor();
         return getCurrentTextColor();
+    }
+
+    public void setActivatedColor(@ColorInt int color) {
+        this.mActivatedColor = color;
     }
 
     @Override
@@ -89,6 +100,7 @@ public class ActionIconThemedTextView extends AppCompatTextView {
         updateCompoundDrawables();
     }
 
+    @ColorInt
     public int getColor() {
         if (mColor != 0) return mColor;
         final ColorStateList colors = getTextColors();
@@ -96,11 +108,20 @@ public class ActionIconThemedTextView extends AppCompatTextView {
         return getCurrentTextColor();
     }
 
+    public void setColor(@ColorInt int color) {
+        this.mColor = color;
+    }
+
+    @ColorInt
     public int getDisabledColor() {
         if (mDisabledColor != 0) return mDisabledColor;
         final ColorStateList colors = getTextColors();
         if (colors != null) return colors.getColorForState(new int[0], colors.getDefaultColor());
         return getCurrentTextColor();
+    }
+
+    public void setDisabledColor(@ColorInt int color) {
+        this.mDisabledColor = color;
     }
 
     @Override

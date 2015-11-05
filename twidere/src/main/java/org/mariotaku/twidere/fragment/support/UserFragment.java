@@ -426,8 +426,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case TAB_TYPE_FAVORITES: {
-                actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_favorites,
-                        (int) user.favorites_count, user.favorites_count));
+                if (mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+                    actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_favorites,
+                            (int) user.favorites_count, user.favorites_count));
+                } else {
+                    actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_likes,
+                            (int) user.favorites_count, user.favorites_count));
+
+                }
                 break;
             }
             default: {
@@ -1445,11 +1451,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
         }
-        mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses), R.drawable.ic_action_quote, TAB_TYPE_STATUSES, TAB_POSITION_STATUSES, null);
+        mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses),
+                R.drawable.ic_action_quote, TAB_TYPE_STATUSES, TAB_POSITION_STATUSES, null);
         if (Utils.isOfficialKeyAccount(context, accountId)) {
-            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media), R.drawable.ic_action_gallery, TAB_TYPE_MEDIA, TAB_POSITION_MEDIA, null);
+            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media),
+                    R.drawable.ic_action_gallery, TAB_TYPE_MEDIA, TAB_POSITION_MEDIA, null);
         }
-        mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.likes), R.drawable.ic_action_heart, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null);
+        if (mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+            mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites),
+                    R.drawable.ic_action_star, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null);
+        } else {
+            mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.likes),
+                    R.drawable.ic_action_heart, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null);
+        }
     }
 
     private void updateFollowProgressState() {

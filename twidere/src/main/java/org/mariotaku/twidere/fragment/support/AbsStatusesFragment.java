@@ -372,7 +372,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         popupMenu.setOnMenuItemClickListener(mOnStatusMenuItemClickListener);
         popupMenu.inflate(R.menu.action_status);
         final ParcelableStatus status = adapter.getStatus(position);
-        setMenuForStatus(adapter.getContext(), popupMenu.getMenu(), status);
+        setMenuForStatus(adapter.getContext(), mPreferences, popupMenu.getMenu(), status);
         popupMenu.show();
         mPopupMenu = popupMenu;
         mSelectedStatus = status;
