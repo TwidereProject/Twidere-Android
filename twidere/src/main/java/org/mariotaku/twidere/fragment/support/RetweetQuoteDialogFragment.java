@@ -198,7 +198,11 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final AlertDialog alertDialog = (AlertDialog) dialog;
         final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         if (positiveButton == null) return;
-        positiveButton.setText(s.length() > 0 ? R.string.comment : R.string.retweet);
+        if (s.length() > 0) {
+            positiveButton.setText(R.string.comment);
+        } else {
+            positiveButton.setText(isMyRetweet(status) ? R.string.cancel_retweet : R.string.retweet);
+        }
         final String statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id).toString();
         final StatusTextCountView textCountView = (StatusTextCountView) alertDialog.findViewById(R.id.comment_text_count);
         textCountView.setTextCount(mValidator.getTweetLength(s + " " + statusLink));
