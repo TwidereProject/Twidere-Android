@@ -55,4 +55,8 @@ public class TwidereValidator implements Constants {
 		return !TextUtils.isEmpty(text) && getTweetLength(text) <= getMaxTweetLength();
 	}
 
+	public boolean isValidDirectMessage(final CharSequence text) {
+		return !TextUtils.isEmpty(text);
+	}
+
 }

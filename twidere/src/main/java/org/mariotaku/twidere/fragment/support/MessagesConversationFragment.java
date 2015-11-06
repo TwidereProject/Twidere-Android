@@ -630,8 +630,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final String message = mEditText.getText().toString();
         if (TextUtils.isEmpty(message)) {
             mEditText.setError(getString(R.string.error_message_no_content));
-        } else if (mValidator.getTweetLength(message) > mValidator.getMaxTweetLength()) {
-            mEditText.setError(getString(R.string.error_message_message_too_long));
         } else {
             mTwitterWrapper.sendDirectMessageAsync(account.account_id, recipient.id, message, mImageUri);
             mEditText.setText(null);
@@ -727,7 +725,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 if (mSendButton == null || s == null) return;
-                mSendButton.setEnabled(mValidator.isValidTweet(s.toString()));
+                mSendButton.setEnabled(mValidator.isValidDirectMessage(s.toString()));
             }
         });
     }
