@@ -28,6 +28,7 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.library.logansquare.extension.LoganSquareWrapper;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -106,25 +107,6 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     public ParcelableMedia[] media;
 
     public ParcelableDirectMessage() {
-    }
-
-    public ParcelableDirectMessage(final ContentValues values) {
-        text_plain = values.getAsString(DirectMessages.TEXT_PLAIN);
-        text_html = values.getAsString(DirectMessages.TEXT_HTML);
-        text_unescaped = toPlainText(text_html);
-        sender_screen_name = values.getAsString(DirectMessages.SENDER_SCREEN_NAME);
-        sender_profile_image_url = values.getAsString(DirectMessages.SENDER_PROFILE_IMAGE_URL);
-        sender_name = values.getAsString(DirectMessages.SENDER_NAME);
-        sender_id = getAsLong(values, DirectMessages.SENDER_ID, -1);
-        recipient_screen_name = values.getAsString(DirectMessages.RECIPIENT_SCREEN_NAME);
-        recipient_profile_image_url = values.getAsString(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL);
-        recipient_name = values.getAsString(DirectMessages.RECIPIENT_NAME);
-        recipient_id = getAsLong(values, DirectMessages.RECIPIENT_ID, -1);
-        timestamp = getAsLong(values, DirectMessages.MESSAGE_TIMESTAMP, -1);
-        id = getAsLong(values, DirectMessages.MESSAGE_ID, -1);
-        is_outgoing = getAsBoolean(values, DirectMessages.IS_OUTGOING, false);
-        account_id = getAsLong(values, DirectMessages.ACCOUNT_ID, -1);
-        media = ParcelableMedia.fromSerializedJson(values.getAsString(DirectMessages.MEDIA_JSON));
     }
 
     public ParcelableDirectMessage(final Cursor c, final CursorIndices idx) {

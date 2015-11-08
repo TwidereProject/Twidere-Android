@@ -28,7 +28,7 @@ import com.twitter.Validator;
  * Created by mariotaku on 15/4/29.
  */
 public class TwitterValidatorMETLengthChecker extends METLengthChecker {
-    private Validator mValidator;
+    private final Validator mValidator;
 
     public TwitterValidatorMETLengthChecker(@NonNull Validator validator) {
         mValidator = validator;

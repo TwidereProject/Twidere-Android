@@ -195,7 +195,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (Utils.hasOfficialAPIAccess(loader.getContext(), mPreferences, account)) {
                 mStatusAdapter.setReplyError(null);
             } else {
-                final SpannableStringBuilder error = SpannableStringBuilder.valueOf(Html.fromHtml(getString(R.string.cant_load_all_replies_message)));
+                final SpannableStringBuilder error = SpannableStringBuilder.valueOf(HtmlSpanBuilder.fromHtml(getString(R.string.cant_load_all_replies_message)));
                 ClickableSpan dialogSpan = null;
                 for (URLSpan span : error.getSpans(0, error.length(), URLSpan.class)) {
                     if ("#dialog".equals(span.getURL())) {
@@ -860,7 +860,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quotedNameView.setText(manager.getUserNickname(status.quoted_user_id, status.quoted_user_name, false));
                 quotedScreenNameView.setText("@" + status.quoted_user_screen_name);
 
-                quotedTextView.setText(Html.fromHtml(status.quoted_text_html));
+                quotedTextView.setText(HtmlSpanBuilder.fromHtml(status.quoted_text_html));
 
                 linkify.applyAllLinks(quotedTextView, status.account_id, layoutPosition, status.is_possibly_sensitive);
                 ThemeUtils.applyParagraphSpacing(quotedTextView, 1.1f);
@@ -903,9 +903,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             final String timeString = Utils.formatToLongTimeString(context, timestamp);
             if (!TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(status.source)) {
-                timeSourceView.setText(Html.fromHtml(context.getString(R.string.time_source, timeString, status.source)));
+                timeSourceView.setText(HtmlSpanBuilder.fromHtml(context.getString(R.string.time_source, timeString, status.source)));
             } else if (TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(status.source)) {
-                timeSourceView.setText(Html.fromHtml(context.getString(R.string.source, status.source)));
+                timeSourceView.setText(HtmlSpanBuilder.fromHtml(context.getString(R.string.source, status.source)));
             } else if (!TextUtils.isEmpty(timeString) && TextUtils.isEmpty(status.source)) {
                 timeSourceView.setText(timeString);
             }

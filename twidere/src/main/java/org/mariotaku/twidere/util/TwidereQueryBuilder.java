@@ -78,10 +78,8 @@ public class TwidereQueryBuilder {
             return qb.build();
         }
 
-        public static SQLSelectQuery withScore(final String[] projection,
-                                               final String selection,
-                                               final String sortOrder,
-                                               final long accountId) {
+        public static SQLSelectQuery withScore(final String[] projection, final String selection,
+                                               final String sortOrder, final long accountId, final int limit) {
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
             final Selectable select = Utils.getColumnsFromProjection(projection);
             final Column[] columns = new Column[CachedUsers.COLUMNS.length + 1];
@@ -105,6 +103,9 @@ public class TwidereQueryBuilder {
             }
             if (sortOrder != null) {
                 qb.orderBy(new OrderBy(sortOrder));
+            }
+            if (limit > 0) {
+                qb.limit(limit);
             }
             return qb.build();
         }
@@ -231,7 +232,7 @@ public class TwidereQueryBuilder {
             }
             qb.where(where);
             qb.groupBy(Utils.getColumnsFromProjection(ConversationEntries.CONVERSATION_ID, DirectMessages.ACCOUNT_ID));
-            qb.orderBy(new OrderBy(ConversationEntries.MESSAGE_TIMESTAMP ,false));
+            qb.orderBy(new OrderBy(ConversationEntries.MESSAGE_TIMESTAMP, false));
             return qb.build();
         }
 

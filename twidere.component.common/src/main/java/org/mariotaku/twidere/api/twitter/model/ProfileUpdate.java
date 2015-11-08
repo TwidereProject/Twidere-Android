@@ -48,6 +48,10 @@ public class ProfileUpdate extends SimpleValueMap {
         put("profile_link_color", String.format(Locale.ROOT, "%06X", 0xFFFFFF & profileLinkColor));
     }
 
+    public void setBackgroundColor(int profileLinkColor) {
+        put("profile_background_color", String.format(Locale.ROOT, "%06X", 0xFFFFFF & profileLinkColor));
+    }
+
     public ProfileUpdate name(String name) {
         setName(name);
         return this;
@@ -70,6 +74,11 @@ public class ProfileUpdate extends SimpleValueMap {
 
     public ProfileUpdate linkColor(int linkColor) {
         setLinkColor(linkColor);
+        return this;
+    }
+
+    public ProfileUpdate backgroundColor(int linkColor) {
+        setBackgroundColor(linkColor);
         return this;
     }
 }

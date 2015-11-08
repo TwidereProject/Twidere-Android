@@ -78,9 +78,13 @@ public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<Status
                         values.put(CachedHashtags.NAME, hashtag);
                         hashTagValues.add(values);
                     }
-                    usersValues.add(createCachedUser(status.getUser()));
+                    final ContentValues cachedUser = createCachedUser(status.getUser());
+                    cachedUser.put(CachedUsers.LAST_SEEN, System.currentTimeMillis());
+                    usersValues.add(cachedUser);
                     if (status.isRetweet()) {
-                        usersValues.add(createCachedUser(status.getRetweetedStatus().getUser()));
+                        final ContentValues cachedRetweetedUser = createCachedUser(status.getRetweetedStatus().getUser());
+                        cachedRetweetedUser.put(CachedUsers.LAST_SEEN, System.currentTimeMillis());
+                        usersValues.add(cachedRetweetedUser);
                     }
 
                     bulkInsert(resolver, CachedStatuses.CONTENT_URI, statusesValues);

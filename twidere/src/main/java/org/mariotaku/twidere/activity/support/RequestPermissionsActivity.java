@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
+import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.PermissionsManager;
 
 import static android.text.TextUtils.isEmpty;
@@ -144,7 +145,7 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
             } else {
                 appendPermission(builder, getString(R.string.permission_description_none), false);
             }
-            mMessageView.setText(Html.fromHtml(builder.toString()));
+            mMessageView.setText(HtmlSpanBuilder.fromHtml(builder.toString()));
         } catch (final NameNotFoundException e) {
             setResult(RESULT_CANCELED);
             finish();

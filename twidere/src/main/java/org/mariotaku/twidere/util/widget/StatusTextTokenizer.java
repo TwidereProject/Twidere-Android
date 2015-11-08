@@ -31,26 +31,29 @@ public class StatusTextTokenizer implements MultiAutoCompleteTextView.Tokenizer 
 
     @Override
     public int findTokenStart(CharSequence text, int cursor) {
-        int i = cursor;
         // Search backward to find start symbol
-        while (i > 0 && !isStartSymbol(text.charAt(i - 1))) {
+        int i = cursor - 1;
+        int len = text.length();
+        while (i >= 0 && i < len && !isStartSymbol(text.charAt(i))) {
             i--;
         }
+        if (i < 0) return cursor;
         return i;
     }
 
     @Override
     public int findTokenEnd(CharSequence text, int cursor) {
-        int i = cursor;
+        int i = cursor - 1;
         int len = text.length();
         // Search backward to find start symbol
-        while (i > 0 && !isStartSymbol(text.charAt(i - 1))) {
+        while (i >= 0 && i < len && isStartSymbol(text.charAt(i))) {
             i--;
         }
         // Search forward to find space
         while (i < len && !isSpace(text.charAt(i))) {
             i++;
         }
+        if (i < 0) return cursor;
         return i;
     }
 

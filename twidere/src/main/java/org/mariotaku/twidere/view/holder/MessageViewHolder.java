@@ -35,6 +35,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.util.HtmlSpanBuilder;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.StatusActionModeCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -83,8 +85,8 @@ public class MessageViewHolder extends ViewHolder implements OnMediaClickListene
 
         final long accountId = cursor.getLong(indices.account_id);
         final long timestamp = cursor.getLong(indices.message_timestamp);
-        final ParcelableMedia[] media = ParcelableMedia.fromSerializedJson(cursor.getString(indices.media));
-        textView.setText(Html.fromHtml(cursor.getString(indices.text)));
+        final ParcelableMedia[] media = JsonSerializer.parseArray(cursor.getString(indices.media), ParcelableMedia.class);
+        textView.setText(HtmlSpanBuilder.fromHtml(cursor.getString(indices.text)));
         linkify.applyAllLinks(textView, accountId, false);
         time.setText(Utils.formatToLongTimeString(context, timestamp));
         mediaContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);

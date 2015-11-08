@@ -84,7 +84,6 @@ import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.system.ErrnoException;
-import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -223,6 +222,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Preferences;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.service.RefreshService;
@@ -363,6 +363,12 @@ public final class Utils implements Constants {
                 VIRTUAL_TABLE_ID_DRAFTS_UNSENT);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS,
                 VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_NOTIFICATIONS,
+                VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Suggestions.AutoComplete.CONTENT_PATH,
+                VIRTUAL_TABLE_ID_SUGGESTIONS_AUTO_COMPLETE);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Suggestions.Search.CONTENT_PATH,
+                VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH);
 
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS, null, LINK_ID_STATUS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER, null, LINK_ID_USER);
@@ -1623,21 +1629,6 @@ public final class Utils implements Constants {
         final TextView textView = new TextView(context, null, android.R.attr.listSeparatorTextViewStyle);
         textView.setText(title);
         return textView;
-    }
-
-    public static boolean removeLineBreaks(Editable s) {
-        boolean deleted = false;
-        try {
-            for (int i = s.length() - 1; i >= 0; i--) {
-                if (s.charAt(i) == '\n') {
-                    s.delete(i, i + 1);
-                    deleted |= true;
-                }
-            }
-        } catch (IndexOutOfBoundsException e) {
-            throw new IndexOutOfBoundsException("Error processing " + s + ", original message: " + e.getMessage());
-        }
-        return deleted;
     }
 
     public static boolean setLastSeen(Context context, UserMentionEntity[] entities, long time) {
@@ -3386,6 +3377,9 @@ public final class Utils implements Constants {
             final Intent shareIntent = createStatusShareIntent(context, status);
             shareSubMenu.removeGroup(MENU_GROUP_STATUS_SHARE);
             addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
+        } else {
+            final Intent shareIntent = createStatusShareIntent(context, status);
+            shareItem.setIntent(Intent.createChooser(shareIntent, context.getString(R.string.share_status)));
         }
 
     }

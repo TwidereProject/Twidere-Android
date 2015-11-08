@@ -204,9 +204,9 @@ public interface TwidereDataStore {
 
         String CONTENT_PATH = TABLE_NAME;
 
-        String CONTENT_PATH_WITH_RELATIONSHIP = TABLE_NAME + "/with_relationship";
+        String CONTENT_PATH_WITH_RELATIONSHIP = CONTENT_PATH + "/with_relationship";
 
-        String CONTENT_PATH_WITH_SCORE = TABLE_NAME + "/with_score";
+        String CONTENT_PATH_WITH_SCORE = CONTENT_PATH + "/with_score";
 
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
 
@@ -288,11 +288,40 @@ public interface TwidereDataStore {
 
     interface Suggestions extends BaseColumns {
         String TYPE = "type";
-        String VALUE1 = "value1";
-        String VALUE2 = "value2";
+        String TITLE = "title";
+        String SUMMARY = "summary";
+        String ICON = "icon";
+        String EXTRA_ID = "extra_id";
+        String EXTRA = "extra";
 
-        interface Compose extends Suggestions {
+        String TABLE_NAME = "suggestions";
 
+        String CONTENT_PATH = TABLE_NAME;
+
+        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+
+        String[] COLUMNS = {_ID, TYPE, TITLE, SUMMARY, ICON, EXTRA_ID, EXTRA};
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
+                TYPE_INT, TYPE_TEXT};
+
+        interface AutoComplete extends Suggestions {
+
+            String TYPE_USERS = "users";
+            String TYPE_HASHTAGS = "hashtags";
+
+            String CONTENT_PATH = Suggestions.CONTENT_PATH + "/auto_complete";
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
+        interface Search extends Suggestions {
+
+            String CONTENT_PATH = Suggestions.CONTENT_PATH + "/search";
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+
+            String TYPE_SAVED_SEARCH = "saved_search";
+            String TYPE_USER = "user";
+            String TYPE_SEARCH_HISTORY = "search_history";
+            String TYPE_SCREEN_NAME = "screen_name";
         }
     }
 

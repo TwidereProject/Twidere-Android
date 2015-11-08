@@ -22,6 +22,8 @@ package org.mariotaku.twidere.util;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.translate.AggregateTranslator;
 import org.apache.commons.lang3.text.translate.CodePointTranslator;
+import org.apache.commons.lang3.text.translate.EntityArrays;
+import org.apache.commons.lang3.text.translate.LookupTranslator;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -30,6 +32,7 @@ public class HtmlEscapeHelper {
 
     public static final AggregateTranslator ESCAPE_HTML = new AggregateTranslator(StringEscapeUtils.ESCAPE_HTML4,
             new UnicodeControlCharacterToHtmlTranslator());
+    public static final LookupTranslator ESCAPE_BASIC = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
     public static String escape(final CharSequence text) {
         if (text == null) return null;
@@ -49,6 +52,10 @@ public class HtmlEscapeHelper {
     public static String unescape(final String string) {
         if (string == null) return null;
         return StringEscapeUtils.unescapeHtml4(string);
+    }
+
+    public static String escapeBasic(CharSequence text) {
+        return ESCAPE_BASIC.translate(text);
     }
 
     private static class UnicodeControlCharacterToHtmlTranslator extends CodePointTranslator {

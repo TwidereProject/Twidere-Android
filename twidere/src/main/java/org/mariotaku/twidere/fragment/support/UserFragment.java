@@ -115,6 +115,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
@@ -506,7 +507,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         mScreenNameView.setText("@" + user.screen_name);
         mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
-        mDescriptionView.setText(user.description_html != null ? Html.fromHtml(user.description_html) : user.description_plain);
+        mDescriptionView.setText(user.description_html != null ? HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain);
         final TwidereLinkify linkify = new TwidereLinkify(this);
         linkify.applyAllLinks(mDescriptionView, user.account_id, false);
         mDescriptionView.setMovementMethod(null);
