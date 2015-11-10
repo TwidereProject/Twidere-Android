@@ -288,7 +288,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final ParcelableStatus status = getStatus();
                 if (status == null) return null;
                 return new NdefMessage(new NdefRecord[]{
-                        NdefRecord.createUri(LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id)),
+                        NdefRecord.createUri(LinkCreator.getTwitterStatusLink(status)),
                 });
             }
         });

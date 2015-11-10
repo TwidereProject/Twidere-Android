@@ -58,7 +58,8 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
  * Created by mariotaku on 15/1/3.
  */
 public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
-        IActivitiesAdapter<Data>, IStatusViewHolder.StatusClickListener, OnLinkClickListener, ActivityTitleSummaryViewHolder.ActivityClickListener {
+        IActivitiesAdapter<Data>, IStatusViewHolder.StatusClickListener, OnLinkClickListener,
+        ActivityTitleSummaryViewHolder.ActivityClickListener {
 
     private static final int ITEM_VIEW_TYPE_STUB = 0;
     private static final int ITEM_VIEW_TYPE_GAP = 1;
@@ -75,6 +76,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     private final boolean mDisplayMediaPreview;
     private final boolean mNameFirst;
     private final boolean mDisplayProfileImage;
+    private final boolean mShouldUseStarsForLikes;
     private final TwidereLinkify mLinkify;
     private final DummyStatusHolderAdapter mStatusAdapterDelegate;
     private ActivityAdapterListener mActivityAdapterListener;
@@ -87,6 +89,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         mInflater = LayoutInflater.from(context);
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
+        mShouldUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
         mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
@@ -173,6 +176,11 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     @Override
     public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
 
+    }
+
+    @Override
+    public boolean shouldUseStarsForLikes() {
+        return mShouldUseStarsForLikes;
     }
 
     @Override

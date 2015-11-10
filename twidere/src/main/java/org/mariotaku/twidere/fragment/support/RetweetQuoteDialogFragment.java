@@ -203,7 +203,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         } else {
             positiveButton.setText(isMyRetweet(status) ? R.string.cancel_retweet : R.string.retweet);
         }
-        final String statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id).toString();
+        final String statusLink = LinkCreator.getTwitterStatusLink(status).toString();
         final StatusTextCountView textCountView = (StatusTextCountView) alertDialog.findViewById(R.id.comment_text_count);
         textCountView.setTextCount(mValidator.getTweetLength(s + " " + statusLink));
     }

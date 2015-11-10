@@ -26,17 +26,15 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
-import org.mariotaku.twidere.loader.support.UserListMembersLoader;
-import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
-
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.UserList;
-
-import static org.mariotaku.twidere.util.TwitterAPIFactory.getTwitterInstance;
+import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
+import org.mariotaku.twidere.loader.support.UserListMembersLoader;
+import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.util.AsyncTaskUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 public class UserListMembersFragment extends CursorSupportUsersListFragment {
 
@@ -107,7 +105,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
         super.onStop();
     }
 
-    private class GetUserListTask extends AsyncTask<Object, Object, ParcelableUserList> {
+    private class GetUserListTask extends AsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final long accountId, userId;
         private final long listId;
@@ -123,7 +121,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
         }
 
         @Override
-        protected ParcelableUserList doInBackground(final Object... params) {
+        protected SingleResponse<ParcelableUserList> doInBackground(final Object... params) {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getActivity(), accountId, true);
             if (twitter == null) return null;
             try {
@@ -136,17 +134,16 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
                     list = twitter.showUserList(listName, screenName);
                 } else
                     return null;
-                return new ParcelableUserList(list, accountId);
+                return SingleResponse.getInstance(new ParcelableUserList(list, accountId));
             } catch (final TwitterException e) {
-                e.printStackTrace();
-                return null;
+                return SingleResponse.getInstance(e);
             }
         }
 
         @Override
-        protected void onPostExecute(final ParcelableUserList result) {
+        protected void onPostExecute(final SingleResponse<ParcelableUserList> result) {
             if (mUserList != null) return;
-            mUserList = result;
+            mUserList = result.getData();
         }
     }
 }

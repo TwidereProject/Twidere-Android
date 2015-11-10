@@ -400,7 +400,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     private void setupUserPages() {
         final Bundle args = getArguments(), tabArgs = new Bundle();
-        if (args.containsKey(EXTRA_USER)) {
+        if (args.containsKey(EXTRA_USER_LIST)) {
             final ParcelableUserList userList = args.getParcelable(EXTRA_USER_LIST);
             tabArgs.putLong(EXTRA_ACCOUNT_ID, userList.account_id);
             tabArgs.putLong(EXTRA_USER_ID, userList.user_id);

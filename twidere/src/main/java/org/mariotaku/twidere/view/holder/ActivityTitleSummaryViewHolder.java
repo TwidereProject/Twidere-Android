@@ -102,14 +102,28 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                 break;
             }
             case Activity.ACTION_FAVORITE: {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
-                if (byFriends) {
-                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
-                            R.string.activity_by_friends_favorite_multi, activity.sources, activity.target_statuses));
+                if (adapter.shouldUseStarsForLikes()) {
+                    activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
+                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+
+                    if (byFriends) {
+                        titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
+                                R.string.activity_by_friends_favorite_multi, activity.sources, activity.target_statuses));
+                    } else {
+                        titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
+                                R.string.activity_about_me_favorite_multi, activity.sources));
+                    }
                 } else {
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
-                            R.string.activity_about_me_favorite_multi, activity.sources));
+                    activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
+                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
+
+                    if (byFriends) {
+                        titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_like,
+                                R.string.activity_by_friends_like_multi, activity.sources, activity.target_statuses));
+                    } else {
+                        titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_like,
+                                R.string.activity_about_me_like_multi, activity.sources));
+                    }
                 }
                 displayUserProfileImages(activity.sources);
                 summaryView.setText(activity.target_statuses[0].text_unescaped);
@@ -135,10 +149,17 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                     showNotSupported();
                     return;
                 }
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
-                        R.string.activity_about_me_favorited_retweet_multi, activity.sources));
+                if (adapter.shouldUseStarsForLikes()) {
+                    activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
+                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
+                            R.string.activity_about_me_favorited_retweet_multi, activity.sources));
+                } else {
+                    activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
+                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_retweet,
+                            R.string.activity_about_me_liked_retweet_multi, activity.sources));
+                }
                 displayUserProfileImages(activity.sources);
                 summaryView.setText(activity.target_statuses[0].text_unescaped);
                 summaryView.setVisibility(View.VISIBLE);
@@ -177,10 +198,17 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                     showNotSupported();
                     return;
                 }
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_mention,
-                        R.string.activity_about_me_liked_mention_multi, activity.sources));
+                if (adapter.shouldUseStarsForLikes()) {
+                    activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
+                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_mention,
+                            R.string.activity_about_me_favorited_mention_multi, activity.sources));
+                } else {
+                    activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
+                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_mention,
+                            R.string.activity_about_me_liked_mention_multi, activity.sources));
+                }
                 displayUserProfileImages(activity.sources);
                 summaryView.setText(activity.target_statuses[0].text_unescaped);
                 summaryView.setVisibility(View.VISIBLE);

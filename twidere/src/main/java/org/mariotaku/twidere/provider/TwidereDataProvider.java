@@ -771,7 +771,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String query = uri.getQueryParameter(QUERY_PARAM_QUERY);
         final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
         if (query == null || accountId <= 0) return null;
-        final ContentResolver resolver = getContentResolver();
         final boolean emptyQuery = TextUtils.isEmpty(query);
         final String queryEscaped = query.replace("_", "^_");
         final Cursor[] cursors;
@@ -815,12 +814,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(CachedUsers.USER_ID, Suggestions.Search.EXTRA_ID).getSQL(),
                     new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL()
             };
+            String queryTrimmed = queryEscaped.startsWith("@") ? queryEscaped.substring(1) : queryEscaped;
             final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
             final Expression usersSelection = Expression.or(
                     Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
                     Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
-            final String[] selectionArgs = new String[]{queryEscaped, queryEscaped};
+            final String[] selectionArgs = new String[]{queryTrimmed, queryTrimmed};
             final String[] order = {CachedUsers.LAST_SEEN, "score", CachedUsers.SCREEN_NAME, CachedUsers.NAME};
             final boolean[] ascending = {false, false, true, true};
             final OrderBy orderBy = new OrderBy(order, ascending);
@@ -831,7 +831,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final Expression exactUserSelection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?", "^"));
             final Cursor exactUserCursor = mDatabaseWrapper.query(CachedUsers.TABLE_NAME,
                     new String[]{SQLFunctions.COUNT()}, exactUserSelection.getSQL(),
-                    new String[]{queryEscaped}, null, null, null, "1");
+                    new String[]{queryTrimmed}, null, null, null, "1");
             final boolean hasName = exactUserCursor.moveToPosition(0) && exactUserCursor.getInt(0) > 0;
             exactUserCursor.close();
             final MatrixCursor screenNameCursor = new MatrixCursor(Suggestions.Search.COLUMNS);
@@ -870,9 +870,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(CachedUsers.USER_ID, Suggestions.EXTRA_ID).getSQL(),
                     new Column(CachedUsers.PROFILE_IMAGE_URL, Suggestions.ICON).getSQL(),
             };
+            final String[] orderBy = {"score", CachedUsers.LAST_SEEN, CachedUsers.SCREEN_NAME,
+                    CachedUsers.NAME};
+            final boolean[] ascending = {false, false, true, true};
             return query(Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, accountId),
-                    mappedProjection, where.getSQL(), whereArgs, new OrderBy(new String[]{"score", CachedUsers.LAST_SEEN},
-                            new boolean[]{false, false}).getSQL());
+                    mappedProjection, where.getSQL(), whereArgs, new OrderBy(orderBy, ascending).getSQL());
         } else if (Suggestions.AutoComplete.TYPE_HASHTAGS.equals(type)) {
             final Expression where = Expression.likeRaw(new Column(CachedHashtags.NAME), "?||'%'", "^");
             final String[] whereArgs = new String[]{queryEscaped};

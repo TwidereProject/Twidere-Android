@@ -279,6 +279,10 @@
     <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited your tweet.</string>
     <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favorited your retweet.</string>
     <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited your retweet.</string>
+    <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> liked your tweet.</string>
+    <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked your tweet.</string>
+    <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> liked your retweet.</string>
+    <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked your retweet.</string>
     <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> is following you.</string>
     <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> are following you.</string>
     <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweeted your tweet.</string>
@@ -296,6 +300,8 @@
     <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> added you to their lists.</string>
     <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
     <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
+    <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
+    <string name="activity_by_friends_like_multi"><xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
     <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g>.</string>
     <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>.</string>
     <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
@@ -811,4 +817,6 @@
     <string name="twitter_optimized_searches_summary">Use special search terms to improve search results like exclude retweets</string>
     <string name="i_want_my_stars_back">I want my stars back!</string>
     <string name="i_want_my_stars_back_summary">Show use favorite (star) instead of like (heart)</string>
+    <string name="copy_link">Copy link</string>
+    <string name="link_copied_to_clipboard">Link copied to clipboard</string>
 </resources>

@@ -342,6 +342,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.CopyLinkActivity"
+            android:label="@string/copy_link"
+            android:theme="@style/Theme.Twidere.Dark.NoDisplay" />
+        <activity
             android:name=".activity.support.RequestPermissionsActivity"
             android:label="@string/permissions_request"
             android:theme="@style/Theme.Twidere.Dark.Dialog">

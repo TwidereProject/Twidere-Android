@@ -51,6 +51,7 @@
         android:title="@string/enable_retweets" />
     <item
         android:id="@id/mute_user"
+        android:checkable="true"
         android:icon="@drawable/ic_action_mic_muted"
         android:title="@string/twitter_mute_user" />
     <item

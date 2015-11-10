@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,27 +17,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.adapter.iface;
+package org.mariotaku.twidere.activity;
 
-import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
-import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.Toast;
 
-/**
- * Created by mariotaku on 14/11/18.
- */
-public interface IActivitiesAdapter<Data> extends IContentCardAdapter, IGapSupportedAdapter {
+import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.util.ClipboardUtils;
 
-    ParcelableActivity getActivity(int position);
+public class CopyLinkActivity extends Activity implements Constants {
 
-    int getActivityCount();
-
-    void setData(Data data);
-
-    @PreviewStyle
-    int getMediaPreviewStyle();
-
-    boolean shouldUseStarsForLikes();
-
-    MediaLoadingHandler getMediaLoadingHandler();
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ClipboardUtils.setText(this, getIntent().getDataString());
+        Toast.makeText(this, R.string.link_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+        finish();
+    }
 }

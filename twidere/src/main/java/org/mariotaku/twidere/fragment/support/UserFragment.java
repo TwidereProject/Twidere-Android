@@ -62,7 +62,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.widget.ActionBarContainer;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -869,9 +868,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             final MenuItem muteItem = menu.findItem(R.id.mute_user);
             if (muteItem != null) {
-                final boolean muting = relationship.isSourceMutingTarget();
-                ActionIconDrawable.setMenuHighlight(muteItem, new TwidereMenuInfo(muting));
-                muteItem.setTitle(muting ? R.string.unmute : R.string.mute);
+                muteItem.setChecked(relationship.isSourceMutingTarget());
             }
             final MenuItem filterItem = menu.findItem(R.id.add_to_filter);
             if (filterItem != null) {
@@ -881,7 +878,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             final MenuItem wantRetweetsItem = menu.findItem(R.id.enable_retweets);
             if (wantRetweetsItem != null) {
-
                 wantRetweetsItem.setChecked(relationship.isSourceWantRetweetsFromTarget());
             }
         } else {

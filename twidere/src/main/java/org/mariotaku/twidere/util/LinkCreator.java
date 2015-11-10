@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.net.Uri;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.ParcelableStatus;
 
 /**
  * Created by mariotaku on 15/3/14.
@@ -82,5 +83,9 @@ public class LinkCreator implements Constants {
         builder.authority(AUTHORITY_TWITTER);
         builder.appendPath(screenName);
         return builder.build();
+    }
+
+    public static Uri getTwitterStatusLink(ParcelableStatus status) {
+        return getTwitterStatusLink(status.user_screen_name, status.id);
     }
 }

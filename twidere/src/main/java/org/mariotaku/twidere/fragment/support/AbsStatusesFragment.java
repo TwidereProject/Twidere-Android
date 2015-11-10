@@ -34,6 +34,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
+import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -121,7 +122,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
             if (status == null) return false;
             if (item.getItemId() == R.id.share) {
                 final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), status);
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_status)));
+                final Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_status));
+                Utils.addCopyLinkIntent(getContext(), chooser, LinkCreator.getTwitterStatusLink(status));
+                startActivity(chooser);
                 return true;
             }
             return Utils.handleMenuItemClick(getActivity(), AbsStatusesFragment.this,
