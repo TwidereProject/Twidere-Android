@@ -34,6 +34,13 @@ public class ScreenEvent extends BaseEvent {
     @JsonField(name = "action", typeConverter = Action.ScreenActionConverter.class)
     Action action;
 
+    public static ScreenEvent create(Context context, Action action) {
+        final ScreenEvent event = new ScreenEvent();
+        event.markStart(context);
+        event.setAction(action);
+        return event;
+    }
+
     public Action getAction() {
         return action;
     }
@@ -42,11 +49,11 @@ public class ScreenEvent extends BaseEvent {
         this.action = action;
     }
 
-    public static ScreenEvent create(Context context, Action action) {
-        final ScreenEvent event = new ScreenEvent();
-        event.markStart(context);
-        event.setAction(action);
-        return event;
+    @Override
+    public String toString() {
+        return "ScreenEvent{" +
+                "action=" + action +
+                "} " + super.toString();
     }
 
     public enum Action {
@@ -81,5 +88,4 @@ public class ScreenEvent extends BaseEvent {
             }
         }
     }
-
 }

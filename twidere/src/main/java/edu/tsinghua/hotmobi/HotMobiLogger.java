@@ -102,6 +102,8 @@ public class HotMobiLogger {
             return "battery";
         } else if (event instanceof NotificationEvent) {
             return "notification";
+        } else if (event instanceof ScreenEvent) {
+            return "screen";
         }
         throw new UnsupportedOperationException("Unknown event type " + event);
     }

@@ -36,7 +36,7 @@ public class MediaEntityImpl implements MediaEntity {
     @JsonField(name = "id")
     long id;
 
-    @JsonField(name = "indices")
+    @JsonField(name = "indices", typeConverter = IndicesConverter.class)
     Indices indices;
 
     @JsonField(name = "media_url")

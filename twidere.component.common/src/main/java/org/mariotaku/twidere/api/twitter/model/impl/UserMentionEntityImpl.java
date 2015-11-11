@@ -29,7 +29,7 @@ import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
  */
 @JsonObject
 public class UserMentionEntityImpl implements UserMentionEntity {
-    @JsonField(name = "indices")
+    @JsonField(name = "indices", typeConverter = IndicesConverter.class)
     Indices indices;
     @JsonField(name = "id")
     long id;

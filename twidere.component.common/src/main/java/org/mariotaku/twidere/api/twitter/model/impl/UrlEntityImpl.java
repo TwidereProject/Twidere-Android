@@ -29,7 +29,7 @@ import org.mariotaku.twidere.api.twitter.model.UrlEntity;
  */
 @JsonObject
 public class UrlEntityImpl implements UrlEntity {
-    @JsonField(name = "indices")
+    @JsonField(name = "indices", typeConverter = IndicesConverter.class)
     Indices indices;
     @JsonField(name = "display_url")
     String displayUrl;
