@@ -50,7 +50,7 @@ public class QueryResultWrapper extends TwitterResponseImpl implements TwitterMo
     }
 
     @JsonObject
-    static class SearchMetadata {
+    public static class SearchMetadata {
         @JsonField(name = "max_id")
         long maxId;
         @JsonField(name = "since_id")

@@ -17,30 +17,32 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package org.mariotaku.twidere.api.twitter.model.impl;
 
-import com.bluelinelabs.logansquare.JsonMapper;
-import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-
-import org.mariotaku.twidere.api.twitter.model.impl.GeoPoint;
+import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.IOException;
 
 /**
- * Created by mariotaku on 15/10/21.
+ * Created by mariotaku on 15/11/11.
  */
-public class GeoLocationMapper extends JsonMapper<GeoLocation> {
+public class IndicesConverter implements TypeConverter<Indices> {
     @Override
-    public GeoLocation parse(JsonParser jsonParser) throws IOException {
-        final GeoPoint geoPoint = LoganSquare.mapperFor(GeoPoint.class).parse(jsonParser);
-        if (geoPoint == null) return null;
-        return geoPoint.getGeoLocation();
+    public Indices parse(JsonParser jsonParser) throws IOException {
+        final int start, end;
+        if (!jsonParser.isExpectedStartArrayToken()) throw new IOException("Malformed indices");
+        start = jsonParser.nextIntValue(-1);
+        end = jsonParser.nextIntValue(-1);
+        if (jsonParser.nextToken() != JsonToken.END_ARRAY)
+            throw new IOException("Malformed indices");
+        return new Indices(start, end);
     }
 
     @Override
-    public void serialize(GeoLocation object, JsonGenerator generator, boolean writeStartAndEnd) throws IOException {
-        throw new UnsupportedOperationException();
+    public void serialize(Indices instance, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
+
     }
 }

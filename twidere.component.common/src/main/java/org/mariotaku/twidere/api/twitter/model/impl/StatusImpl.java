@@ -80,7 +80,7 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
     UserImpl user;
 
     @JsonField(name = "geo")
-    GeoLocation geo;
+    GeoPoint geo;
 
     @JsonField(name = "place")
     Place place;
@@ -215,7 +215,8 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
 
     @Override
     public GeoLocation getGeoLocation() {
-        return geo;
+        if (geo == null) return null;
+        return geo.getGeoLocation();
     }
 
     @Override
@@ -336,7 +337,7 @@ public class StatusImpl extends TwitterResponseImpl implements Status {
     }
 
     @JsonObject
-    static class CurrentUserRetweet {
+    public static class CurrentUserRetweet {
         @JsonField(name = "id")
         long id;
 

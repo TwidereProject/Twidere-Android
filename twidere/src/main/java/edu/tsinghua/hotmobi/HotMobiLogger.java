@@ -52,6 +52,7 @@ import edu.tsinghua.hotmobi.model.MediaEvent;
 import edu.tsinghua.hotmobi.model.NetworkEvent;
 import edu.tsinghua.hotmobi.model.NotificationEvent;
 import edu.tsinghua.hotmobi.model.RefreshEvent;
+import edu.tsinghua.hotmobi.model.ScreenEvent;
 import edu.tsinghua.hotmobi.model.ScrollRecord;
 import edu.tsinghua.hotmobi.model.SessionEvent;
 import edu.tsinghua.hotmobi.model.TweetEvent;
@@ -191,5 +192,9 @@ public class HotMobiLogger {
 
     public void logList(List<?> events, long accountId, String type) {
         mExecutor.execute(new WriteLogTask(mApplication, accountId, type, events));
+    }
+
+    public static void logScreenEvent(Context context, ScreenEvent.Action action) {
+        getInstance(context).log(ScreenEvent.create(context, action));
     }
 }

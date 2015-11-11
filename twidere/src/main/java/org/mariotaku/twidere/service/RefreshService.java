@@ -47,6 +47,7 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.ScreenEvent;
 
 import static org.mariotaku.twidere.util.ParseUtils.parseInt;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
@@ -146,6 +147,22 @@ public class RefreshService extends Service implements Constants {
         }
     };
 
+    private final BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case Intent.ACTION_SCREEN_ON: {
+                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.ON);
+                    break;
+                }
+                case Intent.ACTION_SCREEN_OFF: {
+                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.ON);
+                    break;
+                }
+            }
+        }
+    };
+
     @Override
     public IBinder onBind(final Intent intent) {
         return null;
@@ -177,7 +194,11 @@ public class RefreshService extends Service implements Constants {
         batteryFilter.addAction(Intent.ACTION_BATTERY_LOW);
         batteryFilter.addAction(Intent.ACTION_POWER_CONNECTED);
         batteryFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+        final IntentFilter screenFilter = new IntentFilter();
+        screenFilter.addAction(Intent.ACTION_SCREEN_ON);
+        screenFilter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mPowerStateReceiver, batteryFilter);
+        registerReceiver(mScreenStateReceiver, screenFilter);
         PowerStateReceiver.setServiceReceiverStarted(true);
         startAutoRefresh();
     }
@@ -185,6 +206,7 @@ public class RefreshService extends Service implements Constants {
     @Override
     public void onDestroy() {
         PowerStateReceiver.setServiceReceiverStarted(false);
+        unregisterReceiver(mScreenStateReceiver);
         unregisterReceiver(mPowerStateReceiver);
         unregisterReceiver(mStateReceiver);
         if (hasAutoRefreshAccounts(this)) {

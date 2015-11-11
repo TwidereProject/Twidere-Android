@@ -131,7 +131,7 @@ public class RelationshipImpl extends TwitterResponseImpl implements Relationshi
     }
 
     @JsonObject
-    static class Target {
+    public static class Target {
         @JsonField(name = "id")
         long id;
         @JsonField(name = "screen_name")
@@ -145,7 +145,7 @@ public class RelationshipImpl extends TwitterResponseImpl implements Relationshi
     }
 
     @JsonObject
-    static class Source {
+    public static class Source {
         @JsonField(name = "id")
         long id;
         @JsonField(name = "screen_name")

@@ -19,12 +19,9 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import org.mariotaku.library.logansquare.extension.annotation.Mapper;
-
 /**
  * Created by mariotaku on 15/3/31.
  */
-@Mapper(IndicesMapper.class)
 public class Indices {
 
     private int start, end;

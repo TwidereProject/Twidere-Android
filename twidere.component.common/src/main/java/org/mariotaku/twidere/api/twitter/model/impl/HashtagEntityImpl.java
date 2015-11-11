@@ -32,7 +32,7 @@ public class HashtagEntityImpl implements HashtagEntity {
 
     @JsonField(name = "text")
     String text;
-    @JsonField(name = "indices")
+    @JsonField(name = "indices", typeConverter = IndicesConverter.class)
     Indices indices;
 
     @Override
