@@ -25,9 +25,10 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:id="@+id/verification_hint"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"
-        android:text="@string/login_verification_hint" />
+        android:text="@string/login_verification_pin_hint" />
 
     <EditText
         android:id="@+id/edit_verification_code"

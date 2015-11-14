@@ -56,6 +56,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.meizu.flyme.reflect.StatusBarProxy;
@@ -84,6 +85,7 @@ import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
+import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.LoginVerificationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -459,6 +461,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                     Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof WrongUserPassException) {
                     Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show();
+                } else if (result.exception instanceof LoginVerificationException) {
+                    Toast.makeText(this, R.string.login_verification_failed, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof AuthenticationException) {
                     showErrorMessage(this, getString(R.string.action_signing_in), result.exception.getCause(), true);
                 } else {
@@ -790,7 +794,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             String challengeResponse;
 
             @Override
-            public String getLoginVerification() {
+            public String getLoginVerification(final String challengeType) {
                 // Dismiss current progress dialog
                 publishProgress(new Runnable() {
                     @Override
@@ -807,6 +811,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                             public void run() {
                                 InputLoginVerificationDialogFragment df = new InputLoginVerificationDialogFragment();
                                 df.setCallback(InputLoginVerificationCallback.this);
+                                df.setChallengeType(challengeType);
                                 df.show(activity.getSupportFragmentManager(), null);
                             }
                         });
@@ -840,9 +845,10 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
 
     }
 
-    public static class InputLoginVerificationDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
+    public static class InputLoginVerificationDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener, DialogInterface.OnShowListener {
 
         private SignInTask.InputLoginVerificationCallback callback;
+        private String challengeType;
 
         public void setCallback(SignInTask.InputLoginVerificationCallback callback) {
             this.callback = callback;
@@ -862,7 +868,9 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             builder.setView(R.layout.dialog_login_verification_code);
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
-            return builder.create();
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(this);
+            return dialog;
         }
 
         @Override
@@ -878,6 +886,24 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                     callback.setChallengeResponse(null);
                     break;
                 }
+            }
+        }
+
+        public void setChallengeType(String challengeType) {
+            this.challengeType = challengeType;
+        }
+
+        @Override
+        public void onShow(DialogInterface dialog) {
+            final AlertDialog alertDialog = (AlertDialog) dialog;
+            final TextView verificationHint = (TextView) alertDialog.findViewById(R.id.verification_hint);
+            final EditText editVerification = (EditText) alertDialog.findViewById(R.id.edit_verification_code);
+            if ("Push".equalsIgnoreCase(challengeType)) {
+                verificationHint.setText(R.string.login_verification_push_hint);
+                editVerification.setVisibility(View.GONE);
+            } else {
+                verificationHint.setText(R.string.login_verification_pin_hint);
+                editVerification.setVisibility(View.VISIBLE);
             }
         }
     }

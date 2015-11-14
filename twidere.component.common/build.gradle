@@ -44,7 +44,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.0'
     compile 'com.bluelinelabs:logansquare:1.1.0'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.github.mariotaku.RestFu:library:0.9.6'
+    compile 'com.github.mariotaku.RestFu:library:0.9.7'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
     compile 'com.github.mariotaku:SQLiteQB:88291f3a28'
     compile 'com.github.mariotaku.LoganSquareExtension:core:b6f53c9a4d'
