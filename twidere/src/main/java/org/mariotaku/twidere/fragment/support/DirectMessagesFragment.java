@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
@@ -299,10 +298,9 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         super.setUserVisibleHint(isVisibleToUser);
         final FragmentActivity activity = getActivity();
         if (isVisibleToUser && activity != null) {
-            final NotificationManager nm = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
             for (long accountId : getAccountIds()) {
                 final String tag = "messages_" + accountId;
-                nm.cancel(tag, NOTIFICATION_ID_DIRECT_MESSAGES);
+                mNotificationManager.cancel(tag, NOTIFICATION_ID_DIRECT_MESSAGES);
             }
         }
     }

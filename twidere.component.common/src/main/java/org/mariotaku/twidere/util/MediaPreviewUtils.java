@@ -19,17 +19,20 @@
 
 package org.mariotaku.twidere.util;
 
-import android.util.Pair;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.twidere.api.twitter.model.MediaEntity;
+import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.HtmlLinkExtractor.HtmlLink;
@@ -41,10 +44,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.mariotaku.twidere.api.twitter.model.MediaEntity;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 
 import static android.text.TextUtils.isEmpty;
 

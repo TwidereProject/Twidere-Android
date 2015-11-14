@@ -267,6 +267,16 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
 
     protected abstract int getNotificationType();
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            for (long accountId : getAccountIds()) {
+                mTwitterWrapper.clearNotificationAsync(getNotificationType(), accountId);
+            }
+        }
+    }
+
     protected long[] getOldestStatusIds(long[] accountIds) {
         return getOldestStatusIdsFromDatabase(getActivity(), getContentUri(), accountIds);
     }

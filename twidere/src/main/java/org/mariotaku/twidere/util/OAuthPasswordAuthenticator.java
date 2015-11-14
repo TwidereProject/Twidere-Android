@@ -20,55 +20,94 @@
 package org.mariotaku.twidere.util;
 
 import android.text.TextUtils;
-import android.util.Pair;
-import android.util.Xml;
 
-import com.nostra13.universalimageloader.utils.IoUtils;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Response;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.attoparser.AttoParseException;
+import org.attoparser.IAttoHandler;
+import org.attoparser.IAttoParser;
+import org.attoparser.markup.MarkupAttoParser;
+import org.attoparser.markup.html.AbstractStandardNonValidatingHtmlAttoHandler;
+import org.attoparser.markup.html.HtmlParsingConfiguration;
+import org.attoparser.markup.html.elements.IHtmlElement;
+import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestClient;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.http.Endpoint;
-import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.BaseTypedData;
 import org.mariotaku.restfu.http.mime.FormTypedBody;
+import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.model.RequestType;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.HttpCookie;
+import java.net.CookieManager;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.text.TextUtils.isEmpty;
-
 public class OAuthPasswordAuthenticator implements Constants {
 
-    private static final String INPUT_AUTHENTICITY_TOKEN = "authenticity_token";
-    private static final String INPUT_REDIRECT_AFTER_LOGIN = "redirect_after_login";
+    private static final IAttoParser PARSER = new MarkupAttoParser();
 
     private final TwitterOAuth oauth;
-    private final RestHttpClient client;
+    private final OkHttpRestClient client;
     private final Endpoint endpoint;
+    private final LoginVerificationCallback loginVerificationCallback;
+    private final String userAgent;
 
-    public OAuthPasswordAuthenticator(final TwitterOAuth oauth) {
+    public OAuthPasswordAuthenticator(final TwitterOAuth oauth,
+                                      final LoginVerificationCallback loginVerificationCallback,
+                                      final String userAgent) {
         final RestClient restClient = RestAPIFactory.getRestClient(oauth);
         this.oauth = oauth;
-        this.client = restClient.getRestClient();
+        this.client = (OkHttpRestClient) restClient.getRestClient();
+        final OkHttpClient okhttp = client.getClient();
+        okhttp.setCookieHandler(new CookieManager());
+        okhttp.networkInterceptors().add(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                final Response response = chain.proceed(chain.request());
+                if (!response.isRedirect()) {
+                    return response;
+                }
+                final String location = response.header("Location");
+                final Response.Builder builder = response.newBuilder();
+                if (!TextUtils.isEmpty(location)) {
+                    final HttpUrl originalLocation = HttpUrl.parse(location);
+                    final HttpUrl.Builder locationBuilder = HttpUrl.parse(endpoint.getUrl()).newBuilder();
+                    for (String pathSegments : originalLocation.pathSegments()) {
+                        locationBuilder.addPathSegment(pathSegments);
+                    }
+                    for (int i = 0, j = originalLocation.querySize(); i < j; i++) {
+                        final String name = originalLocation.queryParameterName(i);
+                        final String value = originalLocation.queryParameterValue(i);
+                        locationBuilder.addQueryParameter(name, value);
+                    }
+                    final String encodedFragment = originalLocation.encodedFragment();
+                    if (encodedFragment != null) {
+                        locationBuilder.encodedFragment(encodedFragment);
+                    }
+                    final HttpUrl newLocation = locationBuilder.build();
+                    builder.header("Location", newLocation.toString());
+                }
+                return builder.build();
+            }
+        });
         this.endpoint = restClient.getEndpoint();
+        this.loginVerificationCallback = loginVerificationCallback;
+        this.userAgent = userAgent;
     }
 
     public OAuthToken getOAuthAccessToken(final String username, final String password) throws AuthenticationException {
@@ -79,125 +118,332 @@ public class OAuthPasswordAuthenticator implements Constants {
             if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
             throw new AuthenticityTokenException(e);
         }
-        RestHttpResponse authorizePage = null, authorizeResult = null;
         try {
-            final String oauthToken = requestToken.getOauthToken();
-            final HashMap<String, String> inputMap = new HashMap<>();
-            final RestHttpRequest.Builder authorizePageBuilder = new RestHttpRequest.Builder();
-            authorizePageBuilder.method(GET.METHOD);
-            authorizePageBuilder.url(endpoint.construct("/oauth/authorize", Pair.create("oauth_token",
-                    requestToken.getOauthToken())));
-            authorizePageBuilder.extra(RequestType.API);
-            final RestHttpRequest authorizePageRequest = authorizePageBuilder.build();
-            authorizePage = client.execute(authorizePageRequest);
-            final String[] cookieHeaders = authorizePage.getHeaders("Set-Cookie");
-            readInputFromHtml(BaseTypedData.reader(authorizePage.getBody()), inputMap,
-                    INPUT_AUTHENTICITY_TOKEN, INPUT_REDIRECT_AFTER_LOGIN);
-            final List<Pair<String, String>> params = new ArrayList<>();
-            params.add(Pair.create("oauth_token", oauthToken));
-            params.add(Pair.create(INPUT_AUTHENTICITY_TOKEN, inputMap.get(INPUT_AUTHENTICITY_TOKEN)));
-            if (inputMap.containsKey(INPUT_REDIRECT_AFTER_LOGIN)) {
-                params.add(Pair.create(INPUT_REDIRECT_AFTER_LOGIN, inputMap.get(INPUT_REDIRECT_AFTER_LOGIN)));
+            final AuthorizeRequestData authorizeRequestData = getAuthorizeRequestData(requestToken);
+            AuthorizeResponseData authorizeResponseData = getAuthorizeResponseData(requestToken,
+                    authorizeRequestData, username, password);
+            if (!TextUtils.isEmpty(authorizeResponseData.oauthPin)) {
+                // Here we got OAuth PIN, just get access token directly
+                return oauth.getAccessToken(requestToken, authorizeResponseData.oauthPin);
+            } else if (authorizeResponseData.verification == null) {
+                // No OAuth pin, or verification challenge, so treat as wrong password
+                throw new WrongUserPassException();
             }
-            params.add(Pair.create("session[username_or_email]", username));
-            params.add(Pair.create("session[password]", password));
-            final FormTypedBody authorizationResultBody = new FormTypedBody(params);
-            final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
-            requestHeaders.add(Pair.create("Origin", "https://twitter.com"));
-            requestHeaders.add(Pair.create("Referer", Endpoint.constructUrl("https://twitter.com/oauth/authorize",
-                    Pair.create("oauth_token", requestToken.getOauthToken()))));
+            // Go to password verification flow
+            final AuthorizeRequestData verificationData = getVerificationData(authorizeResponseData,
+                    loginVerificationCallback.getLoginVerification());
+            authorizeResponseData = getAuthorizeResponseData(requestToken,
+                    verificationData, username, password);
+            if (TextUtils.isEmpty(authorizeResponseData.oauthPin)) {
+                throw new VerificationCodeException();
+            }
+            return oauth.getAccessToken(requestToken, authorizeResponseData.oauthPin);
+        } catch (final IOException | NullPointerException | TwitterException e) {
+            throw new AuthenticationException(e);
+        }
+    }
 
-            final String host = parseUrlHost(endpoint.getUrl());
-            for (String cookieHeader : cookieHeaders) {
-                for (HttpCookie cookie : HttpCookie.parse(cookieHeader)) {
-                    if (HttpCookie.domainMatches(cookie.getDomain(), host)) {
-                        cookie.setVersion(1);
-                        cookie.setDomain("twitter.com");
+    private AuthorizeRequestData getVerificationData(AuthorizeResponseData authorizeResponseData,
+                                                     String challengeResponse) throws IOException, VerificationCodeException {
+        RestHttpResponse response = null;
+        try {
+            final AuthorizeRequestData data = new AuthorizeRequestData();
+            final List<Pair<String, String>> params = new ArrayList<>();
+            final AuthorizeResponseData.Verification verification = authorizeResponseData.verification;
+            params.add(Pair.create("authenticity_token", verification.authenticityToken));
+            params.add(Pair.create("user_id", verification.userId));
+            params.add(Pair.create("challenge_id", verification.challengeId));
+            params.add(Pair.create("challenge_type", verification.challengeType));
+            params.add(Pair.create("platform", verification.platform));
+            params.add(Pair.create("redirect_after_login", verification.redirectAfterLogin));
+            final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
+            requestHeaders.add(Pair.create("User-Agent", userAgent));
+
+            params.add(Pair.create("challenge_response", challengeResponse));
+            final FormTypedBody authorizationResultBody = new FormTypedBody(params);
+
+            final RestHttpRequest.Builder authorizeResultBuilder = new RestHttpRequest.Builder();
+            authorizeResultBuilder.method(POST.METHOD);
+            authorizeResultBuilder.url(endpoint.construct("/account/login_verification"));
+            authorizeResultBuilder.headers(requestHeaders);
+            authorizeResultBuilder.body(authorizationResultBody);
+            authorizeResultBuilder.extra(RequestType.API);
+            response = client.execute(authorizeResultBuilder.build());
+            parseAuthorizeRequestData(response, data);
+            return data;
+        } catch (AttoParseException e) {
+            throw new VerificationCodeException();
+        } finally {
+            Utils.closeSilently(response);
+        }
+    }
+
+    private void parseAuthorizeRequestData(RestHttpResponse response, final AuthorizeRequestData data) throws AttoParseException, IOException {
+        final HtmlParsingConfiguration conf = new HtmlParsingConfiguration();
+        final IAttoHandler handler = new AbstractStandardNonValidatingHtmlAttoHandler(conf) {
+            boolean isOAuthFormOpened;
+
+            @Override
+            public void handleHtmlStandaloneElement(IHtmlElement element, boolean minimized,
+                                                    String elementName, Map<String, String> attributes,
+                                                    int line, int col) throws AttoParseException {
+                handleHtmlOpenElement(element, elementName, attributes, line, col);
+                handleHtmlCloseElement(element, elementName, line, col);
+            }
+
+            @Override
+            public void handleHtmlOpenElement(IHtmlElement element, String elementName,
+                                              Map<String, String> attributes, int line, int col)
+                    throws AttoParseException {
+                switch (elementName) {
+                    case "form": {
+                        if (attributes != null && "oauth_form".equals(attributes.get("id"))) {
+                            isOAuthFormOpened = true;
+                        }
+                        break;
                     }
-                    requestHeaders.add(Pair.create("Cookie", cookie.toString()));
+                    case "input": {
+                        if (isOAuthFormOpened && attributes != null) {
+                            final String name = attributes.get("name");
+                            if (TextUtils.isEmpty(name)) break;
+                            final String value = attributes.get("value");
+                            if (name.equals("authenticity_token")) {
+                                data.authenticityToken = value;
+                            } else if (name.equals("redirect_after_login")) {
+                                data.redirectAfterLogin = value;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
+
+            @Override
+            public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) throws AttoParseException {
+                if ("form".equals(elementName)) {
+                    isOAuthFormOpened = false;
+                }
+            }
+        };
+        PARSER.parse(BaseTypedData.reader(response.getBody()), handler);
+    }
+
+    private AuthorizeResponseData getAuthorizeResponseData(OAuthToken requestToken,
+                                                           AuthorizeRequestData authorizeRequestData,
+                                                           String username, String password) throws IOException, AuthenticationException {
+        RestHttpResponse response = null;
+        try {
+            final AuthorizeResponseData data = new AuthorizeResponseData();
+            final List<Pair<String, String>> params = new ArrayList<>();
+            params.add(Pair.create("oauth_token", requestToken.getOauthToken()));
+            params.add(Pair.create("authenticity_token", authorizeRequestData.authenticityToken));
+            params.add(Pair.create("redirect_after_login", authorizeRequestData.redirectAfterLogin));
+            if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+                params.add(Pair.create("session[username_or_email]", username));
+                params.add(Pair.create("session[password]", password));
+            }
+            final FormTypedBody authorizationResultBody = new FormTypedBody(params);
+            final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
+            requestHeaders.add(Pair.create("User-Agent", userAgent));
+            data.referer = authorizeRequestData.referer;
+
             final RestHttpRequest.Builder authorizeResultBuilder = new RestHttpRequest.Builder();
             authorizeResultBuilder.method(POST.METHOD);
             authorizeResultBuilder.url(endpoint.construct("/oauth/authorize"));
             authorizeResultBuilder.headers(requestHeaders);
             authorizeResultBuilder.body(authorizationResultBody);
             authorizeResultBuilder.extra(RequestType.API);
-            authorizeResult = client.execute(authorizeResultBuilder.build());
-            final String oauthPin = readOAuthPINFromHtml(BaseTypedData.reader(authorizeResult.getBody()));
-            if (isEmpty(oauthPin)) throw new WrongUserPassException();
-            return oauth.getAccessToken(requestToken, oauthPin);
-        } catch (final IOException | NullPointerException | XmlPullParserException | TwitterException e) {
+            response = client.execute(authorizeResultBuilder.build());
+            final HtmlParsingConfiguration conf = new HtmlParsingConfiguration();
+            final IAttoHandler handler = new AbstractStandardNonValidatingHtmlAttoHandler(conf) {
+                boolean isOAuthPinDivOpened;
+                boolean isLoginVerificationFormOpened;
+
+                @Override
+                public void handleHtmlStandaloneElement(IHtmlElement element, boolean minimized,
+                                                        String elementName, Map<String, String> attributes,
+                                                        int line, int col) throws AttoParseException {
+                    handleHtmlOpenElement(element, elementName, attributes, line, col);
+                    handleHtmlCloseElement(element, elementName, line, col);
+                }
+
+                @Override
+                public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) throws AttoParseException {
+                    switch (elementName) {
+                        case "div": {
+                            isOAuthPinDivOpened = false;
+                            break;
+                        }
+                        case "form": {
+                            isLoginVerificationFormOpened = false;
+                            break;
+                        }
+                    }
+                }
+
+                @Override
+                public void handleHtmlOpenElement(IHtmlElement element, String elementName,
+                                                  Map<String, String> attributes, int line, int col)
+                        throws AttoParseException {
+                    switch (elementName) {
+                        case "div": {
+                            if (attributes != null && "oauth_pin".equals(attributes.get("id"))) {
+                                isOAuthPinDivOpened = true;
+                            }
+                            break;
+                        }
+                        case "form": {
+                            if (attributes != null && "login-verification-form".equals(attributes.get("id"))) {
+                                isLoginVerificationFormOpened = true;
+                            }
+                            break;
+                        }
+                        case "input":
+                            if (isLoginVerificationFormOpened && attributes != null) {
+                                final String name = attributes.get("name");
+                                if (TextUtils.isEmpty(name)) break;
+                                final String value = attributes.get("value");
+                                switch (name) {
+                                    case "authenticity_token": {
+                                        ensureVerification();
+                                        data.verification.authenticityToken = value;
+                                        break;
+                                    }
+                                    case "challenge_id": {
+                                        ensureVerification();
+                                        data.verification.challengeId = value;
+                                        break;
+                                    }
+                                    case "challenge_type": {
+                                        ensureVerification();
+                                        data.verification.challengeType = value;
+                                        break;
+                                    }
+                                    case "platform": {
+                                        ensureVerification();
+                                        data.verification.platform = value;
+                                        break;
+                                    }
+                                    case "user_id": {
+                                        ensureVerification();
+                                        data.verification.userId = value;
+                                        break;
+                                    }
+                                    case "redirect_after_login": {
+                                        ensureVerification();
+                                        data.verification.redirectAfterLogin = value;
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+
+                private void ensureVerification() {
+                    if (data.verification == null) {
+                        data.verification = new AuthorizeResponseData.Verification();
+                    }
+                }
+
+                @Override
+                public void handleText(char[] buffer, int offset, int len, int line, int col) throws AttoParseException {
+                    if (isOAuthPinDivOpened) {
+                        final String s = new String(buffer, offset, len);
+                        if (TextUtils.isDigitsOnly(s)) {
+                            data.oauthPin = s;
+                        }
+                    }
+                }
+            };
+            PARSER.parse(BaseTypedData.reader(response.getBody()), handler);
+            return data;
+        } catch (AttoParseException e) {
             throw new AuthenticationException(e);
         } finally {
-            if (authorizePage != null) {
-                IoUtils.closeSilently(authorizePage);
-            }
-            if (authorizeResult != null) {
-                IoUtils.closeSilently(authorizeResult);
-            }
+            Utils.closeSilently(response);
         }
     }
 
-    private static void readInputFromHtml(final Reader in, Map<String, String> map, String... desiredNames) throws IOException, XmlPullParserException {
-        final XmlPullParserFactory f = XmlPullParserFactory.newInstance();
-        final XmlPullParser parser = f.newPullParser();
-        parser.setFeature(Xml.FEATURE_RELAXED, true);
-        parser.setInput(in);
-        while (parser.next() != XmlPullParser.END_DOCUMENT) {
-            final String tag = parser.getName();
-            switch (parser.getEventType()) {
-                case XmlPullParser.START_TAG: {
-                    final String name = parser.getAttributeValue(null, "name");
-                    if ("input".equalsIgnoreCase(tag) && ArrayUtils.contains(desiredNames, name)) {
-                        map.put(name, parser.getAttributeValue(null, "value"));
+    private AuthorizeRequestData getAuthorizeRequestData(OAuthToken requestToken) throws IOException,
+            AuthenticationException {
+        RestHttpResponse response = null;
+        try {
+            final AuthorizeRequestData data = new AuthorizeRequestData();
+            final RestHttpRequest.Builder authorizePageBuilder = new RestHttpRequest.Builder();
+            authorizePageBuilder.method(GET.METHOD);
+            authorizePageBuilder.url(endpoint.construct("/oauth/authorize",
+                    Pair.create("oauth_token", requestToken.getOauthToken())));
+            data.referer = Endpoint.constructUrl("https://api.twitter.com/oauth/authorize",
+                    Pair.create("oauth_token", requestToken.getOauthToken()));
+            final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
+            requestHeaders.add(Pair.create("User-Agent", userAgent));
+            authorizePageBuilder.headers(requestHeaders);
+            authorizePageBuilder.extra(RequestType.API);
+            final RestHttpRequest authorizePageRequest = authorizePageBuilder.build();
+            response = client.execute(authorizePageRequest);
+            parseAuthorizeRequestData(response, data);
+            if (TextUtils.isEmpty(data.authenticityToken)) {
+                throw new AuthenticationException();
+            }
+            return data;
+        } catch (AttoParseException e) {
+            throw new AuthenticationException(e);
+        } finally {
+            Utils.closeSilently(response);
+        }
+    }
+
+    public static void readOAuthPINFromHtml(Reader reader, final OAuthPinData data) throws AttoParseException, IOException {
+        final HtmlParsingConfiguration conf = new HtmlParsingConfiguration();
+        final IAttoHandler handler = new AbstractStandardNonValidatingHtmlAttoHandler(conf) {
+            boolean isOAuthPinDivOpened;
+
+            @Override
+            public void handleHtmlStandaloneElement(IHtmlElement element, boolean minimized,
+                                                    String elementName, Map<String, String> attributes,
+                                                    int line, int col) throws AttoParseException {
+                handleHtmlOpenElement(element, elementName, attributes, line, col);
+                handleHtmlCloseElement(element, elementName, line, col);
+            }
+
+            @Override
+            public void handleHtmlOpenElement(IHtmlElement element, String elementName, Map<String, String> attributes, int line, int col) throws AttoParseException {
+                switch (elementName) {
+                    case "div": {
+                        if (attributes != null && "oauth_pin".equals(attributes.get("id"))) {
+                            isOAuthPinDivOpened = true;
+                        }
+                        break;
                     }
-                    break;
                 }
             }
-        }
-    }
 
-    public static String readOAuthPINFromHtml(final Reader in) throws XmlPullParserException, IOException {
-        boolean start_div = false, start_code = false;
-        final XmlPullParserFactory f = XmlPullParserFactory.newInstance();
-        final XmlPullParser parser = f.newPullParser();
-        parser.setFeature(Xml.FEATURE_RELAXED, true);
-        parser.setInput(in);
-        while (parser.next() != XmlPullParser.END_DOCUMENT) {
-            final String tag = parser.getName();
-            final int type = parser.getEventType();
-            if (type == XmlPullParser.START_TAG) {
-                if ("div".equalsIgnoreCase(tag)) {
-                    start_div = "oauth_pin".equals(parser.getAttributeValue(null, "id"));
-                } else if ("code".equalsIgnoreCase(tag)) {
-                    if (start_div) {
-                        start_code = true;
+            @Override
+            public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) throws AttoParseException {
+                if ("div".equals(elementName)) {
+                    isOAuthPinDivOpened = false;
+                }
+            }
+
+            @Override
+            public void handleText(char[] buffer, int offset, int len, int line, int col) throws AttoParseException {
+                if (isOAuthPinDivOpened) {
+                    final String s = new String(buffer, offset, len);
+                    if (TextUtils.isDigitsOnly(s)) {
+                        data.oauthPin = s;
                     }
                 }
-            } else if (type == XmlPullParser.END_TAG) {
-                if ("div".equalsIgnoreCase(tag)) {
-                    start_div = false;
-                } else if ("code".equalsIgnoreCase(tag)) {
-                    start_code = false;
-                }
-            } else if (type == XmlPullParser.TEXT) {
-                final String text = parser.getText();
-                if (start_code && !TextUtils.isEmpty(text) && TextUtils.isDigitsOnly(text))
-                    return text;
             }
-        }
-        return null;
+        };
+        PARSER.parse(reader, handler);
     }
 
-    private static String parseUrlHost(String url) {
-        final int startOfHost = url.indexOf("://") + 3, endOfHost = url.indexOf('/', startOfHost);
-        return url.substring(startOfHost, endOfHost);
+    public interface LoginVerificationCallback {
+        String getLoginVerification();
     }
 
     public static class AuthenticationException extends Exception {
-
-        private static final long serialVersionUID = -5629194721838256378L;
 
         AuthenticationException() {
         }
@@ -213,8 +459,6 @@ public class OAuthPasswordAuthenticator implements Constants {
 
     public static final class AuthenticityTokenException extends AuthenticationException {
 
-        private static final long serialVersionUID = -1840298989316218380L;
-
         public AuthenticityTokenException(Exception e) {
             super(e);
         }
@@ -222,8 +466,41 @@ public class OAuthPasswordAuthenticator implements Constants {
 
     public static final class WrongUserPassException extends AuthenticationException {
 
-        private static final long serialVersionUID = -4880737459768513029L;
 
     }
 
+    public static final class VerificationCodeException extends AuthenticationException {
+
+
+    }
+
+    static class AuthorizeResponseData {
+
+        String referer;
+
+        public String oauthPin;
+        public Verification verification;
+
+        static class Verification {
+
+            String authenticityToken;
+            String challengeId;
+            String challengeType;
+            String platform;
+            String userId;
+            String redirectAfterLogin;
+        }
+    }
+
+    static class AuthorizeRequestData {
+        public String authenticityToken;
+        public String redirectAfterLogin;
+
+        public String referer;
+    }
+
+    public static class OAuthPinData {
+
+        public String oauthPin;
+    }
 }

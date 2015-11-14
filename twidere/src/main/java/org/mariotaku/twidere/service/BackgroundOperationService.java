@@ -21,7 +21,6 @@ package org.mariotaku.twidere.service;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -79,6 +78,7 @@ import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ListUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
+import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.StatusCodeMessageUtils;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
@@ -117,9 +117,10 @@ public class BackgroundOperationService extends IntentService implements Constan
     private Handler mHandler;
     private SharedPreferences mPreferences;
     private ContentResolver mResolver;
-    private NotificationManager mNotificationManager;
     @Inject
     AsyncTwitterWrapper mTwitter;
+    @Inject
+    NotificationManagerWrapper mNotificationManager;
 
     private MediaUploaderInterface mUploader;
     private StatusShortenerInterface mShortener;
@@ -139,7 +140,6 @@ public class BackgroundOperationService extends IntentService implements Constan
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mValidator = new TwidereValidator(this);
         mResolver = getContentResolver();
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         final String uploaderComponent = mPreferences.getString(KEY_MEDIA_UPLOADER, null);
         final String shortenerComponent = mPreferences.getString(KEY_STATUS_SHORTENER, null);
         mUseUploader = !ServicePickerPreference.isNoneValue(uploaderComponent);
@@ -671,14 +671,14 @@ public class BackgroundOperationService extends IntentService implements Constan
 
     static class MessageMediaUploadListener implements ReadListener {
         private final Context context;
-        private final NotificationManager manager;
+        private final NotificationManagerWrapper manager;
 
         int percent;
 
         private final Builder builder;
         private final String message;
 
-        MessageMediaUploadListener(final Context context, final NotificationManager manager,
+        MessageMediaUploadListener(final Context context, final NotificationManagerWrapper manager,
                                    final NotificationCompat.Builder builder, final String message) {
             this.context = context;
             this.manager = manager;
@@ -715,14 +715,14 @@ public class BackgroundOperationService extends IntentService implements Constan
 
     static class StatusMediaUploadListener implements ReadListener {
         private final Context context;
-        private final NotificationManager manager;
+        private final NotificationManagerWrapper manager;
 
         int percent;
 
         private final Builder builder;
         private final ParcelableStatusUpdate statusUpdate;
 
-        StatusMediaUploadListener(final Context context, final NotificationManager manager,
+        StatusMediaUploadListener(final Context context, final NotificationManagerWrapper manager,
                                   final NotificationCompat.Builder builder, final ParcelableStatusUpdate statusUpdate) {
             this.context = context;
             this.manager = manager;

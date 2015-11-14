@@ -19,8 +19,8 @@
 
 package org.mariotaku.twidere.api.twitter.auth;
 
-import android.util.Pair;
 
+import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.Utils;
 import org.mariotaku.restfu.http.ValueMap;
 

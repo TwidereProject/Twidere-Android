@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.provider;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
@@ -50,7 +49,6 @@ import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
 import android.support.v4.util.LongSparseArray;
@@ -109,6 +107,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DatabaseQueryUtils;
 import org.mariotaku.twidere.util.ImagePreloader;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
+import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.PermissionsManager;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -159,14 +158,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     AsyncTwitterWrapper mTwitterWrapper;
     @Inject
     ImageLoader mMediaLoader;
-    private ContentResolver mContentResolver;
-    private SQLiteDatabaseWrapper mDatabaseWrapper;
-    private PermissionsManager mPermissionsManager;
-    @Nullable
-    private NotificationManager mNotificationManager;
+    @Inject
+    NotificationManagerWrapper mNotificationManager;
     @Inject
     SharedPreferencesWrapper mPreferences;
-    private ImagePreloader mImagePreloader;
     @Inject
     Network mNetwork;
     @Inject
@@ -174,6 +169,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Inject
     UserColorNameManager mUserColorNameManager;
     private Handler mHandler;
+    private ContentResolver mContentResolver;
+    private SQLiteDatabaseWrapper mDatabaseWrapper;
+    private PermissionsManager mPermissionsManager;
+    private ImagePreloader mImagePreloader;
 
     private boolean mHomeActivityInBackground;
     private final BroadcastReceiver mHomeActivityStateReceiver = new BroadcastReceiver() {
@@ -576,7 +575,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         notificationBuilder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
-        getNotificationManager().notify(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)).toString(),
+        mNotificationManager.notify(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)).toString(),
                 NOTIFICATION_ID_DRAFTS, notificationBuilder.build());
         return draftId;
     }
@@ -1040,11 +1039,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void clearNotification() {
-        getNotificationManager().cancelAll();
+        mNotificationManager.cancelAll();
     }
 
     private void clearNotification(final int notificationType, final long accountId) {
-
+        mNotificationManager.cancelById(Utils.getNotificationId(notificationType, accountId));
     }
 
     private Cursor getCachedImageCursor(final String url) {
@@ -1098,13 +1097,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
         }
         return c;
-    }
-
-    private NotificationManager getNotificationManager() {
-        if (mNotificationManager != null) return mNotificationManager;
-        final Context context = getContext();
-        assert context != null;
-        return mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     private Cursor getNotificationsCursor() {
@@ -1252,7 +1244,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final long accountId = pref.getAccountId();
         final Context context = getContext();
         final Resources resources = context.getResources();
-        final NotificationManager nm = getNotificationManager();
+        final NotificationManagerWrapper nm = mNotificationManager;
         final Expression selection = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),
                 Expression.greaterThan(Statuses.STATUS_ID, position));
         final String filteredSelection = Utils.buildStatusFilterWhereClause(Statuses.TABLE_NAME,
@@ -1308,7 +1300,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setColor(pref.getNotificationLightColor());
             setNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
             try {
-                nm.notify("home_" + accountId, NOTIFICATION_ID_HOME_TIMELINE, builder.build());
+                nm.notify("home_" + accountId, Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountId), builder.build());
                 Utils.sendPebbleNotification(context, notificationContent);
             } catch (SecurityException e) {
                 // Silently ignore
@@ -1323,7 +1315,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final long accountId = pref.getAccountId();
         final Context context = getContext();
         final Resources resources = context.getResources();
-        final NotificationManager nm = getNotificationManager();
+        final NotificationManagerWrapper nm = mNotificationManager;
         final Expression selection;
         if (pref.isNotificationFollowingOnly()) {
             selection = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),
@@ -1360,8 +1352,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void displaySeparateMentionsNotifications(AccountPreferences pref, long accountId,
-                                                      Context context, Resources resources, NotificationManager nm,
-                                                      String filteredSelection, Cursor statusCursor, int statusesCount) {
+                                                      Context context, Resources resources,
+                                                      NotificationManagerWrapper nm,
+                                                      String filteredSelection, Cursor statusCursor,
+                                                      int statusesCount) {
         //noinspection TryFinallyCanBeTryWithResources
         if (statusCursor.getCount() == 0 || statusesCount == 0) return;
         final String accountName = Utils.getAccountName(context, accountId);
@@ -1399,7 +1393,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             style.setSummaryText(mNameFirst ? accountName : accountScreenName);
             //TODO show account info
             try {
-                nm.notify("mentions_" + accountId + "_" + statusId, NOTIFICATION_ID_MENTIONS_TIMELINE,
+                nm.notify("mentions_" + accountId + "_" + statusId,
+                        Utils.getNotificationId(NOTIFICATION_ID_MENTIONS_TIMELINE, accountId),
                         builder.build());
                 Utils.sendPebbleNotification(context, text);
             } catch (SecurityException e) {
@@ -1412,8 +1407,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void displayGroupedMentionsNotifications(AccountPreferences pref, long accountId,
-                                                     Context context, Resources resources, NotificationManager nm,
-                                                     String filteredSelection, Cursor statusCursor, int statusesCount) {
+                                                     Context context, Resources resources,
+                                                     NotificationManagerWrapper nm,
+                                                     String filteredSelection, Cursor statusCursor,
+                                                     int statusesCount) {
         final String[] userProjection = {Statuses.USER_ID, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
         final Cursor userCursor = mDatabaseWrapper.query(Mentions.TABLE_NAME, userProjection,
                 filteredSelection, null, Statuses.USER_ID, null, Statuses.SORT_ORDER_TIMESTAMP_DESC,
@@ -1566,7 +1563,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
         mReadStateManager.setPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountId), oldestId, false);
         final Resources resources = context.getResources();
-        final NotificationManager nm = getNotificationManager();
+        final NotificationManagerWrapper nm = mNotificationManager;
         final ArrayList<Expression> orExpressions = new ArrayList<>();
         final String prefix = accountId + "-";
         final int prefixLength = prefix.length();

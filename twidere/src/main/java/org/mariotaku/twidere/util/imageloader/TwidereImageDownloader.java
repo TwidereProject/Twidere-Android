@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.webkit.URLUtil;
 
 import com.nostra13.universalimageloader.core.assist.ContentLengthInputStream;
@@ -32,6 +31,7 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.squareup.pollexor.Thumbor;
 import com.squareup.pollexor.ThumborUrlBuilder;
 
+import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.RestRequestInfo;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.Authorization;

@@ -22,14 +22,15 @@ package edu.tsinghua.hotmobi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.util.Pair;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.twidere.util.AbsLogger;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 
@@ -43,6 +44,7 @@ import java.util.List;
 import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
 /**
+ * Upload logs to target server
  * Created by mariotaku on 15/8/27.
  */
 public class UploadLogsTask implements Runnable {
@@ -119,7 +121,7 @@ public class UploadLogsTask implements Runnable {
                 }
             }
             if (succeeded) {
-                dayLogsDir.delete();
+                AbsLogger.logIfFalse(dayLogsDir.delete(), "Unable to delete log dir");
             }
         }
         return hasErrors;

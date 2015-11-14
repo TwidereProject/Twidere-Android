@@ -19,9 +19,10 @@
 
 package org.mariotaku.twidere.api.twitter.auth;
 
+import android.support.annotation.Nullable;
 import android.util.Base64;
-import android.util.Pair;
 
+import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.RestRequestInfo;
 import org.mariotaku.restfu.Utils;
 import org.mariotaku.restfu.http.Authorization;
@@ -79,8 +80,8 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
     private String generateOAuthSignature(String method, String url,
                                           String oauthNonce, long timestamp,
                                           String oauthToken, String oauthTokenSecret,
-                                          List<Pair<String, String>> queries,
-                                          List<Pair<String, String>> forms) {
+                                          @Nullable List<Pair<String, String>> queries,
+                                          @Nullable List<Pair<String, String>> forms) {
         final List<String> encodeParams = new ArrayList<>();
         encodeParams.add(encodeParameter("oauth_consumer_key", consumerKey));
         encodeParams.add(encodeParameter("oauth_nonce", oauthNonce));
@@ -133,11 +134,6 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
     public String getHeader(Endpoint endpoint, RestRequestInfo request) {
         if (!(endpoint instanceof OAuthEndpoint))
             throw new IllegalArgumentException("OAuthEndpoint required");
-        final OAuthEndpoint oauthEndpoint = (OAuthEndpoint) endpoint;
-        final String method = request.getMethod();
-        final String url = Endpoint.constructUrl(oauthEndpoint.getSignUrl(), request);
-        final String oauthNonce = generateOAuthNonce();
-        final long timestamp = System.currentTimeMillis() / 1000;
         final Map<String, Object> extras = request.getExtras();
         final String oauthToken, oauthTokenSecret;
         if (this.oauthToken != null) {
@@ -147,8 +143,36 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
             oauthToken = (String) extras.get("oauth_token");
             oauthTokenSecret = (String) extras.get("oauth_token_secret");
         }
+        final OAuthEndpoint oauthEndpoint = (OAuthEndpoint) endpoint;
+        final String method = request.getMethod();
+        final String url = Endpoint.constructUrl(oauthEndpoint.getSignUrl(), request);
+        final List<Pair<String, String>> queries = request.getQueries();
+        final List<Pair<String, String>> forms = request.getForms();
+        final List<Pair<String, String>> encodeParams = generateOAuthParams(oauthToken, oauthTokenSecret,
+                method, url, queries, forms);
+        final StringBuilder headerBuilder = new StringBuilder();
+        headerBuilder.append("OAuth ");
+        for (int i = 0, j = encodeParams.size(); i < j; i++) {
+            if (i != 0) {
+                headerBuilder.append(", ");
+            }
+            final Pair<String, String> keyValuePair = encodeParams.get(i);
+            headerBuilder.append(keyValuePair.first);
+            headerBuilder.append("=\"");
+            headerBuilder.append(keyValuePair.second);
+            headerBuilder.append('\"');
+        }
+        return headerBuilder.toString();
+    }
+
+    public List<Pair<String, String>> generateOAuthParams(String oauthToken,
+                                                          String oauthTokenSecret, String method,
+                                                          String url, List<Pair<String, String>> queries,
+                                                          List<Pair<String, String>> forms) {
+        final String oauthNonce = generateOAuthNonce();
+        final long timestamp = System.currentTimeMillis() / 1000;
         final String oauthSignature = generateOAuthSignature(method, url, oauthNonce, timestamp, oauthToken,
-                oauthTokenSecret, request.getQueries(), request.getForms());
+                oauthTokenSecret, queries, forms);
         final List<Pair<String, String>> encodeParams = new ArrayList<>();
         encodeParams.add(Pair.create("oauth_consumer_key", consumerKey));
         encodeParams.add(Pair.create("oauth_nonce", oauthNonce));
@@ -165,19 +189,7 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
                 return lhs.first.compareTo(rhs.first);
             }
         });
-        final StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder.append("OAuth ");
-        for (int i = 0, j = encodeParams.size(); i < j; i++) {
-            if (i != 0) {
-                headerBuilder.append(", ");
-            }
-            final Pair<String, String> keyValuePair = encodeParams.get(i);
-            headerBuilder.append(keyValuePair.first);
-            headerBuilder.append("=\"");
-            headerBuilder.append(keyValuePair.second);
-            headerBuilder.append('\"');
-        }
-        return headerBuilder.toString();
+        return encodeParams;
     }
 
     @Override

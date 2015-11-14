@@ -33,7 +33,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -92,6 +91,7 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
@@ -113,7 +113,6 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     private static final String TWITTER_SIGNUP_URL = "https://twitter.com/signup";
     private static final String EXTRA_API_LAST_CHANGE = "api_last_change";
     private static final String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
-    private final Handler mHandler = new Handler();
     @Nullable
     private String mAPIUrlFormat;
     private int mAuthType;
@@ -485,7 +484,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         super.onPause();
     }
 
-    private void dismissDialogFragment(final String tag) {
+    void dismissDialogFragment(final String tag) {
         mResumeFragmentRunnable = new Runnable() {
             @Override
             public void run() {
@@ -503,7 +502,11 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     }
 
     void onSignInStart() {
-        mResumeFragmentRunnable = new Runnable() {
+        showSignInProgressDialog();
+    }
+
+    void showSignInProgressDialog() {
+        postAfterFragmentResumed(new Runnable() {
             @Override
             public void run() {
                 if (isFinishing()) return;
@@ -514,7 +517,11 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 fragment.show(ft, FRAGMENT_TAG_SIGN_IN_PROGRESS);
                 mResumeFragmentRunnable = null;
             }
-        };
+        });
+    }
+
+    void postAfterFragmentResumed(Runnable runnable) {
+        mResumeFragmentRunnable = runnable;
         if (mFragmentsResumed) {
             mResumeFragmentRunnable.run();
         }
@@ -563,25 +570,32 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         }
     }
 
-    public static abstract class AbstractSignInTask extends AsyncTask<Object, Object, SignInResponse> {
+    public static abstract class AbstractSignInTask extends AsyncTask<Object, Runnable, SignInResponse> {
 
-        protected final SignInActivity callback;
+        protected final SignInActivity activity;
 
-        public AbstractSignInTask(final SignInActivity callback) {
-            this.callback = callback;
+        public AbstractSignInTask(final SignInActivity activity) {
+            this.activity = activity;
         }
 
         @Override
         protected void onPostExecute(final SignInResponse result) {
-            if (callback != null) {
-                callback.onSignInResult(result);
+            if (activity != null) {
+                activity.onSignInResult(result);
             }
         }
 
         @Override
         protected void onPreExecute() {
-            if (callback != null) {
-                callback.onSignInStart();
+            if (activity != null) {
+                activity.onSignInStart();
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Runnable... values) {
+            for (Runnable value : values) {
+                value.run();
             }
         }
 
@@ -665,17 +679,17 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         private final String username, password;
         private final int authType;
 
-        private final Context context;
         @NonNull
         private final String apiUrlFormat;
         private final boolean sameOAuthSigningUrl, noVersionSuffix;
         private final OAuthToken consumerKey;
+        private final InputLoginVerificationCallback verificationCallback;
+        private final String userAgent;
 
-        public SignInTask(final SignInActivity context, final String username, final String password, final int authType,
+        public SignInTask(final SignInActivity activity, final String username, final String password, final int authType,
                           final OAuthToken consumerKey, @NonNull final String apiUrlFormat, final boolean sameOAuthSigningUrl,
                           final boolean noVersionSuffix) {
-            super(context);
-            this.context = context;
+            super(activity);
             this.username = username;
             this.password = password;
             this.authType = authType;
@@ -683,6 +697,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             this.apiUrlFormat = apiUrlFormat;
             this.sameOAuthSigningUrl = sameOAuthSigningUrl;
             this.noVersionSuffix = noVersionSuffix;
+            verificationCallback = new InputLoginVerificationCallback();
+            userAgent = UserAgentUtils.getDefaultUserAgentString(activity);
         }
 
         @Override
@@ -712,31 +728,31 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             final String versionSuffix = noVersionSuffix ? null : "1.1";
             final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
             final Authorization auth = new BasicAuthorization(username, password);
-            final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint, auth, Twitter.class);
+            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final long userId = user.getId();
             if (userId <= 0) return new SignInResponse(false, false, null);
-            if (isUserLoggedIn(context, userId)) return new SignInResponse(true, false, null);
+            if (isUserLoggedIn(activity, userId)) return new SignInResponse(true, false, null);
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(context, userId), username, password, user,
+            return new SignInResponse(isUserLoggedIn(activity, userId), username, password, user,
                     color, apiUrlFormat, noVersionSuffix);
         }
 
         private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
             Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
-            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint, auth, TwitterOAuth.class);
-            final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth);
+            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
+            final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth, verificationCallback, userAgent);
             final OAuthToken accessToken = authenticator.getOAuthAccessToken(username, password);
             final long userId = accessToken.getUserId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
             auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
-            final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint,
+            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint,
                     auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(context, userId), auth, user, ParcelableCredentials.AUTH_TYPE_OAUTH, color,
+            return new SignInResponse(isUserLoggedIn(activity, userId), auth, user, ParcelableCredentials.AUTH_TYPE_OAUTH, color,
                     apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
         }
 
@@ -744,30 +760,126 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             final String versionSuffix = noVersionSuffix ? null : "1.1";
             final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
             final Authorization auth = new EmptyAuthorization();
-            final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint, auth, Twitter.class);
+            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final long userId = user.getId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(context, userId), user, color, apiUrlFormat, noVersionSuffix);
+            return new SignInResponse(isUserLoggedIn(activity, userId), user, color, apiUrlFormat, noVersionSuffix);
         }
 
         private SignInResponse authxAuth() throws TwitterException {
             Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
-            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint, auth, TwitterOAuth.class);
+            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password, TwitterOAuth.XAuthMode.CLIENT);
             final long userId = accessToken.getUserId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
             endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
-            final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint, auth, Twitter.class);
+            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(context, userId), auth, user, ParcelableCredentials.AUTH_TYPE_XAUTH, color, apiUrlFormat,
+            return new SignInResponse(isUserLoggedIn(activity, userId), auth, user, ParcelableCredentials.AUTH_TYPE_XAUTH, color, apiUrlFormat,
                     sameOAuthSigningUrl, noVersionSuffix);
         }
 
+        class InputLoginVerificationCallback implements OAuthPasswordAuthenticator.LoginVerificationCallback {
+
+            boolean isChallengeFinished;
+            String challengeResponse;
+
+            @Override
+            public String getLoginVerification() {
+                // Dismiss current progress dialog
+                publishProgress(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.dismissDialogFragment(FRAGMENT_TAG_SIGN_IN_PROGRESS);
+                    }
+                });
+                // Show verification input dialog and wait for user input
+                publishProgress(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.postAfterFragmentResumed(new Runnable() {
+                            @Override
+                            public void run() {
+                                InputLoginVerificationDialogFragment df = new InputLoginVerificationDialogFragment();
+                                df.setCallback(InputLoginVerificationCallback.this);
+                                df.show(activity.getSupportFragmentManager(), null);
+                            }
+                        });
+                    }
+                });
+                while (!isChallengeFinished) {
+                    // Wait for 50ms
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        // Ignore
+                    }
+                }
+                // Show progress dialog
+                publishProgress(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.showSignInProgressDialog();
+                    }
+                });
+                return challengeResponse;
+            }
+
+            public void setChallengeResponse(String challengeResponse) {
+                isChallengeFinished = true;
+                this.challengeResponse = challengeResponse;
+            }
+
+
+        }
+
+    }
+
+    public static class InputLoginVerificationDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
+
+        private SignInTask.InputLoginVerificationCallback callback;
+
+        public void setCallback(SignInTask.InputLoginVerificationCallback callback) {
+            this.callback = callback;
+        }
+
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            callback.setChallengeResponse(null);
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(R.string.login_verification);
+            builder.setView(R.layout.dialog_login_verification_code);
+            builder.setPositiveButton(android.R.string.ok, this);
+            builder.setNegativeButton(android.R.string.cancel, this);
+            return builder.create();
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: {
+                    final AlertDialog alertDialog = (AlertDialog) dialog;
+                    final EditText editVerification = (EditText) alertDialog.findViewById(R.id.edit_verification_code);
+                    callback.setChallengeResponse(ParseUtils.parseString(editVerification.getText()));
+                    break;
+                }
+                case DialogInterface.BUTTON_NEGATIVE: {
+                    callback.setChallengeResponse(null);
+                    break;
+                }
+            }
+        }
     }
 
     static class SignInResponse {

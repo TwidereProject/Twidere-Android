@@ -3991,6 +3991,12 @@ public final class Utils implements Constants {
         return isOfficialCredentials(context, account);
     }
 
+    public static int getNotificationId(int baseId, long accountId) {
+        int result = baseId;
+        result = 31 * result + (int) (accountId ^ (accountId >>> 32));
+        return result;
+    }
+
     static class UtilsL {
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)

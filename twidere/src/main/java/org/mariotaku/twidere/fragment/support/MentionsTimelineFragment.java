@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -82,10 +81,9 @@ public class MentionsTimelineFragment extends CursorStatusesFragment {
         super.setUserVisibleHint(isVisibleToUser);
         final FragmentActivity activity = getActivity();
         if (isVisibleToUser && activity != null) {
-            final NotificationManager nm = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
             for (long accountId : getAccountIds()) {
                 final String tag = "mentions_" + accountId;
-                nm.cancel(tag, NOTIFICATION_ID_MENTIONS_TIMELINE);
+                mNotificationManager.cancel(tag, NOTIFICATION_ID_MENTIONS_TIMELINE);
             }
         }
     }

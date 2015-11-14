@@ -7,7 +7,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
@@ -42,7 +41,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
@@ -59,7 +57,6 @@ public class StreamingService extends Service implements Constants {
     private final LongSparseArray<UserStreamCallback> mCallbacks = new LongSparseArray<>();
     private ContentResolver mResolver;
 
-    private SharedPreferences mPreferences;
     private NotificationManager mNotificationManager;
 
     private long[] mAccountIds;
@@ -92,7 +89,6 @@ public class StreamingService extends Service implements Constants {
     @Override
     public void onCreate() {
         super.onCreate();
-        mPreferences = SharedPreferencesWrapper.getInstance(this, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mResolver = getContentResolver();
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (BuildConfig.DEBUG) {

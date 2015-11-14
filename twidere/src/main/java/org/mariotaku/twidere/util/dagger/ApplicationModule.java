@@ -33,6 +33,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
 import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -43,13 +44,13 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
+import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
-import org.mariotaku.twidere.util.net.OkHttpRestClient;
 import org.mariotaku.twidere.util.net.TwidereNetwork;
 
 import dagger.Module;
@@ -79,6 +80,7 @@ public class ApplicationModule {
     private final UserColorNameManager userColorNameManager;
     private final KeyboardShortcutsHandler keyboardShortcutsHandler;
     private final HotMobiLogger hotMobiLogger;
+    private final NotificationManagerWrapper notificationManagerWrapper;
 
     public ApplicationModule(TwidereApplication application) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
@@ -96,6 +98,7 @@ public class ApplicationModule {
         asyncTaskManager = AsyncTaskManager.getInstance();
         readStateManager = new ReadStateManager(application);
         network = new TwidereNetwork(application);
+        notificationManagerWrapper = new NotificationManagerWrapper(application);
 
 
         asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager, sharedPreferences, bus);
@@ -131,6 +134,11 @@ public class ApplicationModule {
     @Provides
     public KeyboardShortcutsHandler getKeyboardShortcutsHandler() {
         return keyboardShortcutsHandler;
+    }
+
+    @Provides
+    public NotificationManagerWrapper getNotificationManagerWrapper() {
+        return notificationManagerWrapper;
     }
 
     @Provides

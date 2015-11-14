@@ -29,7 +29,6 @@ import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -40,6 +39,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import org.attoparser.AttoParseException;
+import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
@@ -51,7 +52,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -130,8 +130,10 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
 
     private String readOAuthPin(final String html) {
         try {
-            return OAuthPasswordAuthenticator.readOAuthPINFromHtml(new StringReader(html));
-        } catch (final XmlPullParserException | IOException e) {
+            OAuthPasswordAuthenticator.OAuthPinData data = new OAuthPasswordAuthenticator.OAuthPinData();
+            OAuthPasswordAuthenticator.readOAuthPINFromHtml(new StringReader(html), data);
+            return data.oauthPin;
+        } catch (final AttoParseException | IOException e) {
             e.printStackTrace();
         }
         return null;

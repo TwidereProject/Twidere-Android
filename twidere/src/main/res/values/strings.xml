@@ -819,4 +819,6 @@
     <string name="i_want_my_stars_back_summary">Show use favorite (star) instead of like (heart)</string>
     <string name="copy_link">Copy link</string>
     <string name="link_copied_to_clipboard">Link copied to clipboard</string>
+    <string name="login_verification">Login verification</string>
+    <string name="login_verification_hint">Please check your phone for a PIN code and enter it to log in.</string>
 </resources>
