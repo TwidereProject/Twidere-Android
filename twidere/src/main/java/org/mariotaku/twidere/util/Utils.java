@@ -232,6 +232,7 @@ import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
+import org.mariotaku.twidere.util.support.IntentSupport;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -3764,6 +3765,13 @@ public final class Utils implements Constants {
                 } else if (context instanceof Activity) {
                     ((Activity) context).startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
                 }
+                break;
+            }
+            case R.id.open_in_browser: {
+                final Intent intent = new Intent(Intent.ACTION_VIEW, LinkCreator.getTwitterStatusLink(status));
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+//                IntentSupport.setSelector(intent, new Intent(Intent.ACTION_VIEW).addCategory(IntentSupport.CATEGORY_APP_BROWSER));
+                context.startActivity(intent);
                 break;
             }
             default: {

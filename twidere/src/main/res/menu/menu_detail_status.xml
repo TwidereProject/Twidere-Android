@@ -50,6 +50,10 @@
         android:title="@string/delete"
         android:visible="false" />
     <item
+        android:id="@id/open_in_browser"
+        android:icon="@drawable/ic_action_web"
+        android:title="@string/open_in_browser" />
+    <item
         android:id="@id/open_with_account"
         android:icon="@drawable/ic_action_accounts"
         android:title="@string/open_with_account" />
