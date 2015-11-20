@@ -27,11 +27,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
@@ -148,18 +148,31 @@ public class RefreshService extends Service implements Constants {
     };
 
     private final BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
+        public long mPresentTime = -1;
+
         @Override
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case Intent.ACTION_SCREEN_ON: {
-                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.ON);
+                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.ON, getPresentDuration());
                     break;
                 }
                 case Intent.ACTION_SCREEN_OFF: {
-                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.OFF);
+                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.OFF, getPresentDuration());
+                    mPresentTime = -1;
+                    break;
+                }
+                case Intent.ACTION_USER_PRESENT: {
+                    mPresentTime = SystemClock.elapsedRealtime();
+                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.PRESENT, -1);
                     break;
                 }
             }
+        }
+
+        private long getPresentDuration() {
+            if (mPresentTime < 0) return -1;
+            return SystemClock.elapsedRealtime() - mPresentTime;
         }
     };
 
@@ -196,6 +209,7 @@ public class RefreshService extends Service implements Constants {
         final IntentFilter screenFilter = new IntentFilter();
         screenFilter.addAction(Intent.ACTION_SCREEN_ON);
         screenFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        screenFilter.addAction(Intent.ACTION_USER_PRESENT);
         registerReceiver(mPowerStateReceiver, batteryFilter);
         registerReceiver(mScreenStateReceiver, screenFilter);
         PowerStateReceiver.setServiceReceiverStarted(true);

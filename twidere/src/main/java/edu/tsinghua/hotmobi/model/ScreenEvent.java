@@ -33,11 +33,14 @@ public class ScreenEvent extends BaseEvent {
 
     @JsonField(name = "action", typeConverter = Action.ScreenActionConverter.class)
     Action action;
+    @JsonField(name = "present_duration")
+    long presentDuration;
 
-    public static ScreenEvent create(Context context, Action action) {
+    public static ScreenEvent create(Context context, Action action, long presentDuration) {
         final ScreenEvent event = new ScreenEvent();
         event.markStart(context);
         event.setAction(action);
+        event.setPresentDuration(presentDuration);
         return event;
     }
 
@@ -49,15 +52,24 @@ public class ScreenEvent extends BaseEvent {
         this.action = action;
     }
 
+    public long getPresentDuration() {
+        return presentDuration;
+    }
+
+    public void setPresentDuration(long presentDuration) {
+        this.presentDuration = presentDuration;
+    }
+
     @Override
     public String toString() {
         return "ScreenEvent{" +
                 "action=" + action +
+                ", presentDuration=" + presentDuration +
                 "} " + super.toString();
     }
 
     public enum Action {
-        ON("on"), OFF("off"), UNKNOWN("unknown");
+        ON("on"), OFF("off"), PRESENT("present"), UNKNOWN("unknown");
         private final String value;
 
         Action(String value) {
@@ -69,6 +81,8 @@ public class ScreenEvent extends BaseEvent {
                 return ON;
             } else if (OFF.value.equalsIgnoreCase(action)) {
                 return OFF;
+            } else if (PRESENT.value.equalsIgnoreCase(action)) {
+                return PRESENT;
             }
             return UNKNOWN;
         }

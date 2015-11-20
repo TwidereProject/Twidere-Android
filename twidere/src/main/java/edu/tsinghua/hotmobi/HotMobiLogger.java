@@ -27,9 +27,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.BatteryManager;
 import android.text.TextUtils;
-import android.util.Log;
 
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.JsonSerializer;
@@ -198,7 +196,7 @@ public class HotMobiLogger {
         mExecutor.execute(new WriteLogTask(mApplication, accountId, type, events));
     }
 
-    public static void logScreenEvent(Context context, ScreenEvent.Action action) {
-        getInstance(context).log(ScreenEvent.create(context, action));
+    public static void logScreenEvent(Context context, ScreenEvent.Action action, long presentDuration) {
+        getInstance(context).log(ScreenEvent.create(context, action, presentDuration));
     }
 }
