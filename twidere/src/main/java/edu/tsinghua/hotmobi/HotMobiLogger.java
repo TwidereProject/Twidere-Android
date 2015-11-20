@@ -27,7 +27,9 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.BatteryManager;
 import android.text.TextUtils;
+import android.util.Log;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.JsonSerializer;

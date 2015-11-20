@@ -56,7 +56,6 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -859,7 +858,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quotedNameView.setText(manager.getUserNickname(status.quoted_user_id, status.quoted_user_name, false));
                 quotedScreenNameView.setText("@" + status.quoted_user_screen_name);
 
-                quotedTextView.setText(HtmlSpanBuilder.fromHtml(status.quoted_text_html));
+                final Spanned quotedText = HtmlSpanBuilder.fromHtml(status.quoted_text_html);
+                if (!TextUtils.equals(quotedTextView.getText(), quotedText)) {
+                    quotedTextView.setText(quotedText);
+                }
 
                 linkify.applyAllLinks(quotedTextView, status.account_id, layoutPosition, status.is_possibly_sensitive);
                 ThemeUtils.applyParagraphSpacing(quotedTextView, 1.1f);
@@ -910,7 +912,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
-            textView.setText(HtmlSpanBuilder.fromHtml(status.text_html));
+            final Spanned text = HtmlSpanBuilder.fromHtml(status.text_html);
+            if (!TextUtils.equals(textView.getText(), text))
+                textView.setText(text);
             linkify.applyAllLinks(textView, status.account_id, layoutPosition, status.is_possibly_sensitive);
             ThemeUtils.applyParagraphSpacing(textView, 1.1f);
 
@@ -982,8 +986,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             textView.setTextIsSelectable(true);
             quotedTextView.setTextIsSelectable(true);
 
-            textView.setMovementMethod(ArrowKeyMovementMethod.getInstance());
-            quotedTextView.setMovementMethod(ArrowKeyMovementMethod.getInstance());
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+            quotedTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
         @Override

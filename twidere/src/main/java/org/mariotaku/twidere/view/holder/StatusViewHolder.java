@@ -124,7 +124,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         } else {
             textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
         }
-        textView.setMovementMethod(null);
         timeView.setTime(System.currentTimeMillis());
         mediaPreview.setVisibility(adapter.isMediaPreviewEnabled() ? View.VISIBLE : View.GONE);
         mediaPreview.displayMedia(R.drawable.nyan_stars_background);
@@ -185,7 +184,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
                 quotedTextView.setText(text);
                 linkify.applyAllLinks(quotedTextView, status.account_id, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle());
-                quotedTextView.setMovementMethod(null);
             } else {
                 final String text = status.quoted_text_unescaped;
                 quotedTextView.setText(text);
@@ -265,7 +263,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             linkify.applyAllLinks(textView, status.account_id, getLayoutPosition(),
                     status.is_possibly_sensitive,
                     adapter.getLinkHighlightingStyle());
-            textView.setMovementMethod(null);
         }
 
         final Locale locale = Locale.getDefault();

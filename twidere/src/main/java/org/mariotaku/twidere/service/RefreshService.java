@@ -156,7 +156,7 @@ public class RefreshService extends Service implements Constants {
                     break;
                 }
                 case Intent.ACTION_SCREEN_OFF: {
-                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.ON);
+                    HotMobiLogger.logScreenEvent(context, ScreenEvent.Action.OFF);
                     break;
                 }
             }
@@ -173,7 +173,6 @@ public class RefreshService extends Service implements Constants {
         super.onCreate();
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(this)).build().inject(this);
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        final TwidereApplication app = TwidereApplication.getInstance(this);
         mPendingRefreshHomeTimelineIntent = PendingIntent.getBroadcast(this, 0, new Intent(
                 BROADCAST_REFRESH_HOME_TIMELINE), 0);
         mPendingRefreshMentionsIntent = PendingIntent.getBroadcast(this, 0, new Intent(BROADCAST_REFRESH_MENTIONS), 0);

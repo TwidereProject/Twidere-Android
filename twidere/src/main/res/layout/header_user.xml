@@ -166,7 +166,7 @@
                     android:textStyle="bold"
                     android:visibility="gone" />
 
-                <org.mariotaku.twidere.view.HandleSpanClickTextView
+                <org.mariotaku.twidere.view.TimelineContentTextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
                     android:color="?android:textColorPrimary"
                     android:src="@drawable/ic_action_web" />
 
-                <org.mariotaku.twidere.view.HandleSpanClickTextView
+                <org.mariotaku.twidere.view.TimelineContentTextView
                     android:id="@+id/url"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

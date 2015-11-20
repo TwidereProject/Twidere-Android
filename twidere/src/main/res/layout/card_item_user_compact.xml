@@ -82,7 +82,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <org.mariotaku.twidere.view.HandleSpanClickTextView
+                <org.mariotaku.twidere.view.TimelineContentTextView
                     android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textStyle="bold" />
 
-                <org.mariotaku.twidere.view.HandleSpanClickTextView
+                <org.mariotaku.twidere.view.TimelineContentTextView
                     android:id="@+id/screen_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

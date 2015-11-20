@@ -164,7 +164,7 @@
 
         </RelativeLayout>
 
-        <org.mariotaku.twidere.view.HandleSpanClickTextView
+        <org.mariotaku.twidere.view.TimelineContentTextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
             app:nv_secondaryTextColor="?android:textColorSecondary"
             tools:visibility="visible" />
 
-        <org.mariotaku.twidere.view.HandleSpanClickTextView
+        <org.mariotaku.twidere.view.TimelineContentTextView
             android:id="@+id/quoted_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

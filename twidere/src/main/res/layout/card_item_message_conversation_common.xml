@@ -39,7 +39,7 @@
         android:orientation="vertical"
         android:padding="@dimen/element_spacing_normal">
 
-        <org.mariotaku.twidere.view.HandleSpanClickTextView
+        <org.mariotaku.twidere.view.TimelineContentTextView
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

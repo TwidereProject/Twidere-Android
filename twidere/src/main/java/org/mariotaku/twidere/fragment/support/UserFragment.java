@@ -509,12 +509,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mDescriptionView.setText(user.description_html != null ? HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain);
         final TwidereLinkify linkify = new TwidereLinkify(this);
         linkify.applyAllLinks(mDescriptionView, user.account_id, false);
-        mDescriptionView.setMovementMethod(null);
         mLocationContainer.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
         mLocationView.setText(user.location);
         mURLContainer.setVisibility(TextUtils.isEmpty(user.url) && TextUtils.isEmpty(user.url_expanded) ? View.GONE : View.VISIBLE);
         mURLView.setText(TextUtils.isEmpty(user.url_expanded) ? user.url : user.url_expanded);
-        mURLView.setMovementMethod(null);
         final String createdAt = Utils.formatToLongTimeString(activity, user.created_at);
         final float daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24;
         final int dailyTweets = Math.round(user.statuses_count / Math.max(1, daysSinceCreation));
