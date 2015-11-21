@@ -21,7 +21,7 @@ package org.mariotaku.twidere.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.internal.widget.ActionBarContainer;
+import android.support.v7.widget.ActionBarContainer;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;

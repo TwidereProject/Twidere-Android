@@ -59,7 +59,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.internal.widget.ActionBarContainer;
+import android.support.v7.widget.ActionBarContainer;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -142,7 +142,8 @@ import org.mariotaku.twidere.view.ProfileBannerImageView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
-import org.mariotaku.twidere.view.TwidereToolbar;
+
+import android.support.v7.widget.TwidereToolbar;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.util.Calendar;

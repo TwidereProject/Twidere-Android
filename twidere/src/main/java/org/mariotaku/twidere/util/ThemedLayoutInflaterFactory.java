@@ -35,7 +35,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatDelegateTrojan;
-import android.support.v7.internal.view.ContextThemeWrapper;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.View;
@@ -50,7 +50,8 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.ShapedImageView;
-import org.mariotaku.twidere.view.TwidereToolbar;
+
+import android.support.v7.widget.TwidereToolbar;
 import org.mariotaku.twidere.view.iface.IThemeAccentView;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 import org.mariotaku.twidere.view.themed.ThemedTextView;
@@ -201,12 +202,11 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
                 applyTintableBackgroundViewTint(tintable, accentColor, noTintColor, backgroundTintColor, isColorTint);
             }
         } else if (view instanceof TwidereToolbar) {
-            final Context context = viewContext;
-            if (context instanceof android.support.v7.internal.view.ContextThemeWrapper) {
-                ((TwidereToolbar) view).setItemColor(ThemeUtils.getThemeForegroundColor(context,
-                        ((ContextThemeWrapper) context).getThemeResId()));
+            if (viewContext instanceof ContextThemeWrapper) {
+                ((TwidereToolbar) view).setItemColor(ThemeUtils.getThemeForegroundColor(viewContext,
+                        ((ContextThemeWrapper) viewContext).getThemeResId()));
             } else {
-                ((TwidereToolbar) view).setItemColor(ThemeUtils.getThemeForegroundColor(context));
+                ((TwidereToolbar) view).setItemColor(ThemeUtils.getThemeForegroundColor(viewContext));
             }
         } else if (view instanceof EditText) {
             if (isAccentOptimal || !isColorTint) {

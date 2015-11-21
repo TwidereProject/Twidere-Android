@@ -17,16 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view;
+package android.support.v7.widget;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.ActionMenuPresenter;
-import android.support.v7.widget.ActionMenuView;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ImageView;
 
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -60,10 +59,18 @@ public class TwidereToolbar extends Toolbar {
             final ActionMenuPresenter presenter = (ActionMenuPresenter) Utils.findFieldOfTypes(menuView,
                     ActionMenuView.class, ActionMenuPresenter.class);
             if (presenter != null) {
-                ThemeUtils.setActionBarOverflowColor(presenter, mItemColor);
+                setActionBarOverflowColor(presenter, mItemColor);
             }
         }
         return menu;
+    }
+
+    public static void setActionBarOverflowColor(ActionMenuPresenter presenter, int itemColor) {
+        if (presenter == null) return;
+        final View view = (View) Utils.findFieldOfTypes(presenter, ActionMenuPresenter.class,
+                ActionMenuView.ActionMenuChildView.class, View.class);
+        if (!(view instanceof ImageView)) return;
+        ((ImageView) view).setColorFilter(itemColor, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override

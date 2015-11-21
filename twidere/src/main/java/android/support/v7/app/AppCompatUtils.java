@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,17 +17,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package android.support.v7.internal.view;
+package android.support.v7.app;
 
-import android.support.v7.view.ActionMode;
+import android.support.v7.widget.DecorToolbar;
+import android.support.v7.widget.Toolbar;
+
+import org.mariotaku.twidere.util.Utils;
 
 /**
- * Created by mariotaku on 15/4/4.
+ * Created by mariotaku on 15/10/12.
  */
-public class SupportActionModeWrapperTrojan {
+public class AppCompatUtils {
 
-    public static ActionMode getWrappedObject(SupportActionModeWrapper wrapper) {
-        return wrapper.mWrappedObject;
+    public static Toolbar findToolbarForActionBar(ActionBar actionBar) {
+        if (actionBar instanceof ToolbarActionBar) {
+            final Object decorToolbar = Utils.findFieldOfTypes(actionBar, ToolbarActionBar.class, DecorToolbar.class);
+            if (decorToolbar instanceof DecorToolbar) {
+                return (Toolbar) ((DecorToolbar) decorToolbar).getViewGroup();
+            }
+        }
+        return null;
     }
 
 }

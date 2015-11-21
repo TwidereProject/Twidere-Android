@@ -21,12 +21,9 @@ package org.mariotaku.twidere.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.internal.widget.ActionBarContainer;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
-import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.ThemeUtils;
 

@@ -25,10 +25,10 @@ import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatCallback;
-import android.support.v7.internal.view.StandaloneActionMode;
-import android.support.v7.internal.view.SupportActionModeWrapper;
-import android.support.v7.internal.widget.ActionBarContextView;
 import android.support.v7.view.ActionMode;
+import android.support.v7.view.StandaloneActionMode;
+import android.support.v7.view.SupportActionModeWrapper;
+import android.support.v7.widget.ActionBarContextView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -42,7 +42,8 @@ import android.widget.PopupWindow;
 
 import org.mariotaku.twidere.activity.iface.IAppCompatActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.view.AppCompatUtils;
+
+import android.support.v7.app.AppCompatUtils;
 import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 
 /**

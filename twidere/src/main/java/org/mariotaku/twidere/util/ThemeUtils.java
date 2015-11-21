@@ -32,18 +32,18 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.internal.app.WindowDecorActionBar;
-import android.support.v7.internal.app.WindowDecorActionBar.ActionModeImpl;
-import android.support.v7.internal.view.StandaloneActionMode;
-import android.support.v7.internal.view.menu.ActionMenuItemView;
-import android.support.v7.internal.widget.ActionBarContainer;
-import android.support.v7.internal.widget.ActionBarContextView;
-import android.support.v7.internal.widget.ActionBarOverlayLayout;
-import android.support.v7.internal.widget.ContentFrameLayout;
-import android.support.v7.widget.ActionMenuPresenter;
+import android.support.v7.app.WindowDecorActionBar;
+import android.support.v7.app.WindowDecorActionBar.ActionModeImpl;
+import android.support.v7.view.StandaloneActionMode;
+import android.support.v7.view.menu.ActionMenuItemView;
+import android.support.v7.widget.ActionBarContainer;
+import android.support.v7.widget.ActionBarContextView;
+import android.support.v7.widget.ActionBarOverlayLayout;
+import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
@@ -74,7 +74,8 @@ import org.mariotaku.twidere.text.ParagraphSpacingSpan;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.TabPagerIndicator;
-import org.mariotaku.twidere.view.TwidereToolbar;
+
+import android.support.v7.widget.TwidereToolbar;
 
 import java.lang.reflect.Field;
 
@@ -936,14 +937,6 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static void setActionBarOverflowColor(ActionMenuPresenter presenter, int itemColor) {
-        if (presenter == null) return;
-        final View view = (View) Utils.findFieldOfTypes(presenter, ActionMenuPresenter.class,
-                ActionMenuView.ActionMenuChildView.class, View.class);
-        if (!(view instanceof ImageView)) return;
-        ((ImageView) view).setColorFilter(itemColor, Mode.SRC_ATOP);
-    }
-
     public static void setActionBarOverflowColor(ActionMenuView actionMenuView, int itemColor) {
         if (actionMenuView == null) return;
         View overflowView = null;
@@ -1143,7 +1136,7 @@ public class ThemeUtils implements Constants {
         } else if (isSolidBackground(backgroundOption)) {
             return Color.BLACK;
         }
-        return context.getResources().getColor(R.color.background_color_action_bar_dark);
+        return ContextCompat.getColor(context, R.color.background_color_action_bar_dark);
     }
 
     public static boolean isDarkTheme(final String name) {
@@ -1158,7 +1151,7 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static final class ActionBarContextThemeWrapper extends android.support.v7.internal.view.ContextThemeWrapper {
+    public static final class ActionBarContextThemeWrapper extends android.support.v7.view.ContextThemeWrapper {
 
         public ActionBarContextThemeWrapper(Context base, int themeres) {
             super(base, themeres);

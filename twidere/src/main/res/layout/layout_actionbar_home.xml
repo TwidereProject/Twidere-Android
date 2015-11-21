@@ -5,7 +5,7 @@
     tools:layout_height="?actionBarSize"
     tools:layout_width="match_parent">
 
-    <org.mariotaku.twidere.view.TwidereToolbar
+    <android.support.v7.widget.TwidereToolbar
         android:id="@+id/action_bar"
         style="?attr/toolbarStyle"
         android:layout_width="match_parent"
@@ -20,6 +20,6 @@
             app:tabDisplayOption="icon"
             app:tabExpandEnabled="true"
             app:tabHorizontalPadding="@dimen/element_spacing_normal" />
-    </org.mariotaku.twidere.view.TwidereToolbar>
+    </android.support.v7.widget.TwidereToolbar>
 
 </merge>

@@ -51,7 +51,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LongSparseArray;
-import android.support.v7.internal.view.SupportMenuInflater;
+import android.support.v7.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
 import android.support.v7.widget.DefaultItemAnimator;

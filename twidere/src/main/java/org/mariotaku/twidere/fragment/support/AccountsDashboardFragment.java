@@ -51,7 +51,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.internal.view.SupportMenuInflater;
+import android.support.v7.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
 import android.support.v7.widget.FixedLinearLayoutManager;
