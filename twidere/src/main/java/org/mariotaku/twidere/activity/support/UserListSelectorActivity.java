@@ -38,7 +38,7 @@ import android.widget.ListView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
-import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
+import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
@@ -169,7 +169,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
                 getUserLists(mScreenName);
             }
         }
-        final UserHashtagAutoCompleteAdapter adapter = new UserHashtagAutoCompleteAdapter(this);
+        final UserAutoCompleteAdapter adapter = new UserAutoCompleteAdapter(this);
         adapter.setAccountId(getAccountId());
         mEditScreenName.setAdapter(adapter);
         mEditScreenName.setText(mScreenName);

@@ -29,8 +29,9 @@ import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.BaseArrayAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
+import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
-import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
+import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.BaseFragment;
@@ -86,7 +87,9 @@ public interface GeneralComponent {
 
     void inject(AccountsAdapter object);
 
-    void inject(UserHashtagAutoCompleteAdapter object);
+    void inject(ComposeAutoCompleteAdapter object);
+
+    void inject(UserAutoCompleteAdapter object);
 
     void inject(AccountsSpinnerAdapter object);
 

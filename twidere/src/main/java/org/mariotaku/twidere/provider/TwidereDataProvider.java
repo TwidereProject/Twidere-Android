@@ -780,7 +780,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 new Column(SQLConstants.NULL, Suggestions.Search.SUMMARY).getSQL(),
                 new Column(SQLConstants.NULL, Suggestions.Search.ICON).getSQL(),
                 new Column("0", Suggestions.Search.EXTRA_ID).getSQL(),
-                new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL()
+                new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL(),
+                new Column(SearchHistory.QUERY, Suggestions.Search.VALUE).getSQL(),
         };
         final Expression historySelection = Expression.likeRaw(new Column(SearchHistory.QUERY), "?||'%'", "^");
         @SuppressLint("Recycle") final Cursor historyCursor = mDatabaseWrapper.query(true,
@@ -795,7 +796,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(SQLConstants.NULL, Suggestions.Search.SUMMARY).getSQL(),
                     new Column(SQLConstants.NULL, Suggestions.Search.ICON).getSQL(),
                     new Column("0", Suggestions.Search.EXTRA_ID).getSQL(),
-                    new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL()
+                    new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL(),
+                    new Column(SavedSearches.QUERY, Suggestions.Search.VALUE).getSQL()
             };
             final Expression savedSearchesWhere = Expression.equals(SavedSearches.ACCOUNT_ID, accountId);
             @SuppressLint("Recycle") final Cursor savedSearchesCursor = mDatabaseWrapper.query(true,
@@ -811,7 +813,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(CachedUsers.SCREEN_NAME, Suggestions.Search.SUMMARY).getSQL(),
                     new Column(CachedUsers.PROFILE_IMAGE_URL, Suggestions.Search.ICON).getSQL(),
                     new Column(CachedUsers.USER_ID, Suggestions.Search.EXTRA_ID).getSQL(),
-                    new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL()
+                    new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL(),
+                    new Column(CachedUsers.SCREEN_NAME, Suggestions.Search.VALUE).getSQL(),
             };
             String queryTrimmed = queryEscaped.startsWith("@") ? queryEscaped.substring(1) : queryEscaped;
             final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
@@ -820,7 +823,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
                     Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
             final String[] selectionArgs = new String[]{queryTrimmed, queryTrimmed};
-            final String[] order = {CachedUsers.LAST_SEEN, "score", CachedUsers.SCREEN_NAME, CachedUsers.NAME};
+            final String[] order = {CachedUsers.LAST_SEEN, CachedUsers.SCORE, CachedUsers.SCREEN_NAME,
+                    CachedUsers.NAME};
             final boolean[] ascending = {false, false, true, true};
             final OrderBy orderBy = new OrderBy(order, ascending);
 
@@ -838,7 +842,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 final Matcher m = PATTERN_SCREEN_NAME.matcher(query);
                 if (m.matches()) {
                     screenNameCursor.addRow(new Object[]{0, Suggestions.Search.TYPE_SCREEN_NAME,
-                            query, null, null, 0, null});
+                            query, null, null, 0, null, query});
                 }
             }
             cursors = new Cursor[3];
@@ -868,8 +872,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(CachedUsers.SCREEN_NAME, Suggestions.SUMMARY).getSQL(),
                     new Column(CachedUsers.USER_ID, Suggestions.EXTRA_ID).getSQL(),
                     new Column(CachedUsers.PROFILE_IMAGE_URL, Suggestions.ICON).getSQL(),
+                    new Column(CachedUsers.SCREEN_NAME, Suggestions.VALUE).getSQL(),
             };
-            final String[] orderBy = {"score", CachedUsers.LAST_SEEN, CachedUsers.SCREEN_NAME,
+            final String[] orderBy = {CachedUsers.SCORE, CachedUsers.LAST_SEEN, CachedUsers.SCREEN_NAME,
                     CachedUsers.NAME};
             final boolean[] ascending = {false, false, true, true};
             return query(Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, accountId),
@@ -884,6 +889,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column("NULL", Suggestions.SUMMARY).getSQL(),
                     new Column("0", Suggestions.EXTRA_ID).getSQL(),
                     new Column("NULL", Suggestions.ICON).getSQL(),
+                    new Column(CachedHashtags.NAME, Suggestions.VALUE).getSQL(),
             };
             return query(CachedHashtags.CONTENT_URI, mappedProjection, where.getSQL(),
                     whereArgs, null);

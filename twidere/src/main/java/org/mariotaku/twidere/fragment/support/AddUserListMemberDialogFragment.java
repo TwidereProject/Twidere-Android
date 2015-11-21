@@ -32,7 +32,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
+import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -42,7 +42,7 @@ public class AddUserListMemberDialogFragment extends BaseSupportDialogFragment i
 
     public static final String FRAGMENT_TAG = "add_user_list_member";
     private AutoCompleteTextView mEditText;
-    private UserHashtagAutoCompleteAdapter mUserAutoCompleteAdapter;
+    private ComposeAutoCompleteAdapter mUserAutoCompleteAdapter;
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
@@ -71,7 +71,7 @@ public class AddUserListMemberDialogFragment extends BaseSupportDialogFragment i
         if (savedInstanceState != null) {
             mEditText.setText(savedInstanceState.getCharSequence(EXTRA_TEXT));
         }
-        mUserAutoCompleteAdapter = new UserHashtagAutoCompleteAdapter(wrapped);
+        mUserAutoCompleteAdapter = new ComposeAutoCompleteAdapter(wrapped);
         final Bundle args = getArguments();
         mUserAutoCompleteAdapter.setAccountId(args.getLong(EXTRA_ACCOUNT_ID));
         mEditText.setAdapter(mUserAutoCompleteAdapter);

@@ -270,6 +270,8 @@ public interface TwidereDataStore {
 
         String LAST_SEEN = "last_seen";
 
+        String SCORE = "score";
+
         String[] COLUMNS = {_ID, USER_ID, CREATED_AT, NAME, SCREEN_NAME,
                 DESCRIPTION_PLAIN, LOCATION, URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, IS_PROTECTED,
                 IS_VERIFIED, IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT, FAVORITES_COUNT,
@@ -293,6 +295,7 @@ public interface TwidereDataStore {
         String ICON = "icon";
         String EXTRA_ID = "extra_id";
         String EXTRA = "extra";
+        String VALUE = "value";
 
         String TABLE_NAME = "suggestions";
 
@@ -300,9 +303,9 @@ public interface TwidereDataStore {
 
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
 
-        String[] COLUMNS = {_ID, TYPE, TITLE, SUMMARY, ICON, EXTRA_ID, EXTRA};
+        String[] COLUMNS = {_ID, TYPE, TITLE, SUMMARY, ICON, EXTRA_ID, EXTRA, VALUE};
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_INT, TYPE_TEXT};
+                TYPE_INT, TYPE_TEXT, TYPE_TEXT};
 
         interface AutoComplete extends Suggestions {
 

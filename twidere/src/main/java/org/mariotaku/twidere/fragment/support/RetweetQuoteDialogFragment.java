@@ -49,7 +49,7 @@ import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
-import org.mariotaku.twidere.view.ComposeMaterialEditText;
+import org.mariotaku.twidere.view.ComposeEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
@@ -121,7 +121,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.item_content).setFocusable(false);
         view.findViewById(R.id.comment_container).setVisibility(status.user_is_protected ? View.GONE : View.VISIBLE);
-        final ComposeMaterialEditText mEditComment = (ComposeMaterialEditText) view.findViewById(R.id.edit_comment);
+        final ComposeEditText mEditComment = (ComposeEditText) view.findViewById(R.id.edit_comment);
         mEditComment.setAccountId(status.account_id);
 
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);

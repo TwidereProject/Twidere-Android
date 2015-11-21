@@ -20,17 +20,25 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
+import android.text.InputType;
+import android.text.Selection;
 import android.text.method.ArrowKeyMovementMethod;
+import android.text.method.MovementMethod;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.AdapterView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
+import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.util.widget.StatusTextTokenizer;
+import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
-public class ComposeEditText extends AppCompatMultiAutoCompleteTextView {
+public class ComposeEditText extends AppCompatMultiAutoCompleteTextView implements IThemeBackgroundTintView {
 
-    private UserHashtagAutoCompleteAdapter mAdapter;
+    private ComposeAutoCompleteAdapter mAdapter;
     private long mAccountId;
 
     public ComposeEditText(final Context context) {
@@ -44,14 +52,36 @@ public class ComposeEditText extends AppCompatMultiAutoCompleteTextView {
     public ComposeEditText(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         setTokenizer(new StatusTextTokenizer());
-        setMovementMethod(ArrowKeyMovementMethod.getInstance());
+        setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                removeIMESuggestions();
+            }
+        });
+        // HACK: remove AUTO_COMPLETE flag to force IME show auto completion
+        setRawInputType(getInputType() & ~InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+    }
+
+    @Override
+    public void setBackgroundTintColor(@NonNull ColorStateList color) {
+        setSupportBackgroundTintList(color);
+    }
+
+    public void setAccountId(long accountId) {
+        mAccountId = accountId;
+        updateAccountId();
+    }
+
+    @Override
+    protected MovementMethod getDefaultMovementMethod() {
+        return ArrowKeyMovementMethod.getInstance();
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!isInEditMode() && mAdapter == null) {
-            mAdapter = new UserHashtagAutoCompleteAdapter(getContext());
+            mAdapter = new ComposeAutoCompleteAdapter(getContext());
         }
         setAdapter(mAdapter);
         updateAccountId();
@@ -66,13 +96,14 @@ public class ComposeEditText extends AppCompatMultiAutoCompleteTextView {
         }
     }
 
-    public void setAccountId(long accountId) {
-        mAccountId = accountId;
-        updateAccountId();
-    }
-
     private void updateAccountId() {
         if (mAdapter == null) return;
         mAdapter.setAccountId(mAccountId);
+    }
+
+    private void removeIMESuggestions() {
+        final int selectionEnd = getSelectionEnd(), selectionStart = getSelectionStart();
+        Selection.removeSelection(getText());
+        setSelection(selectionStart, selectionEnd);
     }
 }

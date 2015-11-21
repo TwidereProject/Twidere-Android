@@ -44,7 +44,7 @@
             android:alpha="0.2"
             android:numColumns="@integer/grid_column_image_preview"
             android:stretchMode="columnWidth"
-            tools:listitem="@layout/grid_item_image_preview" />
+            tools:listitem="@layout/gallery_item_image_preview" />
 
         <LinearLayout
             android:id="@+id/edit_text_container"
@@ -58,13 +58,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:completionThreshold="1"
                 android:gravity="top"
                 android:hint="@string/status_hint"
-                android:inputType="text|textLongMessage|textAutoComplete|textMultiLine"
+                android:inputType="textMultiLine|textShortMessage"
                 android:minLines="6"
                 android:padding="@dimen/element_spacing_normal"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"
+                android:singleLine="false" />
 
             <LinearLayout
                 android:id="@+id/location_container"

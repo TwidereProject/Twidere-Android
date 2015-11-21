@@ -59,8 +59,8 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
+import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter;
-import org.mariotaku.twidere.adapter.UserHashtagAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.support.AbsContentListViewFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -292,7 +292,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
                 if (auto_complete_type == AUTO_COMPLETE_TYPE_SOURCES) {
                     mUserAutoCompleteAdapter = new SourceAutoCompleteAdapter(activity);
                 } else {
-                    final UserHashtagAutoCompleteAdapter adapter = new UserHashtagAutoCompleteAdapter(activity);
+                    final ComposeAutoCompleteAdapter adapter = new ComposeAutoCompleteAdapter(activity);
                     adapter.setAccountId(Utils.getDefaultAccountId(activity));
                     mUserAutoCompleteAdapter = adapter;
                 }

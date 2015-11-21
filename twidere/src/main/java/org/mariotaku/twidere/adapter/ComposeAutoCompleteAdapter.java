@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.FilterQueryProvider;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
@@ -42,7 +43,7 @@ import org.mariotaku.twidere.view.ProfileImageView;
 import javax.inject.Inject;
 
 
-public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
+public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
 
     private static final String[] FROM = new String[0];
     private static final int[] TO = new int[0];
@@ -56,11 +57,11 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 
     private final boolean mDisplayProfileImage;
 
-    private int mTypeIdx, mIconIdx, mTitleIdx, mSummaryIdx, mExtraIdIdx;
+    private int mTypeIdx, mIconIdx, mTitleIdx, mSummaryIdx, mExtraIdIdx, mValueIdx;
     private long mAccountId;
     private char mToken;
 
-    public UserHashtagAutoCompleteAdapter(final Context context) {
+    public ComposeAutoCompleteAdapter(final Context context) {
         super(context, R.layout.list_item_auto_complete, null, FROM, TO, 0);
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
@@ -68,7 +69,6 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
-        if (isCursorClosed()) return;
         final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
         final ProfileImageView icon = (ProfileImageView) view.findViewById(android.R.id.icon);
@@ -78,7 +78,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 
         if (Suggestions.AutoComplete.TYPE_USERS.equals(cursor.getString(mTypeIdx))) {
             text1.setText(mUserColorNameManager.getUserNickname(cursor.getLong(mExtraIdIdx), cursor.getString(mTitleIdx)));
-            text2.setText("@" + cursor.getString(mSummaryIdx));
+            text2.setText('@' + cursor.getString(mSummaryIdx));
             if (mDisplayProfileImage) {
                 final String profileImageUrl = cursor.getString(mIconIdx);
                 mProfileImageLoader.displayProfileImage(icon, profileImageUrl);
@@ -88,7 +88,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 
             icon.clearColorFilter();
         } else {
-            text1.setText("#" + cursor.getString(mTitleIdx));
+            text1.setText('#' + cursor.getString(mTitleIdx));
             text2.setText(R.string.hashtag);
 
             icon.setImageResource(R.drawable.ic_action_hashtag);
@@ -99,7 +99,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
     }
 
     public void closeCursor() {
-        final Cursor cursor = getCursor();
+        final Cursor cursor = swapCursor(null);
         if (cursor == null) return;
         if (!cursor.isClosed()) {
             cursor.close();
@@ -108,13 +108,15 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
 
     @Override
     public CharSequence convertToString(final Cursor cursor) {
-        if (isCursorClosed()) return null;
-        return cursor.getString(mSummaryIdx != -1 ? mSummaryIdx : mTitleIdx);
-    }
-
-    public boolean isCursorClosed() {
-        final Cursor cursor = getCursor();
-        return cursor == null || cursor.isClosed();
+        switch (StringUtils.defaultIfEmpty(cursor.getString(mTypeIdx), "")) {
+            case Suggestions.AutoComplete.TYPE_HASHTAGS: {
+                return '#' + cursor.getString(mValueIdx);
+            }
+            case Suggestions.AutoComplete.TYPE_USERS: {
+                return '@' + cursor.getString(mValueIdx);
+            }
+        }
+        return cursor.getString(mValueIdx);
     }
 
     @Override
@@ -159,6 +161,7 @@ public class UserHashtagAutoCompleteAdapter extends SimpleCursorAdapter implemen
             mSummaryIdx = cursor.getColumnIndex(Suggestions.AutoComplete.SUMMARY);
             mExtraIdIdx = cursor.getColumnIndex(Suggestions.AutoComplete.EXTRA_ID);
             mIconIdx = cursor.getColumnIndex(Suggestions.AutoComplete.ICON);
+            mValueIdx = cursor.getColumnIndex(Suggestions.AutoComplete.VALUE);
         }
         return super.swapCursor(cursor);
     }
