@@ -1,3 +1,6 @@
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.LibraryPlugin
+
 apply plugin: 'com.github.ben-manes.versions'
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -29,7 +32,7 @@ allprojects {
 
 subprojects {
 
-    plugins.withId('com.android.library') {
+    plugins.withType(LibraryPlugin) {
         android {
             compileSdkVersion 23
             buildToolsVersion '23.0.1'
@@ -52,7 +55,7 @@ subprojects {
         }
     }
 
-    plugins.withId('com.android.application') {
+    plugins.withType(AppPlugin) {
 
         android {
             compileSdkVersion 23
@@ -123,4 +126,12 @@ subprojects {
             }
         }
     }
+}
+
+task clean(type: Delete) {
+    delete(rootProject.buildDir)
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
 }
