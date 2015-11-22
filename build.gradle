@@ -52,10 +52,8 @@ subprojects {
             }
         }
 
-        project.plugins.withId('com.android.application') {
-
+        if (project.plugins.hasPlugin('com.android.application')) {
             android {
-
                 signingConfigs {
                     debug {
                         File signingPropFile = rootProject.file('signing.properties')
