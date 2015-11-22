@@ -34,6 +34,9 @@ import java.util.List;
  * Created by mariotaku on 15/10/21.
  */
 public class IDsImplMapper extends JsonMapper<IDsImpl> {
+
+    public static final IDsImplMapper INSTANCE = new IDsImplMapper();
+
     @SuppressWarnings("TryWithIdenticalCatches")
     @Override
     public IDsImpl parse(JsonParser jsonParser) throws IOException {

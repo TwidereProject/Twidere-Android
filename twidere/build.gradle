@@ -14,7 +14,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 133
+        versionCode 135
         versionName "0.3.0"
         multiDexEnabled true
     }
@@ -52,6 +52,12 @@ repositories {
 
 configurations {
     all*.exclude group: 'org.yaml', module: 'snakeyaml'
+}
+
+apt {
+    arguments {
+        jsonMapperLoaderSuffix '_app'
+    }
 }
 
 dependencies {

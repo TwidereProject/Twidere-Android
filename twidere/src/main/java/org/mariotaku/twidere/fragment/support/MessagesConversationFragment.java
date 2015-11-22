@@ -233,7 +233,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         mValidator = new TwidereValidator(activity);
 
         final View view = getView();
-        if (view == null) throw new AssertionError();
+        assert view != null;
         final Context viewContext = view.getContext();
         setHasOptionsMenu(true);
         final ActionBar actionBar = activity.getSupportActionBar();

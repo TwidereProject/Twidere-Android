@@ -68,7 +68,7 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
             return;
         }
         final View view = getView();
-        if (view == null) throw new AssertionError();
+        assert view != null;
         final FragmentActivity activity = getActivity();
         mAdapter = new DummyStatusHolderAdapter(activity);
         mHolder = new StatusViewHolder(mAdapter, getView());

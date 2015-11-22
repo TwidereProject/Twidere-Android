@@ -141,7 +141,7 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
         super.onActivityCreated(savedInstanceState);
 
         final View view = getView();
-        if (view == null) throw new AssertionError();
+        assert view != null;
         final Context context = view.getContext();
         final boolean compact = Utils.isCompactCards(context);
         final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);

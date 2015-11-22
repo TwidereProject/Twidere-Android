@@ -823,4 +823,5 @@
     <string name="login_verification_pin_hint">Check your phone for a PIN code and enter it to log in.</string>
     <string name="login_verification_push_hint">Accept login verification request from Twitter app, once you approved the request, click OK.</string>
     <string name="login_verification_failed">Login verification failed.</string>
+    <string name="saved_searches_already_saved_hint">Perhaps you already saved this search</string>
 </resources>

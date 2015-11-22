@@ -2,6 +2,8 @@ package org.mariotaku.twidere.text;
 
 import android.text.SpannableString;
 
+import org.mariotaku.twidere.util.CheckUtils;
+
 /**
  * Created by Ningyuan on 2015/5/1.
  */
@@ -13,7 +15,7 @@ public class SafeSpannableString extends SpannableString {
 
     @Override
     public void setSpan(Object what, int start, int end, int flags) {
-        if (start < 0 || end < 0) {
+        if (!CheckUtils.checkRange(this, start, end)) {
             // Silently ignore
             return;
         }

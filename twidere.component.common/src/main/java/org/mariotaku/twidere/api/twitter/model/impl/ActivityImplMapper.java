@@ -37,6 +37,9 @@ import java.text.ParseException;
  * Created by mariotaku on 15/10/21.
  */
 public class ActivityImplMapper extends JsonMapper<ActivityImpl> {
+
+    public static final ActivityImplMapper INSTANCE = new ActivityImplMapper();
+
     @SuppressWarnings("TryWithIdenticalCatches")
     @Override
     public ActivityImpl parse(JsonParser jsonParser) throws IOException {

@@ -277,7 +277,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         final View view = getView();
-        if (view == null) throw new AssertionError();
+        assert view != null;
         final Context context = view.getContext();
         final boolean compact = Utils.isCompactCards(context);
         Utils.setNdefPushMessageCallback(getActivity(), new CreateNdefMessageCallback() {
@@ -790,7 +790,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             super(itemView);
             this.fragment = fragment;
             this.linkClickHandler = new StatusLinkClickHandler(adapter.getContext(), null);
-            this.linkify = new TwidereLinkify(linkClickHandler, false);
+            this.linkify = new TwidereLinkify(linkClickHandler);
             this.adapter = adapter;
             menuBar = (ActionMenuView) itemView.findViewById(R.id.menu_bar);
             nameView = (TextView) itemView.findViewById(R.id.name);
@@ -860,11 +860,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
                 final Spanned quotedText = HtmlSpanBuilder.fromHtml(status.quoted_text_html);
                 if (!TextUtils.equals(quotedTextView.getText(), quotedText)) {
-                    quotedTextView.setText(quotedText);
+                    quotedTextView.setText(quotedText, TextView.BufferType.SPANNABLE);
                 }
 
                 linkify.applyAllLinks(quotedTextView, status.account_id, layoutPosition, status.is_possibly_sensitive);
-                ThemeUtils.applyParagraphSpacing(quotedTextView, 1.1f);
                 quoteIndicator.setColor(manager.getUserColor(status.user_id, false));
                 profileContainer.drawStart(manager.getUserColor(status.quoted_user_id, false));
             } else {
@@ -913,10 +912,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
             final Spanned text = HtmlSpanBuilder.fromHtml(status.text_html);
-            if (!TextUtils.equals(textView.getText(), text))
-                textView.setText(text);
-            linkify.applyAllLinks(textView, status.account_id, layoutPosition, status.is_possibly_sensitive);
-            ThemeUtils.applyParagraphSpacing(textView, 1.1f);
+            if (!TextUtils.equals(textView.getText(), text)) {
+                textView.setText(text, TextView.BufferType.SPANNABLE);
+                linkify.applyAllLinks(textView, status.account_id, layoutPosition, status.is_possibly_sensitive);
+            }
 
             if (!TextUtils.isEmpty(status.place_full_name)) {
                 locationView.setVisibility(View.VISIBLE);

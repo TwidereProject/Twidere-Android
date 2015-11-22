@@ -1126,8 +1126,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (result.hasData()) {
                 final String message = mContext.getString(R.string.search_name_saved, result.getData().getQuery());
                 Utils.showOkMessage(mContext, message, false);
-            } else {
-                Utils.showErrorMessage(mContext, R.string.action_saving_search, result.getException(), false);
+            } else if (result.hasException()) {
+                final Exception exception = result.getException();
+                // https://github.com/TwidereProject/Twidere-Android/issues/244
+                if (exception instanceof TwitterException && ((TwitterException) exception).getStatusCode() == 403) {
+                    final String desc = mContext.getString(R.string.saved_searches_already_saved_hint);
+                    Utils.showErrorMessage(mContext, R.string.action_saving_search, desc, false);
+                } else {
+                    Utils.showErrorMessage(mContext, R.string.action_saving_search, exception, false);
+                }
             }
             super.onPostExecute(result);
         }

@@ -46,17 +46,21 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     private static final long serialVersionUID = -2623309261327598087L;
     @JsonField(name = "errors")
     ErrorInfo[] errors;
+    @JsonField(name = "error")
+    String errorMessage;
+    @JsonField(name = "request")
+    String requestPath;
     boolean nested = false;
     private int statusCode = -1;
     private RateLimitStatus rateLimitStatus;
-    private RestHttpRequest request;
-    private RestHttpResponse response;
+    private RestHttpRequest httpRequest;
+    private RestHttpResponse httpResponse;
 
     public TwitterException() {
     }
 
-    public TwitterException(RestHttpResponse response) {
-        setResponse(response);
+    public TwitterException(RestHttpResponse httpResponse) {
+        setHttpResponse(httpResponse);
     }
 
     public TwitterException(final Throwable cause) {
@@ -77,14 +81,14 @@ public class TwitterException extends Exception implements TwitterResponse, Http
 
     public TwitterException(final String message, final RestHttpRequest req, final RestHttpResponse res) {
         this(message);
-        setResponse(res);
-        setRequest(req);
+        setHttpResponse(res);
+        setHttpRequest(req);
     }
 
     public TwitterException(final String message, final Throwable cause, final RestHttpRequest req, final RestHttpResponse res) {
         this(message, cause);
-        setResponse(res);
-        setRequest(req);
+        setHttpResponse(res);
+        setHttpRequest(req);
     }
 
     public TwitterException(final String message, final RestHttpResponse res) {
@@ -99,16 +103,19 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         super(message, cause);
     }
 
-    private void setRequest(RestHttpRequest request) {
-        this.request = request;
+    private void setHttpRequest(RestHttpRequest httpRequest) {
+        this.httpRequest = httpRequest;
     }
 
     public ErrorInfo[] getErrors() {
+        if (errors != null && errorMessage != null && requestPath != null) {
+            return new ErrorInfo[]{new SingleErrorInfo(errorMessage, requestPath)};
+        }
         return errors;
     }
 
-    public void setResponse(RestHttpResponse res) {
-        response = res;
+    public void setHttpResponse(RestHttpResponse res) {
+        httpResponse = res;
         if (res != null) {
             rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(res);
             statusCode = res.getStatus();
@@ -142,7 +149,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
      */
     @Override
     public int getAccessLevel() {
-        return InternalParseUtil.toAccessLevel(response);
+        return InternalParseUtil.toAccessLevel(httpResponse);
     }
 
     public int getErrorCode() {
@@ -151,11 +158,11 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     }
 
     public RestHttpRequest getHttpRequest() {
-        return request;
+        return httpRequest;
     }
 
     public RestHttpResponse getHttpResponse() {
-        return response;
+        return httpResponse;
     }
 
     /**
@@ -182,8 +189,8 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     }
 
     public String getResponseHeader(final String name) {
-        if (response != null) {
-            return response.getHeader(name);
+        if (httpResponse != null) {
+            return httpResponse.getHeader(name);
         }
         return null;
     }
@@ -214,7 +221,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
             }
         } else if (statusCode == ENHANCE_YOUR_CLAIM) {
             try {
-                final String retryAfterStr = response.getHeader("Retry-After");
+                final String retryAfterStr = httpResponse.getHeader("Retry-After");
                 if (retryAfterStr != null) {
                     retryAfter = Integer.valueOf(retryAfterStr);
                 }
@@ -272,4 +279,30 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         nested = true;
     }
 
+    static class SingleErrorInfo implements ErrorInfo {
+        private final String message;
+        private final String request;
+        private final int code;
+
+        public SingleErrorInfo(String message, String request) {
+            this.message = message;
+            this.request = request;
+            this.code = -1;
+        }
+
+        @Override
+        public int getCode() {
+            return code;
+        }
+
+        @Override
+        public String getRequest() {
+            return request;
+        }
+
+        @Override
+        public String getMessage() {
+            return message;
+        }
+    }
 }

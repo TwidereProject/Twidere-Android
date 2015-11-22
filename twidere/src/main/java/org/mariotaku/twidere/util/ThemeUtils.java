@@ -43,11 +43,10 @@ import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionBarContainer;
 import android.support.v7.widget.ActionBarContextView;
 import android.support.v7.widget.ActionBarOverlayLayout;
-import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.ActionMenuView;
+import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
+import android.support.v7.widget.TwidereToolbar;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -61,7 +60,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
@@ -70,12 +68,9 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference;
-import org.mariotaku.twidere.text.ParagraphSpacingSpan;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.TabPagerIndicator;
-
-import android.support.v7.widget.TwidereToolbar;
 
 import java.lang.reflect.Field;
 
@@ -93,7 +88,7 @@ public class ThemeUtils implements Constants {
             android.R.attr.activityCloseExitAnimation};
 
     private ThemeUtils() {
-        throw new AssertionError();
+        throw new AssertionError("ThemeUtils should never be instantiated");
     }
 
 
@@ -138,22 +133,6 @@ public class ThemeUtils implements Constants {
                 applyColorFilterToMenuIcon(item.getSubMenu(), popupColor, popupColor, highlightColor, mode, excludedGroups);
             }
         }
-    }
-
-    public static void applyParagraphSpacing(TextView textView, float multiplier) {
-        final SpannableStringBuilder builder = SpannableStringBuilder.valueOf(textView.getText());
-        int prevLineBreak, currLineBreak = 0;
-        for (int i = 0, j = builder.length(); i < j; i++) {
-            if (builder.charAt(i) == '\n') {
-                prevLineBreak = currLineBreak;
-                currLineBreak = i;
-                if (currLineBreak > 0) {
-                    builder.setSpan(new ParagraphSpacingSpan(multiplier), prevLineBreak, currLineBreak,
-                            Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-            }
-        }
-        textView.setText(builder);
     }
 
     public static void applySupportActionModeColor(final android.support.v7.view.ActionMode modeCompat,

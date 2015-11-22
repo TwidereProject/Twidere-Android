@@ -241,7 +241,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         final View view = getView();
-        if (view == null) throw new AssertionError();
+        assert view != null;
         final Context viewContext = view.getContext();
         final MessageEntriesAdapter adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();

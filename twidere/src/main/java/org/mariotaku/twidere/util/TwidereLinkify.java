@@ -23,8 +23,6 @@ import android.support.annotation.IntDef;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
@@ -99,7 +97,6 @@ public final class TwidereLinkify implements Constants {
             Pattern.CASE_INSENSITIVE);
     private final OnLinkClickListener mOnLinkClickListener;
     private final Extractor mExtractor = new Extractor();
-    private final boolean mAddMovementMethod;
     private int mHighlightOption;
 
     public TwidereLinkify(final OnLinkClickListener listener) {
@@ -107,17 +104,7 @@ public final class TwidereLinkify implements Constants {
     }
 
     public TwidereLinkify(final OnLinkClickListener listener, final int highlightOption) {
-        this(listener, highlightOption, true);
-    }
-
-    public TwidereLinkify(final OnLinkClickListener listener, boolean addMovementMethod) {
-        this(listener, VALUE_LINK_HIGHLIGHT_OPTION_CODE_BOTH, addMovementMethod);
-
-    }
-
-    public TwidereLinkify(final OnLinkClickListener listener, final int highlightOption, boolean addMovementMethod) {
         mOnLinkClickListener = listener;
-        mAddMovementMethod = addMovementMethod;
         setHighlightOption(highlightOption);
     }
 
@@ -136,15 +123,11 @@ public final class TwidereLinkify implements Constants {
 
     public final void applyAllLinks(final TextView view, final OnLinkClickListener listener, final long accountId, final long extraId,
                                     final boolean sensitive, final int highlightOption) {
-        view.setMovementMethod(LinkMovementMethod.getInstance());
         final SpannableString string = SpannableString.valueOf(view.getText());
         for (final int type : ALL_LINK_TYPES) {
             addLinks(string, accountId, extraId, type, sensitive, listener, highlightOption);
         }
-        view.setText(string);
-        if (mAddMovementMethod) {
-            addLinkMovementMethod(view);
-        }
+        view.setText(string, TextView.BufferType.SPANNABLE);
     }
 
     public final void applyUserProfileLink(final TextView view, final long accountId, final long extraId,
@@ -159,7 +142,6 @@ public final class TwidereLinkify implements Constants {
 
     public final void applyUserProfileLink(final TextView view, final long accountId, final long extraId,
                                            final long userId, final String screenName, final int highlightOption, final OnLinkClickListener listener) {
-        view.setMovementMethod(LinkMovementMethod.getInstance());
         final SpannableString string = SpannableString.valueOf(view.getText());
         final URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
         for (final URLSpan span : spans) {
@@ -172,10 +154,7 @@ public final class TwidereLinkify implements Constants {
             applyLink(screenName, 0, string.length(), string, accountId, extraId,
                     LINK_TYPE_MENTION, false, highlightOption, listener);
         }
-        view.setText(string);
-        if (mAddMovementMethod) {
-            addLinkMovementMethod(view);
-        }
+        view.setText(string, TextView.BufferType.SPANNABLE);
     }
 
     public void setHighlightOption(@HighlightStyle final int style) {
@@ -208,23 +187,8 @@ public final class TwidereLinkify implements Constants {
         return hasMatches;
     }
 
-    private static void addLinkMovementMethod(final TextView t) {
-        final MovementMethod m = t.getMovementMethod();
-        if (m == null || !(m instanceof LinkMovementMethod)) {
-            if (t.getLinksClickable()) {
-                t.setMovementMethod(LinkMovementMethod.getInstance());
-            }
-        }
-    }
-
     /**
      * Applies a regex to the text of a TextView turning the matches into links.
-     * If links are found then UrlSpans are applied to the link text match
-     * areas, and the movement method for the text is changed to
-     * LinkMovementMethod.
-     *
-     * @param highlightOption
-     * @param listener
      */
     private void addLinks(final SpannableString string, final long accountId, final long extraId, final int type,
                           final boolean sensitive, final OnLinkClickListener listener, final int highlightOption) {
@@ -294,7 +258,7 @@ public final class TwidereLinkify implements Constants {
             final String list = matcherGroup(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST);
             applyLink(username, start, username_end, spannable, accountId, extraId, LINK_TYPE_MENTION,
                     false, highlightOption, listener);
-            if (listStart >= 0 && listEnd >= 0) {
+            if (listStart >= 0 && listEnd >= 0 && list != null) {
                 applyLink(String.format("%s/%s", username, list.substring(list.startsWith("/") ? 1 : 0)), listStart,
                         listEnd, spannable, accountId, extraId, LINK_TYPE_LIST, false, highlightOption, listener);
             }

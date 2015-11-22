@@ -107,7 +107,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         mNavigationHelper = new RecyclerViewNavigationHelper(getRecyclerView(), getLayoutManager(),
                 adapter, this);
         final View view = getView();
-        if (view == null) throw new AssertionError();
+        assert view != null;
         adapter.setListener(this);
         getLoaderManager().initLoader(0, getArguments(), this);
         showProgress();

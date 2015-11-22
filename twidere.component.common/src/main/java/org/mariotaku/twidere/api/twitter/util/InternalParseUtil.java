@@ -31,7 +31,7 @@ public final class InternalParseUtil {
 
     private InternalParseUtil() {
         // should never be instantiated
-        throw new AssertionError();
+        throw new AssertionError("This class should never be instantiated");
     }
 
     public static int toAccessLevel(final RestHttpResponse res) {

@@ -451,7 +451,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             } else {
                 te = TwitterConverter.parseTwitterException(response);
             }
-            te.setResponse(response);
+            te.setHttpResponse(response);
             return te;
         }
     }

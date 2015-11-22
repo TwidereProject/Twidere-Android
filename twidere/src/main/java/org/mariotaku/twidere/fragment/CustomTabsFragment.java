@@ -64,7 +64,6 @@ import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
@@ -117,7 +116,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         setHasOptionsMenu(true);
         mResolver = getContentResolver();
         final View view = getView();
-        if (view == null) throw new AssertionError();
+        assert view != null;
         final Context context = view.getContext();
         mAdapter = new CustomTabsAdapter(context);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);

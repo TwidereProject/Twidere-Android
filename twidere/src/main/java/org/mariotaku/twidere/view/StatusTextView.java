@@ -3,6 +3,8 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -42,6 +44,11 @@ public class StatusTextView extends ThemedTextView {
     private void init() {
         setEditableFactory(new SafeEditableFactory());
         setSpannableFactory(new SafeSpannableFactory());
+    }
+
+    @Override
+    protected MovementMethod getDefaultMovementMethod() {
+        return LinkMovementMethod.getInstance();
     }
 
     private class SafeEditableFactory extends Editable.Factory {

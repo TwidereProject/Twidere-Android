@@ -36,6 +36,12 @@ android {
     }
 }
 
+apt {
+    arguments {
+        jsonMapperLoaderSuffix '_component_common'
+    }
+}
+
 dependencies {
     apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'

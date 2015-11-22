@@ -232,7 +232,6 @@ import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
-import org.mariotaku.twidere.util.support.IntentSupport;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -3431,7 +3430,7 @@ public final class Utils implements Constants {
     public static void showErrorMessage(final Context context, final CharSequence action,
                                         final CharSequence message, final boolean longMessage) {
         if (context == null) return;
-        showErrorMessage(context, getErrorMessage(context, message), longMessage);
+        showErrorMessage(context, getErrorMessage(context, action, message), longMessage);
     }
 
     public static void showErrorMessage(final Context context, final CharSequence action,

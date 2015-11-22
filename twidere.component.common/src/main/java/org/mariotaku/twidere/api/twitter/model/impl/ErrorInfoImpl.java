@@ -44,4 +44,9 @@ public class ErrorInfoImpl implements ErrorInfo {
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public String getRequest() {
+        return null;
+    }
 }

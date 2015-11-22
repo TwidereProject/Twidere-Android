@@ -52,7 +52,7 @@ public abstract class UserStreamCallback implements RawCallback {
     public final void result(final RestHttpResponse response) throws IOException {
         if (!response.isSuccessful()) {
             final TwitterException cause = new TwitterException();
-            cause.setResponse(response);
+            cause.setHttpResponse(response);
             onException(cause);
             return;
         }

@@ -411,7 +411,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         super.onActivityCreated(savedInstanceState);
         mResolver = getContentResolver();
         final View view = getView();
-        if (view == null) throw new AssertionError();
+        assert view != null;
         final Context context = view.getContext();
         final TwidereApplication application = TwidereApplication.getInstance(context);
         mListView.setItemsCanFocus(true);
