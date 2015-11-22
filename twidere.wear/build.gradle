@@ -19,9 +19,6 @@
 
 apply plugin: 'com.android.application'
 
-apply from: rootProject.file('global.gradle')
-apply from: rootProject.file('signing.gradle')
-
 android {
     defaultConfig {
         applicationId "org.mariotaku.twidere"
@@ -42,5 +39,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.android.support:wearable:1.3.0'
-    compile 'com.google.android.gms:play-services-wearable:8.1.0'
+    compile 'com.google.android.gms:play-services-wearable:8.3.0'
 }

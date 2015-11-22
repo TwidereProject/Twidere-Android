@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'androidsvgdrawable'
-apply from: rootProject.file('global.gradle')
-apply from: rootProject.file('signing.gradle')
 
 android {
 
@@ -34,6 +32,8 @@ android {
             versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
         }
         release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd")
             versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
         }

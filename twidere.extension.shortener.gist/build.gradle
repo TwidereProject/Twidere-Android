@@ -19,8 +19,6 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-apply from: rootProject.file('global.gradle')
-apply from: rootProject.file('signing.gradle')
 
 android {
 

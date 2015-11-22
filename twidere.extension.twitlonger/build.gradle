@@ -18,14 +18,12 @@
  */
 
 apply plugin: 'com.android.application'
-apply from: rootProject.file('global.gradle')
-apply from: rootProject.file('signing.gradle')
 
 android {
     defaultConfig {
         applicationId "org.mariotaku.extension.twitlonger"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 6
         versionName "1.5"
     }

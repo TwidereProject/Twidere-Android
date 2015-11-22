@@ -60,7 +60,7 @@
                 android:background="@null"
                 android:gravity="top"
                 android:hint="@string/status_hint"
-                android:inputType="textMultiLine|textShortMessage"
+                android:inputType="textMultiLine|textLongMessage"
                 android:minLines="6"
                 android:padding="@dimen/element_spacing_normal"
                 android:scrollbars="vertical"

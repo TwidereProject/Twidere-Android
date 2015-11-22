@@ -26,3 +26,101 @@ allprojects {
     }
 
 }
+
+subprojects {
+
+    plugins.withId('com.android.library') {
+        android {
+            compileSdkVersion 23
+            buildToolsVersion '23.0.1'
+
+            lintOptions {
+                abortOnError false
+                lintConfig rootProject.file('lint.xml')
+            }
+
+            packagingOptions {
+                exclude 'META-INF/DEPENDENCIES'
+                exclude 'META-INF/LICENSE'
+                exclude 'META-INF/LICENSE.txt'
+                exclude 'META-INF/license.txt'
+                exclude 'META-INF/NOTICE'
+                exclude 'META-INF/NOTICE.txt'
+                exclude 'META-INF/notice.txt'
+                exclude 'META-INF/ASL2.0'
+            }
+        }
+    }
+
+    plugins.withId('com.android.application') {
+
+        android {
+            compileSdkVersion 23
+            buildToolsVersion '23.0.1'
+
+            lintOptions {
+                abortOnError false
+                lintConfig rootProject.file('lint.xml')
+            }
+
+            signingConfigs {
+                debug {
+                    File signingPropFile = rootProject.file('signing.properties')
+                    if (signingPropFile.exists()) {
+                        Properties signingProp = new Properties()
+                        signingProp.load(signingPropFile.newDataInputStream())
+                        storeFile file(signingProp.get("debug.storeFile"))
+                        storePassword signingProp.get("debug.storePassword")
+                        keyAlias signingProp.get("debug.keyAlias")
+                        keyPassword signingProp.get("debug.keyPassword")
+                    } else if (System.getenv('DEBUG_KEYSTORE_BASE64') != null) {
+                        storeFile decodeKeyStoreFileFromBase64Env('DEBUG_KEYSTORE_BASE64')
+                        storePassword System.getenv('DEBUG_KEYSTORE_PASSWORD')
+                        keyAlias System.getenv('DEBUG_KEYSTORE_KEY_ALIAS')
+                        keyPassword System.getenv('DEBUG_KEYSTORE_KEY_PASSWORD')
+                    }
+                }
+                release {
+                    File signingPropFile = rootProject.file('signing.properties')
+                    if (signingPropFile.exists()) {
+                        Properties signingProp = new Properties()
+                        signingProp.load(signingPropFile.newDataInputStream())
+                        storeFile file(signingProp.get("release.storeFile"))
+                        storePassword signingProp.get("release.storePassword")
+                        keyAlias signingProp.get("release.keyAlias")
+                        keyPassword signingProp.get("release.keyPassword")
+                    } else if (System.getenv('RELEASE_KEYSTORE_BASE64') != null) {
+                        storeFile decodeKeyStoreFileFromBase64Env('RELEASE_KEYSTORE_BASE64')
+                        storePassword System.getenv('RELEASE_KEYSTORE_PASSWORD')
+                        keyAlias System.getenv('RELEASE_KEYSTORE_KEY_ALIAS')
+                        keyPassword System.getenv('RELEASE_KEYSTORE_KEY_PASSWORD')
+                    }
+                }
+            }
+            buildTypes {
+                debug {
+                    if (rootProject.file('signing.properties').exists()
+                            || System.getenv('DEBUG_KEYSTORE_BASE64') != null) {
+                        signingConfig signingConfigs.debug
+                    }
+                }
+                release {
+                    if (rootProject.file('signing.properties').exists()
+                            || System.getenv('RELEASE_KEYSTORE_BASE64') != null) {
+                        signingConfig signingConfigs.release
+                    }
+                }
+            }
+            packagingOptions {
+                exclude 'META-INF/DEPENDENCIES'
+                exclude 'META-INF/LICENSE'
+                exclude 'META-INF/LICENSE.txt'
+                exclude 'META-INF/license.txt'
+                exclude 'META-INF/NOTICE'
+                exclude 'META-INF/NOTICE.txt'
+                exclude 'META-INF/notice.txt'
+                exclude 'META-INF/ASL2.0'
+            }
+        }
+    }
+}
