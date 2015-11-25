@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -10,9 +11,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import com.squareup.okhttp.Dns;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.internal.Internal;
-import com.squareup.okhttp.internal.Network;
 
 import org.mariotaku.restfu.ExceptionFactory;
 import org.mariotaku.restfu.HttpRequestFactory;
@@ -103,22 +103,23 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     public static RestHttpClient getDefaultHttpClient(final Context context) {
-        return getDefaultHttpClient(context, ApplicationModule.get(context).getNetwork());
+        return getDefaultHttpClient(context, ApplicationModule.get(context).getDns());
     }
 
-    public static RestHttpClient getDefaultHttpClient(final Context context, final Network network) {
-        if (context == null || network == null) return null;
+    public static RestHttpClient getDefaultHttpClient(final Context context, final Dns dns) {
+        if (context == null || dns == null) return null;
         final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return createHttpClient(context, network, prefs);
+        return createHttpClient(context, dns, prefs);
     }
 
-    public static RestHttpClient createHttpClient(final Context context, final Network network, final SharedPreferences prefs) {
+    public static RestHttpClient createHttpClient(final Context context, final Dns dns, final SharedPreferences prefs) {
         final OkHttpClient client = new OkHttpClient();
         updateHttpClientConfiguration(prefs, client);
-        Internal.instance.setNetwork(client, network);
+        client.setDns(dns);
         return new OkHttpRestClient(client);
     }
 
+    @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
     public static void updateHttpClientConfiguration(final SharedPreferences prefs, final OkHttpClient client) {
         final int connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
         final boolean ignoreSslError = prefs.getBoolean(KEY_IGNORE_SSL_ERROR, false);
@@ -128,6 +129,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         final long connectionTimeoutMillis = TimeUnit.MILLISECONDS.convert(connectionTimeout, TimeUnit.SECONDS);
         final SSLSocketFactory sslSocketFactory;
         if (ignoreSslError) {
+            // We intentionally use insecure connections
             sslSocketFactory = SSLCertificateSocketFactory.getInsecure((int) connectionTimeoutMillis, null);
             if (sslSocketFactory instanceof SSLCertificateSocketFactory) {
 

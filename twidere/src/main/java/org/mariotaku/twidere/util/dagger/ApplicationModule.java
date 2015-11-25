@@ -27,8 +27,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
+import com.squareup.okhttp.Dns;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.internal.Network;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
@@ -51,7 +51,7 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
-import org.mariotaku.twidere.util.net.TwidereNetwork;
+import org.mariotaku.twidere.util.net.TwidereDns;
 
 import dagger.Module;
 import dagger.Provides;
@@ -73,7 +73,7 @@ public class ApplicationModule {
     private final MediaLoaderWrapper mediaLoaderWrapper;
     private final TwidereImageDownloader imageDownloader;
     private final AsyncTaskManager asyncTaskManager;
-    private final Network network;
+    private final Dns dns;
     private final RestHttpClient restHttpClient;
     private final Bus bus;
     private final MultiSelectManager multiSelectManager;
@@ -97,12 +97,12 @@ public class ApplicationModule {
         bus = new Bus(ThreadEnforcer.MAIN);
         asyncTaskManager = AsyncTaskManager.getInstance();
         readStateManager = new ReadStateManager(application);
-        network = new TwidereNetwork(application);
+        dns = new TwidereDns(application);
         notificationManagerWrapper = new NotificationManagerWrapper(application);
 
 
         asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager, sharedPreferences, bus);
-        restHttpClient = TwitterAPIFactory.getDefaultHttpClient(application, network);
+        restHttpClient = TwitterAPIFactory.getDefaultHttpClient(application, dns);
         imageDownloader = new TwidereImageDownloader(application, restHttpClient, true);
         imageLoader = createImageLoader(application, imageDownloader);
         videoLoader = new VideoLoader(application, restHttpClient, asyncTaskManager, bus);
@@ -207,8 +207,8 @@ public class ApplicationModule {
     }
 
     @Provides
-    public Network getNetwork() {
-        return network;
+    public Dns getDns() {
+        return dns;
     }
 
 

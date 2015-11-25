@@ -181,7 +181,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             }
             return data;
         } catch (AttoParseException e) {
-            throw new LoginVerificationException();
+            throw new LoginVerificationException("Login verification challenge failed", e);
         } finally {
             Utils.closeSilently(response);
         }
@@ -195,15 +195,14 @@ public class OAuthPasswordAuthenticator implements Constants {
             @Override
             public void handleHtmlStandaloneElement(IHtmlElement element, boolean minimized,
                                                     String elementName, Map<String, String> attributes,
-                                                    int line, int col) throws AttoParseException {
+                                                    int line, int col) {
                 handleHtmlOpenElement(element, elementName, attributes, line, col);
                 handleHtmlCloseElement(element, elementName, line, col);
             }
 
             @Override
             public void handleHtmlOpenElement(IHtmlElement element, String elementName,
-                                              Map<String, String> attributes, int line, int col)
-                    throws AttoParseException {
+                                              Map<String, String> attributes, int line, int col) {
                 switch (elementName) {
                     case "form": {
                         if (attributes != null && "oauth_form".equals(attributes.get("id"))) {
@@ -228,7 +227,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             }
 
             @Override
-            public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) throws AttoParseException {
+            public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) {
                 if ("form".equals(elementName)) {
                     isOAuthFormOpened = false;
                 }
@@ -271,13 +270,13 @@ public class OAuthPasswordAuthenticator implements Constants {
                 @Override
                 public void handleHtmlStandaloneElement(IHtmlElement element, boolean minimized,
                                                         String elementName, Map<String, String> attributes,
-                                                        int line, int col) throws AttoParseException {
+                                                        int line, int col) {
                     handleHtmlOpenElement(element, elementName, attributes, line, col);
                     handleHtmlCloseElement(element, elementName, line, col);
                 }
 
                 @Override
-                public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) throws AttoParseException {
+                public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) {
                     switch (elementName) {
                         case "div": {
                             isOAuthPinDivOpened = false;
@@ -292,8 +291,7 @@ public class OAuthPasswordAuthenticator implements Constants {
 
                 @Override
                 public void handleHtmlOpenElement(IHtmlElement element, String elementName,
-                                                  Map<String, String> attributes, int line, int col)
-                        throws AttoParseException {
+                                                  Map<String, String> attributes, int line, int col) {
                     switch (elementName) {
                         case "div": {
                             if (attributes != null && "oauth_pin".equals(attributes.get("id"))) {
@@ -368,7 +366,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             PARSER.parse(BaseTypedData.reader(response.getBody()), handler);
             return data;
         } catch (AttoParseException e) {
-            throw new AuthenticationException(e);
+            throw new AuthenticationException("Malformed HTML", e);
         } finally {
             Utils.closeSilently(response);
         }
@@ -397,7 +395,7 @@ public class OAuthPasswordAuthenticator implements Constants {
             }
             return data;
         } catch (AttoParseException e) {
-            throw new AuthenticationException(e);
+            throw new AuthenticationException("Malformed HTML", e);
         } finally {
             Utils.closeSilently(response);
         }
@@ -411,13 +409,13 @@ public class OAuthPasswordAuthenticator implements Constants {
             @Override
             public void handleHtmlStandaloneElement(IHtmlElement element, boolean minimized,
                                                     String elementName, Map<String, String> attributes,
-                                                    int line, int col) throws AttoParseException {
+                                                    int line, int col) {
                 handleHtmlOpenElement(element, elementName, attributes, line, col);
                 handleHtmlCloseElement(element, elementName, line, col);
             }
 
             @Override
-            public void handleHtmlOpenElement(IHtmlElement element, String elementName, Map<String, String> attributes, int line, int col) throws AttoParseException {
+            public void handleHtmlOpenElement(IHtmlElement element, String elementName, Map<String, String> attributes, int line, int col) {
                 switch (elementName) {
                     case "div": {
                         if (attributes != null && "oauth_pin".equals(attributes.get("id"))) {
@@ -429,14 +427,14 @@ public class OAuthPasswordAuthenticator implements Constants {
             }
 
             @Override
-            public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) throws AttoParseException {
+            public void handleHtmlCloseElement(IHtmlElement element, String elementName, int line, int col) {
                 if ("div".equals(elementName)) {
                     isOAuthPinDivOpened = false;
                 }
             }
 
             @Override
-            public void handleText(char[] buffer, int offset, int len, int line, int col) throws AttoParseException {
+            public void handleText(char[] buffer, int offset, int len, int line, int col) {
                 if (isOAuthPinDivOpened) {
                     final String s = new String(buffer, offset, len);
                     if (TextUtils.isDigitsOnly(s)) {
@@ -461,6 +459,10 @@ public class OAuthPasswordAuthenticator implements Constants {
             super(cause);
         }
 
+        AuthenticationException(String detailMessage, Throwable throwable) {
+            super(detailMessage, throwable);
+        }
+
         AuthenticationException(final String message) {
             super(message);
         }
@@ -474,13 +476,39 @@ public class OAuthPasswordAuthenticator implements Constants {
     }
 
     public static final class WrongUserPassException extends AuthenticationException {
+        WrongUserPassException() {
+            super();
+        }
 
+        WrongUserPassException(Exception cause) {
+            super(cause);
+        }
 
+        WrongUserPassException(String detailMessage, Throwable throwable) {
+            super(detailMessage, throwable);
+        }
+
+        WrongUserPassException(String message) {
+            super(message);
+        }
     }
 
     public static final class LoginVerificationException extends AuthenticationException {
+        LoginVerificationException(String message) {
+            super(message);
+        }
 
+        LoginVerificationException(String detailMessage, Throwable throwable) {
+            super(detailMessage, throwable);
+        }
 
+        LoginVerificationException(Exception cause) {
+            super(cause);
+        }
+
+        LoginVerificationException() {
+            super();
+        }
     }
 
     static class AuthorizeResponseData {

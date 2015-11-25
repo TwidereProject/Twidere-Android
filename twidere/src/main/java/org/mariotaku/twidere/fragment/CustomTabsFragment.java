@@ -103,6 +103,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
                 final long[] itemIds = mListView.getCheckedItemIds();
                 final Expression where = Expression.in(new Column(Tabs._ID), new RawItemArray(itemIds));
                 mResolver.delete(Tabs.CONTENT_URI, where.getSQL(), null);
+                SettingsActivity.setShouldNotifyChange(getActivity());
                 break;
             }
         }

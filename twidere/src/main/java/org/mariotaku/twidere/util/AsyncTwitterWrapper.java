@@ -257,7 +257,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroySavedSearchAsync(final long accountId, final int searchId) {
+    public int destroySavedSearchAsync(final long accountId, final long searchId) {
         final DestroySavedSearchTask task = new DestroySavedSearchTask(accountId, searchId);
         return mAsyncTaskManager.add(task, true);
     }
@@ -1672,9 +1672,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class DestroySavedSearchTask extends ManagedAsyncTask<Object, Object, SingleResponse<SavedSearch>> {
 
         private final long mAccountId;
-        private final int mSearchId;
+        private final long mSearchId;
 
-        DestroySavedSearchTask(final long accountId, final int searchId) {
+        DestroySavedSearchTask(final long accountId, final long searchId) {
             super(mContext);
             mAccountId = accountId;
             mSearchId = searchId;

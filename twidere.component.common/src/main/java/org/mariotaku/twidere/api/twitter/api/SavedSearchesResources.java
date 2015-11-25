@@ -38,11 +38,11 @@ public interface SavedSearchesResources {
 
     @POST("/saved_searches/destroy/{id}.json")
     @Body(BodyType.FORM)
-    SavedSearch destroySavedSearch(@Path("id") int id) throws TwitterException;
+    SavedSearch destroySavedSearch(@Path("id") long id) throws TwitterException;
 
     @GET("/saved_searches/list.json")
     ResponseList<SavedSearch> getSavedSearches() throws TwitterException;
 
     @POST("/saved_searches/show/{id}.json")
-    SavedSearch showSavedSearch(@Path("id") int id) throws TwitterException;
+    SavedSearch showSavedSearch(@Path("id") long id) throws TwitterException;
 }

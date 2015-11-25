@@ -24,11 +24,10 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
 import java.util.Date;
-
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 
 /**
  * Created by mariotaku on 15/5/7.
@@ -37,7 +36,7 @@ import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 public class SavedSearchImpl extends TwitterResponseImpl implements SavedSearch {
 
     @Override
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -62,7 +61,7 @@ public class SavedSearchImpl extends TwitterResponseImpl implements SavedSearch 
     }
 
     @JsonField(name = "id")
-    int id;
+    long id;
 
     @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
@@ -78,7 +77,7 @@ public class SavedSearchImpl extends TwitterResponseImpl implements SavedSearch 
 
     @Override
     public int compareTo(@NonNull SavedSearch another) {
-        return id - another.getId();
+        return (int) (id - another.getId());
     }
 
 }

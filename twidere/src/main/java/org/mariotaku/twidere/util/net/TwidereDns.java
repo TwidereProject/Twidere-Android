@@ -25,11 +25,10 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.LruCache;
 
-import com.squareup.okhttp.internal.Network;
+import com.squareup.okhttp.Dns;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.HostsFileParser;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.xbill.DNS.AAAARecord;
 import org.xbill.DNS.ARecord;
@@ -43,33 +42,33 @@ import org.xbill.DNS.SimpleResolver;
 import org.xbill.DNS.Type;
 
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-public class TwidereNetwork implements Constants, Network {
+public class TwidereDns implements Constants, Dns {
 
     private static final String RESOLVER_LOGTAG = "Twidere.Host";
 
     private static final String DEFAULT_DNS_SERVER_ADDRESS = "8.8.8.8";
 
     private final SharedPreferences mHostMapping, mPreferences;
-    private final HostsFileParser mSystemHosts = new HostsFileParser();
     private final LruCache<String, InetAddress[]> mHostCache = new LruCache<>(512);
     private final String mDnsAddress;
+    private final SystemHosts mResolver;
 
     private Resolver mDns;
 
-    public TwidereNetwork(final Context context) {
+    public TwidereDns(final Context context) {
         mHostMapping = SharedPreferencesWrapper.getInstance(context, HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String address = mPreferences.getString(KEY_DNS_SERVER, DEFAULT_DNS_SERVER_ADDRESS);
         mDnsAddress = isValidIpAddress(address) ? address : DEFAULT_DNS_SERVER_ADDRESS;
+        mResolver = new SystemHosts();
     }
 
     @SuppressWarnings("unused")
@@ -80,6 +79,12 @@ public class TwidereNetwork implements Constants, Network {
 
     @NonNull
     private InetAddress[] resolveInternal(String originalHost, String host) throws IOException {
+        try {
+            Log.d(LOGTAG, "Test Resolved " + Arrays.toString(mResolver.resolve("localhost")));
+            Log.d(LOGTAG, "Test Resolved " + Arrays.toString(mResolver.resolve("ip6-localhost")));
+        } catch (IOException e) {
+            // Ignore
+        }
         if (isValidIpAddress(host)) return fromAddressString(originalHost, host);
         // First, I'll try to load address cached.
         final InetAddress[] cachedHostAddr = mHostCache.get(host);
@@ -102,14 +107,15 @@ public class TwidereNetwork implements Constants, Network {
                 return hostAddr;
             }
         }
-        mSystemHosts.reloadIfNeeded();
-        if (mSystemHosts.contains(host)) {
-            final InetAddress[] hostAddr = fromAddressString(originalHost, mSystemHosts.getAddress(host));
+        try {
+            final InetAddress[] hostAddr = mResolver.resolve(host);
             mHostCache.put(originalHost, hostAddr);
             if (BuildConfig.DEBUG) {
                 Log.d(RESOLVER_LOGTAG, "Got hosts " + Arrays.toString(hostAddr));
             }
             return hostAddr;
+        } catch (UnknownHostException e) {
+            // Ignore
         }
         final String customMappedHost = findHost(host);
         if (customMappedHost != null) {
@@ -167,13 +173,7 @@ public class TwidereNetwork implements Constants, Network {
     }
 
     private InetAddress[] fromAddressString(String host, String address) throws UnknownHostException {
-        InetAddress inetAddress = InetAddress.getByName(address);
-        if (inetAddress instanceof Inet4Address) {
-            return new InetAddress[]{Inet4Address.getByAddress(host, inetAddress.getAddress())};
-        } else if (inetAddress instanceof Inet6Address) {
-            return new InetAddress[]{Inet6Address.getByAddress(host, inetAddress.getAddress())};
-        }
-        throw new UnknownHostException("Bad address " + host + " = " + address);
+        return new InetAddress[]{InetAddressUtils.getResolvedIPAddress(host, address)};
     }
 
     private String findHost(final String host) {
@@ -201,9 +201,9 @@ public class TwidereNetwork implements Constants, Network {
     }
 
     @Override
-    public InetAddress[] resolveInetAddresses(String host) throws UnknownHostException {
+    public List<InetAddress> lookup(String hostname) throws UnknownHostException {
         try {
-            return resolveInternal(host, host);
+            return Arrays.asList(resolveInternal(hostname, hostname));
         } catch (IOException e) {
             if (e instanceof UnknownHostException) throw (UnknownHostException) e;
             throw new UnknownHostException("Unable to resolve address " + e.getMessage());

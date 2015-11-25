@@ -26,9 +26,10 @@
  */
 package org.mariotaku.twidere.util.net;
 
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.UnknownHostException;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.net.InetAddress;
 
 /**
  * A collection of utilities relating to InetAddresses.
@@ -36,6 +37,11 @@ import java.net.UnknownHostException;
  * @since 4.0
  */
 public class InetAddressUtils {
+
+    static {
+        System.loadLibrary("twidere");
+    }
+
     private InetAddressUtils() {
     }
 
@@ -46,11 +52,7 @@ public class InetAddressUtils {
      * @return true if the input parameter is a valid IPv4 address
      */
     public static boolean isIPv4Address(final String input) {
-        try {
-            return Inet4Address.getByName(input) != null;
-        } catch (UnknownHostException ex) {
-            return false;
-        }
+        return getInetAddressType(input) == 2; // AF_INET4
     }
 
     /**
@@ -60,10 +62,10 @@ public class InetAddressUtils {
      * @return true if the input parameter is a valid standard or compressed IPv6 address
      */
     public static boolean isIPv6Address(final String input) {
-        try {
-            return Inet6Address.getByName(input) != null;
-        } catch (UnknownHostException ex) {
-            return false;
-        }
+        return getInetAddressType(input) == 10; // AF_INET6
     }
+
+    public native static int getInetAddressType(final String input);
+
+    public native static InetAddress getResolvedIPAddress(@Nullable final String host, @NonNull final String address);
 }

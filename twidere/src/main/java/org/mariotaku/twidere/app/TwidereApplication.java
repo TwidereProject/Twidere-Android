@@ -35,7 +35,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
-import com.squareup.okhttp.internal.Network;
+import com.squareup.okhttp.Dns;
 
 import org.acra.annotation.ReportsCrashes;
 import org.mariotaku.twidere.BuildConfig;
@@ -54,7 +54,7 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache;
 import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator;
-import org.mariotaku.twidere.util.net.TwidereNetwork;
+import org.mariotaku.twidere.util.net.TwidereDns;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,7 +77,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private SharedPreferences mPreferences;
     private DiskCache mDiskCache, mFullDiskCache;
     private SQLiteOpenHelper mSQLiteOpenHelper;
-    private Network mNetwork;
     private SQLiteDatabase mDatabase;
 
     private ApplicationModule mApplicationModule;
@@ -100,11 +99,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     public Handler getHandler() {
         return mHandler;
-    }
-
-    public Network getNetwork() {
-        if (mNetwork != null) return mNetwork;
-        return mNetwork = new TwidereNetwork(this);
     }
 
     public void initKeyboardShortcuts() {

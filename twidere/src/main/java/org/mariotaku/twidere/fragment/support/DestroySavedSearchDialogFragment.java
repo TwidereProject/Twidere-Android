@@ -41,7 +41,7 @@ public class DestroySavedSearchDialogFragment extends BaseSupportDialogFragment 
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 final long accountId = getAccountId();
-                final int searchId = getSearchId();
+                final long searchId = getSearchId();
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (searchId <= 0 || twitter == null) return;
                 twitter.destroySavedSearchAsync(accountId, searchId);
@@ -72,10 +72,10 @@ public class DestroySavedSearchDialogFragment extends BaseSupportDialogFragment 
         return args.getLong(EXTRA_ACCOUNT_ID);
     }
 
-    private int getSearchId() {
+    private long getSearchId() {
         final Bundle args = getArguments();
         if (!args.containsKey(EXTRA_SEARCH_ID)) return -1;
-        return args.getInt(EXTRA_SEARCH_ID);
+        return args.getLong(EXTRA_SEARCH_ID);
     }
 
     private String getSearchName() {
@@ -85,10 +85,10 @@ public class DestroySavedSearchDialogFragment extends BaseSupportDialogFragment 
     }
 
     public static DestroySavedSearchDialogFragment show(final FragmentManager fm, final long accountId,
-                                                        final int searchId, final String name) {
+                                                        final long searchId, final String name) {
         final Bundle args = new Bundle();
         args.putLong(EXTRA_ACCOUNT_ID, accountId);
-        args.putInt(EXTRA_SEARCH_ID, searchId);
+        args.putLong(EXTRA_SEARCH_ID, searchId);
         args.putString(EXTRA_NAME, name);
         final DestroySavedSearchDialogFragment f = new DestroySavedSearchDialogFragment();
         f.setArguments(args);

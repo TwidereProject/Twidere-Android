@@ -34,7 +34,7 @@ import java.util.Date;
 public interface SavedSearch extends Comparable<SavedSearch>, TwitterResponse {
 	Date getCreatedAt();
 
-	int getId();
+	long getId();
 
 	String getName();
 

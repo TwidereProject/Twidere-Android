@@ -85,7 +85,7 @@ public class TwitterConverter implements Converter {
         try {
             return LoganSquareWrapper.parseList(stream, elementCls);
         } catch (JsonParseException e) {
-            throw new TwitterException("Malformed JSON Data", resp);
+            throw new TwitterException("Malformed JSON Data", e, resp);
         }
     }
 
