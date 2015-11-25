@@ -79,12 +79,6 @@ public class TwidereDns implements Constants, Dns {
 
     @NonNull
     private InetAddress[] resolveInternal(String originalHost, String host) throws IOException {
-        try {
-            Log.d(LOGTAG, "Test Resolved " + Arrays.toString(mResolver.resolve("localhost")));
-            Log.d(LOGTAG, "Test Resolved " + Arrays.toString(mResolver.resolve("ip6-localhost")));
-        } catch (IOException e) {
-            // Ignore
-        }
         if (isValidIpAddress(host)) return fromAddressString(originalHost, host);
         // First, I'll try to load address cached.
         final InetAddress[] cachedHostAddr = mHostCache.get(host);
@@ -197,7 +191,7 @@ public class TwidereDns implements Constants, Dns {
     }
 
     private static boolean isValidIpAddress(final String address) {
-        return InetAddressUtils.isIPv4Address(address) || InetAddressUtils.isIPv6Address(address);
+        return InetAddressUtils.getInetAddressType(address) != 0;
     }
 
     @Override

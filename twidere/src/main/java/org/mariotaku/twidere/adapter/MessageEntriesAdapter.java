@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +34,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ReadStateManager.OnReadStateChangeListener;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.MessageEntryViewHolder;
@@ -87,12 +83,6 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
         return mTextSize;
     }
 
-    @NonNull
-    @Override
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        return mTwitterWrapper;
-    }
-
     @Override
     public boolean isProfileImageEnabled() {
         return mDisplayProfileImage;
@@ -102,18 +92,6 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
         final Cursor c = mCursor;
         if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
         return new DirectMessageEntry(c);
-    }
-
-    @NonNull
-    @Override
-    public MediaLoaderWrapper getMediaLoader() {
-        return mMediaLoader;
-    }
-
-    @NonNull
-    @Override
-    public UserColorNameManager getUserColorNameManager() {
-        return mUserColorNameManager;
     }
 
     @Override

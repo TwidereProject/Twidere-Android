@@ -43,28 +43,13 @@ public class InetAddressUtils {
     }
 
     private InetAddressUtils() {
+        throw new AssertionError("Trying to instantiate this class");
     }
 
     /**
-     * Checks whether the parameter is a valid IPv4 address
-     *
-     * @param input the address string to check for validity
-     * @return true if the input parameter is a valid IPv4 address
+     * @param input IP address in string
+     * @return type corresponding to &lt;sys/socket.h&gt;
      */
-    public static boolean isIPv4Address(final String input) {
-        return getInetAddressType(input) == 2; // AF_INET4
-    }
-
-    /**
-     * Checks whether the parameter is a valid IPv6 address (including compressed).
-     *
-     * @param input the address string to check for validity
-     * @return true if the input parameter is a valid standard or compressed IPv6 address
-     */
-    public static boolean isIPv6Address(final String input) {
-        return getInetAddressType(input) == 10; // AF_INET6
-    }
-
     public native static int getInetAddressType(final String input);
 
     public native static InetAddress getResolvedIPAddress(@Nullable final String host, @NonNull final String address);

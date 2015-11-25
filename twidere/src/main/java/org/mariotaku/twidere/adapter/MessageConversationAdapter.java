@@ -34,7 +34,6 @@ import org.mariotaku.twidere.adapter.iface.IDirectMessagesAdapter;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -73,11 +72,6 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mIncomingMessageColor = ThemeUtils.getUserAccentColor(context);
         mOutgoingMessageColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
-    }
-
-    @Override
-    public MediaLoaderWrapper getMediaLoader() {
-        return mMediaLoader;
     }
 
     public MediaLoadingHandler getMediaLoadingHandler() {

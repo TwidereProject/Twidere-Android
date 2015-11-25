@@ -32,10 +32,6 @@
                 android:icon="@drawable/ic_action_gallery"
                 android:title="@string/add_image" />
             <item
-                android:id="@id/edit_media"
-                android:icon="@drawable/ic_action_edit"
-                android:title="@string/edit_media" />
-            <item
                 android:id="@id/toggle_sensitive"
                 android:checkable="true"
                 android:icon="@drawable/ic_action_warning"

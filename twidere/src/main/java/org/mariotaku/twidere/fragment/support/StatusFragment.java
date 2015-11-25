@@ -1262,21 +1262,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return mTextSize;
         }
 
-        @NonNull
-        @Override
-        public AsyncTwitterWrapper getTwitterWrapper() {
-            return mFragment.mTwitterWrapper;
-        }
-
         @Override
         public boolean isProfileImageEnabled() {
             return mDisplayProfileImage;
-        }
-
-        @NonNull
-        @Override
-        public MediaLoaderWrapper getMediaLoader() {
-            return mMediaLoader;
         }
 
         public StatusFragment getFragment() {
@@ -1388,12 +1376,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public MediaLoadingHandler getMediaLoadingHandler() {
             return mMediaLoadingHandler;
-        }
-
-        @NonNull
-        @Override
-        public UserColorNameManager getUserColorNameManager() {
-            return mUserColorNameManager;
         }
 
         public ParcelableStatus getStatus() {

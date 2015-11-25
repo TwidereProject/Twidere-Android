@@ -74,17 +74,6 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
         return mTextSize;
     }
 
-    @NonNull
-    @Override
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        return mTwitterWrapper;
-    }
-
-    @NonNull
-    @Override
-    public UserColorNameManager getUserColorNameManager() {
-        return mUserColorNameManager;
-    }
 
     @Override
     public boolean isProfileImageEnabled() {
@@ -175,12 +164,6 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
     @Override
     public boolean shouldShowAccountsColor() {
         return false;
-    }
-
-    @NonNull
-    @Override
-    public MediaLoaderWrapper getMediaLoader() {
-        return mMediaLoader;
     }
 
     protected abstract void bindUserList(UserListViewHolder holder, int position);

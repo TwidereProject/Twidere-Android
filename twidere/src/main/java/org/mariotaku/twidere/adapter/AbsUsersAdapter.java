@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -30,10 +29,7 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
@@ -69,18 +65,6 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     @Override
     public float getTextSize() {
         return mTextSize;
-    }
-
-    @NonNull
-    @Override
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        return mTwitterWrapper;
-    }
-
-    @NonNull
-    @Override
-    public UserColorNameManager getUserColorNameManager() {
-        return mUserColorNameManager;
     }
 
     @Override
@@ -167,12 +151,6 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     @Override
     public boolean shouldShowAccountsColor() {
         return false;
-    }
-
-    @NonNull
-    @Override
-    public MediaLoaderWrapper getMediaLoader() {
-        return mMediaLoader;
     }
 
     protected abstract void bindUser(UserViewHolder holder, int position);

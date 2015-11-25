@@ -90,11 +90,6 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         return mShowAccountsColor;
     }
 
-    @NonNull
-    @Override
-    public final MediaLoaderWrapper getMediaLoader() {
-        return mMediaLoader;
-    }
 
     @Override
     public final MediaLoadingHandler getMediaLoadingHandler() {
@@ -109,18 +104,6 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     @Override
     public final int getMediaPreviewStyle() {
         return mMediaPreviewStyle;
-    }
-
-    @NonNull
-    @Override
-    public final AsyncTwitterWrapper getTwitterWrapper() {
-        return mTwitterWrapper;
-    }
-
-    @NonNull
-    @Override
-    public UserColorNameManager getUserColorNameManager() {
-        return mUserColorNameManager;
     }
 
     @Override

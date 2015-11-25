@@ -31,21 +31,6 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <org.mariotaku.dynamicgridview.DynamicGridView
-            android:id="@+id/media_thumbnail_preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/edit_text_container"
-            android:layout_alignEnd="@+id/edit_text_container"
-            android:layout_alignLeft="@+id/edit_text_container"
-            android:layout_alignRight="@+id/edit_text_container"
-            android:layout_alignStart="@+id/edit_text_container"
-            android:layout_alignTop="@+id/edit_text_container"
-            android:alpha="0.2"
-            android:numColumns="@integer/grid_column_image_preview"
-            android:stretchMode="columnWidth"
-            tools:listitem="@layout/gallery_item_image_preview" />
-
         <LinearLayout
             android:id="@+id/edit_text_container"
             android:layout_width="match_parent"
@@ -65,6 +50,14 @@
                 android:padding="@dimen/element_spacing_normal"
                 android:scrollbars="vertical"
                 android:singleLine="false" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/attached_media_preview"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:layout_weight="0"
+                tools:listitem="@layout/grid_item_media_editor" />
+
 
             <LinearLayout
                 android:id="@+id/location_container"

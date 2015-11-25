@@ -21,7 +21,6 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
@@ -39,13 +38,10 @@ import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
@@ -99,12 +95,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     @Override
     public abstract void setData(Data data);
 
-    @NonNull
-    @Override
-    public MediaLoaderWrapper getMediaLoader() {
-        return mMediaLoader;
-    }
-
     @Override
     public MediaLoadingHandler getMediaLoadingHandler() {
         return mLoadingHandler;
@@ -118,12 +108,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     @Override
     public int getMediaPreviewStyle() {
         return mStatusAdapterDelegate.getMediaPreviewStyle();
-    }
-
-    @NonNull
-    @Override
-    public AsyncTwitterWrapper getTwitterWrapper() {
-        return mTwitterWrapper;
     }
 
     @Override
@@ -333,12 +317,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     @Override
     public void onLinkClick(String link, String orig, long accountId, long extraId, int type, boolean sensitive, int start, int end) {
 
-    }
-
-    @NonNull
-    @Override
-    public UserColorNameManager getUserColorNameManager() {
-        return mUserColorNameManager;
     }
 
     public void setListener(ActivityAdapterListener listener) {

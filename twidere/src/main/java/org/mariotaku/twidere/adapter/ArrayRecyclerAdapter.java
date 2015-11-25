@@ -1,6 +1,6 @@
 package org.mariotaku.twidere.adapter;
 
-import android.support.v7.widget.RecyclerView.Adapter;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 
 import java.util.ArrayList;
@@ -12,9 +12,13 @@ import java.util.List;
 /**
  * Created by mariotaku on 14/10/27.
  */
-public abstract class ArrayRecyclerAdapter<T, H extends ViewHolder> extends Adapter<H> {
+public abstract class ArrayRecyclerAdapter<T, H extends ViewHolder> extends BaseRecyclerViewAdapter<H> {
 
     protected final ArrayList<T> mData = new ArrayList<>();
+
+    public ArrayRecyclerAdapter(Context context) {
+        super(context);
+    }
 
     @Override
     public final void onBindViewHolder(H holder, int position) {

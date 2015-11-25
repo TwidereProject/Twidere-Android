@@ -2,6 +2,7 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -28,6 +29,8 @@ public class ParcelableMediaUpdate implements Parcelable {
         }
     };
 
+    @SuppressWarnings("NullableProblems")
+    @NonNull
     @JsonField(name = "uri")
     public String uri;
     @JsonField(name = "type")
@@ -41,7 +44,7 @@ public class ParcelableMediaUpdate implements Parcelable {
         type = in.readInt();
     }
 
-    public ParcelableMediaUpdate(final String uri, final int type) {
+    public ParcelableMediaUpdate(@NonNull final String uri, final int type) {
         this.uri = uri;
         this.type = type;
     }
@@ -60,6 +63,25 @@ public class ParcelableMediaUpdate implements Parcelable {
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(uri);
         dest.writeInt(type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableMediaUpdate that = (ParcelableMediaUpdate) o;
+
+        if (type != that.type) return false;
+        return uri.equals(that.uri);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uri.hashCode();
+        result = 31 * result + type;
+        return result;
     }
 
     @Deprecated

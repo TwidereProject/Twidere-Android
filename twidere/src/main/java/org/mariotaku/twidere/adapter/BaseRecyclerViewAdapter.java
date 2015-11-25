@@ -52,6 +52,7 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     protected UserColorNameManager mUserColorNameManager;
     @Inject
     protected SharedPreferencesWrapper mPreferences;
+
     public BaseRecyclerViewAdapter(Context context) {
         mContext = context;
         //noinspection unchecked
@@ -64,5 +65,29 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     @NonNull
     public final Context getContext() {
         return mContext;
+    }
+
+    public final SharedPreferencesWrapper getPreferences() {
+        return mPreferences;
+    }
+
+    public final UserColorNameManager getUserColorNameManager() {
+        return mUserColorNameManager;
+    }
+
+    public final MultiSelectManager getMultiSelectManager() {
+        return mMultiSelectManager;
+    }
+
+    public final MediaLoaderWrapper getMediaLoader() {
+        return mMediaLoader;
+    }
+
+    public final ReadStateManager getReadStateManager() {
+        return mReadStateManager;
+    }
+
+    public final AsyncTwitterWrapper getTwitterWrapper() {
+        return mTwitterWrapper;
     }
 }
