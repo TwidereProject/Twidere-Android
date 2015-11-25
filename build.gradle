@@ -1,3 +1,5 @@
+import com.android.builder.signing.DefaultSigningConfig;
+
 apply plugin: 'com.github.ben-manes.versions'
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -29,6 +31,7 @@ allprojects {
 
 subprojects {
     afterEvaluate { project ->
+
         if (project.hasProperty('android')) {
             android {
                 compileSdkVersion 23
@@ -49,61 +52,16 @@ subprojects {
                     exclude 'META-INF/notice.txt'
                     exclude 'META-INF/ASL2.0'
                 }
+
+//                if (android.hasProperty('buildTypes') && project.plugins.hasPlugin('com.android.application')) {
+//                    android.buildTypes.each { buildType ->
+//                        setSigningConfig(signingConfigs.maybeCreate(buildType.name))
+//                        loadSigningConfig(signingConfig, rootProject.file('signing.properties'))
+//                    }
+//                }
             }
         }
 
-        if (project.plugins.hasPlugin('com.android.application')) {
-            android {
-                signingConfigs {
-                    debug {
-                        File signingPropFile = rootProject.file('signing.properties')
-                        if (signingPropFile.exists()) {
-                            Properties signingProp = new Properties()
-                            signingProp.load(signingPropFile.newDataInputStream())
-                            storeFile file(signingProp.get("debug.storeFile"))
-                            storePassword signingProp.get("debug.storePassword")
-                            keyAlias signingProp.get("debug.keyAlias")
-                            keyPassword signingProp.get("debug.keyPassword")
-                        } else if (System.getenv('DEBUG_KEYSTORE_BASE64') != null) {
-                            storeFile decodeKeyStoreFileFromBase64Env('DEBUG_KEYSTORE_BASE64')
-                            storePassword System.getenv('DEBUG_KEYSTORE_PASSWORD')
-                            keyAlias System.getenv('DEBUG_KEYSTORE_KEY_ALIAS')
-                            keyPassword System.getenv('DEBUG_KEYSTORE_KEY_PASSWORD')
-                        }
-                    }
-                    release {
-                        File signingPropFile = rootProject.file('signing.properties')
-                        if (signingPropFile.exists()) {
-                            Properties signingProp = new Properties()
-                            signingProp.load(signingPropFile.newDataInputStream())
-                            storeFile file(signingProp.get("release.storeFile"))
-                            storePassword signingProp.get("release.storePassword")
-                            keyAlias signingProp.get("release.keyAlias")
-                            keyPassword signingProp.get("release.keyPassword")
-                        } else if (System.getenv('RELEASE_KEYSTORE_BASE64') != null) {
-                            storeFile decodeKeyStoreFileFromBase64Env('RELEASE_KEYSTORE_BASE64')
-                            storePassword System.getenv('RELEASE_KEYSTORE_PASSWORD')
-                            keyAlias System.getenv('RELEASE_KEYSTORE_KEY_ALIAS')
-                            keyPassword System.getenv('RELEASE_KEYSTORE_KEY_PASSWORD')
-                        }
-                    }
-                }
-                buildTypes {
-                    debug {
-                        if (rootProject.file('signing.properties').exists()
-                                || System.getenv('DEBUG_KEYSTORE_BASE64') != null) {
-                            signingConfig signingConfigs.debug
-                        }
-                    }
-                    release {
-                        if (rootProject.file('signing.properties').exists()
-                                || System.getenv('RELEASE_KEYSTORE_BASE64') != null) {
-                            signingConfig signingConfigs.release
-                        }
-                    }
-                }
-            }
-        }
 
     }
 
@@ -115,4 +73,13 @@ task clean(type: Delete) {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.9'
+}
+
+def loadSigningConfig(DefaultSigningConfig cfg, File file) {
+    Properties signingProp = new Properties()
+    signingProp.load(file.newDataInputStream())
+    cfg.setStoreFile(new File((String) signingProp.get('storeFile')))
+    cfg.setStorePassword((String) signingProp.get('storePassword'))
+    cfg.setKeyAlias((String) signingProp.get('keyAlias'))
+    cfg.setKeyPassword((String) signingProp.get('keyPassword'))
 }
