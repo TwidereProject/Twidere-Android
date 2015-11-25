@@ -22,6 +22,8 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
@@ -101,6 +103,5 @@ public abstract class ParcelableActivitiesFragment extends AbsActivitiesFragment
     }
 
     protected abstract String[] getSavedActivitiesFileArgs();
-
 
 }

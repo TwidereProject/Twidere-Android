@@ -53,8 +53,6 @@ import edu.tsinghua.hotmobi.model.MediaEvent;
 import edu.tsinghua.hotmobi.model.ScrollRecord;
 import edu.tsinghua.hotmobi.model.TimelineType;
 
-import static org.mariotaku.twidere.util.Utils.setMenuForStatus;
-
 /**
  * Created by mariotaku on 14/11/5.
  */
@@ -375,7 +373,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         popupMenu.setOnMenuItemClickListener(mOnStatusMenuItemClickListener);
         popupMenu.inflate(R.menu.action_status);
         final ParcelableStatus status = adapter.getStatus(position);
-        setMenuForStatus(adapter.getContext(), mPreferences, popupMenu.getMenu(), status);
+        Utils.setMenuForStatus(adapter.getContext(), mPreferences, popupMenu.getMenu(), status, mTwitterWrapper);
         popupMenu.show();
         mPopupMenu = popupMenu;
         mSelectedStatus = status;

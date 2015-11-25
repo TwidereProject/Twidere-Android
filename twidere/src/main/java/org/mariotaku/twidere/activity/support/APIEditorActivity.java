@@ -37,9 +37,9 @@ import android.widget.Toast;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
-import static org.mariotaku.twidere.util.ParseUtils.parseString;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 import static org.mariotaku.twidere.util.Utils.trim;
 
@@ -113,12 +113,12 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        final String apiUrlFormat = parseString(mEditAPIUrlFormat.getText());
+        final String apiUrlFormat = ParseUtils.parseString(mEditAPIUrlFormat.getText());
         final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
         final boolean sameOAuthSigningUrl = mEditSameOAuthSigningUrl.isChecked();
         final boolean noVersionSuffix = mEditNoVersionSuffix.isChecked();
-        final String consumerKey = parseString(mEditConsumerKey.getText());
-        final String consumerSecret = parseString(mEditConsumerSecret.getText());
+        final String consumerKey = ParseUtils.parseString(mEditConsumerKey.getText());
+        final String consumerSecret = ParseUtils.parseString(mEditConsumerSecret.getText());
         outState.putString(Accounts.API_URL_FORMAT, apiUrlFormat);
         outState.putInt(Accounts.AUTH_TYPE, authType);
         outState.putBoolean(Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl);
@@ -129,12 +129,12 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
     }
 
     public void saveAndFinish() {
-        final String apiUrlFormat = parseString(mEditAPIUrlFormat.getText());
+        final String apiUrlFormat = ParseUtils.parseString(mEditAPIUrlFormat.getText());
         final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
         final boolean sameOAuthSigningUrl = mEditSameOAuthSigningUrl.isChecked();
         final boolean noVersionSuffix = mEditNoVersionSuffix.isChecked();
-        final String consumerKey = parseString(mEditConsumerKey.getText());
-        final String consumerSecret = parseString(mEditConsumerSecret.getText());
+        final String consumerKey = ParseUtils.parseString(mEditConsumerKey.getText());
+        final String consumerSecret = ParseUtils.parseString(mEditConsumerSecret.getText());
         final Intent intent = new Intent();
         intent.putExtra(Accounts.API_URL_FORMAT, apiUrlFormat);
         intent.putExtra(Accounts.AUTH_TYPE, authType);

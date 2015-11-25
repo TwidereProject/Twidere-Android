@@ -573,6 +573,17 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
 
         @Override
+        public long getAccountId(int position) {
+            return 0;
+        }
+
+        @Nullable
+        @Override
+        public ParcelableStatus findStatusById(long accountId, long statusId) {
+            return null;
+        }
+
+        @Override
         public TwidereLinkify getTwidereLinkify() {
             return linkify;
         }

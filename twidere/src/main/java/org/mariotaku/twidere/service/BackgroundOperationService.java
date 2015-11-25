@@ -43,6 +43,7 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.mime.FileTypedData;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -79,7 +80,6 @@ import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ListUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.StatusCodeMessageUtils;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereValidator;
@@ -222,7 +222,8 @@ public class BackgroundOperationService extends IntentService implements Constan
         final Uri uri = intent.getData();
         if (uri == null) return;
         mNotificationManager.cancel(uri.toString(), NOTIFICATION_ID_DRAFTS);
-        final long draftId = ParseUtils.parseLong(uri.getLastPathSegment(), -1);
+        final long def = -1;
+        final long draftId = NumberUtils.toLong(uri.getLastPathSegment(), def);
         if (draftId == -1) return;
         final Expression where = Expression.equals(Drafts._ID, draftId);
         final ContentResolver cr = getContentResolver();
@@ -255,7 +256,8 @@ public class BackgroundOperationService extends IntentService implements Constan
         if (data == null) return;
         mNotificationManager.cancel(data.toString(), NOTIFICATION_ID_DRAFTS);
         final ContentResolver cr = getContentResolver();
-        final long id = ParseUtils.parseLong(data.getLastPathSegment(), -1);
+        final long def = -1;
+        final long id = NumberUtils.toLong(data.getLastPathSegment(), def);
         final Expression where = Expression.equals(Drafts._ID, id);
         cr.delete(Drafts.CONTENT_URI, where.getSQL(), null);
     }
@@ -325,7 +327,8 @@ public class BackgroundOperationService extends IntentService implements Constan
             final ContentValues draftValues = ContentValuesCreator.createStatusDraft(item,
                     ParcelableAccount.getAccountIds(item.accounts));
             final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, draftValues);
-            final long draftId = draftUri != null ? ParseUtils.parseLong(draftUri.getLastPathSegment(), -1) : -1;
+            final long def = -1;
+            final long draftId = draftUri != null ? NumberUtils.toLong(draftUri.getLastPathSegment(), def) : -1;
             mTwitter.addSendingDraftId(draftId);
             final List<SingleResponse<ParcelableStatus>> result = updateStatus(builder, item);
             boolean failed = false;

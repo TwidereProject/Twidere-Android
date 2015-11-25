@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
@@ -85,8 +86,8 @@ public class ParcelableLocation implements Parcelable {
             latitude = Double.NaN;
             longitude = Double.NaN;
         } else {
-            latitude = ParseUtils.parseDouble(longlat[0], Double.NaN);
-            longitude = ParseUtils.parseDouble(longlat[1], Double.NaN);
+            latitude = NumberUtils.toDouble(longlat[0], Double.NaN);
+            longitude = NumberUtils.toDouble(longlat[1], Double.NaN);
         }
     }
 

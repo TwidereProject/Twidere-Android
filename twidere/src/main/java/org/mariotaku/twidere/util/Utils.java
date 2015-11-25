@@ -115,6 +115,7 @@ import android.widget.Toast;
 import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestClient;
@@ -846,8 +847,8 @@ public final class Utils implements Constants {
             }
             case LINK_ID_MAP: {
                 if (!args.containsKey(EXTRA_LATITUDE) && !args.containsKey(EXTRA_LONGITUDE)) {
-                    final double lat = ParseUtils.parseDouble(uri.getQueryParameter(QUERY_PARAM_LAT), Double.NaN);
-                    final double lng = ParseUtils.parseDouble(uri.getQueryParameter(QUERY_PARAM_LNG), Double.NaN);
+                    final double lat = NumberUtils.toDouble(uri.getQueryParameter(QUERY_PARAM_LAT), Double.NaN);
+                    final double lng = NumberUtils.toDouble(uri.getQueryParameter(QUERY_PARAM_LNG), Double.NaN);
                     if (Double.isNaN(lat) || Double.isNaN(lng)) return null;
                     args.putDouble(EXTRA_LATITUDE, lat);
                     args.putDouble(EXTRA_LONGITUDE, lng);
@@ -859,7 +860,7 @@ public final class Utils implements Constants {
                 fragment = new StatusFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
                     final String param_status_id = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, ParseUtils.parseLong(param_status_id));
+                    args.putLong(EXTRA_STATUS_ID, NumberUtils.toLong(param_status_id, -1));
                 }
                 break;
             }
@@ -871,7 +872,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(param_user_id, -1));
                 }
                 break;
             }
@@ -883,7 +884,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 }
                 break;
             }
@@ -895,7 +896,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 }
                 if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
@@ -908,7 +909,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 }
                 if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
@@ -921,7 +922,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 }
                 if (!args.containsKey(EXTRA_SCREEN_NAME) && !args.containsKey(EXTRA_USER_ID))
                     return null;
@@ -935,7 +936,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(param_user_id, -1));
                 }
                 if (isEmpty(paramScreenName) && isEmpty(param_user_id)) return null;
                 break;
@@ -948,7 +949,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(param_user_id));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(param_user_id, -1));
                 }
                 if (isEmpty(paramScreenName) && isEmpty(param_user_id)) return null;
                 break;
@@ -969,7 +970,7 @@ public final class Utils implements Constants {
                 fragment = new MessagesConversationFragment();
                 final String paramRecipientId = uri.getQueryParameter(QUERY_PARAM_RECIPIENT_ID);
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final long conversationId = ParseUtils.parseLong(paramRecipientId);
+                final long conversationId = NumberUtils.toLong(paramRecipientId, -1);
                 if (conversationId > 0) {
                     args.putLong(EXTRA_RECIPIENT_ID, conversationId);
                 } else if (paramScreenName != null) {
@@ -986,8 +987,8 @@ public final class Utils implements Constants {
                 if (isEmpty(paramListId)
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putLong(EXTRA_LIST_ID, ParseUtils.parseLong(paramListId));
-                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                args.putLong(EXTRA_LIST_ID, NumberUtils.toLong(paramListId, -1));
+                args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -1000,7 +1001,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 }
                 if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
@@ -1014,8 +1015,8 @@ public final class Utils implements Constants {
                 if (isEmpty(paramListId)
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putLong(EXTRA_LIST_ID, ParseUtils.parseLong(paramListId));
-                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                args.putLong(EXTRA_LIST_ID, NumberUtils.toLong(paramListId, -1));
+                args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -1029,8 +1030,8 @@ public final class Utils implements Constants {
                 if (isEmpty(paramListId)
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putLong(EXTRA_LIST_ID, ParseUtils.parseLong(paramListId));
-                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                args.putLong(EXTRA_LIST_ID, NumberUtils.toLong(paramListId, -1));
+                args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -1044,8 +1045,8 @@ public final class Utils implements Constants {
                 if (isEmpty(paramListId)
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
-                args.putLong(EXTRA_LIST_ID, ParseUtils.parseLong(paramListId));
-                args.putLong(EXTRA_USER_ID, ParseUtils.parseLong(paramUserId));
+                args.putLong(EXTRA_LIST_ID, NumberUtils.toLong(paramListId, -1));
+                args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -1079,7 +1080,7 @@ public final class Utils implements Constants {
                 fragment = new StatusRetweetersListFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
                     final String paramStatusId = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, ParseUtils.parseLong(paramStatusId));
+                    args.putLong(EXTRA_STATUS_ID, NumberUtils.toLong(paramStatusId, -1));
                 }
                 break;
             }
@@ -1087,7 +1088,7 @@ public final class Utils implements Constants {
                 fragment = new StatusFavoritersListFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
                     final String paramStatusId = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, ParseUtils.parseLong(paramStatusId));
+                    args.putLong(EXTRA_STATUS_ID, NumberUtils.toLong(paramStatusId, -1));
                 }
                 break;
             }
@@ -1095,7 +1096,7 @@ public final class Utils implements Constants {
                 fragment = new StatusRepliesListFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
                     final String paramStatusId = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, ParseUtils.parseLong(paramStatusId));
+                    args.putLong(EXTRA_STATUS_ID, NumberUtils.toLong(paramStatusId, -1));
                 }
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
@@ -1120,7 +1121,7 @@ public final class Utils implements Constants {
         }
         final String paramAccountId = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID);
         if (paramAccountId != null) {
-            args.putLong(EXTRA_ACCOUNT_ID, ParseUtils.parseLong(paramAccountId));
+            args.putLong(EXTRA_ACCOUNT_ID, NumberUtils.toLong(paramAccountId, -1));
         } else {
             final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
             if (paramAccountName != null) {
@@ -1954,7 +1955,8 @@ public final class Utils implements Constants {
         final List<Long> list = new ArrayList<>();
         for (final Entry<String, ?> entry : manager.getNameEntries()) {
             final String value = ParseUtils.parseString(entry.getValue());
-            final long key = ParseUtils.parseLong(entry.getKey(), -1);
+            final long def = -1;
+            final long key = NumberUtils.toLong(entry.getKey(), def);
             if (key == -1 || isEmpty(value)) {
                 continue;
             }
@@ -3326,20 +3328,29 @@ public final class Utils implements Constants {
     }
 
     public static void setMenuForStatus(final Context context, final SharedPreferencesWrapper preferences,
-                                        final Menu menu, final ParcelableStatus status) {
+                                        final Menu menu, final ParcelableStatus status,
+                                        final AsyncTwitterWrapper twitter) {
         if (status == null) return;
         final ParcelableCredentials account = ParcelableAccount.getCredentials(context, status.account_id);
-        setMenuForStatus(context, preferences, menu, status, account);
+        setMenuForStatus(context, preferences, menu, status, account, twitter);
     }
 
     public static void setMenuForStatus(final Context context, final SharedPreferencesWrapper preferences,
-                                        final Menu menu, final ParcelableStatus status, final ParcelableCredentials account) {
+                                        final Menu menu, final ParcelableStatus status,
+                                        final ParcelableCredentials account, final AsyncTwitterWrapper twitter) {
         if (context == null || menu == null || status == null || account == null) return;
         final Resources resources = context.getResources();
         final int retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet);
         final int favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite);
         final int likeHighlight = ContextCompat.getColor(context, R.color.highlight_like);
-        final boolean isMyRetweet = isMyRetweet(status);
+        final boolean isMyRetweet;
+        if (twitter.isCreatingRetweet(status.account_id, status.id)) {
+            isMyRetweet = true;
+        } else if (twitter.isDestroyingStatus(status.account_id, status.id)) {
+            isMyRetweet = false;
+        } else {
+            isMyRetweet = isMyRetweet(status);
+        }
         final MenuItem delete = menu.findItem(R.id.delete);
         if (delete != null) {
             delete.setVisible(isMyStatus(status));
@@ -3351,6 +3362,14 @@ public final class Utils implements Constants {
         }
         final MenuItem favorite = menu.findItem(R.id.favorite);
         if (favorite != null) {
+            final boolean is_favorite;
+            if (twitter.isCreatingFavorite(status.account_id, status.id)) {
+                is_favorite = true;
+            } else if (twitter.isDestroyingFavorite(status.account_id, status.id)) {
+                is_favorite = false;
+            } else {
+                is_favorite = status.is_favorite;
+            }
             if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
                 final Drawable oldIcon = favorite.getIcon();
                 if (oldIcon instanceof ActionIconDrawable) {
@@ -3359,11 +3378,11 @@ public final class Utils implements Constants {
                 } else {
                     favorite.setIcon(R.drawable.ic_action_star);
                 }
-                ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, favoriteHighlight));
-                favorite.setTitle(status.is_favorite ? R.string.unfavorite : R.string.favorite);
+                ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(is_favorite, favoriteHighlight));
+                favorite.setTitle(is_favorite ? R.string.unfavorite : R.string.favorite);
             } else {
-                ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(status.is_favorite, likeHighlight));
-                favorite.setTitle(status.is_favorite ? R.string.undo_like : R.string.like);
+                ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(is_favorite, likeHighlight));
+                favorite.setTitle(is_favorite ? R.string.undo_like : R.string.like);
             }
         }
         final MenuItem translate = menu.findItem(R.id.translate);
@@ -3981,11 +4000,15 @@ public final class Utils implements Constants {
     public static void logOpenNotificationFromUri(Context context, Uri uri) {
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, false)) return;
         final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
-        final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
+        final long def3 = -1;
+        final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), def3);
 
-        final long itemId = ParseUtils.parseLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
-        final long itemUserId = ParseUtils.parseLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
-        final long timestamp = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
+        final long def2 = -1;
+        final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), def2);
+        final long def1 = -1;
+        final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), def1);
+        final long def = -1;
+        final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), def);
         if (!NotificationEvent.isSupported(type) || accountId < 0 || itemId < 0 || timestamp < 0)
             return;
         final ApplicationModule module = ApplicationModule.get(context);

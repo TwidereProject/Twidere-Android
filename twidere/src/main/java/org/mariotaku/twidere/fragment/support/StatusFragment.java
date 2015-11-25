@@ -72,6 +72,8 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
@@ -102,6 +104,7 @@ import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MenuUtils;
+import org.mariotaku.twidere.util.Nullables;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.StatusActionModeCallback;
@@ -113,6 +116,9 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
+import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
@@ -387,7 +393,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         popupMenu.setOnMenuItemClickListener(mOnStatusMenuItemClickListener);
         popupMenu.inflate(R.menu.action_status);
         final ParcelableStatus status = mStatusAdapter.getStatus(position);
-        Utils.setMenuForStatus(mStatusAdapter.getContext(), mPreferences, popupMenu.getMenu(), status);
+        Utils.setMenuForStatus(mStatusAdapter.getContext(), mPreferences, popupMenu.getMenu(), status,
+                mTwitterWrapper);
         popupMenu.show();
         mPopupMenu = popupMenu;
         mSelectedStatus = status;
@@ -640,6 +647,42 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mBus.unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void notifyStatusListChanged(StatusListChangedEvent event) {
+        final StatusAdapter adapter = getAdapter();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void notifyFavoriteCreated(FavoriteCreatedEvent event) {
+        final StatusAdapter adapter = getAdapter();
+        final ParcelableStatus status = adapter.findStatusById(event.status.account_id, event.status.id);
+        if (status != null) {
+            status.is_favorite = true;
+        }
+    }
+
+    @Subscribe
+    public void notifyFavoriteDestroyed(FavoriteDestroyedEvent event) {
+        final StatusAdapter adapter = getAdapter();
+        final ParcelableStatus status = adapter.findStatusById(event.status.account_id, event.status.id);
+        if (status != null) {
+            status.is_favorite = false;
+        }
+    }
+
     public static final class LoadSensitiveImageConfirmDialogFragment extends BaseSupportDialogFragment implements
             DialogInterface.OnClickListener {
 
@@ -756,7 +799,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private static class DetailStatusViewHolder extends ViewHolder implements OnClickListener,
             ActionMenuView.OnMenuItemClickListener {
 
-        private final StatusFragment fragment;
         private final StatusAdapter adapter;
 
         private final ActionMenuView menuBar;
@@ -786,9 +828,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final TwidereLinkify linkify;
         private final TextView favoritesLabel;
 
-        public DetailStatusViewHolder(StatusFragment fragment, StatusAdapter adapter, View itemView) {
+        public DetailStatusViewHolder(StatusAdapter adapter, View itemView) {
             super(itemView);
-            this.fragment = fragment;
             this.linkClickHandler = new StatusLinkClickHandler(adapter.getContext(), null);
             this.linkify = new TwidereLinkify(linkClickHandler);
             this.adapter = adapter;
@@ -825,7 +866,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             initViews();
         }
 
-        public void displayStatus(ParcelableStatus status) {
+        public void displayStatus(ParcelableStatus status, AsyncTwitterWrapper twitter) {
             if (status == null) return;
             final StatusFragment fragment = adapter.getFragment();
             final Context context = adapter.getContext();
@@ -979,8 +1020,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 twitterCard.setVisibility(View.GONE);
             }
 
+
             Utils.setMenuForStatus(context, fragment.mPreferences, menuBar.getMenu(), status,
-                    adapter.getStatusAccount());
+                    adapter.getStatusAccount(), twitter);
 
             textView.setTextIsSelectable(true);
             quotedTextView.setTextIsSelectable(true);
@@ -1276,7 +1318,26 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public long getStatusId(int position) {
             final ParcelableStatus status = getStatus(position);
-            return status != null ? status.hashCode() : position;
+            return status != null ? status.id : position;
+        }
+
+        @Override
+        public long getAccountId(int position) {
+            final ParcelableStatus status = getStatus(position);
+            return status != null ? status.account_id : position;
+        }
+
+        @Override
+        public ParcelableStatus findStatusById(long accountId, long statusId) {
+            if (mStatus != null && accountId == mStatus.account_id && statusId == mStatus.id)
+                return mStatus;
+            for (ParcelableStatus status : Nullables.list(mConversation)) {
+                if (accountId == status.account_id && status.id == statusId) return status;
+            }
+            for (ParcelableStatus status : Nullables.list(mReplies)) {
+                if (accountId == status.account_id && status.id == statusId) return status;
+            }
+            return null;
         }
 
         @Override
@@ -1412,7 +1473,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         final CardView cardView = (CardView) view.findViewById(R.id.card);
                         cardView.setCardBackgroundColor(mCardBackgroundColor);
                     }
-                    return new DetailStatusViewHolder(mFragment, this, view);
+                    return new DetailStatusViewHolder(this, view);
                 }
                 case VIEW_TYPE_LIST_STATUS: {
                     final View view = mInflater.inflate(mCardLayoutResource, parent, false);
@@ -1451,7 +1512,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 case VIEW_TYPE_DETAIL_STATUS: {
                     final ParcelableStatus status = getStatus(position);
                     final DetailStatusViewHolder detailHolder = (DetailStatusViewHolder) holder;
-                    detailHolder.displayStatus(status);
+                    detailHolder.displayStatus(status, mTwitterWrapper);
                     break;
                 }
                 case VIEW_TYPE_LIST_STATUS: {

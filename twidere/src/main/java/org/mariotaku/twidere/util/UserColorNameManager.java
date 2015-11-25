@@ -25,6 +25,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.support.v4.util.LongSparseArray;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -175,7 +176,8 @@ public class UserColorNameManager implements TwidereConstants {
 
         @Override
         public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-            final long userId = ParseUtils.parseLong(key, -1);
+            final long def = -1;
+            final long userId = NumberUtils.toLong(key, def);
             if (mListener != null) {
                 mListener.onUserColorChanged(userId, sharedPreferences.getInt(key, 0));
             }
@@ -193,7 +195,8 @@ public class UserColorNameManager implements TwidereConstants {
 
         @Override
         public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-            final long userId = ParseUtils.parseLong(key, -1);
+            final long def = -1;
+            final long userId = NumberUtils.toLong(key, def);
             if (mListener != null) {
                 mListener.onUserNicknameChanged(userId, sharedPreferences.getString(key, null));
             }

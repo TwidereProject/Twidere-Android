@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,11 +17,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.message;
+package org.mariotaku.twidere.util;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Created by mariotaku on 14/12/12.
+ * Created by mariotaku on 15/11/25.
  */
-public class StatusListChangedEvent {
+public class Nullables {
+
+    @NonNull
+    public static <T> List<T> list(@Nullable List<T> list) {
+        if (list == null) return Collections.emptyList();
+        return list;
+    }
 
 }

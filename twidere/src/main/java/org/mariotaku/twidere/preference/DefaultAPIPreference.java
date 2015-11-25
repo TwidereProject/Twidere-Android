@@ -40,9 +40,9 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.util.ParseUtils;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.ParseUtils.parseString;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 import static org.mariotaku.twidere.util.Utils.trim;
 
@@ -96,6 +96,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
 
     @Override
     protected void onBindDialogView(@NonNull final View view) {
+        super.onBindDialogView(view);
         final SharedPreferences pref = getSharedPreferences();
         final String apiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
         final int authType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_OAUTH);
@@ -131,12 +132,12 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
     @Override
     protected void onDialogClosed(final boolean positiveResult) {
         if (!positiveResult) return;
-        final String apiUrlFormat = parseString(mEditAPIUrlFormat.getText());
+        final String apiUrlFormat = ParseUtils.parseString(mEditAPIUrlFormat.getText());
         final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
         final boolean sameOAuthSigningUrl = mEditSameOAuthSigningUrl.isChecked();
         final boolean noVersionSuffix = mEditNoVersionSuffix.isChecked();
-        final String consumerKey = parseString(mEditConsumerKey.getText());
-        final String consumerSecret = parseString(mEditConsumerSecret.getText());
+        final String consumerKey = ParseUtils.parseString(mEditConsumerKey.getText());
+        final String consumerSecret = ParseUtils.parseString(mEditConsumerSecret.getText());
         final SharedPreferences.Editor editor = getSharedPreferences().edit();
         if (!isEmpty(consumerKey) && !isEmpty(consumerSecret)) {
             editor.putString(KEY_CONSUMER_KEY, consumerKey);
@@ -179,11 +180,11 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
     protected Parcelable onSaveInstanceState() {
         final Bundle outState = new Bundle();
         outState.putParcelable(EXTRA_DATA, super.onSaveInstanceState());
-        outState.putString(Accounts.API_URL_FORMAT, parseString(mEditAPIUrlFormat.getText()));
+        outState.putString(Accounts.API_URL_FORMAT, ParseUtils.parseString(mEditAPIUrlFormat.getText()));
         outState.putInt(Accounts.AUTH_TYPE, getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId()));
         outState.putBoolean(Accounts.SAME_OAUTH_SIGNING_URL, mEditSameOAuthSigningUrl.isChecked());
-        outState.putString(Accounts.CONSUMER_KEY, parseString(mEditConsumerKey.getText()));
-        outState.putString(Accounts.CONSUMER_SECRET, parseString(mEditConsumerSecret.getText()));
+        outState.putString(Accounts.CONSUMER_KEY, ParseUtils.parseString(mEditConsumerKey.getText()));
+        outState.putString(Accounts.CONSUMER_SECRET, ParseUtils.parseString(mEditConsumerSecret.getText()));
         return outState;
     }
 

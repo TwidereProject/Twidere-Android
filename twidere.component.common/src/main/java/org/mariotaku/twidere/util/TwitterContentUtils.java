@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
@@ -188,7 +189,8 @@ public class TwitterContentUtils {
             for (int i = entities.length - 1; i >= 0; i--) {
                 final Matcher m = PATTERN_TWITTER_STATUS_LINK.matcher(entities[i].getExpandedUrl());
                 if (!m.matches()) continue;
-                final long quoteId = ParseUtils.parseLong(m.group(3), -1);
+                final long def = -1;
+                final long quoteId = NumberUtils.toLong(m.group(3), def);
                 if (quoteId > 0) {
                     quotes.put(quoteId, status);
                 }

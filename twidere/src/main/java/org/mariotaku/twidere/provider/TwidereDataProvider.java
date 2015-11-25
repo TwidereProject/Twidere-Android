@@ -63,6 +63,7 @@ import com.squareup.okhttp.Dns;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.OnConflict;
@@ -400,11 +401,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 if (segments.size() == 1) {
                     clearNotification();
                 } else if (segments.size() == 2) {
-                    final int notificationType = ParseUtils.parseInt(segments.get(1));
+                    final int notificationType = NumberUtils.toInt(segments.get(1), -1);
                     clearNotification(notificationType, 0);
                 } else if (segments.size() == 3) {
-                    final int notificationType = ParseUtils.parseInt(segments.get(1));
-                    final long accountId = ParseUtils.parseLong(segments.get(2));
+                    final int notificationType = NumberUtils.toInt(segments.get(1), -1);
+                    final long accountId = NumberUtils.toLong(segments.get(2), -1);
                     clearNotification(notificationType, accountId);
                 }
                 return 1;
@@ -678,15 +679,19 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 }
                 case VIRTUAL_TABLE_ID_NOTIFICATIONS: {
                     final List<String> segments = uri.getPathSegments();
-                    if (segments.size() == 2)
-                        return getNotificationsCursor(ParseUtils.parseInt(segments.get(1), -1));
+                    if (segments.size() == 2) {
+                        final int def = -1;
+                        return getNotificationsCursor(NumberUtils.toInt(segments.get(1), def));
+                    }
                     else
                         return getNotificationsCursor();
                 }
                 case VIRTUAL_TABLE_ID_UNREAD_COUNTS: {
                     final List<String> segments = uri.getPathSegments();
-                    if (segments.size() == 2)
-                        return getUnreadCountsCursor(ParseUtils.parseInt(segments.get(1), -1));
+                    if (segments.size() == 2) {
+                        final int def = -1;
+                        return getUnreadCountsCursor(NumberUtils.toInt(segments.get(1), def));
+                    }
                     else
                         return getUnreadCountsCursor();
                 }
@@ -698,8 +703,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case TABLE_ID_DIRECT_MESSAGES_CONVERSATION: {
                     final List<String> segments = uri.getPathSegments();
                     if (segments.size() != 4) return null;
-                    final long accountId = ParseUtils.parseLong(segments.get(2));
-                    final long conversationId = ParseUtils.parseLong(segments.get(3));
+                    final long accountId = NumberUtils.toLong(segments.get(2), -1);
+                    final long conversationId = NumberUtils.toLong(segments.get(3), -1);
                     final SQLSelectQuery query = ConversationQueryBuilder.buildByConversationId(projection,
                             accountId, conversationId, selection, sortOrder);
                     final Cursor c = mDatabaseWrapper.rawQuery(query.getSQL(), selectionArgs);
@@ -709,7 +714,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case TABLE_ID_DIRECT_MESSAGES_CONVERSATION_SCREEN_NAME: {
                     final List<String> segments = uri.getPathSegments();
                     if (segments.size() != 4) return null;
-                    final long accountId = ParseUtils.parseLong(segments.get(2));
+                    final long accountId = NumberUtils.toLong(segments.get(2), -1);
                     final String screenName = segments.get(3);
                     final SQLSelectQuery query = ConversationQueryBuilder.buildByScreenName(projection,
                             accountId, screenName, selection, sortOrder);
@@ -718,7 +723,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return c;
                 }
                 case VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP: {
-                    final long accountId = ParseUtils.parseLong(uri.getLastPathSegment(), -1);
+                    final long def = -1;
+                    final long accountId = NumberUtils.toLong(uri.getLastPathSegment(), def);
                     final SQLSelectQuery query = CachedUsersQueryBuilder.withRelationship(projection,
                             selection, sortOrder, accountId);
                     final Cursor c = mDatabaseWrapper.rawQuery(query.getSQL(), selectionArgs);
@@ -726,7 +732,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return c;
                 }
                 case VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE: {
-                    final long accountId = ParseUtils.parseLong(uri.getLastPathSegment(), -1);
+                    final long def = -1;
+                    final long accountId = NumberUtils.toLong(uri.getLastPathSegment(), def);
                     final SQLSelectQuery query = CachedUsersQueryBuilder.withScore(projection,
                             selection, sortOrder, accountId, 0);
                     final Cursor c = mDatabaseWrapper.rawQuery(query.getSQL(), selectionArgs);
@@ -768,7 +775,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private Cursor getSearchSuggestionCursor(Uri uri) {
         final String query = uri.getQueryParameter(QUERY_PARAM_QUERY);
-        final long accountId = ParseUtils.parseLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
+        final long def = -1;
+        final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), def);
         if (query == null || accountId <= 0) return null;
         final boolean emptyQuery = TextUtils.isEmpty(query);
         final String queryEscaped = query.replace("_", "^_");

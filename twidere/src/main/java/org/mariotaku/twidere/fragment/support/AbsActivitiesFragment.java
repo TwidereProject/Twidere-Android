@@ -43,6 +43,7 @@ import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
+import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 /**
  * Created by mariotaku on 14/11/5.
@@ -167,6 +168,16 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     protected Object createMessageBusCallback() {
         return new StatusesBusCallback();
+    }
+
+    @Override
+    public void onStatusActionClick(StatusViewHolder holder, int id, int position) {
+
+    }
+
+    @Override
+    public void onStatusMenuClick(StatusViewHolder holder, View menuView, int position) {
+
     }
 
     protected final class StatusesBusCallback {

@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
@@ -92,11 +93,11 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
-                openUserProfile(context, accountId, ParseUtils.parseLong(link), null, null);
+                openUserProfile(context, accountId, NumberUtils.toLong(link, -1), null, null);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {
-                openStatus(context, accountId, ParseUtils.parseLong(link));
+                openStatus(context, accountId, NumberUtils.toLong(link, -1));
                 break;
             }
         }

@@ -23,6 +23,7 @@ import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableBindingValue;
 
@@ -60,8 +61,8 @@ public class TwitterCardUtils {
         final ParcelableBindingValue player_width = ParcelableCardEntity.getValue(card, "player_width");
         final ParcelableBindingValue player_height = ParcelableCardEntity.getValue(card, "player_height");
         if (player_width != null && player_height != null) {
-            final int width = ParseUtils.parseInt(String.valueOf(player_width.value));
-            final int height = ParseUtils.parseInt(String.valueOf(player_height.value));
+            final int width = NumberUtils.toInt(String.valueOf(player_width.value), -1);
+            final int height = NumberUtils.toInt(String.valueOf(player_height.value), -1);
             if (width > 0 && height > 0) {
                 return new Point(width, height);
             }

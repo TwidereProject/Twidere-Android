@@ -13,9 +13,9 @@ import android.text.TextUtils;
 import android.util.Pair;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.support.IntentSupport;
 
@@ -222,7 +222,8 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
                 }
             }
         } else if (segsSize >= 3) {
-            if ("status".equals(pathSegments.get(1)) && ParseUtils.parseLong(pathSegments.get(2), -1) != -1) {
+            final long def = -1;
+            if ("status".equals(pathSegments.get(1)) && NumberUtils.toLong(pathSegments.get(2), def) != -1) {
                 final Uri.Builder builder = new Uri.Builder();
                 builder.scheme(SCHEME_TWIDERE);
                 builder.authority(AUTHORITY_STATUS);

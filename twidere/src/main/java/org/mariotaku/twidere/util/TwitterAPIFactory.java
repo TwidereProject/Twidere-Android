@@ -14,6 +14,7 @@ import android.webkit.URLUtil;
 import com.squareup.okhttp.Dns;
 import com.squareup.okhttp.OkHttpClient;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.ExceptionFactory;
 import org.mariotaku.restfu.HttpRequestFactory;
 import org.mariotaku.restfu.Pair;
@@ -148,7 +149,7 @@ public class TwitterAPIFactory implements TwidereConstants {
 
     public static Proxy getProxy(final SharedPreferences prefs) {
         final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);
-        final int proxyPort = ParseUtils.parseInt(prefs.getString(KEY_PROXY_PORT, "-1"));
+        final int proxyPort = NumberUtils.toInt(prefs.getString(KEY_PROXY_PORT, "-1"), -1);
         if (!isEmpty(proxyHost) && proxyPort >= 0 && proxyPort < 65535) {
             final SocketAddress addr = InetSocketAddress.createUnresolved(proxyHost, proxyPort);
             return new Proxy(Proxy.Type.HTTP, addr);

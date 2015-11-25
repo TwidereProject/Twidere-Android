@@ -52,13 +52,13 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
+import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.ParseUtils.parseString;
 import static org.mariotaku.twidere.util.Utils.getAccountScreenName;
 
 public class UserListSelectorActivity extends BaseSupportDialogActivity implements OnClickListener, OnItemClickListener {
@@ -88,7 +88,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.screen_name_confirm: {
-                final String screen_name = parseString(mEditScreenName.getText());
+                final String screen_name = ParseUtils.parseString(mEditScreenName.getText());
                 if (isEmpty(screen_name)) return;
                 searchUser(screen_name);
                 break;

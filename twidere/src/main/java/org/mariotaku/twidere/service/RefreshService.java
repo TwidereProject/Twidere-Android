@@ -30,6 +30,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.AccountPreferences;
@@ -49,7 +50,6 @@ import javax.inject.Inject;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.ScreenEvent;
 
-import static org.mariotaku.twidere.util.ParseUtils.parseInt;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.getNewestMessageIdsFromDatabase;
@@ -268,7 +268,7 @@ public class RefreshService extends Service implements Constants {
 
     private long getRefreshInterval() {
         if (mPreferences == null) return 0;
-        final int prefValue = parseInt(mPreferences.getString(KEY_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL));
+        final int prefValue = NumberUtils.toInt(mPreferences.getString(KEY_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL), -1);
         return Math.max(prefValue, 3) * 60 * 1000;
     }
 

@@ -331,12 +331,16 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     @Override
     public void onItemActionClick(ViewHolder holder, int id, int position) {
-
+        if (mActivityAdapterListener != null) {
+            mActivityAdapterListener.onStatusActionClick(((StatusViewHolder) holder), id, position);
+        }
     }
 
     @Override
     public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
-
+        if (mActivityAdapterListener != null) {
+            mActivityAdapterListener.onStatusMenuClick((StatusViewHolder) holder, menuView, position);
+        }
     }
 
     @Override
@@ -372,6 +376,10 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         void onGapClick(GapViewHolder holder, int position);
 
         void onActivityClick(ActivityTitleSummaryViewHolder holder, int position);
+
+        void onStatusActionClick(StatusViewHolder holder, int id, int position);
+
+        void onStatusMenuClick(StatusViewHolder holder, View menuView, int position);
     }
 
     private static class StubViewHolder extends ViewHolder {

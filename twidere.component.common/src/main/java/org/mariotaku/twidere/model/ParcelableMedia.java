@@ -11,6 +11,7 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.api.twitter.model.CardEntity.BindingValue;
 import org.mariotaku.twidere.api.twitter.model.CardEntity.ImageValue;
@@ -23,7 +24,6 @@ import org.mariotaku.twidere.api.twitter.model.MediaEntity.Type;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.util.MediaPreviewUtils;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
@@ -276,8 +276,8 @@ public class ParcelableMedia implements Parcelable {
             final BindingValue player_width = card.getBindingValue("player_width");
             final BindingValue player_height = card.getBindingValue("player_height");
             if (player_width instanceof StringValue && player_height instanceof StringValue) {
-                media.width = ParseUtils.parseInt(((StringValue) player_width).getValue());
-                media.height = ParseUtils.parseInt(((StringValue) player_height).getValue());
+                media.width = NumberUtils.toInt(((StringValue) player_width).getValue(), -1);
+                media.height = NumberUtils.toInt(((StringValue) player_height).getValue(), -1);
             }
             if (entities != null) {
                 for (UrlEntity entity : entities) {

@@ -20,7 +20,9 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 
+import org.mariotaku.twidere.model.ObjectCursor;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
@@ -62,7 +64,23 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
     @Override
     public long getStatusId(int position) {
         if (position == getStatusesCount()) return -1;
+        if (mData instanceof ObjectCursor) {
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(position);
+            final ParcelableStatus.CursorIndices indices = (ParcelableStatus.CursorIndices) ((ObjectCursor) mData).getIndices();
+            return cursor.getLong(indices.status_id);
+        }
         return mData.get(position).id;
+    }
+
+    @Override
+    public long getAccountId(int position) {
+        if (position == getStatusesCount()) return -1;
+        if (mData instanceof ObjectCursor) {
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(position);
+            final ParcelableStatus.CursorIndices indices = (ParcelableStatus.CursorIndices) ((ObjectCursor) mData).getIndices();
+            return cursor.getLong(indices.account_id);
+        }
+        return mData.get(position).account_id;
     }
 
     @Override
