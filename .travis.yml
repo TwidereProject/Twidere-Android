@@ -35,6 +35,7 @@ addons:
     packages:
       - python2.7
       - libmagic1
+      - p7zip-full
 
 before_install:
   - ./scripts/install_android_ndk.sh
