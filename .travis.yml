@@ -36,10 +36,10 @@ addons:
       - python2.7
       - libmagic1
 
-before_script:
+before_install:
+  - ./scripts/install_android_ndk.sh
   - export PATH=$HOME/.local/bin:$PATH
-  - pip install -r ./scripts/requirements.txt --user
-
+  - pip install -r ./configs/requirements.txt --user
 
 script: ./gradlew build --no-daemon
 
