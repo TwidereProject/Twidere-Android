@@ -2,9 +2,9 @@
 
 if [ `uname -m` = x86_64 ];
 then
-    wget http://dl.google.com/android/ndk/android-ndk-r10d-linux-x86_64.bin -O ndk.bin
+    wget http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86_64.bin -O ndk.bin
 else
-    wget http://dl.google.com/android/ndk/android-ndk-r10d-linux-x86.bin -O ndk.bin
+    wget http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86.bin -O ndk.bin
 fi
 
 7z x ndk.bin android-ndk-r10e/build/ android-ndk-r10e/ndk-build android-ndk-r10e/platforms/android-21 > /dev/null
