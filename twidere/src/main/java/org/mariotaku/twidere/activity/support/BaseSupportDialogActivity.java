@@ -20,16 +20,24 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatCallback;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.view.ActionMode;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 @SuppressLint("Registered")
-public class BaseSupportDialogActivity extends ThemedFragmentActivity implements Constants {
-
-    private boolean mInstanceStateSaved;
+public class BaseSupportDialogActivity extends ThemedFragmentActivity implements Constants,
+        AppCompatCallback {
 
     @Override
     public int getThemeColor() {
@@ -41,23 +49,116 @@ public class BaseSupportDialogActivity extends ThemedFragmentActivity implements
         return ThemeUtils.getDialogThemeResource(this);
     }
 
-    public TwidereApplication getTwidereApplication() {
-        return (TwidereApplication) getApplication();
+    private AppCompatDelegate mDelegate;
+
+    /**
+     * Notifies the Activity that a support action mode has been started.
+     * Activity subclasses overriding this method should call the superclass implementation.
+     *
+     * @param mode The new action mode.
+     */
+    @Override
+    public void onSupportActionModeStarted(ActionMode mode) {
     }
 
-    protected boolean isStateSaved() {
-        return mInstanceStateSaved;
+    /**
+     * Notifies the activity that a support action mode has finished.
+     * Activity subclasses overriding this method should call the superclass implementation.
+     *
+     * @param mode The action mode that just finished.
+     */
+    @Override
+    public void onSupportActionModeFinished(ActionMode mode) {
+    }
+
+    @Nullable
+    @Override
+    public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
+        return null;
+    }
+
+    public boolean supportRequestWindowFeature(int featureId) {
+        return getDelegate().requestWindowFeature(featureId);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mInstanceStateSaved = false;
+    protected void onCreate(Bundle savedInstanceState) {
+        getDelegate().installViewFactory();
+        getDelegate().onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        mInstanceStateSaved = true;
-        super.onSaveInstanceState(outState);
+    protected void onStop() {
+        super.onStop();
+        getDelegate().onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getDelegate().onDestroy();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        getDelegate().onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        getDelegate().onPostResume();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        getDelegate().onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        getDelegate().setContentView(layoutResID);
+    }
+
+    @Override
+    public void setContentView(View view) {
+        getDelegate().setContentView(view);
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        getDelegate().setContentView(view, params);
+    }
+
+    @Override
+    public void addContentView(View view, ViewGroup.LayoutParams params) {
+        getDelegate().addContentView(view, params);
+    }
+
+    @Override
+    public void invalidateOptionsMenu() {
+        getDelegate().invalidateOptionsMenu();
+    }
+
+    @NonNull
+    @Override
+    public MenuInflater getMenuInflater() {
+        return getDelegate().getMenuInflater();
+    }
+
+    @Override
+    protected void onTitleChanged(CharSequence title, int color) {
+        super.onTitleChanged(title, color);
+        getDelegate().setTitle(title);
+    }
+
+    public AppCompatDelegate getDelegate() {
+        if (mDelegate == null) {
+            mDelegate = AppCompatDelegate.create(this, this);
+        }
+        return mDelegate;
     }
 }

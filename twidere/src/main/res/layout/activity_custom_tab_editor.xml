@@ -59,6 +59,7 @@
                     android:hint="@string/name"
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    app:met_baseColor="?android:colorForeground"
                     app:met_floatingLabelAlwaysShown="true" />
             </LinearLayout>
 

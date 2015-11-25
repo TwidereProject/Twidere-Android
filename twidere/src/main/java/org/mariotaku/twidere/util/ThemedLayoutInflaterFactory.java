@@ -36,6 +36,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatDelegateTrojan;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.TwidereToolbar;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.View;
@@ -44,14 +45,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.AppCompatPreferenceActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.ShapedImageView;
-
-import android.support.v7.widget.TwidereToolbar;
 import org.mariotaku.twidere.view.iface.IThemeAccentView;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 import org.mariotaku.twidere.view.themed.ThemedTextView;
@@ -196,11 +197,6 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             if (isAccentOptimal || !isColorTint) {
                 ((IThemeBackgroundTintView) view).setBackgroundTintColor(ColorStateList.valueOf(backgroundTintColor));
             }
-        } else if (view instanceof TintableBackgroundView) {
-            final TintableBackgroundView tintable = (TintableBackgroundView) view;
-            if (isAccentOptimal || !isColorTint) {
-                applyTintableBackgroundViewTint(tintable, accentColor, noTintColor, backgroundTintColor, isColorTint);
-            }
         } else if (view instanceof TwidereToolbar) {
             if (viewContext instanceof ContextThemeWrapper) {
                 ((TwidereToolbar) view).setItemColor(ThemeUtils.getThemeForegroundColor(viewContext,
@@ -212,11 +208,21 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             if (isAccentOptimal || !isColorTint) {
                 ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(backgroundTintColor));
             }
+            if (view instanceof MaterialEditText) {
+                if (isAccentOptimal || !isColorTint) {
+                    ((MaterialEditText) view).setPrimaryColor(backgroundTintColor);
+                }
+            }
         } else if (view instanceof ProgressBar) {
             if (isAccentOptimal || !isColorTint) {
                 ViewSupport.setIndeterminateTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
                 ViewSupport.setProgressTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
                 ViewSupport.setProgressBackgroundTintList((ProgressBar) view, ColorStateList.valueOf(accentColor));
+            }
+        } else if (view instanceof TintableBackgroundView) {
+            final TintableBackgroundView tintable = (TintableBackgroundView) view;
+            if (isAccentOptimal || !isColorTint) {
+                applyTintableBackgroundViewTint(tintable, accentColor, noTintColor, backgroundTintColor, isColorTint);
             }
         }
     }
