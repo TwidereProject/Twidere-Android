@@ -691,6 +691,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
             sensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
             hideCardActions = preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
             linkHighlightStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
+            useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
         }
     }
 }

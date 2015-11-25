@@ -70,35 +70,22 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
     private final int mCardBackgroundColor;
-    private final int mTextSize;
-    private final int mProfileImageStyle, mMediaPreviewStyle, mLinkHighlightingStyle;
     private final boolean mCompactCards;
-    private final boolean mDisplayMediaPreview;
-    private final boolean mNameFirst;
-    private final boolean mDisplayProfileImage;
-    private final boolean mShouldUseStarsForLikes;
     private final TwidereLinkify mLinkify;
     private final DummyStatusHolderAdapter mStatusAdapterDelegate;
     private ActivityAdapterListener mActivityAdapterListener;
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         super(context);
+        mStatusAdapterDelegate = new DummyStatusHolderAdapter(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
-        mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        mShouldUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
         mCompactCards = compact;
-        mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-        mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
-        mLinkHighlightingStyle = Utils.getLinkHighlightingStyleInt(mPreferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
-        mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mDisplayMediaPreview = mPreferences.getBoolean(KEY_MEDIA_PREVIEW, false);
-        mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST, true);
         mLinkify = new TwidereLinkify(this);
-        mStatusAdapterDelegate = new DummyStatusHolderAdapter(context);
+        mStatusAdapterDelegate.updateOptions();
     }
 
     @Override
@@ -125,12 +112,12 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     @Override
     public int getProfileImageStyle() {
-        return mProfileImageStyle;
+        return mStatusAdapterDelegate.getProfileImageStyle();
     }
 
     @Override
     public int getMediaPreviewStyle() {
-        return mMediaPreviewStyle;
+        return mStatusAdapterDelegate.getMediaPreviewStyle();
     }
 
     @NonNull
@@ -141,11 +128,11 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     @Override
     public float getTextSize() {
-        return mTextSize;
+        return mStatusAdapterDelegate.getTextSize();
     }
 
     public int getLinkHighlightingStyle() {
-        return mLinkHighlightingStyle;
+        return mStatusAdapterDelegate.getLinkHighlightingStyle();
     }
 
     public TwidereLinkify getLinkify() {
@@ -153,12 +140,12 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
     public boolean isNameFirst() {
-        return mNameFirst;
+        return mStatusAdapterDelegate.isNameFirst();
     }
 
     @Override
     public boolean isProfileImageEnabled() {
-        return mDisplayProfileImage;
+        return mStatusAdapterDelegate.isProfileImageEnabled();
     }
 
     @Override
@@ -180,7 +167,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     @Override
     public boolean shouldUseStarsForLikes() {
-        return mShouldUseStarsForLikes;
+        return mStatusAdapterDelegate.shouldUseStarsForLikes();
     }
 
     @Override
@@ -220,7 +207,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
                     cardView.setCardBackgroundColor(mCardBackgroundColor);
                 }
                 final StatusViewHolder holder = new StatusViewHolder(mStatusAdapterDelegate, view);
-                holder.setTextSize(getTextSize());
+                holder.setupViewOptions();
                 holder.setStatusClickListener(this);
                 return holder;
             }
@@ -363,7 +350,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     protected abstract int getActivityAction(int position);
 
     private boolean isMediaPreviewEnabled() {
-        return mDisplayMediaPreview;
+        return mStatusAdapterDelegate.isMediaPreviewEnabled();
     }
 
     @Override
