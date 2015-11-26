@@ -116,7 +116,6 @@ import static org.mariotaku.twidere.util.Utils.getTabDisplayOptionInt;
 import static org.mariotaku.twidere.util.Utils.isDatabaseReady;
 import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 import static org.mariotaku.twidere.util.Utils.openSearch;
-import static org.mariotaku.twidere.util.Utils.showMenuItemToast;
 
 public class HomeActivity extends BaseAppCompatActivity implements OnClickListener, OnPageChangeListener,
         SupportFragmentCallback, OnLongClickListener {
@@ -502,7 +501,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     public boolean onLongClick(final View v) {
         switch (v.getId()) {
             case R.id.actions_button: {
-                showMenuItemToast(v, v.getContentDescription(), true);
+                Utils.showMenuItemToast(v, v.getContentDescription(), true);
                 return true;
             }
         }

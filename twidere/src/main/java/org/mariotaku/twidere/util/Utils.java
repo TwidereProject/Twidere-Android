@@ -3503,7 +3503,7 @@ public final class Utils implements Constants {
         final int width = v.getWidth();
         final int height = v.getHeight();
         final int screenWidth = v.getResources().getDisplayMetrics().widthPixels;
-        final Toast cheatSheet = Toast.makeText(v.getContext(), text, Toast.LENGTH_SHORT);
+        final Toast cheatSheet = Toast.makeText(v.getContext().getApplicationContext(), text, Toast.LENGTH_SHORT);
         if (isBottomBar) {
             // Show along the bottom center
             cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);

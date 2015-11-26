@@ -21,10 +21,10 @@ android:
     # if you need to run emulator(s) during your tests
     # - sys-img-armeabi-v7a-android-19
     # - sys-img-x86-android-17
-jdk:
-  - oraclejdk7
-
 sudo: false
+
+jdk:
+  - oraclejdk8
 
 env:
   global:
@@ -36,6 +36,10 @@ addons:
       - python2.7
       - libmagic1
       - p7zip-full
+
+cache:
+  directories:
+  - $HOME/.local/opt
 
 before_install:
   - ./scripts/install_android_ndk.sh
