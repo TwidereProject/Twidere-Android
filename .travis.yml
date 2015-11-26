@@ -41,6 +41,7 @@ cache:
   - $HOME/.local/opt
 
 before_install:
+  - ./scripts/extract_signing_config.sh
   - ./scripts/install_android_ndk.sh
   - export PATH=$HOME/.local/bin:$PATH
   - pip install -r ./configs/requirements.txt --user
