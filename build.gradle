@@ -54,7 +54,6 @@ subprojects {
                 }
 
                 if (System.getenv('TRAVIS') == 'true') {
-                    System.out.println("Is travis build, disable pre-dexing")
                     dexOptions {
                         preDexLibraries = false;
                     }

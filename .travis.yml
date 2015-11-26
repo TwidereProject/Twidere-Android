@@ -29,6 +29,7 @@ jdk:
 env:
   global:
     MALLOC_ARENA_MAX=2
+    GRADLE_OPTS=-Xmx1024m -Dorg.gradle.parallel=false
 
 addons:
   apt:
@@ -41,11 +42,11 @@ cache:
   - $HOME/.local/opt
 
 before_install:
-  - ./scripts/extract_signing_config.sh
-  - ./scripts/install_android_ndk.sh
+  - ./travis/scripts/extract_signing_config.sh
+  - ./travis/scripts/install_android_ndk.sh
   - export PATH=$HOME/.local/bin:$PATH
-  - pip install -r ./configs/requirements.txt --user
+  - pip install -r ./travis/configs/requirements.txt --user
 
-script: ./gradlew build --no-daemon
+script: ./gradlew build --no-daemon --stacktrace
 
-after_success: ./scripts/travis_upload_release_to_github.py
+after_success: ./travis/scripts/travis_upload_release_to_github.py
