@@ -23,7 +23,7 @@ wget "http://dl.google.com/android/ndk/${ndk_installer_name}"
 
 chmod +x ${ndk_installer_name}
 
-./${ndk_installer_name} -y
+./${ndk_installer_name} -y 1>/dev/null
 
 rm ${ndk_installer_name}
 

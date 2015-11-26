@@ -35,7 +35,6 @@ addons:
     packages:
       - python2.7
       - libmagic1
-      - p7zip-full
 
 cache:
   directories:
