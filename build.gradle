@@ -53,6 +53,13 @@ subprojects {
                     exclude 'META-INF/ASL2.0'
                 }
 
+                if (System.getenv('TRAVIS_BUILD') == 'true') {
+                    System.out.println("Is travis build, disable pre-dexing")
+                    dexOptions {
+                        preDexLibraries = false;
+                    }
+                }
+
                 if (android.hasProperty('buildTypes') && project.plugins.hasPlugin('com.android.application')) {
                     android.buildTypes.each { buildType ->
                         File file = rootProject.file('signing.properties')

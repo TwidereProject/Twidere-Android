@@ -27,6 +27,7 @@ jdk:
   - oraclejdk8
 
 env:
+  - TRAVIS_BUILD=true
   global:
     MALLOC_ARENA_MAX=2
 
