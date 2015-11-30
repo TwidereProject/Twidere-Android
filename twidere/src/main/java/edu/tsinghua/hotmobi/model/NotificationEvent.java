@@ -28,7 +28,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
-import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import java.util.TimeZone;
 
@@ -40,35 +39,31 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
 @ParcelablePlease
 @JsonObject
 public class NotificationEvent extends BaseEvent implements Parcelable {
-    public static final Creator<NotificationEvent> CREATOR = new Creator<NotificationEvent>() {
-        @Override
-        public NotificationEvent createFromParcel(Parcel in) {
-            return new NotificationEvent(in);
-        }
 
-        @Override
-        public NotificationEvent[] newArray(int size) {
-            return new NotificationEvent[size];
-        }
-    };
-    @ParcelableThisPlease
     @JsonField(name = "item_id")
     long itemId;
-    @ParcelableThisPlease
+
     @JsonField(name = "item_user_id")
     long itemUserId;
-    @ParcelableThisPlease
+
     @JsonField(name = "account_id")
     long accountId;
-    @ParcelableThisPlease
+
     @JsonField(name = "type")
     String type;
-    @ParcelableThisPlease
+
     @JsonField(name = "action", typeConverter = Action.NotificationActionConverter.class)
     Action action;
-    @ParcelableThisPlease
+
     @JsonField(name = "ringer_mode")
     int ringerMode;
+
+    public void setItemUserFollowing(boolean itemUserFollowing) {
+        this.itemUserFollowing = itemUserFollowing;
+    }
+
+    @JsonField(name = "item_user_following")
+    boolean itemUserFollowing;
 
     public NotificationEvent() {
     }
@@ -78,7 +73,9 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         NotificationEventParcelablePlease.readFromParcel(this, in);
     }
 
-    public static NotificationEvent create(Context context, Action action, long postTime, long respondTime, String type, long accountId, long itemId, long itemUserId) {
+    public static NotificationEvent create(Context context, Action action, long postTime,
+                                           long respondTime, String type, long accountId, long itemId,
+                                           long itemUserId, boolean itemUserFollowing) {
         final NotificationEvent event = new NotificationEvent();
         event.setAction(action);
         event.setStartTime(postTime);
@@ -90,15 +87,21 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         event.setAccountId(accountId);
         event.setItemId(itemId);
         event.setItemUserId(itemUserId);
+        event.setItemUserFollowing(itemUserFollowing);
         return event;
     }
 
-    public static NotificationEvent deleted(Context context, long postTime, String type, long accountId, long itemId, long itemUserId) {
-        return create(context, Action.DELETE, System.currentTimeMillis(), postTime, type, accountId, itemId, itemUserId);
+    public static NotificationEvent deleted(Context context, long postTime, String type,
+                                            long accountId, long itemId, long itemUserId,
+                                            boolean itemUserFollowing) {
+        return create(context, Action.DELETE, System.currentTimeMillis(), postTime, type, accountId,
+                itemId, itemUserId, itemUserFollowing);
     }
 
-    public static NotificationEvent open(Context context, long postTime, String type, long accountId, long itemId, long itemUserId) {
-        return create(context, Action.OPEN, System.currentTimeMillis(), postTime, type, accountId, itemId, itemUserId);
+    public static NotificationEvent open(Context context, long postTime, String type, long accountId,
+                                         long itemId, long itemUserId, boolean itemUserFollowing) {
+        return create(context, Action.OPEN, System.currentTimeMillis(), postTime, type, accountId,
+                itemId, itemUserId, itemUserFollowing);
     }
 
     public Action getAction() {
@@ -107,11 +110,6 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
 
     public void setAction(Action action) {
         this.action = action;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public long getItemId() {
@@ -136,12 +134,6 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        NotificationEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
     public long getItemUserId() {
@@ -205,4 +197,26 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
             }
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        NotificationEventParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<NotificationEvent> CREATOR = new Creator<NotificationEvent>() {
+        public NotificationEvent createFromParcel(Parcel source) {
+            NotificationEvent target = new NotificationEvent();
+            NotificationEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public NotificationEvent[] newArray(int size) {
+            return new NotificationEvent[size];
+        }
+    };
 }

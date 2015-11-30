@@ -20,6 +20,8 @@
 package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -34,7 +36,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
  */
 @ParcelablePlease
 @JsonObject
-public class TweetEvent extends BaseEvent {
+public class TweetEvent extends BaseEvent implements Parcelable {
 
     @ParcelableThisPlease
     @JsonField(name = "id")
@@ -54,6 +56,9 @@ public class TweetEvent extends BaseEvent {
     @ParcelableThisPlease
     @JsonField(name = "action", typeConverter = Action.TweetActionConverter.class)
     Action action;
+    @ParcelableThisPlease
+    @JsonField(name = "following")
+    boolean following;
 
     public static TweetEvent create(Context context, ParcelableStatus status, TimelineType timelineType) {
         final TweetEvent event = new TweetEvent();
@@ -63,9 +68,13 @@ public class TweetEvent extends BaseEvent {
         event.setUserId(status.user_id);
         event.setTimelineType(timelineType);
         event.setTweetType(TweetType.getTweetType(status));
+        event.setFollowing(status.user_is_following);
         return event;
     }
 
+    public void setFollowing(boolean following) {
+        this.following = following;
+    }
 
     public void setAction(Action action) {
         this.action = action;
@@ -145,4 +154,26 @@ public class TweetEvent extends BaseEvent {
             }
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        TweetEventParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<TweetEvent> CREATOR = new Creator<TweetEvent>() {
+        public TweetEvent createFromParcel(Parcel source) {
+            TweetEvent target = new TweetEvent();
+            TweetEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public TweetEvent[] newArray(int size) {
+            return new TweetEvent[size];
+        }
+    };
 }

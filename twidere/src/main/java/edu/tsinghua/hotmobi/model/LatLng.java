@@ -25,7 +25,6 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
-import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * Created by mariotaku on 15/8/13.
@@ -33,21 +32,9 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 @ParcelablePlease
 @JsonObject
 public class LatLng implements Parcelable {
-    public static final Creator<LatLng> CREATOR = new Creator<LatLng>() {
-        @Override
-        public LatLng createFromParcel(Parcel in) {
-            return new LatLng(in);
-        }
 
-        @Override
-        public LatLng[] newArray(int size) {
-            return new LatLng[size];
-        }
-    };
-    @ParcelableThisPlease
     @JsonField(name = "latitude")
     double latitude;
-    @ParcelableThisPlease
     @JsonField(name = "longitude")
     double longitude;
 
@@ -80,6 +67,14 @@ public class LatLng implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        return "LatLng{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -89,11 +84,15 @@ public class LatLng implements Parcelable {
         LatLngParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    @Override
-    public String toString() {
-        return "LatLng{" +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
-    }
+    public static final Creator<LatLng> CREATOR = new Creator<LatLng>() {
+        public LatLng createFromParcel(Parcel source) {
+            LatLng target = new LatLng();
+            LatLngParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public LatLng[] newArray(int size) {
+            return new LatLng[size];
+        }
+    };
 }

@@ -20,6 +20,8 @@
 package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -31,15 +33,15 @@ import java.util.Arrays;
 /**
  * Created by mariotaku on 15/8/8.
  */
-@ParcelablePlease
+@ParcelablePlease(allFields = false)
 @JsonObject
-public class RefreshEvent extends BaseEvent {
-    @ParcelableThisPlease
+public class RefreshEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "ids")
+    @ParcelableThisPlease
     long[] ids;
 
-    @ParcelableThisPlease
     @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
+    @ParcelableThisPlease
     TimelineType timelineType;
 
     public static RefreshEvent create(final Context context, long[] ids, TimelineType timelineType) {
@@ -65,4 +67,26 @@ public class RefreshEvent extends BaseEvent {
                 ", timelineType=" + timelineType +
                 "} " + super.toString();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        RefreshEventParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<RefreshEvent> CREATOR = new Creator<RefreshEvent>() {
+        public RefreshEvent createFromParcel(Parcel source) {
+            RefreshEvent target = new RefreshEvent();
+            RefreshEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public RefreshEvent[] newArray(int size) {
+            return new RefreshEvent[size];
+        }
+    };
 }

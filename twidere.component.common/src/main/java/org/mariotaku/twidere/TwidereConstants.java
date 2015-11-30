@@ -168,6 +168,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int TABLE_ID_ACCOUNTS = 1;
     int TABLE_ID_STATUSES = 12;
     int TABLE_ID_MENTIONS = 13;
+    int TABLE_ID_ACTIVITIES_ABOUT_ME = 14;
+    int TABLE_ID_ACTIVITIES_BY_FRIENDS = 15;
     int TABLE_ID_DIRECT_MESSAGES = 21;
     int TABLE_ID_DIRECT_MESSAGES_INBOX = 22;
     int TABLE_ID_DIRECT_MESSAGES_OUTBOX = 23;
@@ -204,6 +206,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS = 132;
     int VIRTUAL_TABLE_ID_SUGGESTIONS_AUTO_COMPLETE = 141;
     int VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH = 142;
+
+    int VIRTUAL_TABLE_ID_EMPTY = 200;
 
     int NOTIFICATION_ID_HOME_TIMELINE = 1;
     int NOTIFICATION_ID_MENTIONS_TIMELINE = 2;

@@ -50,19 +50,16 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
                 final Uri uri = intent.getData();
                 if (uri == null) return;
                 final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
-                final long def4 = -1;
-                final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), def4);
-                final long def3 = -1;
-                final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), def3);
-                final long def2 = -1;
-                final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), def2);
-                final long def1 = -1;
-                final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), def1);
+                final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
+                final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
+                final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
+                final boolean itemUserFollowing = Boolean.parseBoolean(UriExtraUtils.getExtra(uri, "item_user_following"));
+                final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
                 final ApplicationModule module = ApplicationModule.get(context);
                 if (AUTHORITY_MENTIONS.equals(type) && accountId != -1 && itemId != -1 && timestamp != -1) {
                     final HotMobiLogger logger = module.getHotMobiLogger();
                     logger.log(accountId, NotificationEvent.deleted(context, timestamp, type, accountId,
-                            itemId, itemUserId));
+                            itemId, itemUserId, itemUserFollowing));
                 }
                 final ReadStateManager manager = module.getReadStateManager();
                 final String paramReadPosition, paramReadPositions;

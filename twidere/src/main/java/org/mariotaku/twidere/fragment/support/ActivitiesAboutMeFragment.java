@@ -19,42 +19,44 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.os.Bundle;
-import android.support.v4.content.Loader;
+import android.net.Uri;
+import android.view.View;
 
-import org.mariotaku.twidere.loader.support.ActivitiesAboutMeLoader;
-import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
+import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
+import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
-import java.util.List;
-
-public class ActivitiesAboutMeFragment extends ParcelableActivitiesFragment {
+public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
 
     @Override
-    public Loader<List<ParcelableActivity>> onCreateLoader(final int id, final Bundle args) {
-        setProgressBarIndeterminateVisibility(true);
-        final long[] accountIds = args.getLongArray(EXTRA_ACCOUNT_IDS);
-        final long[] sinceIds = args.getLongArray(EXTRA_SINCE_IDS);
-        final long[] maxIds = args.getLongArray(EXTRA_MAX_IDS);
-        final long accountId = accountIds != null ? accountIds[0] : -1;
-        final long sinceId = sinceIds != null ? sinceIds[0] : -1;
-        final long maxId = maxIds != null ? maxIds[0] : -1;
-        return new ActivitiesAboutMeLoader(getActivity(), accountId, sinceId, maxId, getAdapterData(),
-                getSavedActivitiesFileArgs(), getTabPosition());
+    public boolean getActivities(long[] accountIds, long[] maxIds, long[] sinceIds) {
+        mTwitterWrapper.getActivitiesAboutMeAsync(accountIds, maxIds, sinceIds);
+        return true;
     }
 
     @Override
-    protected boolean isByFriends() {
+    public Uri getContentUri() {
+        return Activities.AboutMe.CONTENT_URI;
+    }
+
+    @Override
+    protected int getNotificationType() {
+        return 0;
+    }
+
+    @Override
+    protected boolean isFilterEnabled() {
         return false;
     }
 
     @Override
-    protected String[] getSavedActivitiesFileArgs() {
-        final Bundle args = getArguments();
-        if (args != null && args.containsKey(EXTRA_ACCOUNT_ID)) {
-            final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            return new String[]{AUTHORITY_ACTIVITIES_ABOUT_ME, "account" + account_id};
-        }
-        return new String[]{AUTHORITY_ACTIVITIES_ABOUT_ME};
+    protected void updateRefreshState() {
+
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        return false;
     }
 
 }

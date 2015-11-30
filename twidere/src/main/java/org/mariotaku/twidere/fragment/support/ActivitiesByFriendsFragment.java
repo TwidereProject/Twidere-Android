@@ -19,43 +19,42 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.os.Bundle;
-import android.support.v4.content.Loader;
+import android.net.Uri;
 
-import org.mariotaku.twidere.loader.support.ActivitiesByFriendsLoader;
-import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 
-import java.util.List;
-
-public class ActivitiesByFriendsFragment extends ParcelableActivitiesFragment {
+public class ActivitiesByFriendsFragment extends CursorActivitiesFragment {
 
 
     @Override
-    public Loader<List<ParcelableActivity>> onCreateLoader(final int id, final Bundle args) {
-        setProgressBarIndeterminateVisibility(true);
-        final long[] accountIds = args.getLongArray(EXTRA_ACCOUNT_IDS);
-        final long[] sinceIds = args.getLongArray(EXTRA_SINCE_IDS);
-        final long[] maxIds = args.getLongArray(EXTRA_MAX_IDS);
-        final long accountId = accountIds != null ? accountIds[0] : -1;
-        final long sinceId = sinceIds != null ? sinceIds[0] : -1;
-        final long maxId = maxIds != null ? maxIds[0] : -1;
-        return new ActivitiesByFriendsLoader(getActivity(), accountId, sinceId, maxId, getAdapterData(),
-                getSavedActivitiesFileArgs(), getTabPosition());
+    public boolean getActivities(long[] accountIds, long[] maxIds, long[] sinceIds) {
+        return false;
+    }
+
+
+    @Override
+    public Uri getContentUri() {
+        return TwidereDataStore.CONTENT_URI_EMPTY;
     }
 
     @Override
-    protected boolean isByFriends() {
-        return true;
+    protected int getNotificationType() {
+        return 0;
     }
 
     @Override
-    protected String[] getSavedActivitiesFileArgs() {
-        final Bundle args = getArguments();
-        if (args != null && args.containsKey(EXTRA_ACCOUNT_ID)) {
-            final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            return new String[]{AUTHORITY_ACTIVITIES_BY_FRIENDS, "account" + account_id};
-        }
-        return new String[]{AUTHORITY_ACTIVITIES_BY_FRIENDS};
+    protected boolean isFilterEnabled() {
+        return false;
+    }
+
+    @Override
+    protected void updateRefreshState() {
+
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        return false;
     }
 
 }

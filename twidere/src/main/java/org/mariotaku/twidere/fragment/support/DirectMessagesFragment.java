@@ -56,6 +56,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
@@ -220,7 +221,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             protected long[][] doInBackground(final Object... params) {
                 final long[][] result = new long[2][];
                 result[0] = Utils.getActivatedAccountIds(getActivity());
-                result[1] = Utils.getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
+                result[1] = DataStoreUtils.getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
                 return result;
             }
 
@@ -355,8 +356,8 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             protected long[][] doInBackground(final Object... params) {
                 final long[][] result = new long[3][];
                 result[0] = Utils.getActivatedAccountIds(getActivity());
-                result[1] = Utils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
-                result[2] = Utils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Outbox.CONTENT_URI);
+                result[1] = DataStoreUtils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
+                result[2] = DataStoreUtils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Outbox.CONTENT_URI);
                 return result;
             }
 

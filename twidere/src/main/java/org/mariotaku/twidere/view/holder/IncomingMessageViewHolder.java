@@ -25,7 +25,7 @@ import android.widget.ImageView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
-import org.mariotaku.twidere.model.ParcelableDirectMessage;
+import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 
 /**
@@ -41,7 +41,7 @@ public class IncomingMessageViewHolder extends MessageViewHolder {
     }
 
     @Override
-    public void displayMessage(Cursor cursor, ParcelableDirectMessage.CursorIndices indices) {
+    public void displayMessage(Cursor cursor, ParcelableDirectMessageCursorIndices indices) {
         super.displayMessage(cursor, indices);
         final MediaLoaderWrapper wrapper = adapter.getMediaLoader();
         if (adapter.isProfileImageEnabled()) {

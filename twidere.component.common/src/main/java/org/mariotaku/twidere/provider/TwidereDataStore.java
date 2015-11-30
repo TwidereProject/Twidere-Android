@@ -41,12 +41,16 @@ public interface TwidereDataStore {
 
     String CONTENT_PATH_NULL = "null_content";
 
+    String CONTENT_PATH_EMPTY = "empty_content";
+
     String CONTENT_PATH_DATABASE_READY = "database_ready";
 
     Uri BASE_CONTENT_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
             .authority(AUTHORITY).build();
 
     Uri CONTENT_URI_NULL = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_NULL);
+
+    Uri CONTENT_URI_EMPTY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_EMPTY);
 
     Uri CONTENT_URI_DATABASE_READY = Uri.withAppendedPath(BASE_CONTENT_URI,
             CONTENT_PATH_DATABASE_READY);
@@ -878,6 +882,7 @@ public interface TwidereDataStore {
     interface Activities extends BaseColumns {
 
         String ACCOUNT_ID = "account_id";
+        String ACTION = "action";
         String TIMESTAMP = "timestamp";
         String STATUS_USER_ID = "status_user_id";
         String STATUS_RETWEETED_BY_USER_ID = "status_retweeted_by_user_id";
@@ -888,7 +893,7 @@ public interface TwidereDataStore {
         String STATUS_QUOTE_TEXT_PLAIN = "status_quote_text_plain";
         String STATUS_TEXT_HTML = "status_text_html";
         String STATUS_QUOTE_TEXT_HTML = "status_quote_text_html";
-        String STATUS_IS_GAP = "status_is_gap";
+        String IS_GAP = "status_is_gap";
         String MIN_POSITION = "min_position";
         String MAX_POSITION = "max_position";
         String SOURCES = "sources";
@@ -897,10 +902,32 @@ public interface TwidereDataStore {
         String TARGET_USER_LISTS = "target_user_lists";
         String TARGET_OBJECT_STATUSES = "target_object_statuses";
         String TARGET_OBJECT_USER_LISTS = "target_object_user_lists";
+        String TARGET_OBJECT_USERS = "target_object_users";
+
+        String[] COLUMNS = {_ID, ACCOUNT_ID, ACTION, TIMESTAMP, STATUS_USER_ID, STATUS_RETWEETED_BY_USER_ID,
+                STATUS_QUOTED_USER_ID, STATUS_SOURCE, STATUS_QUOTE_SOURCE, STATUS_TEXT_PLAIN,
+                STATUS_QUOTE_TEXT_PLAIN, STATUS_TEXT_HTML, STATUS_QUOTE_TEXT_HTML, IS_GAP,
+                MIN_POSITION, MAX_POSITION, SOURCES, TARGET_STATUSES, TARGET_USERS, TARGET_USER_LISTS,
+                TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS};
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN,
+                TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
+                TYPE_TEXT};
+
+        String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC";
 
         interface AboutMe extends Activities {
 
             String CONTENT_PATH = "activities_about_me";
+            String TABLE_NAME = "activities_about_me";
+
+            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
+        }
+
+        interface ByFriends extends Activities {
+
+            String CONTENT_PATH = "activities_by_friends";
+            String TABLE_NAME = "activities_by_friends";
 
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }

@@ -20,11 +20,12 @@
 package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
-import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -34,27 +35,26 @@ import org.mariotaku.twidere.model.ParcelableStatus;
  */
 @ParcelablePlease
 @JsonObject
-public class MediaEvent extends BaseEvent {
+public class MediaEvent extends BaseEvent implements Parcelable {
 
-    @ParcelableThisPlease
     @JsonField(name = "id")
     long id;
-    @ParcelableThisPlease
+
     @JsonField(name = "user_id")
     long userId;
-    @ParcelableThisPlease
+
     @JsonField(name = "tweet_type", typeConverter = TweetType.TweetTypeConverter.class)
     TweetType tweetType;
-    @ParcelableThisPlease
+
     @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
     TimelineType timelineType;
-    @ParcelableThisPlease
+
     @JsonField(name = "preview_url")
     String previewUrl;
-    @ParcelableThisPlease
+
     @JsonField(name = "media_url")
     String mediaUrl;
-    @ParcelableThisPlease
+
     @JsonField(name = "preview_enabled")
     boolean previewEnabled;
 
@@ -111,4 +111,26 @@ public class MediaEvent extends BaseEvent {
                 ", previewEnabled=" + previewEnabled +
                 "} " + super.toString();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        MediaEventParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<MediaEvent> CREATOR = new Creator<MediaEvent>() {
+        public MediaEvent createFromParcel(Parcel source) {
+            MediaEvent target = new MediaEvent();
+            MediaEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public MediaEvent[] newArray(int size) {
+            return new MediaEvent[size];
+        }
+    };
 }

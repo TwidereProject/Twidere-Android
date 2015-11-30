@@ -29,8 +29,11 @@ import android.util.Log;
 
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
+import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -38,12 +41,7 @@ import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
-
 import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
-import static org.mariotaku.twidere.util.TwitterAPIFactory.getTwitterInstance;
 import static org.mariotaku.twidere.util.Utils.isMyAccount;
 
 public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<ParcelableUser>> implements Constants {
@@ -94,7 +92,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final int count = cur.getCount();
             try {
                 if (count > 0) {
-                    final CachedIndices indices = new CachedIndices(cur);
+                    final ParcelableUserCursorIndices indices = new ParcelableUserCursorIndices(cur);
                     cur.moveToFirst();
                     return SingleResponse.getInstance(new ParcelableUser(cur, indices, mAccountId));
                 }

@@ -26,7 +26,6 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
-import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.BuildConfig;
 
@@ -41,31 +40,18 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
 @JsonObject
 public class BaseEvent implements Parcelable {
 
-    public static final Creator<BaseEvent> CREATOR = new Creator<BaseEvent>() {
-        @Override
-        public BaseEvent createFromParcel(Parcel in) {
-            return new BaseEvent(in);
-        }
-
-        @Override
-        public BaseEvent[] newArray(int size) {
-            return new BaseEvent[size];
-        }
-    };
-
-    @ParcelableThisPlease
     @JsonField(name = "app_version")
     int appVersion = BuildConfig.VERSION_CODE;
-    @ParcelableThisPlease
+
     @JsonField(name = "start_time")
     long startTime;
-    @ParcelableThisPlease
+
     @JsonField(name = "end_time")
     long endTime;
-    @ParcelableThisPlease
+
     @JsonField(name = "time_offset")
     long timeOffset;
-    @ParcelableThisPlease
+
     @JsonField(name = "location")
     LatLng location;
 
@@ -122,4 +108,16 @@ public class BaseEvent implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         BaseEventParcelablePlease.writeToParcel(this, dest, flags);
     }
+
+    public static final Creator<BaseEvent> CREATOR = new Creator<BaseEvent>() {
+        public BaseEvent createFromParcel(Parcel source) {
+            BaseEvent target = new BaseEvent();
+            BaseEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public BaseEvent[] newArray(int size) {
+            return new BaseEvent[size];
+        }
+    };
 }

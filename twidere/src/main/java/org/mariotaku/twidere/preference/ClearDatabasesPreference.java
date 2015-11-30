@@ -26,6 +26,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
@@ -66,6 +67,8 @@ public class ClearDatabasesPreference extends AsyncTaskPreference implements Con
         for (final Uri uri : CACHE_URIS) {
             resolver.delete(uri, null, null);
         }
+        resolver.delete(Activities.AboutMe.CONTENT_URI, null, null);
+        resolver.delete(Activities.ByFriends.CONTENT_URI, null, null);
         resolver.delete(Notifications.CONTENT_URI, null, null);
         resolver.delete(UnreadCounts.CONTENT_URI, null, null);
         resolver.delete(SavedSearches.CONTENT_URI, null, null);

@@ -32,7 +32,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IDirectMessagesAdapter;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
-import org.mariotaku.twidere.model.ParcelableDirectMessage.CursorIndices;
+import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -59,7 +59,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
     private final MediaLoadingHandler mMediaLoadingHandler;
 
     private Cursor mCursor;
-    private CursorIndices mIndices;
+    private ParcelableDirectMessageCursorIndices mIndices;
     private TwidereLinkify mLinkify;
 
     public MessageConversationAdapter(final Context context) {
@@ -158,7 +158,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         if (c == null || c.isClosed()) return null;
         c.moveToPosition(position);
         final long account_id = c.getLong(mIndices.account_id);
-        final long message_id = c.getLong(mIndices.message_id);
+        final long message_id = c.getLong(mIndices.id);
         return Utils.findDirectMessageInDatabases(getContext(), account_id, message_id);
     }
 
@@ -185,7 +185,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
 
     public void setCursor(final Cursor cursor) {
         if (cursor != null) {
-            mIndices = new CursorIndices(cursor);
+            mIndices = new ParcelableDirectMessageCursorIndices(cursor);
         } else {
             mIndices = null;
         }

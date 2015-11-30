@@ -14,20 +14,8 @@ import java.io.IOException;
 import java.util.List;
 
 @JsonObject
-@ParcelablePlease(allFields = false)
+@ParcelablePlease
 public class ParcelableMediaUpdate implements Parcelable {
-
-    public static final Parcelable.Creator<ParcelableMediaUpdate> CREATOR = new Parcelable.Creator<ParcelableMediaUpdate>() {
-        @Override
-        public ParcelableMediaUpdate createFromParcel(final Parcel in) {
-            return new ParcelableMediaUpdate(in);
-        }
-
-        @Override
-        public ParcelableMediaUpdate[] newArray(final int size) {
-            return new ParcelableMediaUpdate[size];
-        }
-    };
 
     @SuppressWarnings("NullableProblems")
     @NonNull
@@ -39,30 +27,14 @@ public class ParcelableMediaUpdate implements Parcelable {
     public ParcelableMediaUpdate() {
     }
 
-    public ParcelableMediaUpdate(final Parcel in) {
-        uri = in.readString();
-        type = in.readInt();
-    }
-
     public ParcelableMediaUpdate(@NonNull final String uri, final int type) {
         this.uri = uri;
         this.type = type;
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
     public String toString() {
         return "ParcelableMediaUpdate{uri=" + uri + ", type=" + type + "}";
-    }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(uri);
-        dest.writeInt(type);
     }
 
     @Override
@@ -95,4 +67,25 @@ public class ParcelableMediaUpdate implements Parcelable {
         }
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ParcelableMediaUpdateParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<ParcelableMediaUpdate> CREATOR = new Creator<ParcelableMediaUpdate>() {
+        public ParcelableMediaUpdate createFromParcel(Parcel source) {
+            ParcelableMediaUpdate target = new ParcelableMediaUpdate();
+            ParcelableMediaUpdateParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ParcelableMediaUpdate[] newArray(int size) {
+            return new ParcelableMediaUpdate[size];
+        }
+    };
 }

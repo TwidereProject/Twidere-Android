@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableAccount.Indices;
+import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
@@ -45,11 +44,10 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
 
     @Inject
     MediaLoaderWrapper mImageLoader;
-    private final SharedPreferences mPreferences;
 
     private boolean mDisplayProfileImage;
     private boolean mSortEnabled;
-    private Indices mIndices;
+    private ParcelableAccountCursorIndices mIndices;
     private boolean mSwitchEnabled;
     private OnAccountToggleListener mOnAccountToggleListener;
 
@@ -67,20 +65,19 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         super(context, R.layout.list_item_account, null, new String[]{Accounts.NAME},
                 new int[]{android.R.id.text1}, 0);
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
-        mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     public ParcelableAccount getAccount(int position) {
         final Cursor c = getCursor();
         if (c == null || c.isClosed() || !c.moveToPosition(position)) return null;
-        return new ParcelableAccount(c, mIndices);
+        return mIndices.newObject(c);
     }
 
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
         final int color = cursor.getInt(mIndices.color);
         final AccountViewHolder holder = (AccountViewHolder) view.getTag();
-        holder.screenName.setText("@" + cursor.getString(mIndices.screen_name));
+        holder.screenName.setText(String.format("@%s", cursor.getString(mIndices.screen_name)));
         holder.setAccountColor(color);
         if (mDisplayProfileImage) {
             mImageLoader.displayProfileImage(holder.profileImage, cursor.getString(mIndices.profile_image_url));
@@ -172,7 +169,7 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     @Override
     public Cursor swapCursor(final Cursor cursor) {
         if (cursor != null) {
-            mIndices = new Indices(cursor);
+            mIndices = new ParcelableAccountCursorIndices(cursor);
         }
         return super.swapCursor(cursor);
     }

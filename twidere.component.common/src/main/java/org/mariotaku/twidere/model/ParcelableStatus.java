@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.model;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -34,6 +33,9 @@ import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
+import org.mariotaku.library.objectcursor.annotation.CursorField;
+import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.api.twitter.model.CardEntity.BindingValue;
 import org.mariotaku.twidere.api.twitter.model.CardEntity.BooleanValue;
@@ -43,6 +45,7 @@ import org.mariotaku.twidere.api.twitter.model.CardEntity.UserValue;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.TwitterContentUtils;
@@ -55,13 +58,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+@CursorObject(valuesCreator = true)
 @JsonObject
-@ParcelablePlease(allFields = false)
+@ParcelablePlease
 public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus> {
+    public static final Creator<ParcelableStatus> CREATOR = new Creator<ParcelableStatus>() {
+        public ParcelableStatus createFromParcel(Parcel source) {
+            ParcelableStatus target = new ParcelableStatus();
+            ParcelableStatusParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
 
-    @ParcelableThisPlease
-    @JsonField(name = "id")
-    public long id;
+        public ParcelableStatus[] newArray(int size) {
+            return new ParcelableStatus[size];
+        }
+    };
+
     public static final Comparator<ParcelableStatus> REVERSE_ID_COMPARATOR = new Comparator<ParcelableStatus>() {
 
         @Override
@@ -72,12 +84,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             return (int) diff;
         }
     };
-    @ParcelableThisPlease
-    @JsonField(name = "account_id")
-    public long account_id;
-    @ParcelableThisPlease
-    @JsonField(name = "timestamp")
-    public long timestamp;
+
     public static final Comparator<ParcelableStatus> TIMESTAMP_COMPARATOR = new Comparator<ParcelableStatus>() {
 
         @Override
@@ -88,226 +95,272 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             return (int) diff;
         }
     };
+
+    @CursorField(value = Statuses._ID, excludeWrite = true)
+    long _id;
+
+    @ParcelableThisPlease
+    @JsonField(name = "id")
+    @CursorField(Statuses.STATUS_ID)
+    public long id;
+
+    @ParcelableThisPlease
+    @JsonField(name = "account_id")
+    @CursorField(Statuses.ACCOUNT_ID)
+    public long account_id;
+
+    @ParcelableThisPlease
+    @JsonField(name = "timestamp")
+    @CursorField(Statuses.STATUS_TIMESTAMP)
+    public long timestamp;
+
     @ParcelableThisPlease
     @JsonField(name = "user_id")
+    @CursorField(Statuses.USER_ID)
     public long user_id;
+
     @ParcelableThisPlease
     @JsonField(name = "retweet_id")
+    @CursorField(Statuses.RETWEET_ID)
     public long retweet_id;
+
     @ParcelableThisPlease
     @JsonField(name = "retweeted_by_user_id")
+    @CursorField(Statuses.RETWEETED_BY_USER_ID)
     public long retweeted_by_user_id;
+
     @ParcelableThisPlease
     @JsonField(name = "retweet_timestamp")
+    @CursorField(Statuses.RETWEET_TIMESTAMP)
     public long retweet_timestamp;
+
     @ParcelableThisPlease
     @JsonField(name = "retweet_count")
+    @CursorField(Statuses.RETWEET_COUNT)
     public long retweet_count;
+
     @ParcelableThisPlease
     @JsonField(name = "favorite_count")
+    @CursorField(Statuses.FAVORITE_COUNT)
     public long favorite_count;
+
     @ParcelableThisPlease
     @JsonField(name = "reply_count")
+    @CursorField(Statuses.REPLY_COUNT)
     public long reply_count;
+
     @ParcelableThisPlease
     @JsonField(name = "in_reply_to_status_id")
+    @CursorField(Statuses.IN_REPLY_TO_STATUS_ID)
     public long in_reply_to_status_id;
+
     @ParcelableThisPlease
     @JsonField(name = "in_reply_to_user_id")
+    @CursorField(Statuses.IN_REPLY_TO_USER_ID)
     public long in_reply_to_user_id;
+
     @ParcelableThisPlease
     @JsonField(name = "my_retweet_id")
+    @CursorField(Statuses.MY_RETWEET_ID)
     public long my_retweet_id;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_id")
+    @CursorField(Statuses.QUOTED_ID)
     public long quoted_id;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_timestamp")
+    @CursorField(Statuses.QUOTED_TIMESTAMP)
     public long quoted_timestamp;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_user_id")
+    @CursorField(Statuses.QUOTED_USER_ID)
     public long quoted_user_id;
+
     @ParcelableThisPlease
     @JsonField(name = "is_gap")
+    @CursorField(Statuses.IS_GAP)
     public boolean is_gap;
+
     @ParcelableThisPlease
     @JsonField(name = "is_retweet")
+    @CursorField(Statuses.IS_RETWEET)
     public boolean is_retweet;
+
     @ParcelableThisPlease
     @JsonField(name = "is_favorite")
+    @CursorField(Statuses.IS_FAVORITE)
     public boolean is_favorite;
+
     @ParcelableThisPlease
     @JsonField(name = "is_possibly_sensitive")
+    @CursorField(Statuses.IS_POSSIBLY_SENSITIVE)
     public boolean is_possibly_sensitive;
+
     @ParcelableThisPlease
     @JsonField(name = "user_is_following")
+    @CursorField(Statuses.IS_FOLLOWING)
     public boolean user_is_following;
+
     @ParcelableThisPlease
     @JsonField(name = "user_is_protected")
+    @CursorField(Statuses.IS_PROTECTED)
     public boolean user_is_protected;
+
     @ParcelableThisPlease
     @JsonField(name = "user_is_verified")
+    @CursorField(Statuses.IS_VERIFIED)
     public boolean user_is_verified;
+
     @ParcelableThisPlease
     @JsonField(name = "is_quote")
+    @CursorField(Statuses.IS_QUOTE)
     public boolean is_quote;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_user_is_protected")
+    @CursorField(Statuses.QUOTED_USER_IS_PROTECTED)
     public boolean quoted_user_is_protected;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_user_is_verified")
+    @CursorField(Statuses.QUOTED_USER_IS_VERIFIED)
     public boolean quoted_user_is_verified;
+
     @ParcelableThisPlease
     @JsonField(name = "retweeted_by_user_name")
+    @CursorField(Statuses.RETWEETED_BY_USER_NAME)
     public String retweeted_by_user_name;
+
     @ParcelableThisPlease
     @JsonField(name = "retweeted_by_user_screen_name")
+    @CursorField(Statuses.RETWEETED_BY_USER_SCREEN_NAME)
     public String retweeted_by_user_screen_name;
+
     @ParcelableThisPlease
     @JsonField(name = "retweeted_by_user_profile_image")
+    @CursorField(Statuses.RETWEETED_BY_USER_PROFILE_IMAGE)
     public String retweeted_by_user_profile_image;
+
     @ParcelableThisPlease
     @JsonField(name = "text_html")
+    @CursorField(Statuses.TEXT_HTML)
     public String text_html;
+
     @ParcelableThisPlease
     @JsonField(name = "text_plain")
+    @CursorField(Statuses.TEXT_PLAIN)
     public String text_plain;
+
     @ParcelableThisPlease
     @JsonField(name = "user_name")
+    @CursorField(Statuses.USER_NAME)
     public String user_name;
+
     @ParcelableThisPlease
     @JsonField(name = "user_screen_name")
+    @CursorField(Statuses.USER_SCREEN_NAME)
     public String user_screen_name;
+
     @ParcelableThisPlease
     @JsonField(name = "in_reply_to_name")
+    @CursorField(Statuses.IN_REPLY_TO_USER_NAME)
     public String in_reply_to_name;
+
     @ParcelableThisPlease
     @JsonField(name = "in_reply_to_screen_name")
+    @CursorField(Statuses.IN_REPLY_TO_USER_SCREEN_NAME)
     public String in_reply_to_screen_name;
+
     @ParcelableThisPlease
     @JsonField(name = "source")
+    @CursorField(Statuses.SOURCE)
     public String source;
+
     @ParcelableThisPlease
     @JsonField(name = "user_profile_image_url")
+    @CursorField(Statuses.USER_PROFILE_IMAGE_URL)
     public String user_profile_image_url;
+
     @ParcelableThisPlease
     @JsonField(name = "text_unescaped")
+    @CursorField(Statuses.TEXT_UNESCAPED)
     public String text_unescaped;
+
     @ParcelableThisPlease
     @JsonField(name = "card_name")
+    @CursorField(Statuses.CARD_NAME)
     public String card_name;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_text_html")
+    @CursorField(Statuses.QUOTED_TEXT_HTML)
     public String quoted_text_html;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_text_plain")
+    @CursorField(Statuses.QUOTED_TEXT_PLAIN)
     public String quoted_text_plain;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_text_unescaped")
+    @CursorField(Statuses.QUOTED_TEXT_UNESCAPED)
     public String quoted_text_unescaped;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_source")
+    @CursorField(Statuses.QUOTED_SOURCE)
     public String quoted_source;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_user_name")
+    @CursorField(Statuses.QUOTED_USER_NAME)
     public String quoted_user_name;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_user_screen_name")
+    @CursorField(Statuses.QUOTED_USER_SCREEN_NAME)
     public String quoted_user_screen_name;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_user_profile_image")
+    @CursorField(Statuses.QUOTED_USER_PROFILE_IMAGE)
     public String quoted_user_profile_image;
+
     @ParcelableThisPlease
     @JsonField(name = "location")
+    @CursorField(value = Statuses.LOCATION, converter = ParcelableLocation.Converter.class)
     public ParcelableLocation location;
+
     @ParcelableThisPlease
     @JsonField(name = "place_full_name")
+    @CursorField(value = Statuses.PLACE_FULL_NAME, converter = LoganSquareCursorFieldConverter.class)
     public String place_full_name;
+
     @ParcelableThisPlease
     @JsonField(name = "mentions")
+    @CursorField(value = Statuses.MENTIONS_JSON, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUserMention[] mentions;
+
     @ParcelableThisPlease
     @JsonField(name = "media")
+    @CursorField(value = Statuses.MEDIA_JSON, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableMedia[] media;
+
     @ParcelableThisPlease
     @JsonField(name = "quoted_media")
+    @CursorField(value = Statuses.QUOTED_MEDIA_JSON, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableMedia[] quoted_media;
+
     @ParcelableThisPlease
     @JsonField(name = "card")
+    @CursorField(value = Statuses.CARD, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableCardEntity card;
-    public static final Parcelable.Creator<ParcelableStatus> CREATOR = new Parcelable.Creator<ParcelableStatus>() {
-        @Override
-        public ParcelableStatus createFromParcel(final Parcel in) {
-            ParcelableStatus status = new ParcelableStatus();
-            ParcelableStatusParcelablePlease.readFromParcel(status, in);
-            return status;
-        }
 
-        @Override
-        public ParcelableStatus[] newArray(final int size) {
-            return new ParcelableStatus[size];
-        }
-    };
 
-    public ParcelableStatus(final Cursor c, final CursorIndices idx) {
-        id = idx.status_id != -1 ? c.getLong(idx.status_id) : -1;
-        account_id = idx.account_id != -1 ? c.getLong(idx.account_id) : -1;
-        timestamp = idx.status_timestamp != -1 ? c.getLong(idx.status_timestamp) : 0;
-        user_id = idx.user_id != -1 ? c.getLong(idx.user_id) : -1;
-        retweet_id = idx.retweet_id != -1 ? c.getLong(idx.retweet_id) : -1;
-        retweet_timestamp = idx.retweet_timestamp != -1 ? c.getLong(idx.retweet_timestamp) : -1;
-        retweeted_by_user_id = idx.retweeted_by_user_id != -1 ? c.getLong(idx.retweeted_by_user_id) : -1;
-        retweet_count = idx.retweet_count != -1 ? c.getLong(idx.retweet_count) : -1;
-        favorite_count = idx.favorite_count != -1 ? c.getLong(idx.favorite_count) : -1;
-        reply_count = idx.reply_count != -1 ? c.getLong(idx.reply_count) : -1;
-        in_reply_to_status_id = idx.in_reply_to_status_id != -1 ? c.getLong(idx.in_reply_to_status_id) : -1;
-        in_reply_to_user_id = idx.in_reply_to_user_id != -1 ? c.getLong(idx.in_reply_to_user_id) : -1;
-        is_gap = idx.is_gap != -1 && c.getInt(idx.is_gap) == 1;
-        is_retweet = idx.is_retweet != -1 && c.getInt(idx.is_retweet) == 1;
-        is_favorite = idx.is_favorite != -1 && c.getInt(idx.is_favorite) == 1;
-        user_is_protected = idx.is_protected != -1 && c.getInt(idx.is_protected) == 1;
-        user_is_verified = idx.is_verified != -1 && c.getInt(idx.is_verified) == 1;
-        retweeted_by_user_name = idx.retweeted_by_user_name != -1 ? c.getString(idx.retweeted_by_user_name) : null;
-        retweeted_by_user_screen_name = idx.retweeted_by_user_screen_name != -1 ? c
-                .getString(idx.retweeted_by_user_screen_name) : null;
-        retweeted_by_user_profile_image = idx.retweeted_by_user_profile_image != -1 ? c
-                .getString(idx.retweeted_by_user_profile_image) : null;
-        text_html = idx.text_html != -1 ? c.getString(idx.text_html) : null;
-        media = idx.media != -1 ? ParcelableMedia.fromSerializedJson(c.getString(idx.media)) : null;
-        quoted_media = idx.quoted_media != -1 ? ParcelableMedia.fromSerializedJson(c.getString(idx.quoted_media)) : null;
-        text_plain = idx.text_plain != -1 ? c.getString(idx.text_plain) : null;
-        user_name = idx.user_name != -1 ? c.getString(idx.user_name) : null;
-        user_screen_name = idx.user_screen_name != -1 ? c.getString(idx.user_screen_name) : null;
-        in_reply_to_name = idx.in_reply_to_user_name != -1 ? c.getString(idx.in_reply_to_user_name) : null;
-        in_reply_to_screen_name = idx.in_reply_to_user_screen_name != -1 ? c
-                .getString(idx.in_reply_to_user_screen_name) : null;
-        source = idx.source != -1 ? c.getString(idx.source) : null;
-        location = idx.location != -1 ? new ParcelableLocation(c.getString(idx.location)) : null;
-        user_profile_image_url = idx.user_profile_image_url != -1 ? c.getString(idx.user_profile_image_url) : null;
-        text_unescaped = idx.text_unescaped != -1 ? c.getString(idx.text_unescaped) : null;
-        my_retweet_id = idx.my_retweet_id != -1 ? c.getLong(idx.my_retweet_id) : -1;
-        is_possibly_sensitive = idx.is_possibly_sensitive != -1 && c.getInt(idx.is_possibly_sensitive) == 1;
-        user_is_following = idx.is_following != -1 && c.getInt(idx.is_following) == 1;
-        mentions = idx.mentions != -1 ? ParcelableUserMention.fromSerializedJson(c.getString(idx.mentions)) : null;
-        card = idx.card != -1 ? ParcelableCardEntity.fromJSONString(c.getString(idx.card)) : null;
-        place_full_name = idx.place_full_name != -1 ? c.getString(idx.place_full_name) : null;
-        is_quote = idx.is_quote != -1 && c.getShort(idx.is_quote) == 1;
-        quoted_id = idx.quoted_id != -1 ? c.getLong(idx.quoted_id) : -1;
-        quoted_timestamp = idx.quoted_timestamp != -1 ? c.getLong(idx.quoted_timestamp) : -1;
-        quoted_user_id = idx.quoted_user_id != -1 ? c.getLong(idx.quoted_user_id) : -1;
-        quoted_text_html = idx.quoted_text_html != -1 ? c.getString(idx.quoted_text_html) : null;
-        quoted_text_plain = idx.quoted_text_plain != -1 ? c.getString(idx.quoted_text_plain) : null;
-        quoted_text_unescaped = idx.quoted_text_unescaped != -1 ? c.getString(idx.quoted_text_unescaped) : null;
-        quoted_user_name = idx.quoted_user_name != -1 ? c.getString(idx.quoted_user_name) : null;
-        quoted_user_screen_name = idx.quoted_user_screen_name != -1 ? c.getString(idx.quoted_user_screen_name) : null;
-        quoted_user_profile_image = idx.quoted_user_profile_image != -1 ? c.getString(idx.quoted_user_profile_image) : null;
-        quoted_user_is_protected = idx.quoted_user_is_protected != -1 && c.getShort(idx.quoted_user_is_protected) == 1;
-        quoted_user_is_verified = idx.quoted_user_is_verified != -1 && c.getShort(idx.quoted_user_is_verified) == 1;
-        quoted_source = idx.quoted_source != -1 ? c.getString(idx.quoted_source) : null;
-        card_name = card != null ? card.name : null;
-    }
-
-    public ParcelableStatus() {
+    ParcelableStatus() {
     }
 
     public ParcelableStatus(final ParcelableStatus orig, final long override_my_retweet_id,
@@ -460,17 +513,17 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         return result;
     }
 
+    @AfterCursorObjectCreated
+    void finishCursorObjectCreation() {
+        card_name = card != null ? card.name : null;
+    }
+
     @Override
     public int compareTo(@NonNull final ParcelableStatus another) {
         final long diff = another.id - id;
         if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
         if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
         return (int) diff;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     @Override
@@ -549,150 +602,20 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 '}';
     }
 
-    @Override
-    public void writeToParcel(final Parcel out, final int flags) {
-        ParcelableStatusParcelablePlease.writeToParcel(this, out, flags);
-    }
-
     @OnJsonParseComplete
     void onParseComplete() throws IOException {
         if (is_quote && TextUtils.isEmpty(quoted_text_html))
             throw new IOException("Incompatible model");
     }
 
-    public static final class CursorIndices extends ObjectCursor.CursorIndices<ParcelableStatus> {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-        public final int _id, account_id, status_id, status_timestamp, user_name, user_screen_name,
-                text_html, text_plain, text_unescaped, user_profile_image_url, is_favorite, is_retweet,
-                is_gap, location, is_protected, is_verified, in_reply_to_status_id, in_reply_to_user_id,
-                in_reply_to_user_name, in_reply_to_user_screen_name, my_retweet_id, retweeted_by_user_name,
-                retweeted_by_user_screen_name, retweeted_by_user_profile_image, retweet_id, retweet_timestamp,
-                retweeted_by_user_id, user_id, source, retweet_count, favorite_count, reply_count,
-                is_possibly_sensitive, is_following, media, mentions, quoted_media, card_name, card,
-                place_full_name, is_quote, quoted_id, quoted_text_html, quoted_text_plain, quoted_text_unescaped,
-                quoted_timestamp, quoted_source, quoted_user_id, quoted_user_name, quoted_user_screen_name,
-                quoted_user_profile_image, quoted_user_is_protected, quoted_user_is_verified;
-
-        public CursorIndices(final Cursor cursor) {
-            super(cursor);
-            _id = cursor.getColumnIndex(Statuses._ID);
-            account_id = cursor.getColumnIndex(Statuses.ACCOUNT_ID);
-            status_id = cursor.getColumnIndex(Statuses.STATUS_ID);
-            status_timestamp = cursor.getColumnIndex(Statuses.STATUS_TIMESTAMP);
-            user_name = cursor.getColumnIndex(Statuses.USER_NAME);
-            user_screen_name = cursor.getColumnIndex(Statuses.USER_SCREEN_NAME);
-            text_html = cursor.getColumnIndex(Statuses.TEXT_HTML);
-            text_plain = cursor.getColumnIndex(Statuses.TEXT_PLAIN);
-            text_unescaped = cursor.getColumnIndex(Statuses.TEXT_UNESCAPED);
-            user_profile_image_url = cursor.getColumnIndex(Statuses.USER_PROFILE_IMAGE_URL);
-            is_favorite = cursor.getColumnIndex(Statuses.IS_FAVORITE);
-            is_retweet = cursor.getColumnIndex(Statuses.IS_RETWEET);
-            is_quote = cursor.getColumnIndex(Statuses.IS_QUOTE);
-            is_gap = cursor.getColumnIndex(Statuses.IS_GAP);
-            location = cursor.getColumnIndex(Statuses.LOCATION);
-            is_protected = cursor.getColumnIndex(Statuses.IS_PROTECTED);
-            is_verified = cursor.getColumnIndex(Statuses.IS_VERIFIED);
-            in_reply_to_status_id = cursor.getColumnIndex(Statuses.IN_REPLY_TO_STATUS_ID);
-            in_reply_to_user_id = cursor.getColumnIndex(Statuses.IN_REPLY_TO_USER_ID);
-            in_reply_to_user_name = cursor.getColumnIndex(Statuses.IN_REPLY_TO_USER_NAME);
-            in_reply_to_user_screen_name = cursor.getColumnIndex(Statuses.IN_REPLY_TO_USER_SCREEN_NAME);
-            my_retweet_id = cursor.getColumnIndex(Statuses.MY_RETWEET_ID);
-            retweet_id = cursor.getColumnIndex(Statuses.RETWEET_ID);
-            retweet_timestamp = cursor.getColumnIndex(Statuses.RETWEET_TIMESTAMP);
-            retweeted_by_user_id = cursor.getColumnIndex(Statuses.RETWEETED_BY_USER_ID);
-            retweeted_by_user_name = cursor.getColumnIndex(Statuses.RETWEETED_BY_USER_NAME);
-            retweeted_by_user_screen_name = cursor.getColumnIndex(Statuses.RETWEETED_BY_USER_SCREEN_NAME);
-            retweeted_by_user_profile_image = cursor.getColumnIndex(Statuses.RETWEETED_BY_USER_PROFILE_IMAGE);
-            quoted_id = cursor.getColumnIndex(Statuses.QUOTED_ID);
-            quoted_text_html = cursor.getColumnIndex(Statuses.QUOTED_TEXT_HTML);
-            quoted_text_plain = cursor.getColumnIndex(Statuses.QUOTED_TEXT_PLAIN);
-            quoted_text_unescaped = cursor.getColumnIndex(Statuses.QUOTED_TEXT_UNESCAPED);
-            quoted_timestamp = cursor.getColumnIndex(Statuses.QUOTED_TIMESTAMP);
-            quoted_source = cursor.getColumnIndex(Statuses.QUOTED_SOURCE);
-            quoted_user_id = cursor.getColumnIndex(Statuses.QUOTED_USER_ID);
-            quoted_user_name = cursor.getColumnIndex(Statuses.QUOTED_USER_NAME);
-            quoted_user_screen_name = cursor.getColumnIndex(Statuses.QUOTED_USER_SCREEN_NAME);
-            quoted_user_profile_image = cursor.getColumnIndex(Statuses.QUOTED_USER_PROFILE_IMAGE);
-            quoted_user_is_protected = cursor.getColumnIndex(Statuses.QUOTED_USER_IS_PROTECTED);
-            quoted_user_is_verified = cursor.getColumnIndex(Statuses.QUOTED_USER_IS_VERIFIED);
-            user_id = cursor.getColumnIndex(Statuses.USER_ID);
-            source = cursor.getColumnIndex(Statuses.SOURCE);
-            retweet_count = cursor.getColumnIndex(Statuses.RETWEET_COUNT);
-            favorite_count = cursor.getColumnIndex(Statuses.FAVORITE_COUNT);
-            reply_count = cursor.getColumnIndex(Statuses.REPLY_COUNT);
-            is_possibly_sensitive = cursor.getColumnIndex(Statuses.IS_POSSIBLY_SENSITIVE);
-            is_following = cursor.getColumnIndex(Statuses.IS_FOLLOWING);
-            media = cursor.getColumnIndex(Statuses.MEDIA_JSON);
-            mentions = cursor.getColumnIndex(Statuses.MENTIONS_JSON);
-            quoted_media = cursor.getColumnIndex(Statuses.QUOTED_MEDIA_JSON);
-            card = cursor.getColumnIndex(Statuses.CARD);
-            card_name = cursor.getColumnIndex(Statuses.CARD_NAME);
-            place_full_name = cursor.getColumnIndex(Statuses.PLACE_FULL_NAME);
-        }
-
-        @Override
-        public ParcelableStatus newObject(Cursor cursor) {
-            return new ParcelableStatus(cursor, this);
-        }
-
-        @Override
-        public String toString() {
-            return "CursorIndices{" +
-                    "_id=" + _id +
-                    ", account_id=" + account_id +
-                    ", status_id=" + status_id +
-                    ", status_timestamp=" + status_timestamp +
-                    ", user_name=" + user_name +
-                    ", user_screen_name=" + user_screen_name +
-                    ", text_html=" + text_html +
-                    ", text_plain=" + text_plain +
-                    ", text_unescaped=" + text_unescaped +
-                    ", user_profile_image_url=" + user_profile_image_url +
-                    ", is_favorite=" + is_favorite +
-                    ", is_retweet=" + is_retweet +
-                    ", is_gap=" + is_gap +
-                    ", location=" + location +
-                    ", is_protected=" + is_protected +
-                    ", is_verified=" + is_verified +
-                    ", in_reply_to_status_id=" + in_reply_to_status_id +
-                    ", in_reply_to_user_id=" + in_reply_to_user_id +
-                    ", in_reply_to_user_name=" + in_reply_to_user_name +
-                    ", in_reply_to_user_screen_name=" + in_reply_to_user_screen_name +
-                    ", my_retweet_id=" + my_retweet_id +
-                    ", retweeted_by_user_name=" + retweeted_by_user_name +
-                    ", retweeted_by_user_screen_name=" + retweeted_by_user_screen_name +
-                    ", retweeted_by_user_profile_image=" + retweeted_by_user_profile_image +
-                    ", retweet_id=" + retweet_id +
-                    ", retweet_timestamp=" + retweet_timestamp +
-                    ", retweeted_by_user_id=" + retweeted_by_user_id +
-                    ", user_id=" + user_id +
-                    ", source=" + source +
-                    ", retweet_count=" + retweet_count +
-                    ", favorite_count=" + favorite_count +
-                    ", reply_count=" + reply_count +
-                    ", is_possibly_sensitive=" + is_possibly_sensitive +
-                    ", is_following=" + is_following +
-                    ", media=" + media +
-                    ", mentions=" + mentions +
-                    ", quoted_media=" + quoted_media +
-                    ", card_name=" + card_name +
-                    ", card=" + card +
-                    ", place_full_name=" + place_full_name +
-                    ", is_quote=" + is_quote +
-                    ", quoted_id=" + quoted_id +
-                    ", quoted_text_html=" + quoted_text_html +
-                    ", quoted_text_plain=" + quoted_text_plain +
-                    ", quoted_text_unescaped=" + quoted_text_unescaped +
-                    ", quoted_timestamp=" + quoted_timestamp +
-                    ", quoted_source=" + quoted_source +
-                    ", quoted_user_id=" + quoted_user_id +
-                    ", quoted_user_name=" + quoted_user_name +
-                    ", quoted_user_screen_name=" + quoted_user_screen_name +
-                    ", quoted_user_profile_image=" + quoted_user_profile_image +
-                    ", quoted_user_is_protected=" + quoted_user_is_protected +
-                    ", quoted_user_is_verified=" + quoted_user_is_verified +
-                    "} " + super.toString();
-        }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ParcelableStatusParcelablePlease.writeToParcel(this, dest, flags);
     }
 
     @JsonObject
@@ -710,12 +633,15 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             }
         };
 
+        @ParcelableThisPlease
         @JsonField(name = "name")
         public String name;
 
+        @ParcelableThisPlease
         @JsonField(name = "users")
         public ParcelableUser[] users;
 
+        @ParcelableThisPlease
         @JsonField(name = "values")
         public Map<String, ParcelableBindingValue> values;
 
@@ -803,8 +729,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 }
             };
 
+            @ParcelableThisPlease
             @JsonField(name = "type")
             public String type;
+            @ParcelableThisPlease
             @JsonField(name = "value")
             public String value;
 
@@ -856,5 +784,4 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         }
 
     }
-
 }

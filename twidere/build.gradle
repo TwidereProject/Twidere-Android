@@ -65,15 +65,14 @@ dependencies {
     apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
+    apt "com.github.mariotaku.ObjectCursor:processor:0.9.2"
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile('com.twitter:twitter-text:1.12.1') {
-        exclude group: 'org.yaml', module: 'snakeyaml'
-    }
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile 'com.twitter:twitter-text:1.13.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.squareup:otto:1.3.8'
     compile 'dnsjava:dnsjava:2.1.7'
     compile 'com.commonsware.cwac:merge:1.1.1'
@@ -88,7 +87,7 @@ dependencies {
     compile 'com.github.mariotaku:DragSortListView:0.6.1'
     compile 'com.github.uucky:ColorPicker-Android:0.9.7@aar'
     compile 'com.github.boxme:asyncmanager:1.0.0'
-    compile 'com.sprylab.android.texturevideoview:texturevideoview:1.0.1'
+    compile 'com.sprylab.android.texturevideoview:texturevideoview:1.0.2'
     compile 'com.squareup:pollexor:2.0.4'
     compile 'com.squareup:tape:1.2.3'
     compile 'org.apache.commons:commons-lang3:3.4'
@@ -109,12 +108,12 @@ dependencies {
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
     googleCompile 'com.google.android.gms:play-services-maps:8.3.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4'
-    fdroidCompile 'org.osmdroid:osmdroid-android:4.3'
-    fdroidCompile 'org.slf4j:slf4j-simple:1.7.12'
+    fdroidCompile 'org.osmdroid:osmdroid-android:5.0.1'
     debugCompile 'com.facebook.stetho:stetho:1.2.0'
     debugCompile 'com.facebook.stetho:stetho-okhttp:1.2.0'
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
+    compile 'com.github.mariotaku.ObjectCursor:core:0.9.2'
     compile fileTree(dir: 'libs/main', include: ['*.jar'])
     provided 'javax.annotation:jsr250-api:1.0'
 //    googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])
@@ -122,13 +121,13 @@ dependencies {
 
 task svgToDrawable(type: SvgDrawableTask) {
     // specify where to pick SVG from
-    from = file('src/main/svg/drawable')
+    from = files('src/main/svg/drawable')
     // specify the android res folder
     to = file('src/main/res-svg2png')
     // create qualified directories if missing
     createMissingDirectories = true
     // override files only if necessary
-    overrideMode = 'ifModified'
+    overwriteMode = 'ifModified'
     // let generate PNG for the following densities only
     targetedDensities = ['hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
     // relative path of the file specifying nine patch specs

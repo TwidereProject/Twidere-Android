@@ -31,27 +31,27 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.GeoLocation;
-import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.Trend;
 import org.mariotaku.twidere.api.twitter.model.Trends;
-import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
+import org.mariotaku.twidere.model.ParcelableDirectMessageValuesCreator;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
+import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
+import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -61,7 +61,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -149,37 +148,9 @@ public final class ContentValuesCreator implements TwidereConstants {
     }
 
     public static ContentValues createCachedUser(final User user) {
-        if (user == null || user.getId() <= 0) return null;
-        final String profile_image_url = TwitterContentUtils.getProfileImageUrl(user);
-        final String url = user.getUrl();
-        final UrlEntity[] urls = user.getUrlEntities();
+        if (user == null) return null;
         final ContentValues values = new ContentValues();
-        values.put(CachedUsers.USER_ID, user.getId());
-        values.put(CachedUsers.NAME, user.getName());
-        values.put(CachedUsers.SCREEN_NAME, user.getScreenName());
-        values.put(CachedUsers.PROFILE_IMAGE_URL, profile_image_url);
-        values.put(CachedUsers.PROFILE_BANNER_URL, user.getProfileBannerImageUrl());
-        values.put(CachedUsers.CREATED_AT, user.getCreatedAt().getTime());
-        values.put(CachedUsers.IS_PROTECTED, user.isProtected());
-        values.put(CachedUsers.IS_VERIFIED, user.isVerified());
-        values.put(CachedUsers.IS_FOLLOWING, user.isFollowing());
-        values.put(CachedUsers.FAVORITES_COUNT, user.getFavouritesCount());
-        values.put(CachedUsers.FOLLOWERS_COUNT, user.getFollowersCount());
-        values.put(CachedUsers.FRIENDS_COUNT, user.getFriendsCount());
-        values.put(CachedUsers.STATUSES_COUNT, user.getStatusesCount());
-        values.put(CachedUsers.LISTED_COUNT, user.getListedCount());
-        values.put(CachedUsers.MEDIA_COUNT, user.getMediaCount());
-        values.put(CachedUsers.LOCATION, user.getLocation());
-        values.put(CachedUsers.DESCRIPTION_PLAIN, user.getDescription());
-        values.put(CachedUsers.DESCRIPTION_HTML, TwitterContentUtils.formatUserDescription(user));
-        values.put(CachedUsers.DESCRIPTION_EXPANDED, TwitterContentUtils.formatExpandedUserDescription(user));
-        values.put(CachedUsers.URL, url);
-        if (url != null && urls != null && urls.length > 0) {
-            values.put(CachedUsers.URL_EXPANDED, urls[0].getExpandedUrl());
-        }
-        values.put(CachedUsers.BACKGROUND_COLOR, ParseUtils.parseColor("#" + user.getProfileBackgroundColor(), 0));
-        values.put(CachedUsers.LINK_COLOR, ParseUtils.parseColor("#" + user.getProfileLinkColor(), 0));
-        values.put(CachedUsers.TEXT_COLOR, ParseUtils.parseColor("#" + user.getProfileTextColor(), 0));
+        ParcelableUserValuesCreator.writeTo(new ParcelableUser(user, -1), values);
         return values;
     }
 
@@ -225,27 +196,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createDirectMessage(final ParcelableDirectMessage message) {
         if (message == null) return null;
         final ContentValues values = new ContentValues();
-        values.put(DirectMessages.ACCOUNT_ID, message.account_id);
-        values.put(DirectMessages.MESSAGE_ID, message.id);
-        values.put(DirectMessages.MESSAGE_TIMESTAMP, message.timestamp);
-        values.put(DirectMessages.SENDER_ID, message.sender_id);
-        values.put(DirectMessages.RECIPIENT_ID, message.recipient_id);
-        values.put(DirectMessages.TEXT_HTML, message.text_html);
-        values.put(DirectMessages.TEXT_PLAIN, message.text_plain);
-        values.put(DirectMessages.IS_OUTGOING, message.is_outgoing);
-        values.put(DirectMessages.SENDER_NAME, message.sender_name);
-        values.put(DirectMessages.SENDER_SCREEN_NAME, message.sender_screen_name);
-        values.put(DirectMessages.RECIPIENT_NAME, message.recipient_name);
-        values.put(DirectMessages.RECIPIENT_SCREEN_NAME, message.recipient_screen_name);
-        values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, message.sender_profile_image_url);
-        values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, message.recipient_profile_image_url);
-        if (message.media != null) {
-            try {
-                values.put(DirectMessages.MEDIA_JSON, LoganSquare.serialize(Arrays.asList(message.media), ParcelableMedia.class));
-            } catch (IOException ignored) {
-
-            }
-        }
+        ParcelableDirectMessageValuesCreator.writeTo(message, values);
         return values;
     }
 
@@ -320,128 +271,7 @@ public final class ContentValuesCreator implements TwidereConstants {
 
     @NonNull
     public static ContentValues createStatus(final Status orig, final long accountId) {
-        if (orig == null) throw new NullPointerException();
-        final ContentValues values = new ContentValues();
-        values.put(Statuses.ACCOUNT_ID, accountId);
-        values.put(Statuses.STATUS_ID, orig.getId());
-        values.put(Statuses.STATUS_TIMESTAMP, orig.getCreatedAt().getTime());
-
-        final Status status;
-        if (orig.isRetweet()) {
-            final Status retweetedStatus = orig.getRetweetedStatus();
-            final User retweetUser = orig.getUser();
-            final long retweetedById = retweetUser.getId();
-            values.put(Statuses.RETWEET_ID, retweetedStatus.getId());
-            values.put(Statuses.RETWEET_TIMESTAMP, retweetedStatus.getCreatedAt().getTime());
-            values.put(Statuses.RETWEETED_BY_USER_ID, retweetedById);
-            values.put(Statuses.RETWEETED_BY_USER_NAME, retweetUser.getName());
-            values.put(Statuses.RETWEETED_BY_USER_SCREEN_NAME, retweetUser.getScreenName());
-            values.put(Statuses.RETWEETED_BY_USER_PROFILE_IMAGE, TwitterContentUtils.getProfileImageUrl(retweetUser));
-            values.put(Statuses.IS_RETWEET, true);
-            if (retweetedById == accountId) {
-                values.put(Statuses.MY_RETWEET_ID, orig.getId());
-            } else {
-                values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());
-            }
-            status = retweetedStatus;
-        } else if (orig.isQuote()) {
-            final Status quoted = orig.getQuotedStatus();
-            final User quotedUser = quoted.getUser();
-            final long quotedById = quotedUser.getId();
-            values.put(Statuses.QUOTED_ID, quoted.getId());
-            final String textHtml = TwitterContentUtils.formatStatusText(quoted);
-            values.put(Statuses.QUOTED_TEXT_HTML, textHtml);
-            values.put(Statuses.QUOTED_TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(quoted.getText()));
-            values.put(Statuses.QUOTED_TEXT_UNESCAPED, toPlainText(textHtml));
-            values.put(Statuses.QUOTED_TIMESTAMP, quoted.getCreatedAt().getTime());
-            values.put(Statuses.QUOTED_SOURCE, quoted.getSource());
-            final ParcelableMedia[] quoteMedia = ParcelableMedia.fromStatus(quoted);
-            if (quoteMedia != null && quoteMedia.length > 0) {
-                try {
-                    values.put(Statuses.QUOTED_MEDIA_JSON, LoganSquare.serialize(Arrays.asList(quoteMedia), ParcelableMedia.class));
-                } catch (IOException ignored) {
-                }
-            }
-            values.put(Statuses.QUOTED_USER_ID, quotedById);
-            values.put(Statuses.QUOTED_USER_NAME, quotedUser.getName());
-            values.put(Statuses.QUOTED_USER_SCREEN_NAME, quotedUser.getScreenName());
-            values.put(Statuses.QUOTED_USER_PROFILE_IMAGE, TwitterContentUtils.getProfileImageUrl(quotedUser));
-            values.put(Statuses.QUOTED_USER_IS_VERIFIED, quotedUser.isVerified());
-            values.put(Statuses.QUOTED_USER_IS_PROTECTED, quotedUser.isProtected());
-            values.put(Statuses.IS_QUOTE, true);
-            status = orig;
-        } else {
-            values.put(Statuses.MY_RETWEET_ID, orig.getCurrentUserRetweet());
-            status = orig;
-        }
-        if (orig.isRetweet()) {
-            values.put(Statuses.IN_REPLY_TO_STATUS_ID, status.getInReplyToStatusId());
-            values.put(Statuses.IN_REPLY_TO_USER_ID, status.getInReplyToUserId());
-            values.put(Statuses.IN_REPLY_TO_USER_NAME, TwitterContentUtils.getInReplyToName(status));
-            values.put(Statuses.IN_REPLY_TO_USER_SCREEN_NAME, status.getInReplyToScreenName());
-            values.put(Statuses.RETWEET_COUNT, status.getRetweetCount());
-            values.put(Statuses.FAVORITE_COUNT, status.getFavoriteCount());
-            values.put(Statuses.REPLY_COUNT, status.getReplyCount());
-
-        } else {
-            values.put(Statuses.IN_REPLY_TO_STATUS_ID, orig.getInReplyToStatusId());
-            values.put(Statuses.IN_REPLY_TO_USER_ID, orig.getInReplyToUserId());
-            values.put(Statuses.IN_REPLY_TO_USER_NAME, TwitterContentUtils.getInReplyToName(orig));
-            values.put(Statuses.IN_REPLY_TO_USER_SCREEN_NAME, orig.getInReplyToScreenName());
-
-            values.put(Statuses.RETWEET_COUNT, orig.getRetweetCount());
-            values.put(Statuses.FAVORITE_COUNT, orig.getFavoriteCount());
-            values.put(Statuses.REPLY_COUNT, orig.getReplyCount());
-        }
-        final User user = status.getUser();
-        final long userId = user.getId();
-        final String profileImageUrl = TwitterContentUtils.getProfileImageUrl(user);
-        final String name = user.getName(), screenName = user.getScreenName();
-        values.put(Statuses.USER_ID, userId);
-        values.put(Statuses.USER_NAME, name);
-        values.put(Statuses.USER_SCREEN_NAME, screenName);
-        values.put(Statuses.IS_PROTECTED, user.isProtected());
-        values.put(Statuses.IS_VERIFIED, user.isVerified());
-        values.put(Statuses.USER_PROFILE_IMAGE_URL, profileImageUrl);
-        values.put(Statuses.IS_FOLLOWING, user.isFollowing());
-        final String textHtml = TwitterContentUtils.formatStatusText(status);
-        values.put(Statuses.TEXT_HTML, textHtml);
-        values.put(Statuses.TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(status.getText()));
-        values.put(Statuses.TEXT_UNESCAPED, toPlainText(textHtml));
-        values.put(Statuses.SOURCE, status.getSource());
-        values.put(Statuses.IS_POSSIBLY_SENSITIVE, status.isPossiblySensitive());
-        final GeoLocation location = status.getGeoLocation();
-        if (location != null) {
-            values.put(Statuses.LOCATION, ParcelableLocation.toString(location.getLatitude(), location.getLongitude()));
-        }
-        final Place place = status.getPlace();
-        if (place != null) {
-            values.put(Statuses.PLACE_FULL_NAME, place.getFullName());
-        }
-        values.put(Statuses.IS_FAVORITE, status.isFavorited());
-        final ParcelableMedia[] media = ParcelableMedia.fromStatus(status);
-        if (media != null && media.length > 0) {
-            try {
-                values.put(Statuses.MEDIA_JSON, LoganSquare.serialize(Arrays.asList(media), ParcelableMedia.class));
-            } catch (IOException ignored) {
-            }
-        }
-        final ParcelableUserMention[] mentions = ParcelableUserMention.fromStatus(status);
-        if (mentions != null && mentions.length > 0) {
-            try {
-                values.put(Statuses.MENTIONS_JSON, LoganSquare.serialize(Arrays.asList(mentions), ParcelableUserMention.class));
-            } catch (IOException ignored) {
-            }
-        }
-        final ParcelableCardEntity card = ParcelableCardEntity.fromCardEntity(status.getCard(), accountId);
-        if (card != null) {
-            try {
-                values.put(Statuses.CARD, LoganSquare.serialize(card));
-                values.put(Statuses.CARD_NAME, card.name);
-            } catch (IOException ignored) {
-            }
-        }
-        return values;
+        return ParcelableStatusValuesCreator.create(new ParcelableStatus(orig, accountId, false));
     }
 
     public static ContentValues createStatusDraft(final ParcelableStatusUpdate status) {
@@ -465,16 +295,7 @@ public final class ContentValuesCreator implements TwidereConstants {
                 break;
             }
         }
-        values.put(Activities.ACCOUNT_ID, accountId);
-        values.put(Activities.TIMESTAMP, activity.getCreatedAt().getTime());
-        values.put(Activities.MIN_POSITION, activity.getMinPosition());
-        values.put(Activities.MAX_POSITION, activity.getMaxPosition());
-        values.put(Activities.SOURCES, SerializeUtils.serializeArray(User.class, activity.getSources()));
-        values.put(Activities.TARGET_STATUSES, SerializeUtils.serializeArray(Status.class, activity.getTargetStatuses()));
-        values.put(Activities.TARGET_USERS, SerializeUtils.serializeArray(User.class, activity.getTargetUsers()));
-        values.put(Activities.TARGET_USER_LISTS, SerializeUtils.serializeArray(UserList.class, activity.getTargetUserLists()));
-        values.put(Activities.TARGET_OBJECT_STATUSES, SerializeUtils.serializeArray(Status.class, activity.getTargetObjectStatuses()));
-        values.put(Activities.TARGET_OBJECT_USER_LISTS, SerializeUtils.serializeArray(UserList.class, activity.getTargetObjectUserLists()));
+        ParcelableActivityValuesCreator.writeTo(new ParcelableActivity(activity, accountId, false), values);
         return values;
     }
 

@@ -24,7 +24,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.URLSpan;
-import android.widget.TextView;
 
 import com.twitter.Extractor;
 import com.twitter.Extractor.Entity;
@@ -108,41 +107,42 @@ public final class TwidereLinkify implements Constants {
         setHighlightOption(highlightOption);
     }
 
-    public final void applyAllLinks(final TextView view, final long accountId, final long extraId, final boolean sensitive) {
-        applyAllLinks(view, mOnLinkClickListener, accountId, extraId, sensitive, mHighlightOption);
+    public SpannableString applyAllLinks(CharSequence text, final long accountId, final long extraId, final boolean sensitive) {
+        return applyAllLinks(text, mOnLinkClickListener, accountId, extraId, sensitive, mHighlightOption);
     }
 
-    public final void applyAllLinks(final TextView view, final long accountId, final boolean sensitive) {
-        applyAllLinks(view, mOnLinkClickListener, accountId, -1, sensitive, mHighlightOption);
+    public SpannableString applyAllLinks(CharSequence text, final long accountId, final boolean sensitive) {
+        return applyAllLinks(text, mOnLinkClickListener, accountId, -1, sensitive, mHighlightOption);
     }
 
-    public final void applyAllLinks(final TextView view, final long accountId, final long extraId,
-                                    final boolean sensitive, final int highlightOption) {
-        applyAllLinks(view, mOnLinkClickListener, accountId, extraId, sensitive, highlightOption);
+    public SpannableString applyAllLinks(CharSequence text, final long accountId, final long extraId,
+                                         final boolean sensitive, final int highlightOption) {
+        return applyAllLinks(text, mOnLinkClickListener, accountId, extraId, sensitive, highlightOption);
     }
 
-    public final void applyAllLinks(final TextView view, final OnLinkClickListener listener, final long accountId, final long extraId,
-                                    final boolean sensitive, final int highlightOption) {
-        final SpannableString string = SpannableString.valueOf(view.getText());
+    public SpannableString applyAllLinks(final CharSequence text, final OnLinkClickListener listener,
+                                         final long accountId, final long extraId, final boolean sensitive,
+                                         final int highlightOption) {
+        final SpannableString string = SpannableString.valueOf(text);
         for (final int type : ALL_LINK_TYPES) {
             addLinks(string, accountId, extraId, type, sensitive, listener, highlightOption);
         }
-        view.setText(string, TextView.BufferType.SPANNABLE);
+        return string;
     }
 
-    public final void applyUserProfileLink(final TextView view, final long accountId, final long extraId,
-                                           final long userId, final String screenName) {
-        applyUserProfileLink(view, accountId, extraId, userId, screenName, mHighlightOption);
+    public SpannableString applyUserProfileLink(final CharSequence text, final long accountId, final long extraId,
+                                                final long userId, final String screenName) {
+        return applyUserProfileLink(text, accountId, extraId, userId, screenName, mHighlightOption);
     }
 
-    public final void applyUserProfileLink(final TextView view, final long accountId, final long extraId,
-                                           final long userId, final String screenName, final int highlightOption) {
-        applyUserProfileLink(view, accountId, extraId, userId, screenName, highlightOption, mOnLinkClickListener);
+    public SpannableString applyUserProfileLink(final CharSequence text, final long accountId, final long extraId,
+                                                final long userId, final String screenName, final int highlightOption) {
+        return applyUserProfileLink(text, accountId, extraId, userId, screenName, highlightOption, mOnLinkClickListener);
     }
 
-    public final void applyUserProfileLink(final TextView view, final long accountId, final long extraId,
-                                           final long userId, final String screenName, final int highlightOption, final OnLinkClickListener listener) {
-        final SpannableString string = SpannableString.valueOf(view.getText());
+    public final SpannableString applyUserProfileLink(final CharSequence text, final long accountId, final long extraId,
+                                                      final long userId, final String screenName, final int highlightOption, final OnLinkClickListener listener) {
+        final SpannableString string = SpannableString.valueOf(text);
         final URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
         for (final URLSpan span : spans) {
             string.removeSpan(span);
@@ -154,7 +154,7 @@ public final class TwidereLinkify implements Constants {
             applyLink(screenName, 0, string.length(), string, accountId, extraId,
                     LINK_TYPE_MENTION, false, highlightOption, listener);
         }
-        view.setText(string, TextView.BufferType.SPANNABLE);
+        return string;
     }
 
     public void setHighlightOption(@HighlightStyle final int style) {

@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.loader.support;
+package org.mariotaku.twidere.loader;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -26,8 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.LoaderTrojan;
 
-import org.mariotaku.twidere.model.ListResponse;
-import org.mariotaku.twidere.model.ObjectCursor;
+import org.mariotaku.library.objectcursor.ObjectCursor;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;

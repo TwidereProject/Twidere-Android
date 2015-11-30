@@ -62,6 +62,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ActionBarContainer;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.TwidereToolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -143,8 +144,6 @@ import org.mariotaku.twidere.view.ProfileBannerImageView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
-
-import android.support.v7.widget.TwidereToolbar;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.util.Calendar;
@@ -506,11 +505,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mProfileTypeView.setImageDrawable(null);
             mProfileTypeView.setVisibility(View.GONE);
         }
-        mScreenNameView.setText("@" + user.screen_name);
+        mScreenNameView.setText(String.format("@%s", user.screen_name));
         mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
-        mDescriptionView.setText(user.description_html != null ? HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain);
         final TwidereLinkify linkify = new TwidereLinkify(this);
-        linkify.applyAllLinks(mDescriptionView, user.account_id, false);
+        mDescriptionView.setText(linkify.applyAllLinks(user.description_html != null ?
+                HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain, user.account_id, false));
         mLocationContainer.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
         mLocationView.setText(user.location);
         mURLContainer.setVisibility(TextUtils.isEmpty(user.url) && TextUtils.isEmpty(user.url_expanded) ? View.GONE : View.VISIBLE);

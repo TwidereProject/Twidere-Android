@@ -59,6 +59,8 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.Toast;
 
+import com.desmond.asyncmanager.AsyncManager;
+import com.desmond.asyncmanager.TaskRunnable;
 import com.meizu.flyme.reflect.StatusBarProxy;
 import com.squareup.otto.Subscribe;
 
@@ -571,7 +573,15 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         stopService(new Intent(this, StreamingService.class));
 
         // Delete unused items in databases.
-        cleanDatabasesByItemLimit(this);
+
+        final Context context = getApplicationContext();
+        AsyncManager.runBackgroundTask(new TaskRunnable() {
+            @Override
+            public Object doLongOperation(Object o) throws InterruptedException {
+                cleanDatabasesByItemLimit(context);
+                return null;
+            }
+        });
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONDESTROY));
         super.onDestroy();
     }

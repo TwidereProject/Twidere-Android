@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,14 +38,14 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
-import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
-import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.loader.ObjectCursorLoader;
-import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
+import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.AccountChangedEvent;
@@ -66,12 +66,12 @@ import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
 /**
  * Created by mariotaku on 14/12/3.
  */
-public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
+public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<List<ParcelableActivity>> {
 
     @Override
     protected void onLoadingFinished() {
         final long[] accountIds = getAccountIds();
-        final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+        final AbsActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
         if (adapter.getItemCount() > 0) {
             showContent();
         } else if (accountIds.length > 0) {
@@ -87,14 +87,14 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     public abstract Uri getContentUri();
 
     @Override
-    protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
-                                                                    final Bundle args,
-                                                                    final boolean fromUser) {
+    protected Loader<List<ParcelableActivity>> onCreateStatusesLoader(final Context context,
+                                                                      final Bundle args,
+                                                                      final boolean fromUser) {
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
         final String sortOrder = getSortOrder();
         final long[] accountIds = getAccountIds();
-        final Expression accountWhere = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountIds));
+        final Expression accountWhere = Expression.in(new Column(Activities.ACCOUNT_ID), new RawItemArray(accountIds));
         final Expression filterWhere = getFiltersWhere(table), where;
         if (filterWhere != null) {
             where = Expression.and(accountWhere, filterWhere);
@@ -102,10 +102,10 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
             where = accountWhere;
         }
         final String selection = processWhere(where).getSQL();
-        final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
-        adapter.setShowAccountsColor(accountIds.length > 1);
-        final String[] projection = Statuses.COLUMNS;
-        return new ObjectCursorLoader<>(context, ParcelableStatusCursorIndices.class, uri, projection,
+        final AbsActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
+//        adapter.setShowAccountsColor(accountIds.length > 1);
+        final String[] projection = Activities.COLUMNS;
+        return new ObjectCursorLoader<>(context, ParcelableActivityCursorIndices.class, uri, projection,
                 selection, null, sortOrder);
     }
 
@@ -202,18 +202,18 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     @Override
-    protected boolean hasMoreData(final List<ParcelableStatus> cursor) {
+    protected boolean hasMoreData(final List<ParcelableActivity> cursor) {
         return cursor != null && cursor.size() != 0;
     }
 
     @NonNull
     @Override
-    protected ListParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ListParcelableStatusesAdapter(context, compact);
+    protected ParcelableActivitiesAdapter onCreateAdapter(final Context context, final boolean compact) {
+        return new ParcelableActivitiesAdapter(context, compact, false);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<ParcelableStatus>> loader) {
+    public void onLoaderReset(Loader<List<ParcelableActivity>> loader) {
         getAdapter().setData(null);
     }
 
@@ -222,7 +222,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         if (fromStart) return;
         //noinspection ConstantConditions
         super.onLoadMoreContents(fromStart);
-        AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorStatusesFragment>() {
+        AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorActivitiesFragment>() {
             @Override
             public long[][] doLongOperation(Object o) throws InterruptedException {
                 final long[][] result = new long[3][];
@@ -232,8 +232,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
             }
 
             @Override
-            public void callback(CursorStatusesFragment fragment, long[][] result) {
-                fragment.getStatuses(result[0], result[1], result[2]);
+            public void callback(CursorActivitiesFragment fragment, long[][] result) {
+                fragment.getActivities(result[0], result[1], result[2]);
             }
         }.setResultHandler(this));
     }
@@ -241,7 +241,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     @Override
     public boolean triggerRefresh() {
         super.triggerRefresh();
-        AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorStatusesFragment>() {
+        AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorActivitiesFragment>() {
             @Override
             public long[][] doLongOperation(Object o) throws InterruptedException {
                 final long[][] result = new long[3][];
@@ -251,8 +251,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
             }
 
             @Override
-            public void callback(CursorStatusesFragment fragment, long[][] result) {
-                fragment.getStatuses(result[0], result[1], result[2]);
+            public void callback(CursorActivitiesFragment fragment, long[][] result) {
+                fragment.getActivities(result[0], result[1], result[2]);
             }
         }.setResultHandler(this));
         return true;
@@ -264,7 +264,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     protected long[] getNewestStatusIds(long[] accountIds) {
-        return DataStoreUtils.getNewestStatusIdsFromDatabase(getActivity(), getContentUri(), accountIds);
+        return DataStoreUtils.getActivityMaxPositionsFromDatabase(getActivity(), getContentUri(), accountIds);
     }
 
     protected abstract int getNotificationType();
@@ -292,7 +292,6 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     protected abstract void updateRefreshState();
 
     private String getSortOrder() {
-        final boolean sortById = mPreferences.getBoolean(KEY_SORT_TIMELINE_BY_ID, false);
-        return sortById ? Statuses.SORT_ORDER_STATUS_ID_DESC : Statuses.SORT_ORDER_TIMESTAMP_DESC;
+        return Activities.DEFAULT_SORT_ORDER;
     }
 }

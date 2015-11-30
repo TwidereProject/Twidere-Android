@@ -43,25 +43,13 @@ import java.util.HashMap;
 @JsonObject
 public class SessionEvent extends BaseEvent implements Parcelable {
 
-    public static final Creator<SessionEvent> CREATOR = new Creator<SessionEvent>() {
-        @Override
-        public SessionEvent createFromParcel(Parcel in) {
-            return new SessionEvent(in);
-        }
 
-        @Override
-        public SessionEvent[] newArray(int size) {
-            return new SessionEvent[size];
-        }
-    };
-
-    @ParcelableThisPlease
     @JsonField(name = "configuration")
     String configuration;
-    @ParcelableThisPlease
+
     @JsonField(name = "preferences")
     HashMap<String, String> preferences;
-    @ParcelableThisPlease
+
     @JsonField(name = "device_preferences")
     HashMap<String, String> devicePreferences;
 
@@ -103,12 +91,6 @@ public class SessionEvent extends BaseEvent implements Parcelable {
         this.devicePreferences = devicePreferences;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        SessionEventParcelablePlease.writeToParcel(this, dest, flags);
-    }
-
     public void dumpPreferences(Context context) {
         final HashMap<String, String> preferences = new HashMap<>();
         for (AccountPreferences pref : AccountPreferences.getAccountPreferences(context, Utils.getAccountIds(context))) {
@@ -141,12 +123,29 @@ public class SessionEvent extends BaseEvent implements Parcelable {
                 "} " + super.toString();
     }
 
+    public void setConfiguration(String configuration) {
+        this.configuration = configuration;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
-    public void setConfiguration(String configuration) {
-        this.configuration = configuration;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        SessionEventParcelablePlease.writeToParcel(this, dest, flags);
     }
+
+    public static final Creator<SessionEvent> CREATOR = new Creator<SessionEvent>() {
+        public SessionEvent createFromParcel(Parcel source) {
+            SessionEvent target = new SessionEvent();
+            SessionEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public SessionEvent[] newArray(int size) {
+            return new SessionEvent[size];
+        }
+    };
 }

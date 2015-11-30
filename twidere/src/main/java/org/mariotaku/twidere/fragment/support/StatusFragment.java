@@ -900,11 +900,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quotedScreenNameView.setText("@" + status.quoted_user_screen_name);
 
                 final Spanned quotedText = HtmlSpanBuilder.fromHtml(status.quoted_text_html);
-                if (!TextUtils.equals(quotedTextView.getText(), quotedText)) {
-                    quotedTextView.setText(quotedText, TextView.BufferType.SPANNABLE);
-                }
+                quotedTextView.setText(linkify.applyAllLinks(quotedText, status.account_id,
+                        layoutPosition, status.is_possibly_sensitive));
 
-                linkify.applyAllLinks(quotedTextView, status.account_id, layoutPosition, status.is_possibly_sensitive);
                 quoteIndicator.setColor(manager.getUserColor(status.user_id, false));
                 profileContainer.drawStart(manager.getUserColor(status.quoted_user_id, false));
             } else {
@@ -953,10 +951,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
             final Spanned text = HtmlSpanBuilder.fromHtml(status.text_html);
-            if (!TextUtils.equals(textView.getText(), text)) {
-                textView.setText(text, TextView.BufferType.SPANNABLE);
-                linkify.applyAllLinks(textView, status.account_id, layoutPosition, status.is_possibly_sensitive);
-            }
+            textView.setText(linkify.applyAllLinks(text, status.account_id, layoutPosition,
+                    status.is_possibly_sensitive));
 
             if (!TextUtils.isEmpty(status.place_full_name)) {
                 locationView.setVisibility(View.VISIBLE);

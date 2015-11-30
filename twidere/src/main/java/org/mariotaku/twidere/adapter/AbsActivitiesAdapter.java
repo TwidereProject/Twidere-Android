@@ -134,14 +134,9 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     @Override
     public void onStatusClick(IStatusViewHolder holder, int position) {
-        final ParcelableActivity activity = getActivity(position);
-        final ParcelableStatus status;
-        if (activity.action == Activity.ACTION_MENTION) {
-            status = activity.target_object_statuses[0];
-        } else {
-            status = activity.target_statuses[0];
+        if (mActivityAdapterListener != null) {
+            mActivityAdapterListener.onStatusClick(holder, position);
         }
-        Utils.openStatus(getContext(), status, null);
     }
 
     @Override
@@ -289,26 +284,21 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
     @Override
-    public boolean isGapItem(int position) {
-        return false;
-    }
-
-    @Override
-    public void onGapClick(ViewHolder holder, int position) {
+    public final void onGapClick(ViewHolder holder, int position) {
         if (mActivityAdapterListener != null) {
             mActivityAdapterListener.onGapClick((GapViewHolder) holder, position);
         }
     }
 
     @Override
-    public void onItemActionClick(ViewHolder holder, int id, int position) {
+    public final void onItemActionClick(ViewHolder holder, int id, int position) {
         if (mActivityAdapterListener != null) {
-            mActivityAdapterListener.onStatusActionClick(((StatusViewHolder) holder), id, position);
+            mActivityAdapterListener.onStatusActionClick(((IStatusViewHolder) holder), id, position);
         }
     }
 
     @Override
-    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
+    public final void onItemMenuClick(ViewHolder holder, View menuView, int position) {
         if (mActivityAdapterListener != null) {
             mActivityAdapterListener.onStatusMenuClick((StatusViewHolder) holder, menuView, position);
         }
@@ -327,7 +317,8 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     protected abstract int getActivityAction(int position);
 
-    private boolean isMediaPreviewEnabled() {
+    @Override
+    public boolean isMediaPreviewEnabled() {
         return mStatusAdapterDelegate.isMediaPreviewEnabled();
     }
 
@@ -342,9 +333,11 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
         void onActivityClick(ActivityTitleSummaryViewHolder holder, int position);
 
-        void onStatusActionClick(StatusViewHolder holder, int id, int position);
+        void onStatusActionClick(IStatusViewHolder holder, int id, int position);
 
-        void onStatusMenuClick(StatusViewHolder holder, View menuView, int position);
+        void onStatusMenuClick(IStatusViewHolder holder, View menuView, int position);
+
+        void onStatusClick(IStatusViewHolder holder, int position);
     }
 
     private static class StubViewHolder extends ViewHolder {

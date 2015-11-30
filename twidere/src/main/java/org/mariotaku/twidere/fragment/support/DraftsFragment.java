@@ -63,6 +63,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.model.DraftItem;
+import org.mariotaku.twidere.model.DraftItemCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
@@ -120,10 +121,10 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
                 if (c == null || c.isClosed()) return false;
                 final SparseBooleanArray checked = mListView.getCheckedItemPositions();
                 final List<DraftItem> list = new ArrayList<>();
-                final DraftItem.CursorIndices indices = new DraftItem.CursorIndices(c);
+                final DraftItemCursorIndices indices = new DraftItemCursorIndices(c);
                 for (int i = 0, j = checked.size(); i < j; i++) {
                     if (checked.valueAt(i) && c.moveToPosition(checked.keyAt(i))) {
-                        list.add(new DraftItem(c, indices));
+                        list.add(indices.newObject(c));
                     }
                 }
                 if (sendDrafts(list)) {
@@ -175,7 +176,7 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
     public void onItemClick(final AdapterView<?> view, final View child, final int position, final long id) {
         final Cursor c = mAdapter.getCursor();
         if (c == null || c.isClosed() || !c.moveToPosition(position)) return;
-        final DraftItem item = new DraftItem(c, new DraftItem.CursorIndices(c));
+        final DraftItem item = DraftItemCursorIndices.fromCursor(c);
         if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
             editDraft(item);
         }

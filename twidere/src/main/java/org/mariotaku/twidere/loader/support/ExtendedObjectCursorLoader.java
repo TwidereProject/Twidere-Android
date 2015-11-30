@@ -22,8 +22,9 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.net.Uri;
 
+import org.mariotaku.twidere.loader.ObjectCursorLoader;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
-import org.mariotaku.twidere.model.ObjectCursor;
+import org.mariotaku.library.objectcursor.ObjectCursor;
 
 /**
  * Created by mariotaku on 15/1/9.

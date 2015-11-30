@@ -20,8 +20,6 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.view.View;
 
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
@@ -59,19 +57,9 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
     }
 
     @Override
-    public void onItemActionClick(ViewHolder holder, int id, int position) {
-
-    }
-
-    @Override
     public int getActivityCount() {
         if (mData == null) return 0;
         return mData.size();
-    }
-
-    @Override
-    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
-
     }
 
     @Override

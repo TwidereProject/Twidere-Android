@@ -19,71 +19,68 @@
 
 package org.mariotaku.twidere.model;
 
-import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mariotaku.library.objectcursor.annotation.CursorField;
+import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.JSONObjectConverter;
+import org.mariotaku.twidere.model.util.JSONParcelBagger;
+import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
+import org.mariotaku.twidere.model.util.LongArrayConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
 
+@ParcelablePlease
+@CursorObject
 public class DraftItem implements Parcelable {
 
-    public static final Parcelable.Creator<DraftItem> CREATOR = new Parcelable.Creator<DraftItem>() {
-        @Override
-        public DraftItem createFromParcel(final Parcel in) {
-            return new DraftItem(in);
-        }
+    @ParcelableThisPlease
+    @CursorField(value = Drafts.ACCOUNT_IDS, converter = LongArrayConverter.class)
+    public long[] account_ids;
+    @ParcelableThisPlease
+    @CursorField(Drafts._ID)
+    public long _id;
+    @ParcelableThisPlease
+    @CursorField(Drafts.IN_REPLY_TO_STATUS_ID)
+    public long in_reply_to_status_id;
+    @ParcelableThisPlease
+    @CursorField(Drafts.TIMESTAMP)
+    public long timestamp;
+    @ParcelableThisPlease
+    @CursorField(Drafts.TEXT)
+    public String text;
+    @ParcelableThisPlease
+    @CursorField(value = Drafts.MEDIA, converter = LoganSquareCursorFieldConverter.class)
+    public ParcelableMediaUpdate[] media;
+    @ParcelableThisPlease
+    @CursorField(Drafts.IS_POSSIBLY_SENSITIVE)
+    public boolean is_possibly_sensitive;
+    @ParcelableThisPlease
+    @CursorField(value = Drafts.LOCATION, converter = LoganSquareCursorFieldConverter.class)
+    public ParcelableLocation location;
+    @ParcelableThisPlease
+    @CursorField(Drafts.ACTION_TYPE)
+    public int action_type;
+    @Nullable
+    @Bagger(JSONParcelBagger.class)
+    @ParcelableThisPlease
+    @CursorField(value = Drafts.ACTION_EXTRAS, converter = JSONObjectConverter.class)
+    public JSONObject action_extras;
 
-        @Override
-        public DraftItem[] newArray(final int size) {
-            return new DraftItem[size];
-        }
-    };
 
-    public final long[] account_ids;
-    public final long _id;
-    public final long in_reply_to_status_id;
-    public final long timestamp;
-    public final String text;
-    public final ParcelableMediaUpdate[] media;
-    public final boolean is_possibly_sensitive;
-    public final ParcelableLocation location;
-    public final int action_type;
-    public final JSONObject action_extras;
+    public DraftItem() {
 
-    public DraftItem(final Cursor cursor, final CursorIndices indices) {
-        _id = cursor.getLong(indices._id);
-        text = cursor.getString(indices.text);
-        media = ParcelableMediaUpdate.fromJSONString(cursor.getString(indices.media));
-        account_ids = TwidereArrayUtils.parseLongArray(cursor.getString(indices.account_ids), ',');
-        in_reply_to_status_id = cursor.getLong(indices.in_reply_to_status_id);
-        is_possibly_sensitive = cursor.getShort(indices.is_possibly_sensitive) == 1;
-        location = new ParcelableLocation(cursor.getString(indices.location));
-        timestamp = cursor.getLong(indices.timestamp);
-        action_type = cursor.getInt(indices.action_type);
-        action_extras = createJSONObject(cursor.getString(indices.action_extras));
     }
 
-    public DraftItem(final Parcel in) {
-        account_ids = in.createLongArray();
-        _id = in.readLong();
-        in_reply_to_status_id = in.readLong();
-        text = in.readString();
-        media = in.createTypedArray(ParcelableMediaUpdate.CREATOR);
-        is_possibly_sensitive = in.readInt() == 1;
-        location = ParcelableLocation.fromString(in.readString());
-        timestamp = in.readLong();
-        action_type = in.readInt();
-        action_extras = createJSONObject(in.readString());
-    }
-
-    public DraftItem(final ParcelableStatusUpdate status) {
+    public DraftItem(ParcelableStatusUpdate status) {
         _id = 0;
         account_ids = ParcelableAccount.getAccountIds(status.accounts);
         in_reply_to_status_id = status.in_reply_to_status_id;
@@ -96,53 +93,34 @@ public class DraftItem implements Parcelable {
         action_extras = createJSONObject(null);
     }
 
+    private static JSONObject createJSONObject(String json) {
+        if (TextUtils.isEmpty(json)) return null;
+        try {
+            return new JSONObject(json);
+        } catch (JSONException e) {
+        }
+        return null;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(final Parcel out, final int flags) {
-        out.writeLongArray(account_ids);
-        out.writeLong(_id);
-        out.writeLong(in_reply_to_status_id);
-        out.writeString(text);
-        out.writeTypedArray(media, flags);
-        out.writeInt(is_possibly_sensitive ? 1 : 0);
-        out.writeString(ParcelableLocation.toString(location));
-        out.writeLong(timestamp);
-        out.writeInt(action_type);
-        out.writeString(action_extras.toString());
+    public void writeToParcel(Parcel dest, int flags) {
+        DraftItemParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    private static JSONObject createJSONObject(final String json) {
-        if (TextUtils.isEmpty(json)) return new JSONObject();
-        try {
-            return new JSONObject(json);
-        } catch (final JSONException e) {
-            e.printStackTrace();
-        }
-        return new JSONObject();
-    }
-
-    public static final class CursorIndices {
-
-        public final int _id, account_ids, in_reply_to_status_id, text, location, media, is_possibly_sensitive,
-                timestamp, action_type, action_extras;
-
-        public CursorIndices(final Cursor cursor) {
-            _id = cursor.getColumnIndex(Drafts._ID);
-            account_ids = cursor.getColumnIndex(Drafts.ACCOUNT_IDS);
-            in_reply_to_status_id = cursor.getColumnIndex(Drafts.IN_REPLY_TO_STATUS_ID);
-            timestamp = cursor.getColumnIndex(Drafts.TIMESTAMP);
-            text = cursor.getColumnIndex(Drafts.TEXT);
-            media = cursor.getColumnIndex(Drafts.MEDIA);
-            is_possibly_sensitive = cursor.getColumnIndex(Drafts.IS_POSSIBLY_SENSITIVE);
-            location = cursor.getColumnIndex(Drafts.LOCATION);
-            action_type = cursor.getColumnIndex(Drafts.ACTION_TYPE);
-            action_extras = cursor.getColumnIndex(Drafts.ACTION_EXTRAS);
+    public static final Creator<DraftItem> CREATOR = new Creator<DraftItem>() {
+        public DraftItem createFromParcel(Parcel source) {
+            DraftItem target = new DraftItem();
+            DraftItemParcelablePlease.readFromParcel(target, source);
+            return target;
         }
 
-    }
-
+        public DraftItem[] newArray(int size) {
+            return new DraftItem[size];
+        }
+    };
 }

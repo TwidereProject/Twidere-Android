@@ -87,7 +87,7 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.model.ParcelableUser.CachedIndices;
+import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -857,10 +857,10 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 final Cursor c = context.getContentResolver().query(CachedUsers.CONTENT_URI,
                         CachedUsers.BASIC_COLUMNS, selection != null ? selection.getSQL() : null,
                         selectionArgs, orderBy.getSQL());
-                final CachedIndices i = new CachedIndices(c);
+                final ParcelableUserCursorIndices i = new ParcelableUserCursorIndices(c);
                 c.moveToFirst();
                 while (!c.isAfterLast()) {
-                    cachedList.add(new ParcelableUser(c, i, -1));
+                    cachedList.add(i.newObject(c));
                     c.moveToNext();
                 }
                 c.close();

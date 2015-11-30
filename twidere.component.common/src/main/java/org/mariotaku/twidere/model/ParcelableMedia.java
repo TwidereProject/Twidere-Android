@@ -5,9 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -27,7 +25,6 @@ import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -225,17 +222,6 @@ public class ParcelableMedia implements Parcelable {
             media[i] = new ParcelableMedia(mediaUpdate);
         }
         return media;
-    }
-
-    @Deprecated
-    public static ParcelableMedia[] fromSerializedJson(String string) {
-        if (TextUtils.isEmpty(string)) return null;
-        try {
-            final List<ParcelableMedia> list = LoganSquare.parseList(string, ParcelableMedia.class);
-            return list.toArray(new ParcelableMedia[list.size()]);
-        } catch (IOException ignore) {
-            return null;
-        }
     }
 
     @Nullable

@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.model;
 
-import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -29,90 +28,91 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.library.objectcursor.annotation.CursorField;
+import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.loader.support.ObjectCursorLoader;
+import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 
 import java.util.Arrays;
 
 @ParcelablePlease(allFields = false)
 @JsonObject
+@CursorObject(valuesCreator = true)
 public class ParcelableActivity implements Comparable<ParcelableActivity>, Parcelable {
-
-    public static final Creator<ParcelableActivity> CREATOR = new Creator<ParcelableActivity>() {
-        @Override
-        public ParcelableActivity createFromParcel(Parcel source) {
-            return new ParcelableActivity(source);
-        }
-
-        @Override
-        public ParcelableActivity[] newArray(int size) {
-            return new ParcelableActivity[size];
-        }
-    };
 
     @ParcelableThisPlease
     @JsonField(name = "account_id")
+    @CursorField(value = Activities.ACCOUNT_ID)
     public long account_id;
     @ParcelableThisPlease
     @JsonField(name = "timestamp")
+    @CursorField(value = Activities.TIMESTAMP)
     public long timestamp;
     @ParcelableThisPlease
     @JsonField(name = "max_position")
+    @CursorField(value = Activities.MAX_POSITION)
     public long max_position;
     @ParcelableThisPlease
     @JsonField(name = "min_position")
+    @CursorField(value = Activities.MIN_POSITION)
     public long min_position;
     @ParcelableThisPlease
     @JsonField(name = "action")
+    @CursorField(value = Activities.ACTION)
     public int action;
 
     @ParcelableThisPlease
     @JsonField(name = "sources")
+    @CursorField(value = Activities.SOURCES, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUser[] sources;
     @ParcelableThisPlease
     @JsonField(name = "target_users")
+    @CursorField(value = Activities.TARGET_USERS, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUser[] target_users;
     @ParcelableThisPlease
     @JsonField(name = "target_statuses")
+    @CursorField(value = Activities.TARGET_STATUSES, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableStatus[] target_statuses;
     @ParcelableThisPlease
     @JsonField(name = "target_user_lists")
+    @CursorField(value = Activities.TARGET_USER_LISTS, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUserList[] target_user_lists;
 
     @ParcelableThisPlease
     @JsonField(name = "target_object_user_lists")
+    @CursorField(value = Activities.TARGET_OBJECT_USER_LISTS, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUserList[] target_object_user_lists;
     @ParcelableThisPlease
     @JsonField(name = "target_object_statuses")
+    @CursorField(value = Activities.TARGET_OBJECT_STATUSES, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableStatus[] target_object_statuses;
     @ParcelableThisPlease
     @JsonField(name = "target_object_users")
+    @CursorField(value = Activities.TARGET_OBJECT_USERS, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUser[] target_object_users;
     @ParcelableThisPlease
     @JsonField(name = "is_gap")
+    @CursorField(value = Activities.IS_GAP)
     public boolean is_gap;
 
     public ParcelableActivity() {
     }
 
-    public ParcelableActivity(final Activity activity, final long account_id, boolean is_gap) {
-        this.account_id = account_id;
+    public ParcelableActivity(final Activity activity, final long accountId, boolean isGap) {
+        this.account_id = accountId;
         timestamp = activity.getCreatedAt().getTime();
         action = activity.getAction().getActionId();
         max_position = activity.getMaxPosition();
         min_position = activity.getMinPosition();
-        sources = ParcelableUser.fromUsers(activity.getSources(), account_id);
-        target_users = ParcelableUser.fromUsers(activity.getTargetUsers(), account_id);
-        target_user_lists = ParcelableUserList.fromUserLists(activity.getTargetUserLists(), account_id);
-        target_statuses = ParcelableStatus.fromStatuses(activity.getTargetStatuses(), account_id);
-        target_object_statuses = ParcelableStatus.fromStatuses(activity.getTargetObjectStatuses(), account_id);
-        target_object_user_lists = ParcelableUserList.fromUserLists(activity.getTargetObjectUserLists(), account_id);
-        target_object_users = ParcelableUser.fromUsers(activity.getTargetObjectUsers(), account_id);
-        this.is_gap = is_gap;
-    }
-
-    public ParcelableActivity(Parcel src) {
-        ParcelableActivityParcelablePlease.readFromParcel(this, src);
+        sources = ParcelableUser.fromUsers(activity.getSources(), accountId);
+        target_users = ParcelableUser.fromUsers(activity.getTargetUsers(), accountId);
+        target_user_lists = ParcelableUserList.fromUserLists(activity.getTargetUserLists(), accountId);
+        target_statuses = ParcelableStatus.fromStatuses(activity.getTargetStatuses(), accountId);
+        target_object_statuses = ParcelableStatus.fromStatuses(activity.getTargetObjectStatuses(), accountId);
+        target_object_user_lists = ParcelableUserList.fromUserLists(activity.getTargetObjectUserLists(), accountId);
+        target_object_users = ParcelableUser.fromUsers(activity.getTargetObjectUsers(), accountId);
+        this.is_gap = isGap;
     }
 
     @Override
@@ -160,15 +160,15 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         ParcelableActivityParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static class CursorIndices extends ObjectCursor.CursorIndices<ParcelableActivity> {
-
-        public CursorIndices(@NonNull Cursor cursor) {
-            super(cursor);
+    public static final Creator<ParcelableActivity> CREATOR = new Creator<ParcelableActivity>() {
+        public ParcelableActivity createFromParcel(Parcel source) {
+            ParcelableActivity target = new ParcelableActivity();
+            ParcelableActivityParcelablePlease.readFromParcel(target, source);
+            return target;
         }
 
-        @Override
-        public ParcelableActivity newObject(Cursor cursor) {
-            throw new UnsupportedOperationException();
+        public ParcelableActivity[] newArray(int size) {
+            return new ParcelableActivity[size];
         }
-    }
+    };
 }
