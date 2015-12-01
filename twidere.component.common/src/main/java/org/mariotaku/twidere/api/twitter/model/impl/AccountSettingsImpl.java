@@ -35,13 +35,13 @@ public class AccountSettingsImpl extends TwitterResponseImpl implements AccountS
     @JsonField(name = "geo_enabled")
     boolean geoEnabled;
     @JsonField(name = "trend_location")
-    Location[] trendLocations;
+    LocationImpl[] trendLocations;
     @JsonField(name = "language")
     String language;
     @JsonField(name = "always_use_https")
     boolean alwaysUseHttps;
     @JsonField(name = "time_zone")
-    TimeZone timezone;
+    TimeZoneImpl timezone;
 
     @Override
     public boolean isAlwaysUseHttps() {

@@ -28,6 +28,7 @@ import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
+import org.mariotaku.twidere.api.twitter.model.impl.ErrorInfoImpl;
 import org.mariotaku.twidere.api.twitter.model.impl.RateLimitStatusJSONImpl;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
@@ -45,7 +46,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
 
     private static final long serialVersionUID = -2623309261327598087L;
     @JsonField(name = "errors")
-    ErrorInfo[] errors;
+    ErrorInfoImpl[] errors;
     @JsonField(name = "error")
     String errorMessage;
     @JsonField(name = "request")

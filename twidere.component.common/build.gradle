@@ -19,6 +19,7 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'org.mariotaku.patchlib'
 
 android {
     defaultConfig {
@@ -35,10 +36,8 @@ android {
     }
 }
 
-apt {
-    arguments {
-        jsonMapperLoaderSuffix '_component_common'
-    }
+patchLib {
+    rule rootProject.file('patchlib_rules.yml')
 }
 
 dependencies {

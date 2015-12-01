@@ -19,15 +19,8 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-
-import org.mariotaku.library.logansquare.extension.LoganSquareWrapper;
-import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.library.logansquare.extension.annotation.Mapper;
-
-import java.io.IOException;
+import org.mariotaku.twidere.api.twitter.model.IDs;
 
 /**
  * Created by mariotaku on 15/5/10.

@@ -59,7 +59,7 @@ public class MediaEntityImpl implements MediaEntity {
     @JsonField(name = "source_user_id")
     long sourceUserId;
     @JsonField(name = "video_info")
-    VideoInfo videoInfo;
+    VideoInfoImpl videoInfo;
     @JsonField(name = "features")
     HashMap<String, Feature> features;
 
@@ -145,7 +145,7 @@ public class MediaEntityImpl implements MediaEntity {
     @JsonObject
     public static class FeatureImpl implements Feature {
         @JsonField(name = "faces")
-        Face[] faces;
+        FaceImpl[] faces;
 
         @Override
         public String toString() {
@@ -204,7 +204,7 @@ public class MediaEntityImpl implements MediaEntity {
         @JsonField(name = "duration")
         long duration;
         @JsonField(name = "variants")
-        Variant[] variants;
+        VariantImpl[] variants;
         @JsonField(name = "aspect_ratio")
         long[] aspectRatio;
 

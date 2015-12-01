@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
         classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.github.mariotaku:PatchLib:0.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath('fr.avianey.androidsvgdrawable:gradle-plugin:3.0.0') {
             // should be excluded to avoid conflict
@@ -85,7 +86,7 @@ task wrapper(type: Wrapper) {
 
 def loadSigningConfig(def cfg, def file) {
     Properties signingProp = new Properties()
-    signingProp.load(file.newDataInputStream())
+    signingProp.load(file.newInputStream())
     cfg.setStoreFile(new File((String) signingProp.get('storeFile')))
     cfg.setStorePassword((String) signingProp.get('storePassword'))
     cfg.setKeyAlias((String) signingProp.get('keyAlias'))
