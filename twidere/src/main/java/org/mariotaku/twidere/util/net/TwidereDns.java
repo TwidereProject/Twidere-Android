@@ -180,7 +180,7 @@ public class TwidereDns implements Constants, Dns {
     private Resolver getResolver() throws IOException {
         if (mDns != null) return mDns;
         mDns = new SimpleResolver(mDnsAddress);
-        mDns.setTCP(true);
+        mDns.setTCP(mPreferences.getBoolean(KEY_TCP_DNS_QUERY, false));
         return mDns;
     }
 

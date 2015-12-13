@@ -49,6 +49,8 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
 
     Action getAction();
 
+    String getRawAction();
+
     Date getCreatedAt();
 
     long getMaxPosition();
@@ -78,10 +80,30 @@ public interface Activity extends TwitterResponse, Comparable<Activity> {
 
     @EnumClass
     enum Action {
-        FAVORITE(ACTION_FAVORITE), FOLLOW(ACTION_FOLLOW), MENTION(ACTION_MENTION), REPLY(ACTION_REPLY),
+        FAVORITE(ACTION_FAVORITE),
+        /**
+         * Sources: followers to targets (User)
+         * Targets: following user (User)
+         */
+        FOLLOW(ACTION_FOLLOW),
+        /**
+         * Targets: mentioned users (User)
+         * Target objects: mention status (Status)
+         */
+        MENTION(ACTION_MENTION),
+        /**
+         * Targets: reply status (Status)
+         * Target objects: in reply to status (Status)
+         */
+        REPLY(ACTION_REPLY),
         RETWEET(ACTION_RETWEET), LIST_MEMBER_ADDED(ACTION_LIST_MEMBER_ADDED), LIST_CREATED(ACTION_LIST_CREATED),
         FAVORITED_RETWEET(ACTION_FAVORITED_RETWEET), RETWEETED_RETWEET(ACTION_RETWEETED_RETWEET),
-        QUOTE(ACTION_QUOTE), RETWEETED_MENTION(ACTION_RETWEETED_MENTION),
+        /**
+         * Targets: Quote result (Status)
+         * Target objects: Original status (Status)
+         */
+        QUOTE(ACTION_QUOTE),
+        RETWEETED_MENTION(ACTION_RETWEETED_MENTION),
         FAVORITED_MENTION(ACTION_FAVORITED_MENTION), JOINED_TWITTER(ACTION_JOINED_TWITTER),
         MEDIA_TAGGED(ACTION_MEDIA_TAGGED), FAVORITED_MEDIA_TAGGED(ACTION_FAVORITED_MEDIA_TAGGED),
         RETWEETED_MEDIA_TAGGED(ACTION_RETWEETED_MEDIA_TAGGED), UNKNOWN(ACTION_UNKNOWN);

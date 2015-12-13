@@ -19,15 +19,22 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Wrapper;
-import org.mariotaku.twidere.api.twitter.model.impl.PageableResponseListWrapper;
+import org.mariotaku.library.logansquare.extension.annotation.ParameterizedImplementation;
+import org.mariotaku.library.logansquare.extension.annotation.TypeImplementation;
+import org.mariotaku.twidere.api.twitter.model.impl.PagableStatusListImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.PagableUserListImpl;
+import org.mariotaku.twidere.api.twitter.model.impl.PagableUserListListImpl;
 
 /**
  * ResponseList with cursor support.
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-@Wrapper(PageableResponseListWrapper.class)
+@ParameterizedImplementation({
+        @TypeImplementation(parameter = Status.class, implementation = PagableStatusListImpl.class),
+        @TypeImplementation(parameter = User.class, implementation = PagableUserListImpl.class),
+        @TypeImplementation(parameter = UserList.class, implementation = PagableUserListListImpl.class)
+})
 public interface PageableResponseList<T> extends ResponseList<T>, CursorSupport {
 
 }

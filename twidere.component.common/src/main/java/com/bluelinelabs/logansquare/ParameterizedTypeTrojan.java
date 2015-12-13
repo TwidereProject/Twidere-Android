@@ -17,27 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package com.bluelinelabs.logansquare;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.QueryResultImpl;
+import java.lang.reflect.Type;
 
 /**
- * A data interface representing search API response
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 15/12/13.
  */
-@Implementation(QueryResultImpl.class)
-public interface QueryResult extends ResponseList<Status>, CursorSupport {
-    double getCompletedIn();
+public class ParameterizedTypeTrojan {
 
-    long getMaxId();
+    public static <T> ParameterizedType<T> create(Type type) {
+        return new ParameterizedType.ConcreteParameterizedType<>(type);
+    }
 
-    String getQuery();
-
-    int getResultsPerPage();
-
-    long getSinceId();
-
-    String getWarning();
 }

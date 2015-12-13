@@ -61,6 +61,7 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -370,7 +371,21 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     @Override
     public void onActivityClick(ActivityTitleSummaryViewHolder holder, int position) {
-
+        final ParcelableActivity activity = getAdapter().getActivity(position);
+        if (activity == null) return;
+        switch (activity.action) {
+            case Activity.ACTION_FAVORITE:
+            case Activity.ACTION_FAVORITED_MEDIA_TAGGED:
+            case Activity.ACTION_FAVORITED_MENTION:
+            case Activity.ACTION_FAVORITED_RETWEET:
+            case Activity.ACTION_RETWEET:
+            case Activity.ACTION_RETWEETED_MEDIA_TAGGED:
+            case Activity.ACTION_RETWEETED_MENTION:
+            case Activity.ACTION_RETWEETED_RETWEET: {
+                Utils.openUsers(getActivity(), Arrays.asList(activity.sources));
+                break;
+            }
+        }
     }
 
     @Override

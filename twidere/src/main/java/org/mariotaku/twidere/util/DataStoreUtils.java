@@ -26,7 +26,7 @@ import android.net.Uri;
 
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.SQLFunctions;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.*;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
 /**
@@ -40,21 +40,21 @@ public class DataStoreUtils {
 
     public static long[] getNewestMessageIdsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
         if (context == null || uri == null || accountIds == null) return null;
-        final String[] cols = new String[]{TwidereDataStore.DirectMessages.MESSAGE_ID};
+        final String[] cols = new String[]{DirectMessages.MESSAGE_ID};
         final ContentResolver resolver = context.getContentResolver();
         final long[] messageIds = new long[accountIds.length];
         int idx = 0;
         for (final long accountId : accountIds) {
-            final String where = Expression.equals(TwidereDataStore.DirectMessages.ACCOUNT_ID, accountId).getSQL();
+            final String where = Expression.equals(DirectMessages.ACCOUNT_ID, accountId).getSQL();
             final Cursor cur = ContentResolverUtils.query(resolver, uri, cols, where, null,
-                    TwidereDataStore.DirectMessages.DEFAULT_SORT_ORDER);
+                    DirectMessages.DEFAULT_SORT_ORDER);
             if (cur == null) {
                 continue;
             }
 
             if (cur.getCount() > 0) {
                 cur.moveToFirst();
-                messageIds[idx] = cur.getLong(cur.getColumnIndexOrThrow(TwidereDataStore.DirectMessages.MESSAGE_ID));
+                messageIds[idx] = cur.getLong(cur.getColumnIndexOrThrow(DirectMessages.MESSAGE_ID));
             }
             cur.close();
             idx++;
@@ -69,21 +69,21 @@ public class DataStoreUtils {
 
     public static long[] getNewestStatusIdsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
         if (context == null || uri == null || accountIds == null) return null;
-        final String[] cols = new String[]{TwidereDataStore.Statuses.STATUS_ID};
+        final String[] cols = new String[]{Statuses.STATUS_ID};
         final ContentResolver resolver = context.getContentResolver();
         final long[] status_ids = new long[accountIds.length];
         int idx = 0;
         for (final long accountId : accountIds) {
-            final String where = Expression.equals(TwidereDataStore.Statuses.ACCOUNT_ID, accountId).getSQL();
+            final String where = Expression.equals(Statuses.ACCOUNT_ID, accountId).getSQL();
             final Cursor cur = ContentResolverUtils
-                    .query(resolver, uri, cols, where, null, TwidereDataStore.Statuses.DEFAULT_SORT_ORDER);
+                    .query(resolver, uri, cols, where, null, Statuses.DEFAULT_SORT_ORDER);
             if (cur == null) {
                 continue;
             }
 
             if (cur.getCount() > 0) {
                 cur.moveToFirst();
-                status_ids[idx] = cur.getLong(cur.getColumnIndexOrThrow(TwidereDataStore.Statuses.STATUS_ID));
+                status_ids[idx] = cur.getLong(cur.getColumnIndexOrThrow(Statuses.STATUS_ID));
             }
             cur.close();
             idx++;
@@ -93,21 +93,21 @@ public class DataStoreUtils {
 
     public static long[] getActivityMaxPositionsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
         if (context == null || uri == null || accountIds == null) return null;
-        final String[] cols = new String[]{TwidereDataStore.Activities.MAX_POSITION};
+        final String[] cols = new String[]{Activities.MAX_POSITION};
         final ContentResolver resolver = context.getContentResolver();
         final long[] maxPositions = new long[accountIds.length];
         int idx = 0;
         for (final long accountId : accountIds) {
-            final String where = Expression.equals(TwidereDataStore.Activities.ACCOUNT_ID, accountId).getSQL();
+            final String where = Expression.equals(Activities.ACCOUNT_ID, accountId).getSQL();
             final Cursor cur = ContentResolverUtils
-                    .query(resolver, uri, cols, where, null, TwidereDataStore.Activities.DEFAULT_SORT_ORDER);
+                    .query(resolver, uri, cols, where, null, Activities.DEFAULT_SORT_ORDER);
             if (cur == null) {
                 continue;
             }
 
             if (cur.getCount() > 0) {
                 cur.moveToFirst();
-                maxPositions[idx] = cur.getLong(cur.getColumnIndexOrThrow(TwidereDataStore.Activities.MAX_POSITION));
+                maxPositions[idx] = cur.getLong(cur.getColumnIndexOrThrow(Activities.MAX_POSITION));
             }
             cur.close();
             idx++;
@@ -122,20 +122,20 @@ public class DataStoreUtils {
 
     public static long[] getOldestMessageIdsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
         if (context == null || uri == null) return null;
-        final String[] cols = new String[]{TwidereDataStore.DirectMessages.MESSAGE_ID};
+        final String[] cols = new String[]{DirectMessages.MESSAGE_ID};
         final ContentResolver resolver = context.getContentResolver();
         final long[] status_ids = new long[accountIds.length];
         int idx = 0;
         for (final long accountId : accountIds) {
-            final String where = Expression.equals(TwidereDataStore.DirectMessages.ACCOUNT_ID, accountId).getSQL();
-            final Cursor cur = ContentResolverUtils.query(resolver, uri, cols, where, null, TwidereDataStore.DirectMessages.MESSAGE_ID);
+            final String where = Expression.equals(DirectMessages.ACCOUNT_ID, accountId).getSQL();
+            final Cursor cur = ContentResolverUtils.query(resolver, uri, cols, where, null, DirectMessages.MESSAGE_ID);
             if (cur == null) {
                 continue;
             }
 
             if (cur.getCount() > 0) {
                 cur.moveToFirst();
-                status_ids[idx] = cur.getLong(cur.getColumnIndexOrThrow(TwidereDataStore.DirectMessages.MESSAGE_ID));
+                status_ids[idx] = cur.getLong(cur.getColumnIndexOrThrow(DirectMessages.MESSAGE_ID));
             }
             cur.close();
             idx++;
@@ -150,34 +150,58 @@ public class DataStoreUtils {
 
     public static long[] getOldestStatusIdsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
         if (context == null || uri == null || accountIds == null) return null;
-        final String[] cols = new String[]{TwidereDataStore.Statuses.STATUS_ID};
+        final String[] cols = new String[]{Statuses.STATUS_ID};
         final ContentResolver resolver = context.getContentResolver();
-        final long[] status_ids = new long[accountIds.length];
+        final long[] statusIds = new long[accountIds.length];
         int idx = 0;
         for (final long accountId : accountIds) {
-            final String where = Expression.equals(TwidereDataStore.Statuses.ACCOUNT_ID, accountId).getSQL();
-            final Cursor cur = ContentResolverUtils.query(resolver, uri, cols, where, null, TwidereDataStore.Statuses.STATUS_ID);
+            final String where = Expression.equals(Statuses.ACCOUNT_ID, accountId).getSQL();
+            final Cursor cur = ContentResolverUtils.query(resolver, uri, cols, where, null, Statuses.STATUS_ID);
             if (cur == null) {
                 continue;
             }
 
             if (cur.getCount() > 0) {
                 cur.moveToFirst();
-                status_ids[idx] = cur.getLong(cur.getColumnIndexOrThrow(TwidereDataStore.Statuses.STATUS_ID));
+                statusIds[idx] = cur.getLong(cur.getColumnIndexOrThrow(Statuses.STATUS_ID));
             }
             cur.close();
             idx++;
         }
-        return status_ids;
+        return statusIds;
+    }
+
+
+    public static long[] getOldestActivityIdsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
+        if (context == null || uri == null || accountIds == null) return null;
+        final String[] cols = new String[]{Activities.MIN_POSITION};
+        final ContentResolver resolver = context.getContentResolver();
+        final long[] activityIds = new long[accountIds.length];
+        int idx = 0;
+        for (final long accountId : accountIds) {
+            final String where = Expression.equals(Activities.ACCOUNT_ID, accountId).getSQL();
+            final Cursor cur = ContentResolverUtils.query(resolver, uri, cols, where, null, Activities.TIMESTAMP);
+            if (cur == null) {
+                continue;
+            }
+
+            if (cur.getCount() > 0) {
+                cur.moveToFirst();
+                activityIds[idx] = cur.getLong(cur.getColumnIndexOrThrow(Activities.MIN_POSITION));
+            }
+            cur.close();
+            idx++;
+        }
+        return activityIds;
     }
 
     public static int getStatusCountInDatabase(final Context context, final Uri uri, final long accountId) {
-        final String where = Expression.equals(TwidereDataStore.Statuses.ACCOUNT_ID, accountId).getSQL();
+        final String where = Expression.equals(Statuses.ACCOUNT_ID, accountId).getSQL();
         return queryCount(context, uri, where, null);
     }
 
     public static int getActivityCountInDatabase(final Context context, final Uri uri, final long accountId) {
-        final String where = Expression.equals(TwidereDataStore.Activities.ACCOUNT_ID, accountId).getSQL();
+        final String where = Expression.equals(Activities.ACCOUNT_ID, accountId).getSQL();
         return queryCount(context, uri, where, null);
     }
 

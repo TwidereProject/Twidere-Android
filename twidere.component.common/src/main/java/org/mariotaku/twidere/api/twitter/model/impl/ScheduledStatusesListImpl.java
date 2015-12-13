@@ -21,53 +21,49 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.ScheduledStatus;
-import org.mariotaku.twidere.api.twitter.model.ScheduledStatusesList;
 
-import java.util.ArrayList;
+import java.util.AbstractList;
+import java.util.List;
 
 /**
  * Created by mariotaku on 15/7/9.
  */
 @JsonObject
-public class ScheduledStatusesListWrapper implements TwitterModelWrapper<ScheduledStatusesList> {
+public class ScheduledStatusesListImpl extends AbstractList<ScheduledStatus> implements ResponseList<ScheduledStatus> {
 
     @JsonField(name = "results")
-    ArrayList<ScheduledStatus> list;
-    private ScheduledStatusesListImpl wrapped;
+    List<ScheduledStatus> list;
 
-    @Override
-    public ScheduledStatusesList getWrapped(Object extra) {
-        return wrapped;
-    }
+    TwitterResponseImpl response = new TwitterResponseImpl();
 
     @Override
     public void processResponseHeader(RestHttpResponse resp) {
-        wrapped.processResponseHeader(resp);
+        response.processResponseHeader(resp);
     }
 
-    @OnJsonParseComplete
-    void onParseComplete() {
-        // Do some fancy post-processing stuff after parsing here
-        wrapped = new ScheduledStatusesListImpl();
-        wrapped.addAll(list);
+    @Override
+    public ScheduledStatus get(int location) {
+        return list.get(location);
+    }
+
+    @Override
+    public int size() {
+        return list.size();
     }
 
     @Override
     public int getAccessLevel() {
-        return wrapped.getAccessLevel();
+        return response.getAccessLevel();
     }
 
     @Override
     public RateLimitStatus getRateLimitStatus() {
-        return wrapped.getRateLimitStatus();
+        return response.getRateLimitStatus();
     }
 
-    @JsonObject
-    public static class ScheduledStatusesListImpl extends ResponseListImpl<ScheduledStatus> implements ScheduledStatusesList {
-    }
 }

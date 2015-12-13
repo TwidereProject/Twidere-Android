@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
@@ -57,11 +58,11 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         IActivitiesAdapter<Data>, IStatusViewHolder.StatusClickListener, OnLinkClickListener,
         ActivityTitleSummaryViewHolder.ActivityClickListener {
 
-    private static final int ITEM_VIEW_TYPE_STUB = 0;
-    private static final int ITEM_VIEW_TYPE_GAP = 1;
-    private static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 2;
-    private static final int ITEM_VIEW_TYPE_TITLE_SUMMARY = 3;
-    private static final int ITEM_VIEW_TYPE_STATUS = 4;
+    public static final int ITEM_VIEW_TYPE_STUB = 0;
+    public static final int ITEM_VIEW_TYPE_GAP = 1;
+    public static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 2;
+    public static final int ITEM_VIEW_TYPE_TITLE_SUMMARY = 3;
+    public static final int ITEM_VIEW_TYPE_STATUS = 4;
 
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
@@ -227,8 +228,12 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
                 final ParcelableStatus status;
                 if (activity.action == Activity.ACTION_MENTION) {
                     status = activity.target_object_statuses[0];
-                } else {
+                } else if (activity.action == Activity.ACTION_REPLY) {
                     status = activity.target_statuses[0];
+                } else if (activity.action == Activity.ACTION_QUOTE) {
+                    status = activity.target_statuses[0];
+                } else {
+                    throw new UnsupportedOperationException();
                 }
                 final IStatusViewHolder IStatusViewHolder = (IStatusViewHolder) holder;
                 IStatusViewHolder.displayStatus(status, null, true, true);
@@ -252,15 +257,29 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     @Override
     public int getItemViewType(int position) {
+        final ParcelableActivity activity = getActivity(position);
         if (position == getActivityCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP;
         }
         switch (getActivityAction(position)) {
-            case Activity.ACTION_MENTION:
-            case Activity.ACTION_REPLY:
+            case Activity.ACTION_MENTION: {
+                if (ArrayUtils.isEmpty(activity.target_object_statuses)) {
+                    return ITEM_VIEW_TYPE_STUB;
+                }
+                return ITEM_VIEW_TYPE_STATUS;
+            }
+            case Activity.ACTION_REPLY: {
+                if (ArrayUtils.isEmpty(activity.target_statuses)) {
+                    return ITEM_VIEW_TYPE_STUB;
+                }
+                return ITEM_VIEW_TYPE_STATUS;
+            }
             case Activity.ACTION_QUOTE: {
+                if (ArrayUtils.isEmpty(activity.target_statuses)) {
+                    return ITEM_VIEW_TYPE_STUB;
+                }
                 return ITEM_VIEW_TYPE_STATUS;
             }
             case Activity.ACTION_FOLLOW:
@@ -351,8 +370,9 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         }
 
         public void displayActivity(ParcelableActivity activity) {
-            text1.setText(String.valueOf(activity.action));
-            text2.setText(activity.toString());
+            text1.setText(text1.getResources().getString(R.string.unsupported_activity_action_title,
+                    activity.raw_action));
+            text2.setText(R.string.unsupported_activity_action_summary);
         }
     }
 

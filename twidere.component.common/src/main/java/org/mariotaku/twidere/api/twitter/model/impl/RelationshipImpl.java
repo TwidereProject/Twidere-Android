@@ -30,34 +30,32 @@ import org.mariotaku.twidere.api.twitter.model.Relationship;
 @JsonObject
 public class RelationshipImpl extends TwitterResponseImpl implements Relationship {
 
-    @JsonField(name = "source")
-    Source source;
-    @JsonField(name = "target")
-    Target target;
+    @JsonField(name = "relationship")
+    RelationshipObject object;
 
     @Override
     public boolean isSourceBlockingTarget() {
-        return source.blocking;
+        return object.source.blocking;
     }
 
     @Override
     public boolean isTargetFollowingSource() {
-        return target.following;
+        return object.target.following;
     }
 
     @Override
     public boolean isTargetFollowedBySource() {
-        return target.followedBy;
+        return object.target.followedBy;
     }
 
     @Override
     public boolean isSourceNotificationsEnabled() {
-        return false;
+        return object.source.notificationsEnabled;
     }
 
     @Override
     public boolean isSourceMutingTarget() {
-        return source.muting;
+        return object.source.muting;
     }
 
     @Override
@@ -67,108 +65,118 @@ public class RelationshipImpl extends TwitterResponseImpl implements Relationshi
 
     @Override
     public boolean isSourceFollowingTarget() {
-        return source.following;
+        return object.source.following;
     }
 
     @Override
     public boolean isSourceFollowedByTarget() {
-        return source.followedBy;
+        return object.source.followedBy;
     }
 
     @Override
     public boolean isSourceBlockedByTarget() {
-        return source.blockedBy;
+        return object.source.blockedBy;
     }
 
     @Override
     public String getTargetUserScreenName() {
-        return target.screenName;
+        return object.target.screenName;
     }
 
     @Override
     public long getTargetUserId() {
-        return target.id;
+        return object.target.id;
     }
 
     @Override
     public String getSourceUserScreenName() {
-        return source.screenName;
+        return object.source.screenName;
     }
 
     @Override
     public long getSourceUserId() {
-        return source.id;
+        return object.source.id;
     }
 
     @Override
     public boolean canSourceMediaTagTarget() {
-        return source.canMediaTag;
+        return object.source.canMediaTag;
     }
 
     @Override
     public boolean canSourceDMTarget() {
-        return source.canDm;
+        return object.source.canDm;
     }
 
     @Override
     public boolean isSourceRequestedFollowingTarget() {
-        return source.followingRequested;
+        return object.source.followingRequested;
     }
 
     @Override
     public boolean isTargetRequestedFollowingSource() {
-        return target.followingRequested;
+        return object.target.followingRequested;
     }
 
     @Override
     public boolean isSourceWantRetweetsFromTarget() {
-        return source.wantRetweets;
+        return object.source.wantRetweets;
     }
 
     @Override
     public boolean isSourceNotificationsEnabledForTarget() {
-        return source.notificationsEnabled;
+        return object.source.notificationsEnabled;
     }
 
     @JsonObject
-    public static class Target {
-        @JsonField(name = "id")
-        long id;
-        @JsonField(name = "screen_name")
-        public String screenName;
-        @JsonField(name = "following")
-        boolean following;
-        @JsonField(name = "followed_by")
-        boolean followedBy;
-        @JsonField(name = "following_requested")
-        boolean followingRequested;
-    }
+    public static class RelationshipObject {
 
-    @JsonObject
-    public static class Source {
-        @JsonField(name = "id")
-        long id;
-        @JsonField(name = "screen_name")
-        public String screenName;
-        @JsonField(name = "blocked_by")
-        boolean blockedBy;
-        @JsonField(name = "blocking")
-        boolean blocking;
-        @JsonField(name = "muting")
-        boolean muting;
-        @JsonField(name = "following")
-        boolean following;
-        @JsonField(name = "followed_by")
-        boolean followedBy;
-        @JsonField(name = "following_requested")
-        boolean followingRequested;
-        @JsonField(name = "want_retweets")
-        boolean wantRetweets;
-        @JsonField(name = "notifications_enabled")
-        boolean notificationsEnabled;
-        @JsonField(name = "can_dm")
-        boolean canDm;
-        @JsonField(name = "can_media_tag")
-        boolean canMediaTag;
+        @JsonField(name = "source")
+        Source source;
+        @JsonField(name = "target")
+        Target target;
+
+
+        @JsonObject
+        public static class Target {
+            @JsonField(name = "id")
+            long id;
+            @JsonField(name = "screen_name")
+            public String screenName;
+            @JsonField(name = "following")
+            boolean following;
+            @JsonField(name = "followed_by")
+            boolean followedBy;
+            @JsonField(name = "following_requested")
+            boolean followingRequested;
+        }
+
+        @JsonObject
+        public static class Source {
+            @JsonField(name = "id")
+            long id;
+            @JsonField(name = "screen_name")
+            public String screenName;
+            @JsonField(name = "blocked_by")
+            boolean blockedBy;
+            @JsonField(name = "blocking")
+            boolean blocking;
+            @JsonField(name = "muting")
+            boolean muting;
+            @JsonField(name = "following")
+            boolean following;
+            @JsonField(name = "followed_by")
+            boolean followedBy;
+            @JsonField(name = "following_requested")
+            boolean followingRequested;
+            @JsonField(name = "want_retweets")
+            boolean wantRetweets;
+            @JsonField(name = "notifications_enabled")
+            boolean notificationsEnabled;
+            @JsonField(name = "can_dm")
+            boolean canDm;
+            @JsonField(name = "can_media_tag")
+            boolean canMediaTag;
+        }
     }
 }

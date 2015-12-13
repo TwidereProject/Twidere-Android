@@ -123,7 +123,7 @@
                         android:focusable="true"
                         android:gravity="start|center_vertical"
                         android:hint="@string/type_to_compose"
-                        android:inputType="textShortMessage|textMultiLine"
+                        android:inputType="textShortMessage|textMultiLine|textCapSentences"
                         android:maxHeight="140dp"
                         android:singleLine="false"
                         android:textAppearance="?android:textAppearanceMedium"

@@ -37,6 +37,7 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
 
     static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
     Action action;
+    String rawAction;
 
     Date createdAt;
 
@@ -49,6 +50,11 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
     int targetObjectsSize, targetsSize, sourcesSize;
 
     ActivityImpl() {
+    }
+
+    @Override
+    public String getRawAction() {
+        return rawAction;
     }
 
     @Override
@@ -147,4 +153,29 @@ public class ActivityImpl extends TwitterResponseImpl implements Activity {
                 '}';
     }
 
+    public static Activity fromMention(long accountId, Status status) {
+        final ActivityImpl activity = new ActivityImpl();
+
+        activity.maxPosition = activity.minPosition = status.getId();
+        activity.createdAt = status.getCreatedAt();
+
+        if (status.getInReplyToUserId() == accountId) {
+            activity.action = Action.REPLY;
+            activity.rawAction = "reply";
+            activity.targetStatuses = new Status[]{status};
+
+            //TODO set target statuses (in reply to status)
+            activity.targetObjectStatuses = new Status[0];
+        } else {
+            activity.action = Action.MENTION;
+            activity.rawAction = "mention";
+            activity.targetObjectStatuses = new Status[]{status};
+
+            // TODO set target users (mentioned users)
+            activity.targetUsers = null;
+        }
+        activity.sourcesSize = 1;
+        activity.sources = new User[]{status.getUser()};
+        return activity;
+    }
 }

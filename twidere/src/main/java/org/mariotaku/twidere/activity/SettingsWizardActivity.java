@@ -55,9 +55,9 @@ import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
+import org.mariotaku.twidere.fragment.support.ActivitiesAboutMeFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
-import org.mariotaku.twidere.fragment.support.MentionsTimelineFragment;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.preference.WizardPageHeaderPreference;
@@ -536,8 +536,9 @@ public class SettingsWizardActivity extends Activity implements Constants {
 
         private static final String FRAGMENT_TAG = "initial_settings_dialog";
 
-        private static final String[] DEFAULT_TAB_TYPES = {TAB_TYPE_HOME_TIMELINE, TAB_TYPE_MENTIONS_TIMELINE,
-                TAB_TYPE_TRENDS_SUGGESTIONS, TAB_TYPE_DIRECT_MESSAGES};
+        private static final String[] DEFAULT_TAB_TYPES = {TAB_TYPE_HOME_TIMELINE,
+                TAB_TYPE_NOTIFICATIONS_TIMELINE, TAB_TYPE_TRENDS_SUGGESTIONS,
+                TAB_TYPE_DIRECT_MESSAGES};
 
         private final SettingsWizardActivity mActivity;
 
@@ -605,7 +606,7 @@ public class SettingsWizardActivity extends Activity implements Constants {
         private boolean wasConfigured(final List<SupportTabSpec> tabs) {
             for (final SupportTabSpec spec : tabs) {
                 if (classEquals(spec.cls, HomeTimelineFragment.class)
-                        || classEquals(spec.cls, MentionsTimelineFragment.class)
+                        || classEquals(spec.cls, ActivitiesAboutMeFragment.class)
                         || classEquals(spec.cls, DirectMessagesFragment.class)) return true;
             }
             return false;

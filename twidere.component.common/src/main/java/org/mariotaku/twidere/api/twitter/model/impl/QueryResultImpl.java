@@ -19,17 +19,63 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import java.util.ArrayList;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.twidere.api.twitter.model.QueryResult;
+import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
+
+import java.util.AbstractList;
+import java.util.ArrayList;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
-public class QueryResultImpl extends ResponseListImpl<Status> implements QueryResult {
+@JsonObject
+public class QueryResultImpl extends AbstractList<Status> implements QueryResult {
 
-    private final QueryResultWrapper.SearchMetadata metadata;
+    @JsonField(name = "previous_cursor")
+    long previousCursor;
+    @JsonField(name = "next_cursor")
+    long nextCursor;
+
+    @JsonField(name = "search_metadata")
+    SearchMetadata metadata;
+
+    @JsonField(name = "statuses")
+    ArrayList<Status> statuses;
+
+    private int accessLevel;
+    private RateLimitStatus rateLimitStatus;
+
+    @Override
+    public final void processResponseHeader(RestHttpResponse resp) {
+        rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(resp);
+        accessLevel = InternalParseUtil.toAccessLevel(resp);
+    }
+
+    @Override
+    public final int getAccessLevel() {
+        return accessLevel;
+    }
+
+    @Override
+    public final RateLimitStatus getRateLimitStatus() {
+        return rateLimitStatus;
+    }
+
+    @Override
+    public Status get(int index) {
+        return statuses.get(index);
+    }
+
+    @Override
+    public int size() {
+        return statuses.size();
+    }
 
     @Override
     public double getCompletedIn() {
@@ -52,6 +98,26 @@ public class QueryResultImpl extends ResponseListImpl<Status> implements QueryRe
     }
 
     @Override
+    public long getNextCursor() {
+        return nextCursor;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return nextCursor != 0;
+    }
+
+    @Override
+    public boolean hasPrevious() {
+        return previousCursor != 0;
+    }
+
+    @Override
+    public long getPreviousCursor() {
+        return previousCursor;
+    }
+
+    @Override
     public long getSinceId() {
         return metadata.sinceId;
     }
@@ -61,8 +127,20 @@ public class QueryResultImpl extends ResponseListImpl<Status> implements QueryRe
         return metadata.warning;
     }
 
-    public QueryResultImpl(ArrayList<Status> statuses, QueryResultWrapper.SearchMetadata metadata) {
-        addAll(statuses);
-        this.metadata = metadata;
+    @JsonObject
+    public static class SearchMetadata {
+        @JsonField(name = "max_id")
+        long maxId;
+        @JsonField(name = "since_id")
+        long sinceId;
+        @JsonField(name = "count")
+        int count;
+        @JsonField(name = "completed_in")
+        double completedIn;
+        @JsonField(name = "query")
+        String query;
+        @JsonField(name = "warning")
+        String warning;
     }
+
 }

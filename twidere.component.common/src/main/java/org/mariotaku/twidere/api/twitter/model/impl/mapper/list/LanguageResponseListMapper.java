@@ -17,27 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package org.mariotaku.twidere.api.twitter.model.impl.mapper.list;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.QueryResultImpl;
+import org.mariotaku.twidere.api.twitter.model.Language;
+import org.mariotaku.twidere.api.twitter.model.impl.ResponseListMapper;
 
 /**
- * A data interface representing search API response
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 15/12/13.
  */
-@Implementation(QueryResultImpl.class)
-public interface QueryResult extends ResponseList<Status>, CursorSupport {
-    double getCompletedIn();
-
-    long getMaxId();
-
-    String getQuery();
-
-    int getResultsPerPage();
-
-    long getSinceId();
-
-    String getWarning();
+public class LanguageResponseListMapper extends ResponseListMapper<Language> {
+    public LanguageResponseListMapper() {
+        super(Language.class);
+    }
 }

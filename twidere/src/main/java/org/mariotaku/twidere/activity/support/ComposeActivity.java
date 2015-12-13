@@ -1786,6 +1786,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         }
 
         @Override
+        public float getSwipeThreshold(ViewHolder viewHolder) {
+            return 0.75f;
+        }
+
+        @Override
         public void clearView(RecyclerView recyclerView, ViewHolder viewHolder) {
             super.clearView(recyclerView, viewHolder);
             viewHolder.itemView.setAlpha(ALPHA_FULL);

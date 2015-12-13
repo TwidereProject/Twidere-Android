@@ -20,32 +20,20 @@
 package org.mariotaku.twidere.api.twitter.model.impl;
 
 import org.mariotaku.restfu.http.RestHttpResponse;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
+import java.util.AbstractList;
+
 /**
  * Created by mariotaku on 15/5/7.
  */
-public class ResponseListImpl<T> extends ArrayList<T> implements ResponseList<T> {
+public abstract class ResponseListImpl<T> extends AbstractList<T> implements ResponseList<T> {
 
     private int accessLevel;
     private RateLimitStatus rateLimitStatus;
 
-    public ResponseListImpl(int capacity) {
-        super(capacity);
-    }
-
-    public ResponseListImpl() {
-    }
-
-    public ResponseListImpl(Collection<? extends T> collection) {
-        super(collection);
-    }
 
     @Override
     public final void processResponseHeader(RestHttpResponse resp) {

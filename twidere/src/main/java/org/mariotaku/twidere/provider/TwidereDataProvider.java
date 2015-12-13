@@ -1232,7 +1232,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 final boolean combined = mPreferences.getBoolean(KEY_COMBINED_NOTIFICATIONS);
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isMentionsNotificationEnabled()) continue;
-                    showMentionsNotification(pref, getPositionTag(TAB_TYPE_MENTIONS_TIMELINE, pref.getAccountId()), combined);
+                    showMentionsNotification(pref, getPositionTag(TAB_TYPE_NOTIFICATIONS_TIMELINE, pref.getAccountId()), combined);
                 }
                 notifyUnreadCountChanged(NOTIFICATION_ID_MENTIONS_TIMELINE);
                 break;

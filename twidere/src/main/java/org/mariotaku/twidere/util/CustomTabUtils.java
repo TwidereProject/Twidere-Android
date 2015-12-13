@@ -41,7 +41,6 @@ import org.mariotaku.twidere.fragment.support.ActivitiesByFriendsFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
 import org.mariotaku.twidere.fragment.support.InvalidTabFragment;
-import org.mariotaku.twidere.fragment.support.MentionsTimelineFragment;
 import org.mariotaku.twidere.fragment.support.RetweetsOfMeFragment;
 import org.mariotaku.twidere.fragment.support.StatusesSearchFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggestionsFragment;
@@ -70,13 +69,16 @@ public class CustomTabUtils implements Constants {
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_HOME_TIMELINE, new CustomTabConfiguration(
                 HomeTimelineFragment.class, R.string.home, R.drawable.ic_action_home,
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false));
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_MENTIONS_TIMELINE, new CustomTabConfiguration(
-                MentionsTimelineFragment.class, R.string.mentions, R.drawable.ic_action_at,
+
+        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_NOTIFICATIONS_TIMELINE, new CustomTabConfiguration(
+                ActivitiesAboutMeFragment.class, R.string.notifications, R.drawable.ic_action_notification,
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 1, false,
                 ExtraConfiguration.newBoolean(EXTRA_MY_FOLLOWING_ONLY, R.string.following_only, false)));
+
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_DIRECT_MESSAGES, new CustomTabConfiguration(
                 DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
+
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_TRENDS_SUGGESTIONS, new CustomTabConfiguration(
                 TrendsSuggestionsFragment.class, R.string.trends, R.drawable.ic_action_hashtag,
                 CustomTabConfiguration.ACCOUNT_NONE, CustomTabConfiguration.FIELD_TYPE_NONE, 3, true));
@@ -90,12 +92,11 @@ public class CustomTabUtils implements Constants {
                 StatusesSearchFragment.class, R.string.search_statuses, R.drawable.ic_action_search,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_TEXT, R.string.query,
                 EXTRA_QUERY, 6));
+
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_LIST_TIMELINE, new CustomTabConfiguration(
                 UserListTimelineFragment.class, R.string.list_timeline, R.drawable.ic_action_list,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER_LIST, 7));
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_ACTIVITIES_ABOUT_ME, new CustomTabConfiguration(
-                ActivitiesAboutMeFragment.class, R.string.activities_about_me, R.drawable.ic_action_user,
-                CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_NONE, 8));
+
         CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_ACTIVITIES_BY_FRIENDS, new CustomTabConfiguration(
                 ActivitiesByFriendsFragment.class, R.string.activities_by_friends,
                 R.drawable.ic_action_accounts, CustomTabConfiguration.ACCOUNT_REQUIRED,
@@ -110,6 +111,8 @@ public class CustomTabUtils implements Constants {
         CUSTOM_TABS_ICON_NAME_MAP.put("home", R.drawable.ic_action_home);
         CUSTOM_TABS_ICON_NAME_MAP.put("list", R.drawable.ic_action_list);
         CUSTOM_TABS_ICON_NAME_MAP.put("mention", R.drawable.ic_action_at);
+        CUSTOM_TABS_ICON_NAME_MAP.put("notifications", R.drawable.ic_action_notification);
+        CUSTOM_TABS_ICON_NAME_MAP.put("gallery", R.drawable.ic_action_gallery);
         CUSTOM_TABS_ICON_NAME_MAP.put("message", R.drawable.ic_action_message);
         CUSTOM_TABS_ICON_NAME_MAP.put("quote", R.drawable.ic_action_quote);
         CUSTOM_TABS_ICON_NAME_MAP.put("search", R.drawable.ic_action_search);
@@ -171,13 +174,14 @@ public class CustomTabUtils implements Constants {
     }
 
     @Nullable
-    private static String getTagByType(@NonNull String type) {
-        switch (type) {
+    private static String getTagByType(@NonNull String tabType) {
+        switch (getTabTypeAlias(tabType)) {
             case TAB_TYPE_HOME_TIMELINE: {
                 return TAB_TYPE_HOME_TIMELINE;
             }
-            case TAB_TYPE_MENTIONS_TIMELINE: {
-                return TAB_TYPE_MENTIONS_TIMELINE;
+            case "mentions_timeline":
+            case TAB_TYPE_NOTIFICATIONS_TIMELINE: {
+                return TAB_TYPE_NOTIFICATIONS_TIMELINE;
             }
             case TAB_TYPE_DIRECT_MESSAGES: {
                 return TAB_TYPE_DIRECT_MESSAGES;
@@ -190,9 +194,19 @@ public class CustomTabUtils implements Constants {
         return new HashMap<>(CUSTOM_TABS_ICON_NAME_MAP);
     }
 
-    public static CustomTabConfiguration getTabConfiguration(final String key) {
+    public static CustomTabConfiguration getTabConfiguration(final String tabType) {
+        if (tabType == null) return null;
+        return CUSTOM_TABS_CONFIGURATION_MAP.get(getTabTypeAlias(tabType));
+    }
+
+    private static String getTabTypeAlias(String key) {
         if (key == null) return null;
-        return CUSTOM_TABS_CONFIGURATION_MAP.get(key);
+        switch (key) {
+            case "mentions_timeline":
+            case "activities_about_me":
+                return TAB_TYPE_NOTIFICATIONS_TIMELINE;
+        }
+        return key;
     }
 
     public static Drawable getTabIconDrawable(final Context context, final Object iconObj) {
@@ -271,7 +285,7 @@ public class CustomTabUtils implements Constants {
         return added;
     }
 
-    public static boolean isTabTypeValid(final String type) {
-        return type != null && CUSTOM_TABS_CONFIGURATION_MAP.containsKey(type);
+    public static boolean isTabTypeValid(final String tabType) {
+        return tabType != null && CUSTOM_TABS_CONFIGURATION_MAP.containsKey(getTabTypeAlias(tabType));
     }
 }

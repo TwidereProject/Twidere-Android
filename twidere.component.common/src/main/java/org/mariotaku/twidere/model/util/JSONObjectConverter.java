@@ -21,6 +21,7 @@ package org.mariotaku.twidere.model.util;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,8 +35,10 @@ import java.lang.reflect.ParameterizedType;
 public class JSONObjectConverter implements CursorFieldConverter<JSONObject> {
     @Override
     public JSONObject parseField(Cursor cursor, int columnIndex, ParameterizedType fieldType) {
+        final String string = cursor.getString(columnIndex);
+        if (TextUtils.isEmpty(string)) return null;
         try {
-            return new JSONObject(cursor.getString(columnIndex));
+            return new JSONObject(string);
         } catch (JSONException e) {
             return null;
         }

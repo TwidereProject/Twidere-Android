@@ -67,7 +67,9 @@ public class ActivityImplMapper extends JsonMapper<ActivityImpl> {
 
     public void parseField(ActivityImpl instance, String fieldName, JsonParser jsonParser) throws IOException {
         if ("action".equals(fieldName)) {
-            instance.action = Activity.Action.parse(jsonParser.getValueAsString());
+            final String rawAction = jsonParser.getValueAsString();
+            instance.action = Activity.Action.parse(rawAction);
+            instance.rawAction = rawAction;
         } else if ("created_at".equals(fieldName)) {
             try {
                 instance.createdAt = ActivityImpl.DATE_FORMAT.parse(jsonParser.getValueAsString());

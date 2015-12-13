@@ -19,39 +19,38 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
+import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
+
+import java.util.ArrayList;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
 @JsonObject
-public abstract class PageableResponseListImpl<T> extends ResponseListImpl<T> implements PageableResponseList<T> {
+public class ResponseArrayList<T> extends ArrayList<T> implements ResponseList<T> {
 
-    @JsonField(name = "previous_cursor")
-    long previousCursor;
-    @JsonField(name = "next_cursor")
-    long nextCursor;
+    private int accessLevel;
+    private RateLimitStatus rateLimitStatus;
+
 
     @Override
-    public long getNextCursor() {
-        return nextCursor;
+    public final void processResponseHeader(RestHttpResponse resp) {
+        rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(resp);
+        accessLevel = InternalParseUtil.toAccessLevel(resp);
     }
 
     @Override
-    public long getPreviousCursor() {
-        return previousCursor;
+    public final int getAccessLevel() {
+        return accessLevel;
     }
 
     @Override
-    public boolean hasNext() {
-        return nextCursor != 0;
-    }
-
-    @Override
-    public boolean hasPrevious() {
-        return previousCursor != 0;
+    public final RateLimitStatus getRateLimitStatus() {
+        return rateLimitStatus;
     }
 }

@@ -17,16 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model.impl.mapper.list;
 
-import org.mariotaku.library.logansquare.extension.ModelWrapper;
-import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
+import org.mariotaku.twidere.api.twitter.model.Place;
+import org.mariotaku.twidere.api.twitter.model.impl.ResponseListMapper;
 
 /**
- * Created by mariotaku on 15/5/7.
+ * Created by mariotaku on 15/12/13.
  */
-public interface TwitterModelWrapper<T> extends ModelWrapper<T>, TwitterResponse {
-
-    T getWrapped(Object extra);
-
+public class PlaceResponseListMapper extends ResponseListMapper<Place> {
+    public PlaceResponseListMapper() {
+        super(Place.class);
+    }
 }

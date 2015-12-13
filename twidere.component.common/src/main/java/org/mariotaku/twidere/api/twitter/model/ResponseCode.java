@@ -21,6 +21,8 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import org.mariotaku.restfu.http.RestHttpResponse;
 
+import java.lang.reflect.Type;
+
 /**
  * Created by mariotaku on 15/6/15.
  */
@@ -40,4 +42,11 @@ public class ResponseCode {
         return responseCode >= 200 && responseCode < 300;
     }
 
+    public static class Converter implements org.mariotaku.restfu.Converter {
+
+        @Override
+        public Object convert(RestHttpResponse response, Type type) throws Exception {
+            return new ResponseCode(response);
+        }
+    }
 }

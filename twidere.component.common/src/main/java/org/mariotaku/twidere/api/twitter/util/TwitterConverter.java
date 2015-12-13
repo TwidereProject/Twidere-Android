@@ -19,30 +19,26 @@
 
 package org.mariotaku.twidere.api.twitter.util;
 
+import android.support.v4.util.SimpleArrayMap;
+
+import com.bluelinelabs.logansquare.ParameterizedTypeTrojan;
 import com.fasterxml.jackson.core.JsonParseException;
 
-import org.mariotaku.library.logansquare.extension.LoganSquareWrapper;
+import org.mariotaku.library.logansquare.extension.LoganSquareExtension;
+import org.mariotaku.library.logansquare.extension.LoganSquareExtensionInitializerImpl;
 import org.mariotaku.restfu.Converter;
 import org.mariotaku.restfu.Utils;
-import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.TypedData;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.impl.ResponseListImpl;
-import org.mariotaku.twidere.api.twitter.model.impl.TwitterModelWrapper;
 import org.mariotaku.twidere.api.twitter.model.impl.TwitterResponseImpl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -50,11 +46,18 @@ import java.util.List;
  */
 public class TwitterConverter implements Converter {
 
+    private static SimpleArrayMap<Type, Converter> sConverters = new SimpleArrayMap<>();
+
+    static {
+        sConverters.put(ResponseCode.class, new ResponseCode.Converter());
+        sConverters.put(OAuthToken.class, new OAuthToken.Converter());
+    }
+
     public static TwitterException parseTwitterException(RestHttpResponse resp) {
         try {
             final TypedData body = resp.getBody();
             if (body == null) return new TwitterException(resp);
-            final TwitterException parse = LoganSquareWrapper.parse(body.stream(), TwitterException.class);
+            final TwitterException parse = LoganSquareExtension.parse(body.stream(), TwitterException.class);
             if (parse != null) return parse;
             return new TwitterException(resp);
         } catch (JsonParseException e) {
@@ -64,10 +67,10 @@ public class TwitterConverter implements Converter {
         }
     }
 
-    private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Class<T> cls) throws IOException, TwitterException {
+    private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Type type) throws IOException, TwitterException {
         try {
-            final T parse = LoganSquareWrapper.parse(stream, cls);
-            if (TwitterException.class.isAssignableFrom(cls) && parse == null) {
+            final T parse = LoganSquareExtension.parse(stream, ParameterizedTypeTrojan.<T>create(type));
+            if (TwitterException.class.equals(type) && parse == null) {
                 throw new TwitterException();
             }
             return parse;
@@ -78,7 +81,7 @@ public class TwitterConverter implements Converter {
 
     private static <T> List<T> parseListOrThrow(RestHttpResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
         try {
-            return LoganSquareWrapper.parseList(stream, elementCls);
+            return LoganSquareExtension.parseList(stream, elementCls);
         } catch (JsonParseException e) {
             throw new TwitterException("Malformed JSON Data", e, resp);
         }
@@ -88,64 +91,27 @@ public class TwitterConverter implements Converter {
     public Object convert(RestHttpResponse response, Type type) throws Exception {
         final TypedData body = response.getBody();
         if (!response.isSuccessful()) {
-            throw parseOrThrow(response, body.stream(), TwitterException.class);
+            throw TwitterConverter.<TwitterException>parseOrThrow(response, body.stream(), TwitterException.class);
         }
-        final ContentType contentType = body.contentType();
-        final InputStream stream = body.stream();
         try {
-            if (type instanceof Class<?>) {
-                final Class<?> cls = (Class<?>) type;
-                final Class<?> wrapperCls = LoganSquareWrapper.getWrapperClass(cls);
-                if (wrapperCls != null) {
-                    final TwitterModelWrapper<?> wrapper = (TwitterModelWrapper<?>) parseOrThrow(response, stream, wrapperCls);
-                    wrapper.processResponseHeader(response);
-                    return wrapper.getWrapped(null);
-                } else if (OAuthToken.class.isAssignableFrom(cls)) {
-                    final ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    body.writeTo(os);
-                    Charset charset = contentType != null ? contentType.getCharset() : null;
-                    if (charset == null) {
-                        charset = Charset.defaultCharset();
-                    }
-                    try {
-                        return new OAuthToken(os.toString(charset.name()), charset);
-                    } catch (ParseException e) {
-                        throw new IOException(e);
-                    }
-                } else if (ResponseCode.class.isAssignableFrom(cls)) {
-                    return new ResponseCode(response);
-                }
-                final Object object = parseOrThrow(response, stream, cls);
-                checkResponse(cls, object, response);
-                if (object instanceof TwitterResponseImpl) {
-                    ((TwitterResponseImpl) object).processResponseHeader(response);
-                }
-                return object;
-            } else if (type instanceof ParameterizedType) {
-                final Type rawType = ((ParameterizedType) type).getRawType();
-                if (rawType instanceof Class<?>) {
-                    final Class<?> rawClass = (Class<?>) rawType;
-                    final Class<?> wrapperCls = LoganSquareWrapper.getWrapperClass(rawClass);
-                    if (wrapperCls != null) {
-                        final TwitterModelWrapper<?> wrapper = (TwitterModelWrapper<?>) parseOrThrow(response, stream, wrapperCls);
-                        wrapper.processResponseHeader(response);
-                        return wrapper.getWrapped(((ParameterizedType) type).getActualTypeArguments());
-                    } else if (ResponseList.class.isAssignableFrom(rawClass)) {
-                        final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
-                        final ResponseListImpl<?> responseList = new ResponseListImpl<>(parseListOrThrow(response, stream, (Class<?>) elementType));
-                        responseList.processResponseHeader(response);
-                        return responseList;
-                    }
-                }
+            Converter converter = sConverters.get(type);
+            if (converter != null) {
+                return converter.convert(response, type);
             }
-            throw new UnsupportedTypeException(type);
+            final InputStream stream = body.stream();
+            final Object object = parseOrThrow(response, stream, type);
+            checkResponse(type, object, response);
+            if (object instanceof TwitterResponseImpl) {
+                ((TwitterResponseImpl) object).processResponseHeader(response);
+            }
+            return object;
         } finally {
-            Utils.closeSilently(stream);
+            Utils.closeSilently(body);
         }
     }
 
-    private void checkResponse(Class<?> cls, Object object, RestHttpResponse response) throws TwitterException {
-        if (User.class.isAssignableFrom(cls)) {
+    private void checkResponse(Type type, Object object, RestHttpResponse response) throws TwitterException {
+        if (User.class.equals(type)) {
             if (object == null) throw new TwitterException("User is null");
         }
     }

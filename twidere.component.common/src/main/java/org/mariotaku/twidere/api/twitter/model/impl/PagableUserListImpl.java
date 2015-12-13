@@ -17,27 +17,32 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package org.mariotaku.twidere.api.twitter.model.impl;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.QueryResultImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.model.User;
+
+import java.util.ArrayList;
 
 /**
- * A data interface representing search API response
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 15/12/13.
  */
-@Implementation(QueryResultImpl.class)
-public interface QueryResult extends ResponseList<Status>, CursorSupport {
-    double getCompletedIn();
+@JsonObject
+public class PagableUserListImpl extends PageableResponseListImpl<User> {
 
-    long getMaxId();
+    @JsonField(name = "users")
+    ArrayList<User> user;
 
-    String getQuery();
+    @Override
+    public User get(int location) {
+        return user.get(location);
+    }
 
-    int getResultsPerPage();
-
-    long getSinceId();
-
-    String getWarning();
+    @Override
+    public int size() {
+        if (user == null) return 0;
+        return user.size();
+    }
 }

@@ -17,27 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package org.mariotaku.twidere.util.message;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.QueryResultImpl;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 
 /**
- * A data interface representing search API response
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 14/12/10.
  */
-@Implementation(QueryResultImpl.class)
-public interface QueryResult extends ResponseList<Status>, CursorSupport {
-    double getCompletedIn();
+public class GetActivitiesTaskEvent {
 
-    long getMaxId();
+    @NonNull
+    public final Uri uri;
+    public final boolean running;
+    public final Exception exception;
 
-    String getQuery();
-
-    int getResultsPerPage();
-
-    long getSinceId();
-
-    String getWarning();
+    public GetActivitiesTaskEvent(@NonNull Uri uri, boolean running, Exception exception) {
+        this.uri = uri;
+        this.running = running;
+        this.exception = exception;
+    }
 }

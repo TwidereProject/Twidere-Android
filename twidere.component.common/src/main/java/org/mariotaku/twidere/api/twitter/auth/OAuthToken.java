@@ -22,8 +22,14 @@ package org.mariotaku.twidere.api.twitter.auth;
 
 import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.Utils;
+import org.mariotaku.restfu.http.ContentType;
+import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.ValueMap;
+import org.mariotaku.restfu.http.mime.TypedData;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -116,5 +122,28 @@ public class OAuthToken implements ValueMap {
     @Override
     public String[] keys() {
         return new String[]{"oauth_token", "oauth_token_secret"};
+    }
+
+    public static class Converter implements org.mariotaku.restfu.Converter {
+        @Override
+        public Object convert(RestHttpResponse response, Type type) throws IOException {
+            final TypedData body = response.getBody();
+            try {
+                final ContentType contentType = body.contentType();
+                final ByteArrayOutputStream os = new ByteArrayOutputStream();
+                body.writeTo(os);
+                Charset charset = contentType != null ? contentType.getCharset() : null;
+                if (charset == null) {
+                    charset = Charset.defaultCharset();
+                }
+                try {
+                    return new OAuthToken(os.toString(charset.name()), charset);
+                } catch (ParseException e) {
+                    throw new IOException(e);
+                }
+            } finally {
+                Utils.closeSilently(body);
+            }
+        }
     }
 }

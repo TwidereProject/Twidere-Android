@@ -17,14 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model;
+package org.mariotaku.twidere.api.twitter.model.impl.mapper.list;
 
-import org.mariotaku.library.logansquare.extension.annotation.Wrapper;
-import org.mariotaku.twidere.api.twitter.model.impl.ScheduledStatusesListWrapper;
+import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.api.twitter.model.impl.ResponseListMapper;
 
 /**
- * Created by mariotaku on 15/7/9.
+ * Created by mariotaku on 15/12/13.
  */
-@Wrapper(ScheduledStatusesListWrapper.class)
-public interface ScheduledStatusesList extends ResponseList<ScheduledStatus> {
+public class ActivityResponseListMapper extends ResponseListMapper<Activity> {
+    public ActivityResponseListMapper() {
+        super(Activity.class);
+    }
 }

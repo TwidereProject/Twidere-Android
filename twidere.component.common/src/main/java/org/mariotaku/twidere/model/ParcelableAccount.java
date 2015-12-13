@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@CursorObject
+@CursorObject(valuesCreator = true)
 @ParcelablePlease(allFields = false)
 @JsonObject
 public class ParcelableAccount implements Parcelable {

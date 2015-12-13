@@ -824,4 +824,6 @@
     <string name="login_verification_push_hint">Accept login verification request from Twitter app, once you approved the request, click OK.</string>
     <string name="login_verification_failed">Login verification failed.</string>
     <string name="saved_searches_already_saved_hint">Perhaps you already saved this search</string>
+    <string name="unsupported_activity_action_title"><xliff:g id="action">%s</xliff:g> action</string>
+    <string name="unsupported_activity_action_summary">Please report action above</string>
 </resources>

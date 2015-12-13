@@ -37,7 +37,6 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
-import org.mariotaku.twidere.api.twitter.model.impl.StatusImpl;
 import org.mariotaku.twidere.common.R;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
@@ -210,7 +209,7 @@ public class TwitterContentUtils {
                 // This set shouldn't be null here, add null check to make inspector happy.
                 if (orig == null) continue;
                 for (Status status : orig) {
-                    StatusImpl.setQuotedStatus(status, quoted);
+                    Status.setQuotedStatus(status, quoted);
                 }
             }
         }

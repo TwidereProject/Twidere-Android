@@ -944,7 +944,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                         result.put(spec, Utils.getStatusesCount(mContext, Statuses.CONTENT_URI, position, accountIds));
                         break;
                     }
-                    case TAB_TYPE_MENTIONS_TIMELINE: {
+                    case TAB_TYPE_NOTIFICATIONS_TIMELINE: {
                         final long[] accountIds = Utils.getAccountIds(spec.args);
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext, true, spec.tag, accountIds);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);

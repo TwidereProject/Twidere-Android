@@ -22,19 +22,27 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.twidere.api.twitter.model.UserList;
+
+import java.util.ArrayList;
 
 /**
- * Created by mariotaku on 15/5/7.
+ * Created by mariotaku on 15/12/13.
  */
 @JsonObject
-public class RelationshipWrapper extends TwitterResponseImpl implements TwitterModelWrapper<Relationship> {
+public class PagableUserListListImpl extends PageableResponseListImpl<UserList> {
 
-    @JsonField(name = "relationship")
-    RelationshipImpl relationship;
+    @JsonField(name = "lists")
+    ArrayList<UserList> lists;
 
     @Override
-    public Relationship getWrapped(Object extra) {
-        return relationship;
+    public UserList get(int location) {
+        return lists.get(location);
+    }
+
+    @Override
+    public int size() {
+        if (lists == null) return 0;
+        return lists.size();
     }
 }

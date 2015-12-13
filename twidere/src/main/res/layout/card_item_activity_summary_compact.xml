@@ -121,7 +121,7 @@
         android:singleLine="false"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
-        tools:text="Uucky and 15 others favorited your tweet." />
+        tools:text="User and 15 others favorited your tweet."/>
 
     <org.mariotaku.twidere.view.themed.ThemedTextView
         android:id="@+id/summary"

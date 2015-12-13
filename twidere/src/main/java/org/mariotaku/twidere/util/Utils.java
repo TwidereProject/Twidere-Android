@@ -416,7 +416,7 @@ public final class Utils implements Constants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_PROFILE_EDITOR, null, LINK_ID_PROFILE_EDITOR);
 
         HOME_TABS_URI_MATCHER.addURI(AUTHORITY_HOME, null, CustomTabUtils.TAB_CODE_HOME_TIMELINE);
-        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_MENTIONS, null, CustomTabUtils.TAB_CODE_MENTIONS_TIMELINE);
+        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_MENTIONS, null, CustomTabUtils.TAB_CODE_NOTIFICATIONS_TIMELINE);
         HOME_TABS_URI_MATCHER.addURI(AUTHORITY_DIRECT_MESSAGES, null, CustomTabUtils.TAB_CODE_DIRECT_MESSAGES);
     }
 
@@ -2530,8 +2530,8 @@ public final class Utils implements Constants {
             case TAB_CODE_HOME_TIMELINE: {
                 return TAB_TYPE_HOME_TIMELINE;
             }
-            case TAB_CODE_MENTIONS_TIMELINE: {
-                return TAB_TYPE_MENTIONS_TIMELINE;
+            case TAB_CODE_NOTIFICATIONS_TIMELINE: {
+                return TAB_TYPE_NOTIFICATIONS_TIMELINE;
             }
             case TAB_CODE_DIRECT_MESSAGES: {
                 return TAB_TYPE_DIRECT_MESSAGES;

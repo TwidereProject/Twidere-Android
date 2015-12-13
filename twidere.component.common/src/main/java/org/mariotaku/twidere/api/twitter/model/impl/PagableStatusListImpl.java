@@ -22,46 +22,28 @@ package org.mariotaku.twidere.api.twitter.model.impl;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import java.util.ArrayList;
-
-import org.mariotaku.twidere.api.twitter.model.QueryResult;
 import org.mariotaku.twidere.api.twitter.model.Status;
 
+import java.util.ArrayList;
+
 /**
- * Created by mariotaku on 15/5/7.
+ * Created by mariotaku on 15/12/13.
  */
 @JsonObject
-public class QueryResultWrapper extends TwitterResponseImpl implements TwitterModelWrapper<QueryResult> {
-
-    @JsonField(name = "previous_cursor")
-    long previousCursor;
-    @JsonField(name = "next_cursor")
-    long nextCursor;
-
-    @JsonField(name = "search_metadata")
-    SearchMetadata metadata;
+public class PagableStatusListImpl extends PageableResponseListImpl<Status> {
 
     @JsonField(name = "statuses")
     ArrayList<Status> statuses;
 
     @Override
-    public QueryResult getWrapped(Object extra) {
-        return new QueryResultImpl(statuses, metadata);
+    public Status get(int location) {
+        return statuses.get(location);
     }
 
-    @JsonObject
-    public static class SearchMetadata {
-        @JsonField(name = "max_id")
-        long maxId;
-        @JsonField(name = "since_id")
-        long sinceId;
-        @JsonField(name = "count")
-        int count;
-        @JsonField(name = "completed_in")
-        double completedIn;
-        @JsonField(name = "query")
-        String query;
-        @JsonField(name = "warning")
-        String warning;
+    @Override
+    public int size() {
+        if (statuses == null) return 0;
+        return statuses.size();
     }
+
 }

@@ -19,12 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model.impl;
 
+import android.support.v4.util.ArrayMap;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
-import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
-import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.User;
 
 import java.util.Map;
@@ -43,6 +44,7 @@ public class CardEntityImpl implements CardEntity {
     String url;
 
     @JsonField(name = "binding_values")
+    Map<String, RawBindingValue> rawBindingValues;
     Map<String, BindingValue> bindingValues;
 
     @Override
@@ -68,6 +70,16 @@ public class CardEntityImpl implements CardEntity {
     @Override
     public Map<String, BindingValue> getBindingValues() {
         return bindingValues;
+    }
+
+    @OnJsonParseComplete
+    void onParseComplete() {
+        if (rawBindingValues != null) {
+            bindingValues = new ArrayMap<>();
+            for (Map.Entry<String, RawBindingValue> entry : rawBindingValues.entrySet()) {
+                bindingValues.put(entry.getKey(), entry.getValue().getBindingValue());
+            }
+        }
     }
 
     @JsonObject
@@ -136,7 +148,7 @@ public class CardEntityImpl implements CardEntity {
     }
 
     @JsonObject
-    public static class BindingValueWrapper implements TwitterModelWrapper<BindingValue> {
+    public static class RawBindingValue {
 
         @JsonField(name = "type")
         String type;
@@ -150,8 +162,7 @@ public class CardEntityImpl implements CardEntity {
         UserValueImpl userValue;
 
 
-        @Override
-        public BindingValue getWrapped(Object extra) {
+        public BindingValue getBindingValue() {
             if (type == null) return null;
             switch (type) {
                 case BindingValue.TYPE_BOOLEAN: {
@@ -170,19 +181,5 @@ public class CardEntityImpl implements CardEntity {
             return null;
         }
 
-        @Override
-        public void processResponseHeader(RestHttpResponse resp) {
-
-        }
-
-        @Override
-        public int getAccessLevel() {
-            return 0;
-        }
-
-        @Override
-        public RateLimitStatus getRateLimitStatus() {
-            return null;
-        }
     }
 }
