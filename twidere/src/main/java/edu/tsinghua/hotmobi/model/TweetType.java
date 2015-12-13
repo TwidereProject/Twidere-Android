@@ -73,7 +73,7 @@ public enum TweetType {
         return value;
     }
 
-    public static class TweetTypeConverter extends StringBasedTypeConverter<TweetType> {
+    public static class Converter extends StringBasedTypeConverter<TweetType> {
 
         @Override
         public TweetType getFromString(String string) {

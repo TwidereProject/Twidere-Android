@@ -29,60 +29,56 @@ import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.IOException;
 
-public final class ResponseList$$JsonObjectMapper<T> extends JsonMapper<ResponseList<T>> {
+@SuppressWarnings("unused")
+public final class PageableResponseList$$JsonObjectMapper<T> extends JsonMapper<PageableResponseList<T>> {
     private final JsonMapper<T> m84ClassJsonMapper;
 
-    public ResponseList$$JsonObjectMapper(ParameterizedType type, ParameterizedType TType, SimpleArrayMap<ParameterizedType, JsonMapper> partialMappers) {
+    public PageableResponseList$$JsonObjectMapper(ParameterizedType type, ParameterizedType TType, SimpleArrayMap<ParameterizedType, JsonMapper> partialMappers) {
         partialMappers.put(type, this);
         //noinspection unchecked
         m84ClassJsonMapper = LoganSquare.mapperFor(TType, partialMappers);
     }
 
     @Override
-    public ResponseList<T> parse(JsonParser jsonParser) throws IOException {
+    public PageableResponseList<T> parse(JsonParser jsonParser) throws IOException {
         if (jsonParser.getCurrentToken() == null) {
             jsonParser.nextToken();
         }
-        if (m84ClassJsonMapper instanceof ScheduledStatus$$JsonObjectMapper) {
-            ResponseList<T> instance = new ResponseList<>();
+        PageableResponseList<T> instance = new PageableResponseList<>();
+        final JsonToken currentToken = jsonParser.getCurrentToken();
+        if (currentToken == JsonToken.START_OBJECT) {
             while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
                 String fieldName = jsonParser.getCurrentName();
                 jsonParser.nextToken();
                 parseField(instance, fieldName, jsonParser);
                 jsonParser.skipChildren();
             }
-            return instance;
-        } else if (jsonParser.getCurrentToken() != JsonToken.START_ARRAY) {
-            jsonParser.skipChildren();
-            return null;
+        } else if (currentToken == JsonToken.START_ARRAY) {
+            instance.addAll(m84ClassJsonMapper.parseList(jsonParser));
         }
-        return new ResponseList<>(m84ClassJsonMapper.parseList(jsonParser));
+        return instance;
     }
 
     @Override
-    public void parseField(ResponseList<T> instance, String fieldName, JsonParser jsonParser) throws IOException {
+    public void parseField(PageableResponseList<T> instance, String fieldName, JsonParser jsonParser) throws IOException {
         switch (fieldName) {
-            case "results": {
+            case "users":
+            case "statuses":
+            case "lists": {
                 instance.addAll(m84ClassJsonMapper.parseList(jsonParser));
                 break;
+            }
+            case "previous_cursor": {
+                instance.previousCursor = jsonParser.getValueAsLong();
+            }
+            case "next_cursor": {
+                instance.nextCursor = jsonParser.getValueAsLong();
             }
         }
     }
 
     @Override
-    public void serialize(ResponseList<T> object, JsonGenerator jsonGenerator, boolean writeStartAndEnd) throws IOException {
-        if (object == null) {
-            jsonGenerator.writeNull();
-            return;
-        }
-        if (writeStartAndEnd) {
-            jsonGenerator.writeStartArray();
-        }
-        for (T t : object) {
-            m84ClassJsonMapper.serialize(t, jsonGenerator, true);
-        }
-        if (writeStartAndEnd) {
-            jsonGenerator.writeEndArray();
-        }
+    public void serialize(PageableResponseList<T> object, JsonGenerator jsonGenerator, boolean writeStartAndEnd) throws IOException {
+
     }
 }

@@ -42,7 +42,7 @@ public enum TimelineType {
         return OTHER;
     }
 
-    public static class TimelineTypeConverter extends StringBasedTypeConverter<TimelineType> {
+    public static class Converter extends StringBasedTypeConverter<TimelineType> {
 
         @Override
         public TimelineType getFromString(String string) {

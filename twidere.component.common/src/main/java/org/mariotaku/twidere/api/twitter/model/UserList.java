@@ -49,7 +49,7 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
     @JsonField(name = "member_count")
     long memberCount;
 
-    @JsonField(name = "mode")
+    @JsonField(name = "mode", typeConverter = Mode.Converter.class)
     Mode mode;
 
     @JsonField(name = "description")

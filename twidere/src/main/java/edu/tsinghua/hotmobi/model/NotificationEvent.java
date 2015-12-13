@@ -52,7 +52,7 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "type")
     String type;
 
-    @JsonField(name = "action", typeConverter = Action.NotificationActionConverter.class)
+    @JsonField(name = "action", typeConverter = Action.Converter.class)
     Action action;
 
     @JsonField(name = "ringer_mode")
@@ -183,7 +183,7 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         }
 
 
-        public static class NotificationActionConverter extends StringBasedTypeConverter<Action> {
+        public static class Converter extends StringBasedTypeConverter<Action> {
 
             @Override
             public Action getFromString(String string) {

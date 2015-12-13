@@ -21,8 +21,7 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-
-import org.mariotaku.twidere.api.twitter.model.ExtendedProfile;
+import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 /**
  * Created by mariotaku on 15/7/8.
@@ -52,9 +51,9 @@ public class ExtendedProfile {
         int month;
         @JsonField(name = "year")
         int year;
-        @JsonField(name = "visibility")
+        @JsonField(name = "visibility", typeConverter = Visibility.Converter.class)
         Visibility visibility;
-        @JsonField(name = "year_visibility")
+        @JsonField(name = "year_visibility", typeConverter = Visibility.Converter.class)
         Visibility yearVisibility;
 
         public int getDay() {
@@ -78,12 +77,31 @@ public class ExtendedProfile {
         }
 
         public enum Visibility {
-            MUTUALFOLLOW, PUBLIC, UNKNOWN;
+            MUTUALFOLLOW("mutualfollow"), PUBLIC("public"), UNKNOWN(null);
+
+            private final String literal;
+
+            Visibility(String literal) {
+                this.literal = literal;
+            }
 
             public static Visibility parse(String s) {
                 if ("mutualfollow".equals(s)) return MUTUALFOLLOW;
                 if ("public".equals(s)) return PUBLIC;
                 return UNKNOWN;
+            }
+
+            public static class Converter extends StringBasedTypeConverter<Visibility> {
+
+                @Override
+                public Visibility getFromString(String string) {
+                    return Visibility.parse(string);
+                }
+
+                @Override
+                public String convertToString(Visibility object) {
+                    return object.literal;
+                }
             }
         }
     }

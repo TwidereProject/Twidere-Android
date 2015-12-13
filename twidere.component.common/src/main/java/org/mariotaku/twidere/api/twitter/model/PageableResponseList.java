@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
@@ -29,11 +27,12 @@ import java.util.ArrayList;
 /**
  * Created by mariotaku on 15/5/7.
  */
-@JsonObject
 public class PageableResponseList<T> extends ArrayList<T> implements TwitterResponse, CursorSupport {
 
     private int accessLevel;
     private RateLimitStatus rateLimitStatus;
+    long previousCursor;
+    long nextCursor;
 
 
     @Override

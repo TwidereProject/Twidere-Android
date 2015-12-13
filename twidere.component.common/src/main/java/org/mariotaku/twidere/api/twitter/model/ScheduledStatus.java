@@ -21,6 +21,7 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
@@ -48,7 +49,7 @@ public class ScheduledStatus {
     boolean possiblySensitive;
     @JsonField(name = "user_id")
     long userId;
-    @JsonField(name = "state")
+    @JsonField(name = "state", typeConverter = State.Converter.class)
     State state;
 
     public long getUserId() {
@@ -90,18 +91,18 @@ public class ScheduledStatus {
     public enum State {
         SCHEDULED("scheduled"), FAILED("failed"), CANCELED("canceled");
 
-        private final String value;
+        private final String literal;
 
-        State(String value) {
-            this.value = value;
+        State(String literal) {
+            this.literal = literal;
         }
 
         public static State parse(String value) {
-            if (SCHEDULED.value.equalsIgnoreCase(value)) {
+            if (SCHEDULED.literal.equalsIgnoreCase(value)) {
                 return SCHEDULED;
-            } else if (FAILED.value.equalsIgnoreCase(value)) {
+            } else if (FAILED.literal.equalsIgnoreCase(value)) {
                 return FAILED;
-            } else if (CANCELED.value.equalsIgnoreCase(value)) {
+            } else if (CANCELED.literal.equalsIgnoreCase(value)) {
                 return CANCELED;
             }
             return null;
@@ -109,7 +110,20 @@ public class ScheduledStatus {
 
         @Override
         public String toString() {
-            return value;
+            return literal;
+        }
+
+        public static class Converter extends StringBasedTypeConverter<State> {
+
+            @Override
+            public State getFromString(String string) {
+                return State.parse(string);
+            }
+
+            @Override
+            public String convertToString(State object) {
+                return object.literal;
+            }
         }
     }
 }

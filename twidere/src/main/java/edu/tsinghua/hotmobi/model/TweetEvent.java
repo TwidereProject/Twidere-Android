@@ -48,13 +48,13 @@ public class TweetEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "user_id")
     long userId;
     @ParcelableThisPlease
-    @JsonField(name = "tweet_type", typeConverter = TweetType.TweetTypeConverter.class)
+    @JsonField(name = "tweet_type", typeConverter = TweetType.Converter.class)
     TweetType tweetType;
     @ParcelableThisPlease
-    @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
+    @JsonField(name = "timeline_type", typeConverter = TimelineType.Converter.class)
     TimelineType timelineType;
     @ParcelableThisPlease
-    @JsonField(name = "action", typeConverter = Action.TweetActionConverter.class)
+    @JsonField(name = "action", typeConverter = Action.Converter.class)
     Action action;
     @ParcelableThisPlease
     @JsonField(name = "following")
@@ -140,7 +140,7 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         }
 
 
-        public static class TweetActionConverter extends StringBasedTypeConverter<Action> {
+        public static class Converter extends StringBasedTypeConverter<Action> {
 
             @Override
             public Action getFromString(String string) {

@@ -40,7 +40,7 @@ public class RefreshEvent extends BaseEvent implements Parcelable {
     @ParcelableThisPlease
     long[] ids;
 
-    @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
+    @JsonField(name = "timeline_type", typeConverter = TimelineType.Converter.class)
     @ParcelableThisPlease
     TimelineType timelineType;
 

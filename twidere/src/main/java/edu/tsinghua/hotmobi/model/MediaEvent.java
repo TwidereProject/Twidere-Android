@@ -43,10 +43,10 @@ public class MediaEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "user_id")
     long userId;
 
-    @JsonField(name = "tweet_type", typeConverter = TweetType.TweetTypeConverter.class)
+    @JsonField(name = "tweet_type", typeConverter = TweetType.Converter.class)
     TweetType tweetType;
 
-    @JsonField(name = "timeline_type", typeConverter = TimelineType.TimelineTypeConverter.class)
+    @JsonField(name = "timeline_type", typeConverter = TimelineType.Converter.class)
     TimelineType timelineType;
 
     @JsonField(name = "preview_url")

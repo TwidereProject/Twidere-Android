@@ -31,7 +31,7 @@ import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 @JsonObject
 public class ScreenEvent extends BaseEvent {
 
-    @JsonField(name = "action", typeConverter = Action.ScreenActionConverter.class)
+    @JsonField(name = "action", typeConverter = Action.Conveter.class)
     Action action;
     @JsonField(name = "present_duration")
     long presentDuration;
@@ -88,7 +88,7 @@ public class ScreenEvent extends BaseEvent {
         }
 
 
-        public static class ScreenActionConverter extends StringBasedTypeConverter<Action> {
+        public static class Conveter extends StringBasedTypeConverter<Action> {
 
             @Override
             public Action getFromString(String string) {
