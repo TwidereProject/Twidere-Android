@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
@@ -162,6 +163,19 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
 
         public String getMode() {
             return mode;
+        }
+
+        public static class Converter extends StringBasedTypeConverter<Mode> {
+
+            @Override
+            public Mode getFromString(String string) {
+                return Mode.parse(string);
+            }
+
+            @Override
+            public String convertToString(Mode object) {
+                return object.mode;
+            }
         }
     }
 }

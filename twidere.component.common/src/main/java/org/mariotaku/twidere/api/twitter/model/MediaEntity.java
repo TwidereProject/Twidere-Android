@@ -21,6 +21,7 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class MediaEntity extends UrlEntity {
     String displayUrl;
     @JsonField(name = "expanded_url")
     String expandedUrl;
-    @JsonField(name = "type")
+    @JsonField(name = "type", typeConverter = Type.Converter.class)
     Type type;
     @JsonField(name = "sizes")
     HashMap<String, Size> sizes;
@@ -129,7 +130,13 @@ public class MediaEntity extends UrlEntity {
     }
 
     public enum Type {
-        PHOTO, VIDEO, ANIMATED_GIF, UNKNOWN;
+        PHOTO("photo"), VIDEO("video"), ANIMATED_GIF("animated_gif"), UNKNOWN(null);
+
+        private final String literal;
+
+        Type(String literal) {
+            this.literal = literal;
+        }
 
         public static Type parse(String typeString) {
             if ("photo".equalsIgnoreCase(typeString)) {
@@ -140,6 +147,19 @@ public class MediaEntity extends UrlEntity {
                 return ANIMATED_GIF;
             }
             return UNKNOWN;
+        }
+
+        public static class Converter extends StringBasedTypeConverter<Type> {
+
+            @Override
+            public Type getFromString(String string) {
+                return Type.parse(string);
+            }
+
+            @Override
+            public String convertToString(Type object) {
+                return object.literal;
+            }
         }
     }
 
