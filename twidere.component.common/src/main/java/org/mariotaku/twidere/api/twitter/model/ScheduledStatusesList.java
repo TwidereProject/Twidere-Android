@@ -17,15 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.ScheduledStatus;
+import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
+import org.mariotaku.twidere.api.twitter.model.TwitterResponseObject;
 
 import java.util.AbstractList;
 import java.util.List;
@@ -34,12 +35,12 @@ import java.util.List;
  * Created by mariotaku on 15/7/9.
  */
 @JsonObject
-public class ScheduledStatusesListImpl extends AbstractList<ScheduledStatus> implements ResponseList<ScheduledStatus> {
+public class ScheduledStatusesList extends AbstractList<ScheduledStatus> implements TwitterResponse {
 
     @JsonField(name = "results")
     List<ScheduledStatus> list;
 
-    TwitterResponseImpl response = new TwitterResponseImpl();
+    TwitterResponseObject response = new TwitterResponseObject();
 
     @Override
     public void processResponseHeader(RestHttpResponse resp) {

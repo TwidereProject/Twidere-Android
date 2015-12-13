@@ -42,7 +42,7 @@ public class ResponseListMapper<T> extends JsonMapper<ResponseList<T>> {
 
     @Override
     public ResponseList<T> parse(JsonParser jsonParser) throws IOException {
-        ResponseArrayList<T> list = new ResponseArrayList<>();
+        ResponseList<T> list = new ResponseList<>();
         final JsonMapper<T> mapper = LoganSquare.mapperFor(elementCls);
         if (jsonParser.getCurrentToken() == JsonToken.START_ARRAY) {
             while (jsonParser.nextToken() != JsonToken.END_ARRAY) {

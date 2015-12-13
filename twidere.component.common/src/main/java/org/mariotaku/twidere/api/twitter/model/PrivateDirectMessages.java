@@ -19,77 +19,224 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.EnumClass;
+import android.support.annotation.Nullable;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.model.Entities;
+import org.mariotaku.twidere.api.twitter.model.EntitySupport;
+import org.mariotaku.twidere.api.twitter.model.HashtagEntity;
+import org.mariotaku.twidere.api.twitter.model.MediaEntity;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
+import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
+
+import java.util.Map;
 
 /**
  * Created by mariotaku on 15/7/5.
  */
-public interface PrivateDirectMessages {
+@JsonObject
+public class PrivateDirectMessages {
 
-    UserEvents getUserEvents();
+    @JsonField(name = "user_inbox")
+    UserInbox userInbox;
+    @JsonField(name = "user_events")
+    UserEvents userEvents;
 
-    interface UserInbox {
-
-        User getUser(long userId);
-
-        Conversation getConversation(String conversationId);
-
-        Message[] getEntries();
+    public UserInbox getUserInbox() {
+        return userInbox;
     }
 
-    interface UserEvents {
-        String getCursor();
-
-        long getLastSeenEventId();
+    public UserEvents getUserEvents() {
+        return userEvents;
     }
 
-    UserInbox getUserInbox();
+    public enum Status {
+        HAS_MORE, AT_END
+    }
 
-    interface Message {
-        interface Data extends EntitySupport {
+    @JsonObject
+    public static class UserInbox {
 
-            String getText();
+        @JsonField(name = "users")
+        Map<String, User> users;
 
-            String getConversationId();
+        @JsonField(name = "conversations")
+        Map<String, Conversation> conversations;
 
-            long getId();
+        @JsonField(name = "entries")
+        Message[] entries;
 
-            long getRecipientId();
+        public User getUser(long userId) {
+            return users.get(String.valueOf(userId));
+        }
 
-            long getSenderId();
+        public Conversation getConversation(String conversationId) {
+            return conversations.get(conversationId);
+        }
 
-            long getTime();
+        public Message[] getEntries() {
+            return entries;
         }
     }
 
-    interface Conversation {
-        Participant[] getParticipants();
 
-        String getConversationId();
+    @JsonObject
+    public static class UserEvents {
+        @JsonField(name = "cursor")
+        String cursor;
+        @JsonField(name = "last_seen_event_id")
+        long lastSeenEventId;
 
-        long getLastReadEventId();
-
-        long getMaxEntryId();
-
-        long getMinEntryId();
-
-        boolean isNotificationsDisabled();
-
-
-        interface Participant {
-
-            long getUserId();
+        public String getCursor() {
+            return cursor;
         }
 
-        @EnumClass
-        enum Type {
+        public long getLastSeenEventId() {
+            return lastSeenEventId;
+        }
+    }
+
+    @JsonObject
+    public static class Message {
+
+        @JsonObject
+        public static class Data implements EntitySupport {
+
+            @Nullable
+            @JsonField(name = "entities")
+            Entities entities;
+
+            @JsonField(name = "sender_id")
+            long senderId;
+            @JsonField(name = "recipient_id")
+            long recipientId;
+            @JsonField(name = "id")
+            long id;
+            @JsonField(name = "conversation_id")
+            String conversationId;
+            @JsonField(name = "text")
+            String text;
+            @JsonField(name = "time")
+            long time;
+
+            public String getText() {
+                return text;
+            }
+
+            public String getConversationId() {
+                return conversationId;
+            }
+
+            public long getId() {
+                return id;
+            }
+
+            public long getRecipientId() {
+                return recipientId;
+            }
+
+            public long getSenderId() {
+                return senderId;
+            }
+
+            public long getTime() {
+                return time;
+            }
+
+            @Override
+            public HashtagEntity[] getHashtagEntities() {
+                if (entities == null) return null;
+                return entities.getHashtags();
+            }
+
+            @Override
+            public UrlEntity[] getUrlEntities() {
+                if (entities == null) return null;
+                return entities.getUrls();
+            }
+
+            @Override
+            public MediaEntity[] getMediaEntities() {
+                if (entities == null) return null;
+                return entities.getMedia();
+            }
+
+            @Override
+            public UserMentionEntity[] getUserMentionEntities() {
+                if (entities == null) return null;
+                return entities.getUserMentions();
+            }
+        }
+
+    }
+
+    @JsonObject
+    public static class Conversation {
+
+        @JsonField(name = "conversation_id")
+        String conversationId;
+        @JsonField(name = "last_read_event_id")
+        long lastReadEventId;
+        @JsonField(name = "max_entry_id")
+        long maxEntryId;
+        @JsonField(name = "min_entry_id")
+        long minEntryId;
+        @JsonField(name = "notifications_disabled")
+        boolean notificationsDisabled;
+        @JsonField(name = "participants")
+        Participant[] participants;
+        @JsonField(name = "read_only")
+        boolean readOnly;
+        @JsonField(name = "sort_event_id")
+        long sortEventId;
+        @JsonField(name = "sort_timestamp")
+        long sortTimestamp;
+        @JsonField(name = "status")
+        Status status;
+        @JsonField(name = "type")
+        Type type;
+
+        public Participant[] getParticipants() {
+            return participants;
+        }
+
+        public String getConversationId() {
+            return conversationId;
+        }
+
+        public long getLastReadEventId() {
+            return lastReadEventId;
+        }
+
+        public long getMaxEntryId() {
+            return maxEntryId;
+        }
+
+        public long getMinEntryId() {
+            return minEntryId;
+        }
+
+        public boolean isNotificationsDisabled() {
+            return notificationsDisabled;
+        }
+
+        public enum Type {
             ONE_TO_ONE, GROUP_DM
         }
-    }
 
-    @EnumClass
-    enum Status {
-        HAS_MORE, AT_END
+        @JsonObject
+        public static class Participant {
+
+            @JsonField(name = "user_id")
+            long userId;
+
+            public long getUserId() {
+                return userId;
+            }
+        }
     }
 
 }

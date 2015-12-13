@@ -23,7 +23,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import org.mariotaku.library.logansquare.extension.LoganSquareExtension;
+import com.bluelinelabs.logansquare.LoganSquare;
+
 import org.mariotaku.library.objectcursor.converter.CursorFieldConverter;
 
 import java.io.IOException;
@@ -61,18 +62,18 @@ public class LoganSquareCursorFieldConverter implements CursorFieldConverter<Obj
         if (!(rawType instanceof Class)) throw new UnsupportedOperationException();
         final Class rawCls = (Class) rawType;
         if (List.class.isAssignableFrom(rawCls)) {
-            values.put(columnName, LoganSquareExtension.serialize((List) object,
+            values.put(columnName, LoganSquare.serialize((List) object,
                     (Class) fieldType.getActualTypeArguments()[0]));
         } else if (Map.class.isAssignableFrom(rawCls)) {
             //noinspection unchecked
-            values.put(columnName, LoganSquareExtension.serialize((Map) object,
+            values.put(columnName, LoganSquare.serialize((Map) object,
                     (Class) fieldType.getActualTypeArguments()[1]));
         } else if (rawCls.isArray()) {
             final Class componentType = rawCls.getComponentType();
-            values.put(columnName, LoganSquareExtension.serialize((List) Arrays.asList((Object[]) object),
+            values.put(columnName, LoganSquare.serialize((List) Arrays.asList((Object[]) object),
                     componentType));
         } else {
-            values.put(columnName, LoganSquareExtension.serialize(object));
+            values.put(columnName, LoganSquare.serialize(object));
         }
     }
 
@@ -84,16 +85,16 @@ public class LoganSquareCursorFieldConverter implements CursorFieldConverter<Obj
         if (TextUtils.isEmpty(string)) return null;
         if (List.class.isAssignableFrom(rawCls)) {
             // Parse list
-            return LoganSquareExtension.parseList(string,
+            return LoganSquare.parseList(string,
                     (Class) fieldType.getActualTypeArguments()[0]);
         } else if (Map.class.isAssignableFrom(rawCls)) {
-            return LoganSquareExtension.parseMap(string,
+            return LoganSquare.parseMap(string,
                     (Class) fieldType.getActualTypeArguments()[1]);
         } else if (rawCls.isArray()) {
             final Class componentType = rawCls.getComponentType();
-            List<?> list = LoganSquareExtension.parseList(string, componentType);
+            List<?> list = LoganSquare.parseList(string, componentType);
             return list.toArray((Object[]) Array.newInstance(componentType, list.size()));
         }
-        return LoganSquareExtension.parse(string, rawCls);
+        return LoganSquare.parse(string, rawCls);
     }
 }

@@ -19,38 +19,75 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.PlaceImpl;
+import android.support.annotation.NonNull;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.1.1
+ * Created by mariotaku on 15/5/7.
  */
-@Implementation(PlaceImpl.class)
-public interface Place extends TwitterResponse, Comparable<Place> {
-	GeoLocation[][] getBoundingBoxCoordinates();
+@JsonObject
+public class Place extends TwitterResponseObject implements TwitterResponse, Comparable<Place> {
 
-	String getBoundingBoxType();
+    @JsonField(name = "full_name")
+    String fullName;
 
-	Place[] getContainedWithIn();
+    public GeoLocation[][] getBoundingBoxCoordinates() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getCountry();
+    public String getBoundingBoxType() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getCountryCode();
+    public Place[] getContainedWithIn() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getFullName();
+    public String getCountry() {
+        throw new UnsupportedOperationException();
+    }
 
-	GeoLocation[][] getGeometryCoordinates();
+    public String getCountryCode() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getGeometryType();
+    public String getFullName() {
+        return fullName;
+    }
 
-	String getId();
+    public GeoLocation[][] getGeometryCoordinates() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getName();
+    public String getGeometryType() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getPlaceType();
+    public String getId() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getStreetAddress();
+    public String getName() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getUrl();
+    public String getPlaceType() {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getStreetAddress() {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getUrl() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int compareTo(@NonNull Place another) {
+        return 0;
+    }
+
 }

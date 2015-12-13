@@ -2,7 +2,7 @@
  *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
- *
+ *   
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -19,54 +19,51 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.UrlEntityImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
- * A data interface representing one single URL entity.
- * 
- * @author Mocel - mocel at guma.jp
- * @since Twitter4J 2.1.9
+ * Created by mariotaku on 15/3/31.
  */
-@Implementation(UrlEntityImpl.class)
-public interface UrlEntity  {
+@JsonObject
+public class UrlEntity {
+    @JsonField(name = "indices", typeConverter = IndicesConverter.class)
+    Indices indices;
+    @JsonField(name = "display_url")
+    String displayUrl;
+    @JsonField(name = "expanded_url")
+    String expandedUrl;
 
-	/**
-	 * Returns the display URL if mentioned URL is shorten.
-	 * 
-	 * @return the display URL if mentioned URL is shorten, or null if no
-	 *         shorten URL was mentioned.
-	 */
-	String getDisplayUrl();
+    @JsonField(name = "url")
+    String url;
 
-	/**
-	 * Returns the index of the end character of the URL mentioned in the tweet.
-	 * 
-	 * @return the index of the end character of the URL mentioned in the tweet
-	 */
-	int getEnd();
+    public String getDisplayUrl() {
+        return displayUrl;
+    }
 
-	/**
-	 * Returns the expanded URL if mentioned URL is shorten.
-	 * 
-	 * @return the expanded URL if mentioned URL is shorten, or null if no
-	 *         shorten URL was mentioned.
-	 */
-	String getExpandedUrl();
+    @Override
+    public String toString() {
+        return "UrlEntity{" +
+                "indices=" + indices +
+                ", displayUrl='" + displayUrl + '\'' +
+                ", expandedUrl='" + expandedUrl + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 
-	/**
-	 * Returns the index of the start character of the URL mentioned in the
-	 * tweet.
-	 * 
-	 * @return the index of the start character of the URL mentioned in the
-	 *         tweet
-	 */
-	int getStart();
+    public int getEnd() {
+        return indices.getEnd();
+    }
 
-	/**
-	 * Returns the URL mentioned in the tweet.
-	 * 
-	 * @return the mentioned URL
-	 */
-	String getUrl();
+    public int getStart() {
+        return indices.getStart();
+    }
+
+    public String getExpandedUrl() {
+        return expandedUrl;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

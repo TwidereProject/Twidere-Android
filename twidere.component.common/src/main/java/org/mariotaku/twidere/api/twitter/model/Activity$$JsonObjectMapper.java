@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -25,25 +25,20 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-
 import java.io.IOException;
 import java.text.ParseException;
 
 /**
  * Created by mariotaku on 15/10/21.
  */
-public class ActivityImplMapper extends JsonMapper<ActivityImpl> {
+public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
 
-    public static final ActivityImplMapper INSTANCE = new ActivityImplMapper();
+    public static final Activity$$JsonObjectMapper INSTANCE = new Activity$$JsonObjectMapper();
 
     @SuppressWarnings("TryWithIdenticalCatches")
     @Override
-    public ActivityImpl parse(JsonParser jsonParser) throws IOException {
-        ActivityImpl instance = new ActivityImpl();
+    public Activity parse(JsonParser jsonParser) throws IOException {
+        Activity instance = new Activity();
         if (jsonParser.getCurrentToken() == null) {
             jsonParser.nextToken();
         }
@@ -61,18 +56,18 @@ public class ActivityImplMapper extends JsonMapper<ActivityImpl> {
     }
 
     @Override
-    public void serialize(ActivityImpl activity, JsonGenerator jsonGenerator, boolean writeStartAndEnd) {
+    public void serialize(Activity activity, JsonGenerator jsonGenerator, boolean writeStartAndEnd) {
         throw new UnsupportedOperationException();
     }
 
-    public void parseField(ActivityImpl instance, String fieldName, JsonParser jsonParser) throws IOException {
+    public void parseField(Activity instance, String fieldName, JsonParser jsonParser) throws IOException {
         if ("action".equals(fieldName)) {
             final String rawAction = jsonParser.getValueAsString();
             instance.action = Activity.Action.parse(rawAction);
             instance.rawAction = rawAction;
         } else if ("created_at".equals(fieldName)) {
             try {
-                instance.createdAt = ActivityImpl.DATE_FORMAT.parse(jsonParser.getValueAsString());
+                instance.createdAt = Activity.DATE_FORMAT.parse(jsonParser.getValueAsString());
             } catch (ParseException e) {
                 throw new IOException(e);
             }

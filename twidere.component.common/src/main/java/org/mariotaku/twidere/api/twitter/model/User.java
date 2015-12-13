@@ -19,209 +19,467 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.UserImpl;
 
+import android.support.annotation.NonNull;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+
+import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
+
+import java.io.IOException;
 import java.util.Date;
 
 /**
- * A data interface representing Basic user information element
- * 
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 15/3/31.
  */
-@Implementation(UserImpl.class)
-public interface User extends Comparable<User>, TwitterResponse {
-	Date getCreatedAt();
+@JsonObject
+public class User extends TwitterResponseObject implements Comparable<User> {
 
-	boolean isDefaultProfile();
+    @JsonField(name = "id")
+    long id;
 
-	/**
-	 * Returns the description of the user
-	 * 
-	 * @return the description of the user
-	 */
-	String getDescription();
+    @JsonField(name = "name")
+    String name;
 
-	UrlEntity[] getDescriptionEntities();
+    @JsonField(name = "screen_name")
+    String screenName;
 
-	long getFavouritesCount();
+    @JsonField(name = "location")
+    String location;
 
-	boolean isFollowedBy();
+    @JsonField(name = "profile_location")
+    String profileLocation;
 
-	/**
-	 * Returns the number of followers
-	 * 
-	 * @return the number of followers
-	 * @since Twitter4J 1.0.4
-	 */
-	long getFollowersCount();
+    @JsonField(name = "description")
+    String description;
 
-	long getFriendsCount();
+    @JsonField(name = "url")
+    String url;
 
-	boolean hasCustomTimelines();
+    @JsonField(name = "entities")
+    UserEntities entities;
 
-	/**
-	 * Returns the id of the user
-	 * 
-	 * @return the id of the user
-	 */
-	long getId();
+    @JsonField(name = "protected")
+    boolean isProtected;
 
-	/**
-	 * Returns the preferred language of the user
-	 * 
-	 * @return the preferred language of the user
-	 * @since Twitter4J 2.1.2
-	 */
-	String getLang();
+    @JsonField(name = "followers_count")
+    long followersCount;
 
-	/**
-	 * Returns the number of public lists the user is listed on, or -1 if the
-	 * count is unavailable.
-	 * 
-	 * @return the number of public lists the user is listed on.
-	 * @since Twitter4J 2.1.4
-	 */
-	long getListedCount();
+    @JsonField(name = "friends_count")
+    long friendsCount;
 
-	/**
-	 * Returns the location of the user
-	 * 
-	 * @return the location of the user
-	 */
-	String getLocation();
+    @JsonField(name = "listed_count")
+    long listedCount;
 
-	/**
-	 * Returns the name of the user
-	 * 
-	 * @return the name of the user
-	 */
-	String getName();
+    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
+    Date createdAt;
 
-	boolean isNeedsPhoneVerification();
+    @JsonField(name = "favourites_count")
+    long favouritesCount;
 
-	boolean isNotifications();
+    @JsonField(name = "utc_offset")
+    int utcOffset;
 
-	String getProfileBackgroundColor();
+    @JsonField(name = "time_zone")
+    String timeZone;
 
-	String getProfileBackgroundImageUrl();
+    @JsonField(name = "geo_enabled")
+    boolean geoEnabled;
 
-	String getProfileBackgroundImageUrlHttps();
+    @JsonField(name = "verified")
+    boolean isVerified;
 
-	String getProfileBannerImageUrl();
+    @JsonField(name = "statuses_count")
+    long statusesCount;
 
-	/**
-	 * Returns the profile image url of the user
-	 * 
-	 * @return the profile image url of the user
-	 */
-    String getProfileImageUrl();
+    @JsonField(name = "media_count")
+    long mediaCount;
 
-	/**
-	 * Returns the profile image url of the user, served over SSL
-	 * 
-	 * @return the profile image url of the user, served over SSL
-	 */
-	String getProfileImageUrlHttps();
+    @JsonField(name = "lang")
+    String lang;
 
-	String getProfileLinkColor();
+    @JsonField(name = "status")
+    Status status;
 
-	String getProfileLocation();
+    @JsonField(name = "contributors_enabled")
+    boolean contributorsEnabled;
 
-	String getProfileSidebarBorderColor();
+    @JsonField(name = "is_translator")
+    boolean isTranslator;
 
-	String getProfileSidebarFillColor();
+    @JsonField(name = "is_translation_enabled")
+    boolean isTranslationEnabled;
 
-	String getProfileTextColor();
+    @JsonField(name = "profile_background_color")
+    String profileBackgroundColor;
 
-	/**
-	 * Returns the screen name of the user
-	 * 
-	 * @return the screen name of the user
-	 */
-	String getScreenName();
+    @JsonField(name = "profile_background_image_url")
+    String profileBackgroundImageUrl;
 
-	/**
-	 * Returns the current status of the user<br>
-	 * This can be null if the instance if from Status.getUser().
-	 * 
-	 * @return current status of the user
-	 * @since Twitter4J 2.1.1
-	 */
-	Status getStatus();
+    @JsonField(name = "profile_background_image_url_https")
+    String profileBackgroundImageUrlHttps;
 
-	long getStatusesCount();
+    @JsonField(name = "profile_background_tile")
+    boolean profileBackgroundTile;
 
-	long getMediaCount();
+    @JsonField(name = "profile_image_url")
+    String profileImageUrl;
 
-	boolean isSuspended();
+    @JsonField(name = "profile_image_url_https")
+    String profileImageUrlHttps;
 
-	String getTimeZone();
+    @JsonField(name = "profile_banner_url")
+    String profileBannerUrl;
 
-	/**
-	 * Returns the url of the user
-	 * 
-	 * @return the url of the user
-	 */
-    String getUrl();
+    @JsonField(name = "profile_link_color")
+    String profileLinkColor;
 
-	UrlEntity[] getUrlEntities();
+    @JsonField(name = "profile_sidebar_border_color")
+    String profileSidebarBorderColor;
 
-	int getUtcOffset();
+    @JsonField(name = "profile_sidebar_fill_color")
+    String profileSidebarFillColor;
 
-	boolean canMediaTag();
+    @JsonField(name = "profile_text_color")
+    String profileTextColor;
 
-	/**
-	 * Tests if the user is enabling contributors
-	 * 
-	 * @return if the user is enabling contributors
-	 * @since Twitter4J 2.1.2
-	 */
-	boolean isContributorsEnabled();
+    @JsonField(name = "profile_use_background_image")
+    boolean profileUseBackgroundImage;
 
-	boolean isDefaultProfileImage();
+    @JsonField(name = "default_profile")
+    boolean defaultProfile;
 
-	boolean isFollowing();
+    @JsonField(name = "default_profile_image")
+    boolean defaultProfileImage;
 
-	/**
-	 * Returns true if the authenticating user has requested to follow this
-	 * user, otherwise false.
-	 * 
-	 * @return true if the authenticating user has requested to follow this
-	 *         user.
-	 * @since Twitter4J 2.1.4
-	 */
-	boolean isFollowRequestSent();
+    @JsonField(name = "has_custom_timelines")
+    boolean hasCustomTimelines;
 
-	/**
-	 * @return the user is enabling geo location
-	 * @since Twitter4J 2.0.10
-	 */
-	boolean isGeoEnabled();
+    @JsonField(name = "can_media_tag")
+    boolean canMediaTag;
 
-	boolean isProfileBackgroundTiled();
+    @JsonField(name = "followed_by")
+    boolean followedBy;
 
-	boolean isProfileUseBackgroundImage();
+    @JsonField(name = "following")
+    boolean following;
 
-	/**
-	 * Test if the user status is protected
-	 * 
-	 * @return true if the user status is protected
-	 */
-	boolean isProtected();
+    @JsonField(name = "follow_request_sent")
+    boolean followRequestSent;
 
-	boolean isTranslationEnabled();
+    @JsonField(name = "notifications")
+    boolean notifications;
 
-	/**
-	 * @return returns true if the user is a translator
-	 * @since Twitter4J 2.1.9
-	 */
-	boolean isTranslator();
+    @JsonField(name = "suspended")
+    boolean isSuspended;
 
-	/**
-	 * @return returns true if the user is a verified celebrity
-	 * @since Twitter4J 2.0.10
-	 */
-	boolean isVerified();
+    @JsonField(name = "needs_phone_verification")
+    boolean needsPhoneVerification;
 
+
+    public boolean canMediaTag() {
+        return canMediaTag;
+    }
+
+
+    public boolean isContributorsEnabled() {
+        return contributorsEnabled;
+    }
+
+
+    public boolean isDefaultProfile() {
+        return defaultProfile;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+
+    public UrlEntity[] getDescriptionEntities() {
+        if (entities == null) return null;
+        return entities.getDescriptionEntities();
+    }
+
+
+    public long getFavouritesCount() {
+        return favouritesCount;
+    }
+
+
+    public boolean isFollowRequestSent() {
+        return followRequestSent;
+    }
+
+
+    public boolean isFollowedBy() {
+        return followedBy;
+    }
+
+
+    public long getFollowersCount() {
+        return followersCount;
+    }
+
+
+    public boolean isFollowing() {
+        return following;
+    }
+
+
+    public long getFriendsCount() {
+        return friendsCount;
+    }
+
+
+    public boolean isGeoEnabled() {
+        return geoEnabled;
+    }
+
+
+    public boolean isProfileBackgroundTiled() {
+        return profileBackgroundTile;
+    }
+
+
+    public boolean hasCustomTimelines() {
+        return hasCustomTimelines;
+    }
+
+
+    public long getId() {
+        return id;
+    }
+
+
+    public boolean isTranslationEnabled() {
+        return isTranslationEnabled;
+    }
+
+
+    public boolean isTranslator() {
+        return isTranslator;
+    }
+
+
+    public String getLang() {
+        return lang;
+    }
+
+
+    public long getListedCount() {
+        return listedCount;
+    }
+
+
+    public String getLocation() {
+        return location;
+    }
+
+
+    public long getMediaCount() {
+        return mediaCount;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+
+    public boolean isNeedsPhoneVerification() {
+        return needsPhoneVerification;
+    }
+
+
+    public boolean isNotifications() {
+        return notifications;
+    }
+
+
+    public String getProfileBackgroundColor() {
+        return profileBackgroundColor;
+    }
+
+
+    public String getProfileBackgroundImageUrl() {
+        return profileBackgroundImageUrl;
+    }
+
+
+    public String getProfileBackgroundImageUrlHttps() {
+        return profileBackgroundImageUrlHttps;
+    }
+
+
+    public String getProfileBannerImageUrl() {
+        return profileBannerUrl;
+    }
+
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+
+    public String getProfileImageUrlHttps() {
+        return profileImageUrlHttps;
+    }
+
+
+    public String getProfileLinkColor() {
+        return profileLinkColor;
+    }
+
+
+    public String getProfileLocation() {
+        return profileLocation;
+    }
+
+
+    public String getProfileSidebarBorderColor() {
+        return profileSidebarBorderColor;
+    }
+
+
+    public String getProfileSidebarFillColor() {
+        return profileSidebarFillColor;
+    }
+
+
+    public boolean isProfileUseBackgroundImage() {
+        return profileUseBackgroundImage;
+    }
+
+
+    public boolean isProtected() {
+        return isProtected;
+    }
+
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+
+    public Status getStatus() {
+        return status;
+    }
+
+
+    public long getStatusesCount() {
+        return statusesCount;
+    }
+
+
+    public boolean isSuspended() {
+        return isSuspended;
+    }
+
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+
+    public String getUrl() {
+        return url;
+    }
+
+
+    public UrlEntity[] getUrlEntities() {
+        if (entities == null) return null;
+        return entities.getUrlEntities();
+    }
+
+
+    public int getUtcOffset() {
+        return utcOffset;
+    }
+
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+
+    public String getProfileTextColor() {
+        return profileTextColor;
+    }
+
+
+    public boolean isDefaultProfileImage() {
+        return defaultProfileImage;
+    }
+
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", screenName='" + screenName + '\'' +
+                ", location='" + location + '\'' +
+                ", profileLocation='" + profileLocation + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", entities=" + entities +
+                ", isProtected=" + isProtected +
+                ", followersCount=" + followersCount +
+                ", friendsCount=" + friendsCount +
+                ", listedCount=" + listedCount +
+                ", createdAt=" + createdAt +
+                ", favouritesCount=" + favouritesCount +
+                ", utcOffset=" + utcOffset +
+                ", timeZone='" + timeZone + '\'' +
+                ", geoEnabled=" + geoEnabled +
+                ", isVerified=" + isVerified +
+                ", statusesCount=" + statusesCount +
+                ", mediaCount=" + mediaCount +
+                ", lang='" + lang + '\'' +
+                ", status=" + status +
+                ", contributorsEnabled=" + contributorsEnabled +
+                ", isTranslator=" + isTranslator +
+                ", isTranslationEnabled=" + isTranslationEnabled +
+                ", profileBackgroundColor='" + profileBackgroundColor + '\'' +
+                ", profileBackgroundImageUrl='" + profileBackgroundImageUrl + '\'' +
+                ", profileBackgroundImageUrlHttps='" + profileBackgroundImageUrlHttps + '\'' +
+                ", profileBackgroundTile=" + profileBackgroundTile +
+                ", profileImageUrl='" + profileImageUrl + '\'' +
+                ", profileImageUrlHttps='" + profileImageUrlHttps + '\'' +
+                ", profileBannerUrl='" + profileBannerUrl + '\'' +
+                ", profileLinkColor='" + profileLinkColor + '\'' +
+                ", profileSidebarBorderColor='" + profileSidebarBorderColor + '\'' +
+                ", profileSidebarFillColor='" + profileSidebarFillColor + '\'' +
+                ", profileTextColor='" + profileTextColor + '\'' +
+                ", profileUseBackgroundImage=" + profileUseBackgroundImage +
+                ", defaultProfile=" + defaultProfile +
+                ", defaultProfileImage=" + defaultProfileImage +
+                ", hasCustomTimelines=" + hasCustomTimelines +
+                ", canMediaTag=" + canMediaTag +
+                ", followedBy=" + followedBy +
+                ", following=" + following +
+                ", followRequestSent=" + followRequestSent +
+                ", notifications=" + notifications +
+                ", isSuspended=" + isSuspended +
+                ", needsPhoneVerification=" + needsPhoneVerification +
+                "} " + super.toString();
+    }
+
+    @Override
+    public int compareTo(@NonNull final User that) {
+        return (int) (id - that.getId());
+    }
+
+    @OnJsonParseComplete
+    void onJsonParseComplete() throws IOException {
+        if (id <= 0 || screenName == null) throw new IOException("Malformed User object");
+    }
 }

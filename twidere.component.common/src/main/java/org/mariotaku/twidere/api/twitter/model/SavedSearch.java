@@ -19,27 +19,59 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.SavedSearchImpl;
+import android.support.annotation.NonNull;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
 import java.util.Date;
 
 /**
- * A data interface representing a Saved Search
- * 
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.0.8
+ * Created by mariotaku on 15/5/7.
  */
-@Implementation(SavedSearchImpl.class)
-public interface SavedSearch extends Comparable<SavedSearch>, TwitterResponse {
-	Date getCreatedAt();
+@JsonObject
+public class SavedSearch extends TwitterResponseObject implements Comparable<SavedSearch>, TwitterResponse {
 
-	long getId();
+    public long getId() {
+        return id;
+    }
 
-	String getName();
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
-	int getPosition();
+    public String getName() {
+        return name;
+    }
 
-	String getQuery();
+    public int getPosition() {
+        return position;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    @JsonField(name = "id")
+    long id;
+
+    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
+    Date createdAt;
+
+    @JsonField(name = "name")
+    String name;
+
+    @JsonField(name = "position")
+    int position;
+
+    @JsonField(name = "query")
+    String query;
+
+    @Override
+    public int compareTo(@NonNull SavedSearch another) {
+        return (int) (id - another.id);
+    }
 
 }

@@ -22,9 +22,10 @@ package org.mariotaku.twidere.util;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mariotaku.library.logansquare.extension.LoganSquareExtension;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,7 +49,7 @@ public class JsonSerializer {
     public static <T> String serialize(@Nullable final List<T> list, final Class<T> cls) {
         if (list == null) return null;
         try {
-            return LoganSquareExtension.serialize(list, cls);
+            return LoganSquare.serialize(list, cls);
         } catch (IOException e) {
             return null;
         }
@@ -58,7 +59,7 @@ public class JsonSerializer {
     public static <T> String serialize(@Nullable final T object, final Class<T> cls) {
         if (object == null) return null;
         try {
-            return LoganSquareExtension.mapperFor(cls).serialize(object);
+            return LoganSquare.mapperFor(cls).serialize(object);
         } catch (IOException e) {
             return null;
         }
@@ -68,7 +69,7 @@ public class JsonSerializer {
     public static <T> String serializeArray(@Nullable final T[] object, final Class<T> cls) {
         if (object == null) return null;
         try {
-            return LoganSquareExtension.mapperFor(cls).serialize(Arrays.asList(object));
+            return LoganSquare.mapperFor(cls).serialize(Arrays.asList(object));
         } catch (IOException e) {
             return null;
         }
@@ -78,7 +79,7 @@ public class JsonSerializer {
     public static <T> List<T> parseList(@Nullable final String string, final Class<T> cls) {
         if (string == null) return null;
         try {
-            return LoganSquareExtension.mapperFor(cls).parseList(string);
+            return LoganSquare.mapperFor(cls).parseList(string);
         } catch (IOException e) {
             return null;
         }
@@ -88,7 +89,7 @@ public class JsonSerializer {
     public static <T> T[] parseArray(@Nullable final String string, final Class<T> cls) {
         if (string == null) return null;
         try {
-            final List<T> list = LoganSquareExtension.mapperFor(cls).parseList(string);
+            final List<T> list = LoganSquare.mapperFor(cls).parseList(string);
             //noinspection unchecked
             return list.toArray((T[]) Array.newInstance(cls, list.size()));
         } catch (IOException e) {
@@ -100,7 +101,7 @@ public class JsonSerializer {
     public static <T> T parse(@Nullable final String string, final Class<T> cls) {
         if (string == null) return null;
         try {
-            return LoganSquareExtension.mapperFor(cls).parse(string);
+            return LoganSquare.mapperFor(cls).parse(string);
         } catch (IOException e) {
             return null;
         }
@@ -117,7 +118,7 @@ public class JsonSerializer {
         final FileInputStream is = new FileInputStream(file);
         //noinspection TryFinallyCanBeTryWithResources
         try {
-            return LoganSquareExtension.parseList(is, jsonObjectClass);
+            return LoganSquare.parseList(is, jsonObjectClass);
         } finally {
             is.close();
         }

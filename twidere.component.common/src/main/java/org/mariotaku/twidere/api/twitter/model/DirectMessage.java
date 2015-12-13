@@ -19,39 +19,94 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.DirectMessageImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
 import java.util.Date;
 
 /**
- * A data interface representing sent/received direct message.
- * 
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 15/5/7.
  */
-@Implementation(DirectMessageImpl.class)
-public interface DirectMessage extends TwitterResponse, EntitySupport {
+@JsonObject
+public class DirectMessage extends TwitterResponseObject implements TwitterResponse, EntitySupport {
 
-	/**
-	 * @return created_at
-	 * @since Twitter4J 1.1.0
-	 */
-	Date getCreatedAt();
+    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
+    Date createdAt;
 
-	long getId();
+    @JsonField(name = "sender")
+    User sender;
 
-	User getRecipient();
+    @JsonField(name = "recipient")
+    User recipient;
 
-	long getRecipientId();
+    @JsonField(name = "entities")
+    Entities entities;
 
-	String getRecipientScreenName();
+    @JsonField(name = "text")
+    String text;
 
-	User getSender();
+    @JsonField(name = "id")
+    long id;
 
-	long getSenderId();
+    public long getId() {
+        return id;
+    }
 
-	String getSenderScreenName();
+    public String getText() {
+        return text;
+    }
 
-	String getText();
+    @Override
+    public HashtagEntity[] getHashtagEntities() {
+        if (entities == null) return null;
+        return entities.getHashtags();
+    }
 
+    @Override
+    public MediaEntity[] getMediaEntities() {
+        if (entities == null) return null;
+        return entities.getMedia();
+    }
+
+    @Override
+    public UrlEntity[] getUrlEntities() {
+        if (entities == null) return null;
+        return entities.getUrls();
+    }
+
+    @Override
+    public UserMentionEntity[] getUserMentionEntities() {
+        if (entities == null) return null;
+        return entities.getUserMentions();
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public long getSenderId() {
+        return sender.id;
+    }
+
+    public String getSenderScreenName() {
+        return sender.screenName;
+    }
+
+    public User getRecipient() {
+        return recipient;
+    }
+
+    public long getRecipientId() {
+        return recipient.id;
+    }
+
+    public String getRecipientScreenName() {
+        return recipient.screenName;
+    }
 }

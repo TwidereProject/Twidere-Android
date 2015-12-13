@@ -2,7 +2,7 @@
  *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
- *
+ *   
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -19,49 +19,51 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.UserMentionEntityImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
- * A data interface representing one single user mention entity.
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.1.9
+ * Created by mariotaku on 15/3/31.
  */
-@Implementation(UserMentionEntityImpl.class)
-public interface UserMentionEntity {
-    /**
-     * Returns the index of the end character of the user mention.
-     *
-     * @return the index of the end character of the user mention
-     */
-    int getEnd();
+@JsonObject
+public class UserMentionEntity {
+    @JsonField(name = "indices", typeConverter = IndicesConverter.class)
+    Indices indices;
+    @JsonField(name = "id")
+    long id;
+    @JsonField(name = "name")
+    String name;
+    @JsonField(name = "screen_name")
+    String screenName;
 
-    /**
-     * Returns the user id mentioned in the status.
-     *
-     * @return the user id mentioned in the status
-     */
-    long getId();
+    @Override
+    public String toString() {
+        return "UserMentionEntity{" +
+                "indices=" + indices +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", screenName='" + screenName + '\'' +
+                '}';
+    }
 
-    /**
-     * Returns the name mentioned in the status.
-     *
-     * @return the name mentioned in the status
-     */
-    String getName();
+    public int getEnd() {
+        return indices.getEnd();
+    }
 
-    /**
-     * Returns the screen name mentioned in the status.
-     *
-     * @return the screen name mentioned in the status
-     */
-    String getScreenName();
+    public long getId() {
+        return id;
+    }
 
-    /**
-     * Returns the index of the start character of the user mention.
-     *
-     * @return the index of the start character of the user mention
-     */
-    int getStart();
+    public String getName() {
+        return name;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public int getStart() {
+        return indices.getStart();
+    }
+
 }

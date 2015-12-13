@@ -17,32 +17,35 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import org.mariotaku.restfu.http.RestHttpResponse;
 
-import org.mariotaku.twidere.api.twitter.model.User;
-
-import java.util.ArrayList;
+import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
+import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
+import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
 /**
- * Created by mariotaku on 15/12/13.
+ * Created by mariotaku on 15/5/7.
  */
-@JsonObject
-public class PagableUserListImpl extends PageableResponseListImpl<User> {
+public class TwitterResponseObject implements TwitterResponse {
 
-    @JsonField(name = "users")
-    ArrayList<User> user;
+    private int accessLevel;
+    private RateLimitStatus rateLimitStatus;
 
     @Override
-    public User get(int location) {
-        return user.get(location);
+    public final void processResponseHeader(RestHttpResponse resp) {
+        rateLimitStatus = RateLimitStatus.createFromResponseHeader(resp);
+        accessLevel = InternalParseUtil.toAccessLevel(resp);
     }
 
     @Override
-    public int size() {
-        if (user == null) return 0;
-        return user.size();
+    public final int getAccessLevel() {
+        return accessLevel;
+    }
+
+    @Override
+    public final RateLimitStatus getRateLimitStatus() {
+        return rateLimitStatus;
     }
 }

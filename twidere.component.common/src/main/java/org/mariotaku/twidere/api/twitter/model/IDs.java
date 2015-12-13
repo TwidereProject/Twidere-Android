@@ -19,17 +19,37 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.IDsImpl;
-
 /**
- * A data interface representing array of numeric IDs.
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 15/5/10.
  */
-@Implementation(IDsImpl.class)
-public interface IDs extends TwitterResponse, CursorSupport {
+public class IDs extends TwitterResponseObject implements TwitterResponse, CursorSupport {
 
-    long[] getIDs();
+    long previousCursor;
+    long nextCursor;
+    long[] ids;
+
+    @Override
+    public long getNextCursor() {
+        return nextCursor;
+    }
+
+    @Override
+    public long getPreviousCursor() {
+        return previousCursor;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return nextCursor != 0;
+    }
+
+    @Override
+    public boolean hasPrevious() {
+        return previousCursor != 0;
+    }
+
+    public long[] getIDs() {
+        return ids;
+    }
 
 }

@@ -19,99 +19,143 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.RelationshipImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-@Implementation(RelationshipImpl.class)
-public interface Relationship extends TwitterResponse {
-    boolean canSourceDMTarget();
+/**
+ * Created by mariotaku on 15/5/7.
+ */
+@JsonObject
+public class Relationship extends TwitterResponseObject implements TwitterResponse {
 
-    boolean canSourceMediaTagTarget();
+    @JsonField(name = "relationship")
+    RelationshipObject object;
 
-    /**
-     * Returns the source user id
-     *
-     * @return the source user id
-     */
-    long getSourceUserId();
+    public boolean isSourceBlockingTarget() {
+        return object.source.blocking;
+    }
 
-    /**
-     * Returns the source user screen name
-     *
-     * @return returns the source user screen name
-     */
-    String getSourceUserScreenName();
+    public boolean isTargetFollowingSource() {
+        return object.target.following;
+    }
 
-    /**
-     * Returns the target user id
-     *
-     * @return target user id
-     */
-    long getTargetUserId();
+    public boolean isTargetFollowedBySource() {
+        return object.target.followedBy;
+    }
 
-    /**
-     * Returns the target user screen name
-     *
-     * @return the target user screen name
-     */
-    String getTargetUserScreenName();
+    public boolean isSourceNotificationsEnabled() {
+        return object.source.notificationsEnabled;
+    }
 
-    /**
-     * Returns if the source user is blocking the target user
-     *
-     * @return if the source is blocking the target
-     */
-    boolean isSourceBlockingTarget();
+    public boolean isSourceMutingTarget() {
+        return object.source.muting;
+    }
 
-    boolean isSourceBlockedByTarget();
+    public boolean isSourceMarkedTargetAsSpam() {
+        return false;
+    }
 
-    /**
-     * Checks if source user is being followed by target user
-     *
-     * @return true if source user is being followed by target user
-     */
-    boolean isSourceFollowedByTarget();
+    public boolean isSourceFollowingTarget() {
+        return object.source.following;
+    }
 
-    /**
-     * Checks if source user is following target user
-     *
-     * @return true if source user is following target user
-     */
-    boolean isSourceFollowingTarget();
+    public boolean isSourceFollowedByTarget() {
+        return object.source.followedBy;
+    }
 
-    boolean isSourceMarkedTargetAsSpam();
+    public boolean isSourceBlockedByTarget() {
+        return object.source.blockedBy;
+    }
 
-    boolean isSourceMutingTarget();
+    public String getTargetUserScreenName() {
+        return object.target.screenName;
+    }
 
-    /**
-     * Checks if the source user has enabled notifications for updates of the
-     * target user
-     *
-     * @return true if source user enabled notifications for target user
-     */
-    boolean isSourceNotificationsEnabled();
+    public long getTargetUserId() {
+        return object.target.id;
+    }
 
-    /**
-     * Checks if target user is being followed by source user.<br>
-     * This method is equivalent to isSourceFollowingTarget().
-     *
-     * @return true if target user is being followed by source user
-     */
-    boolean isTargetFollowedBySource();
+    public String getSourceUserScreenName() {
+        return object.source.screenName;
+    }
 
-    /**
-     * Checks if target user is following source user.<br>
-     * This method is equivalent to isSourceFollowedByTarget().
-     *
-     * @return true if target user is following source user
-     */
-    boolean isTargetFollowingSource();
+    public long getSourceUserId() {
+        return object.source.id;
+    }
 
-    boolean isSourceRequestedFollowingTarget();
+    public boolean canSourceMediaTagTarget() {
+        return object.source.canMediaTag;
+    }
 
-    boolean isTargetRequestedFollowingSource();
+    public boolean canSourceDMTarget() {
+        return object.source.canDm;
+    }
 
-    boolean isSourceWantRetweetsFromTarget();
+    public boolean isSourceRequestedFollowingTarget() {
+        return object.source.followingRequested;
+    }
 
-    boolean isSourceNotificationsEnabledForTarget();
+    public boolean isTargetRequestedFollowingSource() {
+        return object.target.followingRequested;
+    }
+
+    public boolean isSourceWantRetweetsFromTarget() {
+        return object.source.wantRetweets;
+    }
+
+    public boolean isSourceNotificationsEnabledForTarget() {
+        return object.source.notificationsEnabled;
+    }
+
+    @JsonObject
+    public static class RelationshipObject {
+
+        @JsonField(name = "source")
+        Source source;
+        @JsonField(name = "target")
+        Target target;
+
+
+        @JsonObject
+        public static class Target {
+            @JsonField(name = "id")
+            long id;
+            @JsonField(name = "screen_name")
+            public String screenName;
+            @JsonField(name = "following")
+            boolean following;
+            @JsonField(name = "followed_by")
+            boolean followedBy;
+            @JsonField(name = "following_requested")
+            boolean followingRequested;
+        }
+
+        @JsonObject
+        public static class Source {
+            @JsonField(name = "id")
+            long id;
+            @JsonField(name = "screen_name")
+            public String screenName;
+            @JsonField(name = "blocked_by")
+            boolean blockedBy;
+            @JsonField(name = "blocking")
+            boolean blocking;
+            @JsonField(name = "muting")
+            boolean muting;
+            @JsonField(name = "following")
+            boolean following;
+            @JsonField(name = "followed_by")
+            boolean followedBy;
+            @JsonField(name = "following_requested")
+            boolean followingRequested;
+            @JsonField(name = "want_retweets")
+            boolean wantRetweets;
+            @JsonField(name = "notifications_enabled")
+            boolean notificationsEnabled;
+            @JsonField(name = "can_dm")
+            boolean canDm;
+            @JsonField(name = "can_media_tag")
+            boolean canMediaTag;
+        }
+    }
 }

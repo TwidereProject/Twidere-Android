@@ -28,8 +28,6 @@ import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
-import org.mariotaku.twidere.api.twitter.model.impl.ErrorInfoImpl;
-import org.mariotaku.twidere.api.twitter.model.impl.RateLimitStatusJSONImpl;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
 import java.util.Locale;
@@ -46,7 +44,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
 
     private static final long serialVersionUID = -2623309261327598087L;
     @JsonField(name = "errors")
-    ErrorInfoImpl[] errors;
+    ErrorInfo[] errors;
     @JsonField(name = "error")
     String errorMessage;
     @JsonField(name = "request")
@@ -118,7 +116,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     public void setHttpResponse(RestHttpResponse res) {
         httpResponse = res;
         if (res != null) {
-            rateLimitStatus = RateLimitStatusJSONImpl.createFromResponseHeader(res);
+            rateLimitStatus = RateLimitStatus.createFromResponseHeader(res);
             statusCode = res.getStatus();
         } else {
             rateLimitStatus = null;
@@ -280,7 +278,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         nested = true;
     }
 
-    static class SingleErrorInfo implements ErrorInfo {
+    static class SingleErrorInfo extends ErrorInfo {
         private final String message;
         private final String request;
         private final int code;
@@ -291,17 +289,14 @@ public class TwitterException extends Exception implements TwitterResponse, Http
             this.code = -1;
         }
 
-        @Override
         public int getCode() {
             return code;
         }
 
-        @Override
         public String getRequest() {
             return request;
         }
 
-        @Override
         public String getMessage() {
             return message;
         }

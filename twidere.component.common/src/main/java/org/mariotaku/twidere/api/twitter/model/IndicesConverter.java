@@ -17,12 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+
+import org.mariotaku.twidere.api.twitter.model.Indices;
 
 import java.io.IOException;
 

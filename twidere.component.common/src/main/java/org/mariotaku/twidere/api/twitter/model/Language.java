@@ -19,17 +19,39 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.LanguageImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
  * Created by mariotaku on 15/5/10.
  */
-@Implementation(LanguageImpl.class)
-public interface Language {
-    String getCode();
+@JsonObject
+public class Language {
+    @JsonField(name = "name")
+    String name;
+    @JsonField(name = "code")
+    String code;
+    @JsonField(name = "status")
+    String status;
 
-    String getName();
+    public String getName() {
+        return name;
+    }
 
-    String getStatus();
+    public String getCode() {
+        return code;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public String toString() {
+        return "Language{" +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

@@ -19,24 +19,56 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.StatusActivitySummaryImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-@Implementation(StatusActivitySummaryImpl.class)
-public interface StatusActivitySummary extends TwitterResponse {
+/**
+ * Created by mariotaku on 15/5/13.
+ */
+@JsonObject
+public class StatusActivitySummary extends TwitterResponseObject implements TwitterResponse {
 
-	long getDescendentReplyCount();
+    @JsonField(name = "favoriters")
+    IDs favoriters;
+    @JsonField(name = "repliers")
+    IDs repliers;
+    @JsonField(name = "retweeters")
+    IDs retweeters;
 
-	IDs getFavoriters();
+    @JsonField(name = "favoriters_count")
+    long favoritersCount;
+    @JsonField(name = "repliers_count")
+    long repliersCount;
+    @JsonField(name = "retweeters_count")
+    long retweetersCount;
+    @JsonField(name = "descendent_reply_count")
+    long descendentReplyCount;
 
-	long getFavoritersCount();
+    public IDs getFavoriters() {
+        return favoriters;
+    }
 
-	IDs getRepliers();
+    public IDs getRepliers() {
+        return repliers;
+    }
 
-	long getRepliersCount();
+    public IDs getRetweeters() {
+        return retweeters;
+    }
 
-	IDs getRetweeters();
+    public long getFavoritersCount() {
+        return favoritersCount;
+    }
 
-	long getRetweetersCount();
+    public long getRepliersCount() {
+        return repliersCount;
+    }
 
+    public long getRetweetersCount() {
+        return retweetersCount;
+    }
+
+    public long getDescendentReplyCount() {
+        return descendentReplyCount;
+    }
 }

@@ -17,16 +17,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl.mapper.list;
+package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.api.twitter.model.impl.ResponseListMapper;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 
 /**
- * Created by mariotaku on 15/12/13.
+ * Created by mariotaku on 15/5/7.
  */
-public class ActivityResponseListMapper extends ResponseListMapper<Activity> {
-    public ActivityResponseListMapper() {
-        super(Activity.class);
+@JsonObject
+public class GeoPoint {
+
+    private volatile GeoLocation geoLocation;
+
+    @JsonField(name = "coordinates")
+    double[] coordinates;
+
+    @JsonField(name = "type")
+    String type;
+
+    public GeoLocation getGeoLocation() {
+        if (coordinates == null) return null;
+        if (geoLocation != null) return geoLocation;
+        return geoLocation = new GeoLocation(coordinates[0], coordinates[1]);
     }
+
 }

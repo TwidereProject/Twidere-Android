@@ -19,33 +19,65 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.EnumClass;
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.ExtendedProfileImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.model.ExtendedProfile;
 
 /**
  * Created by mariotaku on 15/7/8.
  */
-@Implementation(ExtendedProfileImpl.class)
-public interface ExtendedProfile {
+@JsonObject
+public class ExtendedProfile {
 
-    long getId();
+    @JsonField(name = "id")
+    long id;
+    @JsonField(name = "birthdate")
+    Birthdate birthdate;
 
-    Birthdate getBirthdate();
+    public long getId() {
+        return id;
+    }
 
-    interface Birthdate {
-        int getDay();
+    public Birthdate getBirthdate() {
+        return birthdate;
+    }
 
-        int getMonth();
+    @JsonObject
+    public static class Birthdate {
 
-        int getYear();
+        @JsonField(name = "day")
+        int day;
+        @JsonField(name = "month")
+        int month;
+        @JsonField(name = "year")
+        int year;
+        @JsonField(name = "visibility")
+        Visibility visibility;
+        @JsonField(name = "year_visibility")
+        Visibility yearVisibility;
 
-        Visibility getVisibility();
+        public int getDay() {
+            return day;
+        }
 
-        Visibility getYearVisibility();
+        public int getMonth() {
+            return month;
+        }
 
-        @EnumClass
-        enum Visibility {
+        public int getYear() {
+            return year;
+        }
+
+        public Visibility getVisibility() {
+            return visibility;
+        }
+
+        public Visibility getYearVisibility() {
+            return yearVisibility;
+        }
+
+        public enum Visibility {
             MUTUALFOLLOW, PUBLIC, UNKNOWN;
 
             public static Visibility parse(String s) {
@@ -55,5 +87,4 @@ public interface ExtendedProfile {
             }
         }
     }
-
 }

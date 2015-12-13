@@ -19,25 +19,55 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.MediaUploadResponseImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-@Implementation(MediaUploadResponseImpl.class)
-public interface MediaUploadResponse extends TwitterResponse {
+/**
+ * Created by mariotaku on 15/5/7.
+ */
+@JsonObject
+public class MediaUploadResponse extends TwitterResponseObject implements TwitterResponse {
 
-    long getId();
+    public long getId() {
+        return mediaId;
+    }
 
-    Image getImage();
+    public Image getImage() {
+        return image;
+    }
 
-    long getSize();
+    public long getSize() {
+        return size;
+    }
 
-    @Implementation(MediaUploadResponseImpl.ImageImpl.class)
-    interface Image {
+    @JsonField(name = "media_id")
+    long mediaId;
+    @JsonField(name = "size")
+    long size;
+    @JsonField(name = "image")
+    Image image;
 
-        int getHeight();
 
-        String getImageType();
+    @JsonObject
+    public static class Image {
 
-        int getWidth();
+        @JsonField(name = "width")
+        int width;
+        @JsonField(name = "height")
+        int height;
+        @JsonField(name = "image_type")
+        String imageType;
+
+        public int getHeight() {
+            return height;
+        }
+
+        public String getImageType() {
+            return imageType;
+        }
+
+        public int getWidth() {
+            return width;
+        }
     }
 }

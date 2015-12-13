@@ -19,16 +19,36 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import java.io.Serializable;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-/**
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.1.1
- */
-public interface Category extends Serializable {
-	String getName();
+@JsonObject
+public class Category {
+    @JsonField(name = "name")
+    String name;
+    @JsonField(name = "size")
+    long size;
+    @JsonField(name = "slug")
+    String slug;
 
-	int getSize();
+    public String getName() {
+        return name;
+    }
 
-	String getSlug();
+    public long getSize() {
+        return size;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "name='" + name + '\'' +
+                ", size=" + size +
+                ", slug='" + slug + '\'' +
+                '}';
+    }
 }

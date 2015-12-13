@@ -19,49 +19,44 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.AccountSettingsImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.1.9
+ * Created by mariotaku on 15/5/13.
  */
-@Implementation(AccountSettingsImpl.class)
-public interface AccountSettings extends TwitterResponse {
-	/**
-	 * Returns the language used to render Twitter's UII for this user.
-	 * 
-	 * @return the language ISO 639-1 representation
-	 */
-	String getLanguage();
+@JsonObject
+public class AccountSettings extends TwitterResponseObject {
 
-	/**
-	 * Returns the timezone configured for this user.
-	 * 
-	 * @return the timezone (formated as a Rails TimeZone name)
-	 */
-	TimeZone getTimeZone();
+    @JsonField(name = "geo_enabled")
+    boolean geoEnabled;
+    @JsonField(name = "trend_location")
+    Location[] trendLocations;
+    @JsonField(name = "language")
+    String language;
+    @JsonField(name = "always_use_https")
+    boolean alwaysUseHttps;
+    @JsonField(name = "time_zone")
+    TimeZone timezone;
 
-	/**
-	 * Return the user's trend locations
-	 * 
-	 * @return the user's trend locations
-	 */
-	Location[] getTrendLocations();
+    public boolean isAlwaysUseHttps() {
+        return alwaysUseHttps;
+    }
 
-	/**
-	 * Returns true if the wants to always access twitter using HTTPS.
-	 * 
-	 * @return true if the wants to always access twitter using HTTPS
-	 */
-	boolean isAlwaysUseHttps();
+    public String getLanguage() {
+        return language;
+    }
 
+    public TimeZone getTimeZone() {
+        return timezone;
+    }
 
-	/**
-	 * Return true if the user is enabling geo location
-	 * 
-	 * @return true if the user is enabling geo location
-	 */
-	boolean isGeoEnabled();
+    public Location[] getTrendLocations() {
+        return trendLocations;
+    }
+
+    public boolean isGeoEnabled() {
+        return geoEnabled;
+    }
 
 }

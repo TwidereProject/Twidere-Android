@@ -19,26 +19,48 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.TrendsImpl;
+import android.support.annotation.NonNull;
 
-import java.io.Serializable;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.util.TwitterTrendsDateConverter;
+
 import java.util.Date;
 
 /**
- * A data class representing Trends.
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.0.2
+ * Created by mariotaku on 15/5/10.
  */
-@Implementation(TrendsImpl.class)
-public interface Trends extends TwitterResponse, Comparable<Trends>, Serializable {
-    Date getAsOf();
+@JsonObject
+public class Trends extends TwitterResponseObject implements TwitterResponse, Comparable<Trends> {
 
-    Date getCreatedAt();
+    @JsonField(name = "as_of", typeConverter = TwitterTrendsDateConverter.class)
+    Date asOf;
+    @JsonField(name = "created_at", typeConverter = TwitterTrendsDateConverter.class)
+    Date createdAt;
+    @JsonField(name = "trends")
+    Trend[] trends;
+    @JsonField(name = "locations")
+    Location[] locations;
 
-    Location[] getLocations();
+    public Date getAsOf() {
+        return asOf;
+    }
 
-    Trend[] getTrends();
+    public Trend[] getTrends() {
+        return trends;
+    }
 
+    public Location[] getLocations() {
+        return locations;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public int compareTo(@NonNull Trends another) {
+        return asOf.compareTo(another.getAsOf());
+    }
 }

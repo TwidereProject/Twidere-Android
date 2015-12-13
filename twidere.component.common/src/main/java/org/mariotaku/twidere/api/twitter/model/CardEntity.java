@@ -19,28 +19,62 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.CardEntityImpl;
+import android.support.v4.util.ArrayMap;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
 import java.util.Map;
 
 /**
- * Created by mariotaku on 14/12/31.
+ * Created by mariotaku on 15/5/7.
  */
-@Implementation(CardEntityImpl.class)
-public interface CardEntity {
+@JsonObject
+public class CardEntity {
 
-    String getName();
 
-    String getUrl();
+    @JsonField(name = "name")
+    String name;
 
-    User[] getUsers();
+    @JsonField(name = "url")
+    String url;
 
-    BindingValue getBindingValue(String key);
+    @JsonField(name = "binding_values")
+    Map<String, RawBindingValue> rawBindingValues;
+    Map<String, BindingValue> bindingValues;
 
-    Map<String, BindingValue> getBindingValues();
+    public String getName() {
+        return name;
+    }
 
-    interface BindingValue {
+    public String getUrl() {
+        return url;
+    }
+
+    public User[] getUsers() {
+        return new User[0];
+    }
+
+    public BindingValue getBindingValue(String key) {
+        return bindingValues.get(key);
+    }
+
+    public Map<String, BindingValue> getBindingValues() {
+        return bindingValues;
+    }
+
+    @OnJsonParseComplete
+    void onParseComplete() {
+        if (rawBindingValues != null) {
+            bindingValues = new ArrayMap<>();
+            for (Map.Entry<String, RawBindingValue> entry : rawBindingValues.entrySet()) {
+                bindingValues.put(entry.getKey(), entry.getValue().getBindingValue());
+            }
+        }
+    }
+
+    public interface BindingValue {
 
         String TYPE_STRING = "STRING";
         String TYPE_IMAGE = "IMAGE";
@@ -49,24 +83,98 @@ public interface CardEntity {
 
     }
 
+    @JsonObject
+    public static class ImageValue implements BindingValue {
+        @JsonField(name = "width")
+        int width;
+        @JsonField(name = "height")
+        int height;
+        @JsonField(name = "url")
+        String url;
 
-    interface UserValue extends BindingValue {
-        long getUserId();
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
     }
 
-    interface StringValue extends BindingValue {
-        String getValue();
+    public static class BooleanValue implements BindingValue {
+
+        public BooleanValue(boolean value) {
+            this.value = value;
+        }
+
+        private boolean value;
+
+        public boolean getValue() {
+            return value;
+        }
     }
 
-    interface BooleanValue extends BindingValue {
-        boolean getValue();
+    public static class StringValue implements BindingValue {
+        private final String value;
+
+        public StringValue(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
-    interface ImageValue extends BindingValue {
-        int getWidth();
+    @JsonObject
+    public static class UserValue implements BindingValue {
 
-        int getHeight();
+        @JsonField(name = "id")
+        long userId;
 
-        String getUrl();
+        public long getUserId() {
+            return userId;
+        }
+    }
+
+    @JsonObject
+    public static class RawBindingValue {
+
+        @JsonField(name = "type")
+        String type;
+        @JsonField(name = "boolean_value")
+        boolean booleanValue;
+        @JsonField(name = "string_value")
+        String stringValue;
+        @JsonField(name = "image_value")
+        ImageValue imageValue;
+        @JsonField(name = "user_value")
+        UserValue userValue;
+
+
+        public BindingValue getBindingValue() {
+            if (type == null) return null;
+            switch (type) {
+                case BindingValue.TYPE_BOOLEAN: {
+                    return new BooleanValue(booleanValue);
+                }
+                case BindingValue.TYPE_STRING: {
+                    return new StringValue(stringValue);
+                }
+                case BindingValue.TYPE_IMAGE: {
+                    return imageValue;
+                }
+                case BindingValue.TYPE_USER: {
+                    return userValue;
+                }
+            }
+            return null;
+        }
+
     }
 }

@@ -19,22 +19,40 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.TrendImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
- * A data interface representing Trend.
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.0.2
+ * Created by mariotaku on 15/5/10.
  */
-@Implementation(TrendImpl.class)
-public interface Trend {
+@JsonObject
+public class Trend {
 
-    String getName();
+    @JsonField(name = "name")
+    String name;
+    @JsonField(name = "url")
+    String url;
+    @JsonField(name = "query")
+    String query;
 
-    String getQuery();
+    public String getName() {
+        return name;
+    }
 
-    String getUrl();
+    public String getUrl() {
+        return url;
+    }
 
+    public String getQuery() {
+        return query;
+    }
+
+    @Override
+    public String toString() {
+        return "Trend{" +
+                "name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", query='" + query + '\'' +
+                '}';
+    }
 }

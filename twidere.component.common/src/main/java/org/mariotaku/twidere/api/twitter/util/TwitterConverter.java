@@ -21,11 +21,11 @@ package org.mariotaku.twidere.api.twitter.util;
 
 import android.support.v4.util.SimpleArrayMap;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.ParameterizedType;
 import com.bluelinelabs.logansquare.ParameterizedTypeTrojan;
 import com.fasterxml.jackson.core.JsonParseException;
 
-import org.mariotaku.library.logansquare.extension.LoganSquareExtension;
-import org.mariotaku.library.logansquare.extension.LoganSquareExtensionInitializerImpl;
 import org.mariotaku.restfu.Converter;
 import org.mariotaku.restfu.Utils;
 import org.mariotaku.restfu.http.RestHttpResponse;
@@ -33,8 +33,8 @@ import org.mariotaku.restfu.http.mime.TypedData;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
+import org.mariotaku.twidere.api.twitter.model.TwitterResponseObject;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.impl.TwitterResponseImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,7 +57,7 @@ public class TwitterConverter implements Converter {
         try {
             final TypedData body = resp.getBody();
             if (body == null) return new TwitterException(resp);
-            final TwitterException parse = LoganSquareExtension.parse(body.stream(), TwitterException.class);
+            final TwitterException parse = LoganSquare.parse(body.stream(), TwitterException.class);
             if (parse != null) return parse;
             return new TwitterException(resp);
         } catch (JsonParseException e) {
@@ -69,7 +69,8 @@ public class TwitterConverter implements Converter {
 
     private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Type type) throws IOException, TwitterException {
         try {
-            final T parse = LoganSquareExtension.parse(stream, ParameterizedTypeTrojan.<T>create(type));
+            final ParameterizedType<T> parameterizedType = ParameterizedTypeTrojan.create(type);
+            final T parse = LoganSquare.parse(stream, parameterizedType);
             if (TwitterException.class.equals(type) && parse == null) {
                 throw new TwitterException();
             }
@@ -81,7 +82,7 @@ public class TwitterConverter implements Converter {
 
     private static <T> List<T> parseListOrThrow(RestHttpResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
         try {
-            return LoganSquareExtension.parseList(stream, elementCls);
+            return LoganSquare.parseList(stream, elementCls);
         } catch (JsonParseException e) {
             throw new TwitterException("Malformed JSON Data", e, resp);
         }
@@ -101,8 +102,8 @@ public class TwitterConverter implements Converter {
             final InputStream stream = body.stream();
             final Object object = parseOrThrow(response, stream, type);
             checkResponse(type, object, response);
-            if (object instanceof TwitterResponseImpl) {
-                ((TwitterResponseImpl) object).processResponseHeader(response);
+            if (object instanceof TwitterResponseObject) {
+                ((TwitterResponseObject) object).processResponseHeader(response);
             }
             return object;
         } finally {

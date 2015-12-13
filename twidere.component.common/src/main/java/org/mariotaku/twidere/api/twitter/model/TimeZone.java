@@ -19,17 +19,33 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.TimeZoneImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.api.twitter.model.TimeZone;
 
 /**
- * @author Alessandro Bahgat - ale.bahgat at gmail.com
+ * Created by mariotaku on 15/5/13.
  */
-@Implementation(TimeZoneImpl.class)
-public interface TimeZone {
-    String getName();
+@JsonObject
+public class TimeZone {
 
-    String getTzInfoName();
+    @JsonField(name = "utc_offset")
+    int utcOffset;
+    @JsonField(name = "name")
+    String name;
+    @JsonField(name = "tzinfo_name")
+    String tzInfoName;
 
-    int getUtcOffset();
+    public int getUtcOffset() {
+        return utcOffset;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTzInfoName() {
+        return tzInfoName;
+    }
 }

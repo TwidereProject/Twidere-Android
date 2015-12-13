@@ -19,20 +19,43 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.TranslationResultImpl;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-@Implementation(TranslationResultImpl.class)
-public interface TranslationResult extends TwitterResponse {
+/**
+ * Created by mariotaku on 15/5/7.
+ */
+@JsonObject
+public class TranslationResult extends TwitterResponseObject implements TwitterResponse {
 
-	public long getId();
+    @JsonField(name = "id")
+    long id;
+    @JsonField(name = "lang")
+    String lang;
+    @JsonField(name = "translated_lang")
+    String translatedLang;
+    @JsonField(name = "translation_type")
+    String translationType;
+    @JsonField(name = "text")
+    String text;
 
-	public String getLang();
+    public long getId() {
+        return id;
+    }
 
-	public String getText();
+    public String getLang() {
+        return lang;
+    }
 
-	public String getTranslatedLang();
+    public String getText() {
+        return text;
+    }
 
-	public String getTranslationType();
+    public String getTranslatedLang() {
+        return translatedLang;
+    }
 
+    public String getTranslationType() {
+        return translationType;
+    }
 }

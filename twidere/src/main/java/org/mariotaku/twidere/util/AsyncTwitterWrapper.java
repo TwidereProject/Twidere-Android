@@ -59,8 +59,6 @@ import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
-import org.mariotaku.twidere.api.twitter.model.impl.ActivityImpl;
-import org.mariotaku.twidere.api.twitter.model.impl.ResponseArrayList;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -548,9 +546,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 if (Utils.isOfficialKeyAccount(getContext(), accountId)) {
                     return twitter.getActivitiesAboutMe(paging);
                 }
-                final ResponseList<Activity> activities = new ResponseArrayList<Activity>();
+                final ResponseList<Activity> activities = new ResponseList<Activity>();
                 for (org.mariotaku.twidere.api.twitter.model.Status status : twitter.getMentionsTimeline(paging)) {
-                    activities.add(ActivityImpl.fromMention(accountId, status));
+                    activities.add(Activity.fromMention(accountId, status));
                 }
                 return activities;
             }

@@ -19,53 +19,36 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.library.logansquare.extension.annotation.ParameterizedImplementation;
-import org.mariotaku.library.logansquare.extension.annotation.ParameterizedMapper;
-import org.mariotaku.library.logansquare.extension.annotation.TypeImplementation;
-import org.mariotaku.library.logansquare.extension.annotation.TypeMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.ResponseArrayList;
-import org.mariotaku.twidere.api.twitter.model.impl.ScheduledStatusesListImpl;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.ActivityResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.DirectMessageResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.LanguageResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.LocationResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.PlaceResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.SavedSearchResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.StatusResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.TrendsResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.UserListResponseListMapper;
-import org.mariotaku.twidere.api.twitter.model.impl.mapper.list.UserResponseListMapper;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import java.util.List;
+import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
+
+import java.util.ArrayList;
 
 /**
- * List of TwitterResponse.
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
+ * Created by mariotaku on 15/5/7.
  */
-@ParameterizedMapper({
-        @TypeMapper(parameter = Activity.class, mapper = ActivityResponseListMapper.class),
-        @TypeMapper(parameter = DirectMessage.class, mapper = DirectMessageResponseListMapper.class),
-        @TypeMapper(parameter = Language.class, mapper = LanguageResponseListMapper.class),
-        @TypeMapper(parameter = Location.class, mapper = LocationResponseListMapper.class),
-        @TypeMapper(parameter = Place.class, mapper = PlaceResponseListMapper.class),
-        @TypeMapper(parameter = SavedSearch.class, mapper = SavedSearchResponseListMapper.class),
-        @TypeMapper(parameter = Status.class, mapper = StatusResponseListMapper.class),
-        @TypeMapper(parameter = Trends.class, mapper = TrendsResponseListMapper.class),
-        @TypeMapper(parameter = UserList.class, mapper = UserListResponseListMapper.class),
-        @TypeMapper(parameter = User.class, mapper = UserResponseListMapper.class),
-})
-@ParameterizedImplementation({
-        @TypeImplementation(parameter = ScheduledStatus.class, implementation = ScheduledStatusesListImpl.class)
-})
-@Implementation(ResponseArrayList.class)
-public interface ResponseList<T> extends TwitterResponse, List<T> {
+@JsonObject
+public class ResponseList<T> extends ArrayList<T> implements TwitterResponse {
 
-    /**
-     * {@inheritDoc}
-     */
+    private int accessLevel;
+    private RateLimitStatus rateLimitStatus;
+
+
     @Override
-    RateLimitStatus getRateLimitStatus();
+    public final void processResponseHeader(RestHttpResponse resp) {
+        rateLimitStatus = RateLimitStatus.createFromResponseHeader(resp);
+        accessLevel = InternalParseUtil.toAccessLevel(resp);
+    }
 
+    @Override
+    public final int getAccessLevel() {
+        return accessLevel;
+    }
+
+    @Override
+    public final RateLimitStatus getRateLimitStatus() {
+        return rateLimitStatus;
+    }
 }

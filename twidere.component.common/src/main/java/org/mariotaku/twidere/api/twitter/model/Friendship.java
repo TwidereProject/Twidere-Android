@@ -19,18 +19,24 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-/**
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.1.9
- */
-public interface Friendship {
-	long getId();
+public class Friendship {
+    public long getId() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getName();
+    public String getName() {
+        throw new UnsupportedOperationException();
+    }
 
-	String getScreenName();
+    public String getScreenName() {
+        throw new UnsupportedOperationException();
+    }
 
-	boolean isFollowedBy();
+    public boolean isFollowedBy() {
+        throw new UnsupportedOperationException();
+    }
 
-	boolean isFollowing();
+    public boolean isFollowing() {
+        throw new UnsupportedOperationException();
+    }
 }

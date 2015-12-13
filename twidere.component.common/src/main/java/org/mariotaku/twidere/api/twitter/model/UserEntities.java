@@ -17,32 +17,41 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.twitter.model.UserList;
-
-import java.util.ArrayList;
+import org.mariotaku.twidere.api.twitter.model.Entities;
+import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 
 /**
- * Created by mariotaku on 15/12/13.
+ * Created by mariotaku on 15/3/31.
  */
 @JsonObject
-public class PagableUserListListImpl extends PageableResponseListImpl<UserList> {
+public class UserEntities {
 
-    @JsonField(name = "lists")
-    ArrayList<UserList> lists;
+    @JsonField(name = "url")
+    Entities url;
 
-    @Override
-    public UserList get(int location) {
-        return lists.get(location);
+    @JsonField(name = "description")
+    Entities description;
+
+    public UrlEntity[] getDescriptionEntities() {
+        if (description == null) return null;
+        return description.getUrls();
+    }
+
+    public UrlEntity[] getUrlEntities() {
+        if (url == null) return null;
+        return url.getUrls();
     }
 
     @Override
-    public int size() {
-        if (lists == null) return 0;
-        return lists.size();
+    public String toString() {
+        return "UserEntities{" +
+                "url=" + url +
+                ", description=" + description +
+                '}';
     }
 }

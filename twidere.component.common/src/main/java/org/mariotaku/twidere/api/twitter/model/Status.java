@@ -25,10 +25,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
-import org.mariotaku.twidere.api.twitter.model.impl.EntitiesImpl;
-import org.mariotaku.twidere.api.twitter.model.impl.GeoPoint;
-import org.mariotaku.twidere.api.twitter.model.impl.TwitterResponseImpl;
-import org.mariotaku.twidere.api.twitter.model.impl.UserImpl;
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
 import java.io.IOException;
@@ -39,7 +35,8 @@ import java.util.Date;
  * Created by mariotaku on 15/5/5.
  */
 @JsonObject
-public class Status extends TwitterResponseImpl {
+public class Status extends TwitterResponseObject implements Comparable<Status>, TwitterResponse,
+        ExtendedEntitySupport {
 
     @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
@@ -57,10 +54,10 @@ public class Status extends TwitterResponseImpl {
     boolean truncated;
 
     @JsonField(name = "entities")
-    EntitiesImpl entities;
+    Entities entities;
 
     @JsonField(name = "extended_entities")
-    EntitiesImpl extendedEntities;
+    Entities extendedEntities;
 
     @JsonField(name = "in_reply_to_status_id")
     long inReplyToStatusId;
@@ -72,7 +69,7 @@ public class Status extends TwitterResponseImpl {
     String inReplyToScreenName;
 
     @JsonField(name = "user")
-    UserImpl user;
+    User user;
 
     @JsonField(name = "geo")
     GeoPoint geo;
@@ -116,6 +113,7 @@ public class Status extends TwitterResponseImpl {
 
     @JsonField(name = "possibly_sensitive")
     boolean possiblySensitive;
+    private Status mThat;
 
     public static void setQuotedStatus(Status status, Status quoted) {
         if (!(status instanceof Status)) return;
@@ -287,6 +285,7 @@ public class Status extends TwitterResponseImpl {
 
 
     public int compareTo(@NonNull final Status that) {
+        mThat = that;
         final long delta = id - that.getId();
         if (delta < Integer.MIN_VALUE)
             return Integer.MIN_VALUE;
@@ -295,6 +294,7 @@ public class Status extends TwitterResponseImpl {
     }
 
 
+    @Override
     public String toString() {
         return "Status{" +
                 "createdAt=" + createdAt +

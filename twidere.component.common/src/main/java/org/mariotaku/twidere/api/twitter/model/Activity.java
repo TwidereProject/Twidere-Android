@@ -1,5 +1,5 @@
 /*
- *                 Twidere - Twitter client for Android
+ * Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -19,67 +19,164 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.library.logansquare.extension.annotation.EnumClass;
-import org.mariotaku.library.logansquare.extension.annotation.Implementation;
-import org.mariotaku.twidere.api.twitter.model.impl.ActivityImpl;
+import android.support.annotation.NonNull;
+
 import org.mariotaku.twidere.util.AbsLogger;
 
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
-@Implementation(ActivityImpl.class)
-public interface Activity extends TwitterResponse, Comparable<Activity> {
+public class Activity extends TwitterResponseObject implements TwitterResponse, Comparable<Activity> {
 
-    int ACTION_UNKNOWN = 0x00;
-    int ACTION_FAVORITE = 0x01;
-    int ACTION_FOLLOW = 0x02;
-    int ACTION_MENTION = 0x03;
-    int ACTION_REPLY = 0x04;
-    int ACTION_RETWEET = 0x05;
-    int ACTION_LIST_MEMBER_ADDED = 0x06;
-    int ACTION_LIST_CREATED = 0x07;
-    int ACTION_FAVORITED_RETWEET = 0x08;
-    int ACTION_RETWEETED_RETWEET = 0x09;
-    int ACTION_QUOTE = 0x0A;
-    int ACTION_RETWEETED_MENTION = 0x0B;
-    int ACTION_FAVORITED_MENTION = 0x0C;
-    int ACTION_JOINED_TWITTER = 0x0D;
-    int ACTION_MEDIA_TAGGED = 0x0E;
-    int ACTION_FAVORITED_MEDIA_TAGGED = 0x0F;
-    int ACTION_RETWEETED_MEDIA_TAGGED = 0x10;
+    public static final int ACTION_UNKNOWN = 0x00;
+    public static final int ACTION_FAVORITE = 0x01;
+    public static final int ACTION_FOLLOW = 0x02;
+    public static final int ACTION_MENTION = 0x03;
+    public static final int ACTION_REPLY = 0x04;
+    public static final int ACTION_RETWEET = 0x05;
+    public static final int ACTION_LIST_MEMBER_ADDED = 0x06;
+    public static final int ACTION_LIST_CREATED = 0x07;
+    public static final int ACTION_FAVORITED_RETWEET = 0x08;
+    public static final int ACTION_RETWEETED_RETWEET = 0x09;
+    public static final int ACTION_QUOTE = 0x0A;
+    public static final int ACTION_RETWEETED_MENTION = 0x0B;
+    public static final int ACTION_FAVORITED_MENTION = 0x0C;
+    public static final int ACTION_JOINED_TWITTER = 0x0D;
+    public static final int ACTION_MEDIA_TAGGED = 0x0E;
+    public static final int ACTION_FAVORITED_MEDIA_TAGGED = 0x0F;
+    public static final int ACTION_RETWEETED_MEDIA_TAGGED = 0x10;
+    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+    Action action;
+    String rawAction;
 
-    Action getAction();
+    Date createdAt;
 
-    String getRawAction();
+    User[] sources;
+    User[] targetUsers;
+    User[] targetObjectUsers;
+    Status[] targetObjectStatuses, targetStatuses;
+    UserList[] targetUserLists, targetObjectUserLists;
+    long maxPosition, minPosition;
+    int targetObjectsSize, targetsSize, sourcesSize;
 
-    Date getCreatedAt();
+    Activity() {
+    }
 
-    long getMaxPosition();
+    public String getRawAction() {
+        return rawAction;
+    }
 
-    long getMinPosition();
+    public User[] getTargetObjectUsers() {
+        return targetObjectUsers;
+    }
 
-    User[] getSources();
+    @Override
+    public int compareTo(@NonNull final Activity another) {
+        final Date thisDate = getCreatedAt(), thatDate = another.getCreatedAt();
+        if (thisDate == null || thatDate == null) return 0;
+        return thisDate.compareTo(thatDate);
+    }
 
-    int getSourcesSize();
+    public Action getAction() {
+        return action;
+    }
 
-    int getTargetObjectsSize();
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
-    Status[] getTargetObjectStatuses();
+    public long getMaxPosition() {
+        return maxPosition;
+    }
 
-    UserList[] getTargetObjectUserLists();
+    public long getMinPosition() {
+        return minPosition;
+    }
 
-    int getTargetsSize();
+    public User[] getSources() {
+        return sources;
+    }
 
-    Status[] getTargetStatuses();
+    public int getSourcesSize() {
+        return sourcesSize;
+    }
 
-    UserList[] getTargetUserLists();
+    public int getTargetObjectsSize() {
+        return targetObjectsSize;
+    }
 
-    User[] getTargetUsers();
+    public Status[] getTargetObjectStatuses() {
+        return targetObjectStatuses;
+    }
 
-    User[] getTargetObjectUsers();
+    public UserList[] getTargetObjectUserLists() {
+        return targetObjectUserLists;
+    }
 
+    public int getTargetsSize() {
+        return targetsSize;
+    }
 
-    @EnumClass
-    enum Action {
+    public Status[] getTargetStatuses() {
+        return targetStatuses;
+    }
+
+    public UserList[] getTargetUserLists() {
+        return targetUserLists;
+    }
+
+    public User[] getTargetUsers() {
+        return targetUsers;
+    }
+
+    @Override
+    public String toString() {
+        return "ActivityJSONImpl{" +
+                "action=" + action +
+                ", createdAt=" + createdAt +
+                ", sources=" + Arrays.toString(sources) +
+                ", targetUsers=" + Arrays.toString(targetUsers) +
+                ", targetObjectStatuses=" + Arrays.toString(targetObjectStatuses) +
+                ", targetStatuses=" + Arrays.toString(targetStatuses) +
+                ", targetUserLists=" + Arrays.toString(targetUserLists) +
+                ", targetObjectUserLists=" + Arrays.toString(targetObjectUserLists) +
+                ", maxPosition=" + maxPosition +
+                ", minPosition=" + minPosition +
+                ", targetObjectsSize=" + targetObjectsSize +
+                ", targetsSize=" + targetsSize +
+                ", sourcesSize=" + sourcesSize +
+                '}';
+    }
+
+    public static Activity fromMention(long accountId, Status status) {
+        final Activity activity = new Activity();
+
+        activity.maxPosition = activity.minPosition = status.getId();
+        activity.createdAt = status.getCreatedAt();
+
+        if (status.getInReplyToUserId() == accountId) {
+            activity.action = Action.REPLY;
+            activity.rawAction = "reply";
+            activity.targetStatuses = new Status[]{status};
+
+            //TODO set target statuses (in reply to status)
+            activity.targetObjectStatuses = new Status[0];
+        } else {
+            activity.action = Action.MENTION;
+            activity.rawAction = "mention";
+            activity.targetObjectStatuses = new Status[]{status};
+
+            // TODO set target users (mentioned users)
+            activity.targetUsers = null;
+        }
+        activity.sourcesSize = 1;
+        activity.sources = new User[]{status.getUser()};
+        return activity;
+    }
+
+    public enum Action {
         FAVORITE(ACTION_FAVORITE),
         /**
          * Sources: followers to targets (User)

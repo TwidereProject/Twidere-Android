@@ -19,27 +19,34 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.twidere.api.twitter.model.MediaEntity;
-import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
-
 import java.util.Map;
 
-/**
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.2.3
- */
-public interface TwitterAPIConfiguration extends TwitterResponse {
-	int getCharactersReservedPerMedia();
+public class TwitterAPIConfiguration extends TwitterResponseObject implements TwitterResponse {
+    public int getCharactersReservedPerMedia() {
+        throw new UnsupportedOperationException();
+    }
 
-	int getMaxMediaPerUpload();
+    public int getMaxMediaPerUpload() {
+        throw new UnsupportedOperationException();
+    }
 
-	String[] getNonUsernamePaths();
+    public String[] getNonUsernamePaths() {
+        throw new UnsupportedOperationException();
+    }
 
-	int getPhotoSizeLimit();
+    public int getPhotoSizeLimit() {
+        throw new UnsupportedOperationException();
+    }
 
-	Map<Integer, MediaEntity.Size> getPhotoSizes();
+    public Map<Integer, MediaEntity.Size> getPhotoSizes() {
+        throw new UnsupportedOperationException();
+    }
 
-	int getShortUrlLength();
+    public int getShortUrlLength() {
+        throw new UnsupportedOperationException();
+    }
 
-	int getShortUrlLengthHttps();
+    public int getShortUrlLengthHttps() {
+        throw new UnsupportedOperationException();
+    }
 }

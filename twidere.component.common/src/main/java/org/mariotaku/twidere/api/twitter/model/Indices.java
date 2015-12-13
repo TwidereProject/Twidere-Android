@@ -17,16 +17,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl.mapper.list;
-
-import org.mariotaku.twidere.api.twitter.model.Place;
-import org.mariotaku.twidere.api.twitter.model.impl.ResponseListMapper;
+package org.mariotaku.twidere.api.twitter.model;
 
 /**
- * Created by mariotaku on 15/12/13.
+ * Created by mariotaku on 15/3/31.
  */
-public class PlaceResponseListMapper extends ResponseListMapper<Place> {
-    public PlaceResponseListMapper() {
-        super(Place.class);
+public class Indices {
+
+    private int start, end;
+
+    public int getEnd() {
+        return end;
     }
+
+    public int getStart() {
+        return start;
+    }
+
+    public Indices(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    @Override
+    public String toString() {
+        return "Index{" +
+                "start=" + start +
+                ", end=" + end +
+                '}';
+    }
+
 }

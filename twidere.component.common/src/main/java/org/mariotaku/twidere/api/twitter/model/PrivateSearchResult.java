@@ -22,5 +22,5 @@ package org.mariotaku.twidere.api.twitter.model;
 /**
  * Created by mariotaku on 15/10/21.
  */
-public interface PrivateSearchResult {
+public class PrivateSearchResult {
 }

@@ -17,14 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-
-import org.mariotaku.twidere.api.twitter.model.IDs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,14 +31,12 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/10/21.
  */
-public class IDsImplMapper extends JsonMapper<IDsImpl> {
-
-    public static final IDsImplMapper INSTANCE = new IDsImplMapper();
+public class IDs$$JsonObjectMapper extends JsonMapper<IDs> {
 
     @SuppressWarnings("TryWithIdenticalCatches")
     @Override
-    public IDsImpl parse(JsonParser jsonParser) throws IOException {
-        IDsImpl instance = new IDsImpl();
+    public IDs parse(JsonParser jsonParser) throws IOException {
+        IDs instance = new IDs();
         if (jsonParser.getCurrentToken() == null) {
             jsonParser.nextToken();
         }
@@ -61,11 +57,11 @@ public class IDsImplMapper extends JsonMapper<IDsImpl> {
     }
 
     @Override
-    public void serialize(IDsImpl activity, JsonGenerator jsonGenerator, boolean writeStartAndEnd) {
+    public void serialize(IDs activity, JsonGenerator jsonGenerator, boolean writeStartAndEnd) {
         throw new UnsupportedOperationException();
     }
 
-    public void parseField(IDsImpl instance, String fieldName, JsonParser jsonParser) throws IOException {
+    public void parseField(IDs instance, String fieldName, JsonParser jsonParser) throws IOException {
         if ("ids".equals(fieldName)) {
             parseIDsArray(instance, jsonParser);
         } else if ("previous_cursor".equals(fieldName)) {
@@ -75,7 +71,7 @@ public class IDsImplMapper extends JsonMapper<IDsImpl> {
         }
     }
 
-    private void parseIDsArray(IDsImpl instance, JsonParser jsonParser) throws IOException {
+    private void parseIDsArray(IDs instance, JsonParser jsonParser) throws IOException {
         List<Long> collection1 = new ArrayList<>();
         while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
             collection1.add(jsonParser.getValueAsLong());

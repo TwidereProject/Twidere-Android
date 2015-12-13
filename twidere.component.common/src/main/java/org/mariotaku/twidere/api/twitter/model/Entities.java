@@ -17,15 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.api.twitter.model.impl;
+package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-
-import org.mariotaku.twidere.api.twitter.model.HashtagEntity;
-import org.mariotaku.twidere.api.twitter.model.MediaEntity;
-import org.mariotaku.twidere.api.twitter.model.UrlEntity;
-import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 
 import java.util.Arrays;
 
@@ -33,24 +28,24 @@ import java.util.Arrays;
  * Created by mariotaku on 15/3/31.
  */
 @JsonObject
-public class EntitiesImpl {
+public class Entities {
     @JsonField(name = "hashtags")
-    HashtagEntityImpl[] hashtags;
+    HashtagEntity[] hashtags;
 
     @JsonField(name = "user_mentions")
-    UserMentionEntityImpl[] userMentions;
+    UserMentionEntity[] userMentions;
 
     @JsonField(name = "urls")
-    UrlEntityImpl[] urls;
+    UrlEntity[] urls;
 
     @JsonField(name = "media")
-    MediaEntityImpl[] media;
+    MediaEntity[] media;
 
-    public HashtagEntity[] getHashtags() {
+    public org.mariotaku.twidere.api.twitter.model.HashtagEntity[] getHashtags() {
         return hashtags;
     }
 
-    public UserMentionEntity[] getUserMentions() {
+    public org.mariotaku.twidere.api.twitter.model.UserMentionEntity[] getUserMentions() {
         return userMentions;
     }
 
@@ -64,7 +59,7 @@ public class EntitiesImpl {
 
     @Override
     public String toString() {
-        return "EntitiesImpl{" +
+        return "Entities{" +
                 "hashtags=" + Arrays.toString(hashtags) +
                 ", userMentions=" + Arrays.toString(userMentions) +
                 ", urls=" + Arrays.toString(urls) +
