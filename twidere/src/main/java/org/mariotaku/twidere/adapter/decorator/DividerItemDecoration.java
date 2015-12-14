@@ -96,6 +96,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             final int childPos = parent.getChildAdapterPosition(child);
+            if (!isDividerEnabled(childPos)) continue;
             final int start = getDecorationStart(), end = getDecorationEnd(parent);
             if (start >= 0 && childPos < start || end >= 0 && childPos > end) continue;
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
@@ -109,6 +110,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
+    protected boolean isDividerEnabled(int childPos) {
+        return true;
+    }
+
     public void drawHorizontal(Canvas c, RecyclerView parent) {
         if (mDivider == null) return;
         final int top = parent.getPaddingTop();
@@ -119,6 +124,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             final View child = parent.getChildAt(i);
             final int childPos = parent.getChildAdapterPosition(child);
             final int start = getDecorationStart(), end = getDecorationEnd(parent);
+            if (!isDividerEnabled(childPos)) continue;
             if (start >= 0 && childPos < start || end >= 0 && childPos > end) continue;
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
@@ -135,6 +141,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
         if (mDivider == null) return;
         final int childPos = parent.getChildAdapterPosition(view);
+        if (!isDividerEnabled(childPos)) return;
         final int start = getDecorationStart(), end = getDecorationEnd(parent);
         if (start >= 0 && childPos < start || end >= 0 && childPos > end) {
             outRect.setEmpty();

@@ -20,8 +20,11 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.provider.TwidereDataStore;
+
+import edu.tsinghua.hotmobi.model.TimelineType;
 
 public class ActivitiesByFriendsFragment extends CursorActivitiesFragment {
 
@@ -29,6 +32,12 @@ public class ActivitiesByFriendsFragment extends CursorActivitiesFragment {
     @Override
     public boolean getActivities(long[] accountIds, long[] maxIds, long[] sinceIds) {
         return false;
+    }
+
+    @NonNull
+    @Override
+    protected TimelineType getTimelineType() {
+        return TimelineType.OTHER;
     }
 
 

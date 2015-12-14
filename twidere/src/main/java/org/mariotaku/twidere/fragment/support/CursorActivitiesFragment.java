@@ -58,7 +58,6 @@ import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
 
 import java.util.List;
 
-import static org.mariotaku.twidere.util.Utils.buildStatusFilterWhereClause;
 import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
 
 /**
@@ -216,7 +215,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
 
     protected Expression getFiltersWhere(String table) {
         if (!isFilterEnabled()) return null;
-        return buildStatusFilterWhereClause(table, null);
+        return Utils.buildActivityFilterWhereClause(table, null);
     }
 
     protected long[] getNewestActivityIds(long[] accountIds) {

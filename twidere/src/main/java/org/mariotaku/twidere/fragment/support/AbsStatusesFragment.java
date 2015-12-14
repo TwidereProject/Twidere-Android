@@ -332,11 +332,14 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
         // BEGIN HotMobi
-        final MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
+        final MediaEvent event = MediaEvent.create(getActivity(), status, media, getTimelineType(),
                 adapter.isMediaPreviewEnabled());
         HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
         // END HotMobi
     }
+
+    @NonNull
+    protected abstract TimelineType getTimelineType();
 
     @Override
     public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {

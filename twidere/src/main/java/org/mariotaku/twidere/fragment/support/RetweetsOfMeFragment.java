@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.RetweetsOfMeLoader;
@@ -28,12 +29,14 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
 
+import edu.tsinghua.hotmobi.model.TimelineType;
+
 public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
 
     @Override
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
-                                                                 final Bundle args,
-                                                                 final boolean fromUser) {
+                                                                    final Bundle args,
+                                                                    final boolean fromUser) {
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
@@ -59,4 +62,10 @@ public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
         return new String[]{AUTHORITY_RETWEETS_OF_ME, "account" + account_id};
     }
 
+
+    @NonNull
+    @Override
+    protected TimelineType getTimelineType() {
+        return TimelineType.INTERACTIONS;
+    }
 }

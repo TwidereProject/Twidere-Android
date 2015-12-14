@@ -337,7 +337,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
 
-        MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
+        MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.DETAILS,
                 mStatusAdapter.isMediaPreviewEnabled());
         HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
     }

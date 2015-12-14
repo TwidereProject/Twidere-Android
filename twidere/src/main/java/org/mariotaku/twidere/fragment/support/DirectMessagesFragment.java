@@ -324,8 +324,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     }
 
     protected void updateRefreshState() {
-        final AsyncTwitterWrapper twitter = mTwitterWrapper;
-        setRefreshing(twitter != null && (twitter.isReceivedDirectMessagesRefreshing() || twitter.isSentDirectMessagesRefreshing()));
+        setRefreshing(mTwitterWrapper.isReceivedDirectMessagesRefreshing() || mTwitterWrapper.isSentDirectMessagesRefreshing());
     }
 
     private void addReadPosition(final int firstVisibleItem) {

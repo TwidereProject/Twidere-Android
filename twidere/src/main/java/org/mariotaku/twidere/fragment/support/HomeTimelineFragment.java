@@ -20,10 +20,13 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+
+import edu.tsinghua.hotmobi.model.TimelineType;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -76,6 +79,12 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
                 mNotificationManager.cancel(tag, NOTIFICATION_ID_HOME_TIMELINE);
             }
         }
+    }
+
+    @NonNull
+    @Override
+    protected TimelineType getTimelineType() {
+        return TimelineType.HOME;
     }
 
     @Override

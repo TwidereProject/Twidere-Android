@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.UserListTimelineLoader;
@@ -28,10 +29,18 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
 
+import edu.tsinghua.hotmobi.model.TimelineType;
+
 /**
  * Created by mariotaku on 14/12/2.
  */
 public class UserListTimelineFragment extends ParcelableStatusesFragment {
+
+    @NonNull
+    @Override
+    protected TimelineType getTimelineType() {
+        return TimelineType.OTHER;
+    }
 
     @Override
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,

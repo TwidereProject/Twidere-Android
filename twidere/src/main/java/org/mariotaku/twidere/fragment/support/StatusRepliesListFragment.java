@@ -21,12 +21,15 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.StatusRepliesLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
+
+import edu.tsinghua.hotmobi.model.TimelineType;
 
 public class StatusRepliesListFragment extends StatusesSearchFragment {
 
@@ -57,4 +60,10 @@ public class StatusRepliesListFragment extends StatusesSearchFragment {
                 "status_id" + statusId};
     }
 
+
+    @NonNull
+    @Override
+    protected TimelineType getTimelineType() {
+        return TimelineType.DETAILS;
+    }
 }

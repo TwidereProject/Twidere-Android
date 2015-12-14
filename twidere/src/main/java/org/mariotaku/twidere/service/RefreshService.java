@@ -35,7 +35,6 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
-import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.receiver.PowerStateReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -53,8 +52,6 @@ import edu.tsinghua.hotmobi.model.ScreenEvent;
 
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
-import static org.mariotaku.twidere.util.DataStoreUtils.getNewestMessageIdsFromDatabase;
-import static org.mariotaku.twidere.util.DataStoreUtils.getNewestStatusIdsFromDatabase;
 import static org.mariotaku.twidere.util.Utils.hasAutoRefreshAccounts;
 import static org.mariotaku.twidere.util.Utils.isBatteryOkay;
 import static org.mariotaku.twidere.util.Utils.isNetworkAvailable;
@@ -99,14 +96,13 @@ public class RefreshService extends Service implements Constants {
                     if (!isHomeTimelineRefreshing()) {
                         getHomeTimeline(refreshIds, null, sinceIds);
                     }
-                } else if (BROADCAST_REFRESH_MENTIONS.equals(action)) {
+                } else if (BROADCAST_REFRESH_NOTIFICATIONS.equals(action)) {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new MentionsRefreshableFilter());
-                    final long[] sinceIds = DataStoreUtils.getNewestStatusIdsFromDatabase(context, Mentions.CONTENT_URI, refreshIds);
                     if (BuildConfig.DEBUG) {
-                        Log.d(LOGTAG, String.format("Auto refreshing mentions for %s", Arrays.toString(refreshIds)));
+                        Log.d(LOGTAG, String.format("Auto refreshing notifications for %s", Arrays.toString(refreshIds)));
                     }
-                    if (!isMentionsRefreshing()) {
-                        getMentions(refreshIds, null, sinceIds);
+                    if (!isActivitiesAboutMeRefreshing()) {
+                        getActivitiesAboutMe(refreshIds, null, null);
                     }
                 } else if (BROADCAST_REFRESH_DIRECT_MESSAGES.equals(action)) {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new MessagesRefreshableFilter());
@@ -189,13 +185,13 @@ public class RefreshService extends Service implements Constants {
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         mPendingRefreshHomeTimelineIntent = PendingIntent.getBroadcast(this, 0, new Intent(
                 BROADCAST_REFRESH_HOME_TIMELINE), 0);
-        mPendingRefreshMentionsIntent = PendingIntent.getBroadcast(this, 0, new Intent(BROADCAST_REFRESH_MENTIONS), 0);
+        mPendingRefreshMentionsIntent = PendingIntent.getBroadcast(this, 0, new Intent(BROADCAST_REFRESH_NOTIFICATIONS), 0);
         mPendingRefreshDirectMessagesIntent = PendingIntent.getBroadcast(this, 0, new Intent(
                 BROADCAST_REFRESH_DIRECT_MESSAGES), 0);
         mPendingRefreshTrendsIntent = PendingIntent.getBroadcast(this, 0, new Intent(BROADCAST_REFRESH_TRENDS), 0);
         final IntentFilter refreshFilter = new IntentFilter(BROADCAST_NOTIFICATION_DELETED);
         refreshFilter.addAction(BROADCAST_REFRESH_HOME_TIMELINE);
-        refreshFilter.addAction(BROADCAST_REFRESH_MENTIONS);
+        refreshFilter.addAction(BROADCAST_REFRESH_NOTIFICATIONS);
         refreshFilter.addAction(BROADCAST_REFRESH_DIRECT_MESSAGES);
         refreshFilter.addAction(BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING);
         refreshFilter.addAction(BROADCAST_RESCHEDULE_MENTIONS_REFRESHING);
@@ -245,8 +241,9 @@ public class RefreshService extends Service implements Constants {
         return mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
     }
 
-    private boolean getMentions(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
-        return mTwitterWrapper.getMentionsTimelineAsync(accountIds, maxIds, sinceIds);
+    private boolean getActivitiesAboutMe(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+        mTwitterWrapper.getActivitiesAboutMeAsync(accountIds, maxIds, sinceIds);
+        return true;
     }
 
     private int getReceivedDirectMessages(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
@@ -281,7 +278,7 @@ public class RefreshService extends Service implements Constants {
         return mTwitterWrapper.isLocalTrendsRefreshing();
     }
 
-    private boolean isMentionsRefreshing() {
+    private boolean isActivitiesAboutMeRefreshing() {
         return mTwitterWrapper.isMentionsTimelineRefreshing();
     }
 

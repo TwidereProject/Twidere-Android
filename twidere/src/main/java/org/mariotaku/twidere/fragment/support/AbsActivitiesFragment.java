@@ -31,11 +31,9 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.desmond.asyncmanager.AsyncManager;
@@ -44,9 +42,11 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
+import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -65,7 +65,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.MediaEvent;
 import edu.tsinghua.hotmobi.model.ScrollRecord;
+import edu.tsinghua.hotmobi.model.TimelineType;
 
 public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecyclerViewFragment<AbsActivitiesAdapter<Data>>
         implements LoaderCallbacks<Data>, AbsActivitiesAdapter.ActivityAdapterListener, KeyboardShortcutCallback {
@@ -123,24 +125,6 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         }
     };
     private RecyclerViewNavigationHelper mNavigationHelper;
-    private ParcelableActivity mSelectedActivity;
-    private OnMenuItemClickListener mOnStatusMenuItemClickListener = new OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-//            final ParcelableActivity activity = mSelectedActivity;
-//            if (activity == null) return false;
-//            if (item.getItemId() == R.id.share) {
-//                final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), activity);
-//                final Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_status));
-//                Utils.addCopyLinkIntent(getContext(), chooser, LinkCreator.getTwitterStatusLink(activity));
-//                startActivity(chooser);
-//                return true;
-//            }
-//            return Utils.handleMenuItemClick(getActivity(), AbsActivitiesFragment.this,
-//                    getFragmentManager(), mTwitterWrapper, activity, item);
-            return false;
-        }
-    };
     private OnScrollListener mPauseOnScrollListener;
     private OnScrollListener mActiveHotMobiScrollTracker;
 
@@ -325,19 +309,22 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         getActivities(accountIds, maxIds, sinceIds);
     }
 
-//    @Override
-//    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
-//        final AbsActivitiesAdapter<Data> adapter = getAdapter();
-//        final ParcelableActivity activity = adapter.getActivity(position);
-//        if (activity == null) return;
-//        final Bundle options = Utils.createMediaViewerActivityOption(view);
-//        Utils.openMedia(getActivity(), activity, media, options);
-//        // BEGIN HotMobi
-//        final MediaEvent event = MediaEvent.create(getActivity(), activity, media, TimelineType.OTHER,
-//                adapter.isMediaPreviewEnabled());
-//        HotMobiLogger.getInstance(getActivity()).log(activity.account_id, event);
-//        // END HotMobi
-//    }
+    @Override
+    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
+        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatus status = getActivityStatus(adapter.getActivity(position));
+        if (status == null) return;
+        final Bundle options = Utils.createMediaViewerActivityOption(view);
+        Utils.openMedia(getActivity(), status, media, options);
+        // BEGIN HotMobi
+        final MediaEvent event = MediaEvent.create(getActivity(), status, media,
+                getTimelineType(), adapter.isMediaPreviewEnabled());
+        HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
+        // END HotMobi
+    }
+
+    @NonNull
+    protected abstract TimelineType getTimelineType();
 
     @Override
     public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {
@@ -381,7 +368,9 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             case Activity.ACTION_RETWEET:
             case Activity.ACTION_RETWEETED_MEDIA_TAGGED:
             case Activity.ACTION_RETWEETED_MENTION:
-            case Activity.ACTION_RETWEETED_RETWEET: {
+            case Activity.ACTION_RETWEETED_RETWEET:
+            case Activity.ACTION_FOLLOW:
+            case Activity.ACTION_JOINED_TWITTER: {
                 Utils.openUsers(getActivity(), Arrays.asList(activity.sources));
                 break;
             }
@@ -572,6 +561,31 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     protected Rect getExtraContentPadding() {
         final int paddingVertical = getResources().getDimensionPixelSize(R.dimen.element_spacing_small);
         return new Rect(0, paddingVertical, 0, paddingVertical);
+    }
+
+    @Override
+    protected void setupRecyclerView(Context context, boolean compact) {
+        if (compact) {
+            super.setupRecyclerView(context, true);
+            return;
+        }
+        final RecyclerView recyclerView = getRecyclerView();
+        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, getLayoutManager().getOrientation()) {
+
+            @Override
+            protected boolean isDividerEnabled(int childPos) {
+                if (childPos == RecyclerView.NO_POSITION || childPos == adapter.getItemCount() - 1) {
+                    return false;
+                }
+                if (adapter.getItemViewType(childPos) != AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                    if (adapter.getItemViewType(childPos + 1) != AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private String getCurrentReadPositionTag() {

@@ -101,7 +101,6 @@ public class ApplicationModule {
         notificationManagerWrapper = new NotificationManagerWrapper(application);
 
 
-        asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager, sharedPreferences, bus);
         restHttpClient = TwitterAPIFactory.getDefaultHttpClient(application, dns);
         imageDownloader = new TwidereImageDownloader(application, restHttpClient, true);
         imageLoader = createImageLoader(application, imageDownloader);
@@ -111,6 +110,8 @@ public class ApplicationModule {
         userColorNameManager = new UserColorNameManager(application);
         keyboardShortcutsHandler = new KeyboardShortcutsHandler(application);
         hotMobiLogger = new HotMobiLogger(application);
+        asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager,
+                sharedPreferences, bus, userColorNameManager);
     }
 
     public static ApplicationModule get(@NonNull Context context) {

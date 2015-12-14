@@ -25,7 +25,8 @@ import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
  * Created by mariotaku on 15/8/18.
  */
 public enum TimelineType {
-    HOME("home"), INTERACTIONS("interactions"), OTHER("other");
+    HOME("home"), INTERACTIONS("interactions"), DETAILS("details"), SEARCH("search"), USER("user"),
+    OTHER("other");
 
     private final String value;
 

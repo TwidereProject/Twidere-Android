@@ -21,12 +21,15 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.UserMentionsLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
+
+import edu.tsinghua.hotmobi.model.TimelineType;
 
 public class UserMentionsFragment extends StatusesSearchFragment {
 
@@ -56,4 +59,10 @@ public class UserMentionsFragment extends StatusesSearchFragment {
         return new String[]{AUTHORITY_USER_MENTIONS, "account" + account_id, "screen_name" + screen_name};
     }
 
+
+    @NonNull
+    @Override
+    protected TimelineType getTimelineType() {
+        return TimelineType.OTHER;
+    }
 }

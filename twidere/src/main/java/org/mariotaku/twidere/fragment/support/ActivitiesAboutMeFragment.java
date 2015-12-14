@@ -20,11 +20,11 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.net.Uri;
-import android.view.View;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
-import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
+
+import edu.tsinghua.hotmobi.model.TimelineType;
 
 public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
 
@@ -34,6 +34,12 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
         return true;
     }
 
+    @NonNull
+    @Override
+    protected TimelineType getTimelineType() {
+        return TimelineType.INTERACTIONS;
+    }
+
     @Override
     public Uri getContentUri() {
         return Activities.AboutMe.CONTENT_URI;
@@ -41,22 +47,22 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
 
     @Override
     protected int getNotificationType() {
-        return 0;
+        return NOTIFICATION_ID_MENTIONS_TIMELINE;
     }
 
     @Override
     protected boolean isFilterEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     protected void updateRefreshState() {
-
+        setRefreshing(mTwitterWrapper.isMentionsTimelineRefreshing());
     }
 
     @Override
     public boolean isRefreshing() {
-        return false;
+        return mTwitterWrapper.isMentionsTimelineRefreshing();
     }
 
 }
