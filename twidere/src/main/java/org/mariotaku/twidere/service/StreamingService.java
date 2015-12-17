@@ -20,6 +20,7 @@ import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.TypedData;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -37,13 +38,14 @@ import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.mariotaku.twidere.util.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,7 +63,6 @@ public class StreamingService extends Service implements Constants {
 
     private long[] mAccountIds;
 
-    private static final Uri[] STATUSES_URIS = new Uri[]{Statuses.CONTENT_URI, Mentions.CONTENT_URI};
     private static final Uri[] MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI,
             DirectMessages.Outbox.CONTENT_URI};
 
@@ -74,7 +75,7 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onChange(final boolean selfChange, final Uri uri) {
-            if (!TwidereArrayUtils.contentMatch(mAccountIds, Utils.getActivatedAccountIds(StreamingService.this))) {
+            if (!TwidereArrayUtils.contentMatch(mAccountIds, DataStoreUtils.getActivatedAccountIds(StreamingService.this))) {
                 initStreaming();
             }
         }
@@ -229,11 +230,9 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onDeletionNotice(final StatusDeletionNotice statusDeletionNotice) {
-            final long status_id = statusDeletionNotice.getStatusId();
-            final String where = Statuses.STATUS_ID + " = " + status_id;
-            for (final Uri uri : STATUSES_URIS) {
-                resolver.delete(uri, where, null);
-            }
+            final long statusId = statusDeletionNotice.getStatusId();
+            resolver.delete(Statuses.CONTENT_URI, Expression.equals(Statuses.STATUS_ID, statusId).getSQL(), null);
+            resolver.delete(Activities.AboutMe.CONTENT_URI, Expression.equals(Activities.AboutMe.STATUS_ID, statusId).getSQL(), null);
         }
 
         @Override
@@ -323,9 +322,7 @@ public class StreamingService extends Service implements Constants {
                     + upToStatusId;
             final ContentValues values = new ContentValues();
             values.putNull(Statuses.LOCATION);
-            for (final Uri uri : STATUSES_URIS) {
-                resolver.update(uri, values, where, null);
-            }
+            resolver.update(Statuses.CONTENT_URI, values, where, null);
         }
 
         @Override

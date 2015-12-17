@@ -455,7 +455,6 @@
   <string name="wizard_page_welcome_import_settings">Zaimportuj ustawienia</string>
   <string name="wizard_page_theme_text">Wybierz swój motyw.</string>
   <string name="wizard_page_tabs_text">Dodaj karty do Twidere.\nŚledź ludzi bądź rzeczy na których Ci zależy.</string>
-  <string name="wizard_page_tabs_unchanged_message">Możesz dodać karty w \"Ustawienia\" - \"Karty\"</string>
   <string name="wizard_page_cards_text">Ustaw wygląd tweeta.</string>
   <string name="wizard_page_hints_text">Oto kilka użytecznych porad.</string>
   <string name="wizard_page_finished_title">Zakończono</string>
@@ -506,8 +505,6 @@
   <string name="theme_background_solid">Czyste biało-czarne</string>
   <string name="theme_background_transparent">Przezroczyste</string>
   <string name="theme_dark_actionbar">Ciemny ActionBar</string>
-  <string name="wizard_hint_quote_format">Ustaw ulubiony format cytatu w \"Ustawienia\" - \"Zawartość i przechowywanie\"</string>
-  <string name="wizard_hint_filters">Możesz ukryć niechciane tweety w strumieniu i powiadomieniach za pomocą opcji \"Filtry\".</string>
   <string name="view_replies">Zobacz odpowiedzi</string>
   <string name="compact_cards">Zwarty widok tweetów</string>
   <string name="compact_cards_summary">Wyświetla więcej tweetów na ekranie</string>
@@ -578,7 +575,6 @@
   <string name="delete_drafts_confirm">Usunąć wybrane szkice?</string>
   <string name="extra_configurations">Konfiguracje dodatkowe</string>
   <string name="click_item_to_config">Dotknij element aby skonfigurować</string>
-  <string name="dark_drawer">Ciemne menu</string>
   <string name="retweets_of_me">Moje posty podane dalej</string>
   <string name="from_gallery">Z galerii</string>
   <string name="from_camera">Z aparatu</string>

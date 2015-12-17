@@ -186,10 +186,10 @@
   <string name="notifications">通知</string>
   <string name="screen_name">用户名</string>
   <string name="refresh_on_start">启动时刷新</string>
-  <string name="refresh_on_start_summary">启动时刷新时间轴和提及</string>
+  <string name="refresh_on_start_summary">启动时刷新时间线和提及</string>
   <string name="refresh_after_status_updated">发送推文后刷新</string>
-  <string name="refresh_after_status_updated_summary">在发送推文后刷新时间轴</string>
-  <string name="list_timeline">列表时间轴</string>
+  <string name="refresh_after_status_updated_summary">在发送推文后刷新时间线</string>
+  <string name="list_timeline">列表时间线</string>
   <string name="list_members">列表成员</string>
   <string name="list_subscribers">订阅列表的用户</string>
   <string name="type_to_compose">键入信息</string>
@@ -230,7 +230,7 @@
   <string name="edit_tab">编辑标签页</string>
   <string name="icon">图标</string>
   <string name="pick_file">选取文件</string>
-  <string name="user_timeline">时间轴</string>
+  <string name="user_timeline">时间线</string>
   <string name="notification_ringtone">铃声</string>
   <string name="notification_light_color">灯光颜色</string>
   <string name="share_format">分享格式</string>
@@ -240,7 +240,7 @@
   <string name="image_uploader">图片上传服务</string>
   <string name="media_uploader">媒体上传服务</string>
   <string name="image_uploader_default">默认（Twitter）</string>
-  <string name="home_refresh">在主页时间轴刷新</string>
+  <string name="home_refresh">在主页时间线刷新</string>
   <string name="error_message_image_upload_failed">图像上传失败</string>
   <string name="error_message_image_uploader_not_found">未找到图片上传扩展，它可能已经被卸载了</string>
   <string name="image_upload_format">上传图片的推文格式</string>
@@ -376,7 +376,7 @@
   <string name="and_more">和其他<xliff:g id="count">%d</xliff:g>个</string>
   <string name="clear_search_history">清除搜索历史</string>
   <string name="permission_description_none">没有需要的权限</string>
-  <string name="permission_description_refresh">刷新时间轴（包括私信）</string>
+  <string name="permission_description_refresh">刷新时间线（包括私信）</string>
   <string name="permission_description_read">读取推文和一些缓存的内容</string>
   <string name="permission_description_write">将推文和其他一些内容写入到数据库，发送推文</string>
   <string name="permission_description_direct_messages">读写/发送私信</string>
@@ -514,7 +514,7 @@
   <string name="block_user">阻止<xliff:g id="name">%s</xliff:g></string>
   <string name="block_user_confirm_message">阻止<xliff:g id="name">%s</xliff:g>？这个用户将不能关注你、提及你，或者给你发送私信。</string>
   <string name="unfollow_user">取消关注<xliff:g id="name">%s</xliff:g></string>
-  <string name="unfollow_user_confirm_message">取消关注<xliff:g id="name">%s</xliff:g>吗？你将不会在时间轴中看到这个用户的推文。</string>
+  <string name="unfollow_user_confirm_message">取消关注<xliff:g id="name">%s</xliff:g>吗？你将不会在时间线中看到这个用户的推文。</string>
   <string name="delete_user_list">删除列表<xliff:g id="name">%s</xliff:g></string>
   <string name="delete_user_list_confirm_message">删除列表<xliff:g id="name">%s</xliff:g>吗？这个操作不能撤销。</string>
   <string name="unsubscribe_from_user_list">从列表<xliff:g id="name">%s</xliff:g>退订</string>
@@ -537,7 +537,7 @@
   <string name="special_thanks_to">特别感谢</string>
   <string name="contributors_list_summary">如果你没有看到你的名字，请联系我们的项目帐号</string>
   <string name="account_options">帐号选项</string>
-  <string name="show_in_timeline">在时间轴中显示</string>
+  <string name="show_in_timeline">在时间线中显示</string>
   <string name="cards">卡片</string>
   <string name="no_tab_hint">没有标签页</string>
   <string name="delete_user">删除用户<xliff:g id="name">%s</xliff:g></string>
@@ -629,7 +629,6 @@
   <string name="delete_drafts_confirm">删除选择的草稿？</string>
   <string name="extra_configurations">额外设定</string>
   <string name="click_item_to_config">点击一项以设定</string>
-  <string name="dark_drawer">暗色侧栏</string>
   <string name="retweets_of_me">转推我的内容</string>
   <string name="from_gallery">来自相册</string>
   <string name="from_camera">来自相机</string>
@@ -742,8 +741,8 @@
   <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>推文</string>
   <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>收藏</string>
   <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>收藏</string>
-  <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>赞</string>
-  <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>赞</string>
+  <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>喜欢</string>
+  <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>喜欢</string>
   <string name="drafts_hint_messages">你未发送的推文会被保存在这里</string>
   <string name="keyboard_shortcuts">快捷键</string>
   <string name="keyboard_shortcut_hint">按下按键</string>
@@ -811,11 +810,13 @@
   <string name="twitter_optimized_searches">为Twitter优化的搜索</string>
   <string name="twitter_optimized_searches_summary">使用专门的的搜索语句优化搜索结果，例如不显示转推</string>
   <string name="i_want_my_stars_back">把我的星星还给我！</string>
-  <string name="i_want_my_stars_back_summary">使用收藏 (★) 代替赞 (♥︎)</string>
+  <string name="i_want_my_stars_back_summary">使用收藏 (★) 代替喜欢 (♥︎)</string>
   <string name="copy_link">复制链接</string>
   <string name="link_copied_to_clipboard">链接已复制到剪贴板</string>
   <string name="login_verification">登录验证</string>
   <string name="login_verification_pin_hint">输入你手机收到的验证码以登录</string>
   <string name="login_verification_push_hint">从Twitter应用程序同意登录请求。在你同意了请求后，点击确定。</string>
   <string name="login_verification_failed">登录验证失败</string>
+  <string name="saved_searches_already_saved_hint">你可能已经保存过这个搜索了</string>
+  <string name="unsupported_activity_action_summary">请报告上面的内容</string>
 </resources>

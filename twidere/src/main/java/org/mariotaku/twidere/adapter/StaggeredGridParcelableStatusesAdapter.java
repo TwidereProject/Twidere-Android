@@ -32,7 +32,6 @@ import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -96,14 +95,15 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
                 mediaTextView.setText(status.text_unescaped);
             }
             aspectRatioSource.setSize(firstMedia.width, firstMedia.height);
+            mediaImageContainer.setTag(firstMedia);
             mediaImageContainer.requestLayout();
             loader.displayProfileImage(mediaProfileImageView, status.user_profile_image_url);
-            loader.displayPreviewImageWithCredentials(mediaImageView, firstMedia.media_url,
+            loader.displayPreviewImageWithCredentials(mediaImageView, firstMedia.preview_url,
                     status.account_id, adapter.getMediaLoadingHandler());
         }
 
         @Override
-        public void displayStatus(@NonNull ParcelableStatus status, @Nullable TranslationResult translation, boolean displayInReplyTo, boolean shouldDisplayExtraType) {
+        public void displayStatus(@NonNull ParcelableStatus status, boolean displayInReplyTo, boolean shouldDisplayExtraType) {
             displayStatus(status, displayInReplyTo);
         }
 

@@ -45,6 +45,8 @@ public class ParcelableMedia implements Parcelable {
     public static final int TYPE_ANIMATED_GIF = 3;
     @MediaType
     public static final int TYPE_CARD_ANIMATED_GIF = 4;
+    @MediaType
+    public static final int TYPE_EXTERNAL_PLAYER = 5;
     public static final Parcelable.Creator<ParcelableMedia> CREATOR = new Parcelable.Creator<ParcelableMedia>() {
         @Override
         public ParcelableMedia createFromParcel(final Parcel in) {
@@ -77,6 +79,8 @@ public class ParcelableMedia implements Parcelable {
     public int height;
     @JsonField(name = "video_info")
     public VideoInfo video_info;
+    @JsonField(name = "card")
+    public ParcelableStatus.ParcelableCardEntity card;
 
     public ParcelableMedia() {
 
@@ -140,22 +144,37 @@ public class ParcelableMedia implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ParcelableMedia that = (ParcelableMedia) o;
+        ParcelableMedia media = (ParcelableMedia) o;
 
-        if (end != that.end) return false;
-        if (start != that.start) return false;
-        if (type != that.type) return false;
-        if (!media_url.equals(that.media_url)) return false;
+        if (start != media.start) return false;
+        if (end != media.end) return false;
+        if (type != media.type) return false;
+        if (width != media.width) return false;
+        if (height != media.height) return false;
+        if (media_url != null ? !media_url.equals(media.media_url) : media.media_url != null)
+            return false;
+        if (page_url != null ? !page_url.equals(media.page_url) : media.page_url != null)
+            return false;
+        if (preview_url != null ? !preview_url.equals(media.preview_url) : media.preview_url != null)
+            return false;
+        if (video_info != null ? !video_info.equals(media.video_info) : media.video_info != null)
+            return false;
+        return !(card != null ? !card.equals(media.card) : media.card != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = media_url.hashCode();
+        int result = media_url != null ? media_url.hashCode() : 0;
+        result = 31 * result + (page_url != null ? page_url.hashCode() : 0);
+        result = 31 * result + (preview_url != null ? preview_url.hashCode() : 0);
         result = 31 * result + start;
         result = 31 * result + end;
         result = 31 * result + type;
+        result = 31 * result + width;
+        result = 31 * result + height;
+        result = 31 * result + (video_info != null ? video_info.hashCode() : 0);
+        result = 31 * result + (card != null ? card.hashCode() : 0);
         return result;
     }
 
@@ -247,23 +266,55 @@ public class ParcelableMedia implements Parcelable {
         if (card == null) return null;
         final String name = card.getName();
         if ("animated_gif".equals(name) || "player".equals(name)) {
-            final BindingValue player_stream_url = card.getBindingValue("player_stream_url");
-            if (!(player_stream_url instanceof StringValue))
+            final ParcelableMedia media = new ParcelableMedia();
+            final BindingValue playerStreamUrl = card.getBindingValue("player_stream_url");
+            media.card = ParcelableStatus.ParcelableCardEntity.fromCardEntity(card, -1);
+            if ("animated_gif".equals(name)) {
+                media.type = ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
+            } else if (playerStreamUrl instanceof StringValue) {
+                media.media_url = ((StringValue) playerStreamUrl).getValue();
+                media.type = ParcelableMedia.TYPE_VIDEO;
+            } else {
+                media.type = ParcelableMedia.TYPE_EXTERNAL_PLAYER;
+            }
+            media.page_url = card.getUrl();
+            final BindingValue playerImage = card.getBindingValue("player_image");
+            if (playerImage instanceof ImageValue) {
+                media.preview_url = ((ImageValue) playerImage).getUrl();
+                media.width = ((ImageValue) playerImage).getWidth();
+                media.height = ((ImageValue) playerImage).getHeight();
+            }
+            final BindingValue playerWidth = card.getBindingValue("player_width");
+            final BindingValue playerHeight = card.getBindingValue("player_height");
+            if (playerWidth instanceof StringValue && playerHeight instanceof StringValue) {
+                media.width = NumberUtils.toInt(((StringValue) playerWidth).getValue(), -1);
+                media.height = NumberUtils.toInt(((StringValue) playerHeight).getValue(), -1);
+            }
+            if (entities != null) {
+                for (UrlEntity entity : entities) {
+                    if (entity.getUrl().equals(media.page_url)) {
+                        media.start = entity.getStart();
+                        media.end = entity.getEnd();
+                        break;
+                    }
+                }
+            }
+            return new ParcelableMedia[]{media};
+        } else if ("summary_large_image".equals(name)) {
+            final BindingValue photoImageFullSize = card.getBindingValue("photo_image_full_size");
+            if (!(photoImageFullSize instanceof ImageValue))
                 return null;
 
             final ParcelableMedia media = new ParcelableMedia();
-            media.type = ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
-            media.media_url = ((StringValue) player_stream_url).getValue();
+            media.card = ParcelableStatus.ParcelableCardEntity.fromCardEntity(card, -1);
+            media.type = ParcelableMedia.TYPE_IMAGE;
+            media.media_url = ((ImageValue) photoImageFullSize).getUrl();
+            media.width = ((ImageValue) photoImageFullSize).getWidth();
+            media.height = ((ImageValue) photoImageFullSize).getHeight();
             media.page_url = card.getUrl();
-            final BindingValue player_image = card.getBindingValue("player_image");
-            if (player_image instanceof ImageValue) {
-                media.preview_url = ((ImageValue) player_image).getUrl();
-            }
-            final BindingValue player_width = card.getBindingValue("player_width");
-            final BindingValue player_height = card.getBindingValue("player_height");
-            if (player_width instanceof StringValue && player_height instanceof StringValue) {
-                media.width = NumberUtils.toInt(((StringValue) player_width).getValue(), -1);
-                media.height = NumberUtils.toInt(((StringValue) player_height).getValue(), -1);
+            final BindingValue summaryPhotoImage = card.getBindingValue("summary_photo_image");
+            if (summaryPhotoImage instanceof ImageValue) {
+                media.preview_url = ((ImageValue) summaryPhotoImage).getUrl();
             }
             if (entities != null) {
                 for (UrlEntity entity : entities) {
@@ -304,7 +355,8 @@ public class ParcelableMedia implements Parcelable {
         return TYPE_UNKNOWN;
     }
 
-    @IntDef({TYPE_UNKNOWN, TYPE_IMAGE, TYPE_VIDEO, TYPE_ANIMATED_GIF, TYPE_CARD_ANIMATED_GIF})
+    @IntDef({TYPE_UNKNOWN, TYPE_IMAGE, TYPE_VIDEO, TYPE_ANIMATED_GIF, TYPE_CARD_ANIMATED_GIF,
+            TYPE_EXTERNAL_PLAYER})
     @Retention(RetentionPolicy.SOURCE)
     public @interface MediaType {
 

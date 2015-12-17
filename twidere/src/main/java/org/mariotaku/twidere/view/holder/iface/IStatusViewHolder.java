@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
-import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.view.CardMediaContainer;
@@ -36,7 +35,7 @@ import org.mariotaku.twidere.view.CardMediaContainer;
 public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListener {
     void displayStatus(ParcelableStatus status, boolean displayInReplyTo);
 
-    void displayStatus(@NonNull ParcelableStatus status, @Nullable TranslationResult translation,
+    void displayStatus(@NonNull ParcelableStatus status,
                        boolean displayInReplyTo, boolean shouldDisplayExtraType);
 
     @Nullable

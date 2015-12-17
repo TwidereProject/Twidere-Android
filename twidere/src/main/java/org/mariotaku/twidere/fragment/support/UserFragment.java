@@ -116,6 +116,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
@@ -257,11 +258,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         } else if (relationship != null) {
             mFollowButton.setEnabled(!relationship.isSourceBlockedByTarget());
             if (relationship.isSourceBlockedByTarget()) {
-                mPagesErrorContainer.setVisibility(View.VISIBLE);
-                final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
-                mPagesErrorText.setText(getString(R.string.blocked_by_user_summary, displayName));
-                mPagesErrorIcon.setImageResource(R.drawable.ic_info_error_generic);
-                mPagesContent.setVisibility(View.GONE);
+                mPagesErrorContainer.setVisibility(View.GONE);
+                mPagesErrorText.setText(null);
+                mPagesContent.setVisibility(View.VISIBLE);
             } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
                 mPagesErrorContainer.setVisibility(View.VISIBLE);
                 final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
@@ -988,7 +987,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final Intent intent = new Intent(INTENT_ACTION_SELECT_USER_LIST);
                 intent.setClass(getActivity(), UserListSelectorActivity.class);
                 intent.putExtra(EXTRA_ACCOUNT_ID, user.account_id);
-                intent.putExtra(EXTRA_SCREEN_NAME, Utils.getAccountScreenName(getActivity(), user.account_id));
+                intent.putExtra(EXTRA_SCREEN_NAME, DataStoreUtils.getAccountScreenName(getActivity(), user.account_id));
                 startActivityForResult(intent, REQUEST_ADD_TO_LIST);
                 break;
             }

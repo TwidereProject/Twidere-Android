@@ -117,6 +117,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.text.MarkForDeleteSpan;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -141,6 +142,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -148,8 +150,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
-public class ComposeActivity extends ThemedFragmentActivity implements LocationListener,
-        OnMenuItemClickListener, OnClickListener, OnLongClickListener, Callback {
+public class ComposeActivity extends ThemedFragmentActivity implements OnMenuItemClickListener,
+        OnClickListener, OnLongClickListener, Callback {
 
     // Constants
     private static final String FAKE_IMAGE_LINK = "https://www.example.com/fake_image.jpg";
@@ -166,6 +168,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private ContentResolver mResolver;
     private AsyncTask<Object, Object, ?> mTask;
     private SupportMenuInflater mMenuInflater;
+    private ItemTouchHelper mItemTouchHelper;
 
     // Views
     private RecyclerView mAttachedMediaPreview;
@@ -200,7 +203,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private SetProgressVisibleRunnable mSetProgressVisibleRunnable;
     private boolean mFragmentResumed;
     private int mKeyMetaState;
-    private ItemTouchHelper mItemTouchHelper;
+
+    // Listeners
+    private LocationListener mLocationListener;
 
     @Override
     public int getThemeColor() {
@@ -302,7 +307,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     protected void onStop() {
         saveAccountSelection();
         try {
-            mLocationManager.removeUpdates(this);
+            mLocationManager.removeUpdates(mLocationListener);
         } catch (SecurityException ignore) {
         }
         super.onStop();
@@ -381,22 +386,34 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                 contentView.getPaddingRight(), contentView.getPaddingBottom());
     }
 
-    @Override
-    public void onLocationChanged(final Location location) {
-        setRecentLocation(ParcelableLocation.fromLocation(location));
-    }
+    static class ComposeLocationListener implements LocationListener {
 
-    @Override
-    public void onStatusChanged(final String provider, final int status, final Bundle extras) {
+        private final WeakReference<ComposeActivity> mActivityRef;
 
-    }
+        ComposeLocationListener(ComposeActivity activity) {
+            mActivityRef = new WeakReference<>(activity);
+        }
 
-    @Override
-    public void onProviderEnabled(final String provider) {
-    }
+        @Override
+        public void onLocationChanged(final Location location) {
+            final ComposeActivity activity = mActivityRef.get();
+            if (activity == null) return;
+            activity.setRecentLocation(ParcelableLocation.fromLocation(location));
+        }
 
-    @Override
-    public void onProviderDisabled(final String provider) {
+        @Override
+        public void onStatusChanged(final String provider, final int status, final Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(final String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(final String provider) {
+        }
+
     }
 
     @Override
@@ -469,7 +486,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
                             if (accountIds.length > 0) {
                                 final long account_id = accountIds[0];
                                 intent.putExtra(EXTRA_NAME, Utils.getAccountName(this, account_id));
-                                intent.putExtra(EXTRA_SCREEN_NAME, Utils.getAccountScreenName(this, account_id));
+                                intent.putExtra(EXTRA_SCREEN_NAME, DataStoreUtils.getAccountScreenName(this, account_id));
                             }
                             if (mInReplyToStatusId > 0) {
                                 intent.putExtra(EXTRA_IN_REPLY_TO_ID, mInReplyToStatusId);
@@ -594,6 +611,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationListener = new ComposeLocationListener(this);
         mResolver = getContentResolver();
         mValidator = new TwidereValidator(this);
         setContentView(R.layout.activity_compose);
@@ -948,7 +966,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
     private boolean handleMentionIntent(final ParcelableUser user) {
         if (user == null || user.id <= 0) return false;
-        final String my_screen_name = Utils.getAccountScreenName(this, user.account_id);
+        final String my_screen_name = DataStoreUtils.getAccountScreenName(this, user.account_id);
         if (TextUtils.isEmpty(my_screen_name)) return false;
         mEditText.setText(String.format("@%s ", user.screen_name));
         final int selection_end = mEditText.length();
@@ -967,7 +985,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
 
     private boolean handleReplyIntent(final ParcelableStatus status) {
         if (status == null || status.id <= 0) return false;
-        final String myScreenName = Utils.getAccountScreenName(this, status.account_id);
+        final String myScreenName = DataStoreUtils.getAccountScreenName(this, status.account_id);
         if (TextUtils.isEmpty(myScreenName)) return false;
         int selectionStart = 0;
         mEditText.append("@" + status.user_screen_name + " ");
@@ -978,8 +996,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         if (status.is_retweet) {
             mEditText.append("@" + status.retweeted_by_user_screen_name + " ");
         }
+        if (status.is_quote) {
+            mEditText.append("@" + status.quoted_user_screen_name + " ");
+        }
         final Collection<String> mentions = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         mentions.addAll(mExtractor.extractMentionedScreennames(status.text_plain));
+        mentions.addAll(mExtractor.extractMentionedScreennames(status.quoted_text_plain));
+
         for (final String mention : mentions) {
             if (mention.equalsIgnoreCase(status.user_screen_name) || mention.equalsIgnoreCase(myScreenName)
                     || mention.equalsIgnoreCase(status.retweeted_by_user_screen_name)) {
@@ -996,7 +1019,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private boolean handleReplyMultipleIntent(final String[] screenNames, final long accountId,
                                               final long inReplyToStatusId) {
         if (screenNames == null || screenNames.length == 0 || accountId <= 0) return false;
-        final String myScreenName = Utils.getAccountScreenName(this, accountId);
+        final String myScreenName = DataStoreUtils.getAccountScreenName(this, accountId);
         if (TextUtils.isEmpty(myScreenName)) return false;
         for (final String screenName : screenNames) {
             if (screenName.equalsIgnoreCase(myScreenName)) {
@@ -1175,7 +1198,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
     private boolean startLocationUpdateIfEnabled() {
         final LocationManager lm = mLocationManager;
         try {
-            lm.removeUpdates(this);
+            lm.removeUpdates(mLocationListener);
         } catch (SecurityException ignore) {
         }
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
@@ -1188,10 +1211,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements LocationL
         if (provider != null) {
             try {
                 mLocationText.setText(R.string.getting_location);
-                lm.requestLocationUpdates(provider, 0, 0, this);
+                lm.requestLocationUpdates(provider, 0, 0, mLocationListener);
                 final Location location = Utils.getCachedLocation(this);
                 if (location != null) {
-                    onLocationChanged(location);
+                    mLocationListener.onLocationChanged(location);
                 }
             } catch (SecurityException e) {
                 return false;

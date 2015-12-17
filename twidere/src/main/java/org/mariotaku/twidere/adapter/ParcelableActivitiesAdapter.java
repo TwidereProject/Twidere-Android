@@ -46,7 +46,7 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
 
 
     @Override
-    protected int getActivityAction(int position) {
+    protected String getActivityAction(int position) {
         return mData.get(position).action;
     }
 
@@ -63,7 +63,7 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
     }
 
     @Override
-    public void setData(List<ParcelableActivity> data) {
+    protected void onSetData(List<ParcelableActivity> data) {
         mData = data;
         notifyDataSetChanged();
     }

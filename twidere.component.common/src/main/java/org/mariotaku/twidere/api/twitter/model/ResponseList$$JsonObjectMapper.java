@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.IOException;
 
+@SuppressWarnings("unused")
 public final class ResponseList$$JsonObjectMapper<T> extends JsonMapper<ResponseList<T>> {
     private final JsonMapper<T> m84ClassJsonMapper;
 

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.net.Uri;
 
-import org.mariotaku.twidere.loader.ObjectCursorLoader;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.library.objectcursor.ObjectCursor;
 
@@ -30,10 +29,6 @@ import org.mariotaku.library.objectcursor.ObjectCursor;
  * Created by mariotaku on 15/1/9.
  */
 public class ExtendedObjectCursorLoader<E> extends ObjectCursorLoader<E> implements IExtendedLoader {
-
-    public ExtendedObjectCursorLoader(Context context, Class<? extends ObjectCursor.CursorIndices<E>> indicesClass) {
-        super(context, indicesClass);
-    }
 
     public ExtendedObjectCursorLoader(Context context, Class<? extends ObjectCursor.CursorIndices<E>> indicesClass,
                                       Uri uri, String[] projection, String selection, String[] selectionArgs,

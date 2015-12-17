@@ -33,7 +33,6 @@ import java.util.Map;
 @JsonObject
 public class CardEntity {
 
-
     @JsonField(name = "name")
     String name;
 
@@ -74,6 +73,15 @@ public class CardEntity {
         }
     }
 
+    @Override
+    public String toString() {
+        return "CardEntity{" +
+                "name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", bindingValues=" + bindingValues +
+                '}';
+    }
+
     public interface BindingValue {
 
         String TYPE_STRING = "STRING";
@@ -104,6 +112,14 @@ public class CardEntity {
             return url;
         }
 
+        @Override
+        public String toString() {
+            return "ImageValue{" +
+                    "width=" + width +
+                    ", height=" + height +
+                    ", url='" + url + '\'' +
+                    '}';
+        }
     }
 
     public static class BooleanValue implements BindingValue {
@@ -117,6 +133,13 @@ public class CardEntity {
         public boolean getValue() {
             return value;
         }
+
+        @Override
+        public String toString() {
+            return "BooleanValue{" +
+                    "value=" + value +
+                    '}';
+        }
     }
 
     public static class StringValue implements BindingValue {
@@ -129,6 +152,13 @@ public class CardEntity {
         public String getValue() {
             return value;
         }
+
+        @Override
+        public String toString() {
+            return "StringValue{" +
+                    "value='" + value + '\'' +
+                    '}';
+        }
     }
 
     @JsonObject
@@ -139,6 +169,13 @@ public class CardEntity {
 
         public long getUserId() {
             return userId;
+        }
+
+        @Override
+        public String toString() {
+            return "UserValue{" +
+                    "userId=" + userId +
+                    '}';
         }
     }
 
@@ -176,5 +213,15 @@ public class CardEntity {
             return null;
         }
 
+        @Override
+        public String toString() {
+            return "RawBindingValue{" +
+                    "type='" + type + '\'' +
+                    ", booleanValue=" + booleanValue +
+                    ", stringValue='" + stringValue + '\'' +
+                    ", imageValue=" + imageValue +
+                    ", userValue=" + userValue +
+                    '}';
+        }
     }
 }

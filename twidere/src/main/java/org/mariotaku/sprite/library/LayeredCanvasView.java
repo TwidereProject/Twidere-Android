@@ -24,6 +24,8 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by mariotaku on 15/6/26.
  */
@@ -51,13 +53,7 @@ public class LayeredCanvasView extends View {
         }
         notifySizeChanged();
         final long delay = 1000 / fps;
-        post(mAnimateCallback = new Runnable() {
-            @Override
-            public void run() {
-                invalidate();
-                postDelayed(this, delay);
-            }
-        });
+        post(mAnimateCallback = new InvalidateRunnable(this, delay));
     }
 
     public Layer[] getLayers() {
@@ -83,6 +79,27 @@ public class LayeredCanvasView extends View {
         final int width = getWidth(), height = getHeight();
         for (Layer layer : mLayers) {
             layer.onSizeChanged(width, height);
+        }
+    }
+
+    /**
+     * Created by mariotaku on 15/12/14.
+     */
+    static class InvalidateRunnable implements Runnable {
+        private WeakReference<View> viewRef;
+        private final long delay;
+
+        public InvalidateRunnable(View view, long delay) {
+            viewRef = new WeakReference<>(view);
+            this.delay = delay;
+        }
+
+        @Override
+        public void run() {
+            final View view = viewRef.get();
+            if (view == null) return;
+            view.invalidate();
+            view.postDelayed(this, delay);
         }
     }
 }

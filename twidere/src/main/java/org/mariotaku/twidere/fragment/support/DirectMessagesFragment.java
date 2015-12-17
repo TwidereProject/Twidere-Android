@@ -220,7 +220,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             @Override
             protected long[][] doInBackground(final Object... params) {
                 final long[][] result = new long[2][];
-                result[0] = Utils.getActivatedAccountIds(getActivity());
+                result[0] = DataStoreUtils.getActivatedAccountIds(getActivity());
                 result[1] = DataStoreUtils.getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
                 return result;
             }
@@ -320,7 +320,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         if (activity instanceof HomeActivity) {
             return ((HomeActivity) activity).getActivatedAccountIds();
         }
-        return Utils.getActivatedAccountIds(getActivity());
+        return DataStoreUtils.getActivatedAccountIds(getActivity());
     }
 
     protected void updateRefreshState() {
@@ -354,7 +354,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             @Override
             protected long[][] doInBackground(final Object... params) {
                 final long[][] result = new long[3][];
-                result[0] = Utils.getActivatedAccountIds(getActivity());
+                result[0] = DataStoreUtils.getActivatedAccountIds(getActivity());
                 result[1] = DataStoreUtils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
                 result[2] = DataStoreUtils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Outbox.CONTENT_URI);
                 return result;

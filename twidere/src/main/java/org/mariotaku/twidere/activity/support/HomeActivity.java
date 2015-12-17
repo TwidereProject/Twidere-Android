@@ -81,11 +81,12 @@ import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.StreamingService;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MathUtils;
@@ -164,7 +165,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         if (fragment instanceof AccountsDashboardFragment) {
             return ((AccountsDashboardFragment) fragment).getActivatedAccountIds();
         }
-        return Utils.getActivatedAccountIds(this);
+        return DataStoreUtils.getActivatedAccountIds(this);
     }
 
     @Override
@@ -941,14 +942,14 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                         final long[] accountIds = Utils.getAccountIds(spec.args);
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext, true, spec.tag, accountIds);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
-                        result.put(spec, Utils.getStatusesCount(mContext, Statuses.CONTENT_URI, position, accountIds));
+                        result.put(spec, DataStoreUtils.getStatusesCount(mContext, Statuses.CONTENT_URI, position, accountIds));
                         break;
                     }
                     case TAB_TYPE_NOTIFICATIONS_TIMELINE: {
                         final long[] accountIds = Utils.getAccountIds(spec.args);
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext, true, spec.tag, accountIds);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
-                        result.put(spec, Utils.getStatusesCount(mContext, Mentions.CONTENT_URI, position, accountIds));
+                        result.put(spec, DataStoreUtils.getActivitiesCount(mContext, Activities.AboutMe.CONTENT_URI, position, accountIds));
                         break;
                     }
                     case TAB_TYPE_DIRECT_MESSAGES: {

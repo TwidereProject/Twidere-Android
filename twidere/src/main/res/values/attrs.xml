@@ -14,6 +14,7 @@
         <attr name="linePageIndicatorStyle" format="reference"/>
         <attr name="textColorDrawerNamePrimary" format="color"/>
         <attr name="textColorDrawerNameSecondary" format="color"/>
+        <attr name="progressWheelStyle" format="reference"/>
     </declare-styleable>
     <declare-styleable name="ColorLabelView">
         <attr name="ignorePadding" format="boolean"/>

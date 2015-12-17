@@ -61,6 +61,11 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
     }
 
     @Override
+    protected String getReadPositionTag() {
+        return "activities_about_me";
+    }
+
+    @Override
     public boolean isRefreshing() {
         return mTwitterWrapper.isMentionsTimelineRefreshing();
     }

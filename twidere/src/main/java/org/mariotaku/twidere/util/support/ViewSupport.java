@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
+import org.mariotaku.twidere.view.iface.IForegroundView;
 
 public final class ViewSupport {
 
@@ -114,7 +115,9 @@ public final class ViewSupport {
 
     public static void setForeground(View view, Drawable foreground) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return;
+            if (view instanceof IForegroundView) {
+                view.setForeground(foreground);
+            }
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             ViewAccessorICS.setForeground(view, foreground);
         } else {
@@ -137,6 +140,8 @@ public final class ViewSupport {
             if (view instanceof FrameLayout) {
                 //noinspection RedundantCast
                 ((FrameLayout) view).setForeground(foreground);
+            } else if (view instanceof IForegroundView) {
+                view.setForeground(foreground);
             }
         }
     }

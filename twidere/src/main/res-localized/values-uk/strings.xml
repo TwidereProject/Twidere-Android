@@ -380,7 +380,6 @@
   <string name="preview_images">Перегляд зображень</string>
   <string name="preload_wifi_only">Попереднє завантаження лише через wi-fi</string>
   <string name="sign_in_method_introduction_title">Як це працює?</string>
-  <string name="sign_in_method_introduction">Більшість клієнтів відкривають веб-сторінку, щоб увійти до Твіттеру. Але це викликає незручності, якщо викристовується стороннє API або повільне з\'єднання. Twidere імітує звичайний переглядач, що спрощує вхід до Твіттеру. Не хвилюйтеся, ваш пароль не зберігається і не витече.</string>
   <string name="quote_protected_status_notice">Не рекомендується цитувати захищений твіт.</string>
   <string name="edit_draft">Редагувати чернетку</string>
   <string name="profile_image">Зображення профілю</string>
@@ -480,7 +479,6 @@
   <string name="wizard_page_welcome_import_settings">Імпорт налаштувань</string>
   <string name="wizard_page_theme_text">Виберіть вподобану тему.</string>
   <string name="wizard_page_tabs_text">Додайте вкладки до Twidere.\nОтримуйте миттєві оновлення про те, що вас цікавить.</string>
-  <string name="wizard_page_tabs_unchanged_message">Ви можете додати вкладки у \"Налаштування\" - \"Вкладки\"</string>
   <string name="wizard_page_cards_text">Налаштуємо картки.</string>
   <string name="wizard_page_hints_text">Ось декілька корисних порад.</string>
   <string name="wizard_page_usage_statistics_text">Twidere взяв участь у дослідницькому проекті, який потребує збору деяких даних о використанні програми.</string>
@@ -534,8 +532,6 @@
   <string name="theme_background_transparent">Прозорий</string>
   <string name="theme_dark_actionbar">Темна панель дій</string>
   <string name="wizard_hint_compose_select_account">Щоб обрати обліковий запис при створенні твіту, натисніть на його зображення.</string>
-  <string name="wizard_hint_quote_format">Задайте ваш улюблений формат цитати у \"Налаштуваннях\" - \"Вміст і пам\'ять\"</string>
-  <string name="wizard_hint_filters">Ви можете приховати небажаний твіт зі стрічки та сповіщень за допомогою \"Фільтрів\".</string>
   <string name="view_replies">Переглянути відповіді</string>
   <string name="compact_cards">Компактні картки</string>
   <string name="compact_cards_summary">Відображати більше карток на екрані</string>
@@ -610,7 +606,6 @@
   <string name="delete_drafts_confirm">Видалити обрані чернетки?</string>
   <string name="extra_configurations">Додаткові налаштування</string>
   <string name="click_item_to_config">Оберіть елемент для налаштування</string>
-  <string name="dark_drawer">Темне вислизаюче меню</string>
   <string name="retweets_of_me">Ретвіти мене</string>
   <string name="from_gallery">З галереї</string>
   <string name="from_camera">Зробити світлину</string>

@@ -157,7 +157,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 openActivity(activity);
                 return true;
             }
-            final ParcelableStatus status = getActivityStatus(activity);
+            final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
             if (status == null) return false;
             if (action == null) {
                 action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState);
@@ -189,7 +189,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     }
 
     private void openActivity(ParcelableActivity activity) {
-        final ParcelableStatus status = getActivityStatus(activity);
+        final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
         if (status != null) {
             Utils.openStatus(getContext(), status, null);
         } else {
@@ -312,7 +312,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     @Override
     public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
-        final ParcelableStatus status = getActivityStatus(adapter.getActivity(position));
+        final ParcelableStatus status = ParcelableActivity.getActivityStatus(adapter.getActivity(position));
         if (status == null) return;
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
@@ -360,21 +360,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     public void onActivityClick(ActivityTitleSummaryViewHolder holder, int position) {
         final ParcelableActivity activity = getAdapter().getActivity(position);
         if (activity == null) return;
-        switch (activity.action) {
-            case Activity.ACTION_FAVORITE:
-            case Activity.ACTION_FAVORITED_MEDIA_TAGGED:
-            case Activity.ACTION_FAVORITED_MENTION:
-            case Activity.ACTION_FAVORITED_RETWEET:
-            case Activity.ACTION_RETWEET:
-            case Activity.ACTION_RETWEETED_MEDIA_TAGGED:
-            case Activity.ACTION_RETWEETED_MENTION:
-            case Activity.ACTION_RETWEETED_RETWEET:
-            case Activity.ACTION_FOLLOW:
-            case Activity.ACTION_JOINED_TWITTER: {
-                Utils.openUsers(getActivity(), Arrays.asList(activity.sources));
-                break;
-            }
-        }
+        Utils.openUsers(getActivity(), Arrays.asList(activity.sources));
     }
 
     @Override
@@ -391,23 +377,10 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     @Nullable
     private ParcelableStatus getActivityStatus(int position) {
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
-        return getActivityStatus(adapter.getActivity(position));
+        return ParcelableActivity.getActivityStatus(adapter.getActivity(position));
     }
 
-    @Nullable
-    private ParcelableStatus getActivityStatus(ParcelableActivity activity) {
-        switch (activity.action) {
-            case Activity.ACTION_MENTION:
-                return activity.target_object_statuses[0];
-            case Activity.ACTION_REPLY:
-                return activity.target_statuses[0];
-            case Activity.ACTION_QUOTE:
-                return activity.target_statuses[0];
-        }
-        return null;
-    }
-
-//    @Override
+    //    @Override
 //    public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
 //        //TODO handle long click event
 //        return true;
@@ -550,10 +523,10 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         if (readPositionTag == null) return;
         if (position == RecyclerView.NO_POSITION) return;
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
-        final ParcelableActivity status = adapter.getActivity(position);
-        if (status == null) return;
-//        mReadStateManager.setPosition(readPositionTag, status.id);
-//        mReadStateManager.setPosition(getCurrentReadPositionTag(), status.id, true);
+        final ParcelableActivity activity = adapter.getActivity(position);
+        if (activity == null) return;
+        mReadStateManager.setPosition(readPositionTag, activity.timestamp);
+        mReadStateManager.setPosition(getCurrentReadPositionTag(), activity.timestamp, true);
     }
 
     @NonNull
@@ -578,12 +551,17 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 if (childPos == RecyclerView.NO_POSITION || childPos == adapter.getItemCount() - 1) {
                     return false;
                 }
-                if (adapter.getItemViewType(childPos) != AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
-                    if (adapter.getItemViewType(childPos + 1) != AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                if (shouldUseDividerFor(adapter.getItemViewType(childPos))) {
+                    if (shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
                         return true;
                     }
                 }
                 return false;
+            }
+
+            private boolean shouldUseDividerFor(int itemViewType) {
+                return itemViewType != AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS
+                        && itemViewType != AbsActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY;
             }
         });
     }

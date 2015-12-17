@@ -9,6 +9,8 @@
   <string name="error_twitter_130">O Twitter está temporariamente sobrecarregado.</string>
   <string name="error_twitter_131">O servidor do Twitter está temporariamente fora do ar, tente novamente mais tarde.</string>
   <string name="error_twitter_135">Por favor verifique a hora do sistema.</string>
+  <string name="error_twitter_136">Você foi bloqueado por esse usuário.</string>
+  <string name="error_twitter_139">Você já favoritou este tweet.</string>
   <string name="error_twitter_161">Você já solicitou seguir este usuário.</string>
   <string name="error_twitter_162">Você foi bloqueado por este usuário.</string>
   <string name="error_twitter_172">Você já salvou esta pesquisa.</string>

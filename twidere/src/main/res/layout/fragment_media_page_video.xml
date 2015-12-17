@@ -18,7 +18,8 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -119,6 +120,13 @@
         </FrameLayout>
     </RelativeLayout>
 
-    <include layout="@layout/layout_progress_wheel_medium" />
+    <org.mariotaku.twidere.view.themed.AccentProgressWheel
+        android:id="@+id/load_progress"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
+        android:layout_gravity="center"
+        android:padding="@dimen/element_spacing_xsmall"
+        app:matProg_barColor="?colorAccent"
+        app:matProg_progressIndeterminate="true"/>
 
 </FrameLayout>

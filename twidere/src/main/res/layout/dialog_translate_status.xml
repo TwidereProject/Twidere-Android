@@ -25,6 +25,7 @@
     <include layout="@layout/dialog_scrollable_status" />
 
     <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/progress_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,12 +35,14 @@
         android:visibility="visible"
         tools:visibility="gone">
 
-        <include
-            layout="@layout/layout_progress_wheel_medium"
+        <org.mariotaku.twidere.view.themed.AccentProgressWheel
+            android:id="@+id/load_progress"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp" />
+            android:layout_gravity="center"
+            android:padding="@dimen/element_spacing_xsmall"
+            app:matProg_barColor="?colorAccent"
+            app:matProg_progressIndeterminate="true"/>
 
         <TextView
             android:id="@android:id/message"

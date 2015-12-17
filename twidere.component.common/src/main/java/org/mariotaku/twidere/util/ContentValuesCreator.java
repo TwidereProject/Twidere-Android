@@ -29,7 +29,6 @@ import org.json.JSONObject;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
-import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
@@ -279,58 +278,30 @@ public final class ContentValuesCreator implements TwidereConstants {
     }
 
     @NonNull
-    public static ContentValues createActivity(final Activity activity, final long accountId) {
-        final ContentValues values;
-        switch (activity.getAction()) {
-            case REPLY: {
-                values = createStatusActivity(activity.getTargetStatuses()[0]);
-                break;
-            }
-            case MENTION: {
-                values = createStatusActivity(activity.getTargetObjectStatuses()[0]);
-                break;
-            }
-            default: {
-                values = new ContentValues();
-                break;
-            }
+    public static ContentValues createActivity(final ParcelableActivity activity) {
+        final ContentValues values = new ContentValues();
+        final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
+        if (status != null) {
+            createStatusActivity(status, values);
         }
-        ParcelableActivityValuesCreator.writeTo(new ParcelableActivity(activity, accountId, false), values);
+        ParcelableActivityValuesCreator.writeTo(activity, values);
         return values;
     }
 
-    @NonNull
-    public static ContentValues createStatusActivity(final Status orig) {
-        if (orig == null) throw new NullPointerException();
-        final ContentValues values = new ContentValues();
-        final Status status;
-        if (orig.isRetweet()) {
-            final Status retweetedStatus = orig.getRetweetedStatus();
-            final User retweetUser = orig.getUser();
-            final long retweetedById = retweetUser.getId();
-            values.put(Activities.STATUS_RETWEETED_BY_USER_ID, retweetedById);
-            status = retweetedStatus;
-        } else if (orig.isQuote()) {
-            final Status quotedStatus = orig.getQuotedStatus();
-            final User quoteUser = orig.getUser();
-            final long quotedById = quoteUser.getId();
-            final String textHtml = TwitterContentUtils.formatStatusText(orig);
-            values.put(Activities.STATUS_QUOTE_TEXT_HTML, textHtml);
-            values.put(Activities.STATUS_QUOTE_TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(orig.getText()));
-            values.put(Activities.STATUS_QUOTE_SOURCE, orig.getSource());
-            values.put(Activities.STATUS_QUOTED_USER_ID, quotedById);
-            status = quotedStatus;
-        } else {
-            status = orig;
+    public static void createStatusActivity(@NonNull final ParcelableStatus status,
+                                            @NonNull final ContentValues values) {
+        if (status.is_retweet) {
+            values.put(Activities.STATUS_RETWEETED_BY_USER_ID, status.retweeted_by_user_id);
+        } else if (status.is_quote) {
+            values.put(Activities.STATUS_QUOTE_TEXT_HTML, status.quoted_text_html);
+            values.put(Activities.STATUS_QUOTE_TEXT_PLAIN, status.quoted_text_plain);
+            values.put(Activities.STATUS_QUOTE_SOURCE, status.quoted_source);
+            values.put(Activities.STATUS_QUOTED_USER_ID, status.quoted_user_id);
         }
-        final User user = status.getUser();
-        final long userId = user.getId();
-        values.put(Activities.STATUS_USER_ID, userId);
-        final String textHtml = TwitterContentUtils.formatStatusText(status);
-        values.put(Activities.STATUS_TEXT_HTML, textHtml);
-        values.put(Activities.STATUS_TEXT_PLAIN, TwitterContentUtils.unescapeTwitterStatusText(status.getText()));
-        values.put(Activities.STATUS_SOURCE, status.getSource());
-        return values;
+        values.put(Activities.STATUS_USER_ID, status.user_id);
+        values.put(Activities.STATUS_TEXT_HTML, status.text_html);
+        values.put(Activities.STATUS_TEXT_PLAIN, status.text_plain);
+        values.put(Activities.STATUS_SOURCE, status.source);
     }
 
 

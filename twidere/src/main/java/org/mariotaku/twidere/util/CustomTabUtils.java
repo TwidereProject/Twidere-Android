@@ -179,7 +179,9 @@ public class CustomTabUtils implements Constants {
             case TAB_TYPE_HOME_TIMELINE: {
                 return TAB_TYPE_HOME_TIMELINE;
             }
-            case "mentions_timeline":
+            case "mentions_timeline": {
+                return "mentions_timeline";
+            }
             case TAB_TYPE_NOTIFICATIONS_TIMELINE: {
                 return TAB_TYPE_NOTIFICATIONS_TIMELINE;
             }

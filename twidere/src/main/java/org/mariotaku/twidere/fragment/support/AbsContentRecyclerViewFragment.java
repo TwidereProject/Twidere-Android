@@ -132,7 +132,17 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     public void setControlVisible(boolean visible) {
         final FragmentActivity activity = getActivity();
         if (activity instanceof IControlBarActivity) {
-            ((IControlBarActivity) activity).setControlBarVisibleAnimate(visible, this);
+            //TODO hide only if top > actionBar.height
+            final L manager = getLayoutManager();
+            if (manager.getChildCount() == 0) return;
+            final View firstView = manager.getChildAt(0);
+            final IControlBarActivity controlBarActivity = (IControlBarActivity) activity;
+            if (manager.getPosition(firstView) != 0) {
+                controlBarActivity.setControlBarVisibleAnimate(visible, this);
+                return;
+            }
+            final int top = firstView.getTop();
+            controlBarActivity.setControlBarVisibleAnimate(visible || top > 0, this);
         }
     }
 

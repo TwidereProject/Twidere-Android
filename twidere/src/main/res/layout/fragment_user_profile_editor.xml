@@ -243,7 +243,14 @@
         android:visibility="visible"
         tools:visibility="gone">
 
-        <include layout="@layout/layout_progress_wheel_medium" />
+        <org.mariotaku.twidere.view.themed.AccentProgressWheel
+            android:id="@+id/load_progress"
+            android:layout_width="@dimen/element_size_normal"
+            android:layout_height="@dimen/element_size_normal"
+            android:layout_gravity="center"
+            android:padding="@dimen/element_spacing_xsmall"
+            app:matProg_barColor="?colorAccent"
+            app:matProg_progressIndeterminate="true"/>
     </FrameLayout>
 
 </FrameLayout>

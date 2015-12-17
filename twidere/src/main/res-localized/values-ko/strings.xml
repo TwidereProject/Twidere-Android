@@ -479,7 +479,6 @@
   <string name="wizard_page_welcome_import_settings">설정 가져오기</string>
   <string name="wizard_page_theme_text">원하시는 테마를 선택하세요.</string>
   <string name="wizard_page_tabs_text">Twidere는 탭을 추가하세요.\n친구를 지켜보거나 관심사를 살펴 보십시오.</string>
-  <string name="wizard_page_tabs_unchanged_message">탭은 \"설정\" - \"탭\"에서 추가할 수 있습니다.</string>
   <string name="wizard_page_cards_text">카드 항목을 설정하세요.</string>
   <string name="wizard_page_hints_text">힌트를 드리겠습니다.</string>
   <string name="wizard_page_usage_statistics_text">Twidere는 사용 데이터 중 일부가 필요한 연구 프로젝트에 참여하고 있습니다.</string>
@@ -533,8 +532,6 @@
   <string name="theme_background_transparent">투명</string>
   <string name="theme_dark_actionbar">어두운 행동바</string>
   <string name="wizard_hint_compose_select_account">트윗을 쓸 때, 프로필 사진을 클릭해 계정을 선택하세요.</string>
-  <string name="wizard_hint_quote_format">인용 양식은 \"설정\" - \"콘텐츠 및 저장소\"에서 설정할 수 있습니다.</string>
-  <string name="wizard_hint_filters">타임라인과 알림의 원하지 않는 트윗은 \"필터\"를 써서 숨길 수 있습니다.</string>
   <string name="view_replies">답글 보기</string>
   <string name="compact_cards">작은 카드</string>
   <string name="compact_cards_summary">더 많은 카드를 화면에 표시합니다.</string>
@@ -615,7 +612,6 @@
   <string name="delete_drafts_confirm">선택된 보관된 트윗을 지울까요?</string>
   <string name="extra_configurations">추가 설정</string>
   <string name="click_item_to_config">설정할 항목을 클릭하세요.</string>
-  <string name="dark_drawer">어두운 드로어</string>
   <string name="retweets_of_me">리트윗된 내 트윗</string>
   <string name="from_gallery">갤러리로부터</string>
   <string name="from_camera">카메라로부터</string>

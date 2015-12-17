@@ -17,9 +17,10 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView
     android:id="@+id/item_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/element_spacing_small"
@@ -39,12 +40,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <org.mariotaku.twidere.view.ForegroundImageView
                 android:id="@+id/media_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/media"
-                android:scaleType="centerCrop" />
+                android:foregroundGravity="center"
+                android:scaleType="centerCrop"/>
 
             <ProgressBar
                 android:id="@+id/media_image_progress"
@@ -52,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="@dimen/element_spacing_small" />
+                android:layout_margin="@dimen/element_spacing_small"/>
         </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
 
         <org.mariotaku.twidere.view.ColorLabelRelativeLayout
@@ -65,7 +67,7 @@
                 android:id="@+id/media_profile_image"
                 style="?profileImageStyle"
                 android:layout_width="@dimen/element_size_small"
-                android:layout_height="@dimen/element_size_small" />
+                android:layout_height="@dimen/element_size_small"/>
 
             <TextView
                 android:id="@+id/media_text"
@@ -76,7 +78,7 @@
                 android:layout_marginStart="@dimen/element_spacing_small"
                 android:layout_toEndOf="@+id/media_profile_image"
                 android:layout_toRightOf="@+id/media_profile_image"
-                android:ellipsize="end" />
+                android:ellipsize="end"/>
         </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
     </LinearLayout>

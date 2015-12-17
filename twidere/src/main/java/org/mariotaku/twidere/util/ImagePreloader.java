@@ -30,7 +30,7 @@ import org.mariotaku.twidere.Constants;
 
 import java.io.File;
 
-import static org.mariotaku.twidere.util.Utils.isOnWifi;
+import static org.mariotaku.twidere.util.ConnectivityUtils.isOnWifi;
 
 /**
  * @author mariotaku

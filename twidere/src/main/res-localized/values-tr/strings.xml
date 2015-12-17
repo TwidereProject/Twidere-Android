@@ -54,6 +54,7 @@
   <string name="cancel_retweet">Retweeti iptal et</string>
   <string name="favorite">Favorilerine ekle</string>
   <string name="unfavorite">Favorilerinden çıkar</string>
+  <string name="like">Beğen</string>
   <string name="reply">Cevapla</string>
   <string name="share">Paylaş</string>
   <string name="view_image">Resim</string>
@@ -97,6 +98,7 @@
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> kullanıcı bunu retweet etti</string>
   <string name="users_retweeted_this">Kullanıcılar bunu retweetledi</string>
   <string name="users_favorited_this">Kullanıcılar bunu beğendi</string>
+  <string name="users_liked_this">Kullanıcılar bunu beğendi</string>
   <string name="reply_to"><xliff:g id="user_name">%s</xliff:g> adlı kişiye cevap ver</string>
   <string name="quote_user">Alıntı yap <xliff:g id="user_name">%s</xliff:g></string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g>, <xliff:g id="source">%2$s</xliff:g> kullanılarak</string>
@@ -130,6 +132,7 @@
   <string name="location">Konum</string>
   <string name="url">URL</string>
   <string name="favorites">Favoriler</string>
+  <string name="likes">Beğen</string>
   <string name="name">Ad</string>
   <string name="refresh">Yenile</string>
   <string name="retry">Tekrar Dene</string>
@@ -271,6 +274,10 @@
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> kişi daha tweetinizi favorilerine ekledi.</string>
   <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> tweetinizi favorilerine ekledi.</string>
   <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> kişi daha tweetinizi favorilerine ekledi.</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> tweet\'inizi beğendi.</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> tweet\'inizi beğendi.</string>
+  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> retweet\'inizi beğendi.</string>
+  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> retweet\'inizi beğendi.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> seni takip ediyor.</string>
   <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="other">%2$s</xliff:g> kişi daha sizi takip ediyor.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> senin tweetini retweet etti.</string>
@@ -469,7 +476,6 @@
   <string name="wizard_page_welcome_import_settings">Ayarları import et</string>
   <string name="wizard_page_theme_text">İstediğiniz biri tema seçin.</string>
   <string name="wizard_page_tabs_text">Twidere\'ye sekme ekle.\nÖnemsediğin kişileri veya şeyleri izle.</string>
-  <string name="wizard_page_tabs_unchanged_message">"Ayarlar\"\'dan sekme ekleyebilirsiniz - \"Sekmeler"</string>
   <string name="wizard_page_cards_text">Kart içeriğini özelleştir.</string>
   <string name="wizard_page_hints_text">İşe yarayabilecek bazı ipuçları.</string>
   <string name="wizard_page_usage_statistics_text">Twidere, bazı kullanım verilerine ihtiyaç duyan bazı araştırma projelerinde yer aldı.</string>
@@ -576,15 +582,20 @@
   <string name="appearance">Görünüm</string>
   <string name="function">Fonksiyon</string>
   <string name="replies">Yanıtlar</string>
+  <string name="profile">Profil</string>
   <string name="state_blocking">Engelleniyor</string>
   <string name="photo">Fotoğraf</string>
+  <string name="camera">Kamera</string>
   <string name="gallery">Galeri</string>
+  <string name="source_camera">Kamera</string>
+  <string name="source_gallery">Galeri</string>
   <string name="remove">Kaldır</string>
   <string name="profile_text_color">Metin rengi</string>
   <string name="profile_background_color">Arkaplan rengi</string>
   <string name="retweet_quote_confirm_title">Takipçilerine retweetle?</string>
   <string name="font">Yazıtipi</string>
   <string name="size">Boyut</string>
+  <string name="just_now">Şimdi</string>
   <string name="requested">İstendi</string>
   <string name="round">Yuvarlak</string>
   <string name="square">Kare</string>
@@ -593,6 +604,8 @@
   <string name="draft_saved">Taslak kaydedildi</string>
   <string name="open_twitter_links">Twitter linklerini aç</string>
   <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">diğer</string>
+  <string name="no_user_found">Kullanıcı bulunamadı</string>
+  <string name="members">Üyeler</string>
   <string name="unknown_location">Bilinmeyen konum</string>
   <string name="no_tab">Sekme yok</string>
   <string name="user_protected_summary">Bu kısıtlı kullanıcının tweetlerini görmek için ona takip isteği göndermen gerek</string>

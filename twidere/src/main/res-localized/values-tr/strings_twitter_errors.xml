@@ -6,4 +6,7 @@
   <string name="error_twitter_88">Kota aşıldı, lütfen daha sonra tekrar deneyiniz.</string>
   <string name="error_twitter_89">Giriş bilgileriniz doğru değil ya da zaman aşımına uğradı, lütfen tekrar giriş yapınız.</string>
   <string name="error_twitter_64">Hesabınız askıya alındı ve bu özelliğe erişimi kısıtlandı.</string>
+  <string name="error_twitter_135">Lütfen sistem saatinizi doğrulayın.</string>
+  <string name="error_twitter_136">Bu kullanıcıdan engellendiniz.</string>
+  <string name="error_twitter_193">Yüklediğiniz fotoğraf çok büyük.</string>
 </resources>

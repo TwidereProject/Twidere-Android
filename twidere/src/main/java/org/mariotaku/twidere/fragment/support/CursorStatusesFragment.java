@@ -40,14 +40,13 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
-import org.mariotaku.twidere.loader.ObjectCursorLoader;
+import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.AccountChangedEvent;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
@@ -58,10 +57,8 @@ import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
 
 import java.util.List;
 
-import static org.mariotaku.twidere.util.Utils.buildStatusFilterWhereClause;
-import static org.mariotaku.twidere.util.DataStoreUtils.getNewestStatusIdsFromDatabase;
-import static org.mariotaku.twidere.util.DataStoreUtils.getOldestStatusIdsFromDatabase;
-import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
+import static org.mariotaku.twidere.util.DataStoreUtils.buildStatusFilterWhereClause;
+import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -105,8 +102,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         adapter.setShowAccountsColor(accountIds.length > 1);
         final String[] projection = Statuses.COLUMNS;
-        return new ObjectCursorLoader<>(context, ParcelableStatusCursorIndices.class, uri, projection,
-                selection, null, sortOrder);
+        return new ExtendedObjectCursorLoader<>(context, ParcelableStatusCursorIndices.class, uri,
+                projection, selection, null, sortOrder, fromUser);
     }
 
     @Override
@@ -165,7 +162,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         if (activity instanceof HomeActivity) {
             return ((HomeActivity) activity).getActivatedAccountIds();
         }
-        return Utils.getActivatedAccountIds(getActivity());
+        return DataStoreUtils.getActivatedAccountIds(getActivity());
     }
 
     @Override

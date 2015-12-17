@@ -73,10 +73,11 @@ public class ViewStatusDialogFragment extends BaseSupportDialogFragment {
         mAdapter = new DummyStatusHolderAdapter(activity);
         mHolder = new StatusViewHolder(mAdapter, getView());
         final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
+        assert status != null;
         if (args.containsKey(EXTRA_SHOW_MEDIA_PREVIEW)) {
             mAdapter.setMediaPreviewEnabled(args.getBoolean(EXTRA_SHOW_MEDIA_PREVIEW));
         }
-        mHolder.displayStatus(status, null, false, true);
+        mHolder.displayStatus(status, false, true);
         mStatusContainer.findViewById(R.id.item_menu).setVisibility(View.GONE);
         mStatusContainer.findViewById(R.id.action_buttons).setVisibility(View.GONE);
     }

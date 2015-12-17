@@ -22,6 +22,7 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -32,6 +33,7 @@ import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
+import org.mariotaku.twidere.model.util.LongArrayConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 
 import java.util.Arrays;
@@ -60,10 +62,12 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @ParcelableThisPlease
     @JsonField(name = "action")
     @CursorField(value = Activities.ACTION)
-    public int action;
-    @JsonField(name = "raw_action")
-    @CursorField(value = Activities.RAW_ACTION)
-    public String raw_action;
+    public String action;
+
+    @ParcelableThisPlease
+    @JsonField(name = "source_ids")
+    @CursorField(value = Activities.SOURCE_IDS, converter = LongArrayConverter.class)
+    public long[] source_ids;
 
     @ParcelableThisPlease
     @JsonField(name = "sources")
@@ -99,14 +103,17 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @CursorField(value = Activities.IS_GAP)
     public boolean is_gap;
 
+
+    public transient long[] filtered_source_ids;
+    public transient ParcelableUser[] filtered_sources;
+
     public ParcelableActivity() {
     }
 
     public ParcelableActivity(final Activity activity, final long accountId, boolean isGap) {
         this.account_id = accountId;
         timestamp = activity.getCreatedAt().getTime();
-        action = activity.getAction().getActionId();
-        raw_action = activity.getRawAction();
+        action = activity.getRawAction();
         max_position = activity.getMaxPosition();
         min_position = activity.getMinPosition();
         sources = ParcelableUser.fromUsers(activity.getSources(), accountId);
@@ -116,7 +123,25 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         target_object_statuses = ParcelableStatus.fromStatuses(activity.getTargetObjectStatuses(), accountId);
         target_object_user_lists = ParcelableUserList.fromUserLists(activity.getTargetObjectUserLists(), accountId);
         target_object_users = ParcelableUser.fromUsers(activity.getTargetObjectUsers(), accountId);
+        if (sources != null) {
+            source_ids = new long[sources.length];
+            for (int i = 0; i < sources.length; i++) {
+                source_ids[i] = sources[i].id;
+            }
+        }
         this.is_gap = isGap;
+    }
+
+    @Nullable
+    public static ParcelableStatus getActivityStatus(ParcelableActivity activity) {
+        if (Activity.Action.MENTION.literal.equals(activity.action)) {
+            return activity.target_object_statuses[0];
+        } else if (Activity.Action.REPLY.literal.equals(activity.action)) {
+            return activity.target_statuses[0];
+        } else if (Activity.Action.QUOTE.literal.equals(activity.action)) {
+            return activity.target_statuses[0];
+        }
+        return null;
     }
 
     @Override
@@ -127,7 +152,6 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
                 ", max_position=" + max_position +
                 ", min_position=" + min_position +
                 ", action=" + action +
-                ", raw_action='" + raw_action + '\'' +
                 ", sources=" + Arrays.toString(sources) +
                 ", target_users=" + Arrays.toString(target_users) +
                 ", target_statuses=" + Arrays.toString(target_statuses) +
@@ -176,4 +200,20 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
             return new ParcelableActivity[size];
         }
     };
+
+    public ParcelableUser[] getUnfilteredSources() {
+        if (filtered_sources != null) return filtered_sources;
+        if (filtered_source_ids == null || sources.length == filtered_source_ids.length) {
+            return sources;
+        }
+        ParcelableUser[] result = new ParcelableUser[filtered_source_ids.length];
+        for (int i = 0; i < filtered_source_ids.length; i++) {
+            for (ParcelableUser user : sources) {
+                if (user.id == filtered_source_ids[i]) {
+                    result[i] = user;
+                }
+            }
+        }
+        return filtered_sources = result;
+    }
 }

@@ -18,7 +18,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -132,12 +131,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
     @Override
     public void displayStatus(final ParcelableStatus status, final boolean displayInReplyTo) {
-        displayStatus(status, null, displayInReplyTo, true);
+        displayStatus(status, displayInReplyTo, true);
     }
 
     @Override
-    public void displayStatus(@NonNull final ParcelableStatus status, @Nullable final TranslationResult translation,
-                              final boolean displayInReplyTo, final boolean shouldDisplayExtraType) {
+    public void displayStatus(@NonNull final ParcelableStatus status, final boolean displayInReplyTo,
+                              final boolean shouldDisplayExtraType) {
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
         final TwidereLinkify linkify = adapter.getTwidereLinkify();
@@ -253,9 +252,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         } else {
             mediaPreview.setVisibility(View.GONE);
         }
-        if (translation != null) {
-            textView.setText(translation.getText());
-        } else if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+        if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.setText(status.text_unescaped);
         } else {
             final Spanned text = HtmlSpanBuilder.fromHtml(status.text_html);

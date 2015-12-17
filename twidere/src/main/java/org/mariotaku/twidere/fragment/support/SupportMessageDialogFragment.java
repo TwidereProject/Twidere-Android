@@ -29,7 +29,7 @@ import android.support.v4.app.FragmentActivity;
 /**
  * Created by mariotaku on 14-6-24.
  */
-public class SupportMessageDialogFragment extends DialogFragment {
+public class SupportMessageDialogFragment extends BaseSupportDialogFragment {
     private static final String EXTRA_MESSAGE = "message";
 
     public static SupportMessageDialogFragment show(FragmentActivity activity, String message, String tag) {

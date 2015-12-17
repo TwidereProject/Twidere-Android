@@ -380,7 +380,6 @@
   <string name="preview_images">Slike predpregleda</string>
   <string name="preload_wifi_only">Predpregled sam preko Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Kako to funkcionira?</string>
-  <string name="sign_in_method_introduction">Većina klijenata otvara web stranicu za autentikaciju za Twitter, ovo može biti neprikladno ako se koristi prilagođeni API ili ako ste na sporoj mreži. Twidere simulira uobičajeni preglednik kako bi vam pomogao kod prijave u Twitter. Ne brinite se, vaša lozinka nikad neće biti spremljena ili će procuriti.</string>
   <string name="quote_protected_status_notice">Ne preporuča se citirati zaštićene tweetove.</string>
   <string name="edit_draft">Uredi skicu</string>
   <string name="profile_image">Slika profila</string>
@@ -480,7 +479,6 @@
   <string name="wizard_page_welcome_import_settings">Uvezi postavke</string>
   <string name="wizard_page_theme_text">Odaberite temu koja vam se sviđa.</string>
   <string name="wizard_page_tabs_text">Dodajte tabove u Twidere.\nPratite ljude i stvari do kojih vam je stalo.</string>
-  <string name="wizard_page_tabs_unchanged_message">Možete dodati tabove u \"Postavke\" - \"Tabovi\"</string>
   <string name="wizard_page_cards_text">Postavite stavke kartice.</string>
   <string name="wizard_page_hints_text">Evo nekoliko korisnih savjeta.</string>
   <string name="wizard_page_usage_statistics_text">Twidere sudjeluje u istraživačkom projektu kojemu trebaju podaci o korištenju.</string>
@@ -534,8 +532,6 @@
   <string name="theme_background_transparent">Prozirno</string>
   <string name="theme_dark_actionbar">Tamna Akcijska Traka</string>
   <string name="wizard_hint_compose_select_account">Dodirnite sliku profila za odabir računa kod pisanja tweeta.</string>
-  <string name="wizard_hint_quote_format">Postavite format nadražih citata u \"Postavke\" - \"Sadržaj &amp; Pohrana\"</string>
-  <string name="wizard_hint_filters">Možete sakriti neželjene tweetove s timelinea i obavijesti koristeći \"Filtri\".</string>
   <string name="view_replies">Pregledaj Odgovore</string>
   <string name="compact_cards">Kompaktne kartice</string>
   <string name="compact_cards_summary">Prikaži više kartice na zaslonu</string>
@@ -610,7 +606,6 @@
   <string name="delete_drafts_confirm">Obrisati odabrane skice?</string>
   <string name="extra_configurations">Dodatne postavke</string>
   <string name="click_item_to_config">Dodirnite stavku za postavljanje</string>
-  <string name="dark_drawer">Tamna ladica</string>
   <string name="retweets_of_me">Moji rewteetovi</string>
   <string name="from_gallery">Iz galerije</string>
   <string name="from_camera">Iz kamere</string>

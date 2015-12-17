@@ -87,184 +87,166 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     public void displayActivity(ParcelableActivity activity, boolean byFriends) {
         final Context context = adapter.getContext();
         final Resources resources = adapter.getContext().getResources();
-        switch (activity.action) {
-            case Activity.ACTION_FOLLOW: {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_follow);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_follow), Mode.SRC_ATOP);
-                if (byFriends) {
-                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_follow,
-                            R.string.activity_by_friends_follow_multi, activity.sources, activity.target_users));
-                } else {
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_follow,
-                            R.string.activity_about_me_follow_multi, activity.sources));
-                }
-                displayUserProfileImages(activity.sources);
-                summaryView.setVisibility(View.GONE);
-                break;
+        final ParcelableUser[] sources = activity.getUnfilteredSources();
+        if (Activity.Action.FOLLOW.literal.equals(activity.action)) {
+            activityTypeView.setImageResource(R.drawable.ic_activity_action_follow);
+            activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_follow), Mode.SRC_ATOP);
+            if (byFriends) {
+                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_follow,
+                        R.string.activity_by_friends_follow_multi, sources, activity.target_users));
+            } else {
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_follow,
+                        R.string.activity_about_me_follow_multi, sources));
             }
-            case Activity.ACTION_FAVORITE: {
-                if (adapter.shouldUseStarsForLikes()) {
-                    activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+            displayUserProfileImages(sources);
+            summaryView.setVisibility(View.GONE);
+        } else if (Activity.Action.FAVORITE.literal.equals(activity.action)) {
+            if (adapter.shouldUseStarsForLikes()) {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
 
-                    if (byFriends) {
-                        titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
-                                R.string.activity_by_friends_favorite_multi, activity.sources, activity.target_statuses));
-                    } else {
-                        titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
-                                R.string.activity_about_me_favorite_multi, activity.sources));
-                    }
+                if (byFriends) {
+                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
+                            R.string.activity_by_friends_favorite_multi, sources, activity.target_statuses));
                 } else {
-                    activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
-                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
+                            R.string.activity_about_me_favorite_multi, sources));
+                }
+            } else {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
 
-                    if (byFriends) {
-                        titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_like,
-                                R.string.activity_by_friends_like_multi, activity.sources, activity.target_statuses));
-                    } else {
-                        titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_like,
-                                R.string.activity_about_me_like_multi, activity.sources));
-                    }
-                }
-                displayUserProfileImages(activity.sources);
-                summaryView.setText(activity.target_statuses[0].text_unescaped);
-                summaryView.setVisibility(View.VISIBLE);
-                break;
-            }
-            case Activity.ACTION_RETWEET: {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
                 if (byFriends) {
-                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_retweet,
-                            R.string.activity_by_friends_retweet_multi, activity.sources, activity.target_statuses));
-                } else
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweet,
-                            R.string.activity_about_me_retweet_multi, activity.sources));
-                displayUserProfileImages(activity.sources);
-                summaryView.setText(activity.target_statuses[0].text_unescaped);
-                summaryView.setVisibility(View.VISIBLE);
-                break;
-            }
-            case Activity.ACTION_FAVORITED_RETWEET: {
-                if (byFriends) {
-                    showNotSupported();
-                    return;
-                }
-                if (adapter.shouldUseStarsForLikes()) {
-                    activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
-                            R.string.activity_about_me_favorited_retweet_multi, activity.sources));
+                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_like,
+                            R.string.activity_by_friends_like_multi, sources, activity.target_statuses));
                 } else {
-                    activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
-                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_retweet,
-                            R.string.activity_about_me_liked_retweet_multi, activity.sources));
+                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_like,
+                            R.string.activity_about_me_like_multi, sources));
                 }
-                displayUserProfileImages(activity.sources);
-                summaryView.setText(activity.target_statuses[0].text_unescaped);
-                summaryView.setVisibility(View.VISIBLE);
-                break;
             }
-            case Activity.ACTION_RETWEETED_RETWEET: {
-                if (byFriends) {
-                    showNotSupported();
-                    return;
-                }
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_retweet,
-                        R.string.activity_about_me_retweeted_retweet_multi, activity.sources));
-                displayUserProfileImages(activity.sources);
-                summaryView.setText(activity.target_statuses[0].text_unescaped);
-                summaryView.setVisibility(View.VISIBLE);
-                break;
+            displayUserProfileImages(sources);
+            summaryView.setText(activity.target_statuses[0].text_unescaped);
+            summaryView.setVisibility(View.VISIBLE);
+        } else if (Activity.Action.RETWEET.literal.equals(activity.action)) {
+            activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
+            activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
+            if (byFriends) {
+                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_retweet,
+                        R.string.activity_by_friends_retweet_multi, sources, activity.target_statuses));
+            } else
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweet,
+                        R.string.activity_about_me_retweet_multi, sources));
+            displayUserProfileImages(sources);
+            summaryView.setText(activity.target_statuses[0].text_unescaped);
+            summaryView.setVisibility(View.VISIBLE);
+        } else if (Activity.Action.FAVORITED_RETWEET.literal.equals(activity.action)) {
+            if (byFriends) {
+                showNotSupported();
+                return;
             }
-            case Activity.ACTION_RETWEETED_MENTION: {
-                if (byFriends) {
-                    showNotSupported();
-                    return;
-                }
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_mention,
-                        R.string.activity_about_me_retweeted_mention_multi, activity.sources));
-                displayUserProfileImages(activity.sources);
-                summaryView.setText(activity.target_statuses[0].text_unescaped);
-                summaryView.setVisibility(View.VISIBLE);
-                break;
+            if (adapter.shouldUseStarsForLikes()) {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
+                        R.string.activity_about_me_favorited_retweet_multi, sources));
+            } else {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_retweet,
+                        R.string.activity_about_me_liked_retweet_multi, sources));
             }
-            case Activity.ACTION_FAVORITED_MENTION: {
-                if (byFriends) {
-                    showNotSupported();
-                    return;
-                }
-                if (adapter.shouldUseStarsForLikes()) {
-                    activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_mention,
-                            R.string.activity_about_me_favorited_mention_multi, activity.sources));
-                } else {
-                    activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
-                    activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_mention,
-                            R.string.activity_about_me_liked_mention_multi, activity.sources));
-                }
-                displayUserProfileImages(activity.sources);
-                summaryView.setText(activity.target_statuses[0].text_unescaped);
-                summaryView.setVisibility(View.VISIBLE);
-                break;
+            displayUserProfileImages(sources);
+            summaryView.setText(activity.target_statuses[0].text_unescaped);
+            summaryView.setVisibility(View.VISIBLE);
+        } else if (Activity.Action.RETWEETED_RETWEET.literal.equals(activity.action)) {
+            if (byFriends) {
+                showNotSupported();
+                return;
             }
-            case Activity.ACTION_LIST_CREATED: {
-                if (!byFriends) {
-                    showNotSupported();
-                    return;
-                }
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
-                activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_list_created,
-                        R.string.activity_by_friends_list_created_multi, activity.sources,
-                        activity.target_object_user_lists));
-                displayUserProfileImages(activity.sources);
-                boolean firstLine = true;
-                summaryView.setText("");
-                for (ParcelableUserList item : activity.target_object_user_lists) {
-                    if (!firstLine) {
-                        summaryView.append("\n");
-                    }
-                    summaryView.append(item.description);
-                    firstLine = false;
-                }
-                summaryView.setVisibility(View.VISIBLE);
-                break;
+            activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
+            activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
+            titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_retweet,
+                    R.string.activity_about_me_retweeted_retweet_multi, sources));
+            displayUserProfileImages(sources);
+            summaryView.setText(activity.target_statuses[0].text_unescaped);
+            summaryView.setVisibility(View.VISIBLE);
+        } else if (Activity.Action.RETWEETED_MENTION.literal.equals(activity.action)) {
+            if (byFriends) {
+                showNotSupported();
+                return;
             }
-            case Activity.ACTION_LIST_MEMBER_ADDED: {
-                if (byFriends) {
-                    showNotSupported();
-                    return;
-                }
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
-                activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
-                if (activity.sources.length == 1 && activity.target_object_user_lists != null
-                        && activity.target_object_user_lists.length == 1) {
-                    final UserColorNameManager manager = adapter.getUserColorNameManager();
-                    final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(
-                            activity.sources[0], adapter.isNameFirst(), false));
-                    final SpannableString listName = new SpannableString(activity.target_object_user_lists[0].name);
-                    firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    listName.setSpan(new StyleSpan(Typeface.BOLD), 0, listName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    final String format = context.getString(R.string.activity_about_me_list_member_added_with_name);
-                    final Configuration configuration = resources.getConfiguration();
-                    titleView.setText(SpanFormatter.format(configuration.locale, format, firstDisplayName,
-                            listName));
-                } else {
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_list_member_added,
-                            R.string.activity_about_me_list_member_added_multi, activity.sources));
-                }
-                displayUserProfileImages(activity.sources);
-                summaryView.setVisibility(View.GONE);
-                break;
+            activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
+            activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
+            titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_mention,
+                    R.string.activity_about_me_retweeted_mention_multi, sources));
+            displayUserProfileImages(sources);
+            summaryView.setText(activity.target_statuses[0].text_unescaped);
+            summaryView.setVisibility(View.VISIBLE);
+        } else if (Activity.Action.FAVORITED_MENTION.literal.equals(activity.action)) {
+            if (byFriends) {
+                showNotSupported();
+                return;
             }
+            if (adapter.shouldUseStarsForLikes()) {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_mention,
+                        R.string.activity_about_me_favorited_mention_multi, sources));
+            } else {
+                activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
+                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_mention,
+                        R.string.activity_about_me_liked_mention_multi, sources));
+            }
+            displayUserProfileImages(sources);
+            summaryView.setText(activity.target_statuses[0].text_unescaped);
+            summaryView.setVisibility(View.VISIBLE);
+        } else if (Activity.Action.LIST_CREATED.literal.equals(activity.action)) {
+            if (!byFriends) {
+                showNotSupported();
+                return;
+            }
+            activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
+            activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
+            titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_list_created,
+                    R.string.activity_by_friends_list_created_multi, sources,
+                    activity.target_object_user_lists));
+            displayUserProfileImages(sources);
+            boolean firstLine = true;
+            summaryView.setText("");
+            for (ParcelableUserList item : activity.target_object_user_lists) {
+                if (!firstLine) {
+                    summaryView.append("\n");
+                }
+                summaryView.append(item.description);
+                firstLine = false;
+            }
+            summaryView.setVisibility(View.VISIBLE);
+        } else if (Activity.Action.LIST_MEMBER_ADDED.literal.equals(activity.action)) {
+            if (byFriends) {
+                showNotSupported();
+                return;
+            }
+            activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
+            activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
+            if (sources.length == 1 && activity.target_object_user_lists != null
+                    && activity.target_object_user_lists.length == 1) {
+                final UserColorNameManager manager = adapter.getUserColorNameManager();
+                final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(
+                        sources[0], adapter.isNameFirst(), false));
+                final SpannableString listName = new SpannableString(activity.target_object_user_lists[0].name);
+                firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                listName.setSpan(new StyleSpan(Typeface.BOLD), 0, listName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                final String format = context.getString(R.string.activity_about_me_list_member_added_with_name);
+                final Configuration configuration = resources.getConfiguration();
+                titleView.setText(SpanFormatter.format(configuration.locale, format, firstDisplayName,
+                        listName));
+            } else {
+                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_list_member_added,
+                        R.string.activity_about_me_list_member_added_multi, sources));
+            }
+            displayUserProfileImages(sources);
+            summaryView.setVisibility(View.GONE);
         }
     }
 

@@ -25,6 +25,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -84,6 +85,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
 import org.mariotaku.twidere.loader.support.StatusRepliesLoader;
@@ -165,6 +167,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private LinearLayoutManager mLayoutManager;
 
     private LoadConversationTask mLoadConversationTask;
+    private LoadTranslationTask mLoadTranslationTask;
     private RecyclerViewNavigationHelper mNavigationHelper;
 
     // Data fields
@@ -603,19 +606,24 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         mRepliesLoaderInitialized = true;
     }
 
-    private void restoreReadPosition(@Nullable Pair<Long, Integer> position) {
-        if (position == null) return;
-        // FIXME We don't know why we need to -1 here, but only -1 works.
-        final int adapterPosition = mStatusAdapter.findPositionById(position.first) - 1;
-        if (adapterPosition < 0) return;
-        //TODO maintain read position
-        mLayoutManager.scrollToPositionWithOffset(adapterPosition, position.second);
+    private void loadTranslation(@Nullable ParcelableStatus status) {
+        if (status == null) return;
+        if (AsyncTaskUtils.isTaskRunning(mLoadTranslationTask)) {
+            mLoadTranslationTask.cancel(true);
+        }
+        mLoadTranslationTask = new LoadTranslationTask(this);
+        AsyncTaskUtils.executeTask(mLoadTranslationTask, status);
+    }
+
+
+    private void displayTranslation(TranslationResult translation) {
+        mStatusAdapter.setTranslationResult(translation);
     }
 
     @Nullable
     private Pair<Long, Integer> saveReadPosition() {
         final int position = mLayoutManager.findFirstVisibleItemPosition();
-        if (position < 0) return null;
+        if (position == RecyclerView.NO_POSITION) return null;
         final int itemType = mStatusAdapter.getItemType(position);
         long itemId = mStatusAdapter.getItemId(position);
         final View positionView;
@@ -627,7 +635,15 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         } else {
             positionView = mLayoutManager.findViewByPosition(position);
         }
-        return new Pair<>(itemId, positionView != null ? positionView.getTop() : -1);
+        return new Pair<>(itemId, positionView != null ? positionView.getTop() : 0);
+    }
+
+    private void restoreReadPosition(@Nullable Pair<Long, Integer> position) {
+        if (position == null) return;
+        final int adapterPosition = mStatusAdapter.findPositionById(position.first);
+        if (adapterPosition < 0) return;
+        //TODO maintain read position
+        mLayoutManager.scrollToPositionWithOffset(adapterPosition, position.second);
     }
 
     private void setReplies(List<ParcelableStatus> data) {
@@ -713,6 +729,54 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return builder.create();
         }
     }
+
+    static class LoadTranslationTask extends AsyncTask<ParcelableStatus, Object,
+            SingleResponse<TranslationResult>> {
+        final Context context;
+        final StatusFragment fragment;
+
+        LoadTranslationTask(final StatusFragment fragment) {
+            context = fragment.getActivity();
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected SingleResponse<TranslationResult> doInBackground(ParcelableStatus... params) {
+            final ParcelableStatus status = params[0];
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, status.account_id,
+                    true);
+            final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
+                    Context.MODE_PRIVATE);
+            if (twitter == null) return SingleResponse.getInstance();
+            try {
+                final String prefDest = prefs.getString(KEY_TRANSLATION_DESTINATION, null);
+                final String dest;
+                if (TextUtils.isEmpty(prefDest)) {
+                    dest = twitter.getAccountSettings().getLanguage();
+                    final SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(KEY_TRANSLATION_DESTINATION, dest);
+                    editor.apply();
+                } else {
+                    dest = prefDest;
+                }
+                final long statusId = status.is_retweet ? status.retweet_id : status.id;
+                return SingleResponse.getInstance(twitter.showTranslation(statusId, dest));
+            } catch (final TwitterException e) {
+                return SingleResponse.getInstance(e);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(SingleResponse<TranslationResult> result) {
+            if (result.hasData()) {
+                fragment.displayTranslation(result.getData());
+            } else if (result.hasException()) {
+                //TODO show translation error
+                Utils.showErrorMessage(context, R.string.translate, result.getException(), false);
+            }
+        }
+    }
+
 
     static class LoadConversationTask extends AsyncTask<ParcelableStatus, ParcelableStatus,
             ListResponse<ParcelableStatus>> {
@@ -820,6 +884,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         private final CardMediaContainer mediaPreview;
         private final View quotedNameContainer;
+        private final TextView translateLabelView;
 
         private final ForegroundColorView quoteIndicator;
         private final TextView locationView;
@@ -827,6 +892,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final StatusLinkClickHandler linkClickHandler;
         private final TwidereLinkify linkify;
         private final TextView favoritesLabel;
+        private final View translateContainer;
+        private final TextView translateResultView;
 
         public DetailStatusViewHolder(StatusAdapter adapter, View itemView) {
             super(itemView);
@@ -861,17 +928,23 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             quotedScreenNameView = (TextView) itemView.findViewById(R.id.quoted_screen_name);
             quotedNameContainer = itemView.findViewById(R.id.quoted_name_container);
             quoteIndicator = (ForegroundColorView) itemView.findViewById(R.id.quote_indicator);
+            translateLabelView = (TextView) itemView.findViewById(R.id.translate_label);
+            translateContainer = itemView.findViewById(R.id.translate_container);
+            translateResultView = (TextView) itemView.findViewById(R.id.translate_result);
 
             setIsRecyclable(false);
             initViews();
         }
 
-        public void displayStatus(ParcelableStatus status, AsyncTwitterWrapper twitter) {
-            if (status == null) return;
+        public void displayStatus(@Nullable final ParcelableCredentials account,
+                                  @Nullable final ParcelableStatus status,
+                                  @Nullable final TranslationResult translation) {
+            if (account == null || status == null) return;
             final StatusFragment fragment = adapter.getFragment();
             final Context context = adapter.getContext();
             final MediaLoaderWrapper loader = adapter.getMediaLoader();
             final UserColorNameManager manager = adapter.getUserColorNameManager();
+            AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
             final boolean nameFirst = adapter.isNameFirst();
 
             linkClickHandler.setStatus(status);
@@ -897,7 +970,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quoteIndicator.setVisibility(View.VISIBLE);
 
                 quotedNameView.setText(manager.getUserNickname(status.quoted_user_id, status.quoted_user_name, false));
-                quotedScreenNameView.setText("@" + status.quoted_user_screen_name);
+                quotedScreenNameView.setText(String.format("@%s", status.quoted_user_screen_name));
 
                 final Spanned quotedText = HtmlSpanBuilder.fromHtml(status.quoted_text_html);
                 quotedTextView.setText(linkify.applyAllLinks(quotedText, status.account_id,
@@ -923,7 +996,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
 
             nameView.setText(manager.getUserNickname(status.user_id, status.user_name, false));
-            screenNameView.setText("@" + status.user_screen_name);
+            screenNameView.setText(String.format("@%s", status.user_screen_name));
 
             loader.displayProfileImage(profileImageView, status.user_profile_image_url);
 
@@ -1020,6 +1093,22 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             Utils.setMenuForStatus(context, fragment.mPreferences, menuBar.getMenu(), status,
                     adapter.getStatusAccount(), twitter);
 
+
+            final String lang = status.lang;
+            if (!Utils.isOfficialCredentials(context, account) || TextUtils.isEmpty(lang)) {
+                translateLabelView.setText(R.string.unknown_language);
+                translateContainer.setVisibility(View.GONE);
+            } else {
+                translateLabelView.setText(new Locale(lang).getDisplayLanguage());
+                translateContainer.setVisibility(View.VISIBLE);
+                if (translation != null) {
+                    translateResultView.setVisibility(View.VISIBLE);
+                    translateResultView.setText(translation.getText());
+                } else {
+                    translateResultView.setVisibility(View.GONE);
+                }
+            }
+
             textView.setTextIsSelectable(true);
             quotedTextView.setTextIsSelectable(true);
 
@@ -1087,6 +1176,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 case R.id.quote_original_link: {
                     Utils.openStatus(adapter.getContext(), status.account_id, status.quoted_id);
                 }
+                case R.id.translate_label: {
+                    fragment.loadTranslation(adapter.getStatus());
+                    break;
+                }
             }
         }
 
@@ -1123,6 +1216,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             retweetedByView.setOnClickListener(this);
             locationView.setOnClickListener(this);
             quoteOriginalLink.setOnClickListener(this);
+            translateLabelView.setOnClickListener(this);
 
             final float defaultTextSize = adapter.getTextSize();
             nameView.setTextSize(defaultTextSize * 1.25f);
@@ -1131,8 +1225,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             quotedTextView.setTextSize(defaultTextSize * 1.25f);
             screenNameView.setTextSize(defaultTextSize * 0.85f);
             quotedScreenNameView.setTextSize(defaultTextSize * 0.85f);
+            quoteOriginalLink.setTextSize(defaultTextSize * 0.85f);
             locationView.setTextSize(defaultTextSize * 0.85f);
             timeSourceView.setTextSize(defaultTextSize * 0.85f);
+            translateLabelView.setTextSize(defaultTextSize * 0.85f);
+            translateResultView.setTextSize(defaultTextSize * 1.05f);
 
             mediaPreview.setStyle(adapter.getMediaPreviewStyle());
 
@@ -1199,6 +1296,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private StatusAdapterListener mStatusAdapterListener;
         private RecyclerView mRecyclerView;
         private CharSequence mReplyError;
+        private boolean mRepliesLoading, mConversationsLoading;
+        private TranslationResult mTranslationResult;
 
         public StatusAdapter(StatusFragment fragment, boolean compact) {
             super(fragment.getContext());
@@ -1208,6 +1307,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mItemCounts = new int[ITEM_TYPES_SUM];
             // There's always a space at the end of the list
             mItemCounts[ITEM_IDX_SPACE] = 1;
+            mItemCounts[ITEM_IDX_STATUS] = 1;
+            mItemCounts[ITEM_IDX_CONVERSATION_LOAD_MORE] = 1;
+            mItemCounts[ITEM_IDX_REPLY_LOAD_MORE] = 1;
             mFragment = fragment;
             mInflater = LayoutInflater.from(context);
             mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
@@ -1490,7 +1592,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 case VIEW_TYPE_DETAIL_STATUS: {
                     final ParcelableStatus status = getStatus(position);
                     final DetailStatusViewHolder detailHolder = (DetailStatusViewHolder) holder;
-                    detailHolder.displayStatus(status, mTwitterWrapper);
+                    detailHolder.displayStatus(getStatusAccount(), status, getTranslationResult());
                     break;
                 }
                 case VIEW_TYPE_LIST_STATUS: {
@@ -1508,7 +1610,29 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     errorHolder.showError(mReplyError);
                     break;
                 }
+                case VIEW_TYPE_CONVERSATION_LOAD_INDICATOR: {
+                    LoadIndicatorViewHolder indicatorHolder = ((LoadIndicatorViewHolder) holder);
+                    indicatorHolder.setLoadProgressVisible(mConversationsLoading);
+                    break;
+                }
+                case VIEW_TYPE_REPLIES_LOAD_INDICATOR: {
+                    LoadIndicatorViewHolder indicatorHolder = ((LoadIndicatorViewHolder) holder);
+                    indicatorHolder.setLoadProgressVisible(mRepliesLoading);
+                    break;
+                }
             }
+        }
+
+        private TranslationResult getTranslationResult() {
+            return mTranslationResult;
+        }
+
+        public void setTranslationResult(TranslationResult translation) {
+            if (mStatus == null || (translation != null && mStatus.id != translation.getId())) {
+                return;
+            }
+            mTranslationResult = translation;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -1566,6 +1690,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public int getItemCount() {
+            if (mStatus == null) return 0;
             return MathUtils.sum(mItemCounts);
         }
 
@@ -1661,7 +1786,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus old = mStatus;
             mStatus = status;
             mStatusAccount = credentials;
-            setCount(ITEM_IDX_STATUS, status != null ? 1 : 0);
+            notifyDataSetChanged();
             updateItemDecoration();
             return !CompareUtils.objectEquals(old, status);
         }
@@ -1679,12 +1804,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         public void setRepliesLoading(boolean loading) {
-            setCount(ITEM_IDX_REPLY_LOAD_MORE, loading ? 1 : 0);
+            mRepliesLoading = loading;
+            notifyItemChanged(getFirstPositionOfItem(ITEM_IDX_REPLY_LOAD_MORE));
             updateItemDecoration();
         }
 
         public void setConversationsLoading(boolean loading) {
-            setCount(ITEM_IDX_CONVERSATION_LOAD_MORE, loading ? 1 : 0);
+            mConversationsLoading = loading;
+            notifyItemChanged(getFirstPositionOfItem(ITEM_IDX_CONVERSATION_LOAD_MORE));
             updateItemDecoration();
         }
 

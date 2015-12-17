@@ -461,7 +461,6 @@
   <string name="wizard_page_welcome_import_settings">Importeer instellingen</string>
   <string name="wizard_page_theme_text">Kies een thema dat je leuk vind.</string>
   <string name="wizard_page_tabs_text">Voeg een paar tabbladen toe aan Twidere.\nHoud belangrijke mensen en dingen bij.</string>
-  <string name="wizard_page_tabs_unchanged_message">Je kan tabbladen toevoegen in \'\'Instellingen\'\' - \'\'Tabbladen\'\'</string>
   <string name="wizard_page_cards_text">Configureer kaart items.</string>
   <string name="wizard_page_hints_text">Hier zijn een paar handige hints.</string>
   <string name="wizard_page_finished_title">Voltooid</string>
@@ -512,8 +511,6 @@
   <string name="theme_background_solid">Zuiver wit/zwart</string>
   <string name="theme_background_transparent">Transparant</string>
   <string name="theme_dark_actionbar">Donkere ActionBar</string>
-  <string name="wizard_hint_quote_format">Stel je favoriete citaat formaat in via \'\'Instellingen\'\' - \'\'Inhoud &amp; Opslag\'\'</string>
-  <string name="wizard_hint_filters">Je kunt ongewenste tweets verbergen van de tijdlijn en meldingen via \'\'Filters\'\'.</string>
   <string name="view_replies">Bekijk Reacties</string>
   <string name="compact_cards">Compacte kaarten</string>
   <string name="compact_cards_summary">Toon meer kaarten op het scherm</string>
@@ -586,7 +583,6 @@
   <string name="delete_drafts_confirm">Geselecteerde concepten verwijderen?</string>
   <string name="extra_configurations">Extra instellingen</string>
   <string name="click_item_to_config">Klik op een item om in te stellen</string>
-  <string name="dark_drawer">Donker schuifpaneel</string>
   <string name="retweets_of_me">Retweets van mij</string>
   <string name="from_gallery">Uit galerij</string>
   <string name="from_camera">Uit camera</string>

@@ -479,7 +479,6 @@
   <string name="wizard_page_welcome_import_settings">Importa impostazioni</string>
   <string name="wizard_page_theme_text">Scegli un tema.</string>
   <string name="wizard_page_tabs_text">Aggiunge tabs a Twidere.\nTieni sott\'occhio cose e persone interessanti.</string>
-  <string name="wizard_page_tabs_unchanged_message">Puoi aggiungere le tabs in \"Impostazioni\" - \"Tabs\"</string>
   <string name="wizard_page_cards_text">Configura le schede.</string>
   <string name="wizard_page_hints_text">Ecco alcuni suggerimenti utili.</string>
   <string name="wizard_page_usage_statistics_text">Twidere prende parte a dei progetti di ricerca che hanno bisogno di alcuni dati di utilizzo.</string>
@@ -533,8 +532,6 @@
   <string name="theme_background_transparent">Trasparente</string>
   <string name="theme_dark_actionbar">ActionBar scura</string>
   <string name="wizard_hint_compose_select_account">Clicca sull\'immagine del profilo per scegliere un account quando scrivi un tweet.</string>
-  <string name="wizard_hint_quote_format">Imposta il tipo di citazione preferita in \"Impostazioni\" - \"Contenuti &amp; Archiviazione\"</string>
-  <string name="wizard_hint_filters">Puoi nascondere tweet e notifiche non desiderate utilizzando i \"Filtri\".</string>
   <string name="view_replies">Visualizza Risposte</string>
   <string name="compact_cards">Schede compatte</string>
   <string name="compact_cards_summary">Visualizza più schede sullo schermo</string>
@@ -609,7 +606,6 @@
   <string name="delete_drafts_confirm">Eliminare le bozze selezionate?</string>
   <string name="extra_configurations">Configurazioni extra</string>
   <string name="click_item_to_config">Selezionare un elemento da configurare</string>
-  <string name="dark_drawer">Dark drawer</string>
   <string name="retweets_of_me">I miei retweets</string>
   <string name="from_gallery">Da galleria</string>
   <string name="from_camera">Da Camera</string>

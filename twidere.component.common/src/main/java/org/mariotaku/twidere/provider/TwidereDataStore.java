@@ -55,8 +55,7 @@ public interface TwidereDataStore {
     Uri CONTENT_URI_DATABASE_READY = Uri.withAppendedPath(BASE_CONTENT_URI,
             CONTENT_PATH_DATABASE_READY);
 
-    Uri[] STATUSES_URIS = new Uri[]{Statuses.CONTENT_URI, Mentions.CONTENT_URI,
-            CachedStatuses.CONTENT_URI};
+    Uri[] STATUSES_URIS = new Uri[]{Statuses.CONTENT_URI, CachedStatuses.CONTENT_URI};
     Uri[] CACHE_URIS = new Uri[]{CachedUsers.CONTENT_URI, CachedStatuses.CONTENT_URI,
             CachedHashtags.CONTENT_URI, CachedTrends.Local.CONTENT_URI};
     Uri[] DIRECT_MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI,
@@ -723,6 +722,8 @@ public interface TwidereDataStore {
          */
         String TEXT_PLAIN = "text_plain";
 
+        String LANG = "lang";
+
         String TEXT_UNESCAPED = "text_unescaped";
 
         /**
@@ -865,7 +866,7 @@ public interface TwidereDataStore {
                 QUOTED_USER_IS_VERIFIED, QUOTED_USER_IS_PROTECTED, MY_RETWEET_ID, IS_RETWEET,
                 IS_QUOTE, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
                 IS_POSSIBLY_SENSITIVE, MEDIA_JSON, MENTIONS_JSON, QUOTED_MEDIA_JSON, CARD_NAME, CARD,
-                PLACE_FULL_NAME};
+                PLACE_FULL_NAME, LANG};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
@@ -875,7 +876,7 @@ public interface TwidereDataStore {
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
 
     }
 
@@ -885,6 +886,7 @@ public interface TwidereDataStore {
         String ACTION = "action";
         String RAW_ACTION = "raw_action";
         String TIMESTAMP = "timestamp";
+        String STATUS_ID = "status_id";
         String STATUS_USER_ID = "status_user_id";
         String STATUS_RETWEETED_BY_USER_ID = "status_retweeted_by_user_id";
         String STATUS_QUOTED_USER_ID = "status_quoted_user_id";
@@ -898,6 +900,7 @@ public interface TwidereDataStore {
         String MIN_POSITION = "min_position";
         String MAX_POSITION = "max_position";
         String SOURCES = "sources";
+        String SOURCE_IDS = "source_ids";
         String TARGET_STATUSES = "target_statuses";
         String TARGET_USERS = "target_users";
         String TARGET_USER_LISTS = "target_user_lists";
@@ -905,14 +908,14 @@ public interface TwidereDataStore {
         String TARGET_OBJECT_USER_LISTS = "target_object_user_lists";
         String TARGET_OBJECT_USERS = "target_object_users";
 
-        String[] COLUMNS = {_ID, ACCOUNT_ID, ACTION, RAW_ACTION, TIMESTAMP, STATUS_USER_ID,
+        String[] COLUMNS = {_ID, ACCOUNT_ID, ACTION, TIMESTAMP, STATUS_ID, STATUS_USER_ID,
                 STATUS_RETWEETED_BY_USER_ID, STATUS_QUOTED_USER_ID, STATUS_SOURCE, STATUS_QUOTE_SOURCE,
                 STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_TEXT_HTML, STATUS_QUOTE_TEXT_HTML,
-                IS_GAP, MIN_POSITION, MAX_POSITION, SOURCES, TARGET_STATUSES, TARGET_USERS,
+                IS_GAP, MIN_POSITION, MAX_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
                 TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS};
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_INT, TYPE_INT,
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
+                TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC";

@@ -62,13 +62,21 @@
     </FrameLayout>
 
     <FrameLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/progress_container"
         android:layout_width="match_parent"
         android:visibility="visible"
         tools:visibility="gone"
         android:layout_height="match_parent">
 
-        <include layout="@layout/layout_progress_wheel_medium" />
+        <org.mariotaku.twidere.view.themed.AccentProgressWheel
+            android:id="@+id/load_progress"
+            android:layout_width="@dimen/element_size_normal"
+            android:layout_height="@dimen/element_size_normal"
+            android:layout_gravity="center"
+            android:padding="@dimen/element_spacing_xsmall"
+            app:matProg_barColor="?colorAccent"
+            app:matProg_progressIndeterminate="true"/>
     </FrameLayout>
 
 </FrameLayout>

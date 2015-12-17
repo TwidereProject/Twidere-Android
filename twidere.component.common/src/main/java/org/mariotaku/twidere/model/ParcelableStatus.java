@@ -61,7 +61,7 @@ import java.util.Map.Entry;
 @CursorObject(valuesCreator = true)
 @JsonObject
 @ParcelablePlease
-public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus> {
+public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus>, Cloneable {
     public static final Creator<ParcelableStatus> CREATOR = new Creator<ParcelableStatus>() {
         public ParcelableStatus createFromParcel(Parcel source) {
             ParcelableStatus target = new ParcelableStatus();
@@ -255,6 +255,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public String text_plain;
 
     @ParcelableThisPlease
+    @JsonField(name = "lang")
+    @CursorField(Statuses.LANG)
+    public String lang;
+
+    @ParcelableThisPlease
     @JsonField(name = "user_name")
     @CursorField(Statuses.USER_NAME)
     public String user_name;
@@ -363,62 +368,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     ParcelableStatus() {
     }
 
-    public ParcelableStatus(final ParcelableStatus orig, final long override_my_retweet_id,
-                            final long override_retweet_count) {
-        id = orig.id;
-        account_id = orig.account_id;
-        timestamp = orig.timestamp;
-        user_id = orig.user_id;
-        retweet_id = orig.retweet_id;
-        retweet_timestamp = orig.retweet_timestamp;
-        retweeted_by_user_id = orig.retweeted_by_user_id;
-        retweet_count = override_retweet_count;
-        favorite_count = orig.favorite_count;
-        reply_count = orig.reply_count;
-        in_reply_to_status_id = orig.in_reply_to_status_id;
-        is_gap = orig.is_gap;
-        is_retweet = orig.is_retweet;
-        is_favorite = orig.is_favorite;
-        user_is_protected = orig.user_is_protected;
-        user_is_verified = orig.user_is_verified;
-        retweeted_by_user_name = orig.retweeted_by_user_name;
-        retweeted_by_user_screen_name = orig.retweeted_by_user_screen_name;
-        retweeted_by_user_profile_image = orig.retweeted_by_user_profile_image;
-        text_html = orig.text_html;
-        text_plain = orig.text_plain;
-        user_name = orig.user_name;
-        user_screen_name = orig.user_screen_name;
-        in_reply_to_screen_name = orig.in_reply_to_screen_name;
-        source = orig.source;
-        user_profile_image_url = orig.user_profile_image_url;
-        media = orig.media;
-        quoted_media = orig.quoted_media;
-        location = orig.location;
-        my_retweet_id = override_my_retweet_id;
-        is_possibly_sensitive = orig.is_possibly_sensitive;
-        user_is_following = orig.user_is_following;
-        text_unescaped = orig.text_unescaped;
-        in_reply_to_user_id = orig.in_reply_to_user_id;
-        in_reply_to_name = orig.in_reply_to_name;
-        mentions = orig.mentions;
-        card = orig.card;
-        place_full_name = orig.place_full_name;
-        is_quote = orig.is_quote;
-        quoted_id = orig.quoted_id;
-        quoted_timestamp = orig.quoted_timestamp;
-        quoted_user_id = orig.quoted_user_id;
-        quoted_user_name = orig.quoted_user_name;
-        quoted_user_screen_name = orig.quoted_user_screen_name;
-        quoted_user_profile_image = orig.quoted_user_profile_image;
-        quoted_text_html = orig.quoted_text_html;
-        quoted_text_plain = orig.quoted_text_plain;
-        quoted_text_unescaped = orig.quoted_text_unescaped;
-        quoted_source = orig.quoted_source;
-        quoted_user_is_protected = orig.quoted_user_is_protected;
-        quoted_user_is_verified = orig.quoted_user_is_verified;
-        card_name = card != null ? card.name : null;
-    }
-
     public ParcelableStatus(final Status orig, final long account_id, final boolean is_gap) {
         this.is_gap = is_gap;
         this.account_id = account_id;
@@ -491,6 +440,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         card = ParcelableCardEntity.fromCardEntity(status.getCard(), account_id);
         place_full_name = getPlaceFullName(status.getPlace());
         card_name = card != null ? card.name : null;
+        lang = status.getLang();
     }
 
     @Nullable

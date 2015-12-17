@@ -29,7 +29,7 @@ import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.ConnectivityUtils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 
@@ -60,7 +60,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
             HotMobiLogger.getInstance(context).log(event);
             // END HotMobi
         }
-        final int networkType = Utils.getActiveNetworkType(context.getApplicationContext());
+        final int networkType = ConnectivityUtils.getActiveNetworkType(context.getApplicationContext());
         NetworkUsageUtils.setNetworkType(networkType);
         final boolean isWifi = networkType == ConnectivityManager.TYPE_WIFI;
         final boolean isCharging = SpiceProfilingUtil.isCharging(context.getApplicationContext());

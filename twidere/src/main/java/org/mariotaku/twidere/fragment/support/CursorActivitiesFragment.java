@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +34,7 @@ import com.desmond.asyncmanager.AsyncManager;
 import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Subscribe;
 
+import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
@@ -40,14 +42,13 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
-import org.mariotaku.twidere.loader.ObjectCursorLoader;
+import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.AccountChangedEvent;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
@@ -58,7 +59,7 @@ import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
 
 import java.util.List;
 
-import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
+import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -100,10 +101,10 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         }
         final String selection = processWhere(where).getSQL();
         final AbsActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
-//        adapter.setShowAccountsColor(accountIds.length > 1);
+        adapter.setShowAccountsColor(accountIds.length > 1);
         final String[] projection = Activities.COLUMNS;
-        return new ObjectCursorLoader<>(context, ParcelableActivityCursorIndices.class, uri, projection,
-                selection, null, sortOrder);
+        return new CursorActivitiesLoader(context, uri, projection, selection, null, sortOrder,
+                fromUser);
     }
 
     @Override
@@ -121,7 +122,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         if (activity instanceof HomeActivity) {
             return ((HomeActivity) activity).getActivatedAccountIds();
         }
-        return Utils.getActivatedAccountIds(getActivity());
+        return DataStoreUtils.getActivatedAccountIds(getActivity());
     }
 
     @Override
@@ -215,7 +216,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
 
     protected Expression getFiltersWhere(String table) {
         if (!isFilterEnabled()) return null;
-        return Utils.buildActivityFilterWhereClause(table, null);
+        return DataStoreUtils.buildActivityFilterWhereClause(table, null);
     }
 
     protected long[] getNewestActivityIds(long[] accountIds) {
@@ -291,4 +292,30 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
 
     }
 
+    public static class CursorActivitiesLoader extends ExtendedObjectCursorLoader<ParcelableActivity> {
+        public CursorActivitiesLoader(Context context, Uri uri, String[] projection,
+                                      String selection, String[] selectionArgs, String sortOrder,
+                                      boolean fromUser) {
+            super(context, ParcelableActivityCursorIndices.class, uri, projection, selection, selectionArgs, sortOrder, fromUser);
+        }
+
+        @Override
+        protected ObjectCursor<ParcelableActivity> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<ParcelableActivity> indices) {
+            return new ActivityCursor(cursor, indices, DataStoreUtils.getFilteredUserIds(getContext()));
+        }
+
+        public static class ActivityCursor extends ObjectCursor<ParcelableActivity> {
+
+            private final long[] filteredUserIds;
+
+            public ActivityCursor(Cursor cursor, CursorIndices<ParcelableActivity> indies, long[] filteredUserIds) {
+                super(cursor, indies);
+                this.filteredUserIds = filteredUserIds;
+            }
+
+            public long[] getFilteredUserIds() {
+                return filteredUserIds;
+            }
+        }
+    }
 }

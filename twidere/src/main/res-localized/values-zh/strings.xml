@@ -243,7 +243,7 @@
   <string name="status_shortener">推文縮短服務</string>
   <string name="status_shortener_default">無（不發送過長推文）</string>
   <string name="error_message_status_too_long">推文太長</string>
-  <string name="error_message_message_too_long">資訊太長</string>
+  <string name="error_message_message_too_long">訊息過長</string>
   <string name="error_message_no_content">沒有內容</string>
   <string name="error_message_tweet_shorten_failed">推文縮短失敗</string>
   <string name="error_message_tweet_shortener_not_found">未找到推文縮短擴展，它可能已經被移除</string>
@@ -386,7 +386,6 @@
   <string name="preview_images">推文預覽圖片</string>
   <string name="preload_wifi_only">僅使用 Wi-Fi 預加載</string>
   <string name="sign_in_method_introduction_title">輸入密碼登錄是怎樣工作的？</string>
-  <string name="sign_in_method_introduction">很多客戶端打開網頁登錄到Twitter。這在使用自定義API或是網速緩慢時可能會有所不便。Twidere模擬普通的瀏覽器幫助登錄到Twitter。毋須擔心，你的密碼永遠不會被儲存或者被洩露。</string>
   <string name="quote_protected_status_notice">不建議引用受保護的推文</string>
   <string name="edit_draft">編輯草稿</string>
   <string name="profile_image">個人資料圖片</string>
@@ -486,7 +485,6 @@
   <string name="wizard_page_welcome_import_settings">匯入設定</string>
   <string name="wizard_page_theme_text">選擇一個您喜歡的主題。</string>
   <string name="wizard_page_tabs_text">新增一些標籤頁到Twidere。\n即時關注您在意的人和事。</string>
-  <string name="wizard_page_tabs_unchanged_message">您可以稍後在設定中新增標籤頁</string>
   <string name="wizard_page_cards_text">設定卡片項目。</string>
   <string name="wizard_page_hints_text">這裡有一些有用的小提示。</string>
   <string name="wizard_page_usage_statistics_text">Twidere加入了一些需要收集使用資訊的研究項目。</string>
@@ -540,8 +538,6 @@
   <string name="theme_background_transparent">透明</string>
   <string name="theme_dark_actionbar">深色 ActionBar</string>
   <string name="wizard_hint_compose_select_account">寫推文時點擊個人資料圖片選擇帳號</string>
-  <string name="wizard_hint_quote_format">在\"設定\"-\"內容與存儲\"設定您喜歡的引用格式</string>
-  <string name="wizard_hint_filters">你可以透過使用\"過濾\"功能隱藏不想看到的推文和通知</string>
   <string name="view_replies">檢視回應</string>
   <string name="compact_cards">緊湊卡片視圖</string>
   <string name="compact_cards_summary">在螢幕上顯示更多卡片</string>
@@ -616,7 +612,6 @@
   <string name="delete_drafts_confirm">刪除選擇的草稿？</string>
   <string name="extra_configurations">額外設定</string>
   <string name="click_item_to_config">點擊一項以設定</string>
-  <string name="dark_drawer">暗色側欄</string>
   <string name="retweets_of_me">轉推我的內容</string>
   <string name="from_gallery">來自相簿</string>
   <string name="from_camera">來自相機</string>

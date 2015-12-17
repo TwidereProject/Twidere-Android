@@ -20,9 +20,12 @@
 package org.mariotaku.twidere.util;
 
 import android.app.Application;
+import android.os.Build;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -32,6 +35,8 @@ import java.util.List;
  * Created by mariotaku on 15/5/27.
  */
 public class DebugModeUtils {
+
+    private static RefWatcher sRefWatcher;
 
     public static void initForHttpClient(final OkHttpClient client) {
         final List<Interceptor> interceptors = client.networkInterceptors();
@@ -43,5 +48,14 @@ public class DebugModeUtils {
                 .enableDumpapp(Stetho.defaultDumperPluginsProvider(application))
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
                 .build());
+        // LeakCanary not working on Android Marshmallow, see https://github.com/square/leakcanary/issues/267
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            sRefWatcher = LeakCanary.install(application);
+        }
+    }
+
+    public static void watchReferenceLeak(final Object object) {
+        if (sRefWatcher == null) return;
+        sRefWatcher.watch(object);
     }
 }

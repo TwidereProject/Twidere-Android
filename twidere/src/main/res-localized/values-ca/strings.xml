@@ -381,7 +381,6 @@
   <string name="preview_images">Previsualització d\'imatges</string>
   <string name="preload_wifi_only">Precarrega només a través de Wi-Fi</string>
   <string name="sign_in_method_introduction_title">Com funciona, això?</string>
-  <string name="sign_in_method_introduction">La majoria de clients obre una pàgina web per autoritzar a Twitter, això podria ser un inconvenient quan es fa servir una API personalitzada, o a una xarxa lenta. Twidere simula un navegador normal per registrar-te a Twitter. No et preocupis, la teva contrasenya no s\'emmagatzemarà ni es filtrarà.</string>
   <string name="quote_protected_status_notice">No és recomanable citar piulades protegides.</string>
   <string name="edit_draft">Edita l\'esborrany</string>
   <string name="profile_image">Imatge de perfil</string>
@@ -481,7 +480,6 @@
   <string name="wizard_page_welcome_import_settings">Importa els paràmetres</string>
   <string name="wizard_page_theme_text">Trieu un tema que us agradi.</string>
   <string name="wizard_page_tabs_text">Afegeix alguna pestanya al Twidere.\nPodreu seguir la gent o els temes que us importin.</string>
-  <string name="wizard_page_tabs_unchanged_message">Podeu afegir pestanyes a «Paràmetres» - «Pestanyes»</string>
   <string name="wizard_page_cards_text">Configura els elements de les targetes.</string>
   <string name="wizard_page_hints_text">A continuació us deixem uns consells.</string>
   <string name="wizard_page_usage_statistics_text">Twidere participa en un projecte de recerca, que consumeix una mica de dades.</string>
@@ -536,8 +534,6 @@
   <string name="theme_background_transparent">Transparent</string>
   <string name="theme_dark_actionbar">Barra d\'acció fosca</string>
   <string name="wizard_hint_compose_select_account">Prem la imatge de perfil per seleccionar un compte al escriure un tuit.</string>
-  <string name="wizard_hint_quote_format">Estableix el text de cita a «Paràmetres» - «Contingut i emmagatzematge»</string>
-  <string name="wizard_hint_filters">Podeu evitar que apareguin piulades no desitjades a la vostra cronologia i com a notificacions mitjançant «Filtres».</string>
   <string name="view_replies">Mostra les respostes</string>
   <string name="compact_cards">Targetes més compactes</string>
   <string name="compact_cards_summary">Fa que es vegin més piulades per pàgina</string>
@@ -612,7 +608,6 @@
   <string name="delete_drafts_confirm">Voleu eliminar els esborranys seleccionats?</string>
   <string name="extra_configurations">Paràmetres addicionals</string>
   <string name="click_item_to_config">Feu clic en un element per configurar-lo</string>
-  <string name="dark_drawer">Calaix fosc</string>
   <string name="retweets_of_me">Repiulades meves</string>
   <string name="from_gallery">Des de la galeria</string>
   <string name="from_camera">Des de la càmera</string>

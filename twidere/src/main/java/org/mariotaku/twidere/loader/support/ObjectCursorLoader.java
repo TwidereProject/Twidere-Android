@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.loader;
+package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -61,7 +61,11 @@ public class ObjectCursorLoader<T> extends AsyncTaskLoader<List<T>> {
             cursor.registerContentObserver(mObserver);
         }
         if (cursor == null) throw new NullPointerException("Cursor is null");
-        return new ObjectCursor<>(cursor, createIndices(cursor));
+        return createObjectCursor(cursor, createIndices(cursor));
+    }
+
+    protected ObjectCursor<T> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<T> indices) {
+        return new ObjectCursor<>(cursor, indices);
     }
 
     @SuppressWarnings("TryWithIdenticalCatches")

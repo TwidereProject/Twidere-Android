@@ -30,6 +30,7 @@ import android.support.v4.app.DialogFragment;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
@@ -74,6 +75,12 @@ public class BaseSupportDialogFragment extends DialogFragment implements Constan
     public void onAttach(Context context) {
         super.onAttach(context);
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        DebugModeUtils.watchReferenceLeak(this);
     }
 
     public void registerReceiver(final BroadcastReceiver receiver, final IntentFilter filter) {

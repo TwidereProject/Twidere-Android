@@ -37,4 +37,7 @@ public class DebugModeUtils {
         // No-op
     }
 
+    public static void watchReferenceLeak(final Object object) {
+        // No-op
+    }
 }

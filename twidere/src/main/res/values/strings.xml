@@ -632,8 +632,7 @@
     <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
     <string name="delete_drafts_confirm">Delete selected drafts?</string>
     <string name="extra_configurations">Extra configurations</string>
-    <string name="click_item_to_config">Click an item to config</string>
-    <string name="dark_drawer">Dark drawer</string>
+    <string name="click_item_to_configure">Click an item to configure</string>
     <string name="retweets_of_me">Retweets of me</string>
     <string name="from_gallery">From gallery</string>
     <string name="from_camera">From camera</string>
@@ -824,6 +823,6 @@
     <string name="login_verification_push_hint">Accept login verification request from Twitter app, once you approved the request, click OK.</string>
     <string name="login_verification_failed">Login verification failed.</string>
     <string name="saved_searches_already_saved_hint">Perhaps you already saved this search</string>
-    <string name="unsupported_activity_action_title"><xliff:g id="action">%s</xliff:g> action</string>
     <string name="unsupported_activity_action_summary">Please report action above</string>
+    <string name="unknown_language">Unknown language</string>
 </resources>

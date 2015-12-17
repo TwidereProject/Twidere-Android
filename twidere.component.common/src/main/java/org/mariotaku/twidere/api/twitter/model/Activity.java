@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
-import org.mariotaku.twidere.util.AbsLogger;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -32,24 +32,6 @@ import java.util.Locale;
 
 public class Activity extends TwitterResponseObject implements TwitterResponse, Comparable<Activity> {
 
-    public static final int ACTION_UNKNOWN = 0x00;
-    public static final int ACTION_FAVORITE = 0x01;
-    public static final int ACTION_FOLLOW = 0x02;
-    public static final int ACTION_MENTION = 0x03;
-    public static final int ACTION_REPLY = 0x04;
-    public static final int ACTION_RETWEET = 0x05;
-    public static final int ACTION_LIST_MEMBER_ADDED = 0x06;
-    public static final int ACTION_LIST_CREATED = 0x07;
-    public static final int ACTION_FAVORITED_RETWEET = 0x08;
-    public static final int ACTION_RETWEETED_RETWEET = 0x09;
-    public static final int ACTION_QUOTE = 0x0A;
-    public static final int ACTION_RETWEETED_MENTION = 0x0B;
-    public static final int ACTION_FAVORITED_MENTION = 0x0C;
-    public static final int ACTION_JOINED_TWITTER = 0x0D;
-    public static final int ACTION_MEDIA_TAGGED = 0x0E;
-    public static final int ACTION_FAVORITED_MEDIA_TAGGED = 0x0F;
-    public static final int ACTION_RETWEETED_MEDIA_TAGGED = 0x10;
-    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
     Action action;
     String rawAction;
 
@@ -179,63 +161,55 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
     }
 
     public enum Action {
-        FAVORITE(ACTION_FAVORITE),
+        FAVORITE("favorite"),
         /**
          * Sources: followers to targets (User)
          * Targets: following user (User)
          */
-        FOLLOW(ACTION_FOLLOW),
+        FOLLOW("follow"),
         /**
          * Targets: mentioned users (User)
          * Target objects: mention status (Status)
          */
-        MENTION(ACTION_MENTION),
+        MENTION("mention"),
         /**
          * Targets: reply status (Status)
          * Target objects: in reply to status (Status)
          */
-        REPLY(ACTION_REPLY),
-        RETWEET(ACTION_RETWEET), LIST_MEMBER_ADDED(ACTION_LIST_MEMBER_ADDED), LIST_CREATED(ACTION_LIST_CREATED),
-        FAVORITED_RETWEET(ACTION_FAVORITED_RETWEET), RETWEETED_RETWEET(ACTION_RETWEETED_RETWEET),
+        REPLY("reply"),
+        RETWEET("retweet"),
+        LIST_MEMBER_ADDED("list_member_added"),
+        LIST_CREATED("list_created"),
+        FAVORITED_RETWEET("favorited_retweet"),
+        RETWEETED_RETWEET("retweeted_retweet"),
         /**
          * Targets: Quote result (Status)
          * Target objects: Original status (Status)
          */
-        QUOTE(ACTION_QUOTE),
-        RETWEETED_MENTION(ACTION_RETWEETED_MENTION),
-        FAVORITED_MENTION(ACTION_FAVORITED_MENTION), JOINED_TWITTER(ACTION_JOINED_TWITTER),
-        MEDIA_TAGGED(ACTION_MEDIA_TAGGED), FAVORITED_MEDIA_TAGGED(ACTION_FAVORITED_MEDIA_TAGGED),
-        RETWEETED_MEDIA_TAGGED(ACTION_RETWEETED_MEDIA_TAGGED), UNKNOWN(ACTION_UNKNOWN);
+        QUOTE("quote"),
+        RETWEETED_MENTION("retweeted_mention"),
+        FAVORITED_MENTION("favorited_mention"),
+        JOINED_TWITTER("joined_twitter"),
+        MEDIA_TAGGED("media_tagged"),
+        FAVORITED_MEDIA_TAGGED("favorited_media_tagged"),
+        RETWEETED_MEDIA_TAGGED("retweeted_media_tagged"),
+        UNKNOWN(null);
 
-        private final int actionId;
+        public final String literal;
 
-        Action(final int action) {
-            actionId = action;
+        Action(final String literal) {
+            this.literal = literal;
         }
 
         public static Action parse(final String string) {
-            if ("favorite".equalsIgnoreCase(string)) return FAVORITE;
-            if ("follow".equalsIgnoreCase(string)) return FOLLOW;
-            if ("mention".equalsIgnoreCase(string)) return MENTION;
-            if ("reply".equalsIgnoreCase(string)) return REPLY;
-            if ("retweet".equalsIgnoreCase(string)) return RETWEET;
-            if ("list_member_added".equalsIgnoreCase(string)) return LIST_MEMBER_ADDED;
-            if ("list_created".equalsIgnoreCase(string)) return LIST_CREATED;
-            if ("favorited_retweet".equalsIgnoreCase(string)) return FAVORITED_RETWEET;
-            if ("retweeted_retweet".equalsIgnoreCase(string)) return RETWEETED_RETWEET;
-            if ("quote".equalsIgnoreCase(string)) return QUOTE;
-            if ("retweeted_mention".equalsIgnoreCase(string)) return RETWEETED_MENTION;
-            if ("favorited_mention".equalsIgnoreCase(string)) return FAVORITED_MENTION;
-            if ("joined_twitter".equalsIgnoreCase(string)) return JOINED_TWITTER;
-            if ("media_tagged".equalsIgnoreCase(string)) return MEDIA_TAGGED;
-            if ("favorited_media_tagged".equalsIgnoreCase(string)) return FAVORITED_MEDIA_TAGGED;
-            if ("retweeted_media_tagged".equalsIgnoreCase(string)) return RETWEETED_MEDIA_TAGGED;
-            AbsLogger.error("Unknown Twitter activity action " + string);
+            for (Action action : values()) {
+                if (StringUtils.equalsIgnoreCase(action.literal, string)) return action;
+            }
             return UNKNOWN;
         }
 
-        public int getActionId() {
-            return actionId;
+        public String getLiteral() {
+            return literal;
         }
 
         public static class Converter extends StringBasedTypeConverter<Action> {
@@ -247,8 +221,8 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
 
             @Override
             public String convertToString(Action object) {
-                //TODO use better literal
-                return object.name().toLowerCase(Locale.US);
+                if (object == null) return null;
+                return object.literal;
             }
         }
     }

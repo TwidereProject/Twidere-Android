@@ -23,6 +23,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.Space;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -30,11 +31,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.collections.primitives.ArrayLongList;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
 import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.fragment.support.CursorActivitiesFragment;
 import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -63,6 +66,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     public static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 2;
     public static final int ITEM_VIEW_TYPE_TITLE_SUMMARY = 3;
     public static final int ITEM_VIEW_TYPE_STATUS = 4;
+    public static final int ITEM_VIEW_TYPE_EMPTY = 5;
 
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
@@ -71,6 +75,8 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     private final TwidereLinkify mLinkify;
     private final DummyStatusHolderAdapter mStatusAdapterDelegate;
     private ActivityAdapterListener mActivityAdapterListener;
+
+    private long[] mFilteredUserIds;
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         super(context);
@@ -94,7 +100,14 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     public abstract Data getData();
 
     @Override
-    public abstract void setData(Data data);
+    public final void setData(Data data) {
+        if (data instanceof CursorActivitiesFragment.CursorActivitiesLoader.ActivityCursor) {
+            mFilteredUserIds = ((CursorActivitiesFragment.CursorActivitiesLoader.ActivityCursor) data).getFilteredUserIds();
+        }
+        onSetData(data);
+    }
+
+    protected abstract void onSetData(Data data);
 
     @Override
     public MediaLoadingHandler getMediaLoadingHandler() {
@@ -156,12 +169,8 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     public void onUserProfileClick(IStatusViewHolder holder, int position) {
         final Context context = getContext();
         final ParcelableActivity activity = getActivity(position);
-        final ParcelableStatus status;
-        if (activity.action == Activity.ACTION_MENTION) {
-            status = activity.target_object_statuses[0];
-        } else {
-            status = activity.target_statuses[0];
-        }
+        final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
+        assert status != null;
         final View profileImageView = holder.getProfileImageView();
         final View profileTypeView = holder.getProfileTypeView();
         if (context instanceof FragmentActivity) {
@@ -215,11 +224,17 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
                 final View view = mInflater.inflate(R.layout.card_item_load_indicator, parent, false);
                 return new LoadIndicatorViewHolder(view);
             }
-            default: {
+            case ITEM_VIEW_TYPE_STUB: {
                 final View view = mInflater.inflate(R.layout.list_item_two_line, parent, false);
                 return new StubViewHolder(view);
             }
+            case ITEM_VIEW_TYPE_EMPTY: {
+                final View view = new Space(getContext());
+                return new ViewHolder(view) {
+                };
+            }
         }
+        throw new UnsupportedOperationException("Unsupported viewType " + viewType);
     }
 
     @Override
@@ -227,18 +242,10 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         switch (getItemViewType(position)) {
             case ITEM_VIEW_TYPE_STATUS: {
                 final ParcelableActivity activity = getActivity(position);
-                final ParcelableStatus status;
-                if (activity.action == Activity.ACTION_MENTION) {
-                    status = activity.target_object_statuses[0];
-                } else if (activity.action == Activity.ACTION_REPLY) {
-                    status = activity.target_statuses[0];
-                } else if (activity.action == Activity.ACTION_QUOTE) {
-                    status = activity.target_statuses[0];
-                } else {
-                    throw new UnsupportedOperationException();
-                }
-                final IStatusViewHolder IStatusViewHolder = (IStatusViewHolder) holder;
-                IStatusViewHolder.displayStatus(status, null, true, true);
+                final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
+                assert status != null;
+                final IStatusViewHolder statusViewHolder = (IStatusViewHolder) holder;
+                statusViewHolder.displayStatus(status, true, true);
                 break;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {
@@ -265,36 +272,44 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP;
         }
-        switch (getActivityAction(position)) {
-            case Activity.ACTION_MENTION: {
-                if (ArrayUtils.isEmpty(activity.target_object_statuses)) {
-                    return ITEM_VIEW_TYPE_STUB;
+        final String action = getActivityAction(position);
+        if (Activity.Action.MENTION.literal.equals(action)) {
+            if (ArrayUtils.isEmpty(activity.target_object_statuses)) {
+                return ITEM_VIEW_TYPE_STUB;
+            }
+            return ITEM_VIEW_TYPE_STATUS;
+        } else if (Activity.Action.REPLY.literal.equals(action)) {
+            if (ArrayUtils.isEmpty(activity.target_statuses)) {
+                return ITEM_VIEW_TYPE_STUB;
+            }
+            return ITEM_VIEW_TYPE_STATUS;
+        } else if (Activity.Action.QUOTE.literal.equals(action)) {
+            if (ArrayUtils.isEmpty(activity.target_statuses)) {
+                return ITEM_VIEW_TYPE_STUB;
+            }
+            return ITEM_VIEW_TYPE_STATUS;
+        } else if (Activity.Action.FOLLOW.literal.equals(action) || Activity.Action.FAVORITE.literal.equals(action)
+                || Activity.Action.RETWEET.literal.equals(action) || Activity.Action.FAVORITED_RETWEET.literal.equals(action)
+                || Activity.Action.RETWEETED_RETWEET.literal.equals(action) || Activity.Action.RETWEETED_MENTION.literal.equals(action)
+                || Activity.Action.FAVORITED_MENTION.literal.equals(action) || Activity.Action.LIST_CREATED.literal.equals(action)
+                || Activity.Action.LIST_MEMBER_ADDED.literal.equals(action)) {
+            if (activity.filtered_source_ids == null) {
+                if (!ArrayUtils.isEmpty(mFilteredUserIds)) {
+                    ArrayLongList list = new ArrayLongList();
+                    for (long id : ArrayUtils.nullToEmpty(activity.source_ids)) {
+                        if (!ArrayUtils.contains(mFilteredUserIds, id)) {
+                            list.add(id);
+                        }
+                    }
+                    activity.filtered_source_ids = list.toArray();
+                } else {
+                    activity.filtered_source_ids = activity.source_ids;
                 }
-                return ITEM_VIEW_TYPE_STATUS;
             }
-            case Activity.ACTION_REPLY: {
-                if (ArrayUtils.isEmpty(activity.target_statuses)) {
-                    return ITEM_VIEW_TYPE_STUB;
-                }
-                return ITEM_VIEW_TYPE_STATUS;
+            if (ArrayUtils.isEmpty(activity.filtered_source_ids)) {
+                return ITEM_VIEW_TYPE_EMPTY;
             }
-            case Activity.ACTION_QUOTE: {
-                if (ArrayUtils.isEmpty(activity.target_statuses)) {
-                    return ITEM_VIEW_TYPE_STUB;
-                }
-                return ITEM_VIEW_TYPE_STATUS;
-            }
-            case Activity.ACTION_FOLLOW:
-            case Activity.ACTION_FAVORITE:
-            case Activity.ACTION_RETWEET:
-            case Activity.ACTION_FAVORITED_RETWEET:
-            case Activity.ACTION_RETWEETED_RETWEET:
-            case Activity.ACTION_RETWEETED_MENTION:
-            case Activity.ACTION_FAVORITED_MENTION:
-            case Activity.ACTION_LIST_CREATED:
-            case Activity.ACTION_LIST_MEMBER_ADDED: {
-                return ITEM_VIEW_TYPE_TITLE_SUMMARY;
-            }
+            return ITEM_VIEW_TYPE_TITLE_SUMMARY;
         }
         return ITEM_VIEW_TYPE_STUB;
     }
@@ -331,7 +346,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     protected abstract void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position);
 
-    protected abstract int getActivityAction(int position);
+    protected abstract String getActivityAction(int position);
 
     @Override
     public boolean isMediaPreviewEnabled() {
@@ -343,6 +358,18 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         if (mActivityAdapterListener == null) return;
         mActivityAdapterListener.onActivityClick(holder, position);
     }
+
+
+    @Override
+    public boolean shouldShowAccountsColor() {
+        return mStatusAdapterDelegate.shouldShowAccountsColor();
+    }
+
+    public void setShowAccountsColor(boolean showAccountsColor) {
+        mStatusAdapterDelegate.setShouldShowAccountsColor(showAccountsColor);
+        notifyDataSetChanged();
+    }
+
 
     public interface ActivityAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
@@ -371,7 +398,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
         public void displayActivity(ParcelableActivity activity) {
             text1.setText(text1.getResources().getString(R.string.unsupported_activity_action_title,
-                    activity.raw_action));
+                    activity.action));
             text2.setText(R.string.unsupported_activity_action_summary);
         }
     }

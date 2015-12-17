@@ -42,4 +42,6 @@ public interface IActivitiesAdapter<Data> extends IContentCardAdapter, IGapSuppo
     MediaLoadingHandler getMediaLoadingHandler();
 
     boolean isMediaPreviewEnabled();
+
+    boolean shouldShowAccountsColor();
 }

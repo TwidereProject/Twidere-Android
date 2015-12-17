@@ -40,7 +40,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
-import static org.mariotaku.twidere.util.Utils.getTableNameByUri;
+import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
 
 public class TrendsSuggestionsFragment extends AbsContentListViewFragment<TrendsAdapter>

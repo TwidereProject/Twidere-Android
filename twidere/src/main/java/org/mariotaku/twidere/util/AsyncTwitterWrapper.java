@@ -62,7 +62,6 @@ import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -394,7 +393,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     @Deprecated
     public void refreshAll() {
-        refreshAll(Utils.getActivatedAccountIds(mContext));
+        refreshAll(DataStoreUtils.getActivatedAccountIds(mContext));
     }
 
     public boolean refreshAll(final long[] accountIds) {
@@ -609,22 +608,22 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     for (Activity activity : getActivities(accountId, twitter, paging)) {
                         final ParcelableActivity parcelableActivity = new ParcelableActivity(activity, accountId, false);
                         if (deleteBound[0] < 0) {
-                            deleteBound[0] = parcelableActivity.min_position;
+                            deleteBound[0] = parcelableActivity.timestamp;
                         } else {
-                            deleteBound[0] = Math.min(deleteBound[0], parcelableActivity.min_position);
+                            deleteBound[0] = Math.min(deleteBound[0], parcelableActivity.timestamp);
                         }
                         if (deleteBound[1] < 0) {
-                            deleteBound[1] = parcelableActivity.max_position;
+                            deleteBound[1] = parcelableActivity.timestamp;
                         } else {
-                            deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_position);
+                            deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.timestamp);
                         }
-                        valuesList.add(ParcelableActivityValuesCreator.create(parcelableActivity));
+                        valuesList.add(ContentValuesCreator.createActivity(parcelableActivity));
                     }
                     if (deleteBound[0] > 0 && deleteBound[1] > 0) {
                         Expression where = Expression.and(
                                 Expression.equals(Activities.ACCOUNT_ID, accountId),
-                                Expression.greaterEquals(Activities.MIN_POSITION, deleteBound[0]),
-                                Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
+                                Expression.greaterEquals(Activities.TIMESTAMP, deleteBound[0]),
+                                Expression.lesserEquals(Activities.TIMESTAMP, deleteBound[1])
                         );
                         int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), null);
                         boolean insertGap = !noItemsBefore && rowsDeleted <= 0;
@@ -2434,7 +2433,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final ListResponse<Long> result) {
             if (result != null) {
-                final String user_id_where = ListUtils.toString(result.getData(), ',', false);
+                final String user_id_where = TwidereListUtils.toString(result.getData(), ',', false);
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
                             new Expression(String.format(Locale.ROOT, "%s IN (%s)", Statuses.USER_ID, user_id_where)));

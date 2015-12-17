@@ -34,7 +34,7 @@ import com.squareup.okhttp.ResponseBody;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.provider.TwidereDataStore.NetworkUsages;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.ConnectivityUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,7 +59,7 @@ public class NetworkUsageUtils implements Constants {
 
         public NetworkUsageInterceptor(Context context) {
             this.context = context;
-            setNetworkType(Utils.getActiveNetworkType(context));
+            setNetworkType(ConnectivityUtils.getActiveNetworkType(context));
         }
 
         @Override

@@ -380,7 +380,6 @@
   <string name="preview_images">Esikatsele kuvia</string>
   <string name="preload_wifi_only">Lataa etukäteen vain Wi-Fi-yhteydellä</string>
   <string name="sign_in_method_introduction_title">Kuinka se toimii?</string>
-  <string name="sign_in_method_introduction">Suurin osa Twitter sovelluksista avaa sivuston antaakseen sovellukselle luvan käyttää Twitter-tiliäsi, tämä voi tuntua hankalalta, jos sovellus käyttää sille räätälöityä ohjelmointirajapintaa, tai jos yhteys on huono. Twidere simuloi tavallista selainta helpottaakseen käyttäjää kirjautumaan Twitter-tililleen. Salasanaasi ei tulla koskaan tallentamaan eikä sitä tulla vuotamaan.</string>
   <string name="quote_protected_status_notice">Ei ole suositeltavaa lainata suojattua twiittiä.</string>
   <string name="edit_draft">Muokkaa luonnosta</string>
   <string name="profile_image">Profiilikuva</string>
@@ -480,7 +479,6 @@
   <string name="wizard_page_welcome_import_settings">Tuo asetukset</string>
   <string name="wizard_page_theme_text">Valitse haluamasi teema.</string>
   <string name="wizard_page_tabs_text">Lisää välilehtiä Twidereen\nSeuraa ihmisiä ja asioita, joista olet kiinnostunut.</string>
-  <string name="wizard_page_tabs_unchanged_message">Voit lisätä välilehtiä kohdasta \"Asetukset\" ja \"Välilehdet\"</string>
   <string name="wizard_page_cards_text">Määritä kortit.</string>
   <string name="wizard_page_hints_text">Tässä on joitakin hyödyllisiä vinkkejä.</string>
   <string name="wizard_page_usage_statistics_text">Twidere otti osaa erääseen tutkimukseen, joka tarvitsee jonkin verran käyttötietoja.</string>
@@ -534,8 +532,6 @@
   <string name="theme_background_transparent">Läpinäkyvä</string>
   <string name="theme_dark_actionbar">Tumma ActionBar</string>
   <string name="wizard_hint_compose_select_account">Kosketa käyttäjäkuvaa valitaksesi tilin, jolla twiitti lähetetään.</string>
-  <string name="wizard_hint_quote_format">Määritä haluamasi lainausmuoto kohdasta \"Asetukset\" - \"Sisältö &amp; säilytys\"</string>
-  <string name="wizard_hint_filters">Suodattimilla voit piilottaa aikajanasta ja ilmoituksista twiitit, joita et halua nähdä.</string>
   <string name="view_replies">Näytä vastaukset</string>
   <string name="compact_cards">Tiiviit kortit</string>
   <string name="compact_cards_summary">Näytä ruudulla enemmän kortteja</string>
@@ -610,7 +606,6 @@
   <string name="delete_drafts_confirm">Poistetaanko valittu luonnos?</string>
   <string name="extra_configurations">Lisäasetukset</string>
   <string name="click_item_to_config">Määritä napauttamalla</string>
-  <string name="dark_drawer">Tumma vetolaatikko</string>
   <string name="retweets_of_me">Twiittieni uudelleentwiittaukset</string>
   <string name="from_gallery">Galleriasta</string>
   <string name="from_camera">Kamerasta</string>

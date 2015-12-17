@@ -71,7 +71,7 @@ public class TwitterConverter implements Converter {
         try {
             final ParameterizedType<T> parameterizedType = ParameterizedTypeTrojan.create(type);
             final T parse = LoganSquare.parse(stream, parameterizedType);
-            if (TwitterException.class.equals(type) && parse == null) {
+            if (TwitterException.class == type && parse == null) {
                 throw new TwitterException();
             }
             return parse;

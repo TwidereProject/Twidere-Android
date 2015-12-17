@@ -53,9 +53,12 @@ public final class BirthdayView extends LayeredCanvasView {
 
     private void init() {
         setBackgroundColor(0xFF203040);
-        final AnimatedBitmapLayer tableLayer = new AnimatedBitmapLayer(getResources(), R.drawable.sprite_birthday_table_frames, 4, true);
-        final AnimatedBitmapLayer cakeLayer = new AnimatedBitmapLayer(getResources(), R.drawable.sprite_birthday_cake_frames, 4, false);
-        final AnimatedBitmapLayer lightStripLayer = new AnimatedBitmapLayer(getResources(), R.drawable.sprite_birthday_light_strip_frames, 4, true);
+        final AnimatedBitmapLayer tableLayer = new AnimatedBitmapLayer(getResources(),
+                R.drawable.sprite_birthday_table_frames, 4, true);
+        final AnimatedBitmapLayer cakeLayer = new AnimatedBitmapLayer(getResources(),
+                R.drawable.sprite_birthday_cake_frames, 4, false);
+        final AnimatedBitmapLayer lightStripLayer = new AnimatedBitmapLayer(getResources(),
+                R.drawable.sprite_birthday_light_strip_frames, 4, true);
         tableLayer.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
         tableLayer.setAntiAlias(false);
         cakeLayer.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
@@ -80,6 +83,7 @@ public final class BirthdayView extends LayeredCanvasView {
         ((AnimatedBitmapLayer) layers[2]).setScale(Math.max(1, w / 160));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected boolean fitSystemWindows(@NonNull Rect insets) {
         final int stripTop = Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top);

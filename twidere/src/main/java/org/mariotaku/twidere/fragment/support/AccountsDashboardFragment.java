@@ -91,6 +91,7 @@ import org.mariotaku.twidere.menu.support.AccountToggleProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ListViewUtils;
@@ -156,7 +157,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         if (mAccountActionProvider != null) {
             return mAccountActionProvider.getActivatedAccountIds();
         }
-        return Utils.getActivatedAccountIds(getActivity());
+        return DataStoreUtils.getActivatedAccountIds(getActivity());
     }
 
     @Override
