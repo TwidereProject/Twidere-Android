@@ -497,7 +497,7 @@
   <string name="wizard_page_welcome_import_settings">Importar axustes</string>
   <string name="wizard_page_theme_text">Escueyi un tema que te preste.</string>
   <string name="wizard_page_tabs_text">Amiesta delles llingüetes a Twidere.\nSigui a la xente o coses que t\'importen.</string>
-  <string name="wizard_page_tabs_unchanged_message">Pues amestar llingüetes n\'&quot;Axustes&quot; - &quot;Llingüetes&quot;</string>
+  <string name="wizard_page_tabs_unchanged_message">Pues amestar llingüetes n\'"Axustes" - "Llingüetes"</string>
   <string name="wizard_page_cards_text">Configuración d\'elementos de tarxetes.</string>
   <string name="wizard_page_hints_text">Equí hai dellos conseyos interesantes.</string>
   <string name="wizard_page_usage_statistics_text">Twidere participa en dellos proyeutos d\'investigación que necesiten dél usu de datos.</string>
@@ -551,9 +551,8 @@
   <string name="theme_background_transparent">Tresparente</string>
   <string name="theme_dark_actionbar">Barra d\'aiciones escura</string>
   <string name="wizard_hint_compose_select_account">Primi na imaxe de perfil pa esbillar la cuenta al escribir un tuit.</string>
-  <string name="wizard_hint_quote_format">Afita\'l to formatu de cita favoritu n\'&laquo;Axustes&raquo;
-    - &laquo;Componer&raquo;</string>
-  <string name="wizard_hint_filters">Pues anubrir tuits que nun quieras de la llinia temporal y avisos usando &quot;Peñeres&quot;.</string>
+  <string name="wizard_hint_quote_format">Afita\'l to formatu de cita favoritu n\'«Axustes» - «Componer»</string>
+  <string name="wizard_hint_filters">Pues anubrir tuits que nun quieras de la llinia temporal y avisos usando "Peñeres".</string>
   <string name="view_replies">Ver rempuestes</string>
   <string name="compact_cards">Tarxetes compautes</string>
   <string name="compact_cards_summary">Amuesa más tarxetes na pantalla</string>
@@ -590,7 +589,7 @@
   <string name="denied_users_follow_request">Refugóse la solicitú de siguimientu de <xliff:g id="user">%s</xliff:g>.</string>
   <string name="import_settings">Importar axustes</string>
   <string name="export_settings">Esportar axustes</string>
-  <string name="export_settings_type_dialog_title">Esportar axustes&#8230;</string>
+  <string name="export_settings_type_dialog_title">Esportar axustes…</string>
   <string name="import_settings_type_dialog_title">Importar axustes...</string>
   <string name="nicknames">Nomatos</string>
   <string name="user_colors">Colores d\'usuariu</string>
@@ -704,7 +703,7 @@
   <string name="usage_statistics">Estadístiques d\'usu</string>
   <string name="research_hot_mobile">Investigación de redes móviles de datos</string>
   <string name="unknown_location">Allugamientu desconocíu</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Importar/Esportar axustes</string>
   <string name="usage_statistics_header_summary">Twidere participa en dellos proyeutos d\'investigación, xunise a estos proyeutos ameyorarán Twidere y daqué otra aplicación.</string>
   <string name="no_tab">Ensin llingüetes</string>

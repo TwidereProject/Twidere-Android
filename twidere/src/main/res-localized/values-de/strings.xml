@@ -396,7 +396,7 @@
   <string name="preview_images">Vorschaubilder</string>
   <string name="preload_wifi_only">Vorausladen nur mit WLAN</string>
   <string name="sign_in_method_introduction_title">Wie funktioniert es?</string>
-  <string name="sign_in_method_introduction">Die meisten Programme &ouml;ffnen eine Webseite, um sich zu bei Twitter anzumelden. Das kann beim Nutzen einer eigenen API oder bei einer langsamen Verbindung nervig sein. Twidere gibt sich als normaler Browser aus und kann sich so zuverl&auml;ssiger anmelden. Und keine Sorge, das Passwort wird nirgendwo gespeichert oder gar ver&ouml;ffentlicht.</string>
+  <string name="sign_in_method_introduction">Die meisten Programme öffnen eine Webseite, um sich zu bei Twitter anzumelden. Das kann beim Nutzen einer eigenen API oder bei einer langsamen Verbindung nervig sein. Twidere gibt sich als normaler Browser aus und kann sich so zuverlässiger anmelden. Und keine Sorge, das Passwort wird nirgendwo gespeichert oder gar veröffentlicht.</string>
   <string name="quote_protected_status_notice">Es ist nicht empfohlen einen geschützten Tweet zu zitieren.</string>
   <string name="edit_draft">Bearbeite Entwurf</string>
   <string name="profile_image">Profilbild</string>
@@ -421,7 +421,7 @@
   <string name="search_name_saved">Suche \"<xliff:g id="name">%s</xliff:g>\" gespeichert.</string>
   <string name="search_deleted">Suche gelöscht.</string>
   <string name="search_name_deleted">Suche \"<xliff:g id="name">%s</xliff:g>\" gelöscht.</string>
-  <string name="import_from">Importiere aus&#8230;</string>
+  <string name="import_from">Importiere aus…</string>
   <string name="link_to_quoted_status">Link zum zitierten Tweet</string>
   <string name="quote_original_status">Originalen Tweet zitieren</string>
   <string name="followed_user">Folge <xliff:g id="user">%s</xliff:g>.</string>
@@ -496,7 +496,7 @@
   <string name="wizard_page_welcome_import_settings">Einstellungen importieren</string>
   <string name="wizard_page_theme_text">Theme auswählen.</string>
   <string name="wizard_page_tabs_text">Neue Tabs hinzufügen.\nInteressensgebiete hinterlegen.</string>
-  <string name="wizard_page_tabs_unchanged_message">Tabs können unter &quot;Einstellungen&quot; - &quot;Tabs&quot; hinzugef&uuml;gt werden</string>
+  <string name="wizard_page_tabs_unchanged_message">Tabs können unter "Einstellungen" - "Tabs" hinzugefügt werden</string>
   <string name="wizard_page_cards_text">Tweet-Karten konfigurieren.</string>
   <string name="wizard_page_hints_text">Hier sind ein paar nützliche Hinweise.</string>
   <string name="wizard_page_usage_statistics_text">Twidere hat an einem Forschungsprojekt teilgenommen, das ein paar Nutzungsstatistiken benötigt.</string>
@@ -550,8 +550,8 @@
   <string name="theme_background_transparent">Transparent</string>
   <string name="theme_dark_actionbar">Dunkle Aktionsleiste</string>
   <string name="wizard_hint_compose_select_account">Drücke auf das Profil Bild um den Account auszuwählen,  wenn du einen Tweet schreibst.</string>
-  <string name="wizard_hint_quote_format">Konfiguriere dein bevorzugtes Zitat-Format unter &quot;Einstellungen&quot; - &quot;Neuer Tweet&quot;</string>
-  <string name="wizard_hint_filters">Unter &quot;Filter&quot; können bestimmte Tweets und Erinnerungen versteckt werden</string>
+  <string name="wizard_hint_quote_format">Konfiguriere dein bevorzugtes Zitat-Format unter "Einstellungen" - "Neuer Tweet"</string>
+  <string name="wizard_hint_filters">Unter "Filter" können bestimmte Tweets und Erinnerungen versteckt werden</string>
   <string name="view_replies">Antworten ansehen</string>
   <string name="compact_cards">kompaktere Karten</string>
   <string name="compact_cards_summary">Mehr Karten anzeigen</string>
@@ -588,8 +588,8 @@
   <string name="denied_users_follow_request">Follower-Anfrage von <xliff:g id="user">%s</xliff:g> wurde abgelehnt.</string>
   <string name="import_settings">Einstellungen importieren</string>
   <string name="export_settings">Einstellungen exportieren</string>
-  <string name="export_settings_type_dialog_title">Einstellungen exportieren&#8230;</string>
-  <string name="import_settings_type_dialog_title">Einstellungen importieren&#8230;</string>
+  <string name="export_settings_type_dialog_title">Einstellungen exportieren…</string>
+  <string name="import_settings_type_dialog_title">Einstellungen importieren…</string>
   <string name="nicknames">Spitznamen</string>
   <string name="user_colors">Benutzerfarben</string>
   <string name="import_export">Importieren/Exportieren</string>
@@ -702,7 +702,7 @@
   <string name="usage_statistics">Nutzungsstatistiken</string>
   <string name="research_hot_mobile">Datenbasierte Suche im mobilen Netzwerk</string>
   <string name="unknown_location">Unbekannte Position</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Einstellungen importieren/exportieren</string>
   <string name="usage_statistics_header_summary">Twidere hat an einem Forschungsprojekt teilgenommen, an diesem Projekt mitzumachen wird Twidere und andere Anwendungen verbessern.</string>
   <string name="no_tab">Kein Tab</string>
@@ -762,7 +762,7 @@
   <string name="delete_conversation_confirm_message">Alle Nachrichten dieser Unterhaltung löschen?</string>
   <string name="name_first_summary_on">Name zuerst anzeigen</string>
   <string name="name_first_summary_off">\@screenname zuerst anzeigen</string>
-  <string name="comment_hint">Kommentar&#8230;</string>
+  <string name="comment_hint">Kommentar…</string>
   <string name="comment">Kommentar</string>
   <string name="enable_retweets">Retweets erlauben</string>
   <string name="disable_retweets">Retweets verbieten</string>
@@ -798,10 +798,10 @@
   <string name="combined_notifications_summary_on">Erinnerungen werden zusammen angezeigt</string>
   <string name="combined_notifications_summary_off">Erinnerungen werden getrennt angezeigt</string>
   <string name="save_media_no_storage_permission_message">Speicherberechtigung nötig, um Bilder und Videos zu speichern.</string>
-  <string name="select_file_no_storage_permission_message">Speicherberechtigung nötig, um Dateien zu w&auml;hlen.</string>
-  <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g> hat Dich erw&auml;hnt</string>
+  <string name="select_file_no_storage_permission_message">Speicherberechtigung nötig, um Dateien zu wählen.</string>
+  <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g> hat Dich erwähnt</string>
   <string name="cant_load_all_replies_message">Kann nicht alle Antworten laden. &lt;a href=\"#dialog\";&gt;Warum?&lt;/a&gt;</string>
-  <string name="cant_load_all_replies_explanation">Wegen der Einschr&auml;nkung Programme anderer Hersteller durch Twitter, hat Twidere keinen Zugriff auf die Antworten auf einen Tweet, Twidere kann nicht garantieren, alle Antworten laden zu k&ouml;nnen.</string>
+  <string name="cant_load_all_replies_explanation">Wegen der Einschränkung Programme anderer Hersteller durch Twitter, hat Twidere keinen Zugriff auf die Antworten auf einen Tweet, Twidere kann nicht garantieren, alle Antworten laden zu können.</string>
   <string name="current_status">Letzter Tweet</string>
   <string name="twitter_optimized_searches">Twitter-optimierte Suche</string>
   <string name="twitter_optimized_searches_summary">Verwenden Sie spezielle Begriffe um die Suchergebnisse zu verbessern sowie Retweets auszuschließen</string>

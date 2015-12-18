@@ -404,7 +404,7 @@
   <string name="search_name_saved">Пошук \"<xliff:g id="name">%s</xliff:g>\" збережено.</string>
   <string name="search_deleted">Пошук вилучено.</string>
   <string name="search_name_deleted">Пошук \"<xliff:g id="name">%s</xliff:g>\" вилучено.</string>
-  <string name="import_from">Імпортувати з&#8230;</string>
+  <string name="import_from">Імпортувати з…</string>
   <string name="link_to_quoted_status">Посилання на цитований твіт</string>
   <string name="quote_original_status">Цитувати первісний твіт</string>
   <string name="followed_user">Підписаний на <xliff:g id="user">%s</xliff:g>.</string>
@@ -456,7 +456,7 @@
   <string name="settings_interface">Інтерфейс</string>
   <string name="no_rule">Правила відсутні</string>
   <string name="safety">Безпека</string>
-  <string name="updating_status_notification">Надсилання твіту&#8230;</string>
+  <string name="updating_status_notification">Надсилання твіту…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Запит</string>
   <string name="input_text">Ввод тексту</string>
@@ -568,8 +568,8 @@
   <string name="denied_users_follow_request">Відхилений запит на підписку від <xliff:g id="user">%s</xliff:g>.</string>
   <string name="import_settings">Імпорт налаштувань</string>
   <string name="export_settings">Експорт налаштувань</string>
-  <string name="export_settings_type_dialog_title">Експорт налаштувань&#8230;</string>
-  <string name="import_settings_type_dialog_title">Імпорт налаштувань&#8230;</string>
+  <string name="export_settings_type_dialog_title">Експорт налаштувань…</string>
+  <string name="import_settings_type_dialog_title">Імпорт налаштувань…</string>
   <string name="nicknames">Псевдо</string>
   <string name="user_colors">Кольори користувача</string>
   <string name="import_export">Імпорт/експорт</string>
@@ -682,7 +682,7 @@
   <string name="usage_statistics">Статистика  використання</string>
   <string name="research_hot_mobile">Керовані даними дослідження мобільної мережі</string>
   <string name="unknown_location">Невідоме місцеположення</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Імпорт/Експорт налаштувань</string>
   <string name="usage_statistics_header_summary">Twidere взяв участь у деяких дослідницких проектах. Долучившись до них, ви покращите Twidere та деякі інші програми.</string>
   <string name="no_tab">Нема вкладок</string>
@@ -741,7 +741,7 @@
   <string name="delete_conversation_confirm_message">Видалити всі повідомлення у цій бесіді?</string>
   <string name="name_first_summary_on">Відображати спершу ім\'я</string>
   <string name="name_first_summary_off">Показувати спочатку \@нікнейм</string>
-  <string name="comment_hint">Коментувати&#8230;</string>
+  <string name="comment_hint">Коментувати…</string>
   <string name="comment">Коментар</string>
   <string name="enable_retweets">Увімкнути ретвіти</string>
   <string name="disable_retweets">Вимкнути ретвіти</string>

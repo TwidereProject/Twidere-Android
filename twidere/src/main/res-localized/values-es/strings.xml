@@ -476,7 +476,7 @@
   <string name="settings_interface">Interfaz</string>
   <string name="no_rule">Sin regla</string>
   <string name="safety">Seguro</string>
-  <string name="updating_status_notification">Enviando tweet&#8230;</string>
+  <string name="updating_status_notification">Enviando tweet…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Consulta</string>
   <string name="input_text">Introduce el texto</string>
@@ -499,7 +499,7 @@
   <string name="wizard_page_welcome_import_settings">Importar configuración</string>
   <string name="wizard_page_theme_text">Selecciona el tema que te gusta.</string>
   <string name="wizard_page_tabs_text">Añade algunas pestañas a Twidere.\nMantén un registro de las personas o las cosas que te importan.</string>
-  <string name="wizard_page_tabs_unchanged_message">Puedes añadir pestañas en &quot;Ajustes&quot; - &quot;Pestañas&quot;</string>
+  <string name="wizard_page_tabs_unchanged_message">Puedes añadir pestañas en "Ajustes" - "Pestañas"</string>
   <string name="wizard_page_cards_text">Configura artículos de la tarjeta.</string>
   <string name="wizard_page_hints_text">Aquí algunos consejos útiles.</string>
   <string name="wizard_page_usage_statistics_text">Twidere participa en un proyecto de investigación que necesita algunos datos de uso.</string>
@@ -553,8 +553,8 @@
   <string name="theme_background_transparent">Transparente</string>
   <string name="theme_dark_actionbar">Barra de acciones oscura</string>
   <string name="wizard_hint_compose_select_account">Click en la imagen de perfil para seleccionar una cuenta al escribir un tweet.</string>
-  <string name="wizard_hint_quote_format">Selecciona tu forma de citar favorita en &quot;Ajustes&quot; - &quot;Componer&quot;</string>
-  <string name="wizard_hint_filters">Puedes esconder tweets no deseados de la timeline y de las notificaciones usando &quot;Filtros&quot;.</string>
+  <string name="wizard_hint_quote_format">Selecciona tu forma de citar favorita en "Ajustes" - "Componer"</string>
+  <string name="wizard_hint_filters">Puedes esconder tweets no deseados de la timeline y de las notificaciones usando "Filtros".</string>
   <string name="view_replies">Ver respuestas</string>
   <string name="compact_cards">Compactar tarjetas</string>
   <string name="compact_cards_summary">Visualizar más tarjetas en pantalla</string>
@@ -591,8 +591,8 @@
   <string name="denied_users_follow_request">Denegar la solicitud de <xliff:g id="user">%s</xliff:g> para seguirle.</string>
   <string name="import_settings">Importar ajustes</string>
   <string name="export_settings">Exportar ajustes</string>
-  <string name="export_settings_type_dialog_title">Exportar ajustes&#8230;</string>
-  <string name="import_settings_type_dialog_title">Importar ajustes&#8230;</string>
+  <string name="export_settings_type_dialog_title">Exportar ajustes…</string>
+  <string name="import_settings_type_dialog_title">Importar ajustes…</string>
   <string name="nicknames">Apodos</string>
   <string name="user_colors">Colores de usuario</string>
   <string name="import_export">Importar/exportar</string>
@@ -705,7 +705,7 @@
   <string name="usage_statistics">Estadísticas de uso</string>
   <string name="research_hot_mobile">Búsqueda de red móvil a través de datos</string>
   <string name="unknown_location">Localización desconocida</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Importar/Exportar ajustes</string>
   <string name="usage_statistics_header_summary">Twidere forma parte de un proyecto de investigación, unirse a estos proyectos hará de Twidere, y otras, una aplicación mejor.</string>
   <string name="no_tab">Sin pestañas</string>
@@ -766,7 +766,7 @@
   <string name="delete_conversation_confirm_message">¿Borrar todos los mensajes de esta conversación?</string>
   <string name="name_first_summary_on">Mostrar nombre primero</string>
   <string name="name_first_summary_off">Mostrar \@nombre de usuario primero</string>
-  <string name="comment_hint">Comentario&#8230;</string>
+  <string name="comment_hint">Comentario…</string>
   <string name="comment">Comentario</string>
   <string name="enable_retweets">Habilitar retweets</string>
   <string name="disable_retweets">Deshabilitar retweets</string>

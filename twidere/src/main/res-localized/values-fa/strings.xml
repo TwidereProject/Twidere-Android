@@ -424,7 +424,7 @@
   <string name="search_name_saved">جست‌وجوی «<xliff:g id="name">%s</xliff:g>» ذخیره شد.</string>
   <string name="search_deleted">جست‌وجو حذف شد.</string>
   <string name="search_name_deleted">جست‌وجوی «<xliff:g id="name">%s</xliff:g>» حذف شد.</string>
-  <string name="import_from">وارد کردن از&#8230;</string>
+  <string name="import_from">وارد کردن از…</string>
   <string name="link_to_quoted_status">پیوند به توییت نقل‌قول شده</string>
   <string name="quote_original_status">نقل قول توییت اصلی</string>
   <string name="followed_user">‫<xliff:g id="user">%s</xliff:g> دنیال شد.</string>
@@ -474,7 +474,7 @@
   <string name="settings_interface">رابط</string>
   <string name="no_rule">بدون شرط</string>
   <string name="safety">ایمنی</string>
-  <string name="updating_status_notification">در حال فرستادن توئیت&#8230;</string>
+  <string name="updating_status_notification">در حال فرستادن توئیت…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">پرسش</string>
   <string name="input_text">ورود متن</string>
@@ -497,7 +497,7 @@
   <string name="wizard_page_welcome_import_settings">واردکردن تنظیمات</string>
   <string name="wizard_page_theme_text">زمینه‌ای که دوست دارید انتخاب کنید.</string>
   <string name="wizard_page_tabs_text">تعدادی برگه به Twidere بیافزایید.\nافرادی را که بهشان توجه دارید دنبال کنید.</string>
-  <string name="wizard_page_tabs_unchanged_message">می‌توانید در &quot;تنظیمات&quot; - &quot;زبانه‌ها&quot;، زبانه‌هایی بیفزایید</string>
+  <string name="wizard_page_tabs_unchanged_message">می‌توانید در "تنظیمات" - "زبانه‌ها"، زبانه‌هایی بیفزایید</string>
   <string name="wizard_page_cards_text">تنظیم موارد کارتی.</string>
   <string name="wizard_page_hints_text">این‌جا راهنماهای مفیدی هست.</string>
   <string name="wizard_page_usage_statistics_text">Twidere در برخی پروژه‌های تحقیقی نقش دارد که نیازمند داده‌های مصرف است.</string>
@@ -551,8 +551,8 @@
   <string name="theme_background_transparent">شفّاف</string>
   <string name="theme_dark_actionbar">نوار کنش تیره</string>
   <string name="wizard_hint_compose_select_account">هنگام نوشتن یک توییت، برای گزینش حساب، روی تصویر نمایه کلیک کنید.</string>
-  <string name="wizard_hint_quote_format">قالب نقل‌قول دلخواهتان را در &quot;تنظیمات&quot; - &quot;ایجاد&quot; تنظیم کنید</string>
-  <string name="wizard_hint_filters">می‌توانید با استفاده از &quot;پالایه‌ها&quot;، توییت‌های ناخواسته را خط زمانتان پنهان کنید.</string>
+  <string name="wizard_hint_quote_format">قالب نقل‌قول دلخواهتان را در "تنظیمات" - "ایجاد" تنظیم کنید</string>
+  <string name="wizard_hint_filters">می‌توانید با استفاده از "پالایه‌ها"، توییت‌های ناخواسته را خط زمانتان پنهان کنید.</string>
   <string name="view_replies">دیدن پاسخ‌ها</string>
   <string name="compact_cards">کارت‌های فشرده</string>
   <string name="compact_cards_summary">نمایش کارت‌های بیش‌تر روی صفحه</string>
@@ -589,8 +589,8 @@
   <string name="denied_users_follow_request">درخواست دنبال کردن <xliff:g id="user">%s</xliff:g> رد شد.</string>
   <string name="import_settings">وارد کردن تنظیمات</string>
   <string name="export_settings">صادر کردن تنظیمات</string>
-  <string name="export_settings_type_dialog_title">صادر کردن تنظیمات&#8230;</string>
-  <string name="import_settings_type_dialog_title">وارد کردن تنظیمات&#8230;</string>
+  <string name="export_settings_type_dialog_title">صادر کردن تنظیمات…</string>
+  <string name="import_settings_type_dialog_title">وارد کردن تنظیمات…</string>
   <string name="nicknames">نام‌های مستعار</string>
   <string name="user_colors">رنگ‌های کاربر</string>
   <string name="import_export">وارد/صادر</string>
@@ -702,7 +702,7 @@
   <string name="usage_statistics">آمار استفاده</string>
   <string name="research_hot_mobile">تحقیقات شبکهٔ همراه داده محور</string>
   <string name="unknown_location">موقعیّت ناشناخته</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">تنظیمات ورود/صدور</string>
   <string name="usage_statistics_header_summary">تویدر در برهی پروژه‌های تحقیقاتی شرکت می‌کند،شرکت در این پروژه‌های تویدر و برخی برنامه‌های دیگر را بهتر خواهد کرد.</string>
   <string name="no_tab">بدون زبانه</string>
@@ -763,7 +763,7 @@
   <string name="delete_conversation_confirm_message">حذف تمام پیام‌های این گفت‌وگو؟</string>
   <string name="name_first_summary_on">نخست نام نمایش داده شود</string>
   <string name="name_first_summary_off">نخست \@نام‌کاربری نمایش داده شود</string>
-  <string name="comment_hint">نظر&#8230;</string>
+  <string name="comment_hint">نظر…</string>
   <string name="comment">نظر</string>
   <string name="enable_retweets">فعّال کردن بازتوییت‌ها</string>
   <string name="disable_retweets">غیرفعّال کردن بازتوییت‌ها</string>

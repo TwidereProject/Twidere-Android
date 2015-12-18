@@ -683,7 +683,7 @@
   <string name="save_to_gallery">갤러리에 저장</string>
   <string name="usage_statistics">사용 통계</string>
   <string name="unknown_location">알 수 없는 위치</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">설정 가져오기/내보내기</string>
   <string name="usage_statistics_header_summary">Twidere는 일부 연구 프로젝트에 참여하고 있습니다. 프로젝트에 참여하면 Twidere와 다른 앱들을 향상시킬 수 있을 것입니다.</string>
   <string name="no_tab">탭 없음</string>
@@ -742,7 +742,7 @@
   <string name="delete_conversation_confirm_message">이 대화의 모든 메세지를 삭제할까요?</string>
   <string name="name_first_summary_on">이름 먼저 표시</string>
   <string name="name_first_summary_off">\@\screenname 먼저 표시</string>
-  <string name="comment_hint">코멘트&#8230;</string>
+  <string name="comment_hint">코멘트…</string>
   <string name="comment">코멘트</string>
   <string name="enable_retweets">리트윗 사용</string>
   <string name="disable_retweets">리트윗 사용 안함</string>

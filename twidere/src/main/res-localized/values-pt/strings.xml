@@ -471,7 +471,7 @@
   <string name="settings_interface">Interface</string>
   <string name="no_rule">Sem regras</string>
   <string name="safety">Segurança</string>
-  <string name="updating_status_notification">Enviando tweet&#8230;</string>
+  <string name="updating_status_notification">Enviando tweet…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Pesquisar</string>
   <string name="input_text">Entrada de texto</string>
@@ -494,7 +494,7 @@
   <string name="wizard_page_welcome_import_settings">Importar configurações</string>
   <string name="wizard_page_theme_text">Escolha seu tema preferido.</string>
   <string name="wizard_page_tabs_text">Adicione algumas abas ao Twidere.\nMantenha o controle de perfis ou assuntos que você gosta.</string>
-  <string name="wizard_page_tabs_unchanged_message">Você pode adicionar abas em &quot;Configurações&quot; - &quot;Abas&quot;</string>
+  <string name="wizard_page_tabs_unchanged_message">Você pode adicionar abas em "Configurações" - "Abas"</string>
   <string name="wizard_page_cards_text">Configurar itens do cartão.</string>
   <string name="wizard_page_hints_text">Aqui estão algumas dicas úteis.</string>
   <string name="wizard_page_usage_statistics_text">Twidere participa de alguns projetos de pesquisa que precisam de alguns dados de uso.</string>
@@ -548,8 +548,8 @@
   <string name="theme_background_transparent">Transparente</string>
   <string name="theme_dark_actionbar">ActionBar Escura</string>
   <string name="wizard_hint_compose_select_account">Clique na imagem de perfil para selecionar uma conta ao escrever um tweet.</string>
-  <string name="wizard_hint_quote_format">Definir o seu formato preferido de citação em &quot;Configurações&quot; - &quot;Escrever&quot;</string>
-  <string name="wizard_hint_filters">Você pode esconder tweets indesejados da linha do tempo e notificações usando &quot;Filtros&quot;.</string>
+  <string name="wizard_hint_quote_format">Definir o seu formato preferido de citação em "Configurações" - "Escrever"</string>
+  <string name="wizard_hint_filters">Você pode esconder tweets indesejados da linha do tempo e notificações usando "Filtros".</string>
   <string name="view_replies">Ver Respostas</string>
   <string name="compact_cards">Compactar cartões</string>
   <string name="compact_cards_summary">Exibir mais cartões na tela</string>
@@ -700,7 +700,7 @@
   <string name="usage_statistics">Estatísticas de uso</string>
   <string name="research_hot_mobile">Pesquisa de rede móvel por dados</string>
   <string name="unknown_location">Localização desconhecida</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Importar/Exportar configurações</string>
   <string name="usage_statistics_header_summary">Twidere participa de alguns projetos de pesquisa, participar desses projetos irá aperfeiçoar o Twidere e outros aplicativos.</string>
   <string name="no_tab">Sem aba</string>
@@ -761,7 +761,7 @@
   <string name="delete_conversation_confirm_message">Deletar todas as mensagens dessa conversa?</string>
   <string name="name_first_summary_on">Exibir o nome primeiro</string>
   <string name="name_first_summary_off">Exibir o \@screenname primeiro</string>
-  <string name="comment_hint">Comentar&#8230;</string>
+  <string name="comment_hint">Comentar…</string>
   <string name="comment">Comentar</string>
   <string name="enable_retweets">Ativar retweets</string>
   <string name="disable_retweets">Desativar retweets</string>

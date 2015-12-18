@@ -417,7 +417,7 @@
   <string name="search_name_saved">حُفظ البحث \"<xliff:g id="name">%s</xliff:g>\".</string>
   <string name="search_deleted">حُذِف البحث.</string>
   <string name="search_name_deleted">حُذِف البحث \"<xliff:g id="name">%s</xliff:g>\".</string>
-  <string name="import_from">استيراد من &#8230;</string>
+  <string name="import_from">استيراد من …</string>
   <string name="link_to_quoted_status">ربط لتغريدة مقتبسة</string>
   <string name="quote_original_status">اقتباس التغريدة الأصلية</string>
   <string name="followed_user">تابعتَ <xliff:g id="user">%s</xliff:g>.</string>
@@ -469,7 +469,7 @@
   <string name="settings_interface">الواجهة</string>
   <string name="no_rule">ولا قاعدة</string>
   <string name="safety">الأمن</string>
-  <string name="updating_status_notification">يرسل التغريدة&#8230;</string>
+  <string name="updating_status_notification">يرسل التغريدة…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">طلب</string>
   <string name="input_text">إدخال النص</string>
@@ -562,8 +562,8 @@
   <string name="denied_users_follow_request">رفض <xliff:g id="user">%s</xliff:g> متابعتك.</string>
   <string name="import_settings">استيراد الإعدادات</string>
   <string name="export_settings">تصدير الإعدادات</string>
-  <string name="export_settings_type_dialog_title">تصدير الإعدادات&#8230;</string>
-  <string name="import_settings_type_dialog_title">استيراد الإعدادات&#8230;</string>
+  <string name="export_settings_type_dialog_title">تصدير الإعدادات…</string>
+  <string name="import_settings_type_dialog_title">استيراد الإعدادات…</string>
   <string name="nicknames">أسماء مستعارة</string>
   <string name="user_colors">ألوان المستخدم</string>
   <string name="import_export">الإستيراد والتصدير</string>

@@ -404,7 +404,7 @@
   <string name="search_name_saved">Pretraga \"<xliff:g id="name">%s</xliff:g>\" spremljena.</string>
   <string name="search_deleted">Pretraga obrisana.</string>
   <string name="search_name_deleted">Pretraga \"<xliff:g id="name">%s</xliff:g>\" obrisana.</string>
-  <string name="import_from">Uvezi iz&#8230;</string>
+  <string name="import_from">Uvezi iz…</string>
   <string name="link_to_quoted_status">Link do citiranog tweeta</string>
   <string name="quote_original_status">Citiraj originalni tweet</string>
   <string name="followed_user">Slijedite <xliff:g id="user">%s</xliff:g>.</string>
@@ -456,7 +456,7 @@
   <string name="settings_interface">Sučelje</string>
   <string name="no_rule">Nema pravila</string>
   <string name="safety">Sigurnost</string>
-  <string name="updating_status_notification">Šaljem tweet&#8230;</string>
+  <string name="updating_status_notification">Šaljem tweet…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Upit</string>
   <string name="input_text">Tekst unosa</string>
@@ -568,8 +568,8 @@
   <string name="denied_users_follow_request">Odbačen zahtjev od <xliff:g id="user">%s</xliff:g> za slijeđenjem.</string>
   <string name="import_settings">Uvezi postavke</string>
   <string name="export_settings">Izvezi postavke</string>
-  <string name="export_settings_type_dialog_title">Izvezi postavke&#8230;</string>
-  <string name="import_settings_type_dialog_title">Uvezi postavke&#8230;</string>
+  <string name="export_settings_type_dialog_title">Izvezi postavke…</string>
+  <string name="import_settings_type_dialog_title">Uvezi postavke…</string>
   <string name="nicknames">Nadimci</string>
   <string name="user_colors">Korisničke boje</string>
   <string name="import_export">Uvoz/Izvoz</string>
@@ -682,7 +682,7 @@
   <string name="usage_statistics">Statistika korištenja</string>
   <string name="research_hot_mobile">Istraživanje o Mobilnoj Mreži Pogonjenoj Podacima</string>
   <string name="unknown_location">Nepoznata lokacija</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Postavke izvoza/uvoza</string>
   <string name="usage_statistics_header_summary">Twidere je sudjelovao u nekim istraživačkim projektima, pridružite se tim projektima kako bi učinili Twidere i ostale aplikacije boljima.</string>
   <string name="no_tab">Nema tabova</string>
@@ -741,7 +741,7 @@
   <string name="delete_conversation_confirm_message">Obrisati sve poruke u ovom razgovoru?</string>
   <string name="name_first_summary_on">Prikaži prvo ime</string>
   <string name="name_first_summary_off">Prikaži \@zaslonskoime prvo</string>
-  <string name="comment_hint">Komentiraj&#8230;</string>
+  <string name="comment_hint">Komentiraj…</string>
   <string name="comment">Komentirat</string>
   <string name="enable_retweets">Omogući retweetove</string>
   <string name="disable_retweets">Onemogući retweetovi</string>

@@ -404,7 +404,7 @@
   <string name="search_name_saved">Ricerca \"<xliff:g id="name">%s</xliff:g>\" salvata.</string>
   <string name="search_deleted">Ricerca eliminata.</string>
   <string name="search_name_deleted">Ricerca \"<xliff:g id="name">%s</xliff:g>\" eliminata.</string>
-  <string name="import_from">Importa da&#8230;</string>
+  <string name="import_from">Importa da…</string>
   <string name="link_to_quoted_status">Link al tweet quotato</string>
   <string name="quote_original_status">Cita il tweet originale</string>
   <string name="followed_user">Seguito <xliff:g id="user">%s</xliff:g>.</string>
@@ -456,7 +456,7 @@
   <string name="settings_interface">Interfaccia</string>
   <string name="no_rule">Nessuna regola</string>
   <string name="safety">Sicurezza</string>
-  <string name="updating_status_notification">Invio del tweet&#8230;</string>
+  <string name="updating_status_notification">Invio del tweet…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Interroga</string>
   <string name="input_text">Immissione testo</string>
@@ -568,8 +568,8 @@
   <string name="denied_users_follow_request">Richiesta <xliff:g id="user">%s</xliff:g> di follow negata.</string>
   <string name="import_settings">Importa impostazioni</string>
   <string name="export_settings">Esporta impostazioni</string>
-  <string name="export_settings_type_dialog_title">Esporta impostazioni&#8230;</string>
-  <string name="import_settings_type_dialog_title">Importa impostazioni&#8230;</string>
+  <string name="export_settings_type_dialog_title">Esporta impostazioni…</string>
+  <string name="import_settings_type_dialog_title">Importa impostazioni…</string>
   <string name="nicknames">Nickname</string>
   <string name="user_colors">Colori personalizzati</string>
   <string name="import_export">Importa/Esporta</string>
@@ -681,7 +681,7 @@
   <string name="save_to_gallery">Salva nella galleria</string>
   <string name="usage_statistics">Statistiche di utilizzo</string>
   <string name="unknown_location">Posizione sconosciuta</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Importa/Esporta le impostazioni</string>
   <string name="usage_statistics_header_summary">Twidere prende parte ad alcuni progetti di ricerca,unendoti a questi progetti renderai migliore Twidere e le altre applicationi.</string>
   <string name="no_tab">Nessuna scheda</string>
@@ -740,7 +740,7 @@
   <string name="delete_conversation_confirm_message">Cancellare tutti i messaggi di questa conversazione?</string>
   <string name="name_first_summary_on">Mostra il nome prima</string>
   <string name="name_first_summary_off">Display \@nomeschermo primo</string>
-  <string name="comment_hint">Commento&#8230;</string>
+  <string name="comment_hint">Commento…</string>
   <string name="comment">Commenta</string>
   <string name="enable_retweets">Abilita retweet</string>
   <string name="disable_retweets">Disabilita retweet</string>

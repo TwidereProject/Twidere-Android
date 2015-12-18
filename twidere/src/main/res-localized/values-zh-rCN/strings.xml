@@ -424,7 +424,7 @@
   <string name="search_name_saved">搜索“<xliff:g id="name">%s</xliff:g>”已保存</string>
   <string name="search_deleted">搜索已删除</string>
   <string name="search_name_deleted">搜索“<xliff:g id="name">%s</xliff:g>”已删除</string>
-  <string name="import_from">导入自&#8230;</string>
+  <string name="import_from">导入自…</string>
   <string name="link_to_quoted_status">链接到引用的推文</string>
   <string name="quote_original_status">引用原推文</string>
   <string name="followed_user">关注了<xliff:g id="user">%s</xliff:g></string>
@@ -476,7 +476,7 @@
   <string name="settings_interface">界面</string>
   <string name="no_rule">没有规则</string>
   <string name="safety">安全</string>
-  <string name="updating_status_notification">正在发送推文&#8230;</string>
+  <string name="updating_status_notification">正在发送推文…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g>（<xliff:g id="nickname">%2$s</xliff:g>）</string>
   <string name="query">查询</string>
   <string name="input_text">输入文本</string>
@@ -499,7 +499,7 @@
   <string name="wizard_page_welcome_import_settings">导入设定</string>
   <string name="wizard_page_theme_text">选择一个你喜欢的主题。</string>
   <string name="wizard_page_tabs_text">添加一些标签页到Twidere。\n时刻关注你在意的人和事。</string>
-  <string name="wizard_page_tabs_unchanged_message">你可以在&quot;设置&quot; - &quot;标签页&quot;添加标签</string>
+  <string name="wizard_page_tabs_unchanged_message">你可以在"设置" - "标签页"添加标签</string>
   <string name="wizard_page_cards_text">设定卡片项。</string>
   <string name="wizard_page_hints_text">这里有一些有用的小提示。</string>
   <string name="wizard_page_usage_statistics_text">Twidere加入了一些需要收集使用信息的研究项目。</string>
@@ -554,7 +554,7 @@
   <string name="theme_dark_actionbar">暗色 ActionBar</string>
   <string name="wizard_hint_compose_select_account">写推文时点击个人资料图片选择帐号</string>
   <string name="wizard_hint_quote_format">在“设定”-“撰写”中设定你喜欢的引用格式</string>
-  <string name="wizard_hint_filters">你可以使用&quot;过滤器&quot;在时间线上隐藏不喜欢的推文和通知</string>
+  <string name="wizard_hint_filters">你可以使用"过滤器"在时间线上隐藏不喜欢的推文和通知</string>
   <string name="view_replies">查看回复</string>
   <string name="compact_cards">紧凑卡片视图</string>
   <string name="compact_cards_summary">在屏幕中显示更多卡片</string>
@@ -591,8 +591,8 @@
   <string name="denied_users_follow_request">拒绝了<xliff:g id="user">%s</xliff:g>的关注请求</string>
   <string name="import_settings">导入设定</string>
   <string name="export_settings">导出设定</string>
-  <string name="export_settings_type_dialog_title">导出设定&#8230;</string>
-  <string name="import_settings_type_dialog_title">导入设定&#8230;</string>
+  <string name="export_settings_type_dialog_title">导出设定…</string>
+  <string name="import_settings_type_dialog_title">导入设定…</string>
   <string name="nicknames">昵称</string>
   <string name="user_colors">用户颜色标签</string>
   <string name="import_export">导入/导出</string>
@@ -705,7 +705,7 @@
   <string name="usage_statistics">使用信息统计</string>
   <string name="research_hot_mobile">Data-Driven Mobile Network Research</string>
   <string name="unknown_location">未知位置</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">导入/导出设定</string>
   <string name="usage_statistics_header_summary">Twidere参与了一些研究项目，加入这些项目帮助Twidere和更多应用做得更好。</string>
   <string name="no_tab">没有标签页</string>
@@ -766,7 +766,7 @@
   <string name="delete_conversation_confirm_message">删除此对话的所有信息？</string>
   <string name="name_first_summary_on">优先显示名字</string>
   <string name="name_first_summary_off">优先显示 \@screenname</string>
-  <string name="comment_hint">评论&#8230;</string>
+  <string name="comment_hint">评论…</string>
   <string name="comment">评论</string>
   <string name="enable_retweets">启用转推</string>
   <string name="disable_retweets">禁用转推</string>

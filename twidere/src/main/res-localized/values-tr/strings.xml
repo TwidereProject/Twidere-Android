@@ -408,7 +408,7 @@
   <string name="search_name_saved">Arama \"<xliff:g id="name">%s</xliff:g>\" kaydedildi.</string>
   <string name="search_deleted">Arama silindi.</string>
   <string name="search_name_deleted">Arama \"<xliff:g id="name">%s</xliff:g>\" silindi.</string>
-  <string name="import_from">Şuradan import&#8230;</string>
+  <string name="import_from">Şuradan import…</string>
   <string name="link_to_quoted_status">Alıntılanmış tweet\'a link</string>
   <string name="quote_original_status">Özgün tweeti alıntıla</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> takiplendi.</string>
@@ -453,7 +453,7 @@
   <string name="settings_interface">Arayüz</string>
   <string name="no_rule">Kural yok</string>
   <string name="safety">Güvenlik</string>
-  <string name="updating_status_notification">Tweet gönderiliyor&#8230;</string>
+  <string name="updating_status_notification">Tweet gönderiliyor…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g>(<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Sorgu</string>
   <string name="input_text">giriş metni</string>
@@ -547,8 +547,8 @@
   <string name="deny">Reddet</string>
   <string name="import_settings">Ayarları içe aktar</string>
   <string name="export_settings">Ayarları dışa aktar</string>
-  <string name="export_settings_type_dialog_title">Ayarları dışa aktar&#8230;</string>
-  <string name="import_settings_type_dialog_title">Ayarları içe aktar&#8230;</string>
+  <string name="export_settings_type_dialog_title">Ayarları dışa aktar…</string>
+  <string name="import_settings_type_dialog_title">Ayarları içe aktar…</string>
   <string name="nicknames">Lakaplar</string>
   <string name="user_colors">Kullanıcı renkleri</string>
   <string name="import_export">İçe aktar/Dışa aktar</string>

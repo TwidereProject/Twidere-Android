@@ -418,7 +418,7 @@
   <string name="search_name_saved">Запрос \"<xliff:g id="name">%s</xliff:g>\" сохранён</string>
   <string name="search_deleted">Запрос удалён</string>
   <string name="search_name_deleted">Запрос \"<xliff:g id="name">%s</xliff:g>\" удалён</string>
-  <string name="import_from">Импортировать из&#8230;</string>
+  <string name="import_from">Импортировать из…</string>
   <string name="link_to_quoted_status">Ссылка на цитированный твит</string>
   <string name="quote_original_status">Цитировать оригинальный твит</string>
   <string name="followed_user">Подписан на <xliff:g id="user">%s</xliff:g></string>
@@ -470,7 +470,7 @@
   <string name="settings_interface">Интерфейс</string>
   <string name="no_rule">Правил нет</string>
   <string name="safety">Безопасность</string>
-  <string name="updating_status_notification">Отправление твита&#8230;</string>
+  <string name="updating_status_notification">Отправление твита…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g>(<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Запрос</string>
   <string name="input_text">Ввод текста</string>
@@ -493,7 +493,7 @@
   <string name="wizard_page_welcome_import_settings">Импортировать параметры</string>
   <string name="wizard_page_theme_text">Выберите тему, которая вам нравится.</string>
   <string name="wizard_page_tabs_text">Добавьте свои вкладки в Twidere. \nБудьте в курсе нужных именно вам вещей.</string>
-  <string name="wizard_page_tabs_unchanged_message">Вы можете добавить вкладки в &quot;Настройки&quot; - &quot;Вкладки&quot;</string>
+  <string name="wizard_page_tabs_unchanged_message">Вы можете добавить вкладки в "Настройки" - "Вкладки"</string>
   <string name="wizard_page_cards_text">Настроим карточки.</string>
   <string name="wizard_page_hints_text">Здесь вы найдёте несколько полезных подсказок.</string>
   <string name="wizard_page_usage_statistics_text">Twidere принимает участие в научно-исследовательской работе, для которой нужны некоторые данные об использовании приложения.</string>
@@ -547,8 +547,8 @@
   <string name="theme_background_transparent">Прозрачный</string>
   <string name="theme_dark_actionbar">Тёмный ActionBar</string>
   <string name="wizard_hint_compose_select_account">Нажмите на изображение профиля, чтобы выбрать аккаунт при написании твита.</string>
-  <string name="wizard_hint_quote_format">Установите предпочитаемый формат тестирования в &quot;Настройки&quot; - &quot;Написать&quot;</string>
-  <string name="wizard_hint_filters">Вы можете скрыть нежелательные твиты из ленты и уведомлений, используя &quot;Фильтры&quot;.</string>
+  <string name="wizard_hint_quote_format">Установите предпочитаемый формат тестирования в "Настройки" - "Написать"</string>
+  <string name="wizard_hint_filters">Вы можете скрыть нежелательные твиты из ленты и уведомлений, используя "Фильтры".</string>
   <string name="view_replies">Посмотреть ответы</string>
   <string name="compact_cards">Компактный вид карточек</string>
   <string name="compact_cards_summary">Отображать на экране больше карточек</string>
@@ -585,8 +585,8 @@
   <string name="denied_users_follow_request">Отклонён запрос на чтение от <xliff:g id="user">%s</xliff:g>.</string>
   <string name="import_settings">Импортировать настройки</string>
   <string name="export_settings">Экспортировать параметры</string>
-  <string name="export_settings_type_dialog_title">Экспорт настроек&#8230;</string>
-  <string name="import_settings_type_dialog_title">Импорт настроек&#8230;</string>
+  <string name="export_settings_type_dialog_title">Экспорт настроек…</string>
+  <string name="import_settings_type_dialog_title">Импорт настроек…</string>
   <string name="nicknames">Имена</string>
   <string name="user_colors">Пользовательские цвета</string>
   <string name="import_export">Импортировать/Экспортировать</string>
@@ -760,7 +760,7 @@
   <string name="delete_conversation_confirm_message">Удалить все сообщения в этой беседе?</string>
   <string name="name_first_summary_on">Отображать сначала имя</string>
   <string name="name_first_summary_off">Показывать сначала @никнейм</string>
-  <string name="comment_hint">Комментарий&#8230;</string>
+  <string name="comment_hint">Комментарий…</string>
   <string name="comment">Комментировать</string>
   <string name="enable_retweets">Включить ретвиты</string>
   <string name="disable_retweets">Отключить ретвиты</string>

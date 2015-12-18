@@ -410,7 +410,7 @@
   <string name="search_name_saved">搜尋 \"<xliff:g id="name">%s</xliff:g>\" 已儲存</string>
   <string name="search_deleted">搜尋已刪除</string>
   <string name="search_name_deleted">搜尋 \"<xliff:g id="name">%s</xliff:g>\" 已刪除</string>
-  <string name="import_from">匯入從&#8230;</string>
+  <string name="import_from">匯入從…</string>
   <string name="link_to_quoted_status">連結到引用的推文</string>
   <string name="quote_original_status">引用原推文</string>
   <string name="followed_user">關注了 <xliff:g id="user">%s</xliff:g></string>
@@ -462,7 +462,7 @@
   <string name="settings_interface">界面</string>
   <string name="no_rule">沒有規則</string>
   <string name="safety">安全</string>
-  <string name="updating_status_notification">正在發送推文&#8230;</string>
+  <string name="updating_status_notification">正在發送推文…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g>（<xliff:g id="nickname">%2$s</xliff:g>）</string>
   <string name="query">查詢</string>
   <string name="input_text">輸入文字</string>
@@ -687,7 +687,7 @@
   <string name="save_to_gallery">儲存到相冊</string>
   <string name="usage_statistics">使用資訊統計</string>
   <string name="unknown_location">未知位置</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">導入/導出設定</string>
   <string name="usage_statistics_header_summary">Twidere參與了一些研究項目，加入這些項目幫助Twidere和更多應用做得更好。</string>
   <string name="no_tab">沒有標籤頁</string>
@@ -746,7 +746,7 @@
   <string name="delete_conversation_confirm_message">刪除此對話的所有資訊？</string>
   <string name="name_first_summary_on">優先顯示名字</string>
   <string name="name_first_summary_off">優先顯示 \@screenname</string>
-  <string name="comment_hint">評論&#8230;</string>
+  <string name="comment_hint">評論…</string>
   <string name="comment">評論</string>
   <string name="enable_retweets">啟用轉推</string>
   <string name="disable_retweets">禁用轉推</string>

@@ -423,7 +423,7 @@
   <string name="search_name_saved">A  keresés, \"<xliff:g id="name">%s</xliff:g>\" elmentve.</string>
   <string name="search_deleted">Keresés törölve.</string>
   <string name="search_name_deleted">A keresés, \"<xliff:g id="name">%s</xliff:g>\" törölve.</string>
-  <string name="import_from">Importálás&#8230;</string>
+  <string name="import_from">Importálás…</string>
   <string name="link_to_quoted_status">Link az idézett tweet-hez</string>
   <string name="quote_original_status">Eredeti tweet idézése</string>
   <string name="followed_user">Követve <xliff:g id="user">%s</xliff:g>.</string>
@@ -475,7 +475,7 @@
   <string name="settings_interface">Felhasználói felület</string>
   <string name="no_rule">Nincs szabály</string>
   <string name="safety">Biztonság</string>
-  <string name="updating_status_notification">Tweet küldése&#8230;</string>
+  <string name="updating_status_notification">Tweet küldése…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Lekérdezés</string>
   <string name="input_text">Írd be a szöveget</string>
@@ -587,8 +587,8 @@
   <string name="denied_users_follow_request"><xliff:g id="user">%s</xliff:g> követési kérelme elutasítva.</string>
   <string name="import_settings">Beállítások importálása</string>
   <string name="export_settings">Beállítások exportálása</string>
-  <string name="export_settings_type_dialog_title">Beállítások exportálása&#8230;</string>
-  <string name="import_settings_type_dialog_title">Beállítások importálása&#8230;</string>
+  <string name="export_settings_type_dialog_title">Beállítások exportálása…</string>
+  <string name="import_settings_type_dialog_title">Beállítások importálása…</string>
   <string name="nicknames">Becenevek</string>
   <string name="user_colors">Felhasználói színek</string>
   <string name="import_export">Importálás/Exportálás</string>
@@ -700,7 +700,7 @@
   <string name="save_to_gallery">Mentés a galériába</string>
   <string name="usage_statistics">Használati statisztikák</string>
   <string name="unknown_location">Ismeretlen hely</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Beállítások Importálása/Exportálása</string>
   <string name="usage_statistics_header_summary">A Twidere részt vesz néhány kutatási projektben. Csatlakozz ezekhez, hogy a Twidere és néhány másik alkalmazás jobb lehessen.</string>
   <string name="no_tab">Nincs fül</string>
@@ -761,7 +761,7 @@
   <string name="delete_conversation_confirm_message">Töröljem az összes elemét ennek a beszélgetésnek ?</string>
   <string name="name_first_summary_on">Név megjelenítése először</string>
   <string name="name_first_summary_off">\@Felhasználónév megjelenítése először</string>
-  <string name="comment_hint">Megjegyzés&#8230;</string>
+  <string name="comment_hint">Megjegyzés…</string>
   <string name="comment">Megjegyzés</string>
   <string name="enable_retweets">Retweetek engedélyezése</string>
   <string name="disable_retweets">Retweetek tiltása</string>

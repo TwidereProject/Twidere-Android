@@ -384,7 +384,7 @@
   <string name="search_name_saved">Wyszukiwanie \"<xliff:g id="name">%s</xliff:g>\" zapisane.</string>
   <string name="search_deleted">Wyszukiwanie usunięte.</string>
   <string name="search_name_deleted">Wyszukiwanie \"<xliff:g id="name">%s</xliff:g>\" usunięte.</string>
-  <string name="import_from">Importuj z&#8230;</string>
+  <string name="import_from">Importuj z…</string>
   <string name="link_to_quoted_status">Linkuj do cytowanego tweeta</string>
   <string name="followed_user">Obserwujesz <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">Wysłano żądania obserwacji do <xliff:g id="user">%s</xliff:g>.</string>
@@ -435,7 +435,7 @@
   <string name="settings_interface">Interfejs</string>
   <string name="no_rule">Brak reguł</string>
   <string name="safety">Bezpieczeństwo</string>
-  <string name="updating_status_notification">Wysyłanie tweeta&#8230;</string>
+  <string name="updating_status_notification">Wysyłanie tweeta…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Zapytanie</string>
   <string name="input_text">Tekst wejściowy</string>
@@ -539,8 +539,8 @@
   <string name="denied_users_follow_request">Odmówiono żądania obserwowania od <xliff:g id="user">%s</xliff:g>.</string>
   <string name="import_settings">Importuj ustawienia</string>
   <string name="export_settings">Eksportuj ustawienia</string>
-  <string name="export_settings_type_dialog_title">Eksportowanie ustawień&#8230;</string>
-  <string name="import_settings_type_dialog_title">Importowanie ustawień&#8230;</string>
+  <string name="export_settings_type_dialog_title">Eksportowanie ustawień…</string>
+  <string name="import_settings_type_dialog_title">Importowanie ustawień…</string>
   <string name="nicknames">Pseudonimy</string>
   <string name="user_colors">Kolory użytkownika</string>
   <string name="import_export">Import/Eksport</string>

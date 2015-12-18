@@ -424,7 +424,7 @@
   <string name="search_name_saved">Søket «<xliff:g id="name">%s</xliff:g>» er lagret.</string>
   <string name="search_deleted">Søk slettet.</string>
   <string name="search_name_deleted">Søket «<xliff:g id="name">%s</xliff:g>» er slettet.</string>
-  <string name="import_from">Importer fra&#8230;</string>
+  <string name="import_from">Importer fra…</string>
   <string name="link_to_quoted_status">Lenke til sitert tweet</string>
   <string name="quote_original_status">Siter opprinnelig tweet</string>
   <string name="followed_user">Følger <xliff:g id="user">%s</xliff:g>.</string>
@@ -476,7 +476,7 @@
   <string name="settings_interface">Grensesnitt</string>
   <string name="no_rule">Ingen regler</string>
   <string name="safety">Sikkerhet</string>
-  <string name="updating_status_notification">Sender tweet&#8230;</string>
+  <string name="updating_status_notification">Sender tweet…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Spørring</string>
   <string name="input_text">Skriv inn tekst</string>
@@ -499,8 +499,7 @@
   <string name="wizard_page_welcome_import_settings">Importer innstillinger</string>
   <string name="wizard_page_theme_text">Velg et tema du liker.</string>
   <string name="wizard_page_tabs_text">Legg til faner i Twidere.\nFølg med på folk eller ting du bryr deg om.</string>
-  <string name="wizard_page_tabs_unchanged_message">Du kan legge til faner fra &laquo;Innstillinger&raquo;
-    - &laquo;Faner&raquo;</string>
+  <string name="wizard_page_tabs_unchanged_message">Du kan legge til faner fra «Innstillinger» - «Faner»</string>
   <string name="wizard_page_cards_text">Sett opp kortelementer.</string>
   <string name="wizard_page_hints_text">Her er noen nyttige tips.</string>
   <string name="wizard_page_usage_statistics_text">Twidere tok del i flere forskningsprosjekt som trenger bruksdata.</string>
@@ -554,9 +553,8 @@
   <string name="theme_background_transparent">Gjennomsiktig</string>
   <string name="theme_dark_actionbar">Mørk ActionBar</string>
   <string name="wizard_hint_compose_select_account">Trykk på profilbildet for å velge konto mens du skriver en tweet.</string>
-  <string name="wizard_hint_quote_format">Velg siteringsformat under &laquo;Innstillinger&raquo;
-    - &laquo;Skriv&laquo;</string>
-  <string name="wizard_hint_filters">Du kan skjule uønskede tweets fra tidslinjen og varsler ved å bruke &laquo;Filtre&raquo;.</string>
+  <string name="wizard_hint_quote_format">Velg siteringsformat under «Innstillinger» - «Skriv«</string>
+  <string name="wizard_hint_filters">Du kan skjule uønskede tweets fra tidslinjen og varsler ved å bruke «Filtre».</string>
   <string name="view_replies">Vis svar</string>
   <string name="compact_cards">Kompakte kort</string>
   <string name="compact_cards_summary">Vis flere kort på skjermen</string>
@@ -593,8 +591,8 @@
   <string name="denied_users_follow_request">Avslo følgeforespørselen til <xliff:g id="user">%s</xliff:g>.</string>
   <string name="import_settings">Importer innstillinger</string>
   <string name="export_settings">Eksporter innstillinger</string>
-  <string name="export_settings_type_dialog_title">Eksporter innstillinger&#8230;</string>
-  <string name="import_settings_type_dialog_title">Importer innstillinger&#8230;</string>
+  <string name="export_settings_type_dialog_title">Eksporter innstillinger…</string>
+  <string name="import_settings_type_dialog_title">Importer innstillinger…</string>
   <string name="nicknames">Kallenavn</string>
   <string name="user_colors">Brukerfarger</string>
   <string name="import_export">Import/Eksport</string>
@@ -707,7 +705,7 @@
   <string name="usage_statistics">Bruksstatistikk</string>
   <string name="research_hot_mobile">Datadrevet mobilnett-forskning</string>
   <string name="unknown_location">Ukjent posisjon</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Importer/eksporter innstillinger</string>
   <string name="usage_statistics_header_summary">Twidere tok del i noen forskningsprosjekter. Ved å bidra til disse prosjektene gjør du Twidere og fremtidige apper bedre.</string>
   <string name="no_tab">Ingen faner</string>
@@ -768,7 +766,7 @@
   <string name="delete_conversation_confirm_message">Slette alle meldinger i denne samtalen?</string>
   <string name="name_first_summary_on">Viser navnet først</string>
   <string name="name_first_summary_off">Viser \@brukernavn først</string>
-  <string name="comment_hint">Kommenter&#8230;</string>
+  <string name="comment_hint">Kommenter…</string>
   <string name="comment">Kommenter</string>
   <string name="enable_retweets">Aktiver retweets</string>
   <string name="disable_retweets">Deaktiver retweets</string>

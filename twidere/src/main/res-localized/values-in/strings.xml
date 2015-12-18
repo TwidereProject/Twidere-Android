@@ -412,7 +412,7 @@
   <string name="search_name_saved">Pencarian \"<xliff:g id="name">%s</xliff:g>\" tersimpan.</string>
   <string name="search_deleted">Pencarian terhapus.</string>
   <string name="search_name_deleted">Pencarian \"<xliff:g id="name">%s</xliff:g>\" terhapus.</string>
-  <string name="import_from">Impor dari&#8230;</string>
+  <string name="import_from">Impor dari…</string>
   <string name="link_to_quoted_status">Link ke tweet kutipan</string>
   <string name="quote_original_status">Kutip tweet asli</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> diikuti.</string>
@@ -464,7 +464,7 @@
   <string name="settings_interface">Antarmuka</string>
   <string name="no_rule">Tak ada aturan</string>
   <string name="safety">Keamanan</string>
-  <string name="updating_status_notification">Mengirim cuit&#8230;</string>
+  <string name="updating_status_notification">Mengirim cuit…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Menanyakan</string>
   <string name="input_text">Masukkan teks</string>
@@ -487,8 +487,8 @@
   <string name="wizard_page_welcome_import_settings">Impor pengaturan</string>
   <string name="wizard_page_theme_text">Pilih tema yang Anda suka.</string>
   <string name="wizard_page_tabs_text">Tambah beberapa tab ke Twidere.\nTetap terhubung dengan orang atau sesuatu yang kamu perhatikan.</string>
-  <string name="wizard_page_tabs_unchanged_message">Anda bisa menambahkan tab dalam &quot;Settings&quot; - 
-&quot;Tabs&quot;</string>
+  <string name="wizard_page_tabs_unchanged_message">Anda bisa menambahkan tab dalam "Settings" - 
+"Tabs"</string>
   <string name="wizard_page_cards_text">Konfigurasi item kartu.</string>
   <string name="wizard_page_hints_text">Disini ada berbagai petunjuk berguna.</string>
   <string name="wizard_page_usage_statistics_text">Twidere mengambil bagian dalam beberapa proyek penelitian yang membutuhkan penggunaan data.</string>
@@ -543,7 +543,7 @@
   <string name="theme_dark_actionbar">Bar aksi gelap</string>
   <string name="wizard_hint_compose_select_account">Klik gambar profil untuk memilih akun ketika menulis tweet.</string>
   <string name="wizard_hint_filters">Anda bisa menyembunyikan twit yang tidak diinginkan dari timeline dan notifikasi dengan menggunakan
-&quot;Filters&quot;.</string>
+"Filters".</string>
   <string name="view_replies">Lihat balasan</string>
   <string name="compact_cards">Kartu compact</string>
   <string name="compact_cards_summary">Tampilkan kartu lebih banyak</string>
@@ -580,8 +580,8 @@
   <string name="denied_users_follow_request">Permintaan mengikuti  <xliff:g id="user">%s</xliff:g> ditolak.</string>
   <string name="import_settings">Impor pengaturan</string>
   <string name="export_settings">Ekspor pengaturan</string>
-  <string name="export_settings_type_dialog_title">Ekspor pengaturan&#8230;</string>
-  <string name="import_settings_type_dialog_title">Impor pengaturan&#8230;</string>
+  <string name="export_settings_type_dialog_title">Ekspor pengaturan…</string>
+  <string name="import_settings_type_dialog_title">Impor pengaturan…</string>
   <string name="nicknames">Nama panggilan</string>
   <string name="user_colors">Warna pengguna</string>
   <string name="import_export">Impor/Ekspor</string>

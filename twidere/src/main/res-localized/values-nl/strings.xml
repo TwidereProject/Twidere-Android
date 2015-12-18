@@ -386,7 +386,7 @@
   <string name="search_name_saved">Zoekopdracht \"<xliff:g id="name">%s</xliff:g>\" opgeslagen.</string>
   <string name="search_deleted">Zoekopdracht verwijderd.</string>
   <string name="search_name_deleted">Zoekopdracht \"<xliff:g id="name">%s</xliff:g>\" verwijderd.</string>
-  <string name="import_from">Importeren uit&#8230;</string>
+  <string name="import_from">Importeren uit…</string>
   <string name="link_to_quoted_status">Link naar geciteerde tweet</string>
   <string name="quote_original_status">Quote originele tweet</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> gevolgt.</string>
@@ -438,7 +438,7 @@
   <string name="settings_interface">Interface</string>
   <string name="no_rule">Geen regel</string>
   <string name="safety">Veiligheid</string>
-  <string name="updating_status_notification">Tweet versturen&#8230;</string>
+  <string name="updating_status_notification">Tweet versturen…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Vraag</string>
   <string name="input_text">Tekst invoeren</string>
@@ -545,8 +545,8 @@
   <string name="denied_users_follow_request">Volgaanvraag van <xliff:g id="user">%s</xliff:g> geweigerd.</string>
   <string name="import_settings">Importeer instellingen</string>
   <string name="export_settings">Exporteer instellingen</string>
-  <string name="export_settings_type_dialog_title">Exporteer instellingen&#8230;</string>
-  <string name="import_settings_type_dialog_title">Importeer instellingen&#8230;</string>
+  <string name="export_settings_type_dialog_title">Exporteer instellingen…</string>
+  <string name="import_settings_type_dialog_title">Importeer instellingen…</string>
   <string name="nicknames">Bijnamen</string>
   <string name="user_colors">Gebruikerskleuren</string>
   <string name="import_export">Importeren/exporteren</string>

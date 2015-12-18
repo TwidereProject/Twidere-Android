@@ -424,7 +424,7 @@
   <string name="search_name_saved">Recherche \"<xliff:g id="name">%s</xliff:g>\" sauvegardée.</string>
   <string name="search_deleted">Recherche supprimée.</string>
   <string name="search_name_deleted">Recherche \"<xliff:g id="name">%s</xliff:g>\" supprimée.</string>
-  <string name="import_from">Importer depuis&#8230;</string>
+  <string name="import_from">Importer depuis…</string>
   <string name="link_to_quoted_status">Lien vers le tweet cité</string>
   <string name="quote_original_status">Citer le tweet original</string>
   <string name="followed_user">Abonné à <xliff:g id="user">%s</xliff:g>.</string>
@@ -476,7 +476,7 @@
   <string name="settings_interface">Interface</string>
   <string name="no_rule">Aucune règle</string>
   <string name="safety">Sécurité</string>
-  <string name="updating_status_notification">Envoi du tweet&#8230;</string>
+  <string name="updating_status_notification">Envoi du tweet…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Requête</string>
   <string name="input_text">Saisir le texte</string>
@@ -553,8 +553,8 @@
   <string name="theme_background_transparent">Transparent</string>
   <string name="theme_dark_actionbar">«ActionBar» sombre</string>
   <string name="wizard_hint_compose_select_account">Cliquez sur l\'image de profil pour sélectionner un compte lorsque vous composez un tweet.</string>
-  <string name="wizard_hint_quote_format">Définissez le format favoris de vos citations dans &quot;Paramètres&quot; - &quot;&Eacute;crire&quot;</string>
-  <string name="wizard_hint_filters">Vous pouvez masquer les tweets indésirables de la timeline et des notifications en utilisant des &quot;Filtres&quot;.</string>
+  <string name="wizard_hint_quote_format">Définissez le format favoris de vos citations dans "Paramètres" - "Écrire"</string>
+  <string name="wizard_hint_filters">Vous pouvez masquer les tweets indésirables de la timeline et des notifications en utilisant des "Filtres".</string>
   <string name="view_replies">Voir les réponses</string>
   <string name="compact_cards">Cartes compactes</string>
   <string name="compact_cards_summary">Afficher plus de cartes à l\'écran</string>
@@ -591,8 +591,8 @@
   <string name="denied_users_follow_request">Demande de suivi de <xliff:g id="user">%s</xliff:g> refusée.</string>
   <string name="import_settings">Importation des paramètres</string>
   <string name="export_settings">Exportation des paramètres</string>
-  <string name="export_settings_type_dialog_title">Exportation des paramètres&#8230;</string>
-  <string name="import_settings_type_dialog_title">Importation des paramètres&#8230;</string>
+  <string name="export_settings_type_dialog_title">Exportation des paramètres…</string>
+  <string name="import_settings_type_dialog_title">Importation des paramètres…</string>
   <string name="nicknames">Surnoms</string>
   <string name="user_colors">Couleurs utilisateur</string>
   <string name="import_export">Importer / Exporter</string>
@@ -705,7 +705,7 @@
   <string name="usage_statistics">Statistiques d\'utilisation</string>
   <string name="research_hot_mobile">Recherche de réseaux mobiles 3G</string>
   <string name="unknown_location">Localisation inconnue</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Importer/Exporter des paramètres</string>
   <string name="usage_statistics_header_summary">Twidere prend part à quelques projets de recherche, rejoindre ces projets vont rendre Twidere et d\'autres applications encore meilleures.</string>
   <string name="no_tab">Aucun onglet</string>
@@ -766,7 +766,7 @@
   <string name="delete_conversation_confirm_message">Supprimer tous les messages de cette conversation ?</string>
   <string name="name_first_summary_on">Afficher le nom en premier</string>
   <string name="name_first_summary_off">Afficher \@utilisateur d\'abord</string>
-  <string name="comment_hint">Commenter&#8230;</string>
+  <string name="comment_hint">Commenter…</string>
   <string name="comment">Commenter</string>
   <string name="enable_retweets">Activer les retweets</string>
   <string name="disable_retweets">Désactiver les retweets</string>

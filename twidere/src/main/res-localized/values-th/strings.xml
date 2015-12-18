@@ -314,7 +314,7 @@
   <string name="status_updated">ข้อความถูกส่งแล้ว</string>
   <string name="status_deleted">ข้อความถูกลบแล้ว</string>
   <string name="search_deleted">ลบการค้นหาแล้ว</string>
-  <string name="import_from">นำเข้าจาก&#8230;</string>
+  <string name="import_from">นำเข้าจาก…</string>
   <string name="followed_user">ติดตาม <xliff:g id="user">%s</xliff:g></string>
   <string name="sent_follow_request_to_user">ส่งคำขอติดตามถึง <xliff:g id="user">%s</xliff:g></string>
   <string name="unfollowed_user">เลิกติดตาม <xliff:g id="user">%s</xliff:g></string>

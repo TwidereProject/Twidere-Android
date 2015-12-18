@@ -499,7 +499,7 @@
   <string name="wizard_page_welcome_import_settings">設定をインポート</string>
   <string name="wizard_page_theme_text">好きなテーマを選んでください。</string>
   <string name="wizard_page_tabs_text">タブを追加します。\n気になるキーワードを含むツイートやユーザーの検索をするタブも追加出来ます。</string>
-  <string name="wizard_page_tabs_unchanged_message">&quot;設定&quot; - &quot;タブ&quot;でタブを追加出来ます</string>
+  <string name="wizard_page_tabs_unchanged_message">"設定" - "タブ"でタブを追加出来ます</string>
   <string name="wizard_page_cards_text">カードアイテムを編集します。</string>
   <string name="wizard_page_hints_text">お役立ちヒント!</string>
   <string name="wizard_page_usage_statistics_text">Twidereは使用状況データを研究目的において必要とするプロジェクトに参加しています</string>
@@ -553,8 +553,8 @@
   <string name="theme_background_transparent">背景透過</string>
   <string name="theme_dark_actionbar">黒アクションバー</string>
   <string name="wizard_hint_compose_select_account">ツイートするアカウントを選択するにはプロフィール画像をクリックしてください。</string>
-  <string name="wizard_hint_quote_format">&quot;設定&quot; - &quot;ツイートする&quot;でお気に入りの引用形式を設定できます</string>
-  <string name="wizard_hint_filters">&quot;フィルタ&quot;を使用することで、タイムラインと通知から不要なツイートを非表示にすることができます。</string>
+  <string name="wizard_hint_quote_format">"設定" - "ツイートする"でお気に入りの引用形式を設定できます</string>
+  <string name="wizard_hint_filters">"フィルタ"を使用することで、タイムラインと通知から不要なツイートを非表示にすることができます。</string>
   <string name="view_replies">返信を表示</string>
   <string name="compact_cards">カードのコンパクト化</string>
   <string name="compact_cards_summary">画面あたりのカード表示数を増やせます。</string>
@@ -591,8 +591,8 @@
   <string name="denied_users_follow_request"><xliff:g id="user">%s</xliff:g>さんのフォローリクエストを拒否しました。</string>
   <string name="import_settings">設定のインポート</string>
   <string name="export_settings">設定のエクスポート</string>
-  <string name="export_settings_type_dialog_title">設定をエクスポート中&#8230;</string>
-  <string name="import_settings_type_dialog_title">設定のインポート&#8230;</string>
+  <string name="export_settings_type_dialog_title">設定をエクスポート中…</string>
+  <string name="import_settings_type_dialog_title">設定のインポート…</string>
   <string name="nicknames">ニックネーム</string>
   <string name="user_colors">ユーザー色</string>
   <string name="import_export">インポート/エクスポート</string>
@@ -705,7 +705,7 @@
   <string name="usage_statistics">匿名利用状況データ</string>
   <string name="research_hot_mobile">データ駆動型モバイルネットワーク研究</string>
   <string name="unknown_location">場所不明</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">設定の保存/読み込み</string>
   <string name="usage_statistics_header_summary">Twidere は研究プロジェクトに参加しています。プロジェクトに参加する事で、Twidere や他のアプリがより良くなります。</string>
   <string name="no_tab">タブがありません</string>
@@ -766,7 +766,7 @@
   <string name="delete_conversation_confirm_message">この返信のツイートを全て削除しますか？</string>
   <string name="name_first_summary_on">先に名前を表示する</string>
   <string name="name_first_summary_off">先に\@ユーザー名を表示する</string>
-  <string name="comment_hint">コメント&#8230;</string>
+  <string name="comment_hint">コメント…</string>
   <string name="comment">コメントする</string>
   <string name="enable_retweets">リツイートを有効にする</string>
   <string name="disable_retweets">リツイートを無効にする</string>

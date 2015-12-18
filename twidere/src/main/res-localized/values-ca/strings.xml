@@ -405,7 +405,7 @@
   <string name="search_name_saved">La cerca «<xliff:g id="name">%s</xliff:g>» ha estat desada.</string>
   <string name="search_deleted">La cerca ha estat esborrada.</string>
   <string name="search_name_deleted">La cerca «<xliff:g id="name">%s</xliff:g>» ha estat esborrada.</string>
-  <string name="import_from">Importa des de&#8230;</string>
+  <string name="import_from">Importa des de…</string>
   <string name="link_to_quoted_status">Enllaça la piulada citada</string>
   <string name="quote_original_status">Cita la piulada original</string>
   <string name="followed_user">Esteu seguint <xliff:g id="user">%s</xliff:g>.</string>
@@ -457,7 +457,7 @@
   <string name="settings_interface">Interfície</string>
   <string name="no_rule">No hi ha regles</string>
   <string name="safety">Seguretat</string>
-  <string name="updating_status_notification">S\'està enviant la piulada&#8230;</string>
+  <string name="updating_status_notification">S\'està enviant la piulada…</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Consulta</string>
   <string name="input_text">Entrada de text</string>
@@ -570,8 +570,8 @@
   <string name="denied_users_follow_request">S\'ha denegat la soŀlicitud de seguiment de <xliff:g id="user">%s</xliff:g>.</string>
   <string name="import_settings">Importa paràmetres</string>
   <string name="export_settings">Exporta els paràmetres</string>
-  <string name="export_settings_type_dialog_title">Exporta els paràmetres&#8230;</string>
-  <string name="import_settings_type_dialog_title">Importa paràmetres&#8230;</string>
+  <string name="export_settings_type_dialog_title">Exporta els paràmetres…</string>
+  <string name="import_settings_type_dialog_title">Importa paràmetres…</string>
   <string name="nicknames">Sobrenoms</string>
   <string name="user_colors">Colors de l\'usuari</string>
   <string name="import_export">Importar/Exportar</string>
@@ -682,7 +682,7 @@
   <string name="save_to_gallery">Desar a la galeria</string>
   <string name="usage_statistics">Estadístiques d\'ús</string>
   <string name="unknown_location">Localització desconeguda</string>
-  <string name="ellipsis">&#8230;</string>
+  <string name="ellipsis">…</string>
   <string name="import_export_settings">Importar/Exportar configuració</string>
   <string name="usage_statistics_header_summary">Twidere forma part en alguns projectes d\'investigació; contribuint a aquests projectes faràs Twidere i altres aplicacions futures millor.</string>
   <string name="no_tab">No hi ha pestanyes</string>
@@ -740,7 +740,7 @@
   <string name="delete_conversation">Esborra la conversa</string>
   <string name="delete_conversation_confirm_message">Segur que vols esborrar tots els missatges de la conversa?</string>
   <string name="name_first_summary_on">Mostra el nom al principi</string>
-  <string name="comment_hint">Comentari&#8230;</string>
+  <string name="comment_hint">Comentari…</string>
   <string name="comment">Comentari</string>
   <string name="enable_retweets">Activa les repiulades</string>
   <string name="disable_retweets">Desactiva les repiulades</string>
