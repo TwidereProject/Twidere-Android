@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
@@ -131,9 +132,9 @@ public class DataImportActivity extends ThemedFragmentActivity implements DataEx
                 DataImportExportUtils.importData(mActivity, file, mFlags);
                 return true;
             } catch (final IOException e) {
-                e.printStackTrace();
+                Log.w(LOGTAG, e);
+                return false;
             }
-            return false;
         }
 
         @Override

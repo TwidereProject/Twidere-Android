@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.preference.Preference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -186,7 +187,7 @@ public class TranslationDestinationPreference extends Preference implements Cons
                 }
                 return twitter.getLanguages();
             } catch (final TwitterException e) {
-                e.printStackTrace();
+                Log.w(LOGTAG, e);
             }
             return null;
         }

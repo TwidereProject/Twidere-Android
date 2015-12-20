@@ -98,7 +98,7 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
             startActivity(handled.first);
         } else {
             if (!handled.second) {
-//                AbsLogger.error(new TwitterLinkException("Unable to handle twitter uri " + uri));
+//                BugReporter.error(new TwitterLinkException("Unable to handle twitter uri " + uri));
             }
             final String packageName = mPreferences.getString(KEY_FALLBACK_TWITTER_LINK_HANDLER, null);
             final Intent fallbackIntent = new Intent(Intent.ACTION_VIEW, uri);

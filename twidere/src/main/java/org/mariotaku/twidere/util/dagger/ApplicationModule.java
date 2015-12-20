@@ -41,6 +41,7 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ExternalThemeManager;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
@@ -81,6 +82,7 @@ public class ApplicationModule {
     private final KeyboardShortcutsHandler keyboardShortcutsHandler;
     private final HotMobiLogger hotMobiLogger;
     private final NotificationManagerWrapper notificationManagerWrapper;
+    private final ExternalThemeManager externalThemeManager;
 
     public ApplicationModule(TwidereApplication application) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
@@ -112,6 +114,7 @@ public class ApplicationModule {
         hotMobiLogger = new HotMobiLogger(application);
         asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager,
                 sharedPreferences, bus, userColorNameManager);
+        externalThemeManager = new ExternalThemeManager(application);
     }
 
     public static ApplicationModule get(@NonNull Context context) {
@@ -138,6 +141,12 @@ public class ApplicationModule {
     }
 
     @Provides
+    public ExternalThemeManager getExternalThemeManager() {
+        return externalThemeManager;
+    }
+
+    @Provides
+
     public NotificationManagerWrapper getNotificationManagerWrapper() {
         return notificationManagerWrapper;
     }

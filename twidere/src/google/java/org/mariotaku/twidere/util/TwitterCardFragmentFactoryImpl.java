@@ -19,9 +19,16 @@
 
 package org.mariotaku.twidere.util;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
+import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableBindingValue;
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -42,34 +49,36 @@ public final class TwitterCardFragmentFactoryImpl extends TwitterCardFragmentFac
 
     @Override
     public Fragment createPlayerFragment(ParcelableCardEntity card) {
-//        final ParcelableValueItem app_url_resolved = ParcelableCardEntity.getValue(card, "app_url_resolved");
-//        if (app_url_resolved != null) {
-//            final Uri uri = Uri.parse((String) app_url_resolved.value);
-//            final String paramV = uri.getQueryParameter("v");
-//            if ("www.youtube.com".equals(uri.getHost()) && paramV != null) {
-//                final YouTubePlayerSupportFragment fragment = YouTubePlayerSupportFragment.newInstance();
-//                fragment.initialize(YOUTUBE_DATA_API_KEY, new OnInitializedListener() {
-//                    @Override
-//                    public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
-//                        if (!wasRestored) {
-//                            player.cueVideo(paramV);
+        if (Boolean.parseBoolean("true")) return null;
+        final ParcelableBindingValue appUrlResolved = ParcelableCardEntity.getValue(card, "app_url_resolved");
+        final ParcelableBindingValue domain = ParcelableCardEntity.getValue(card, "domain");
+        if (domain != null && appUrlResolved != null) {
+            final Uri uri = Uri.parse(appUrlResolved.value);
+            final String paramV = uri.getQueryParameter("v");
+            if ("www.youtube.com".equals(domain.value) && paramV != null) {
+                final YouTubePlayerSupportFragment fragment = YouTubePlayerSupportFragment.newInstance();
+                fragment.initialize(YOUTUBE_DATA_API_KEY, new YouTubePlayer.OnInitializedListener() {
+                    @Override
+                    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                        if (!wasRestored) {
+                            player.cueVideo(paramV);
+                        }
+                    }
+
+                    @Override
+                    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
+                        final FragmentActivity activity = fragment.getActivity();
+                        if (activity == null) return;
+//                        if (errorReason.isUserRecoverableError()) {
+//                            errorReason.getErrorDialog(activity, RECOVERY_DIALOG_REQUEST).show();
+//                        } else {
+//                            Toast.makeText(activity, errorReason.toString(), Toast.LENGTH_LONG).show();
 //                        }
-//                    }
-//
-//                    @Override
-//                    public void onInitializationFailure(Provider provider, YouTubeInitializationResult errorReason) {
-//                        final FragmentActivity activity = fragment.getActivity();
-//                        if (activity == null) return;
-////                        if (errorReason.isUserRecoverableError()) {
-////                            errorReason.getErrorDialog(activity, RECOVERY_DIALOG_REQUEST).show();
-////                        } else {
-////                            Toast.makeText(activity, errorReason.toString(), Toast.LENGTH_LONG).show();
-////                        }
-//                    }
-//                });
-//                return fragment;
-//            }
-//        }
+                    }
+                });
+                return fragment;
+            }
+        }
         return null;
     }
 

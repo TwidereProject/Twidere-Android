@@ -63,7 +63,12 @@ public class TwitterCardContainer extends FrameLayout {
             height = measuredHeight;
         }
         final int newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY);
-        final int newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+        final int newHeightMeasureSpec;
+        if (height != 0) {
+            newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+        } else {
+            newHeightMeasureSpec = heightMeasureSpec;
+        }
         super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec);
     }
 }

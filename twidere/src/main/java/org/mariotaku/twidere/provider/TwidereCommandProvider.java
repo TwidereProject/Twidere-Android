@@ -27,6 +27,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.provider.TwidereCommands.Refresh;
@@ -135,7 +136,7 @@ public class TwidereCommandProvider extends ContentProvider implements Constants
             }
             // something blah blah blah
         } catch (final RuntimeException e) {
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
             if (Thread.currentThread().getId() != 1)
                 throw new IllegalStateException("This method cannot be called from non-UI thread");
         }
@@ -161,7 +162,7 @@ public class TwidereCommandProvider extends ContentProvider implements Constants
             }
             // something blah blah blah
         } catch (final RuntimeException e) {
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
             if (Thread.currentThread().getId() != 1)
                 throw new IllegalStateException("This method cannot be called from non-UI thread");
         }

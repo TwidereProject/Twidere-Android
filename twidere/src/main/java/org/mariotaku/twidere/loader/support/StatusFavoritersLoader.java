@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 
@@ -41,10 +42,8 @@ public class StatusFavoritersLoader extends IDsUsersLoader {
     }
 
     @Override
-    protected IDs getIDs(final Twitter twitter, final Paging paging) throws TwitterException {
-        if (twitter == null) return null;
-        if (mStatusId > 0) return twitter.getStatusActivitySummary(mStatusId).getFavoriters();
-        return null;
+    protected IDs getIDs(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
+        return twitter.getStatusActivitySummary(mStatusId).getFavoriters();
     }
 
 }

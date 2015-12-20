@@ -459,15 +459,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 updateTextCount();
                 break;
             }
-            case R.id.view: {
-                if (mInReplyToStatus == null) return false;
-                final DialogFragment fragment = new ViewStatusDialogFragment();
-                final Bundle args = new Bundle();
-                args.putParcelable(EXTRA_STATUS, mInReplyToStatus);
-                fragment.setArguments(args);
-                fragment.show(getSupportFragmentManager(), "view_status");
-                break;
-            }
             case R.id.link_to_quoted_status: {
                 final boolean newValue = !item.isChecked();
                 item.setChecked(newValue);
@@ -1122,7 +1113,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         MenuUtils.setMenuItemAvailability(menu, R.id.take_photo, !hasInReplyTo);
         MenuUtils.setMenuItemAvailability(menu, R.id.take_photo_sub_item, hasInReplyTo);
         MenuUtils.setMenuItemAvailability(menu, R.id.add_image, !hasMedia && !hasInReplyTo);
-        MenuUtils.setMenuItemAvailability(menu, R.id.view, hasInReplyTo);
         MenuUtils.setMenuItemAvailability(menu, R.id.media_menu, hasMedia || hasInReplyTo);
         MenuUtils.setMenuItemAvailability(menu, R.id.toggle_sensitive, hasMedia);
         MenuUtils.setMenuItemAvailability(menu, R.id.link_to_quoted_status, isQuote());

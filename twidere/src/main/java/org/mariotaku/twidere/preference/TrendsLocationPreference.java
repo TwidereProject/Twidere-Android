@@ -29,6 +29,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.Preference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -37,18 +38,15 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Location;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.Location;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-
-import static org.mariotaku.twidere.util.TwitterAPIFactory.getDefaultTwitterInstance;
 
 public class TrendsLocationPreference extends Preference implements Constants, OnClickListener {
 
@@ -177,7 +175,7 @@ public class TrendsLocationPreference extends Preference implements Constants, O
             try {
                 return twitter.getAvailableTrends();
             } catch (final TwitterException e) {
-                e.printStackTrace();
+                Log.w(LOGTAG, e);
             }
             return null;
         }

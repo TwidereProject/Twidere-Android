@@ -28,11 +28,11 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class StatusActivitySummary extends TwitterResponseObject implements TwitterResponse {
 
-    @JsonField(name = "favoriters")
+    @JsonField(name = "favoriters", typeConverter = IDs.Converter.class)
     IDs favoriters;
-    @JsonField(name = "repliers")
+    @JsonField(name = "repliers", typeConverter = IDs.Converter.class)
     IDs repliers;
-    @JsonField(name = "retweeters")
+    @JsonField(name = "retweeters", typeConverter = IDs.Converter.class)
     IDs retweeters;
 
     @JsonField(name = "favoriters_count")

@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -123,7 +124,7 @@ public class ColorPickerPreference extends DialogPreference implements DialogInt
         try {
             if (isPersistent()) return getPersistedInt(mDefaultValue);
         } catch (final ClassCastException e) {
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
         }
         return mDefaultValue;
     }

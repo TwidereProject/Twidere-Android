@@ -116,7 +116,8 @@ public final class ViewSupport {
     public static void setForeground(View view, Drawable foreground) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             if (view instanceof IForegroundView) {
-                view.setForeground(foreground);
+                //noinspection RedundantCast
+                ((IForegroundView) view).setForeground(foreground);
             }
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             ViewAccessorICS.setForeground(view, foreground);
@@ -141,7 +142,8 @@ public final class ViewSupport {
                 //noinspection RedundantCast
                 ((FrameLayout) view).setForeground(foreground);
             } else if (view instanceof IForegroundView) {
-                view.setForeground(foreground);
+                //noinspection RedundantCast
+                ((IForegroundView) view).setForeground(foreground);
             }
         }
     }

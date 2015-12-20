@@ -35,7 +35,6 @@ import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
-import com.squareup.okhttp.Dns;
 
 import org.acra.annotation.ReportsCrashes;
 import org.mariotaku.twidere.BuildConfig;
@@ -44,17 +43,16 @@ import org.mariotaku.twidere.activity.AssistLauncherActivity;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
-import org.mariotaku.twidere.util.AbsLogger;
+import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
-import org.mariotaku.twidere.util.TwidereLogger;
+import org.mariotaku.twidere.util.TwidereBugReporter;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache;
 import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator;
-import org.mariotaku.twidere.util.net.TwidereDns;
 
 import java.io.File;
 import java.io.IOException;
@@ -167,8 +165,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private void initBugReport() {
         final SharedPreferences preferences = getSharedPreferences();
         if (!preferences.getBoolean(KEY_BUG_REPORTS, true)) return;
-        AbsLogger.setImplementation(new TwidereLogger());
-        AbsLogger.init(this);
+        BugReporter.setImplementation(new TwidereBugReporter());
+        BugReporter.init(this);
     }
 
     private void migrateUsageStatisticsPreferences() {

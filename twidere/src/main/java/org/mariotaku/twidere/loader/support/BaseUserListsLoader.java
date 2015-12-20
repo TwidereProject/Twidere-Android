@@ -21,7 +21,14 @@ package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+import android.util.Log;
 
+import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.CursorSupport;
+import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
+import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -30,16 +37,9 @@ import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.mariotaku.twidere.api.twitter.model.CursorSupport;
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-
-import static org.mariotaku.twidere.util.TwitterAPIFactory.getTwitterInstance;
 
 public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<ParcelableUserList>>
-        implements ICursorSupportLoader {
+        implements TwidereConstants, ICursorSupportLoader {
 
     protected final NoDuplicatesArrayList<ParcelableUserList> mData = new NoDuplicatesArrayList<>();
     protected final long mAccountId;
@@ -81,7 +81,7 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
         try {
             listLoaded = getUserLists(twitter);
         } catch (final TwitterException e) {
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
         }
         if (listLoaded != null) {
             final int listSize = listLoaded.size();

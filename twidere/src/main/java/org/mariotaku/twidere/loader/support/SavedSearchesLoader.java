@@ -21,40 +21,40 @@ package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+import android.util.Log;
 
-import org.mariotaku.twidere.util.TwitterAPIFactory;
-
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
-import static org.mariotaku.twidere.util.TwitterAPIFactory.getTwitterInstance;
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
 
 public class SavedSearchesLoader extends AsyncTaskLoader<ResponseList<SavedSearch>> {
 
-	private final long mAccountId;
+    private final long mAccountId;
 
-	public SavedSearchesLoader(final Context context, final long account_id) {
-		super(context);
-		mAccountId = account_id;
-	}
+    public SavedSearchesLoader(final Context context, final long account_id) {
+        super(context);
+        mAccountId = account_id;
+    }
 
-	@Override
-	public ResponseList<SavedSearch> loadInBackground() {
-		final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, false);
-		if (twitter == null) return null;
-		try {
-			return twitter.getSavedSearches();
-		} catch (final TwitterException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    @Override
+    public ResponseList<SavedSearch> loadInBackground() {
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, false);
+        if (twitter == null) return null;
+        try {
+            return twitter.getSavedSearches();
+        } catch (final TwitterException e) {
+            Log.w(LOGTAG, e);
+        }
+        return null;
+    }
 
-	@Override
-	public void onStartLoading() {
-		forceLoad();
-	}
+    @Override
+    public void onStartLoading() {
+        forceLoad();
+    }
 
 }

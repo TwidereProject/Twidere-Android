@@ -30,7 +30,7 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.FileTypedData;
-import org.mariotaku.twidere.util.AbsLogger;
+import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 
@@ -121,7 +121,7 @@ public class UploadLogsTask implements Runnable {
                 }
             }
             if (succeeded) {
-                AbsLogger.logIfFalse(dayLogsDir.delete(), "Unable to delete log dir");
+                BugReporter.logIfFalse(dayLogsDir.delete(), "Unable to delete log dir");
             }
         }
         return hasErrors;

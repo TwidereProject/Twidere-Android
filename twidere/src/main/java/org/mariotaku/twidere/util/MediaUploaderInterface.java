@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import org.mariotaku.twidere.IMediaUploader;
 import org.mariotaku.twidere.model.MediaUploadResult;
@@ -53,7 +54,7 @@ public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUplo
         try {
             return iface.upload(status, media);
         } catch (final RemoteException e) {
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
         }
         return null;
     }

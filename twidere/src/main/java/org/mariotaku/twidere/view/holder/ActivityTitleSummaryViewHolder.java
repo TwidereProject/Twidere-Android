@@ -314,8 +314,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                     secondDisplayName);
         } else {
             final int othersCount = sources.length - 1;
-            final SpannableString nOthers = new SpannableString(resources.getQuantityString(R.plurals.N_others, othersCount, othersCount));
-            nOthers.setSpan(new StyleSpan(Typeface.BOLD), 0, nOthers.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            final String nOthers = resources.getQuantityString(R.plurals.N_others, othersCount, othersCount);
             final String format = context.getString(stringResMulti);
             return SpanFormatter.format(configuration.locale, format, firstDisplayName, nOthers);
         }
@@ -354,8 +353,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
                     secondSourceName, firstTargetName);
         } else {
             final int othersCount = sources.length - 1;
-            final SpannableString nOthers = new SpannableString(resources.getQuantityString(R.plurals.N_others, othersCount, othersCount));
-            nOthers.setSpan(new StyleSpan(Typeface.BOLD), 0, nOthers.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            final String nOthers = resources.getQuantityString(R.plurals.N_others, othersCount, othersCount);
             final String format = context.getString(stringResMulti);
             return SpanFormatter.format(configuration.locale, format, firstSourceName, nOthers, firstTargetName);
         }

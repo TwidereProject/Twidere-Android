@@ -1,4 +1,4 @@
-include ':twidere'
+include ':twidere', ':twidere.extension.emoji.noto'
 include ':twidere.component.common'
 include ':twidere.library.extension'
 include ':twidere.wear'

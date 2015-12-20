@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 
@@ -39,8 +40,7 @@ public abstract class IDsUsersLoader extends BaseCursorSupportUsersLoader {
     }
 
     @Override
-    public List<User> getUsers(final Twitter twitter) throws TwitterException {
-        if (twitter == null) return null;
+    public List<User> getUsers(@NonNull final Twitter twitter) throws TwitterException {
         final Paging paging = new Paging();
         paging.count(getCount());
         if (getCursor() > 0) {
@@ -52,6 +52,6 @@ public abstract class IDsUsersLoader extends BaseCursorSupportUsersLoader {
         return twitter.lookupUsers(ids.getIDs());
     }
 
-    protected abstract IDs getIDs(Twitter twitter, Paging paging) throws TwitterException;
+    protected abstract IDs getIDs(@NonNull Twitter twitter, Paging paging) throws TwitterException;
 
 }

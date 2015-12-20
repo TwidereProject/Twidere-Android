@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import org.mariotaku.twidere.IStatusShortener;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -49,7 +50,7 @@ public final class StatusShortenerInterface extends AbsServiceInterface<IStatusS
         try {
             return iface.shorten(status, overrideStatusText);
         } catch (final RemoteException e) {
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
         }
         return null;
     }

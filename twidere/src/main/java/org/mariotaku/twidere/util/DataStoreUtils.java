@@ -387,15 +387,12 @@ public class DataStoreUtils implements Constants {
                 .select(new Columns.Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_ID))
                 .from(new Tables(Filters.Users.TABLE_NAME))
                 .build();
-        final SQLSelectQuery selectCTEIds = SQLQueryBuilder.select(new Columns.Column(Filters.Users.USER_ID))
-                .from(new Table("cte_filtered_user_ids")).build();
         final Expression filteredUsersWhere = Expression.or(
-                Expression.in(new Columns.Column(new Table(table), Statuses.USER_ID), selectCTEIds),
-                Expression.in(new Columns.Column(new Table(table), Statuses.RETWEETED_BY_USER_ID), selectCTEIds),
-                Expression.in(new Columns.Column(new Table(table), Statuses.QUOTED_USER_ID), selectCTEIds)
+                Expression.in(new Columns.Column(new Table(table), Statuses.USER_ID), filteredUsersQuery),
+                Expression.in(new Columns.Column(new Table(table), Statuses.RETWEETED_BY_USER_ID), filteredUsersQuery),
+                Expression.in(new Columns.Column(new Table(table), Statuses.QUOTED_USER_ID), filteredUsersQuery)
         );
         final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
-                .with("cte_filtered_user_ids", filteredUsersQuery)
                 .select(new Columns.Column(new Table(table), Statuses._ID))
                 .from(new Tables(table))
                 .where(filteredUsersWhere)
@@ -670,15 +667,12 @@ public class DataStoreUtils implements Constants {
                 .select(new Columns.Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_ID))
                 .from(new Tables(Filters.Users.TABLE_NAME))
                 .build();
-        final SQLSelectQuery selectCTEIds = SQLQueryBuilder.select(new Columns.Column(Filters.Users.USER_ID))
-                .from(new Table("cte_filtered_user_ids")).build();
         final Expression filteredUsersWhere = Expression.or(
-                Expression.in(new Columns.Column(new Table(table), Activities.STATUS_USER_ID), selectCTEIds),
-                Expression.in(new Columns.Column(new Table(table), Activities.STATUS_RETWEETED_BY_USER_ID), selectCTEIds),
-                Expression.in(new Columns.Column(new Table(table), Activities.STATUS_QUOTED_USER_ID), selectCTEIds)
+                Expression.in(new Columns.Column(new Table(table), Activities.STATUS_USER_ID), filteredUsersQuery),
+                Expression.in(new Columns.Column(new Table(table), Activities.STATUS_RETWEETED_BY_USER_ID), filteredUsersQuery),
+                Expression.in(new Columns.Column(new Table(table), Activities.STATUS_QUOTED_USER_ID), filteredUsersQuery)
         );
         final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
-                .with("cte_filtered_user_ids", filteredUsersQuery)
                 .select(new Columns.Column(new Table(table), Activities._ID))
                 .from(new Tables(table))
                 .where(filteredUsersWhere)

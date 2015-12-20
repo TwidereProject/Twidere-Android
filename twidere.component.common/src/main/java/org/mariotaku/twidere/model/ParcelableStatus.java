@@ -632,9 +632,16 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             }
         }
 
+        @Nullable
+        public ParcelableBindingValue getValue(@Nullable String key) {
+            if (key == null || values == null) return null;
+            return values.get(key);
+        }
+
+        @Nullable
         public static ParcelableBindingValue getValue(@Nullable ParcelableCardEntity entity, @Nullable String key) {
-            if (entity == null || entity.values == null || key == null) return null;
-            return entity.values.get(key);
+            if (entity == null) return null;
+            return entity.getValue(key);
         }
 
         @Override
@@ -730,7 +737,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 dest.writeString(value);
             }
 
-
+            @Override
+            public String toString() {
+                return value + " (" + type + ")";
+            }
         }
 
     }

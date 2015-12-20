@@ -52,6 +52,7 @@ android {
 
 repositories {
     maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
+    flatDir { dirs "$projectDir/lib" }
 }
 
 dependencies {
@@ -102,6 +103,7 @@ dependencies {
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
     googleCompile 'com.google.android.gms:play-services-maps:8.3.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4'
+    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     fdroidCompile 'org.osmdroid:osmdroid-android:5.0.1'
     debugCompile 'com.facebook.stetho:stetho:1.2.0'
     debugCompile 'com.facebook.stetho:stetho-okhttp:1.2.0'
@@ -119,8 +121,6 @@ task svgToDrawable(type: SvgDrawableTask) {
     from = files('src/main/svg/drawable')
     // specify the android res folder
     to = file('src/main/res-svg2png')
-    // create qualified directories if missing
-    createMissingDirectories = true
     // override files only if necessary
     overwriteMode = 'ifModified'
     // let generate PNG for the following densities only

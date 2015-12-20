@@ -101,7 +101,7 @@ public abstract class TwitterAPIActivitiesLoader extends ParcelableActivitiesLoa
             truncated = truncateActivities(getActivities(getTwitter(), paging), activities, mSinceId);
         } catch (final TwitterException e) {
             // mHandler.post(new ShowErrorRunnable(e));
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
             return new CopyOnWriteArrayList<>(data);
         }
         final Pair<Long, Long> position;
@@ -170,9 +170,8 @@ public abstract class TwitterAPIActivitiesLoader extends ParcelableActivitiesLoa
         try {
             return JsonSerializer.getSerializationFile(mContext, mSavedStatusesFileArgs);
         } catch (final IOException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private void saveCachedData(final File file, final List<ParcelableActivity> data) {
@@ -183,7 +182,7 @@ public abstract class TwitterAPIActivitiesLoader extends ParcelableActivitiesLoa
             final List<ParcelableActivity> activities = data.subList(0, Math.min(databaseItemLimit, data.size()));
             LoganSquare.serialize(activities, new FileOutputStream(file), ParcelableActivity.class);
         } catch (final IOException e) {
-            e.printStackTrace();
+            // Ignore
         }
     }
 

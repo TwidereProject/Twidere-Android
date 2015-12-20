@@ -289,7 +289,7 @@ public class StreamingService extends Service implements Constants {
                             Log.w(LOGTAG, os.toString(charsetName));
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.w(LOGTAG, e);
                     }
                 }
             } else {

@@ -20,15 +20,15 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.IDs;
+import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.IDs;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
 public class StatusRetweetersLoader extends IDsUsersLoader {
 
@@ -41,10 +41,8 @@ public class StatusRetweetersLoader extends IDsUsersLoader {
     }
 
     @Override
-    protected IDs getIDs(final Twitter twitter, final Paging paging) throws TwitterException {
-        if (twitter == null) return null;
-        if (mStatusId > 0) return twitter.getRetweetersIDs(mStatusId, paging);
-        return null;
+    protected IDs getIDs(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
+        return twitter.getRetweetersIDs(mStatusId, paging);
     }
 
 }

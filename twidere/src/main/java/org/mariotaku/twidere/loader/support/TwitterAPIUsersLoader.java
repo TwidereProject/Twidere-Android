@@ -20,18 +20,17 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.util.Collections;
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
-
-import static org.mariotaku.twidere.util.TwitterAPIFactory.getTwitterInstance;
 
 public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
@@ -47,13 +46,15 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
     @Override
     public List<ParcelableUser> loadInBackground() {
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, true);
+        if (twitter == null) return null;
         final List<ParcelableUser> data = getData();
         final List<User> users;
         try {
-            users = getUsers(TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, true));
+            users = getUsers(twitter);
             if (users == null) return data;
         } catch (final TwitterException e) {
-            e.printStackTrace();
+            Log.w(LOGTAG, e);
             return data;
         }
         int pos = data.size();
@@ -68,5 +69,5 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         return data;
     }
 
-    protected abstract List<User> getUsers(Twitter twitter) throws TwitterException;
+    protected abstract List<User> getUsers(@NonNull Twitter twitter) throws TwitterException;
 }

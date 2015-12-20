@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.IInterface;
+import android.util.Log;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.ServiceUtils.ServiceToken;
@@ -83,7 +84,7 @@ public abstract class AbsServiceInterface<I extends IInterface> implements Const
             try {
                 Thread.sleep(100L);
             } catch (final InterruptedException e) {
-                e.printStackTrace();
+                Log.w(LOGTAG, e);
             }
         }
     }

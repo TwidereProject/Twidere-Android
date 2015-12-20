@@ -79,7 +79,7 @@
                     android:color="?android:textColorSecondary"
                     android:src="@drawable/ic_action_location" />
 
-                <TextView
+                <org.mariotaku.twidere.view.themed.ThemedTextView
                     android:id="@+id/location_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

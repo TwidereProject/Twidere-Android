@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -312,7 +313,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
                 result.getExtras().putBoolean(EXTRA_IS_MY_ACCOUNT, is_my_account);
                 return result;
             } catch (final TwitterException e) {
-                e.printStackTrace();
+                Log.w(LOGTAG, e);
                 return SingleResponse.getInstance(e);
             }
         }
@@ -366,7 +367,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
                 }
                 return SingleResponse.getInstance(data);
             } catch (final TwitterException e) {
-                e.printStackTrace();
+                Log.w(LOGTAG, e);
                 return SingleResponse.getInstance(e);
             }
         }
