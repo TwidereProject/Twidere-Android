@@ -20,7 +20,16 @@ import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
  */
 
 apply plugin: 'com.android.application'
-apply plugin: 'androidsvgdrawable'
+apply plugin: 'com.github.forsety.adr'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.forsety:adr:0.1'
+    }
+}
 
 android {
     compileSdkVersion 23
@@ -48,22 +57,4 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-}
-
-
-task emojiSvgToMipmap(type: SvgDrawableTask) {
-    // specify where to pick SVG from
-    from = files('src/main/svg/drawable')
-    // specify the android res folder
-    to = file('src/main/res-svg2png')
-    // override files only if necessary
-    overwriteMode = 'ifModified'
-    // let generate PNG for the following densities only
-    targetedDensities = ['hdpi', 'mdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']
-    // relative path of the file specifying nine patch specs
-    ninePatchConfig = file('src/main/svg/drawable/9patch.json')
-    // output format of the generated resources
-    outputFormat = 'PNG'
-
-    outputType = 'mipmap'
 }
