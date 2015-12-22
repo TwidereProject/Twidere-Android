@@ -68,10 +68,9 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.CharacterStyle;
 import android.text.style.ImageSpan;
-import android.text.style.MetricAffectingSpan;
-import android.text.style.URLSpan;
+import android.text.style.SuggestionSpan;
+import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
@@ -101,7 +100,6 @@ import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
-import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -115,6 +113,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.text.MarkForDeleteSpan;
+import org.mariotaku.twidere.text.style.EmojiSpan;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -430,8 +429,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.take_photo:
-            case R.id.take_photo_sub_item: {
+            case R.id.take_photo: {
                 takePhoto();
                 break;
             }
@@ -755,12 +753,16 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 updateTextCount();
                 if (s instanceof Spannable && count == 1 && before == 0) {
                     final ImageSpan[] imageSpans = ((Spannable) s).getSpans(start, start + count, ImageSpan.class);
-                    if (imageSpans.length == 1) {
-                        final Intent intent = ThemedImagePickerActivity.withThemed(ComposeActivity.this)
-                                .getImage(Uri.parse(imageSpans[0].getSource())).build();
-                        startActivityForResult(intent, REQUEST_PICK_IMAGE);
+                    List<String> imageSources = new ArrayList<>();
+                    for (ImageSpan imageSpan : imageSpans) {
+                        imageSources.add(imageSpan.getSource());
                         ((Spannable) s).setSpan(new MarkForDeleteSpan(), start, start + count,
                                 Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+                    if (!imageSources.isEmpty()) {
+                        final Intent intent = ThemedImagePickerActivity.withThemed(ComposeActivity.this)
+                                .getImage(Uri.parse(imageSources.get(0))).build();
+                        startActivityForResult(intent, REQUEST_PICK_IMAGE);
                     }
                 }
             }
@@ -773,13 +775,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                     s.delete(s.getSpanStart(delete), s.getSpanEnd(delete));
                     s.removeSpan(delete);
                 }
-                for (Object span : s.getSpans(0, s.length(), CharacterStyle.class)) {
-                    if (span instanceof URLSpan) {
-                        s.removeSpan(span);
-                    } else if (span instanceof MetricAffectingSpan) {
-                        s.removeSpan(span);
-                    }
+                for (Object span : s.getSpans(0, s.length(), UpdateAppearance.class)) {
+                    trimSpans(s, span);
                 }
+            }
+
+            private void trimSpans(Editable s, Object span) {
+                if (span instanceof EmojiSpan) return;
+                if (span instanceof SuggestionSpan) return;
+                s.removeSpan(span);
             }
         });
         mEditText.setCustomSelectionActionModeCallback(this);
@@ -1110,8 +1114,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
          * Has media & Not reply: [Take photo][Media menu][Attach location][Drafts]
          * Is reply: [Media menu][View status][Attach location][Drafts]
          */
-        MenuUtils.setMenuItemAvailability(menu, R.id.take_photo, !hasInReplyTo);
-        MenuUtils.setMenuItemAvailability(menu, R.id.take_photo_sub_item, hasInReplyTo);
+        MenuUtils.setMenuItemAvailability(menu, R.id.take_photo, hasInReplyTo);
         MenuUtils.setMenuItemAvailability(menu, R.id.add_image, !hasMedia && !hasInReplyTo);
         MenuUtils.setMenuItemAvailability(menu, R.id.media_menu, hasMedia || hasInReplyTo);
         MenuUtils.setMenuItemAvailability(menu, R.id.toggle_sensitive, hasMedia);

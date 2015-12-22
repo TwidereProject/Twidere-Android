@@ -39,5 +39,4 @@ public class ThemedTextView extends AppCompatTextView {
         super(context, attrs, defStyle);
     }
 
-
 }

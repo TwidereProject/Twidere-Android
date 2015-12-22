@@ -20,16 +20,6 @@ import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
  */
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.github.forsety.adr'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.forsety:adr:0.1'
-    }
-}
 
 android {
     compileSdkVersion 23

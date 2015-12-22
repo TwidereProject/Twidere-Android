@@ -19,18 +19,23 @@
 
 package org.mariotaku.twidere.util;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.Spanned;
-import android.text.style.ImageSpan;
+
+import org.mariotaku.twidere.text.style.EmojiSpan;
 
 /**
  * Created by mariotaku on 15/12/20.
  */
 public class EmojiSupportUtils {
-    public static void applyEmoji(ExternalThemeManager manager, Spannable text) {
+    public static void applyEmoji(ExternalThemeManager manager, @NonNull Spannable text) {
+        applyEmoji(manager, text, 0, text.length());
+    }
+
+    public static void applyEmoji(ExternalThemeManager manager, @NonNull Spannable text,
+                                  int textStart, int textLength) {
         final ExternalThemeManager.Emoji emoji = manager.getEmoji();
         if (!emoji.isSupported()) return;
         CodePointArray array = new CodePointArray(text);
@@ -38,10 +43,11 @@ public class EmojiSupportUtils {
             final int codePoint = array.get(i);
             if (isEmoji(codePoint)) {
                 final int idx = array.indexOfText(codePoint, i);
-                if (idx == -1) {
+                if (idx == -1 || idx < textStart) {
                     continue;
                 }
                 final int end = idx + Character.charCount(codePoint);
+                if (end > textStart + textLength) continue;
                 final ExternalThemeManager.Emoji[] spans = text.getSpans(idx, end,
                         ExternalThemeManager.Emoji.class);
                 if (spans.length > 0) continue;
@@ -61,37 +67,4 @@ public class EmojiSupportUtils {
         return codePoint >= from && codePoint <= to;
     }
 
-    private static class EmojiSpan extends ImageSpan {
-        public EmojiSpan(Drawable drawable) {
-            super(drawable);
-        }
-
-        @Override
-        public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
-            final int textSizePx = Math.round(paint.getTextSize());
-            final Drawable drawable = getDrawable();
-            if (drawable != null) {
-                drawable.setBounds(0, 0, textSizePx, textSizePx);
-            }
-            return textSizePx + textSizePx / 16;
-        }
-
-        @Override
-        public void draw(Canvas canvas, CharSequence text, int start,
-                         int end, float x, int top, int y, int bottom,
-                         Paint paint) {
-            Drawable b = getDrawable();
-            if (b == null) return;
-            canvas.save();
-
-            int transY = bottom - b.getBounds().bottom;
-            // this is the key
-            transY -= paint.getFontMetricsInt().descent / 2;
-
-            canvas.translate(x, transY);
-            b.draw(canvas);
-            canvas.restore();
-        }
-
-    }
 }

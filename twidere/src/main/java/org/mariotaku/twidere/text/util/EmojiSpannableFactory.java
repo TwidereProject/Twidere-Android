@@ -34,20 +34,17 @@ import javax.inject.Inject;
  */
 public class EmojiSpannableFactory extends SafeSpannableFactory {
 
-    private final TextView textView;
     @Inject
     ExternalThemeManager externalThemeManager;
 
     public EmojiSpannableFactory(TextView textView) {
         DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(textView.getContext())).build().inject(this);
-        this.textView = textView;
     }
 
     @Override
     public Spannable newSpannable(CharSequence source) {
         final Spannable spannable = super.newSpannable(source);
         EmojiSupportUtils.applyEmoji(externalThemeManager, spannable);
-        System.identityHashCode(spannable);
         return spannable;
     }
 }

@@ -33,6 +33,9 @@ import android.widget.AdapterView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
+import org.mariotaku.twidere.text.util.EmojiEditableFactory;
+import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
+import org.mariotaku.twidere.text.util.SafeEditableFactory;
 import org.mariotaku.twidere.util.widget.StatusTextTokenizer;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
@@ -51,6 +54,8 @@ public class ComposeEditText extends AppCompatMultiAutoCompleteTextView implemen
 
     public ComposeEditText(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+        setEditableFactory(new EmojiEditableFactory(this));
+        setSpannableFactory(new EmojiSpannableFactory(this));
         setTokenizer(new StatusTextTokenizer());
         setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

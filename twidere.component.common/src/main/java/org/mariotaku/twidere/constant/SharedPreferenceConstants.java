@@ -315,4 +315,6 @@ public interface SharedPreferenceConstants {
     String KEY_TWITTER_OPTIMIZED_SEARCHES = "twitter_optimized_searches";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_I_WANT_MY_STARS_BACK = "i_want_my_stars_back";
+    @Preference(type = STRING, hasDefault = false)
+    String KEY_EMOJI_SUPPORT = "emoji_support";
 }

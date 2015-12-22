@@ -24,10 +24,6 @@
         tools:ignore="AlwaysShowAction">
         <menu>
             <item
-                android:id="@+id/take_photo_sub_item"
-                android:icon="@drawable/ic_action_camera"
-                android:title="@string/take_photo"/>
-            <item
                 android:id="@+id/add_image_sub_item"
                 android:icon="@drawable/ic_action_gallery"
                 android:title="@string/add_image"/>

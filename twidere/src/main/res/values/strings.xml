@@ -825,4 +825,6 @@
     <string name="saved_searches_already_saved_hint">Perhaps you already saved this search</string>
     <string name="unsupported_activity_action_summary">Please report action above</string>
     <string name="unknown_language">Unknown language</string>
+    <string name="system_default">System default</string>
+    <string name="emoji_support">Emoji support</string>
 </resources>

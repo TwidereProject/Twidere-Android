@@ -23,15 +23,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.model.ParcelableStatus;
-
-import java.util.List;
-
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.model.ParcelableStatus;
+
+import java.util.List;
 
 public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
 
@@ -53,7 +52,7 @@ public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
         if (mUserId != -1)
             return twitter.getFavorites(mUserId, paging);
         else if (mUserScreenName != null) return twitter.getFavorites(mUserScreenName, paging);
-        return null;
+        throw new IllegalArgumentException();
     }
 
     public int getTotalItemsCount() {

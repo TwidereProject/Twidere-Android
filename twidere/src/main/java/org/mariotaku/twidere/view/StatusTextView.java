@@ -6,6 +6,7 @@ import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 import org.mariotaku.twidere.text.util.SafeEditableFactory;
 import org.mariotaku.twidere.view.themed.ThemedTextView;
@@ -40,7 +41,7 @@ public class StatusTextView extends ThemedTextView {
     }
 
     private void init() {
-        setEditableFactory(new SafeEditableFactory());
+        setEditableFactory(new EmojiEditableFactory(this));
         setSpannableFactory(new EmojiSpannableFactory(this));
     }
 

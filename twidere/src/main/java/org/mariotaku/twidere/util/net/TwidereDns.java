@@ -80,7 +80,10 @@ public class TwidereDns implements Constants, Dns {
 
     @NonNull
     private InetAddress[] resolveInternal(String originalHost, String host) throws IOException {
-        if (isValidIpAddress(host)) return fromAddressString(originalHost, host);
+        if (isValidIpAddress(host)) {
+            final InetAddress[] inetAddresses = fromAddressString(originalHost, host);
+            if (inetAddresses != null) return inetAddresses;
+        }
         // First, I'll try to load address cached.
         final InetAddress[] cachedHostAddr = mHostCache.get(host);
         if (cachedHostAddr != null) {
@@ -99,7 +102,9 @@ public class TwidereDns implements Constants, Dns {
                 if (BuildConfig.DEBUG) {
                     Log.d(RESOLVER_LOGTAG, "Got mapped " + Arrays.toString(hostAddr));
                 }
-                return hostAddr;
+                if (hostAddr != null) {
+                    return hostAddr;
+                }
             }
         }
         try {
@@ -119,7 +124,9 @@ public class TwidereDns implements Constants, Dns {
             if (BuildConfig.DEBUG) {
                 Log.d(RESOLVER_LOGTAG, "Got mapped address " + customMappedHost + " for host " + host);
             }
-            return hostAddr;
+            if (hostAddr != null) {
+                return hostAddr;
+            }
         }
         // Use TCP DNS Query if enabled.
         final Resolver dns = getResolver();
@@ -173,7 +180,9 @@ public class TwidereDns implements Constants, Dns {
     }
 
     private InetAddress[] fromAddressString(String host, String address) throws UnknownHostException {
-        return new InetAddress[]{InetAddressUtils.getResolvedIPAddress(host, address)};
+        final InetAddress resolved = InetAddressUtils.getResolvedIPAddress(host, address);
+        if (resolved == null) return null;
+        return new InetAddress[]{resolved};
     }
 
     private String findHost(final String host) {

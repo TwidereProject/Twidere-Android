@@ -46,6 +46,7 @@ import org.mariotaku.twidere.provider.TwidereDataProvider;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
+import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
@@ -111,4 +112,6 @@ public interface GeneralComponent {
     void inject(AccountsDashboardFragment.OptionItemsAdapter object);
 
     void inject(EmojiSpannableFactory object);
+
+    void inject(EmojiEditableFactory object);
 }

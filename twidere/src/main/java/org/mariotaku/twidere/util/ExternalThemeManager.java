@@ -20,35 +20,64 @@
 package org.mariotaku.twidere.util;
 
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.SparseIntArray;
+
+import org.mariotaku.twidere.Constants;
 
 /**
  * Created by mariotaku on 15/12/20.
  */
-public class ExternalThemeManager {
+public class ExternalThemeManager implements Constants {
     private final Emoji emoji;
 
-    public ExternalThemeManager(Application application) {
-        emoji = new Emoji(application, "org.mariotaku.twidere.extension.emoji.noto");
+    public ExternalThemeManager(Application application, SharedPreferencesWrapper preferences) {
+        final String emojiComponentName = preferences.getString(KEY_EMOJI_SUPPORT, null);
+        String packageName = null;
+        if (emojiComponentName != null) {
+            final ComponentName componentName = ComponentName.unflattenFromString(emojiComponentName);
+            if (componentName != null) {
+                packageName = componentName.getPackageName();
+            }
+        }
+        emoji = new Emoji(application, packageName);
     }
 
+    @NonNull
     public Emoji getEmoji() {
         return emoji;
     }
 
     public static class Emoji {
         private final String packageName;
+        private boolean useMipmap;
         private Resources resources;
         private SparseIntArray identifierCache = new SparseIntArray();
 
         public Emoji(Application application, String packageName) {
             this.packageName = packageName;
+            initResources(application, packageName);
+        }
+
+        private void initResources(Application application, String packageName) {
+            if (packageName == null) {
+                useMipmap = false;
+                resources = null;
+                return;
+            }
             try {
-                this.resources = application.getPackageManager().getResourcesForApplication(packageName);
+                final PackageManager pm = application.getPackageManager();
+                final ApplicationInfo info = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+                if (info.metaData != null) {
+                    this.useMipmap = info.metaData.getBoolean("org.mariotaku.twidere.extension.emoji.mipmap");
+                }
+                this.resources = pm.getResourcesForApplication(info);
             } catch (PackageManager.NameNotFoundException e) {
                 // Ignore
             }
@@ -60,7 +89,7 @@ public class ExternalThemeManager {
             else if (cached != -1)
                 return ResourcesCompat.getDrawable(resources, cached, null);
             final int identifier = resources.getIdentifier("emoji_u" + Integer.toHexString(codePoint),
-                    "mipmap", packageName);
+                    useMipmap ? "mipmap" : "drawable", packageName);
             identifierCache.put(codePoint, identifier);
             if (identifier == 0) return null;
             return ResourcesCompat.getDrawable(resources, identifier, null);

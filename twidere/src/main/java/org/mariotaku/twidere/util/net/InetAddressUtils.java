@@ -52,5 +52,6 @@ public class InetAddressUtils {
      */
     public native static int getInetAddressType(final String input);
 
+    @Nullable
     public native static InetAddress getResolvedIPAddress(@Nullable final String host, @NonNull final String address);
 }

@@ -29,7 +29,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <meta-data
+            android:name="org.mariotaku.twidere.extension.emoji"
+            android:value="true"/>
+        <meta-data
+            android:name="org.mariotaku.twidere.extension.emoji.mipmap"
+            android:value="false"/>
 
+        <activity android:name=".AboutActivity">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.EMOJI_SUPPORT_ABOUT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

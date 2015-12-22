@@ -114,7 +114,7 @@ public class ApplicationModule {
         hotMobiLogger = new HotMobiLogger(application);
         asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager,
                 sharedPreferences, bus, userColorNameManager);
-        externalThemeManager = new ExternalThemeManager(application);
+        externalThemeManager = new ExternalThemeManager(application, sharedPreferences);
     }
 
     public static ApplicationModule get(@NonNull Context context) {

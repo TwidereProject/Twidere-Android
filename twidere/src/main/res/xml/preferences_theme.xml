@@ -55,5 +55,13 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.ThemeFontFamilyPreference>
 
+    <org.mariotaku.twidere.preference.EmojiSupportPreference
+        android:key="emoji_support"
+        android:order="25"
+        android:title="@string/emoji_support">
+        <extra
+            android:name="notify_change"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.EmojiSupportPreference>
 
 </PreferenceScreen>
