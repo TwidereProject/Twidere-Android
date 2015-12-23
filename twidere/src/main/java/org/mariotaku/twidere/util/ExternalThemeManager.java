@@ -27,9 +27,11 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.SparseIntArray;
+import android.util.LruCache;
 
 import org.mariotaku.twidere.Constants;
+
+import java.util.Locale;
 
 /**
  * Created by mariotaku on 15/12/20.
@@ -58,7 +60,7 @@ public class ExternalThemeManager implements Constants {
         private final String packageName;
         private boolean useMipmap;
         private Resources resources;
-        private SparseIntArray identifierCache = new SparseIntArray();
+        private LruCache<int[], Integer> identifierCache = new LruCache<>(512);
 
         public Emoji(Application application, String packageName) {
             this.packageName = packageName;
@@ -83,16 +85,25 @@ public class ExternalThemeManager implements Constants {
             }
         }
 
-        public Drawable getEmojiDrawableFor(int codePoint) {
-            int cached = identifierCache.get(codePoint, -1);
-            if (cached == 0) return null;
-            else if (cached != -1)
+        public Drawable getEmojiDrawableFor(int... codePoints) {
+            final Integer cached = identifierCache.get(codePoints);
+            if (cached == null) {
+                final StringBuilder sb = new StringBuilder("emoji_u");
+                for (int i = 0; i < codePoints.length; i++) {
+                    if (i != 0) {
+                        sb.append("_");
+                    }
+                    sb.append(String.format(Locale.US, "%04x", codePoints[i]));
+                }
+                final int identifier = resources.getIdentifier(sb.toString(),
+                        useMipmap ? "mipmap" : "drawable", packageName);
+                identifierCache.put(codePoints, identifier);
+                if (identifier == 0) return null;
+                return ResourcesCompat.getDrawable(resources, identifier, null);
+            } else if (cached != 0) {
                 return ResourcesCompat.getDrawable(resources, cached, null);
-            final int identifier = resources.getIdentifier("emoji_u" + Integer.toHexString(codePoint),
-                    useMipmap ? "mipmap" : "drawable", packageName);
-            identifierCache.put(codePoint, identifier);
-            if (identifier == 0) return null;
-            return ResourcesCompat.getDrawable(resources, identifier, null);
+            }
+            return null;
         }
 
         public boolean isSupported() {

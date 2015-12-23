@@ -21,6 +21,8 @@ package org.mariotaku.twidere.util;
 
 import android.support.annotation.NonNull;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 /**
  * Created by mariotaku on 15/11/4.
  */
@@ -66,5 +68,9 @@ public final class CodePointArray {
             sb.appendCodePoint(codePoints[i]);
         }
         return sb.toString();
+    }
+
+    public int[] subarray(int start, int end) {
+        return ArrayUtils.subarray(codePoints, start, end);
     }
 }

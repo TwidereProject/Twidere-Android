@@ -805,10 +805,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         list.add(0, status);
                     }
                     final Paging paging = new Paging();
-                    paging.setMaxId(status.id);
+                    final long id = status.is_retweet ? status.retweet_id : status.id;
+                    paging.setMaxId(id);
                     final List<ParcelableStatus> conversations = new ArrayList<>();
-                    for (org.mariotaku.twidere.api.twitter.model.Status item : twitter.showConversation(status.id, paging)) {
-                        if (item.getId() < status.id) {
+                    for (org.mariotaku.twidere.api.twitter.model.Status item : twitter.showConversation(id, paging)) {
+                        if (item.getId() < id) {
                             final ParcelableStatus conversation = new ParcelableStatus(item, accountId, false);
                             publishProgress(conversation);
                             conversations.add(conversation);

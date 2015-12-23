@@ -38,33 +38,59 @@ public class EmojiSupportUtils {
                                   int textStart, int textLength) {
         final ExternalThemeManager.Emoji emoji = manager.getEmoji();
         if (!emoji.isSupported()) return;
-        CodePointArray array = new CodePointArray(text);
-        for (int i = 0, j = array.length(); i < j; i++) {
+        final CodePointArray array = new CodePointArray(text);
+        for (int i = array.length() - 1; i >= 0; i--) {
             final int codePoint = array.get(i);
             if (isEmoji(codePoint)) {
-                final int idx = array.indexOfText(codePoint, i);
-                if (idx == -1 || idx < textStart) {
+                int arrayIdx = i, arrayEnd = i + 1;
+                int textIdx = array.indexOfText(codePoint, i);
+                if (textIdx == -1 || textIdx < textStart) {
                     continue;
                 }
-                final int end = idx + Character.charCount(codePoint);
-                if (end > textStart + textLength) continue;
-                final ExternalThemeManager.Emoji[] spans = text.getSpans(idx, end,
-                        ExternalThemeManager.Emoji.class);
+                final int textEnd = textIdx + Character.charCount(codePoint);
+                if (isRegionalIndicatorSymbol(codePoint)) {
+                    if (i > 0) {
+                        int prev = array.get(i - 1);
+                        if (isRegionalIndicatorSymbol(prev)) {
+                            textIdx -= Character.charCount(prev);
+                            arrayIdx--;
+                            i--;
+                        }
+                    }
+                } else if (isModifier(codePoint)) {
+                    if (i > 0) {
+                        int prev = array.get(i - 1);
+                        if (isEmoji(prev)) {
+                            textIdx -= Character.charCount(prev);
+                            arrayIdx--;
+                            i--;
+                        }
+                    }
+                }
+                if (textEnd > textStart + textLength) continue;
+                final EmojiSpan[] spans = text.getSpans(textIdx, textEnd, EmojiSpan.class);
                 if (spans.length > 0) continue;
-                final Drawable drawable = emoji.getEmojiDrawableFor(codePoint);
+                final Drawable drawable = emoji.getEmojiDrawableFor(array.subarray(arrayIdx, arrayEnd));
                 if (drawable == null) continue;
-                text.setSpan(new EmojiSpan(drawable), idx, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                text.setSpan(new EmojiSpan(drawable), textIdx, textEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }
 
+    private static boolean isModifier(int codePoint) {
+        return inRange(codePoint, 0x1f3fb, 0x1f3ff);
+    }
+
     private static boolean isEmoji(int codePoint) {
-        return inRange(codePoint, 0x1f300, 0x1f5ff) || inRange(codePoint, 0x2500, 0x2BEF)
-                || inRange(codePoint, 0x1f600, 0x1f64f) || inRange(codePoint, 0x2702, 0x27b0);
+        return !Character.isLetterOrDigit(codePoint);
     }
 
     private static boolean inRange(int codePoint, int from, int to) {
         return codePoint >= from && codePoint <= to;
+    }
+
+    private static boolean isRegionalIndicatorSymbol(int codePoint) {
+        return inRange(codePoint, 0x1f1e6, 0x1f1ff);
     }
 
 }
