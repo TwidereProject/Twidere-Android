@@ -6,26 +6,24 @@ import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import org.mariotaku.twidere.text.util.EmojiEditableFactory;
-import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
-import org.mariotaku.twidere.text.util.SafeEditableFactory;
+import org.mariotaku.twidere.util.EmojiSupportUtils;
 import org.mariotaku.twidere.view.themed.ThemedTextView;
 
 public class StatusTextView extends ThemedTextView {
 
     public StatusTextView(final Context context) {
         super(context);
-        init();
+        EmojiSupportUtils.initForTextView(this);
     }
 
     public StatusTextView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        init();
+        EmojiSupportUtils.initForTextView(this);
     }
 
     public StatusTextView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        init();
+        EmojiSupportUtils.initForTextView(this);
     }
 
     @Override
@@ -33,16 +31,13 @@ public class StatusTextView extends ThemedTextView {
         // FIXME simple workaround to https://code.google.com/p/android/issues/detail?id=191430
         // Android clears TextView when setText(), so setText before touch
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            final CharSequence text = getText();
-            setText(null);
-            setText(text);
+            if (getSelectionEnd() != getSelectionStart()) {
+                final CharSequence text = getText();
+                setText(null);
+                setText(text);
+            }
         }
         return super.dispatchTouchEvent(event);
-    }
-
-    private void init() {
-        setEditableFactory(new EmojiEditableFactory(this));
-        setSpannableFactory(new EmojiSpannableFactory(this));
     }
 
     @Override

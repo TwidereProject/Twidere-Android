@@ -28,7 +28,7 @@ import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
+import org.mariotaku.twidere.util.EmojiSupportUtils;
 import org.mariotaku.twidere.view.themed.ThemedTextView;
 
 /**
@@ -40,17 +40,17 @@ public class TimelineContentTextView extends ThemedTextView {
 
     public TimelineContentTextView(Context context) {
         super(context);
-        setSpannableFactory(new EmojiSpannableFactory(this));
+        EmojiSupportUtils.initForTextView(this);
     }
 
     public TimelineContentTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setSpannableFactory(new EmojiSpannableFactory(this));
+        EmojiSupportUtils.initForTextView(this);
     }
 
     public TimelineContentTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setSpannableFactory(new EmojiSpannableFactory(this));
+        EmojiSupportUtils.initForTextView(this);
     }
 
     @Override

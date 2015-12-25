@@ -23,13 +23,23 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.widget.TextView;
 
 import org.mariotaku.twidere.text.style.EmojiSpan;
+import org.mariotaku.twidere.text.util.EmojiEditableFactory;
+import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 
 /**
  * Created by mariotaku on 15/12/20.
  */
 public class EmojiSupportUtils {
+
+    public static void initForTextView(TextView textView) {
+        if (textView.isInEditMode()) return;
+        textView.setSpannableFactory(new EmojiSpannableFactory(textView));
+        textView.setEditableFactory(new EmojiEditableFactory(textView));
+    }
+
     public static void applyEmoji(ExternalThemeManager manager, @NonNull Spannable text) {
         applyEmoji(manager, text, 0, text.length());
     }
