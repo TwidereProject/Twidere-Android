@@ -85,6 +85,7 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifSupportChecker;
@@ -402,7 +403,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         public void onPrepareOptionsMenu(Menu menu) {
             super.onPrepareOptionsMenu(menu);
             final boolean isLoading = getLoaderManager().hasRunningLoaders();
-            final TaskRunnable<File, Pair<Boolean, Intent>, Pair<Fragment, Menu>> checkState = new TaskRunnable<File, Pair<Boolean, Intent>, Pair<Fragment, Menu>>() {
+            final TaskRunnable<File, Pair<Boolean, Intent>, Pair<Fragment, Menu>> checkState
+                    = new TaskRunnable<File, Pair<Boolean, Intent>, Pair<Fragment, Menu>>() {
                 @Override
                 public Pair<Boolean, Intent> doLongOperation(File file) throws InterruptedException {
                     final boolean hasImage = file != null && file.exists();
@@ -411,7 +413,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     }
                     final Intent intent = new Intent(Intent.ACTION_SEND);
                     final Uri fileUri = Uri.fromFile(file);
-                    intent.setDataAndType(fileUri, Utils.getImageMimeType(file));
+                    final String imageMimeType = Utils.getImageMimeType(file);
+                    intent.setDataAndType(fileUri, imageMimeType);
                     intent.putExtra(Intent.EXTRA_STREAM, fileUri);
                     final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
                     if (activity.hasStatus()) {

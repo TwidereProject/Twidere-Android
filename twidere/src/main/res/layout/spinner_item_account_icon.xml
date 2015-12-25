@@ -17,10 +17,13 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.SquareFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:padding="@dimen/element_spacing_small">
+    android:padding="@dimen/element_spacing_small"
+    tools:layout_width="48dp">
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
@@ -29,6 +32,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:contentDescription="@string/profile_image"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
 </org.mariotaku.twidere.view.SquareFrameLayout>

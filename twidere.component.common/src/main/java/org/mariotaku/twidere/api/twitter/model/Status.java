@@ -20,12 +20,12 @@
 package org.mariotaku.twidere.api.twitter.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
-import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
 import java.io.IOException;
@@ -81,8 +81,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "current_user_retweet")
     CurrentUserRetweet currentUserRetweet;
 
+    @Nullable
     @JsonField(name = "contributors")
-    long[] contributors;
+    Contributor[] contributors;
 
     @JsonField(name = "retweet_count")
     long retweetCount;
@@ -127,25 +128,21 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
 
     public String getInReplyToScreenName() {
-
         return inReplyToScreenName;
     }
 
 
     public long getInReplyToUserId() {
-
         return inReplyToUserId;
     }
 
 
     public long getInReplyToStatusId() {
-
         return inReplyToStatusId;
     }
 
 
     public boolean isTruncated() {
-
         return truncated;
     }
 
@@ -157,11 +154,12 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
 
     public String getSource() {
-
         return source;
     }
 
-
+    /**
+     * UTC time when this Tweet was created.
+     */
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -201,6 +199,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return currentUserRetweet != null;
     }
 
+    public boolean wasRetweeted() {
+        return retweeted;
+    }
+
 
     public long getFavoriteCount() {
         return favoriteCount;
@@ -213,6 +215,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     }
 
 
+    /**
+     * <i>Perspectival</i>. Only surfaces on methods supporting the <code>include_my_retweet</code> parameter,
+     * when set to true. Details the Tweet ID of the user’s own retweet (if existent) of this Tweet.
+     */
     public long getCurrentUserRetweet() {
         if (currentUserRetweet == null) return -1;
         return currentUserRetweet.id;
@@ -279,7 +285,12 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     }
 
 
-    public long[] getContributors() {
+    /**
+     * An collection of brief user objects (usually only one) indicating users who contributed to
+     * the authorship of the tweet, on behalf of the official tweet author.
+     */
+    @Nullable
+    public Contributor[] getContributors() {
         return contributors;
     }
 

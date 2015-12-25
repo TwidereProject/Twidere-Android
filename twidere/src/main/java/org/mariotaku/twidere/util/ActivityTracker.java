@@ -22,12 +22,14 @@ package org.mariotaku.twidere.util;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.PreProcessing;
 import edu.tsinghua.hotmobi.model.SessionEvent;
 
 /**
@@ -56,7 +58,7 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivityStarted(Activity activity) {
+    public void onActivityStarted(final Activity activity) {
         mInternalStack.add(System.identityHashCode(activity));
         // BEGIN HotMobi
         if (mSessionEvent == null) {
@@ -82,9 +84,13 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
         // BEGIN HotMobi
         final SessionEvent event = mSessionEvent;
         if (event != null && !isSwitchingInSameTask(hashCode)) {
-            event.dumpPreferences(activity);
             event.markEnd();
-            HotMobiLogger.getInstance(activity).log(event);
+            HotMobiLogger.getInstance(activity).log(event, new PreProcessing<SessionEvent>() {
+                @Override
+                public void process(SessionEvent event, Context appContext) {
+                    event.dumpPreferences(appContext);
+                }
+            });
             mSessionEvent = null;
         }
         // END HotMobi

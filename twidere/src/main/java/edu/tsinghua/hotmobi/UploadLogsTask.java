@@ -110,7 +110,6 @@ public class UploadLogsTask implements Runnable {
                     if (response.isSuccessful()) {
                         succeeded &= logFile.delete();
                     }
-                    response.close();
                 } catch (IOException e) {
                     Log.w(HotMobiLogger.LOGTAG, e);
                     succeeded = false;

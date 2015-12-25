@@ -21,6 +21,7 @@ package edu.tsinghua.hotmobi;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -40,24 +41,28 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/8/23.
  */
-public class WriteLogTask implements Runnable, Constants {
+public class WriteLogTask<T> implements Runnable, Constants {
 
     private static final byte[] LF = {'\n'};
 
     private final Context context;
     private final long accountId;
     private final String type;
-    private final List<?> events;
+    private final List<T> events;
+    @Nullable
+    private final PreProcessing<T> preProcessing;
 
-    public WriteLogTask(Context context, long accountId, Object event) {
-        this(context, accountId, HotMobiLogger.getLogFilename(event), Collections.singletonList(event));
+    public WriteLogTask(Context context, long accountId, T event, @Nullable PreProcessing<T> preProcessing) {
+        this(context, accountId, HotMobiLogger.getLogFilename(event), Collections.singletonList(event), preProcessing);
     }
 
-    public WriteLogTask(Context context, long accountId, String type, List<?> events) {
+    public WriteLogTask(Context context, long accountId, String type, List<T> events,
+                        @Nullable PreProcessing<T> preProcessing) {
         this.context = context;
         this.accountId = accountId;
         this.type = type;
         this.events = events;
+        this.preProcessing = preProcessing;
     }
 
     @Override
@@ -71,7 +76,10 @@ public class WriteLogTask implements Runnable, Constants {
             raf = new RandomAccessFile(HotMobiLogger.getLogFile(context, accountId, type), "rw");
             fc = raf.getChannel();
             final FileLock lock = fc.lock();
-            for (Object event : events) {
+            for (T event : events) {
+                if (preProcessing != null) {
+                    preProcessing.process(event, context);
+                }
                 if (BuildConfig.DEBUG) {
                     if (accountId > 0) {
                         Log.v(HotMobiLogger.LOGTAG, "Log " + type + " for account " + accountId + ": " + event);

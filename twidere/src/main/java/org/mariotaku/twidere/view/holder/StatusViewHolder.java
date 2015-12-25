@@ -471,11 +471,15 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         private boolean useStarsForLikes;
 
         public DummyStatusHolderAdapter(Context context) {
+            this(context, new TwidereLinkify(null));
+        }
+
+        public DummyStatusHolderAdapter(Context context, TwidereLinkify linkify) {
             DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
             this.context = context;
             preferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             handler = new MediaLoadingHandler(R.id.media_preview_progress);
-            linkify = new TwidereLinkify(null);
+            this.linkify = linkify;
             updateOptions();
         }
 

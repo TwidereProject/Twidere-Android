@@ -87,8 +87,8 @@ public class TwidereDns implements Constants, Dns {
         // First, I'll try to load address cached.
         final InetAddress[] cachedHostAddr = mHostCache.get(host);
         if (cachedHostAddr != null) {
-            if (BuildConfig.DEBUG) {
-                Log.d(RESOLVER_LOGTAG, "Got cached " + Arrays.toString(cachedHostAddr));
+            if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
+                Log.v(RESOLVER_LOGTAG, "Got cached " + Arrays.toString(cachedHostAddr));
                 return cachedHostAddr;
             }
         }
@@ -100,7 +100,7 @@ public class TwidereDns implements Constants, Dns {
                 final InetAddress[] hostAddr = fromAddressString(originalHost, mappedAddr);
                 putCache(originalHost, hostAddr);
                 if (BuildConfig.DEBUG) {
-                    Log.d(RESOLVER_LOGTAG, "Got mapped " + Arrays.toString(hostAddr));
+                    Log.v(RESOLVER_LOGTAG, "Got mapped " + Arrays.toString(hostAddr));
                 }
                 if (hostAddr != null) {
                     return hostAddr;
@@ -110,8 +110,8 @@ public class TwidereDns implements Constants, Dns {
         try {
             final InetAddress[] hostAddr = mResolver.resolve(host);
             putCache(originalHost, hostAddr);
-            if (BuildConfig.DEBUG) {
-                Log.d(RESOLVER_LOGTAG, "Got hosts " + Arrays.toString(hostAddr));
+            if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
+                Log.v(RESOLVER_LOGTAG, "Got hosts " + Arrays.toString(hostAddr));
             }
             return hostAddr;
         } catch (UnknownHostException e) {
@@ -121,8 +121,8 @@ public class TwidereDns implements Constants, Dns {
         if (customMappedHost != null) {
             final InetAddress[] hostAddr = fromAddressString(originalHost, customMappedHost);
             putCache(originalHost, hostAddr);
-            if (BuildConfig.DEBUG) {
-                Log.d(RESOLVER_LOGTAG, "Got mapped address " + customMappedHost + " for host " + host);
+            if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
+                Log.v(RESOLVER_LOGTAG, "Got mapped address " + customMappedHost + " for host " + host);
             }
             if (hostAddr != null) {
                 return hostAddr;
@@ -154,8 +154,8 @@ public class TwidereDns implements Constants, Dns {
             if (!resolvedAddresses.isEmpty()) {
                 final InetAddress[] hostAddr = resolvedAddresses.toArray(new InetAddress[resolvedAddresses.size()]);
                 putCache(originalHost, hostAddr);
-                if (BuildConfig.DEBUG) {
-                    Log.d(RESOLVER_LOGTAG, "Resolved " + Arrays.toString(hostAddr));
+                if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
+                    Log.v(RESOLVER_LOGTAG, "Resolved " + Arrays.toString(hostAddr));
                 }
                 return hostAddr;
             }
@@ -166,8 +166,8 @@ public class TwidereDns implements Constants, Dns {
                     return resolveInternal(originalHost, ((CNAMERecord) record).getTarget().toString());
             }
         }
-        if (BuildConfig.DEBUG) {
-            Log.w(RESOLVER_LOGTAG, "Resolve address " + host + " failed, using original host");
+        if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
+            Log.v(RESOLVER_LOGTAG, "Resolve address " + host + " failed, using original host");
         }
         final InetAddress[] defaultAddresses = InetAddress.getAllByName(host);
         putCache(host, defaultAddresses);

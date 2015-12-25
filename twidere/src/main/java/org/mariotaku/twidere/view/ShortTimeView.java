@@ -31,6 +31,8 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.themed.ThemedTextView;
 
+import java.lang.ref.WeakReference;
+
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.mariotaku.twidere.util.Utils.formatSameDayTime;
 
@@ -111,17 +113,19 @@ public class ShortTimeView extends ThemedTextView implements Constants, OnShared
 
     private static class TickerRunnable implements Runnable {
 
-        private final ShortTimeView mTextView;
+        private final WeakReference<ShortTimeView> mViewRef;
 
         private TickerRunnable(final ShortTimeView view) {
-            mTextView = view;
+            mViewRef = new WeakReference<>(view);
         }
 
         @Override
         public void run() {
-            final Handler handler = mTextView.getHandler();
+            final ShortTimeView view = mViewRef.get();
+            if (view == null) return;
+            final Handler handler = view.getHandler();
             if (handler == null) return;
-            mTextView.invalidateTime();
+            view.invalidateTime();
             final long now = SystemClock.uptimeMillis();
             final long next = now + TICKER_DURATION - now % TICKER_DURATION;
             handler.postAtTime(this, next);

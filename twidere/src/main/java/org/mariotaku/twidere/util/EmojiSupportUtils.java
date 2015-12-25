@@ -42,8 +42,9 @@ public class EmojiSupportUtils {
         for (int i = array.length() - 1; i >= 0; i--) {
             final int codePoint = array.get(i);
             if (isEmoji(codePoint)) {
-                int arrayIdx = i, arrayEnd = i + 1;
-                int textIdx = array.indexOfText(codePoint, i);
+                int arrayIdx = i, arrayEnd = i + 1, arrayIdxOffset = 0;
+                int textIdx = array.indexOfText(codePoint, i), textIdxOffset = 0;
+                int indexOffset = 0;
                 if (textIdx == -1 || textIdx < textStart) {
                     continue;
                 }
@@ -52,29 +53,58 @@ public class EmojiSupportUtils {
                     if (i > 0) {
                         int prev = array.get(i - 1);
                         if (isRegionalIndicatorSymbol(prev)) {
-                            textIdx -= Character.charCount(prev);
-                            arrayIdx--;
-                            i--;
+                            arrayIdxOffset = -1;
+                            textIdxOffset = -Character.charCount(prev);
+                            indexOffset = -1;
                         }
                     }
                 } else if (isModifier(codePoint)) {
                     if (i > 0) {
                         int prev = array.get(i - 1);
                         if (isEmoji(prev)) {
-                            textIdx -= Character.charCount(prev);
-                            arrayIdx--;
-                            i--;
+                            arrayIdxOffset = -1;
+                            textIdxOffset = -Character.charCount(prev);
+                            indexOffset = -1;
+                        }
+                    }
+                } else if (isKeyCap(codePoint)) {
+                    if (i > 0) {
+                        int prev = array.get(i - 1);
+                        if (isPhoneNumberSymbol(prev)) {
+                            arrayIdxOffset = -1;
+                            textIdxOffset = -Character.charCount(prev);
+                            indexOffset = -1;
                         }
                     }
                 }
                 if (textEnd > textStart + textLength) continue;
-                final EmojiSpan[] spans = text.getSpans(textIdx, textEnd, EmojiSpan.class);
-                if (spans.length > 0) continue;
-                final Drawable drawable = emoji.getEmojiDrawableFor(array.subarray(arrayIdx, arrayEnd));
-                if (drawable == null) continue;
-                text.setSpan(new EmojiSpan(drawable), textIdx, textEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                EmojiSpan[] spans = text.getSpans(textIdx + textIdxOffset, textEnd, EmojiSpan.class);
+                if (spans.length == 0) {
+                    Drawable drawable = emoji.getEmojiDrawableFor(array.subarray(arrayIdx + arrayIdxOffset,
+                            arrayEnd));
+                    if (drawable == null) {
+                        // Not emoji combination, just use fallback
+                        textIdxOffset = 0;
+                        arrayIdxOffset = 0;
+                        indexOffset = 0;
+                        spans = text.getSpans(textIdx + textIdxOffset, textEnd, EmojiSpan.class);
+                        if (spans.length == 0) {
+                            drawable = emoji.getEmojiDrawableFor(array.subarray(arrayIdx + arrayIdxOffset,
+                                    arrayEnd));
+                        }
+                    }
+                    if (drawable != null) {
+                        text.setSpan(new EmojiSpan(drawable), textIdx + textIdxOffset, textEnd,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                i += indexOffset;
             }
         }
+    }
+
+    private static boolean isPhoneNumberSymbol(int codePoint) {
+        return codePoint == 0x0023 || codePoint == 0x002a || inRange(codePoint, 0x0030, 0x0039);
     }
 
     private static boolean isModifier(int codePoint) {
@@ -91,6 +121,10 @@ public class EmojiSupportUtils {
 
     private static boolean isRegionalIndicatorSymbol(int codePoint) {
         return inRange(codePoint, 0x1f1e6, 0x1f1ff);
+    }
+
+    private static boolean isKeyCap(int codePoint) {
+        return codePoint == 0x20e3;
     }
 
 }

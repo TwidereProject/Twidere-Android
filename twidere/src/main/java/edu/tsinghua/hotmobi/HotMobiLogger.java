@@ -181,22 +181,35 @@ public class HotMobiLogger {
         record.setState(intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1));
         record.setTimestamp(System.currentTimeMillis());
         record.setTimeOffset(TimeZone.getDefault().getRawOffset());
-        getInstance(context).log(record);
+        getInstance(context).log(record, null);
     }
 
-    public void log(long accountId, final Object event) {
-        mExecutor.execute(new WriteLogTask(mApplication, accountId, event));
+    public <T> void log(long accountId, final T event, final PreProcessing<T> preProcessing) {
+        mExecutor.execute(new WriteLogTask<>(mApplication, accountId, event, preProcessing));
     }
 
-    public void log(Object event) {
-        log(ACCOUNT_ID_NOT_NEEDED, event);
+    public <T> void log(long accountId, final T event) {
+        log(accountId, event, null);
     }
 
-    public void logList(List<?> events, long accountId, String type) {
-        mExecutor.execute(new WriteLogTask(mApplication, accountId, type, events));
+    public <T> void log(final T event) {
+        log(event, null);
+    }
+
+    public void log(final Object event, final PreProcessing preProcessing) {
+        log(ACCOUNT_ID_NOT_NEEDED, event, preProcessing);
+    }
+
+    public <T> void logList(List<T> events, long accountId, String type) {
+        logList(events, accountId, type, null);
+    }
+
+    public <T> void logList(List<T> events, long accountId, String type, final PreProcessing<T> preProcessing) {
+        mExecutor.execute(new WriteLogTask<>(mApplication, accountId, type, events, preProcessing));
     }
 
     public static void logScreenEvent(Context context, ScreenEvent.Action action, long presentDuration) {
-        getInstance(context).log(ScreenEvent.create(context, action, presentDuration));
+        getInstance(context).log(ScreenEvent.create(context, action, presentDuration), null);
     }
+
 }

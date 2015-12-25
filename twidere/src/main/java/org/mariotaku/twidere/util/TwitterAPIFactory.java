@@ -11,8 +11,11 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Dns;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.ExceptionFactory;
@@ -51,6 +54,7 @@ import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
@@ -118,6 +122,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         final OkHttpClient client = new OkHttpClient();
         updateHttpClientConfiguration(prefs, client);
         client.setDns(dns);
+        DebugModeUtils.initForHttpClient(client);
         NetworkUsageUtils.initForHttpClient(context, client);
         return new OkHttpRestClient(client);
     }
@@ -386,8 +391,8 @@ public class TwitterAPIFactory implements TwidereConstants {
             sExtraParams.put("include_cards", "true");
             sExtraParams.put("cards_platform", "Android-12");
             sExtraParams.put("include_entities", "true");
-            sExtraParams.put("include_my_retweet", "1");
-            sExtraParams.put("include_rts", "1");
+            sExtraParams.put("include_my_retweet", "true");
+            sExtraParams.put("include_rts", "true");
             sExtraParams.put("include_reply_count", "true");
             sExtraParams.put("include_descendent_reply_count", "true");
             sExtraParams.put("full_text", "true");

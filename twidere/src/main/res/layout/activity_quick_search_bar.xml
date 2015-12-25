@@ -17,10 +17,11 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.ExtendedRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.ExtendedRelativeLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/element_spacing_normal">
@@ -53,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
-                    tools:listitem="@layout/spinner_item_account_icon" />
+                    tools:listitem="@layout/spinner_item_account_icon"/>
 
                 <EditText
                     android:id="@+id/search_query"
@@ -65,7 +66,7 @@
                     android:hint="@string/search_hint"
                     android:inputType="text|textMultiLine">
 
-                    <requestFocus />
+                    <requestFocus/>
                 </EditText>
 
                 <org.mariotaku.twidere.view.ActionIconButton
@@ -75,14 +76,14 @@
                     android:layout_weight="0"
                     android:background="?actionBarItemBackground"
                     android:color="?menuIconColor"
-                    android:src="@drawable/ic_action_search" />
+                    android:src="@drawable/ic_action_search"/>
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="#20808080" />
+                android:background="#20808080"/>
 
             <ListView
                 android:id="@+id/suggestions_list"
@@ -90,7 +91,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:listSelector="?selectableItemBackground"
-                tools:listitem="@layout/list_item_user" />
+                tools:listitem="@layout/list_item_user"/>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

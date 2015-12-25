@@ -18,17 +18,17 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:showIn="@layout/card_item_message_conversation_incoming">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:showIn="@layout/card_item_message_conversation_incoming">
 
     <org.mariotaku.twidere.view.CardMediaContainer
         android:id="@+id/media_preview_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/layout_card_media_preview" />
+        <include layout="@layout/layout_card_media_preview"/>
 
     </org.mariotaku.twidere.view.CardMediaContainer>
 
@@ -45,8 +45,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            android:textIsSelectable="true"
-            tools:text="@string/sample_status_text" />
+            tools:text="@string/sample_status_text"/>
 
         <org.mariotaku.twidere.view.themed.ThemedTextView
             android:id="@+id/time"
@@ -54,6 +53,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/element_spacing_small"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="12:00" />
+            tools:text="12:00"/>
     </LinearLayout>
 </RelativeLayout>

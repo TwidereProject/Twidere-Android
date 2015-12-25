@@ -72,7 +72,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     private final MediaLoadingHandler mLoadingHandler;
     private final int mCardBackgroundColor;
     private final boolean mCompactCards;
-    private final TwidereLinkify mLinkify;
     private final DummyStatusHolderAdapter mStatusAdapterDelegate;
     private ActivityAdapterListener mActivityAdapterListener;
 
@@ -80,14 +79,13 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         super(context);
-        mStatusAdapterDelegate = new DummyStatusHolderAdapter(context);
+        mStatusAdapterDelegate = new DummyStatusHolderAdapter(context, new TwidereLinkify(new OnLinkClickHandler(context, null)));
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mCompactCards = compact;
-        mLinkify = new TwidereLinkify(new OnLinkClickHandler(context, null));
         mStatusAdapterDelegate.updateOptions();
     }
 
@@ -131,10 +129,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     public int getLinkHighlightingStyle() {
         return mStatusAdapterDelegate.getLinkHighlightingStyle();
-    }
-
-    public TwidereLinkify getLinkify() {
-        return mLinkify;
     }
 
     public boolean isNameFirst() {
