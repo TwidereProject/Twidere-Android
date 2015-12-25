@@ -211,6 +211,7 @@ public class ParcelableMedia implements Parcelable {
             final BindingValue playerStreamUrl = card.getBindingValue("player_stream_url");
             media.card = ParcelableStatus.ParcelableCardEntity.fromCardEntity(card, -1);
             if ("animated_gif".equals(name)) {
+                media.media_url = ((StringValue) playerStreamUrl).getValue();
                 media.type = ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
             } else if (playerStreamUrl instanceof StringValue) {
                 media.media_url = ((StringValue) playerStreamUrl).getValue();

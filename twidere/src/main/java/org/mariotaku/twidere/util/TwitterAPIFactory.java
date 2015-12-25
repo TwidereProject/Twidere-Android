@@ -11,11 +11,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
-import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Dns;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.ExceptionFactory;
@@ -54,12 +51,12 @@ import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +102,10 @@ public class TwitterAPIFactory implements TwidereConstants {
                                            final boolean includeRetweets, Class<T> cls) {
         if (context == null) return null;
         final ParcelableCredentials credentials = ParcelableCredentials.getCredentials(context, accountId);
-        return getInstance(context, credentials, cls);
+        final HashMap<String, String> extraParams = new HashMap<>();
+        extraParams.put("include_entities", String.valueOf(includeEntities));
+        extraParams.put("include_retweets", String.valueOf(includeRetweets));
+        return getInstance(context, credentials, extraParams, cls);
     }
 
     public static RestHttpClient getDefaultHttpClient(final Context context) {
@@ -164,7 +164,9 @@ public class TwitterAPIFactory implements TwidereConstants {
         return Proxy.NO_PROXY;
     }
 
-    public static <T> T getInstance(final Context context, final Endpoint endpoint, final Authorization auth, Class<T> cls) {
+    public static <T> T getInstance(final Context context, final Endpoint endpoint,
+                                    final Authorization auth, final Map<String, String> extraRequestParams,
+                                    final Class<T> cls) {
         final RestAPIFactory factory = new RestAPIFactory();
         final String userAgent;
         if (auth instanceof OAuthAuthorization) {
@@ -183,19 +185,41 @@ public class TwitterAPIFactory implements TwidereConstants {
         factory.setConverter(new TwitterConverter());
         factory.setEndpoint(endpoint);
         factory.setAuthorization(auth);
-        factory.setRequestInfoFactory(new TwidereRequestInfoFactory());
+        factory.setRequestInfoFactory(new TwidereRequestInfoFactory(extraRequestParams));
         factory.setHttpRequestFactory(new TwidereHttpRequestFactory(userAgent));
         factory.setExceptionFactory(new TwidereExceptionFactory());
         return factory.build(cls);
     }
 
-    public static <T> T getInstance(final Context context, final Endpoint endpoint, final ParcelableCredentials credentials, Class<T> cls) {
-        return TwitterAPIFactory.getInstance(context, endpoint, getAuthorization(credentials), cls);
+    public static <T> T getInstance(final Context context, final Endpoint endpoint,
+                                    final Authorization auth, final Class<T> cls) {
+        return getInstance(context, endpoint, auth, null, cls);
     }
 
-    static <T> T getInstance(final Context context, final ParcelableCredentials credentials, final Class<T> cls) {
+
+    public static <T> T getInstance(final Context context, final Endpoint endpoint,
+                                    final ParcelableCredentials credentials,
+                                    final Class<T> cls) {
+        return getInstance(context, endpoint, credentials, null, cls);
+    }
+
+    public static <T> T getInstance(final Context context, final Endpoint endpoint,
+                                    final ParcelableCredentials credentials,
+                                    final Map<String, String> extraRequestParams, final Class<T> cls) {
+        return TwitterAPIFactory.getInstance(context, endpoint, getAuthorization(credentials),
+                extraRequestParams, cls);
+    }
+
+    static <T> T getInstance(final Context context, final ParcelableCredentials credentials,
+                             final Class<T> cls) {
+        return getInstance(context, credentials, null, cls);
+    }
+
+    static <T> T getInstance(final Context context, final ParcelableCredentials credentials,
+                             final Map<String, String> extraRequestParams, final Class<T> cls) {
         if (credentials == null) return null;
-        return TwitterAPIFactory.getInstance(context, getEndpoint(credentials, cls), credentials, cls);
+        return TwitterAPIFactory.getInstance(context, getEndpoint(credentials, cls), credentials,
+                extraRequestParams, cls);
     }
 
     public static Endpoint getEndpoint(ParcelableCredentials credentials, Class<?> cls) {
@@ -263,7 +287,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         return new EmptyAuthorization();
     }
 
-    private static void addParameter(List<Pair<String, String>> params, String name, Object value) {
+    private static void addParam(List<Pair<String, String>> params, String name, Object value) {
         params.add(Pair.create(name, String.valueOf(value)));
     }
 
@@ -385,18 +409,29 @@ public class TwitterAPIFactory implements TwidereConstants {
 
     public static class TwidereRequestInfoFactory implements RequestInfoFactory {
 
-        private static HashMap<String, String> sExtraParams = new HashMap<>();
+        private static Map<String, String> sDefaultRequestParams;
 
         static {
-            sExtraParams.put("include_cards", "true");
-            sExtraParams.put("cards_platform", "Android-12");
-            sExtraParams.put("include_entities", "true");
-            sExtraParams.put("include_my_retweet", "true");
-            sExtraParams.put("include_rts", "true");
-            sExtraParams.put("include_reply_count", "true");
-            sExtraParams.put("include_descendent_reply_count", "true");
-            sExtraParams.put("full_text", "true");
-            sExtraParams.put("model_version", "7");
+            final HashMap<String, String> map = new HashMap<>();
+            try {
+                map.put("include_cards", "true");
+                map.put("cards_platform", "Android-12");
+                map.put("include_entities", "true");
+                map.put("include_my_retweet", "true");
+                map.put("include_rts", "true");
+                map.put("include_reply_count", "true");
+                map.put("include_descendent_reply_count", "true");
+                map.put("full_text", "true");
+                map.put("model_version", "7");
+            } finally {
+                sDefaultRequestParams = Collections.unmodifiableMap(map);
+            }
+        }
+
+        private final Map<String, String> extraRequestParams;
+
+        TwidereRequestInfoFactory(Map<String, String> extraRequestParams) {
+            this.extraRequestParams = extraRequestParams;
         }
 
 
@@ -416,11 +451,19 @@ public class TwitterAPIFactory implements TwidereConstants {
                 if (parts.isEmpty()) {
                     final List<Pair<String, String>> params = method.hasBody() ? forms : queries;
                     for (String key : extraParamKeys) {
-                        addParameter(params, key, sExtraParams.get(key));
+                        if (extraRequestParams != null && extraRequestParams.containsKey(key)) {
+                            addParam(params, key, extraRequestParams.get(key));
+                        } else {
+                            addParam(params, key, sDefaultRequestParams.get(key));
+                        }
                     }
                 } else {
                     for (String key : extraParamKeys) {
-                        addPart(parts, key, sExtraParams.get(key));
+                        if (extraRequestParams != null && extraRequestParams.containsKey(key)) {
+                            addPart(parts, key, extraRequestParams.get(key));
+                        } else {
+                            addPart(parts, key, sDefaultRequestParams.get(key));
+                        }
                     }
                 }
             }

@@ -85,7 +85,6 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import pl.droidsonroids.gif.GifSupportChecker;
@@ -643,7 +642,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
 
         public void loadVideo(boolean forceReload) {
             Pair<String, String> urlAndType = getBestVideoUrlAndType(getMedia());
-            if (urlAndType == null) return;
+            if (urlAndType == null || urlAndType.first == null) return;
             mVideoUrlAndType = urlAndType;
             mVideoLoader.loadVideo(urlAndType.first, forceReload, this);
         }

@@ -1118,9 +1118,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             retweetsCountView.setText(Utils.getLocalizedNumber(locale, retweetCount));
             favoritesCountView.setText(Utils.getLocalizedNumber(locale, favoriteCount));
             final UserProfileImagesAdapter interactUsersAdapter = (UserProfileImagesAdapter) interactUsersView.getAdapter();
-            interactUsersAdapter.clear();
-            if (statusActivity != null && statusActivity.retweeters != null) {
-                interactUsersAdapter.addAll(statusActivity.retweeters);
+            if (interactUsersAdapter != null) {
+                interactUsersAdapter.clear();
+                if (statusActivity != null && statusActivity.retweeters != null) {
+                    interactUsersAdapter.addAll(statusActivity.retweeters);
+                }
             }
 
             final ParcelableMedia[] media = Utils.getPrimaryMedia(status);
@@ -1971,6 +1973,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         public void setStatusActivity(StatusActivity activity) {
+            final ParcelableStatus status = getStatus();
+            if (status == null) return;
+            if (activity != null && activity.statusId != (status.is_retweet ? status.retweet_id : status.id)) {
+                return;
+            }
             mStatusActivity = activity;
             notifyDataSetChanged();
         }
@@ -2047,9 +2054,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public StatusActivity loadInBackground() {
             final Context context = getContext();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountId, true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountId, false);
             final Paging paging = new Paging();
-            final StatusActivity activitySummary = new StatusActivity();
+            paging.setCount(10);
+            final StatusActivity activitySummary = new StatusActivity(mStatusId);
             final List<ParcelableUser> retweeters = new ArrayList<>();
             try {
                 for (Status status : twitter.getRetweets(mStatusId, paging)) {
@@ -2114,9 +2122,15 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         List<ParcelableUser> retweeters;
 
+        long statusId;
+
         long favoriteCount;
         long replyCount = -1;
         long retweetCount;
+
+        public StatusActivity(long statusId) {
+            this.statusId = statusId;
+        }
 
         public List<ParcelableUser> getRetweeters() {
             return retweeters;
