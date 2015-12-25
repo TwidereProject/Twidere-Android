@@ -2759,7 +2759,7 @@ public final class Utils implements Constants {
         } else if (twitter.isDestroyingStatus(status.account_id, status.id)) {
             isMyRetweet = false;
         } else {
-            isMyRetweet = isMyRetweet(status);
+            isMyRetweet = status.retweeted || isMyRetweet(status);
         }
         final MenuItem delete = menu.findItem(R.id.delete);
         if (delete != null) {

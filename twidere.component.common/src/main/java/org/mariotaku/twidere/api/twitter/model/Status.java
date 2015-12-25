@@ -86,13 +86,13 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     Contributor[] contributors;
 
     @JsonField(name = "retweet_count")
-    long retweetCount;
+    long retweetCount = -1;
 
     @JsonField(name = "favorite_count")
-    long favoriteCount;
+    long favoriteCount = -1;
 
     @JsonField(name = "reply_count")
-    long replyCount;
+    long replyCount = -1;
 
     @JsonField(name = "favorited")
     boolean favorited;

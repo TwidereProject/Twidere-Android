@@ -145,7 +145,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final boolean nameFirst = adapter.isNameFirst();
 
         final long reply_count = status.reply_count;
-        final long retweet_count;
+        final long retweetCount;
         final long favorite_count;
 
         if (status.retweet_id > 0) {
@@ -269,15 +269,15 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         if (twitter.isDestroyingStatus(status.account_id, status.my_retweet_id)) {
             retweetCountView.setActivated(false);
-            retweet_count = Math.max(0, status.retweet_count - 1);
+            retweetCount = Math.max(0, status.retweet_count - 1);
         } else {
             final boolean creatingRetweet = twitter.isCreatingRetweet(status.account_id, status.id);
-            retweetCountView.setActivated(creatingRetweet || Utils.isMyRetweet(status.account_id,
-                    status.retweeted_by_user_id, status.my_retweet_id));
-            retweet_count = status.retweet_count + (creatingRetweet ? 1 : 0);
+            retweetCountView.setActivated(creatingRetweet || status.retweeted ||
+                    Utils.isMyRetweet(status.account_id, status.retweeted_by_user_id, status.my_retweet_id));
+            retweetCount = status.retweet_count + (creatingRetweet ? 1 : 0);
         }
-        if (retweet_count > 0) {
-            retweetCountView.setText(Utils.getLocalizedNumber(locale, retweet_count));
+        if (retweetCount > 0) {
+            retweetCountView.setText(Utils.getLocalizedNumber(locale, retweetCount));
         } else {
             retweetCountView.setText(null);
         }

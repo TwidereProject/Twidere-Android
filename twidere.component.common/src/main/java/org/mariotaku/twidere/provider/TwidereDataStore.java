@@ -889,6 +889,7 @@ public interface TwidereDataStore {
         String RAW_ACTION = "raw_action";
         String TIMESTAMP = "timestamp";
         String STATUS_ID = "status_id";
+        String STATUS_RETWEET_ID = "status_retweet_id";
         String STATUS_USER_ID = "status_user_id";
         String STATUS_RETWEETED_BY_USER_ID = "status_retweeted_by_user_id";
         String STATUS_QUOTED_USER_ID = "status_quoted_user_id";
@@ -914,11 +915,12 @@ public interface TwidereDataStore {
                 STATUS_RETWEETED_BY_USER_ID, STATUS_QUOTED_USER_ID, STATUS_SOURCE, STATUS_QUOTE_SOURCE,
                 STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_TEXT_HTML, STATUS_QUOTE_TEXT_HTML,
                 IS_GAP, MIN_POSITION, MAX_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
-                TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS};
+                TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS,
+                STATUS_RETWEET_ID};
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT};
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC";
 

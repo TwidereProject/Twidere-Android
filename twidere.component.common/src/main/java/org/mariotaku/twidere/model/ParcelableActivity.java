@@ -44,6 +44,9 @@ import java.util.Arrays;
 public class ParcelableActivity implements Comparable<ParcelableActivity>, Parcelable {
 
     @ParcelableThisPlease
+    @CursorField(value = Activities._ID, excludeWrite = true)
+    public long _id;
+    @ParcelableThisPlease
     @JsonField(name = "account_id")
     @CursorField(value = Activities.ACCOUNT_ID)
     public long account_id;
