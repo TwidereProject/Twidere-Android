@@ -49,41 +49,54 @@ public class EmojiSupportUtils {
         final ExternalThemeManager.Emoji emoji = manager.getEmoji();
         if (!emoji.isSupported()) return;
         final CodePointArray array = new CodePointArray(text);
-        for (int i = array.length() - 1; i >= 0; i--) {
-            final int codePoint = array.get(i);
+        for (int arrayIdx = array.length() - 1; arrayIdx >= 0; arrayIdx--) {
+            final int codePoint = array.get(arrayIdx);
             if (isEmoji(codePoint)) {
-                int arrayIdx = i, arrayEnd = i + 1, arrayIdxOffset = 0;
-                int textIdx = array.indexOfText(codePoint, i), textIdxOffset = 0;
-                int indexOffset = 0;
+                int arrayEnd = arrayIdx + 1, arrayIdxOffset = 0;
+                int textIdx = array.indexOfText(codePoint, arrayIdx), textIdxOffset = 0;
+                int skippedIndex = 0;
                 if (textIdx == -1 || textIdx < textStart) {
                     continue;
                 }
                 final int textEnd = textIdx + Character.charCount(codePoint);
-                if (isRegionalIndicatorSymbol(codePoint)) {
-                    if (i > 0) {
-                        int prev = array.get(i - 1);
-                        if (isRegionalIndicatorSymbol(prev)) {
+                if (arrayIdx > 0) {
+                    final int prevCodePoint = array.get(arrayIdx - 1);
+                    if (isRegionalIndicatorSymbol(codePoint)) {
+                        if (isRegionalIndicatorSymbol(prevCodePoint)) {
                             arrayIdxOffset = -1;
-                            textIdxOffset = -Character.charCount(prev);
-                            indexOffset = -1;
+                            textIdxOffset = -Character.charCount(prevCodePoint);
+                            skippedIndex = -1;
                         }
-                    }
-                } else if (isModifier(codePoint)) {
-                    if (i > 0) {
-                        int prev = array.get(i - 1);
-                        if (isEmoji(prev)) {
+                    } else if (isModifier(codePoint)) {
+                        if (isEmoji(prevCodePoint)) {
                             arrayIdxOffset = -1;
-                            textIdxOffset = -Character.charCount(prev);
-                            indexOffset = -1;
+                            textIdxOffset = -Character.charCount(prevCodePoint);
+                            skippedIndex = -1;
                         }
-                    }
-                } else if (isKeyCap(codePoint)) {
-                    if (i > 0) {
-                        int prev = array.get(i - 1);
-                        if (isPhoneNumberSymbol(prev)) {
+                    } else if (isKeyCap(codePoint)) {
+                        if (isPhoneNumberSymbol(prevCodePoint)) {
                             arrayIdxOffset = -1;
-                            textIdxOffset = -Character.charCount(prev);
-                            indexOffset = -1;
+                            textIdxOffset = -Character.charCount(prevCodePoint);
+                            skippedIndex = -1;
+                        }
+                    } else if (isZeroWidthJoin(prevCodePoint)) {
+                        int notValidControlCount = 0;
+                        int charCount = 0;
+                        for (int i = arrayIdx - 1; i >= 0; i--) {
+                            final int cp = array.get(i);
+                            charCount += Character.charCount(cp);
+                            if (isZeroWidthJoin(cp) || isVariationSelector(cp)) {
+                                // Ignore
+                                notValidControlCount = 0;
+                                continue;
+                            }
+                            notValidControlCount++;
+                            if (notValidControlCount > 1 || i == 0) {
+                                arrayIdxOffset = i - arrayIdx + 1;
+                                textIdxOffset = -charCount + Character.charCount(cp);
+                                skippedIndex = i - arrayIdx + 1;
+                                break;
+                            }
                         }
                     }
                 }
@@ -96,7 +109,7 @@ public class EmojiSupportUtils {
                         // Not emoji combination, just use fallback
                         textIdxOffset = 0;
                         arrayIdxOffset = 0;
-                        indexOffset = 0;
+                        skippedIndex = 0;
                         spans = text.getSpans(textIdx + textIdxOffset, textEnd, EmojiSpan.class);
                         if (spans.length == 0) {
                             drawable = emoji.getEmojiDrawableFor(array.subarray(arrayIdx + arrayIdxOffset,
@@ -108,9 +121,17 @@ public class EmojiSupportUtils {
                                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
-                i += indexOffset;
+                arrayIdx += skippedIndex;
             }
         }
+    }
+
+    private static boolean isVariationSelector(int codePoint) {
+        return codePoint == 0xfe0f;
+    }
+
+    private static boolean isZeroWidthJoin(int codePoint) {
+        return codePoint == 0x200d;
     }
 
     private static boolean isPhoneNumberSymbol(int codePoint) {

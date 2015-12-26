@@ -22,7 +22,11 @@ package org.mariotaku.twidere.util;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -33,8 +37,10 @@ import java.lang.reflect.Constructor;
  */
 public class UserAgentUtils {
     // You may uncomment next line if using Android Annotations library, otherwise just be sure to run it in on the UI thread
+    @UiThread
     public static String getDefaultUserAgentString(Context context) {
-        if (Looper.myLooper() != Looper.getMainLooper()) throw new IllegalStateException();
+        if (Looper.myLooper() != Looper.getMainLooper())
+            throw new IllegalStateException("User-Agent cannot be fetched from worker thread");
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 return NewApiWrapper.getDefaultUserAgent(context);
@@ -62,8 +68,49 @@ public class UserAgentUtils {
         }
     }
 
+    @WorkerThread
+    @Nullable
+    public static String getDefaultUserAgentStringSafe(Context context) {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        final FetchUserAgentRunnable runnable = new FetchUserAgentRunnable(context);
+        handler.post(runnable);
+        runnable.waitForExecution();
+        try {
+            return runnable.getUserAgent();
+        } finally {
+            handler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    private static class FetchUserAgentRunnable implements Runnable {
+
+        private final Context context;
+        private String userAgent;
+        private boolean userAgentSet;
+
+        public FetchUserAgentRunnable(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            userAgent = getDefaultUserAgentString(context);
+            userAgentSet = true;
+        }
+
+        public String getUserAgent() {
+            return userAgent;
+        }
+
+        public void waitForExecution() {
+            //noinspection StatementWithEmptyBody
+            while (!userAgentSet) ;
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     static class NewApiWrapper {
+        @UiThread
         static String getDefaultUserAgent(Context context) {
             return WebSettings.getDefaultUserAgent(context);
         }

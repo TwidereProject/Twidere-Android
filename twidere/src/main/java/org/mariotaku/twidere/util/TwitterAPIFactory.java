@@ -6,8 +6,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.SSLCertificateSocketFactory;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
@@ -33,6 +36,7 @@ import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.StringTypedData;
 import org.mariotaku.restfu.http.mime.TypedData;
 import org.mariotaku.restfu.okhttp.OkHttpRestClient;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -59,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -73,23 +78,27 @@ import static android.text.TextUtils.isEmpty;
  */
 public class TwitterAPIFactory implements TwidereConstants {
 
+    @WorkerThread
     public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities) {
         if (context == null) return null;
         return getDefaultTwitterInstance(context, includeEntities, true);
     }
 
+    @WorkerThread
     public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities,
                                                     final boolean includeRetweets) {
         if (context == null) return null;
         return getTwitterInstance(context, Utils.getDefaultAccountId(context), includeEntities, includeRetweets);
     }
 
+    @WorkerThread
     public static Twitter getTwitterInstance(final Context context, final long accountId,
                                              final boolean includeEntities) {
         return getTwitterInstance(context, accountId, includeEntities, true);
     }
 
     @Nullable
+    @WorkerThread
     public static Twitter getTwitterInstance(final Context context, final long accountId,
                                              final boolean includeEntities,
                                              final boolean includeRetweets) {
@@ -97,6 +106,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     @Nullable
+    @WorkerThread
     public static <T> T getTwitterInstance(final Context context, final long accountId,
                                            final boolean includeEntities,
                                            final boolean includeRetweets, Class<T> cls) {
@@ -164,6 +174,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         return Proxy.NO_PROXY;
     }
 
+    @WorkerThread
     public static <T> T getInstance(final Context context, final Endpoint endpoint,
                                     final Authorization auth, final Map<String, String> extraRequestParams,
                                     final Class<T> cls) {
@@ -174,7 +185,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             final String consumerSecret = ((OAuthAuthorization) auth).getConsumerSecret();
             final ConsumerKeyType officialKeyType = TwitterContentUtils.getOfficialKeyType(context, consumerKey, consumerSecret);
             if (officialKeyType != ConsumerKeyType.UNKNOWN) {
-                userAgent = getUserAgentName(officialKeyType);
+                userAgent = getUserAgentName(context, officialKeyType);
             } else {
                 userAgent = getTwidereUserAgent(context);
             }
@@ -191,18 +202,20 @@ public class TwitterAPIFactory implements TwidereConstants {
         return factory.build(cls);
     }
 
+    @WorkerThread
     public static <T> T getInstance(final Context context, final Endpoint endpoint,
                                     final Authorization auth, final Class<T> cls) {
         return getInstance(context, endpoint, auth, null, cls);
     }
 
-
+    @WorkerThread
     public static <T> T getInstance(final Context context, final Endpoint endpoint,
                                     final ParcelableCredentials credentials,
                                     final Class<T> cls) {
         return getInstance(context, endpoint, credentials, null, cls);
     }
 
+    @WorkerThread
     public static <T> T getInstance(final Context context, final Endpoint endpoint,
                                     final ParcelableCredentials credentials,
                                     final Map<String, String> extraRequestParams, final Class<T> cls) {
@@ -210,11 +223,13 @@ public class TwitterAPIFactory implements TwidereConstants {
                 extraRequestParams, cls);
     }
 
+    @WorkerThread
     static <T> T getInstance(final Context context, final ParcelableCredentials credentials,
                              final Class<T> cls) {
         return getInstance(context, credentials, null, cls);
     }
 
+    @WorkerThread
     static <T> T getInstance(final Context context, final ParcelableCredentials credentials,
                              final Map<String, String> extraRequestParams, final Class<T> cls) {
         if (credentials == null) return null;
@@ -327,7 +342,6 @@ public class TwitterAPIFactory implements TwidereConstants {
 
     public static String getApiUrl(final String pattern, final String domain, final String appendPath) {
         final String urlBase = getApiBaseUrl(pattern, domain);
-        if (urlBase == null) return null;
         if (appendPath == null) return urlBase.endsWith("/") ? urlBase : urlBase + "/";
         final StringBuilder sb = new StringBuilder(urlBase);
         if (urlBase.endsWith("/")) {
@@ -343,10 +357,22 @@ public class TwitterAPIFactory implements TwidereConstants {
         return sb.toString();
     }
 
-    public static String getUserAgentName(ConsumerKeyType type) {
+    @WorkerThread
+    public static String getUserAgentName(Context context, ConsumerKeyType type) {
         switch (type) {
             case TWITTER_FOR_ANDROID: {
-                return "TwitterAndroid";
+                final String versionName = "5.2.4";
+                final String internalVersionName = "524-r1";
+                final String model = Build.MODEL;
+                final String manufacturer = Build.MANUFACTURER;
+                final int sdkInt = Build.VERSION.SDK_INT;
+                final String device = Build.DEVICE;
+                final String brand = Build.BRAND;
+                final String product = Build.PRODUCT;
+                final int debug = BuildConfig.DEBUG ? 1 : 0;
+                return String.format(Locale.ROOT, "TwitterAndroid/%s (%s) %s/%d (%s;%s;%s;%s;%d)",
+                        versionName, internalVersionName, model, sdkInt, manufacturer, device, brand,
+                        product, debug);
             }
             case TWITTER_FOR_IPHONE: {
                 return "Twitter-iPhone";
@@ -358,7 +384,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                 return "Twitter-Mac";
             }
             case TWEETDECK: {
-                return "TweetDeck";
+                return UserAgentUtils.getDefaultUserAgentStringSafe(context);
             }
         }
         return "Twitter";
@@ -367,10 +393,10 @@ public class TwitterAPIFactory implements TwidereConstants {
     public static String getTwidereUserAgent(final Context context) {
         final PackageManager pm = context.getPackageManager();
         try {
-            final PackageInfo pi = pm.getPackageInfo(TWIDERE_PACKAGE_NAME, 0);
-            return TWIDERE_APP_NAME + " " + TWIDERE_PROJECT_URL + " / " + pi.versionName;
+            final PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+            return String.format("%s %s / %s", TWIDERE_APP_NAME, TWIDERE_PROJECT_URL, pi.versionName);
         } catch (final PackageManager.NameNotFoundException e) {
-            return TWIDERE_APP_NAME + " " + TWIDERE_PROJECT_URL;
+            throw new AssertionError(e);
         }
     }
 

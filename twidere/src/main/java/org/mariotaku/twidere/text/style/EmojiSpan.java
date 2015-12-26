@@ -29,10 +29,12 @@ import android.text.style.DynamicDrawableSpan;
  */
 public class EmojiSpan extends DynamicDrawableSpan {
     private final Drawable drawable;
+    private Paint.FontMetrics fontMetrics;
 
     public EmojiSpan(Drawable drawable) {
         super(ALIGN_BOTTOM);
         this.drawable = drawable;
+        this.fontMetrics = new Paint.FontMetrics();
     }
 
     @Override
@@ -44,7 +46,8 @@ public class EmojiSpan extends DynamicDrawableSpan {
     public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
         final Drawable drawable = getDrawable();
         if (drawable == null) return 0;
-        final int textHeightPx = Math.round(paint.descent() - paint.ascent());
+        paint.getFontMetrics(fontMetrics);
+        final int textHeightPx = Math.round(fontMetrics.descent - fontMetrics.ascent);
         final float intrinsicWidth = drawable.getIntrinsicWidth(),
                 intrinsicHeight = drawable.getIntrinsicHeight();
         final int scaledWidth;
@@ -53,10 +56,7 @@ public class EmojiSpan extends DynamicDrawableSpan {
         } else {
             scaledWidth = Math.round(intrinsicWidth * (textHeightPx / intrinsicHeight));
         }
-        if (fm == null) {
-            fm = paint.getFontMetricsInt();
-        }
-        final int top = fm.bottom - textHeightPx, left = 0;
+        final int top = Math.round(fontMetrics.bottom) - textHeightPx, left = 0;
         drawable.setBounds(left, top, left + scaledWidth, top + textHeightPx);
         return scaledWidth;
     }
