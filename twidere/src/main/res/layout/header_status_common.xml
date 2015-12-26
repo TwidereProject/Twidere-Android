@@ -381,12 +381,45 @@
         android:splitMotionEvents="false">
 
         <LinearLayout
+            android:id="@+id/replies_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:minWidth="@dimen/element_size_normal"
+            android:orientation="vertical"
+            android:padding="@dimen/element_spacing_normal">
+
+            <org.mariotaku.twidere.view.themed.ThemedTextView
+                android:id="@+id/replies_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/element_spacing_small"
+                android:layout_marginRight="@dimen/element_spacing_small"
+                android:singleLine="true"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:textColorPrimary"
+                android:textStyle="bold"
+                tools:text="255"/>
+
+            <org.mariotaku.twidere.view.themed.ThemedTextView
+                android:id="@+id/replies_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/replies"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:textColorSecondary"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/retweets_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="?selectableItemBackground"
-            android:baselineAligned="true"
             android:clickable="true"
             android:gravity="center_vertical"
             android:minWidth="@dimen/element_size_normal"
@@ -421,7 +454,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="?selectableItemBackground"
-            android:baselineAligned="true"
             android:clickable="true"
             android:gravity="center_vertical"
             android:minWidth="@dimen/element_size_normal"

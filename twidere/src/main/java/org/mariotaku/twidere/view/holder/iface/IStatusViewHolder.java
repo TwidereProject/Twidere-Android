@@ -53,7 +53,7 @@ public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListen
 
     interface StatusClickListener extends ContentCardClickListener {
 
-        void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position);
+        void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition);
 
         void onStatusClick(IStatusViewHolder holder, int position);
 

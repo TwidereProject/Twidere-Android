@@ -22,12 +22,15 @@ package org.mariotaku.twidere.util.net;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.LruCache;
+import android.util.TimingLogger;
 
 import com.squareup.okhttp.Dns;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -49,27 +52,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 public class TwidereDns implements Constants, Dns {
 
-    private static final String RESOLVER_LOGTAG = "Twidere.Host";
+    private static final String RESOLVER_LOGTAG = "TwidereDns";
 
     private static final String DEFAULT_DNS_SERVER_ADDRESS = "8.8.8.8";
 
     private final SharedPreferences mHostMapping, mPreferences;
     private final LruCache<String, InetAddress[]> mHostCache = new LruCache<>(512);
     private final String mDnsAddress;
-    private final SystemHosts mResolver;
+    private final SystemHosts mSystemHosts;
 
     private Resolver mDns;
+    private TimingLogger mLogger;
 
     public TwidereDns(final Context context) {
+        mLogger = new TimingLogger(RESOLVER_LOGTAG, "resolve");
         mHostMapping = SharedPreferencesWrapper.getInstance(context, HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String address = mPreferences.getString(KEY_DNS_SERVER, DEFAULT_DNS_SERVER_ADDRESS);
         mDnsAddress = isValidIpAddress(address) ? address : DEFAULT_DNS_SERVER_ADDRESS;
-        mResolver = new SystemHosts();
+        mSystemHosts = new SystemHosts();
     }
 
     @SuppressWarnings("unused")
@@ -80,38 +84,44 @@ public class TwidereDns implements Constants, Dns {
 
     @NonNull
     private InetAddress[] resolveInternal(String originalHost, String host) throws IOException {
-        if (isValidIpAddress(host)) {
-            final InetAddress[] inetAddresses = fromAddressString(originalHost, host);
-            if (inetAddresses != null) return inetAddresses;
+        mLogger.reset();
+        // Return if host is an address
+        final InetAddress[] fromAddressString = fromAddressString(originalHost, host);
+        if (fromAddressString != null) {
+            if (BuildConfig.DEBUG) {
+                mLogger.dumpToLog();
+            }
+            return fromAddressString;
         }
-        // First, I'll try to load address cached.
-        final InetAddress[] cachedHostAddr = mHostCache.get(host);
-        if (cachedHostAddr != null) {
-            if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
-                Log.v(RESOLVER_LOGTAG, "Got cached " + Arrays.toString(cachedHostAddr));
-                return cachedHostAddr;
+        // Find from cache
+        final InetAddress[] fromCache = getCached(host);
+        if (fromCache != null) {
+            if (BuildConfig.DEBUG) {
+                mLogger.dumpToLog();
             }
+            return fromCache;
         }
-        final String customMappedHost = findHost(host);
-        if (customMappedHost != null) {
-            final InetAddress[] hostAddr = fromAddressString(originalHost, customMappedHost);
-            putCache(originalHost, hostAddr);
-            if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
-                Log.v(RESOLVER_LOGTAG, "Got mapped address " + customMappedHost + " for host " + host);
+        // Load from custom mapping
+        mLogger.addSplit("start custom mappong resolve");
+        final InetAddress[] fromMapping = getFromMapping(host);
+        mLogger.addSplit("end custom mappong resolve");
+        if (fromMapping != null) {
+            putCache(originalHost, fromMapping);
+            if (BuildConfig.DEBUG) {
+                mLogger.dumpToLog();
             }
-            if (hostAddr != null) {
-                return hostAddr;
-            }
+            return fromMapping;
         }
-        try {
-            final InetAddress[] hostAddr = mResolver.resolve(host);
-            putCache(originalHost, hostAddr);
-            if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
-                Log.v(RESOLVER_LOGTAG, "Got hosts " + Arrays.toString(hostAddr));
+        // Load from /etc/hosts
+        mLogger.addSplit("start /etc/hosts resolve");
+        final InetAddress[] fromSystemHosts = fromSystemHosts(host);
+        mLogger.addSplit("end /etc/hosts resolve");
+        if (fromSystemHosts != null) {
+            putCache(originalHost, fromSystemHosts);
+            if (BuildConfig.DEBUG) {
+                mLogger.dumpToLog();
             }
-            return hostAddr;
-        } catch (UnknownHostException e) {
-            // Ignore
+            return fromSystemHosts;
         }
         // Use TCP DNS Query if enabled.
 //        final Resolver dns = getResolver();
@@ -119,12 +129,26 @@ public class TwidereDns implements Constants, Dns {
 //            final InetAddress[] hostAddr = resolveDns(originalHost, host, dns);
 //            if (hostAddr != null) return hostAddr;
 //        }
-        if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
-            Log.v(RESOLVER_LOGTAG, "Resolve address " + host + " failed, using original host");
-        }
+        mLogger.addSplit("start system default resolve");
         final InetAddress[] defaultAddresses = InetAddress.getAllByName(host);
+        mLogger.addSplit("end system default resolve");
         putCache(host, defaultAddresses);
+        if (BuildConfig.DEBUG) {
+            mLogger.dumpToLog();
+        }
         return defaultAddresses;
+    }
+
+    private InetAddress[] fromSystemHosts(String host) {
+        try {
+            return mSystemHosts.resolve(host);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private InetAddress[] getCached(String host) {
+        return mHostCache.get(host);
     }
 
     private InetAddress[] resolveDns(String originalHost, String host, Resolver dns) throws IOException {
@@ -151,7 +175,7 @@ public class TwidereDns implements Constants, Dns {
         if (!resolvedAddresses.isEmpty()) {
             final InetAddress[] hostAddr = resolvedAddresses.toArray(new InetAddress[resolvedAddresses.size()]);
             putCache(originalHost, hostAddr);
-            if (BuildConfig.DEBUG && Log.isLoggable(RESOLVER_LOGTAG, Log.VERBOSE)) {
+            if (BuildConfig.DEBUG) {
                 Log.v(RESOLVER_LOGTAG, "Resolved " + Arrays.toString(hostAddr));
             }
             return hostAddr;
@@ -176,9 +200,27 @@ public class TwidereDns implements Constants, Dns {
         return new InetAddress[]{resolved};
     }
 
-    private String findHost(final String host) {
+    @Nullable
+    private InetAddress[] getFromMapping(final String host) {
+        return getFromMappingInternal(host, host, false);
+    }
+
+    @Nullable
+    private InetAddress[] getFromMappingInternal(String host, String origHost, boolean checkRecursive) {
+        if (checkRecursive && hostMatches(host, origHost)) {
+            // Recursive resolution, stop this call
+            return null;
+        }
         for (final Entry<String, ?> entry : mHostMapping.getAll().entrySet()) {
-            if (hostMatches(host, entry.getKey())) return (String) entry.getValue();
+            if (hostMatches(host, entry.getKey())) {
+                final String value = (String) entry.getValue();
+                final InetAddress resolved = InetAddressUtils.getResolvedIPAddress(origHost, value);
+                if (resolved == null) {
+                    // Maybe another hostname
+                    return getFromMappingInternal(value, origHost, true);
+                }
+                return new InetAddress[]{resolved};
+            }
         }
         return null;
     }
@@ -190,7 +232,7 @@ public class TwidereDns implements Constants, Dns {
 
     private static boolean hostMatches(final String host, final String rule) {
         if (rule == null || host == null) return false;
-        if (rule.startsWith(".")) return host.matches("(?i).*" + Pattern.quote(rule));
+        if (rule.startsWith(".")) return StringUtils.endsWithIgnoreCase(host, rule);
         return host.equalsIgnoreCase(rule);
     }
 

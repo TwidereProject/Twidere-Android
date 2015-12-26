@@ -80,6 +80,7 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
@@ -369,8 +370,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
-        final ParcelableStatus status = mStatusAdapter.getStatus(position);
+    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
+        final ParcelableStatus status = mStatusAdapter.getStatus(statusPosition);
         if (status == null) return;
         final Bundle options = Utils.createMediaViewerActivityOption(view);
         Utils.openMedia(getActivity(), status, media, options);
@@ -925,8 +926,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final ImageView profileTypeView;
         private final TextView timeSourceView;
         private final TextView retweetedByView;
-        private final View retweetsContainer, favoritesContainer;
-        private final TextView retweetsCountView, favoritesCountView;
+        private final View repliesContainer, retweetsContainer, favoritesContainer;
+        private final TextView repliesCountView, retweetsCountView, favoritesCountView;
         private final View countsContainer;
 
         private final TextView quoteOriginalLink;
@@ -943,7 +944,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final TwitterCardContainer twitterCard;
         private final StatusLinkClickHandler linkClickHandler;
         private final TwidereLinkify linkify;
-        private final TextView retweetsLabel, favoritesLabel;
+        private final TextView repliesLabel, retweetsLabel, favoritesLabel;
         private final View translateContainer;
         private final TextView translateResultView;
         private final RecyclerView interactUsersView;
@@ -961,8 +962,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
             timeSourceView = (TextView) itemView.findViewById(R.id.time_source);
             retweetedByView = (TextView) itemView.findViewById(R.id.retweeted_by);
+            repliesContainer = itemView.findViewById(R.id.replies_container);
             retweetsContainer = itemView.findViewById(R.id.retweets_container);
             favoritesContainer = itemView.findViewById(R.id.favorites_container);
+            repliesCountView = (TextView) itemView.findViewById(R.id.replies_count);
             retweetsCountView = (TextView) itemView.findViewById(R.id.retweets_count);
             favoritesCountView = (TextView) itemView.findViewById(R.id.favorites_count);
             mediaPreviewContainer = itemView.findViewById(R.id.media_preview_container);
@@ -972,6 +975,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             quoteOriginalLink = (TextView) itemView.findViewById(R.id.quote_original_link);
             profileContainer = (ColorLabelRelativeLayout) itemView.findViewById(R.id.profile_container);
             twitterCard = (TwitterCardContainer) itemView.findViewById(R.id.twitter_card);
+
+            repliesLabel = (TextView) itemView.findViewById(R.id.replies_label);
             retweetsLabel = (TextView) itemView.findViewById(R.id.retweets_label);
             favoritesLabel = (TextView) itemView.findViewById(R.id.favorites_label);
 
@@ -1096,19 +1101,24 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 locationView.setText(null);
             }
 
-            final long retweetCount, favoriteCount;
+            final long repliesCount, retweetCount, favoriteCount;
             if (statusActivity != null) {
+                repliesCount = statusActivity.getReplyCount();
                 retweetCount = statusActivity.getRetweetCount();
                 favoriteCount = statusActivity.getFavoriteCount();
             } else {
+                repliesCount = status.reply_count;
                 retweetCount = status.retweet_count;
                 favoriteCount = status.favorite_count;
             }
 
+            repliesContainer.setVisibility(repliesCount > 0 ? View.VISIBLE : View.GONE);
             retweetsContainer.setVisibility(!status.user_is_protected && retweetCount > 0 ? View.VISIBLE : View.GONE);
             favoritesContainer.setVisibility(favoriteCount > 0 ? View.VISIBLE : View.GONE);
 
-            if (retweetsContainer.getVisibility() == View.VISIBLE || favoritesContainer.getVisibility() == View.VISIBLE) {
+            if (retweetsContainer.getVisibility() == View.VISIBLE
+                    || favoritesContainer.getVisibility() == View.VISIBLE
+                    || repliesContainer.getVisibility() == View.VISIBLE) {
                 countsContainer.setVisibility(View.VISIBLE);
             } else {
                 countsContainer.setVisibility(View.GONE);
@@ -1116,6 +1126,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             final Locale locale = context.getResources().getConfiguration().locale;
 
+            repliesCountView.setText(Utils.getLocalizedNumber(locale, repliesCount));
             retweetsCountView.setText(Utils.getLocalizedNumber(locale, retweetCount));
             favoritesCountView.setText(Utils.getLocalizedNumber(locale, favoriteCount));
             final UserProfileImagesAdapter interactUsersAdapter = (UserProfileImagesAdapter) interactUsersView.getAdapter();
@@ -1316,6 +1327,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             retweetsCountView.setTextSize(defaultTextSize * 1.25f);
             favoritesCountView.setTextSize(defaultTextSize * 1.25f);
 
+            repliesLabel.setTextSize(defaultTextSize * 0.85f);
             retweetsLabel.setTextSize(defaultTextSize * 0.85f);
             favoritesLabel.setTextSize(defaultTextSize * 0.85f);
 
@@ -1401,13 +1413,25 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final ParcelableStatus status = adapter.getStatus();
                 if (status.media != null) {
                     for (final ParcelableMedia media : status.media) {
-                        if (media.start == start && media.end == end) {
-                            adapter.setDetailMediaExpanded(true);
+                        if (link.equals(media.page_url)) {
+                            expandOrOpenMedia();
                             return;
                         }
                     }
                 }
+                if (type == TwidereLinkify.LINK_TYPE_STATUS && status.id == NumberUtils.toLong(link)) {
+                    expandOrOpenMedia();
+                    return;
+                }
                 super.onLinkClick(link, orig, accountId, extraId, type, sensitive, start, end);
+            }
+
+            private void expandOrOpenMedia() {
+                if (adapter.isDetailMediaExpanded()) {
+                    //TODO open first media
+                    return;
+                }
+                adapter.setDetailMediaExpanded(true);
             }
         }
     }
@@ -1904,9 +1928,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
+        public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
             if (mStatusAdapterListener != null) {
-                mStatusAdapterListener.onMediaClick(holder, view, media, position);
+                mStatusAdapterListener.onMediaClick(holder, view, media, statusPosition);
             }
         }
 

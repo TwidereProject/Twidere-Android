@@ -163,9 +163,9 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     }
 
     @Override
-    public void onMediaClick(IStatusViewHolder holder, View view, final ParcelableMedia media, int position) {
+    public void onMediaClick(IStatusViewHolder holder, View view, final ParcelableMedia media, int statusPosition) {
         if (mStatusAdapterListener == null) return;
-        mStatusAdapterListener.onMediaClick(holder, view, media, position);
+        mStatusAdapterListener.onMediaClick(holder, view, media, statusPosition);
     }
 
     @Override
@@ -289,7 +289,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     public interface StatusAdapterListener {
         void onGapClick(GapViewHolder holder, int position);
 
-        void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position);
+        void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition);
 
         void onStatusActionClick(IStatusViewHolder holder, int id, int position);
 

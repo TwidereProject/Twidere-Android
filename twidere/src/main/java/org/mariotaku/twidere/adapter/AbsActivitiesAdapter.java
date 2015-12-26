@@ -148,9 +148,9 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
     @Override
-    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
+    public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
         if (mActivityAdapterListener != null) {
-            mActivityAdapterListener.onMediaClick(holder, view, media, position);
+            mActivityAdapterListener.onMediaClick(holder, view, media, statusPosition);
         }
     }
 
