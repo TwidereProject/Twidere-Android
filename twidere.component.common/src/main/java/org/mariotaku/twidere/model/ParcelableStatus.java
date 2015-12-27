@@ -33,6 +33,7 @@ import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
@@ -602,6 +603,30 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         public ParcelableBindingValue getValue(@Nullable String key) {
             if (key == null || values == null) return null;
             return values.get(key);
+        }
+
+        public boolean getAsBoolean(@Nullable String key, boolean def) {
+            final ParcelableBindingValue value = getValue(key);
+            if (value == null) return def;
+            return Boolean.parseBoolean(value.value);
+        }
+
+        public String getAsString(@Nullable String key, String def) {
+            final ParcelableBindingValue value = getValue(key);
+            if (value == null) return def;
+            return value.value;
+        }
+
+        public int getAsInteger(@Nullable String key, int def) {
+            final ParcelableBindingValue value = getValue(key);
+            if (value == null) return def;
+            return NumberUtils.toInt(value.value, def);
+        }
+
+        public long getAsLong(@Nullable String key, long def) {
+            final ParcelableBindingValue value = getValue(key);
+            if (value == null) return def;
+            return NumberUtils.toLong(value.value, def);
         }
 
         @Override

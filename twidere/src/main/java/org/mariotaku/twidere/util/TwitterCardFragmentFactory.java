@@ -50,7 +50,7 @@ public abstract class TwitterCardFragmentFactory {
         return CardBrowserFragment.show(player_url.value);
     }
 
-    public static Fragment createCardPollFragment(ParcelableCardEntity card) {
-        return CardPollFragment.show(card);
+    public static Fragment createCardPollFragment(ParcelableStatus status) {
+        return CardPollFragment.show(status);
     }
 }

@@ -1157,7 +1157,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mediaPreview.displayMedia();
             }
 
-            if (TwitterCardUtils.isCardSupported(status.card)) {
+            if (TwitterCardUtils.isCardSupported(status)) {
                 final Point size = TwitterCardUtils.getCardSize(status.card);
                 twitterCard.setVisibility(View.VISIBLE);
                 if (size != null) {
@@ -1165,7 +1165,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 } else {
                     twitterCard.setCardSize(0, 0);
                 }
-                final Fragment cardFragment = TwitterCardUtils.createCardFragment(status.card);
+                final Fragment cardFragment = TwitterCardUtils.createCardFragment(status);
                 final FragmentManager fm = fragment.getChildFragmentManager();
                 if (cardFragment != null && !FragmentManagerTrojan.isStateSaved(fm)) {
                     final FragmentTransaction ft = fm.beginTransaction();
@@ -1324,6 +1324,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             translateLabelView.setTextSize(defaultTextSize * 0.85f);
             translateResultView.setTextSize(defaultTextSize * 1.05f);
 
+            repliesCountView.setTextSize(defaultTextSize * 1.25f);
             retweetsCountView.setTextSize(defaultTextSize * 1.25f);
             favoritesCountView.setTextSize(defaultTextSize * 1.25f);
 

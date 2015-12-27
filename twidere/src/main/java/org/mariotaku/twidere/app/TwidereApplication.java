@@ -19,9 +19,11 @@
 
 package org.mariotaku.twidere.app;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -37,6 +39,7 @@ import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
 
 import org.acra.annotation.ReportsCrashes;
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.AssistLauncherActivity;
@@ -45,6 +48,7 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.DebugModeUtils;
+import org.mariotaku.twidere.util.ExternalThemeManager;
 import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereBugReporter;
@@ -156,6 +160,23 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         reloadConnectivitySettings();
 
         registerActivityLifecycleCallbacks(getApplicationModule().getActivityTracker());
+
+        final IntentFilter packageFilter = new IntentFilter();
+        packageFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
+                final String[] packages = getPackageManager().getPackagesForUid(uid);
+                final ExternalThemeManager manager = getApplicationModule().getExternalThemeManager();
+                if (ArrayUtils.contains(packages, manager.getEmojiPackageName())) {
+                    manager.reloadEmojiPreferences();
+                }
+            }
+        }, packageFilter);
     }
 
     private void initDebugMode() {
@@ -205,18 +226,32 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
-        if (KEY_REFRESH_INTERVAL.equals(key)) {
-            stopService(new Intent(this, RefreshService.class));
-            startRefreshServiceIfNeeded(this);
-        } else if (KEY_ENABLE_PROXY.equals(key) || KEY_CONNECTION_TIMEOUT.equals(key) || KEY_PROXY_HOST.equals(key)
-                || KEY_PROXY_PORT.equals(key)) {
-            reloadConnectivitySettings();
-        } else if (KEY_CONSUMER_KEY.equals(key) || KEY_CONSUMER_SECRET.equals(key) || KEY_API_URL_FORMAT.equals(key)
-                || KEY_AUTH_TYPE.equals(key) || KEY_SAME_OAUTH_SIGNING_URL.equals(key) || KEY_THUMBOR_ENABLED.equals(key)
-                || KEY_THUMBOR_ADDRESS.equals(key) || KEY_THUMBOR_SECURITY_KEY.equals(key)) {
-            final SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(KEY_API_LAST_CHANGE, System.currentTimeMillis());
-            editor.apply();
+        switch (key) {
+            case KEY_REFRESH_INTERVAL:
+                stopService(new Intent(this, RefreshService.class));
+                startRefreshServiceIfNeeded(this);
+                break;
+            case KEY_ENABLE_PROXY:
+            case KEY_CONNECTION_TIMEOUT:
+            case KEY_PROXY_HOST:
+            case KEY_PROXY_PORT:
+                reloadConnectivitySettings();
+                break;
+            case KEY_CONSUMER_KEY:
+            case KEY_CONSUMER_SECRET:
+            case KEY_API_URL_FORMAT:
+            case KEY_AUTH_TYPE:
+            case KEY_SAME_OAUTH_SIGNING_URL:
+            case KEY_THUMBOR_ENABLED:
+            case KEY_THUMBOR_ADDRESS:
+            case KEY_THUMBOR_SECURITY_KEY:
+                final Editor editor = preferences.edit();
+                editor.putLong(KEY_API_LAST_CHANGE, System.currentTimeMillis());
+                editor.apply();
+                break;
+            case KEY_EMOJI_SUPPORT:
+                getApplicationModule().getExternalThemeManager().initEmojiSupport();
+                break;
         }
     }
 

@@ -748,6 +748,8 @@
     <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favorites</string>
     <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> like</string>
     <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> likes</string>
+    <string name="N_votes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> vote</string>
+    <string name="N_votes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> votes</string>
     <string name="drafts_hint_messages">Your unsent tweets will save here</string>
     <string name="keyboard_shortcuts">Keyboard shortcuts</string>
     <string name="keyboard_shortcut_hint">Press keys</string>
@@ -827,4 +829,7 @@
     <string name="unknown_language">Unknown language</string>
     <string name="system_default">System default</string>
     <string name="emoji_support">Emoji support</string>
+    <string name="open_poll_in_official_app">Open poll in official app</string>
+    <string name="vote">Vote</string>
+    <string name="poll_summary_format"><xliff:g id="poll_count">%s</xliff:g> · <xliff:g id="poll_time_left">%s</xliff:g></string>
 </resources>

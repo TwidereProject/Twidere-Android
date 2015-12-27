@@ -61,5 +61,9 @@
         <item quantity="one">@string/N_likes_quantity_one</item>
         <item quantity="other">@string/N_likes_quantity_other</item>
     </plurals>
+    <plurals name="N_votes">
+        <item quantity="one">@string/N_votes_quantity_one</item>
+        <item quantity="other">@string/N_votes_quantity_other</item>
+    </plurals>
 
 </resources>

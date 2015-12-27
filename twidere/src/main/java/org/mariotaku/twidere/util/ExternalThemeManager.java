@@ -37,18 +37,39 @@ import java.util.Locale;
  * Created by mariotaku on 15/12/20.
  */
 public class ExternalThemeManager implements Constants {
-    private final Emoji emoji;
+    private final Application application;
+    private final SharedPreferencesWrapper preferences;
+
+    private Emoji emoji;
+    private String emojiPackageName;
 
     public ExternalThemeManager(Application application, SharedPreferencesWrapper preferences) {
+        this.application = application;
+        this.preferences = preferences;
+        reloadEmojiPreferences();
+    }
+
+    public String getEmojiPackageName() {
+        return emojiPackageName;
+    }
+
+    public void reloadEmojiPreferences() {
         final String emojiComponentName = preferences.getString(KEY_EMOJI_SUPPORT, null);
-        String packageName = null;
         if (emojiComponentName != null) {
             final ComponentName componentName = ComponentName.unflattenFromString(emojiComponentName);
             if (componentName != null) {
-                packageName = componentName.getPackageName();
+                emojiPackageName = componentName.getPackageName();
             }
         }
-        emoji = new Emoji(application, packageName);
+        initEmojiSupport();
+    }
+
+    public void initEmojiSupport() {
+        if (emojiPackageName == null) {
+            emojiPackageName = null;
+            return;
+        }
+        emoji = new Emoji(application, emojiPackageName);
     }
 
     @NonNull
