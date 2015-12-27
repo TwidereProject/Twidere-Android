@@ -58,7 +58,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     @NonNull
     private final IStatusesAdapter<?> adapter;
 
-    private final ImageView replyRetweetIcon;
+    private final ImageView statusInfoIcon;
     private final ImageView profileImageView;
     private final ImageView profileTypeView;
     private final ImageView extraTypeView;
@@ -66,7 +66,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     private final TextView quotedTextView;
     private final NameView nameView;
     private final NameView quotedNameView;
-    private final TextView replyRetweetView;
+    private final TextView statusInfoLabel;
     private final ShortTimeView timeView;
     private final CardMediaContainer mediaPreview;
     private final ActionIconThemedTextView replyCountView, retweetCountView, favoriteCountView;
@@ -88,8 +88,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         quotedTextView = (TextView) itemView.findViewById(R.id.quoted_text);
         nameView = (NameView) itemView.findViewById(R.id.name);
         quotedNameView = (NameView) itemView.findViewById(R.id.quoted_name);
-        replyRetweetIcon = (ImageView) itemView.findViewById(R.id.reply_retweet_icon);
-        replyRetweetView = (TextView) itemView.findViewById(R.id.reply_retweet_status);
+        statusInfoIcon = (ImageView) itemView.findViewById(R.id.status_info_icon);
+        statusInfoLabel = (TextView) itemView.findViewById(R.id.status_info_label);
         timeView = (ShortTimeView) itemView.findViewById(R.id.time);
 
         mediaPreview = (CardMediaContainer) itemView.findViewById(R.id.media_preview);
@@ -148,23 +148,28 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         final long retweetCount;
         final long favorite_count;
 
-        if (status.retweet_id > 0) {
+        if (TwitterCardUtils.isPoll(status)) {
+            statusInfoLabel.setText(R.string.label_poll);
+            statusInfoIcon.setImageResource(R.drawable.ic_activity_action_poll);
+            statusInfoLabel.setVisibility(View.VISIBLE);
+            statusInfoIcon.setVisibility(View.VISIBLE);
+        } else if (status.retweet_id > 0) {
             final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_id,
                     status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst, false);
-            replyRetweetView.setText(context.getString(R.string.name_retweeted, retweetedBy));
-            replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_retweet);
-            replyRetweetView.setVisibility(View.VISIBLE);
-            replyRetweetIcon.setVisibility(View.VISIBLE);
+            statusInfoLabel.setText(context.getString(R.string.name_retweeted, retweetedBy));
+            statusInfoIcon.setImageResource(R.drawable.ic_activity_action_retweet);
+            statusInfoLabel.setVisibility(View.VISIBLE);
+            statusInfoIcon.setVisibility(View.VISIBLE);
         } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id > 0 && displayInReplyTo) {
             final String inReplyTo = manager.getDisplayName(status.in_reply_to_user_id,
                     status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst, false);
-            replyRetweetView.setText(context.getString(R.string.in_reply_to_name, inReplyTo));
-            replyRetweetIcon.setImageResource(R.drawable.ic_activity_action_reply);
-            replyRetweetView.setVisibility(View.VISIBLE);
-            replyRetweetIcon.setVisibility(View.VISIBLE);
+            statusInfoLabel.setText(context.getString(R.string.in_reply_to_name, inReplyTo));
+            statusInfoIcon.setImageResource(R.drawable.ic_activity_action_reply);
+            statusInfoLabel.setVisibility(View.VISIBLE);
+            statusInfoIcon.setVisibility(View.VISIBLE);
         } else {
-            replyRetweetView.setVisibility(View.GONE);
-            replyRetweetIcon.setVisibility(View.GONE);
+            statusInfoLabel.setVisibility(View.GONE);
+            statusInfoIcon.setVisibility(View.GONE);
         }
 
 
@@ -386,7 +391,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         nameView.setSecondaryTextSize(textSize * 0.85f);
         quotedNameView.setSecondaryTextSize(textSize * 0.85f);
         timeView.setTextSize(textSize * 0.85f);
-        replyRetweetView.setTextSize(textSize * 0.75f);
+        statusInfoLabel.setTextSize(textSize * 0.75f);
         replyCountView.setTextSize(textSize);
         retweetCountView.setTextSize(textSize);
         favoriteCountView.setTextSize(textSize);

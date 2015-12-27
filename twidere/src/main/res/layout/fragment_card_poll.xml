@@ -41,7 +41,7 @@
             android:id="@+id/vote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/vote"/>
+            android:text="@string/action_vote"/>
 
         <TextView
             android:id="@+id/poll_summary"

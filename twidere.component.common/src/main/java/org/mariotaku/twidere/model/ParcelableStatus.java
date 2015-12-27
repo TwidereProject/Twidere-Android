@@ -243,6 +243,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "text_unescaped")
     @CursorField(Statuses.TEXT_UNESCAPED)
     public String text_unescaped;
+    @Nullable
     @ParcelableThisPlease
     @JsonField(name = "card_name")
     @CursorField(Statuses.CARD_NAME)
@@ -295,6 +296,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "quoted_media")
     @CursorField(value = Statuses.QUOTED_MEDIA_JSON, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableMedia[] quoted_media;
+    @Nullable
     @ParcelableThisPlease
     @JsonField(name = "card")
     @CursorField(value = Statuses.CARD, converter = LoganSquareCursorFieldConverter.class)

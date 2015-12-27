@@ -830,6 +830,7 @@
     <string name="system_default">System default</string>
     <string name="emoji_support">Emoji support</string>
     <string name="open_poll_in_official_app">Open poll in official app</string>
-    <string name="vote">Vote</string>
+    <string name="action_vote">Vote</string>
+    <string name="label_poll">Poll</string>
     <string name="poll_summary_format"><xliff:g id="poll_count">%s</xliff:g> · <xliff:g id="poll_time_left">%s</xliff:g></string>
 </resources>

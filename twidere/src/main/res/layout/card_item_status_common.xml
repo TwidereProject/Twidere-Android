@@ -33,27 +33,27 @@
         app:ignorePadding="true">
 
         <Space
-            android:id="@+id/reply_retweet_space"
+            android:id="@+id/status_info_space"
             android:layout_width="@dimen/icon_size_status_profile_image"
             android:layout_height="@dimen/element_size_small"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/reply_retweet_status"
+            android:layout_alignTop="@+id/status_info_label"
             android:layout_marginEnd="@dimen/element_spacing_small"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_small"
             android:layout_marginStart="@dimen/element_spacing_normal" />
 
         <org.mariotaku.twidere.view.ActionIconView
-            android:id="@+id/reply_retweet_icon"
+            android:id="@+id/status_info_icon"
             style="?profileImageStyle"
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
-            android:layout_alignTop="@id/reply_retweet_status"
+            android:layout_alignTop="@id/status_info_label"
             android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginStart="@dimen/element_spacing_small"
-            android:layout_toLeftOf="@+id/reply_retweet_status"
-            android:layout_toStartOf="@+id/reply_retweet_status"
+            android:layout_toLeftOf="@+id/status_info_label"
+            android:layout_toStartOf="@+id/status_info_label"
             android:color="?android:textColorSecondary"
             android:padding="@dimen/element_spacing_small"
             android:scaleType="centerInside"
@@ -62,13 +62,13 @@
             tools:visibility="visible" />
 
         <org.mariotaku.twidere.view.themed.ThemedTextView
-            android:id="@+id/reply_retweet_status"
+            android:id="@+id/status_info_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
-            android:layout_toEndOf="@+id/reply_retweet_space"
-            android:layout_toRightOf="@+id/reply_retweet_space"
+            android:layout_toEndOf="@+id/status_info_space"
+            android:layout_toRightOf="@+id/status_info_space"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
             android:minHeight="@dimen/element_size_small"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/reply_retweet_status"
+            android:layout_below="@+id/status_info_label"
             android:paddingEnd="0dp"
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="0dp"

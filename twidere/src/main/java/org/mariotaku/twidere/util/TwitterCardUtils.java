@@ -71,8 +71,8 @@ public class TwitterCardUtils {
     }
 
     public static boolean isCardSupported(ParcelableStatus status) {
-        if (status.card == null || status.card.name == null) return false;
-        switch (status.card.name) {
+        if (status.card == null || status.card_name == null) return false;
+        switch (status.card_name) {
             case CARD_NAME_PLAYER: {
                 return ParcelableCardEntity.getValue(status.card, "player_stream_url") == null;
             }
@@ -80,10 +80,14 @@ public class TwitterCardUtils {
                 return true;
             }
         }
-        if (CardPollFragment.isPoll(status.card.name)) {
+        if (CardPollFragment.isPoll(status.card_name)) {
             return true;
         }
         return false;
     }
 
+    public static boolean isPoll(ParcelableStatus status) {
+        if (status.card_name == null) return false;
+        return CardPollFragment.isPoll(status.card_name);
+    }
 }
