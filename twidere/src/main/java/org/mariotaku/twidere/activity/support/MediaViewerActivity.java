@@ -17,6 +17,9 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -32,8 +35,10 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
@@ -58,15 +63,15 @@ import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.desmond.asyncmanager.AsyncManager;
-import com.desmond.asyncmanager.TaskRunnable;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.sprylab.android.widget.TextureVideoView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.adapter.support.SupportFixedFragmentStatePagerAdapter;
+import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
 import org.mariotaku.twidere.loader.support.TileImageLoader;
@@ -75,11 +80,13 @@ import org.mariotaku.twidere.loader.support.TileImageLoader.Result;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMedia.VideoInfo.Variant;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.task.ProgressSaveFileTask;
+import org.mariotaku.twidere.task.SaveFileTask;
+import org.mariotaku.twidere.task.SaveImageToGalleryTask;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.PermissionUtils;
-import org.mariotaku.twidere.util.SaveFileTask;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
@@ -258,6 +265,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
     public static class BaseImagePageFragment extends AbsMediaPageFragment
             implements DownloadListener, LoaderCallbacks<Result>, OnClickListener {
 
+        private static final int REQUEST_SHARE_IMAGE = 201;
+
         private SubsamplingScaleImageView mImageView;
         private ProgressWheel mProgressBar;
         private boolean mLoaderInitialized;
@@ -265,6 +274,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         private SaveFileTask mSaveFileTask;
 
         private File mImageFile;
+        private File mShareImageFile;
 
         @Override
         public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -394,7 +404,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             final File file = mImageFile;
             final boolean hasImage = file != null && file.exists();
             if (!hasImage) return;
-            mSaveFileTask = SaveFileTask.saveImage(getActivity(), file);
+            mSaveFileTask = SaveImageToGalleryTask.create(getActivity(), file);
             AsyncTaskUtils.executeTask(mSaveFileTask);
         }
 
@@ -402,44 +412,10 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         public void onPrepareOptionsMenu(Menu menu) {
             super.onPrepareOptionsMenu(menu);
             final boolean isLoading = getLoaderManager().hasRunningLoaders();
-            final TaskRunnable<File, Pair<Boolean, Intent>, Pair<Fragment, Menu>> checkState
-                    = new TaskRunnable<File, Pair<Boolean, Intent>, Pair<Fragment, Menu>>() {
-                @Override
-                public Pair<Boolean, Intent> doLongOperation(File file) throws InterruptedException {
-                    final boolean hasImage = file != null && file.exists();
-                    if (!hasImage) {
-                        return Pair.create(false, null);
-                    }
-                    final Intent intent = new Intent(Intent.ACTION_SEND);
-                    final Uri fileUri = Uri.fromFile(file);
-                    final String imageMimeType = Utils.getImageMimeType(file);
-                    intent.setDataAndType(fileUri, imageMimeType);
-                    intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                    final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
-                    if (activity.hasStatus()) {
-                        final ParcelableStatus status = activity.getStatus();
-                        intent.putExtra(Intent.EXTRA_TEXT, Utils.getStatusShareText(activity, status));
-                        intent.putExtra(Intent.EXTRA_SUBJECT, Utils.getStatusShareSubject(activity, status));
-                    }
-                    return Pair.create(true, intent);
-                }
-
-                @Override
-                public void callback(Pair<Fragment, Menu> callback, Pair<Boolean, Intent> result) {
-                    if (callback.first.isDetached() || callback.first.getActivity() == null) return;
-                    final Menu menu = callback.second;
-                    final boolean hasImage = result.first;
-                    MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasImage && !isLoading);
-                    MenuUtils.setMenuItemAvailability(menu, R.id.share, hasImage && !isLoading);
-                    MenuUtils.setMenuItemAvailability(menu, R.id.save, hasImage && !isLoading);
-                    if (!hasImage) return;
-                    final MenuItem shareItem = menu.findItem(R.id.share);
-                    shareItem.setIntent(Intent.createChooser(result.second, callback.first.getString(R.string.share)));
-                }
-            };
-            checkState.setParams(mImageFile);
-            checkState.setResultHandler(Pair.<Fragment, Menu>create(this, menu));
-            AsyncManager.runBackgroundTask(checkState);
+            final boolean hasImage = mImageFile != null;
+            MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasImage && !isLoading);
+            MenuUtils.setMenuItemAvailability(menu, R.id.share, hasImage && !isLoading);
+            MenuUtils.setMenuItemAvailability(menu, R.id.save, hasImage && !isLoading);
         }
 
 
@@ -464,6 +440,65 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     loadImage();
                     return true;
                 }
+                case R.id.share: {
+                    final FragmentActivity activity = getActivity();
+                    final File destination = new File(activity.getCacheDir(), "shared_files");
+                    final SaveFileTask task = new SaveFileTask(activity, mImageFile, destination,
+                            new SaveImageToGalleryTask.ImageMimeTypeCallback()) {
+                        private static final String PROGRESS_FRAGMENT_TAG = "progress";
+
+                        protected void dismissProgress() {
+                            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+                            if (activity == null) return;
+                            activity.executeAfterFragmentResumed(new IExtendedActivity.Action() {
+                                @Override
+                                public void execute(IExtendedActivity activity) {
+                                    final FragmentManager fm = ((Activity) activity).getFragmentManager();
+                                    final DialogFragment fragment = (DialogFragment) fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG);
+                                    if (fragment != null) {
+                                        fragment.dismiss();
+                                    }
+                                }
+                            });
+                        }
+
+                        protected void showProgress() {
+                            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+                            if (activity == null) return;
+                            activity.executeAfterFragmentResumed(new IExtendedActivity.Action() {
+                                @Override
+                                public void execute(IExtendedActivity activity) {
+                                    final DialogFragment fragment = new ProgressDialogFragment();
+                                    fragment.setCancelable(false);
+                                    fragment.show(((Activity) activity).getFragmentManager(), PROGRESS_FRAGMENT_TAG);
+                                }
+                            });
+                        }
+
+                        protected void onFileSaved(File savedFile, String mimeType) {
+                            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+                            if (activity == null) return;
+
+                            final Uri fileUri = FileProvider.getUriForFile(activity,
+                                    AUTHORITY_TWIDERE_FILE, savedFile);
+
+                            final Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.setDataAndType(fileUri, mimeType);
+                            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            if (activity.hasStatus()) {
+                                final ParcelableStatus status = activity.getStatus();
+                                intent.putExtra(Intent.EXTRA_TEXT, Utils.getStatusShareText(activity, status));
+                                intent.putExtra(Intent.EXTRA_SUBJECT, Utils.getStatusShareSubject(activity, status));
+                            }
+                            startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.share)),
+                                    REQUEST_SHARE_IMAGE);
+                        }
+
+                    };
+                    task.execute();
+                    return true;
+                }
             }
             return super.onOptionsItemSelected(item);
         }
@@ -484,7 +519,18 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             loadImage();
         }
 
-
+        @Override
+        public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+            switch (requestCode) {
+                case REQUEST_SHARE_IMAGE: {
+                    if (mShareImageFile != null) {
+                        mShareImageFile.delete();
+                    }
+                    return;
+                }
+            }
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     public static final class ImagePageFragment extends BaseImagePageFragment
@@ -840,7 +886,13 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             if (extension == null) return;
             final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
             final File saveDir = new File(pubDir, "Twidere");
-            mSaveFileTask = AsyncTaskUtils.executeTask(new SaveFileTask(getActivity(), file, mimeType, saveDir));
+            mSaveFileTask = AsyncTaskUtils.executeTask(new ProgressSaveFileTask(getActivity(), file, saveDir,
+                    new SaveFileTask.StringMimeTypeCallback(mimeType)) {
+                @Override
+                protected void onFileSaved(File savedFile, String mimeType) {
+
+                }
+            });
         }
 
         @Override
@@ -938,6 +990,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             final Intent intent = new Intent(Intent.ACTION_SEND);
             final Uri fileUri = Uri.fromFile(file);
             intent.setDataAndType(fileUri, linkAndType.second);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(Intent.EXTRA_STREAM, fileUri);
             final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
             if (activity.hasStatus()) {

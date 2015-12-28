@@ -1,5 +1,5 @@
 /*
- *                 Twidere - Twitter client for Android
+ * Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,17 +17,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package android.support.v4.widget;
+package android.support.v7.app;
 
-import android.view.View;
+import android.support.annotation.Nullable;
 
 /**
- * Created by mariotaku on 15/7/18.
+ * Created by mariotaku on 15/4/27.
  */
-public class DrawerLayoutTrojan {
+public class AppCompatDelegateAccessor {
 
-    public static View findDrawerWithGravity(DrawerLayout layout, int gravity) {
-        return layout.findDrawerWithGravity(gravity);
+    @Nullable
+    public static ActionBar peekActionBar(@Nullable AppCompatDelegate delegate) {
+        if (delegate instanceof AppCompatDelegateImplBase)
+            return ((AppCompatDelegateImplBase) delegate).peekSupportActionBar();
+        return null;
     }
 
+    public static boolean isFloating(AppCompatDelegate delegate) {
+        if (delegate instanceof AppCompatDelegateImplBase)
+            return ((AppCompatDelegateImplBase) delegate).mIsFloating;
+        return false;
+    }
 }

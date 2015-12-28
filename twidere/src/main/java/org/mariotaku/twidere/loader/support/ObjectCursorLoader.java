@@ -24,7 +24,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.LoaderTrojan;
+import android.support.v4.content.LoaderAccessor;
 
 import org.mariotaku.library.objectcursor.ObjectCursor;
 
@@ -247,7 +247,7 @@ public class ObjectCursorLoader<T> extends AsyncTaskLoader<List<T>> {
         writer.println(mObjects);
         writer.print(prefix);
         writer.print("mContentChanged=");
-        writer.println(LoaderTrojan.isContentChanged(this));
+        writer.println(LoaderAccessor.isContentChanged(this));
     }
 
 }

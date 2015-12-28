@@ -43,7 +43,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManagerTrojan;
+import android.support.v4.app.FragmentManagerAccessor;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
@@ -1167,7 +1167,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 final Fragment cardFragment = TwitterCardUtils.createCardFragment(status);
                 final FragmentManager fm = fragment.getChildFragmentManager();
-                if (cardFragment != null && !FragmentManagerTrojan.isStateSaved(fm)) {
+                if (cardFragment != null && !FragmentManagerAccessor.isStateSaved(fm)) {
                     final FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.twitter_card, cardFragment);
                     ft.commit();

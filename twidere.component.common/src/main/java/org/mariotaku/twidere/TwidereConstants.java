@@ -67,6 +67,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String PROTOCOL_CONTENT = SCHEME_CONTENT + "://";
     String PROTOCOL_TWIDERE = SCHEME_TWIDERE + "://";
 
+    String AUTHORITY_TWIDERE_FILE = "twidere.file";
+
     String AUTHORITY_USER = "user";
     String AUTHORITY_HOME = "home";
     String AUTHORITY_MENTIONS = "mentions";

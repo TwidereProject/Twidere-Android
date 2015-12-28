@@ -43,7 +43,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.DrawerLayoutTrojan;
+import android.support.v4.widget.DrawerLayoutAccessor;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -257,7 +257,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             switch (action) {
                 case ACTION_NAVIGATION_PREVIOUS_TAB: {
                     final int previous = mViewPager.getCurrentItem() - 1;
-                    if (previous < 0 && DrawerLayoutTrojan.findDrawerWithGravity(mDrawerLayout, Gravity.START) != null) {
+                    if (previous < 0 && DrawerLayoutAccessor.findDrawerWithGravity(mDrawerLayout, Gravity.START) != null) {
                         mDrawerLayout.openDrawer(GravityCompat.START);
                         setControlBarVisibleAnimate(true);
                     } else if (previous < mPagerAdapter.getCount()) {
@@ -271,7 +271,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
                 case ACTION_NAVIGATION_NEXT_TAB: {
                     final int next = mViewPager.getCurrentItem() + 1;
-                    if (next >= mPagerAdapter.getCount() && DrawerLayoutTrojan.findDrawerWithGravity(mDrawerLayout, Gravity.END) != null) {
+                    if (next >= mPagerAdapter.getCount() && DrawerLayoutAccessor.findDrawerWithGravity(mDrawerLayout, Gravity.END) != null) {
                         mDrawerLayout.openDrawer(GravityCompat.END);
                         setControlBarVisibleAnimate(true);
                     } else if (next >= 0) {

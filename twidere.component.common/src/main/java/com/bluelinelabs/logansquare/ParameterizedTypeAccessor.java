@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,25 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package android.support.v7.app;
+package com.bluelinelabs.logansquare;
 
-import android.support.annotation.Nullable;
+import java.lang.reflect.Type;
 
 /**
- * Created by mariotaku on 15/4/27.
+ * Created by mariotaku on 15/12/13.
  */
-public class AppCompatDelegateTrojan {
+public class ParameterizedTypeAccessor {
 
-    @Nullable
-    public static ActionBar peekActionBar(@Nullable AppCompatDelegate delegate) {
-        if (delegate instanceof AppCompatDelegateImplBase)
-            return ((AppCompatDelegateImplBase) delegate).peekSupportActionBar();
-        return null;
+    public static <T> ParameterizedType<T> create(Type type) {
+        return new ParameterizedType.ConcreteParameterizedType<>(type);
     }
 
-    public static boolean isFloating(AppCompatDelegate delegate) {
-        if (delegate instanceof AppCompatDelegateImplBase)
-            return ((AppCompatDelegateImplBase) delegate).mIsFloating;
-        return false;
-    }
 }

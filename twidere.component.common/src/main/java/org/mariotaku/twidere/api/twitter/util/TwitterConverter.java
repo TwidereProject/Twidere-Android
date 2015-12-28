@@ -23,7 +23,7 @@ import android.support.v4.util.SimpleArrayMap;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.ParameterizedType;
-import com.bluelinelabs.logansquare.ParameterizedTypeTrojan;
+import com.bluelinelabs.logansquare.ParameterizedTypeAccessor;
 import com.fasterxml.jackson.core.JsonParseException;
 
 import org.mariotaku.restfu.Converter;
@@ -69,7 +69,7 @@ public class TwitterConverter implements Converter {
 
     private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Type type) throws IOException, TwitterException {
         try {
-            final ParameterizedType<T> parameterizedType = ParameterizedTypeTrojan.create(type);
+            final ParameterizedType<T> parameterizedType = ParameterizedTypeAccessor.create(type);
             final T parse = LoganSquare.parse(stream, parameterizedType);
             if (TwitterException.class == type && parse == null) {
                 throw new TwitterException();

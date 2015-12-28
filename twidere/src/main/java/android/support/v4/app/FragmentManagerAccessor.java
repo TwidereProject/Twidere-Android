@@ -2,7 +2,7 @@ package android.support.v4.app;
 
 import android.support.v4.view.LayoutInflaterFactory;
 
-public class FragmentManagerTrojan {
+public class FragmentManagerAccessor {
 
     public static boolean isStateSaved(final FragmentManager fm) {
         if (fm instanceof FragmentManagerImpl) return ((FragmentManagerImpl) fm).mStateSaved;

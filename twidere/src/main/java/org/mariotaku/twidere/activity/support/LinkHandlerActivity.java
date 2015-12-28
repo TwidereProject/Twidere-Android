@@ -110,7 +110,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     public int getThemeResourceId() {
-        return ThemeUtils.getDialogWhenLargeThemeResource(this);
+        return ThemeUtils.getNoActionBarThemeResource(this);
     }
 
     @Override

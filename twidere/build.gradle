@@ -114,6 +114,7 @@ dependencies {
     compile fileTree(dir: 'libs/main', include: ['*.jar'])
     provided 'javax.annotation:jsr250-api:1.0'
 //    googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }
 
 task svgToDrawable(type: SvgDrawableTask) {

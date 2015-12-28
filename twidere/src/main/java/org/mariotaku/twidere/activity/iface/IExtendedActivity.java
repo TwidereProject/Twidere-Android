@@ -17,17 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bluelinelabs.logansquare;
-
-import java.lang.reflect.Type;
+package org.mariotaku.twidere.activity.iface;
 
 /**
- * Created by mariotaku on 15/12/13.
+ * Created by mariotaku on 15/12/28.
  */
-public class ParameterizedTypeTrojan {
+public interface IExtendedActivity {
 
-    public static <T> ParameterizedType<T> create(Type type) {
-        return new ParameterizedType.ConcreteParameterizedType<>(type);
+    void executeAfterFragmentResumed(Action action);
+
+    interface Action {
+        void execute(IExtendedActivity activity);
     }
-
 }

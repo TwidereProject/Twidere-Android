@@ -17,13 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package android.support.v4.content;
+package android.support.v4.widget;
+
+import android.view.View;
 
 /**
- * Created by mariotaku on 15/7/5.
+ * Created by mariotaku on 15/7/18.
  */
-public class LoaderTrojan {
-    public static <T> boolean isContentChanged(final Loader<T> loader) {
-        return loader.mContentChanged;
+public class DrawerLayoutAccessor {
+
+    public static View findDrawerWithGravity(DrawerLayout layout, int gravity) {
+        return layout.findDrawerWithGravity(gravity);
     }
+
 }

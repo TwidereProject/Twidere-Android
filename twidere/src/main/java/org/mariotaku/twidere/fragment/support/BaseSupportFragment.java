@@ -30,7 +30,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManagerTrojan;
+import android.support.v4.app.FragmentManagerAccessor;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.view.LayoutInflater;
@@ -193,7 +193,7 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
         }
         final LayoutInflater inflater = activity.getLayoutInflater().cloneInContext(getThemedContext());
         getChildFragmentManager(); // Init if needed; use raw implementation below.
-        final LayoutInflaterFactory delegate = FragmentManagerTrojan.getLayoutInflaterFactory(getChildFragmentManager());
+        final LayoutInflaterFactory delegate = FragmentManagerAccessor.getLayoutInflaterFactory(getChildFragmentManager());
         LayoutInflaterCompat.setFactory(inflater, new ThemedLayoutInflaterFactory((IThemedActivity) activity, delegate));
         return inflater;
     }
