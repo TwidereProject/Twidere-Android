@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.LruCache;
 
@@ -72,7 +73,7 @@ public class ExternalThemeManager implements Constants {
         emoji = new Emoji(application, emojiPackageName);
     }
 
-    @NonNull
+    @Nullable
     public Emoji getEmoji() {
         return emoji;
     }

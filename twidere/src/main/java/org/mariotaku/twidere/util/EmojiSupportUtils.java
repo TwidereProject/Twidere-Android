@@ -47,7 +47,7 @@ public class EmojiSupportUtils {
     public static void applyEmoji(ExternalThemeManager manager, @NonNull Spannable text,
                                   int textStart, int textLength) {
         final ExternalThemeManager.Emoji emoji = manager.getEmoji();
-        if (!emoji.isSupported()) return;
+        if (emoji == null || !emoji.isSupported()) return;
         final CodePointArray array = new CodePointArray(text);
         for (int arrayIdx = array.length() - 1; arrayIdx >= 0; arrayIdx--) {
             final int codePoint = array.get(arrayIdx);
