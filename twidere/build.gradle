@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.21.2'
     }
 }
 import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
@@ -44,12 +44,14 @@ android {
         debug {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm")
             versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
+            resValue("bool", "debug", "true")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd")
             versionNameSuffix String.format(" (dev %s)", format.format(new Date()))
+            resValue("bool", "debug", "false")
         }
     }
     sourceSets {
@@ -100,7 +102,7 @@ dependencies {
     compile 'commons-primitives:commons-primitives:1.0'
     compile 'com.bluelinelabs:logansquare:1.3.4'
     compile 'org.jraf:android-switch-backport:2.0.1'
-    compile 'com.github.FasterXML:jackson-jr-trees:5baf62567e'
+    compile 'com.github.mariotaku:jackson-jr-trees:7fe682ee09'
     compile 'com.makeramen:roundedimageview:2.1.1'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'

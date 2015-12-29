@@ -183,7 +183,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     private void initBugReport() {
         final SharedPreferences preferences = getSharedPreferences();
-        if (!preferences.getBoolean(KEY_BUG_REPORTS, true)) return;
+        if (!preferences.getBoolean(KEY_BUG_REPORTS, BuildConfig.DEBUG)) return;
         BugReporter.setImplementation(new TwidereBugReporter());
         BugReporter.init(this);
     }

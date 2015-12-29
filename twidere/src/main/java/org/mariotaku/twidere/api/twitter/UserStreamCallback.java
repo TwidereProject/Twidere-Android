@@ -23,7 +23,7 @@ import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.simple.tree.SimpleTreeCodec;
+import com.fasterxml.jackson.jr.tree.JacksonJrSimpleTreeCodec;
 
 import org.mariotaku.restfu.callback.RawCallback;
 import org.mariotaku.restfu.http.RestHttpResponse;
@@ -56,7 +56,7 @@ public abstract class UserStreamCallback implements RawCallback {
             onException(cause);
             return;
         }
-        final SimpleTreeCodec mapper = new SimpleTreeCodec();
+        final JacksonJrSimpleTreeCodec mapper = new JacksonJrSimpleTreeCodec();
         final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), "UTF-8"));
         try {
             for (String line; (line = reader.readLine()) != null && !disconnected; ) {

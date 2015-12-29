@@ -21,7 +21,9 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 
+import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 
 import java.util.List;
@@ -46,8 +48,21 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
 
 
     @Override
-    protected String getActivityAction(int position) {
+    public String getActivityAction(int position) {
+        if (mData instanceof ObjectCursor) {
+            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
+            return ((ObjectCursor) mData).getCursor(position).getString(indices.action);
+        }
         return mData.get(position).action;
+    }
+
+    @Override
+    public long getTimestamp(int position) {
+        if (mData instanceof ObjectCursor) {
+            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
+            return ((ObjectCursor) mData).getCursor(position).getLong(indices.timestamp);
+        }
+        return mData.get(position).timestamp;
     }
 
     @Override

@@ -28,7 +28,7 @@
         android:title="@string/usage_statistics"/>
 
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="@bool/debug"
         android:key="bug_reports"
         android:order="12"
         android:summary="@string/bug_reports_summary"

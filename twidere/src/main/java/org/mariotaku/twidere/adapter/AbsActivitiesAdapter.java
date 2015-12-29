@@ -340,7 +340,9 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     protected abstract void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position);
 
-    protected abstract String getActivityAction(int position);
+    public abstract String getActivityAction(int position);
+
+    public abstract long getTimestamp(int position);
 
     @Override
     public boolean isMediaPreviewEnabled() {
@@ -362,6 +364,10 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     public void setShowAccountsColor(boolean showAccountsColor) {
         mStatusAdapterDelegate.setShouldShowAccountsColor(showAccountsColor);
         notifyDataSetChanged();
+    }
+
+    public boolean isActivity(int position) {
+        return position < getActivityCount();
     }
 
 

@@ -176,18 +176,11 @@ public class CustomTabUtils implements Constants {
     @Nullable
     private static String getTagByType(@NonNull String tabType) {
         switch (getTabTypeAlias(tabType)) {
-            case TAB_TYPE_HOME_TIMELINE: {
-                return TAB_TYPE_HOME_TIMELINE;
-            }
-            case "mentions_timeline": {
-                return "mentions_timeline";
-            }
-            case TAB_TYPE_NOTIFICATIONS_TIMELINE: {
-                return TAB_TYPE_NOTIFICATIONS_TIMELINE;
-            }
-            case TAB_TYPE_DIRECT_MESSAGES: {
-                return TAB_TYPE_DIRECT_MESSAGES;
-            }
+            case TAB_TYPE_HOME_TIMELINE:
+            case TAB_TYPE_NOTIFICATIONS_TIMELINE:
+            case TAB_TYPE_ACTIVITIES_ABOUT_ME:
+            case TAB_TYPE_DIRECT_MESSAGES:
+                return tabType;
         }
         return null;
     }

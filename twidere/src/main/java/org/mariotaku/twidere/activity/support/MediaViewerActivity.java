@@ -20,12 +20,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
 import android.os.Build;
@@ -890,7 +892,15 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     new SaveFileTask.StringMimeTypeCallback(mimeType)) {
                 @Override
                 protected void onFileSaved(File savedFile, String mimeType) {
-
+                    final Context context = getContext();
+                    if (context == null) return;
+                    if (savedFile != null && savedFile.exists()) {
+                        MediaScannerConnection.scanFile(context, new String[]{savedFile.getPath()},
+                                new String[]{mimeType}, null);
+                        Toast.makeText(context, R.string.saved_to_gallery, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, R.string.error_occurred, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -985,20 +995,6 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !hasVideo && !isLoading);
             MenuUtils.setMenuItemAvailability(menu, R.id.share, hasVideo && !isLoading);
             MenuUtils.setMenuItemAvailability(menu, R.id.save, hasVideo && !isLoading);
-            if (!hasVideo) return;
-            final MenuItem shareItem = menu.findItem(R.id.share);
-            final Intent intent = new Intent(Intent.ACTION_SEND);
-            final Uri fileUri = Uri.fromFile(file);
-            intent.setDataAndType(fileUri, linkAndType.second);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
-            if (activity.hasStatus()) {
-                final ParcelableStatus status = activity.getStatus();
-                intent.putExtra(Intent.EXTRA_TEXT, Utils.getStatusShareText(activity, status));
-                intent.putExtra(Intent.EXTRA_SUBJECT, Utils.getStatusShareSubject(activity, status));
-            }
-            shareItem.setIntent(Intent.createChooser(intent, getString(R.string.share)));
         }
 
 
@@ -1018,6 +1014,21 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 case R.id.refresh: {
                     loadVideo(true);
                     return true;
+                }
+                case R.id.share: {
+                    if (mVideoFile == null || mVideoUrlAndType == null) return true;
+                    final Intent intent = new Intent(Intent.ACTION_SEND);
+                    final Uri fileUri = Uri.fromFile(mVideoFile);
+                    intent.setDataAndType(fileUri, mVideoUrlAndType.second);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                    final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
+                    if (activity.hasStatus()) {
+                        final ParcelableStatus status = activity.getStatus();
+                        intent.putExtra(Intent.EXTRA_TEXT, Utils.getStatusShareText(activity, status));
+                        intent.putExtra(Intent.EXTRA_SUBJECT, Utils.getStatusShareSubject(activity, status));
+                    }
+                    Intent.createChooser(intent, getString(R.string.share));
                 }
             }
             return super.onOptionsItemSelected(item);

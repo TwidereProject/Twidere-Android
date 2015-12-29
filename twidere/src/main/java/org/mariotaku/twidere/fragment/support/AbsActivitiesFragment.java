@@ -43,7 +43,6 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
-import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -61,8 +60,10 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.MediaEvent;
@@ -76,7 +77,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
 
         public List<ScrollRecord> mRecords;
-        private long mFirstVisibleId = -1, mFirstVisibleAccountId = -1;
+        private long mFirstVisibleTimestamp = -1, mFirstVisibleAccountId = -1;
         private int mFirstVisiblePosition = -1;
         private int mScrollState;
 
@@ -89,15 +90,15 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 final AbsActivitiesAdapter<Data> adapter = (AbsActivitiesAdapter<Data>) recyclerView.getAdapter();
                 final ParcelableActivity activity = adapter.getActivity(firstVisiblePosition);
                 if (activity != null) {
-//                    final long id = activity.id, accountId = activity.account_id;
-//                    if (id != mFirstVisibleId || accountId != mFirstVisibleAccountId) {
-//                        if (mRecords == null) mRecords = new ArrayList<>();
-//                        final long time = System.currentTimeMillis();
-//                        mRecords.add(ScrollRecord.create(id, accountId, time,
-//                                TimeZone.getDefault().getOffset(time), mScrollState));
-//                    }
-//                    mFirstVisibleId = id;
-//                    mFirstVisibleAccountId = accountId;
+                    final long timestamp = activity.timestamp, accountId = activity.account_id;
+                    if (timestamp != mFirstVisibleTimestamp || accountId != mFirstVisibleAccountId) {
+                        if (mRecords == null) mRecords = new ArrayList<>();
+                        final long time = System.currentTimeMillis();
+                        mRecords.add(ScrollRecord.create(timestamp, accountId, time,
+                                TimeZone.getDefault().getOffset(time), mScrollState));
+                    }
+                    mFirstVisibleTimestamp = timestamp;
+                    mFirstVisibleAccountId = accountId;
                 }
             }
             mFirstVisiblePosition = firstVisiblePosition;
@@ -256,7 +257,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             lastVisiblePos = layoutManager.findFirstVisibleItemPosition();
         }
         if (lastVisiblePos != RecyclerView.NO_POSITION && lastVisiblePos < adapter.getItemCount()) {
-//            lastReadId = adapter.getStatusId(lastVisiblePos);
+            lastReadId = adapter.getTimestamp(lastVisiblePos);
             final View positionView = layoutManager.findViewByPosition(lastVisiblePos);
             lastVisibleTop = positionView != null ? positionView.getTop() : 0;
         } else if (rememberPosition && tag != null) {
@@ -271,20 +272,20 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             adapter.setLoadMoreSupported(hasMoreData(data));
             int pos = -1;
-//            for (int i = 0, j = adapter.getItemCount(); i < j; i++) {
-//                if (lastReadId != -1 && lastReadId == adapter.getStatusId(i)) {
-//                    pos = i;
-//                    break;
-//                }
-//            }
-//            if (pos != -1 && adapter.isStatus(pos) && (readFromBottom || lastVisiblePos != 0)) {
-//                if (layoutManager.getHeight() == 0) {
-//                    // RecyclerView has not currently laid out, ignore padding.
-//                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop);
-//                } else {
-//                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - layoutManager.getPaddingTop());
-//                }
-//            }
+            for (int i = 0, j = adapter.getItemCount(); i < j; i++) {
+                if (lastReadId != -1 && lastReadId == adapter.getTimestamp(i)) {
+                    pos = i;
+                    break;
+                }
+            }
+            if (pos != -1 && adapter.isActivity(pos) && (readFromBottom || lastVisiblePos != 0)) {
+                if (layoutManager.getHeight() == 0) {
+                    // RecyclerView has not currently laid out, ignore padding.
+                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop);
+                } else {
+                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - layoutManager.getPaddingTop());
+                }
+            }
         }
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);

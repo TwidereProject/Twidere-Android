@@ -49,7 +49,6 @@ public class TwidereBugReporter extends BugReporter implements Constants {
             if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, message, throwable);
             }
-
             handleSilentException(new Exception(message, throwable));
             return;
         }
