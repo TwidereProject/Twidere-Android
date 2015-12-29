@@ -223,7 +223,7 @@ public class TwidereDns implements Constants, Dns {
         for (final Record record : records) {
             if (record instanceof CNAMERecord)
                 return resolveInternal(originalHost, ((CNAMERecord) record).getTarget().toString(),
-                        +1);
+                        depth + 1);
         }
         return null;
     }

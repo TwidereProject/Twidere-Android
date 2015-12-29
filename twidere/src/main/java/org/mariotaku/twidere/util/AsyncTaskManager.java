@@ -108,6 +108,14 @@ public final class AsyncTaskManager {
         return false;
     }
 
+    public void cancel(final String tag) {
+        for (final ManagedAsyncTask<?, ?, ?> task : getTaskSpecList()) {
+            if (tag.equals(task.getTag())) {
+                task.cancel(true);
+            }
+        }
+    }
+
     public boolean isExecuting(final int hashCode) {
         final ManagedAsyncTask<?, ?, ?> task = findTask(hashCode);
         return task != null && task.getStatus() == AsyncTask.Status.RUNNING;

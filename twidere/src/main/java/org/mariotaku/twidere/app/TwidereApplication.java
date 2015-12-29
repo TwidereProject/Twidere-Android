@@ -39,7 +39,6 @@ import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
 import com.squareup.okhttp.Dns;
 
-import org.acra.annotation.ReportsCrashes;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
@@ -67,9 +66,6 @@ import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 
-@ReportsCrashes(formUri = "https://twidere-bugreport.herokuapp.com/reports",
-        buildConfigClass = BuildConfig.class, sendReportsInDevMode = false,
-        sendReportsAtShutdown = false)
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
 

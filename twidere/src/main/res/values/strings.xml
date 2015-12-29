@@ -801,6 +801,7 @@
     <string name="report_usage_statistics_now">Report usage statistics now</string>
     <string name="cache_size_limit">Cache size limit</string>
     <string name="bug_reports">Bug reports</string>
+    <string name="bug_reports_summary">Powered by Fabric</string>
     <string name="invalid_consumer_key">Invalid consumer key</string>
     <string name="invalid_consumer_secret">Invalid consumer secret</string>
     <string name="page_up">Page up</string>

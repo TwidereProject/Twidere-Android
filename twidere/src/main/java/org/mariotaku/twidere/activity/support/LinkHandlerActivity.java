@@ -237,7 +237,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         }
         mMainContent.setOnFitSystemWindowsListener(this);
         setStatusBarColor(linkId, data);
-        setTaskInfo(linkId, data);
         Utils.logOpenNotificationFromUri(this, data);
         if (!showFragment(linkId, data)) {
             finish();
@@ -393,21 +392,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getCurrentThemeResourceId(), getThemeBackgroundOption());
         mMainContent.setColor(statusBarColor, alpha);
         StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
-    }
-
-    private void setTaskInfo(int linkId, Uri uri) {
-        switch (linkId) {
-//            case LINK_ID_USER: {
-//                break;
-//            }
-            default: {
-                if (ThemeUtils.isColoredActionBar(getCurrentThemeResourceId())) {
-                    ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null,
-                            getCurrentThemeColor()));
-                }
-                break;
-            }
-        }
     }
 
     private boolean showFragment(final int linkId, final Uri uri) {
@@ -587,6 +571,15 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     public int getControlBarHeight() {
         if (mActionBarHeight != 0) return mActionBarHeight;
         return mActionBarHeight = ThemeUtils.getActionBarHeight(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ThemeUtils.isColoredActionBar(getCurrentThemeResourceId())) {
+            ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null,
+                    getCurrentThemeColor()));
+        }
     }
 
     public ActionBarContainer getActionBarContainer() {

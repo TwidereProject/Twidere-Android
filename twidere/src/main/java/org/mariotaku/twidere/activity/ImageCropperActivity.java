@@ -23,7 +23,9 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.WindowCompat;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -61,11 +63,11 @@ public class ImageCropperActivity extends CropImageActivity implements IThemedAc
     }
 
     @Override
-    public void onCreate(final Bundle icicle) {
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        super.onCreate(icicle);
         final int themeColor = getThemeColor();
         final int themeResId = getCurrentThemeResourceId();
         final String backgroundOption = getCurrentThemeBackgroundOption();

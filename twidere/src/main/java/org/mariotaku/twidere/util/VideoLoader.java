@@ -81,7 +81,8 @@ public class VideoLoader {
 
     public int loadVideo(String uri, boolean forceReload, VideoLoadingListener listener) {
         if (mTaskManager.hasRunningTasksForTag(uri)) {
-            return 0;
+            if (!forceReload) return 0;
+            mTaskManager.cancel(uri);
         }
         return mTaskManager.add(new PreLoadVideoTask(mContext, this, listener, uri, forceReload), true);
     }

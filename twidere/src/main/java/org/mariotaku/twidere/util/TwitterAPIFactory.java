@@ -9,7 +9,6 @@ import android.net.SSLCertificateSocketFactory;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
@@ -144,11 +143,12 @@ public class TwitterAPIFactory implements TwidereConstants {
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
 
         client.setConnectTimeout(connectionTimeout, TimeUnit.SECONDS);
-        final long connectionTimeoutMillis = TimeUnit.MILLISECONDS.convert(connectionTimeout, TimeUnit.SECONDS);
+        client.setReadTimeout(0, TimeUnit.SECONDS);
+        client.setWriteTimeout(0, TimeUnit.SECONDS);
         final SSLSocketFactory sslSocketFactory;
         if (ignoreSslError) {
             // We intentionally use insecure connections
-            sslSocketFactory = SSLCertificateSocketFactory.getInsecure((int) connectionTimeoutMillis, null);
+            sslSocketFactory = SSLCertificateSocketFactory.getInsecure(0, null);
             if (sslSocketFactory instanceof SSLCertificateSocketFactory) {
 
             }

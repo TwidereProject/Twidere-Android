@@ -435,6 +435,11 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+        if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
+            // TODO show dark bar
+        } else {
+            ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null, getThemeColor()));
+        }
         sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONRESUME));
         invalidateOptionsMenu();
         updateActionsButtonStyle();
@@ -794,7 +799,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             mTabIndicator.setStripColor(contrastColor);
             mTabIndicator.setIconColor(contrastColor);
             mTabIndicator.setLabelColor(contrastColor);
-            ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null, themeColor));
         }
         mHomeContent.setDrawColor(true);
         mHomeContent.setDrawShadow(false);

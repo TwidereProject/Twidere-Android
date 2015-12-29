@@ -1114,9 +1114,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
          * Has media & Not reply: [Take photo][Media menu][Attach location][Drafts]
          * Is reply: [Media menu][View status][Attach location][Drafts]
          */
-        MenuUtils.setMenuItemAvailability(menu, R.id.take_photo, hasInReplyTo);
-        MenuUtils.setMenuItemAvailability(menu, R.id.add_image, !hasMedia && !hasInReplyTo);
-        MenuUtils.setMenuItemAvailability(menu, R.id.media_menu, hasMedia || hasInReplyTo);
+        MenuUtils.setMenuItemAvailability(menu, R.id.add_image, !hasMedia);
+        MenuUtils.setMenuItemAvailability(menu, R.id.media_menu, hasMedia);
         MenuUtils.setMenuItemAvailability(menu, R.id.toggle_sensitive, hasMedia);
         MenuUtils.setMenuItemAvailability(menu, R.id.link_to_quoted_status, isQuote());
         MenuUtils.setMenuItemAvailability(menu, R.id.schedule, isScheduleSupported());
