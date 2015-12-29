@@ -19,7 +19,6 @@
             android:title="@string/tcp_dns_query"/>
 
         <org.mariotaku.twidere.preference.SummaryEditTextPreference
-            android:defaultValue="8.8.8.8"
             android:dialogTitle="@string/dns_server"
             android:inputType="textVisiblePassword"
             android:key="dns_server"

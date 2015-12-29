@@ -5,6 +5,7 @@
 JNIEXPORT jint JNICALL
 Java_org_mariotaku_twidere_util_net_InetAddressUtils_getInetAddressType(JNIEnv *env, jclass type,
                                                                         jstring input_) {
+    if (input_ == NULL) return AF_UNSPEC;
     const char *input = (*env)->GetStringUTFChars(env, input_, 0);
 
     struct sockaddr addr;
@@ -23,6 +24,8 @@ JNIEXPORT jobject JNICALL
 Java_org_mariotaku_twidere_util_net_InetAddressUtils_getResolvedIPAddress(JNIEnv *env, jclass type,
                                                                           jstring host_,
                                                                           jstring address_) {
+    if (address_ == NULL) return NULL;
+
     const char *address = (*env)->GetStringUTFChars(env, address_, 0);
 
     jclass addressClass = (*env)->FindClass(env, "java/net/InetAddress");

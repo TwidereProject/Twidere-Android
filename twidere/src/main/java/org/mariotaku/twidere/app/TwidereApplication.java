@@ -37,6 +37,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
+import com.squareup.okhttp.Dns;
 
 import org.acra.annotation.ReportsCrashes;
 import org.apache.commons.lang3.ArrayUtils;
@@ -57,6 +58,7 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache;
 import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator;
+import org.mariotaku.twidere.util.net.TwidereDns;
 
 import java.io.File;
 import java.io.IOException;
@@ -237,6 +239,10 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             case KEY_PROXY_PORT:
                 reloadConnectivitySettings();
                 break;
+            case KEY_DNS_SERVER:
+            case KEY_TCP_DNS_QUERY:
+                reloadDnsSettings();
+                break;
             case KEY_CONSUMER_KEY:
             case KEY_CONSUMER_SECRET:
             case KEY_API_URL_FORMAT:
@@ -252,6 +258,13 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             case KEY_EMOJI_SUPPORT:
                 getApplicationModule().getExternalThemeManager().initEmojiSupport();
                 break;
+        }
+    }
+
+    private void reloadDnsSettings() {
+        final Dns dns = getApplicationModule().getDns();
+        if (dns instanceof TwidereDns) {
+            ((TwidereDns) dns).reloadDnsSettings();
         }
     }
 

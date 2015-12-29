@@ -21,8 +21,10 @@ package org.mariotaku.twidere.util.net;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 import android.util.LruCache;
 import android.util.TimingLogger;
@@ -52,28 +54,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 public class TwidereDns implements Constants, Dns {
 
     private static final String RESOLVER_LOGTAG = "TwidereDns";
 
-    private static final String DEFAULT_DNS_SERVER_ADDRESS = "8.8.8.8";
-
     private final SharedPreferences mHostMapping, mPreferences;
-    private final LruCache<String, InetAddress[]> mHostCache = new LruCache<>(512);
-    private final String mDnsAddress;
+    private final HostCache mHostCache = new HostCache(512);
     private final SystemHosts mSystemHosts;
 
-    private Resolver mDns;
+    private Resolver mResolver;
     private TimingLogger mLogger;
 
     public TwidereDns(final Context context) {
         mLogger = new TimingLogger(RESOLVER_LOGTAG, "resolve");
         mHostMapping = SharedPreferencesWrapper.getInstance(context, HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final String address = mPreferences.getString(KEY_DNS_SERVER, DEFAULT_DNS_SERVER_ADDRESS);
-        mDnsAddress = isValidIpAddress(address) ? address : DEFAULT_DNS_SERVER_ADDRESS;
         mSystemHosts = new SystemHosts();
+    }
+
+    private static boolean hostMatches(final String host, final String rule) {
+        if (rule == null || host == null) return false;
+        if (rule.startsWith(".")) return StringUtils.endsWithIgnoreCase(host, rule);
+        return host.equalsIgnoreCase(rule);
+    }
+
+    private static boolean isValidIpAddress(final String address) {
+        return InetAddressUtils.getInetAddressType(address) != 0;
     }
 
     @SuppressWarnings("unused")
@@ -81,15 +89,15 @@ public class TwidereDns implements Constants, Dns {
         mHostCache.remove(host);
     }
 
-
     @NonNull
-    private InetAddress[] resolveInternal(String originalHost, String host) throws IOException {
-        mLogger.reset();
+    private InetAddress[] resolveInternal(String originalHost, String host, int depth) throws IOException {
+        resetLog(originalHost);
         // Return if host is an address
         final InetAddress[] fromAddressString = fromAddressString(originalHost, host);
         if (fromAddressString != null) {
             if (BuildConfig.DEBUG) {
-                mLogger.dumpToLog();
+                addLogSplit(originalHost, host, "valid ip address", depth);
+                dumpLog();
             }
             return fromAddressString;
         }
@@ -97,46 +105,71 @@ public class TwidereDns implements Constants, Dns {
         final InetAddress[] fromCache = getCached(host);
         if (fromCache != null) {
             if (BuildConfig.DEBUG) {
-                mLogger.dumpToLog();
+                addLogSplit(originalHost, host, "hit cache", depth);
+                dumpLog();
             }
             return fromCache;
         }
         // Load from custom mapping
-        mLogger.addSplit("start custom mappong resolve");
+        addLogSplit(originalHost, host, "start custom mapping resolve", depth);
         final InetAddress[] fromMapping = getFromMapping(host);
-        mLogger.addSplit("end custom mappong resolve");
+        addLogSplit(originalHost, host, "end custom mapping resolve", depth);
         if (fromMapping != null) {
-            putCache(originalHost, fromMapping);
+            putCache(originalHost, fromMapping, -1, TimeUnit.SECONDS);
             if (BuildConfig.DEBUG) {
-                mLogger.dumpToLog();
+                dumpLog();
             }
             return fromMapping;
         }
         // Load from /etc/hosts
-        mLogger.addSplit("start /etc/hosts resolve");
+        addLogSplit(originalHost, host, "start /etc/hosts resolve", depth);
         final InetAddress[] fromSystemHosts = fromSystemHosts(host);
-        mLogger.addSplit("end /etc/hosts resolve");
+        addLogSplit(originalHost, host, "end /etc/hosts resolve", depth);
         if (fromSystemHosts != null) {
-            putCache(originalHost, fromSystemHosts);
+            putCache(originalHost, fromSystemHosts, 60, TimeUnit.SECONDS);
             if (BuildConfig.DEBUG) {
-                mLogger.dumpToLog();
+                dumpLog();
             }
             return fromSystemHosts;
         }
         // Use TCP DNS Query if enabled.
-//        final Resolver dns = getResolver();
-//        if (dns != null && mPreferences.getBoolean(KEY_TCP_DNS_QUERY, false)) {
-//            final InetAddress[] hostAddr = resolveDns(originalHost, host, dns);
-//            if (hostAddr != null) return hostAddr;
-//        }
-        mLogger.addSplit("start system default resolve");
-        final InetAddress[] defaultAddresses = InetAddress.getAllByName(host);
-        mLogger.addSplit("end system default resolve");
-        putCache(host, defaultAddresses);
-        if (BuildConfig.DEBUG) {
-            mLogger.dumpToLog();
+        addLogSplit(originalHost, host, "start resolver resolve", depth);
+        final InetAddress[] fromResolver = fromResolver(originalHost, host, depth);
+        addLogSplit(originalHost, host, "end resolver resolve", depth);
+        if (fromResolver != null) {
+            if (BuildConfig.DEBUG) {
+                dumpLog();
+            }
+            return fromResolver;
         }
-        return defaultAddresses;
+        addLogSplit(originalHost, host, "start system default resolve", depth);
+        final InetAddress[] fromDefault = InetAddress.getAllByName(host);
+        addLogSplit(originalHost, host, "end system default resolve", depth);
+        putCache(host, fromDefault, 0, TimeUnit.SECONDS);
+        if (BuildConfig.DEBUG) {
+            dumpLog();
+        }
+        return fromDefault;
+    }
+
+    private void dumpLog() {
+        mLogger.dumpToLog();
+    }
+
+    private void resetLog(String originalHost) {
+        mLogger.reset(RESOLVER_LOGTAG, originalHost);
+    }
+
+    private void addLogSplit(String originalHost, String host, String message, int depth) {
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < depth; i++) {
+            sb.append(">");
+        }
+        sb.append(" ");
+        sb.append(host);
+        sb.append(": ");
+        sb.append(message);
+        mLogger.addSplit(sb.toString());
     }
 
     private InetAddress[] fromSystemHosts(String host) {
@@ -148,10 +181,11 @@ public class TwidereDns implements Constants, Dns {
     }
 
     private InetAddress[] getCached(String host) {
-        return mHostCache.get(host);
+        return mHostCache.getValid(host);
     }
 
-    private InetAddress[] resolveDns(String originalHost, String host, Resolver dns) throws IOException {
+    private InetAddress[] fromResolver(String originalHost, String host, int depth) throws IOException {
+        final Resolver dns = getResolver();
         final Lookup lookup = new Lookup(new Name(host), Type.A, DClass.IN);
         final Record[] records;
         lookup.setResolver(dns);
@@ -163,7 +197,11 @@ public class TwidereDns implements Constants, Dns {
         records = lookup.getAnswers();
         final ArrayList<InetAddress> resolvedAddresses = new ArrayList<>();
         // Test each IP address resolved.
+        long ttl = -1;
         for (final Record record : records) {
+            if (ttl == -1) {
+                ttl = record.getTTL();
+            }
             if (record instanceof ARecord) {
                 final InetAddress ipv4Addr = ((ARecord) record).getAddress();
                 resolvedAddresses.add(InetAddress.getByAddress(originalHost, ipv4Addr.getAddress()));
@@ -174,7 +212,7 @@ public class TwidereDns implements Constants, Dns {
         }
         if (!resolvedAddresses.isEmpty()) {
             final InetAddress[] hostAddr = resolvedAddresses.toArray(new InetAddress[resolvedAddresses.size()]);
-            putCache(originalHost, hostAddr);
+            putCache(originalHost, hostAddr, ttl, TimeUnit.SECONDS);
             if (BuildConfig.DEBUG) {
                 Log.v(RESOLVER_LOGTAG, "Resolved " + Arrays.toString(hostAddr));
             }
@@ -184,14 +222,15 @@ public class TwidereDns implements Constants, Dns {
 
         for (final Record record : records) {
             if (record instanceof CNAMERecord)
-                return resolveInternal(originalHost, ((CNAMERecord) record).getTarget().toString());
+                return resolveInternal(originalHost, ((CNAMERecord) record).getTarget().toString(),
+                        +1);
         }
         return null;
     }
 
-    private void putCache(String host, InetAddress[] addresses) {
+    private void putCache(String host, InetAddress[] addresses, long ttl, TimeUnit unit) {
         if (ArrayUtils.isEmpty(addresses) || ArrayUtils.contains(addresses, null)) return;
-        mHostCache.put(host, addresses);
+        mHostCache.put(host, addresses, ttl, unit);
     }
 
     private InetAddress[] fromAddressString(String host, String address) throws UnknownHostException {
@@ -225,28 +264,66 @@ public class TwidereDns implements Constants, Dns {
         return null;
     }
 
+    @NonNull
     private Resolver getResolver() throws IOException {
-        if (mDns != null) return mDns;
-        return mDns = new SimpleResolver(mDnsAddress);
+        if (mResolver != null) return mResolver;
+        final boolean tcp = mPreferences.getBoolean(KEY_TCP_DNS_QUERY, false);
+        final String address = mPreferences.getString(KEY_DNS_SERVER, null);
+        final SimpleResolver resolver;
+        if (isValidIpAddress(address)) {
+            resolver = new SimpleResolver(address);
+        } else {
+            resolver = new SimpleResolver();
+        }
+        resolver.setTCP(tcp);
+        return mResolver = resolver;
     }
 
-    private static boolean hostMatches(final String host, final String rule) {
-        if (rule == null || host == null) return false;
-        if (rule.startsWith(".")) return StringUtils.endsWithIgnoreCase(host, rule);
-        return host.equalsIgnoreCase(rule);
-    }
-
-    private static boolean isValidIpAddress(final String address) {
-        return InetAddressUtils.getInetAddressType(address) != 0;
+    public void reloadDnsSettings() {
+        mResolver = null;
     }
 
     @Override
     public List<InetAddress> lookup(String hostname) throws UnknownHostException {
         try {
-            return Arrays.asList(resolveInternal(hostname, hostname));
+            return Arrays.asList(resolveInternal(hostname, hostname, 0));
         } catch (IOException e) {
             if (e instanceof UnknownHostException) throw (UnknownHostException) e;
             throw new UnknownHostException("Unable to resolve address " + e.getMessage());
+        }
+    }
+
+    private static class HostCache extends LruCache<String, InetAddress[]> {
+
+        private SimpleArrayMap<String, Long> ttlMap = new SimpleArrayMap<>();
+
+        public HostCache(int maxSize) {
+            super(maxSize);
+        }
+
+        public synchronized void put(String host, InetAddress[] addresses, long ttl, TimeUnit unit) {
+            // Don't cache this entry if ttl == 0
+            if (ttl == 0) return;
+            put(host, addresses);
+            // ttl < 0 means permanent entry
+            if (ttl > 0) {
+                ttlMap.put(host, SystemClock.elapsedRealtime() + unit.toMillis(ttl));
+            }
+        }
+
+        public InetAddress[] getValid(String host) {
+            cleanExpired();
+            return get(host);
+        }
+
+
+        private synchronized void cleanExpired() {
+            for (int i = ttlMap.size() - 1; i >= 0; i--) {
+                if (ttlMap.valueAt(i) < SystemClock.elapsedRealtime()) {
+                    remove(ttlMap.keyAt(i));
+                    ttlMap.removeAt(i);
+                }
+            }
         }
     }
 }
