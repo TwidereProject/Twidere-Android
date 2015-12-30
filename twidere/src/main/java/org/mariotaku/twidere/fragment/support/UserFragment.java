@@ -121,7 +121,7 @@ import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
-import org.mariotaku.twidere.util.MathUtils;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -1505,7 +1505,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final View profileBirthdayBannerView = mProfileBirthdayBannerView;
         final View profileBannerContainer = mProfileBannerContainer;
         final int spaceHeight = space.getHeight();
-        final float factor = MathUtils.clamp(spaceHeight == 0 ? 0 : (offset / (float) spaceHeight), 0, 1);
+        final float factor = TwidereMathUtils.clamp(spaceHeight == 0 ? 0 : (offset / (float) spaceHeight), 0, 1);
 //        profileBannerContainer.setTranslationY(Math.max(-offset, -spaceHeight));
 //        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / 2);
         profileBannerContainer.setTranslationY(-offset);
@@ -1519,7 +1519,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final float profileContentHeight = mProfileNameContainer.getHeight() + mProfileDetailsContainer.getHeight();
             final float tabOutlineAlphaFactor;
             if ((offset - spaceHeight) > 0) {
-                tabOutlineAlphaFactor = 1f - MathUtils.clamp((offset - spaceHeight) / profileContentHeight, 0, 1);
+                tabOutlineAlphaFactor = 1f - TwidereMathUtils.clamp((offset - spaceHeight) / profileContentHeight, 0, 1);
             } else {
                 tabOutlineAlphaFactor = 1f;
             }
@@ -1586,7 +1586,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mNameView.getLocationInWindow(location);
         final float nameShowingRatio = (mHeaderDrawerLayout.getPaddingTop() - location[1])
                 / (float) mNameView.getHeight();
-        final float textAlpha = MathUtils.clamp(nameShowingRatio, 0, 1);
+        final float textAlpha = TwidereMathUtils.clamp(nameShowingRatio, 0, 1);
         final ThemedAppCompatActivity activity = (ThemedAppCompatActivity) getActivity();
         final Toolbar actionBarView = activity.getActionBarToolbar();
         if (actionBarView != null) {
@@ -1654,9 +1654,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         public void setFactor(float f) {
             mFactor = f;
-            mShadowDrawable.setAlpha(Math.round(mAlpha * MathUtils.clamp(1 - f, 0, 1)));
+            mShadowDrawable.setAlpha(Math.round(mAlpha * TwidereMathUtils.clamp(1 - f, 0, 1)));
             final boolean hasColor = mColor != 0;
-            mColorDrawable.setAlpha(hasColor ? Math.round(mAlpha * MathUtils.clamp(f, 0, 1)) : 0);
+            mColorDrawable.setAlpha(hasColor ? Math.round(mAlpha * TwidereMathUtils.clamp(f, 0, 1)) : 0);
         }
 
         public void setOutlineAlphaFactor(float f) {

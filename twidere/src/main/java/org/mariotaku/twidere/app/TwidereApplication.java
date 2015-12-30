@@ -49,7 +49,7 @@ import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
-import org.mariotaku.twidere.util.MathUtils;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereBugReporter;
 import org.mariotaku.twidere.util.Utils;
@@ -273,7 +273,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         final File fallbackCacheDir = getInternalCacheDir(this, dirName);
         final URLFileNameGenerator fileNameGenerator = new URLFileNameGenerator();
         final SharedPreferences preferences = getSharedPreferences();
-        final int cacheSize = MathUtils.clamp(preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300), 100, 500);
+        final int cacheSize = TwidereMathUtils.clamp(preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300), 100, 500);
         try {
             final int cacheMaxSizeBytes = cacheSize * 1024 * 1024;
             if (cacheDir != null)

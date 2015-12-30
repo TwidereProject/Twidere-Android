@@ -90,6 +90,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.PermissionUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwitterCardFragmentFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.VideoLoader.VideoLoadingListener;
 
@@ -606,13 +607,17 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 case ParcelableMedia.TYPE_VIDEO: {
                     return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
                 }
-                default: {
+                case ParcelableMedia.TYPE_IMAGE: {
                     if (ANIMATED_GIF_SUPPORTED) {
                         return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
                     }
                     return Fragment.instantiate(mActivity, BaseImagePageFragment.class.getName(), args);
                 }
+                case ParcelableMedia.TYPE_EXTERNAL_PLAYER: {
+                    return TwitterCardFragmentFactory.createGenericPlayerFragment(media.card);
+                }
             }
+            return new UnsupportedPageFragment();
         }
 
         public void setMedia(long accountId, ParcelableMedia[] media) {
@@ -620,6 +625,10 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             mMedia = media;
             notifyDataSetChanged();
         }
+
+    }
+
+    public static class UnsupportedPageFragment extends Fragment {
     }
 
     private static abstract class AbsMediaPageFragment extends BaseSupportFragment {
@@ -629,7 +638,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             } else {
                 final String[] permissions;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+                    permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE};
                 } else {
                     permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
                 }

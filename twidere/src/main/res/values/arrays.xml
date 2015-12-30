@@ -11,16 +11,6 @@
         <item>@string/item_2_hours</item>
         <item>@string/item_4_hours</item>
     </string-array>
-    <string-array name="values_refresh_interval">
-        <item>3</item>
-        <item>5</item>
-        <item>10</item>
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>120</item>
-        <item>240</item>
-    </string-array>
     <string-array name="entries_auto_refresh_content">
         <item>@string/home</item>
         <item>@string/mentions</item>
@@ -45,30 +35,10 @@
         <item>@string/theme_light</item>
         <item>@string/theme_dark</item>
     </string-array>
-    <string-array name="values_theme">
-        <item>light</item>
-        <item>dark</item>
-    </string-array>
-    <string-array name="values_theme_background">
-        <item>default</item>
-        <item>solid</item>
-        <item>transparent</item>
-    </string-array>
     <string-array name="entries_theme_background">
         <item>@string/theme_background_default</item>
         <item>@string/theme_background_solid</item>
         <item>@string/theme_background_transparent</item>
-    </string-array>
-    <string-array name="dependency_values_true">
-        <item>true</item>
-    </string-array>
-    <string-array name="dependency_values_false">
-        <item>false</item>
-    </string-array>
-    <string-array name="values_tab_display_option">
-        <item>icon</item>
-        <item>label</item>
-        <item>both</item>
     </string-array>
     <string-array name="entries_tab_display_option">
         <item>@string/tab_display_option_icon</item>
@@ -85,19 +55,10 @@
         <item>@string/user_colors</item>
         <item>@string/custom_host_mapping</item>
     </string-array>
-    <string-array name="values_compose_now_action">
-        <item>compose</item>
-        <item>take_photo</item>
-        <item>pick_image</item>
-    </string-array>
     <string-array name="entries_compose_now_action">
         <item>@string/compose</item>
         <item>@string/take_photo</item>
         <item>@string/add_image</item>
-    </string-array>
-    <string-array name="values_media_preview_style">
-        <item>crop</item>
-        <item>scale</item>
     </string-array>
     <string-array name="entries_media_preview_style">
         <item>@string/crop</item>
@@ -108,18 +69,13 @@
         <item>@string/source_gallery</item>
         <item>@string/source_clipboard</item>
     </string-array>
-    <string-array name="value_image_sources">
-        <item>camera</item>
-        <item>gallery</item>
-        <item>clipboard</item>
-    </string-array>
-    <string-array name="values_profile_image_style">
-        <item>round</item>
-        <item>square</item>
-    </string-array>
     <string-array name="entries_profile_image_style">
         <item>@string/round</item>
         <item>@string/square</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <item>SOCKS</item>
     </string-array>
 
 </resources>

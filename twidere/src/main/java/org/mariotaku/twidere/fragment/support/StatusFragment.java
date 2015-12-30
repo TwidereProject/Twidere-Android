@@ -116,7 +116,6 @@ import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
-import org.mariotaku.twidere.util.MathUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MenuUtils;
@@ -129,6 +128,7 @@ import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
 import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
@@ -1268,6 +1268,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case R.id.quote_original_link: {
                     Utils.openStatus(adapter.getContext(), status.account_id, status.quoted_id);
+                    break;
                 }
                 case R.id.translate_label: {
                     fragment.loadTranslation(adapter.getStatus());
@@ -1899,7 +1900,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public int getItemCount() {
             if (mStatus == null) return 0;
-            return MathUtils.sum(mItemCounts);
+            return TwidereMathUtils.sum(mItemCounts);
         }
 
         @Override

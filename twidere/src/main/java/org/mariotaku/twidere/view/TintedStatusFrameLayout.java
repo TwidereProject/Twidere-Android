@@ -29,7 +29,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.MathUtils;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 
@@ -145,8 +145,8 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
 
     private void updateAlpha() {
         final float f = mFactor;
-        mShadowPaint.setAlpha(Math.round(mShadowAlpha * MathUtils.clamp(1 - f, 0, 1)));
-        mColorPaint.setAlpha(Math.round(mColorAlpha * MathUtils.clamp(f, 0, 1)));
+        mShadowPaint.setAlpha(Math.round(mShadowAlpha * TwidereMathUtils.clamp(1 - f, 0, 1)));
+        mColorPaint.setAlpha(Math.round(mColorAlpha * TwidereMathUtils.clamp(f, 0, 1)));
         invalidate();
     }
 }

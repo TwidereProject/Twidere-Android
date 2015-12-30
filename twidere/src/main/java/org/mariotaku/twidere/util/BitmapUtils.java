@@ -40,7 +40,7 @@ public class BitmapUtils {
     public static int computeSampleSize(final float scale) {
         if (scale <= 0) return 1;
         final int initialSize = Math.max(1, (int) Math.ceil(1 / scale));
-        return initialSize <= 8 ? MathUtils.nextPowerOf2(initialSize) : (initialSize + 7) / 8 * 8;
+        return initialSize <= 8 ? TwidereMathUtils.nextPowerOf2(initialSize) : (initialSize + 7) / 8 * 8;
     }
 
     // This computes a sample size which makes the longer side at least
@@ -49,7 +49,7 @@ public class BitmapUtils {
         final int initialSize = Math.max(w / minSideLength, h / minSideLength);
         if (initialSize <= 1) return 1;
 
-        return initialSize <= 8 ? MathUtils.prevPowerOf2(initialSize) : initialSize / 8 * 8;
+        return initialSize <= 8 ? TwidereMathUtils.prevPowerOf2(initialSize) : initialSize / 8 * 8;
     }
 
     public static boolean downscaleImageIfNeeded(final File imageFile, final int quality) {

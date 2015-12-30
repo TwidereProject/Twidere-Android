@@ -36,7 +36,7 @@ import com.desmond.asyncmanager.TaskRunnable;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.NetworkUsageInfo;
 import org.mariotaku.twidere.model.RequestType;
-import org.mariotaku.twidere.util.MathUtils;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.Calendar;
@@ -136,7 +136,7 @@ public class NetworkUsageSummaryPreferences extends Preference {
             apiSet.addBar(day, (float) dayUsage[RequestType.API.getValue()]);
             mediaSet.addBar(day, (float) dayUsage[RequestType.MEDIA.getValue()]);
             usageStatisticsSet.addBar(day, (float) dayUsage[RequestType.USAGE_STATISTICS.getValue()]);
-            dayUsageMax = Math.max(dayUsageMax, MathUtils.sum(dayUsage));
+            dayUsageMax = Math.max(dayUsageMax, TwidereMathUtils.sum(dayUsage));
         }
 
         apiSet.setColor(Color.RED);

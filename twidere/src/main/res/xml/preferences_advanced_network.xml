@@ -39,9 +39,16 @@
             android:defaultValue="false"
             android:disableDependentsState="false"
             android:key="enable_proxy"
-            android:summary="@string/http_proxy_summary"
-            android:title="@string/http_proxy"/>
+            android:summary="@string/proxy_summary"
+            android:title="@string/proxy"/>
 
+        <org.mariotaku.twidere.preference.SummaryListPreference
+            android:defaultValue="http"
+            android:dependency="enable_proxy"
+            android:entries="@array/entries_proxy_type"
+            android:entryValues="@array/values_proxy_type"
+            android:key="proxy_type"
+            android:title="@string/proxy_type"/>
         <org.mariotaku.twidere.preference.SummaryEditTextPreference
             android:dependency="enable_proxy"
             android:key="proxy_host"
@@ -53,6 +60,18 @@
             android:key="proxy_port"
             android:singleLine="true"
             android:title="@string/proxy_port"/>
+        <org.mariotaku.twidere.preference.SummaryEditTextPreference
+            android:dependency="enable_proxy"
+            android:inputType="textEmailAddress"
+            android:key="proxy_username"
+            android:singleLine="true"
+            android:title="@string/proxy_username"/>
+        <org.mariotaku.twidere.preference.AutoFixEditTextPreference
+            android:dependency="enable_proxy"
+            android:inputType="textPassword"
+            android:key="proxy_password"
+            android:singleLine="true"
+            android:title="@string/proxy_password"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="category_api"
@@ -79,7 +98,7 @@
             android:key="thumbor_address"
             android:title="@string/server_address"/>
 
-        <org.mariotaku.twidere.preference.SummaryEditTextPreference
+        <org.mariotaku.twidere.preference.AutoFixEditTextPreference
             android:dependency="thumbor_enabled"
             android:inputType="textVisiblePassword"
             android:key="thumbor_security_key"

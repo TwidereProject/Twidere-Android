@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
-public class MathUtils {
+public class TwidereMathUtils {
     public static float clamp(final float num, final float bound1, final float bound2) {
         final float max = Math.max(bound1, bound2), min = Math.min(bound1, bound2);
         return Math.max(Math.min(num, max), min);
@@ -67,5 +67,9 @@ public class MathUtils {
             sum += i;
         }
         return sum;
+    }
+
+    public static boolean inRangeInclusiveInclusive(int num, int from, int to) {
+        return num >= from && num <= to;
     }
 }

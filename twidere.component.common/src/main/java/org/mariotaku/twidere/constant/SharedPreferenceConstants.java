@@ -166,7 +166,13 @@ public interface SharedPreferenceConstants {
     @Preference(type = STRING)
     String KEY_PROXY_HOST = "proxy_host";
     @Preference(type = STRING)
+    String KEY_PROXY_TYPE = "proxy_type";
+    @Preference(type = STRING)
     String KEY_PROXY_PORT = "proxy_port";
+    @Preference(type = STRING)
+    String KEY_PROXY_USERNAME = "proxy_username";
+    @Preference(type = STRING)
+    String KEY_PROXY_PASSWORD = "proxy_password";
     @Preference(type = BOOLEAN)
     String KEY_REFRESH_ON_START = "refresh_on_start";
     @Preference(type = BOOLEAN)
