@@ -26,9 +26,15 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  * Created by mariotaku on 15/12/30.
  */
 @JsonObject
-public class CursorResponse {
+public class CursorTimestampResponse {
     @JsonField(name = "cursor")
     long cursor;
+    @JsonField(name = "timestamp")
+    long timestamp;
+
+    public long getTimestamp() {
+        return timestamp;
+    }
 
     public long getCursor() {
         return cursor;

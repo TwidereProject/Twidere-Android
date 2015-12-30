@@ -49,9 +49,9 @@ import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
-import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereBugReporter;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
@@ -233,6 +233,9 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             case KEY_CONNECTION_TIMEOUT:
             case KEY_PROXY_HOST:
             case KEY_PROXY_PORT:
+            case KEY_PROXY_TYPE:
+            case KEY_PROXY_USERNAME:
+            case KEY_PROXY_PASSWORD:
                 reloadConnectivitySettings();
                 break;
             case KEY_DNS_SERVER:

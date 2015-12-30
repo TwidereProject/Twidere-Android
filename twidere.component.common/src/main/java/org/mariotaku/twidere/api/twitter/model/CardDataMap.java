@@ -21,30 +21,49 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 
+import org.mariotaku.restfu.http.ValueMap;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Example
- * <pre>
- * {@code
- * CreateCardData cardData = new CreateCardData("poll2choice_text_only");
- * cardData.putString("choice1_label", "Label 1");
- * cardData.putString("choice2_label", "Label 2");
- * }
- * </pre>
  * Created by mariotaku on 15/12/30.
  */
-public class CreateCardData extends CardDataMap {
+public class CardDataMap implements ValueMap {
+    protected final Map<String, String> map = new LinkedHashMap<>();
 
-    public CreateCardData(String name) {
-        this(name, "1");
+    public void putString(String key, String value) {
+        map.put("twitter:string:" + key, value);
     }
 
-    public CreateCardData(String name, String endpoint) {
-        map.put("twitter:card", name);
-        map.put("twitter:api:api:endpoint", endpoint);
+    public void putLong(String key, long value) {
+        map.put("twitter:long:" + key, String.valueOf(value));
     }
 
+    @Override
+    public String toString() {
+        try {
+            return LoganSquare.serialize(map);
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    @Override
+    public boolean has(String key) {
+        return map.containsKey(key);
+    }
+
+    @Override
+    public Object get(String key) {
+        return map.get(key);
+    }
+
+    @Override
+    public String[] keys() {
+        final Set<String> keySet = map.keySet();
+        return keySet.toArray(new String[keySet.size()]);
+    }
 }

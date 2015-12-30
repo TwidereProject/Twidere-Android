@@ -1830,8 +1830,7 @@ public final class Utils implements Constants {
 
     public static boolean hasAutoRefreshAccounts(final Context context) {
         final long[] accountIds = getAccountIds(context);
-        final long[] refreshIds = AccountPreferences.getAutoRefreshEnabledAccountIds(context, accountIds);
-        return refreshIds != null && refreshIds.length > 0;
+        return !ArrayUtils.isEmpty(AccountPreferences.getAutoRefreshEnabledAccountIds(context, accountIds));
     }
 
     public static boolean hasStaggeredTimeline() {

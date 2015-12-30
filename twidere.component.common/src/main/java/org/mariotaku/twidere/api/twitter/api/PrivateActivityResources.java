@@ -20,14 +20,14 @@
 package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.api.twitter.model.CursorResponse;
+import org.mariotaku.twidere.api.twitter.model.CursorTimestampResponse;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.TimestampResponse;
 
 @SuppressWarnings("RedundantThrows")
 @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
@@ -38,11 +38,12 @@ public interface PrivateActivityResources extends PrivateResources {
     @GET("/activity/about_me.json")
     ResponseList<Activity> getActivitiesAboutMe(@Query Paging paging) throws TwitterException;
 
-    @GET("/activity/about_me/unread.json?cursor=true")
-    CursorResponse getActivitiesAboutMeUnreadCursor() throws TwitterException;
+    @GET("/activity/about_me/unread.json")
+    CursorTimestampResponse getActivitiesAboutMeUnread(@Query("cursor") boolean cursor) throws TwitterException;
 
-    @GET("/activity/about_me/unread.json?cursor=false")
-    TimestampResponse getActivitiesAboutMeUnreadTimestamp() throws TwitterException;
+    @POST("/activity/about_me/unread.json")
+    CursorTimestampResponse setActivitiesAboutMeUnread(@Query("cursor") long cursor) throws TwitterException;
+
 
     @GET("/activity/by_friends.json")
     ResponseList<Activity> getActivitiesByFriends(@Query Paging paging) throws TwitterException;

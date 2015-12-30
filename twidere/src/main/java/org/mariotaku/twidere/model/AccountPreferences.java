@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
@@ -134,8 +133,9 @@ public class AccountPreferences implements Constants {
         return preferences;
     }
 
+    @NonNull
     public static long[] getAutoRefreshEnabledAccountIds(final Context context, final long[] accountIds) {
-        if (context == null || accountIds == null) return null;
+        if (context == null || accountIds == null) return new long[0];
         final long[] temp = new long[accountIds.length];
         int i = 0;
         for (final long accountId : accountIds) {

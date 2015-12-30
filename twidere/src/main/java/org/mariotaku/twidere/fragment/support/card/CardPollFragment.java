@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 /**
  * Created by mariotaku on 15/12/20.
  */
-public class CardPollFragment extends BaseSupportFragment {
+public class CardPollFragment extends BaseSupportFragment implements View.OnClickListener {
 
     public static final Pattern PATTERN_POLL_TEXT_ONLY = Pattern.compile("poll([\\d]+)choice_text_only");
     private TableLayout mPollContainer;
@@ -74,6 +74,7 @@ public class CardPollFragment extends BaseSupportFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mVoteButton.setOnClickListener(this);
         initChoiceView(savedInstanceState);
     }
 
@@ -175,6 +176,11 @@ public class CardPollFragment extends BaseSupportFragment {
 
     private ParcelableStatus getStatus() {
         return getArguments().getParcelable(EXTRA_STATUS);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     private static class PercentDrawable extends Drawable {

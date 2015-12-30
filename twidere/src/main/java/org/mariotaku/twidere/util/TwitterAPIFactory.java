@@ -43,6 +43,7 @@ import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterCaps;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.TwitterUpload;
@@ -192,7 +193,8 @@ public class TwitterAPIFactory implements TwidereConstants {
                 }
             });
         } else {
-            client.setProxySelector(ProxySelector.getDefault());
+            client.setProxySelector(null);
+            client.setAuthenticator(null);
         }
     }
 
@@ -298,6 +300,9 @@ public class TwitterAPIFactory implements TwidereConstants {
         } else if (TwitterUserStream.class.isAssignableFrom(cls)) {
             domain = "userstream";
             versionSuffix = noVersionSuffix ? null : "/1.1/";
+        } else if (TwitterCaps.class.isAssignableFrom(cls)) {
+            domain = "caps";
+            versionSuffix = null;
         } else {
             throw new TwitterConverter.UnsupportedTypeException(cls);
         }

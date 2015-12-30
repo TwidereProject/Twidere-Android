@@ -19,25 +19,34 @@
 
 package org.mariotaku.twidere.fragment;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.util.Utils;
 
 public class AccountRefreshSettingsFragment extends BaseAccountPreferenceFragment {
 
-	@Override
-	protected int getPreferencesResource() {
-		return R.xml.preferences_account_refresh;
-	}
+    @Override
+    protected int getPreferencesResource() {
+        return R.xml.preferences_account_refresh;
+    }
 
-	@Override
-	protected boolean getSwitchPreferenceDefault() {
-		return DEFAULT_AUTO_REFRESH;
-	}
+    @Override
+    protected boolean getSwitchPreferenceDefault() {
+        return DEFAULT_AUTO_REFRESH;
+    }
 
-	@Override
-	@Nullable
-	protected String getSwitchPreferenceKey() {
-		return null;
-	}
+    @Override
+    @Nullable
+    protected String getSwitchPreferenceKey() {
+        return null;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (KEY_AUTO_REFRESH.equals(key)) {
+            Utils.startRefreshServiceIfNeeded(getActivity());
+        }
+    }
 }
