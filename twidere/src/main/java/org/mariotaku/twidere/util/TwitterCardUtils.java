@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.fragment.support.card.CardPollFragment;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
@@ -74,7 +75,7 @@ public class TwitterCardUtils {
         if (status.card == null || status.card_name == null) return false;
         switch (status.card_name) {
             case CARD_NAME_PLAYER: {
-                return ParcelableCardEntity.getValue(status.card, "player_stream_url") == null;
+                return TextUtils.isEmpty(status.card.getString("player_stream_url"));
             }
             case CARD_NAME_AUDIO: {
                 return true;

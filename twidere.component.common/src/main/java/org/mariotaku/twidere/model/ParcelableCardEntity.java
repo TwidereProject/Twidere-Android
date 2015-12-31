@@ -95,12 +95,6 @@ public final class ParcelableCardEntity implements Parcelable {
     }
 
     @Nullable
-    public static ParcelableBindingValue getValue(@Nullable ParcelableCardEntity entity, @Nullable String key) {
-        if (entity == null) return null;
-        return entity.getValue(key);
-    }
-
-    @Nullable
     public ParcelableBindingValue getValue(@Nullable String key) {
         if (key == null || values == null) return null;
         return values.get(key);
@@ -115,6 +109,12 @@ public final class ParcelableCardEntity implements Parcelable {
     public String getAsString(@Nullable String key, String def) {
         final ParcelableBindingValue value = getValue(key);
         if (value == null) return def;
+        return value.value;
+    }
+
+    public String getString(@Nullable String key) {
+        final ParcelableBindingValue value = getValue(key);
+        if (value == null || !CardEntity.BindingValue.TYPE_STRING.equals(value.type)) return null;
         return value.value;
     }
 

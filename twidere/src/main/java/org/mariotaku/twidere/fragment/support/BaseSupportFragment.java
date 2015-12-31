@@ -36,7 +36,6 @@ import android.support.v4.view.LayoutInflaterFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.danikula.videocache.HttpProxyCacheServer;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;
@@ -78,8 +77,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected SharedPreferencesWrapper mPreferences;
     @Inject
     protected NotificationManagerWrapper mNotificationManager;
-    @Inject
-    protected HttpProxyCacheServer mHttpProxyCacheServer;
 
     public BaseSupportFragment() {
 

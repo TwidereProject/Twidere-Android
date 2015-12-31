@@ -20,12 +20,17 @@
 package org.mariotaku.twidere.util.dagger;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 /**
  * Created by mariotaku on 15/12/31.
  */
 public class GeneralComponentHelper {
-    public static GeneralComponent build(Context context) {
-        return DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build();
+    private static GeneralComponent sGeneralComponent;
+
+    @NonNull
+    public static GeneralComponent build(@NonNull Context context) {
+        if (sGeneralComponent != null) return sGeneralComponent;
+        return sGeneralComponent = DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build();
     }
 }

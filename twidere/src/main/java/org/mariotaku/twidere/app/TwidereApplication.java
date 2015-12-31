@@ -35,8 +35,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
-import com.nostra13.universalimageloader.cache.disc.DiskCache;
-import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
 import com.squareup.okhttp.Dns;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -51,19 +49,12 @@ import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereBugReporter;
-import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
-import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache;
-import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator;
 import org.mariotaku.twidere.util.net.TwidereDns;
 
-import java.io.File;
-import java.io.IOException;
-
-import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 
@@ -76,7 +67,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     private Handler mHandler;
     private SharedPreferences mPreferences;
-    private DiskCache mDiskCache, mFullDiskCache;
     private SQLiteOpenHelper mSQLiteOpenHelper;
     private SQLiteDatabase mDatabase;
 
@@ -85,16 +75,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     @NonNull
     public static TwidereApplication getInstance(@NonNull final Context context) {
         return (TwidereApplication) context.getApplicationContext();
-    }
-
-    public DiskCache getDiskCache() {
-        if (mDiskCache != null) return mDiskCache;
-        return mDiskCache = createDiskCache(DIR_NAME_IMAGE_CACHE);
-    }
-
-    public DiskCache getFullDiskCache() {
-        if (mFullDiskCache != null) return mFullDiskCache;
-        return mFullDiskCache = createDiskCache(DIR_NAME_FULL_IMAGE_CACHE);
     }
 
 
@@ -275,21 +255,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         getApplicationModule().reloadConnectivitySettings();
     }
 
-    private DiskCache createDiskCache(final String dirName) {
-        final File cacheDir = Utils.getExternalCacheDir(this, dirName);
-        final File fallbackCacheDir = getInternalCacheDir(this, dirName);
-        final URLFileNameGenerator fileNameGenerator = new URLFileNameGenerator();
-        final SharedPreferences preferences = getSharedPreferences();
-        final int cacheSize = TwidereMathUtils.clamp(preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300), 100, 500);
-        try {
-            final int cacheMaxSizeBytes = cacheSize * 1024 * 1024;
-            if (cacheDir != null)
-                return new LruDiskCache(cacheDir, fallbackCacheDir, fileNameGenerator, cacheMaxSizeBytes, 0);
-            return new LruDiskCache(fallbackCacheDir, null, fileNameGenerator, cacheMaxSizeBytes, 0);
-        } catch (IOException e) {
-            return new ReadOnlyDiskLRUNameCache(cacheDir, fallbackCacheDir, fileNameGenerator);
-        }
-    }
 
     private void initializeAsyncTask() {
         // AsyncTask class needs to be loaded in UI thread.

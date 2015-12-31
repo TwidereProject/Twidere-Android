@@ -19,33 +19,30 @@
 
 package org.mariotaku.twidere.loader.support;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.DisplayMetrics;
 
-import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
-import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.util.BitmapUtils;
-import org.mariotaku.twidere.util.ImageValidator;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.imageloader.AccountFullImageExtra;
-import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
+import org.mariotaku.twidere.util.io.ContentLengthInputStream;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
+
+import cz.fhucho.android.util.SimpleDiskCache;
+import okio.ByteString;
 
 public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
@@ -54,7 +51,8 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
     private final DownloadListener mListener;
     @Inject
     ImageDownloader mDownloader;
-    private final DiskCache mDiskCache;
+    @Inject
+    SimpleDiskCache mDiskCache;
 
     private final float mFallbackSize;
     private final long mAccountId;
@@ -66,8 +64,6 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
         mAccountId = accountId;
         mUri = uri;
         mListener = listener;
-        final TwidereApplication app = TwidereApplication.getInstance(context);
-        mDiskCache = app.getFullDiskCache();
         final Resources res = context.getResources();
         final DisplayMetrics dm = res.getDisplayMetrics();
         mFallbackSize = Math.max(dm.heightPixels, dm.widthPixels);
@@ -79,74 +75,64 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
             return Result.nullInstance();
         }
         final String scheme = mUri.getScheme();
+        SimpleDiskCache.InputStreamEntry cacheEntry = null;
         if ("http".equals(scheme) || "https".equals(scheme)) {
-            final String url = mUri.toString();
-            if (url == null) return Result.nullInstance();
-            File cacheFile = mDiskCache.get(url);
-            if (cacheFile != null) {
-                final int cachedValidity = ImageValidator.checkImageValidity(cacheFile);
-                if (ImageValidator.isValid(cachedValidity)) {
-                    // The file is corrupted, so we remove it from
-                    // cache.
-                    return decodeBitmapOnly(cacheFile, ImageValidator.isValidForRegionDecoder(cachedValidity));
-                }
+            final String uriString = mUri.toString();
+            if (uriString == null) return Result.nullInstance();
+            try {
+                cacheEntry = mDiskCache.getInputStream(uriString);
+            } catch (IOException e) {
+                // Ignore
+            }
+            if (isValid(cacheEntry)) {
+                return Result.getInstance(Uri.fromParts("cache",
+                        ByteString.encodeUtf8(uriString).base64Url(), null));
             }
             try {
                 // from SD cache
-                final InputStream is = mDownloader.getStream(url, new AccountFullImageExtra(mAccountId));
+                ContentLengthInputStream cis = null;
+                final InputStream is = mDownloader.getStream(uriString, new AccountFullImageExtra(mAccountId));
                 if (is == null) return Result.nullInstance();
                 try {
                     final long length = is.available();
                     mHandler.post(new DownloadStartRunnable(this, mListener, length));
-                    mDiskCache.save(url, is, new IoUtils.CopyListener() {
+
+                    final Map<String, String> metadata = new HashMap<>();
+                    metadata.put("length", String.valueOf(length));
+
+                    cis = new ContentLengthInputStream(is, length);
+                    cis.setReadListener(new ContentLengthInputStream.ReadListener() {
                         @Override
-                        public boolean onBytesCopied(int current, int total) {
-                            mHandler.post(new ProgressUpdateRunnable(mListener, current));
-                            return !isAbandoned();
+                        public void onRead(long length, long position) {
+                            mHandler.post(new ProgressUpdateRunnable(mListener, position));
                         }
                     });
+                    mDiskCache.put(uriString, cis, metadata);
                     mHandler.post(new DownloadFinishRunnable(this, mListener));
                 } finally {
                     IoUtils.closeSilently(is);
                 }
-                cacheFile = mDiskCache.get(url);
-                final int downloadedValidity = ImageValidator.checkImageValidity(cacheFile);
-                if (ImageValidator.isValid(downloadedValidity)) {
-                    // The file is corrupted, so we remove it from
-                    // cache.
-                    return decodeBitmapOnly(cacheFile,
-                            ImageValidator.isValidForRegionDecoder(downloadedValidity));
+                cacheEntry = mDiskCache.getInputStream(uriString);
+                if (isValid(cacheEntry)) {
+                    return Result.getInstance(Uri.fromParts("cache",
+                            ByteString.encodeUtf8(uriString).base64Url(), null));
                 } else {
-                    mDiskCache.remove(url);
+                    mDiskCache.remove(uriString);
                     throw new IOException();
                 }
             } catch (final Exception e) {
                 mHandler.post(new DownloadErrorRunnable(this, mListener, e));
-                return Result.getInstance(cacheFile, e);
-            }
-        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-            final File file = new File(mUri.getPath());
-            try {
-                return decodeBitmapOnly(file,
-                        ImageValidator.isValidForRegionDecoder(ImageValidator.checkImageValidity(file)));
-            } catch (final Exception e) {
-                return Result.getInstance(file, e);
+                return Result.getInstance(e);
             }
         }
-        return Result.nullInstance();
+        return Result.getInstance(mUri);
     }
 
-    protected Result decodeBitmapOnly(final File file, boolean useDecoder) {
-        final String path = file.getAbsolutePath();
-        final BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, o);
-        final int width = o.outWidth, height = o.outHeight;
-        if (width <= 0 || height <= 0) return Result.getInstance(file, null);
-        o.inJustDecodeBounds = false;
-        o.inSampleSize = BitmapUtils.computeSampleSize(mFallbackSize / Math.max(width, height));
-        final Bitmap bitmap = BitmapFactory.decodeFile(path, o);
-        return Result.getInstance(useDecoder, bitmap, o, ImageValidator.getOrientation(file.getAbsolutePath()), file);
+    private static boolean isValid(SimpleDiskCache.InputStreamEntry entry) {
+        if (entry == null) return false;
+        final Map<String, String> metadata = entry.getMetadata();
+        final long length = NumberUtils.toLong(metadata.get("length"), -1);
+        return length == -1 || entry.getLength() == length;
     }
 
     @Override
@@ -166,42 +152,24 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
     }
 
     public static class Result {
-        public final Bitmap bitmap;
-        public final Options options;
-        public final File file;
+        public final Uri cacheUri;
         public final Exception exception;
-        public final boolean useDecoder;
-        public final int orientation;
 
-        public Result(final boolean useDecoder, final Bitmap bitmap, final Options options, final int orientation,
-                      final File file, final Exception exception) {
-            this.bitmap = bitmap;
-            this.options = options;
-            this.file = file;
-            this.useDecoder = useDecoder;
-            this.orientation = orientation;
+        public Result(final Uri cacheUri, final Exception exception) {
+            this.cacheUri = cacheUri;
             this.exception = exception;
         }
 
-        public boolean hasData() {
-            return bitmap != null || useDecoder;
+        public static Result getInstance(final Uri uri) {
+            return new Result(uri, null);
         }
 
-        public static Result getInstance(final Bitmap bitmap, final Options options, final int orientation, final File file) {
-            return new Result(false, bitmap, options, orientation, file, null);
-        }
-
-        public static Result getInstance(final boolean useDecoder, final Bitmap bitmap, final Options options,
-                                         final int orientation, final File file) {
-            return new Result(useDecoder, bitmap, options, orientation, file, null);
-        }
-
-        public static Result getInstance(final File file, final Exception e) {
-            return new Result(false, null, null, 0, file, e);
+        public static Result getInstance(final Exception e) {
+            return new Result(null, e);
         }
 
         public static Result nullInstance() {
-            return new Result(false, null, null, 0, null, null);
+            return new Result(null, null);
         }
     }
 

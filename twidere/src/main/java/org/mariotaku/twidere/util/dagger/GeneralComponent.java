@@ -51,6 +51,8 @@ import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
+import org.mariotaku.twidere.util.imageloader.TwidereSkiaImageDecoder;
+import org.mariotaku.twidere.util.imageloader.TwidereSkiaImageRegionDecoder;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
@@ -130,4 +132,8 @@ public interface GeneralComponent {
     void inject(DependencyHolder object);
 
     void inject(TileImageLoader object);
+
+    void inject(TwidereSkiaImageRegionDecoder object);
+
+    void inject(TwidereSkiaImageDecoder object);
 }
