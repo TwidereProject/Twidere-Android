@@ -213,7 +213,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
@@ -3091,8 +3091,9 @@ public final class Utils implements Constants {
         return pm.getDrawable(info.packageName, info.metaData.getInt(key), info.applicationInfo);
     }
 
-    public static boolean handleMenuItemClick(Context context, Fragment fragment, FragmentManager fm, AsyncTwitterWrapper twitter, ParcelableStatus status, MenuItem item) {
-        final UserColorNameManager colorNameManager = UserColorNameManager.getInstance(context);
+    public static boolean handleMenuItemClick(Context context, Fragment fragment, FragmentManager fm,
+                                              UserColorNameManager colorNameManager, AsyncTwitterWrapper twitter,
+                                              ParcelableStatus status, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.copy: {
                 if (ClipboardUtils.setText(context, status.text_plain)) {
@@ -3393,10 +3394,9 @@ public final class Utils implements Constants {
         final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
         if (!NotificationEvent.isSupported(type) || accountId < 0 || itemId < 0 || timestamp < 0)
             return;
-        final ApplicationModule module = ApplicationModule.get(context);
-        final HotMobiLogger logger = module.getHotMobiLogger();
-        logger.log(accountId, NotificationEvent.open(context, timestamp, type, accountId, itemId,
-                itemUserId, itemUserFollowing));
+        final NotificationEvent event = NotificationEvent.open(context, timestamp, type, accountId,
+                itemId, itemUserId, itemUserFollowing);
+        HotMobiLogger.getInstance(context).log(accountId, event);
     }
 
     public static boolean hasOfficialAPIAccess(Context context, SharedPreferences preferences, ParcelableCredentials account) {

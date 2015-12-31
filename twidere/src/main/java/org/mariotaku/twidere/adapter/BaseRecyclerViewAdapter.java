@@ -29,8 +29,7 @@ import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
@@ -56,10 +55,7 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     public BaseRecyclerViewAdapter(Context context) {
         mContext = context;
         //noinspection unchecked
-        DaggerGeneralComponent.builder()
-                .applicationModule(ApplicationModule.get(context))
-                .build()
-                .inject((BaseRecyclerViewAdapter<RecyclerView.ViewHolder>) this);
+        GeneralComponentHelper.build(context).inject((BaseRecyclerViewAdapter<RecyclerView.ViewHolder>) this);
     }
 
     @NonNull

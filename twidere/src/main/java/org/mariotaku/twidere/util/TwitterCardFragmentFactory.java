@@ -23,9 +23,9 @@ import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.fragment.support.card.CardBrowserFragment;
 import org.mariotaku.twidere.fragment.support.card.CardPollFragment;
+import org.mariotaku.twidere.model.ParcelableBindingValue;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableBindingValue;
+import org.mariotaku.twidere.model.ParcelableCardEntity;
 
 import org.mariotaku.twidere.api.twitter.model.CardEntity.BindingValue;
 

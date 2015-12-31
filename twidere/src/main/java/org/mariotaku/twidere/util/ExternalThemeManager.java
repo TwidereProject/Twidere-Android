@@ -25,7 +25,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.LruCache;
@@ -34,9 +33,12 @@ import org.mariotaku.twidere.Constants;
 
 import java.util.Locale;
 
+import javax.inject.Singleton;
+
 /**
  * Created by mariotaku on 15/12/20.
  */
+@Singleton
 public class ExternalThemeManager implements Constants {
     private final Application application;
     private final SharedPreferencesWrapper preferences;

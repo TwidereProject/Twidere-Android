@@ -48,18 +48,17 @@ public class SetUserNicknameDialogFragment extends BaseSupportDialogFragment imp
         final String text = ParseUtils.parseString(mEditText.getText());
         final long userId = args != null ? args.getLong(EXTRA_USER_ID, -1) : -1;
         if (userId == -1) return;
-        final UserColorNameManager manager = UserColorNameManager.getInstance(getActivity());
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE: {
                 if (TextUtils.isEmpty(text)) {
-                    manager.clearUserNickname(userId);
+                    mUserColorNameManager.clearUserNickname(userId);
                 } else {
-                    manager.setUserNickname(userId, text);
+                    mUserColorNameManager.setUserNickname(userId, text);
                 }
                 break;
             }
             case DialogInterface.BUTTON_NEUTRAL: {
-                manager.clearUserNickname(userId);
+                mUserColorNameManager.clearUserNickname(userId);
                 break;
             }
         }

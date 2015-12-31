@@ -47,8 +47,7 @@ import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 import org.mariotaku.twidere.view.TintedStatusFrameLayout;
@@ -153,7 +152,7 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         }
         setupWindow();
         super.onCreate(savedInstanceState);
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(this)).build().inject(this);
+        GeneralComponentHelper.build(this).inject(this);
     }
 
     @Override

@@ -23,17 +23,17 @@ import android.content.Context;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.Dns;
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
 import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -50,9 +50,10 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
-import org.mariotaku.twidere.util.VideoLoader;
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 import org.mariotaku.twidere.util.net.TwidereDns;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -64,64 +65,77 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
 @Module
 public class ApplicationModule {
 
-    private final SharedPreferencesWrapper sharedPreferences;
-
-    private final ActivityTracker activityTracker;
-    private final AsyncTwitterWrapper asyncTwitterWrapper;
-    private final ReadStateManager readStateManager;
-    private final VideoLoader videoLoader;
-    private final ImageLoader imageLoader;
-    private final MediaLoaderWrapper mediaLoaderWrapper;
-    private final TwidereImageDownloader imageDownloader;
-    private final AsyncTaskManager asyncTaskManager;
-    private final Dns dns;
-    private final RestHttpClient restHttpClient;
-    private final Bus bus;
-    private final MultiSelectManager multiSelectManager;
-    private final UserColorNameManager userColorNameManager;
-    private final KeyboardShortcutsHandler keyboardShortcutsHandler;
-    private final HotMobiLogger hotMobiLogger;
-    private final NotificationManagerWrapper notificationManagerWrapper;
-    private final ExternalThemeManager externalThemeManager;
+    private final TwidereApplication application;
 
     public ApplicationModule(TwidereApplication application) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
             throw new RuntimeException("Module must be created inside main thread");
         }
-        sharedPreferences = SharedPreferencesWrapper.getInstance(application, Constants.SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE, SharedPreferenceConstants.class);
-
-        if (sharedPreferences == null) {
-            throw new RuntimeException("SharedPreferences must not be null");
-        }
-
-        activityTracker = new ActivityTracker();
-        bus = new Bus(ThreadEnforcer.MAIN);
-        asyncTaskManager = AsyncTaskManager.getInstance();
-        readStateManager = new ReadStateManager(application);
-        dns = new TwidereDns(application);
-        notificationManagerWrapper = new NotificationManagerWrapper(application);
-
-
-        restHttpClient = TwitterAPIFactory.getDefaultHttpClient(application, dns);
-        imageDownloader = new TwidereImageDownloader(application, restHttpClient, true);
-        imageLoader = createImageLoader(application, imageDownloader);
-        videoLoader = new VideoLoader(application, restHttpClient, asyncTaskManager, bus);
-        mediaLoaderWrapper = new MediaLoaderWrapper(imageLoader, videoLoader);
-        multiSelectManager = new MultiSelectManager();
-        userColorNameManager = new UserColorNameManager(application);
-        keyboardShortcutsHandler = new KeyboardShortcutsHandler(application);
-        hotMobiLogger = new HotMobiLogger(application);
-        asyncTwitterWrapper = new AsyncTwitterWrapper(application, asyncTaskManager,
-                sharedPreferences, bus, userColorNameManager);
-        externalThemeManager = new ExternalThemeManager(application, sharedPreferences);
+        this.application = application;
     }
 
-    public static ApplicationModule get(@NonNull Context context) {
+    static ApplicationModule get(@NonNull Context context) {
         return TwidereApplication.getInstance(context).getApplicationModule();
     }
 
-    private static ImageLoader createImageLoader(TwidereApplication application, TwidereImageDownloader imageDownloader) {
+    @Provides
+    @Singleton
+    public KeyboardShortcutsHandler keyboardShortcutsHandler() {
+        return new KeyboardShortcutsHandler(application);
+    }
+
+    @Provides
+    @Singleton
+    public ExternalThemeManager externalThemeManager(SharedPreferencesWrapper preferences) {
+        return new ExternalThemeManager(application, preferences);
+    }
+
+    @Provides
+    @Singleton
+    public NotificationManagerWrapper notificationManagerWrapper() {
+        return new NotificationManagerWrapper(application);
+    }
+
+    @Provides
+    @Singleton
+    public SharedPreferencesWrapper sharedPreferences() {
+        return SharedPreferencesWrapper.getInstance(application, Constants.SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+    }
+
+    @Provides
+    @Singleton
+    public UserColorNameManager userColorNameManager() {
+        return new UserColorNameManager(application);
+    }
+
+    @Provides
+    @Singleton
+    public MultiSelectManager multiSelectManager() {
+        return new MultiSelectManager();
+    }
+
+    @Provides
+    @Singleton
+    public RestHttpClient restHttpClient() {
+        return TwitterAPIFactory.getDefaultHttpClient(application);
+    }
+
+    @Provides
+    @Singleton
+    public Bus bus() {
+        return new Bus(ThreadEnforcer.MAIN);
+    }
+
+    @Provides
+    @Singleton
+    public AsyncTaskManager asyncTaskManager() {
+        return new AsyncTaskManager();
+    }
+
+    @Provides
+    @Singleton
+    public ImageLoader imageLoader(ImageDownloader downloader) {
         final ImageLoader loader = ImageLoader.getInstance();
         final ImageLoaderConfiguration.Builder cb = new ImageLoaderConfiguration.Builder(application);
         cb.threadPriority(Thread.NORM_PRIORITY - 2);
@@ -129,112 +143,71 @@ public class ApplicationModule {
         cb.tasksProcessingOrder(QueueProcessingType.LIFO);
         // cb.memoryCache(new ImageMemoryCache(40));
         cb.diskCache(application.getDiskCache());
-        cb.imageDownloader(imageDownloader);
+        cb.imageDownloader(downloader);
         L.writeDebugLogs(BuildConfig.DEBUG);
         loader.init(cb.build());
         return loader;
     }
 
     @Provides
-    public KeyboardShortcutsHandler getKeyboardShortcutsHandler() {
-        return keyboardShortcutsHandler;
+    @Singleton
+    public ImageDownloader imageDownloader(SharedPreferencesWrapper preferences, RestHttpClient client) {
+        return new TwidereImageDownloader(application, preferences, client, true);
     }
 
     @Provides
-    public ExternalThemeManager getExternalThemeManager() {
-        return externalThemeManager;
+    @Singleton
+    public ActivityTracker activityTracker() {
+        return new ActivityTracker();
     }
 
     @Provides
-
-    public NotificationManagerWrapper getNotificationManagerWrapper() {
-        return notificationManagerWrapper;
+    @Singleton
+    public AsyncTwitterWrapper asyncTwitterWrapper(UserColorNameManager userColorNameManager,
+                                                   Bus bus, SharedPreferencesWrapper preferences,
+                                                   AsyncTaskManager asyncTaskManager) {
+        return new AsyncTwitterWrapper(application, userColorNameManager, bus, preferences, asyncTaskManager);
     }
 
     @Provides
-    public SharedPreferencesWrapper getSharedPreferences() {
-        return sharedPreferences;
+    @Singleton
+    public ReadStateManager readStateManager() {
+        return new ReadStateManager(application);
     }
 
     @Provides
-    public UserColorNameManager getUserColorNameManager() {
-        return userColorNameManager;
+    @Singleton
+    public MediaLoaderWrapper mediaLoaderWrapper(ImageLoader loader) {
+        return new MediaLoaderWrapper(loader);
     }
 
     @Provides
-    public MultiSelectManager getMultiSelectManager() {
-        return multiSelectManager;
+    @Singleton
+    public Dns dns() {
+        return new TwidereDns(application);
     }
 
     @Provides
-    public RestHttpClient getRestHttpClient() {
-        return restHttpClient;
-    }
-
-    @Provides
-    public Bus getBus() {
-        return bus;
-    }
-
-    @Provides
-    public AsyncTaskManager getAsyncTaskManager() {
-        return asyncTaskManager;
-    }
-
-    @Provides
-    public ImageLoader getImageLoader() {
-        return imageLoader;
-    }
-
-    @Provides
-    public VideoLoader getVideoLoader() {
-        return videoLoader;
-    }
-
-    @Provides
-    public TwidereImageDownloader getImageDownloader() {
-        return imageDownloader;
-    }
-
-    @Provides
-    public ActivityTracker getActivityTracker() {
-        return activityTracker;
-    }
-
-    @Provides
-    public AsyncTwitterWrapper getAsyncTwitterWrapper() {
-        return asyncTwitterWrapper;
-    }
-
-    @Provides
-    public ReadStateManager getReadStateManager() {
-        return readStateManager;
-    }
-
-    @Provides
-    public MediaLoaderWrapper getMediaLoaderWrapper() {
-        return mediaLoaderWrapper;
-    }
-
-    @Provides
-    public Dns getDns() {
-        return dns;
+    @Singleton
+    public HttpProxyCacheServer providesHttpProxyCacheServer() {
+        return new HttpProxyCacheServer(application);
     }
 
 
     public void reloadConnectivitySettings() {
-        imageDownloader.reloadConnectivitySettings();
-        if (restHttpClient instanceof OkHttpRestClient) {
-            final OkHttpClient okHttpClient = ((OkHttpRestClient) restHttpClient).getClient();
-            TwitterAPIFactory.updateHttpClientConfiguration(sharedPreferences, okHttpClient);
-        }
+//        imageDownloader.reloadConnectivitySettings();
+//        if (restHttpClient instanceof OkHttpRestClient) {
+//             OkHttpClient okHttpClient = ((OkHttpRestClient) restHttpClient).getClient();
+//            TwitterAPIFactory.updateHttpClientConfiguration(application, sharedPreferences, okHttpClient);
+//        }
     }
 
     public void onLowMemory() {
-        mediaLoaderWrapper.clearMemoryCache();
     }
 
-    public HotMobiLogger getHotMobiLogger() {
-        return hotMobiLogger;
+    @Provides
+    @Singleton
+    public HotMobiLogger hotMobiLogger() {
+        return new HotMobiLogger(application);
     }
 }

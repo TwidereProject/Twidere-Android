@@ -276,7 +276,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus status = mSelectedStatus;
             if (status == null) return false;
             return Utils.handleMenuItemClick(getActivity(), StatusFragment.this,
-                    getFragmentManager(), mTwitterWrapper, status, item);
+                    getFragmentManager(), mUserColorNameManager, mTwitterWrapper, status, item);
         }
     };
 
@@ -288,13 +288,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             case REQUEST_SET_COLOR: {
                 final ParcelableStatus status = mStatusAdapter.getStatus();
                 if (status == null) return;
-                final UserColorNameManager manager = UserColorNameManager.getInstance(activity);
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null) return;
                     final int color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT);
-                    manager.setUserColor(status.user_id, color);
+                    mUserColorNameManager.setUserColor(status.user_id, color);
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
-                    manager.clearUserColor(status.user_id);
+                    mUserColorNameManager.clearUserColor(status.user_id);
                 }
                 break;
             }
@@ -1285,13 +1284,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus status = adapter.getStatus(layoutPosition);
             if (status == null || fragment == null) return false;
             final AsyncTwitterWrapper twitter = fragment.mTwitterWrapper;
+            final UserColorNameManager manager = fragment.mUserColorNameManager;
             final FragmentActivity activity = fragment.getActivity();
             final FragmentManager fm = fragment.getFragmentManager();
             if (item.getItemId() == R.id.retweet) {
                 RetweetQuoteDialogFragment.show(fm, status);
                 return true;
             }
-            return Utils.handleMenuItemClick(activity, fragment, fm, twitter, status, item);
+            return Utils.handleMenuItemClick(activity, fragment, fm, manager, twitter, status, item);
         }
 
         private void initViews() {

@@ -29,8 +29,8 @@ import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ConnectivityUtils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -50,7 +50,8 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
             Log.d(RECEIVER_LOGTAG, String.format("Received Broadcast %s", intent));
         }
         if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) return;
-        ApplicationModule.get(context).reloadConnectivitySettings();
+        final TwidereApplication application = TwidereApplication.getInstance(context);
+        application.reloadConnectivitySettings();
         startRefreshServiceIfNeeded(context);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);

@@ -39,8 +39,7 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.ProfileImageView;
 
 import javax.inject.Inject;
@@ -66,7 +65,7 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Cons
 
     public UserAutoCompleteAdapter(final Context context) {
         super(context, R.layout.list_item_auto_complete, null, FROM, TO, 0);
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+        GeneralComponentHelper.build(context).inject(this);
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
     }
 

@@ -7,7 +7,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.SSLCertificateSocketFactory;
 import android.os.Build;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -16,7 +15,6 @@ import android.webkit.URLUtil;
 
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.Dns;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -58,15 +56,14 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
+import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.ProxySelector;
 import java.net.SocketAddress;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,6 +83,8 @@ import static android.text.TextUtils.isEmpty;
  * Created by mariotaku on 15/5/7.
  */
 public class TwitterAPIFactory implements TwidereConstants {
+
+    public static final String CARDS_PLATFORM_ANDROID_12 = "Android-12";
 
     @WorkerThread
     public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities) {
@@ -128,26 +127,22 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     public static RestHttpClient getDefaultHttpClient(final Context context) {
-        return getDefaultHttpClient(context, ApplicationModule.get(context).getDns());
-    }
-
-    public static RestHttpClient getDefaultHttpClient(final Context context, final Dns dns) {
-        if (context == null || dns == null) return null;
+        if (context == null) return null;
         final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return createHttpClient(context, dns, prefs);
+        return createHttpClient(context, prefs);
     }
 
-    public static RestHttpClient createHttpClient(final Context context, final Dns dns, final SharedPreferences prefs) {
+    public static RestHttpClient createHttpClient(final Context context, final SharedPreferences prefs) {
         final OkHttpClient client = new OkHttpClient();
-        updateHttpClientConfiguration(prefs, client);
-        client.setDns(dns);
+        updateHttpClientConfiguration(context, prefs, client);
         DebugModeUtils.initForHttpClient(client);
         NetworkUsageUtils.initForHttpClient(context, client);
         return new OkHttpRestClient(client);
     }
 
     @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
-    public static void updateHttpClientConfiguration(final SharedPreferences prefs, final OkHttpClient client) {
+    public static void updateHttpClientConfiguration(final Context context,
+                                                     final SharedPreferences prefs, final OkHttpClient client) {
         final int connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
         final boolean ignoreSslError = prefs.getBoolean(KEY_IGNORE_SSL_ERROR, false);
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
@@ -171,8 +166,8 @@ public class TwitterAPIFactory implements TwidereConstants {
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);
             final int proxyPort = NumberUtils.toInt(prefs.getString(KEY_PROXY_PORT, null), -1);
             if (!isEmpty(proxyHost) && TwidereMathUtils.inRangeInclusiveInclusive(proxyPort, 0, 65535)) {
-                client.setProxySelector(new TwidereProxySelector(client.getDns(),
-                        getProxyType(proxyType), proxyHost, proxyPort));
+                client.setProxySelector(new TwidereProxySelector(context, getProxyType(proxyType),
+                        proxyHost, proxyPort));
             }
             final String username = prefs.getString(KEY_PROXY_USERNAME, null);
             final String password = prefs.getString(KEY_PROXY_PASSWORD, null);
@@ -233,7 +228,8 @@ public class TwitterAPIFactory implements TwidereConstants {
         } else {
             userAgent = getTwidereUserAgent(context);
         }
-        factory.setClient(ApplicationModule.get(context).getRestHttpClient());
+        DependencyHolder holder = new DependencyHolder(context);
+        factory.setClient(holder.getRestHttpClient());
         factory.setConverter(new TwitterConverter());
         factory.setEndpoint(endpoint);
         factory.setAuthorization(auth);
@@ -477,6 +473,15 @@ public class TwitterAPIFactory implements TwidereConstants {
         return ('A' <= codePoint && codePoint <= 'Z') || ('a' <= codePoint && codePoint <= 'z') || '0' <= codePoint && codePoint <= '9';
     }
 
+    public static class Options {
+
+        final HashMap<String, String> extras = new HashMap<>();
+
+        public void putExtra(String key, String value) {
+            extras.put(key, value);
+        }
+    }
+
     public static class TwidereRequestInfoFactory implements RequestInfoFactory {
 
         private static Map<String, String> sDefaultRequestParams;
@@ -485,7 +490,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             final HashMap<String, String> map = new HashMap<>();
             try {
                 map.put("include_cards", "true");
-                map.put("cards_platform", "Android-12");
+                map.put("cards_platform", CARDS_PLATFORM_ANDROID_12);
                 map.put("include_entities", "true");
                 map.put("include_my_retweet", "true");
                 map.put("include_rts", "true");
@@ -579,47 +584,4 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
     }
 
-    private static class TwidereProxySelector extends ProxySelector {
-        private final Dns dns;
-        private final Proxy.Type type;
-        private final String host;
-        private final int port;
-        private List<Proxy> proxy;
-
-        public TwidereProxySelector(Dns dns, Proxy.Type type, String host, int port) {
-            this.dns = dns;
-            this.type = type;
-            this.host = host;
-            this.port = port;
-        }
-
-        @Override
-        public List<Proxy> select(URI uri) {
-            if (proxy != null) return proxy;
-            final InetSocketAddress unresolved;
-            if (Looper.myLooper() != Looper.getMainLooper()) {
-                unresolved = createResolved(host, port);
-            } else {
-                unresolved = InetSocketAddress.createUnresolved(host, port);
-            }
-            return proxy = Collections.singletonList(new Proxy(type, unresolved));
-        }
-
-        private InetSocketAddress createResolved(String host, int port) {
-            try {
-                //noinspection LoopStatementThatDoesntLoop
-                for (InetAddress inetAddress : dns.lookup(host)) {
-                    return new InetSocketAddress(inetAddress, port);
-                }
-            } catch (IOException e) {
-                return InetSocketAddress.createUnresolved(host, port);
-            }
-            return InetSocketAddress.createUnresolved(host, port);
-        }
-
-        @Override
-        public void connectFailed(URI uri, SocketAddress address, IOException failure) {
-
-        }
-    }
 }

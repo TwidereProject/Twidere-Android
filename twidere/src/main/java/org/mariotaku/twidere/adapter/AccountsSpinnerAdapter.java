@@ -29,8 +29,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.util.Collection;
 
@@ -50,7 +49,7 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableCredentials> 
 
     public AccountsSpinnerAdapter(final Context context, int itemViewResource) {
         super(context, itemViewResource);
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+        GeneralComponentHelper.build(context).inject(this);
         mContext = context;
         mDisplayProfileImage = context.getSharedPreferences(MessagesConversationFragment.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE).getBoolean(MessagesConversationFragment.KEY_DISPLAY_PROFILE_IMAGE, true);

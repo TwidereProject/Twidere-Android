@@ -34,8 +34,7 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.holder.AccountViewHolder;
 
 import javax.inject.Inject;
@@ -64,7 +63,7 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     public AccountsAdapter(final Context context) {
         super(context, R.layout.list_item_account, null, new String[]{Accounts.NAME},
                 new int[]{android.R.id.text1}, 0);
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+        GeneralComponentHelper.build(context).inject(this);
     }
 
     public ParcelableAccount getAccount(int position) {

@@ -31,7 +31,6 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
 
 import java.util.Map;
 import java.util.Set;
@@ -62,10 +61,6 @@ public class UserColorNameManager implements TwidereConstants {
         final SharedPreferences prefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
         prefs.registerOnSharedPreferenceChangeListener(new OnNickPreferenceChangeListener(listener));
-    }
-
-    public static UserColorNameManager getInstance(Context context) {
-        return ApplicationModule.get(context).getUserColorNameManager();
     }
 
     public void clearUserColor(final long userId) {

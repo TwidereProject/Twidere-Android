@@ -44,7 +44,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
-import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -67,22 +66,24 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
 
     private final Context mContext;
     private final SharedPreferencesWrapper mPreferences;
+    private final RestHttpClient mClient;
+
     private final boolean mUseThumbor;
     private final String mUserAgent;
-    private final RestHttpClient mClient;
+
+
     private Thumbor mThumbor;
 
     private final String mTwitterProfileImageSize;
 
-    public TwidereImageDownloader(final Context context, final RestHttpClient client, final boolean useThumbor) {
+    public TwidereImageDownloader(final Context context, SharedPreferencesWrapper preferences, RestHttpClient client, final boolean useThumbor) {
         super(context);
         mContext = context;
-        mPreferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+        mPreferences = preferences;
+        mClient = client;
         mTwitterProfileImageSize = context.getString(R.string.profile_image_size);
         mUseThumbor = useThumbor;
         mUserAgent = UserAgentUtils.getDefaultUserAgentString(context);
-        mClient = client;
         reloadConnectivitySettings();
     }
 

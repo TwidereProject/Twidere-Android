@@ -24,8 +24,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.util.EmojiSupportUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
@@ -38,7 +37,7 @@ public class EmojiSpannableFactory extends SafeSpannableFactory {
     ExternalThemeManager externalThemeManager;
 
     public EmojiSpannableFactory(TextView textView) {
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(textView.getContext())).build().inject(this);
+        GeneralComponentHelper.build(textView.getContext()).inject(this);
     }
 
     @Override

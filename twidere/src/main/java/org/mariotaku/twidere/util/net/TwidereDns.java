@@ -56,6 +56,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class TwidereDns implements Constants, Dns {
 
     private static final String RESOLVER_LOGTAG = "TwidereDns";

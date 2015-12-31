@@ -187,7 +187,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         try {
             return JsonSerializer.parseList(file, ParcelableStatus.class);
         } catch (final IOException e) {
-            Log.w(LOGTAG, e);
+            // Ignore
         }
         return null;
     }

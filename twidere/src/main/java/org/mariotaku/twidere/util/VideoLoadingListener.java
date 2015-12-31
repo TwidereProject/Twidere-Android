@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -19,28 +19,20 @@
 
 package org.mariotaku.twidere.util;
 
-import android.support.v4.app.Fragment;
-
-import org.mariotaku.twidere.model.ParcelableCardEntity;
+import java.io.File;
 
 /**
- * Created by mariotaku on 15/1/1.
+ * Created by mariotaku on 15/12/31.
  */
-public final class TwitterCardFragmentFactoryImpl extends TwitterCardFragmentFactory {
+public interface VideoLoadingListener {
 
-    @Override
-    public Fragment createAnimatedGifFragment(ParcelableCardEntity card) {
-        return null;
-    }
+    void onVideoLoadingCancelled(String uri, VideoLoadingListener listener);
 
-    @Override
-    public Fragment createAudioFragment(ParcelableCardEntity card) {
-        return null;
-    }
+    void onVideoLoadingComplete(String uri, VideoLoadingListener listener, File file);
 
-    @Override
-    public Fragment createPlayerFragment(ParcelableCardEntity card) {
-        return null;
-    }
+    void onVideoLoadingFailed(String uri, VideoLoadingListener listener, Exception e);
 
+    void onVideoLoadingProgressUpdate(String uri, VideoLoadingListener listener, int current, int total);
+
+    void onVideoLoadingStarted(String uri, VideoLoadingListener listener);
 }

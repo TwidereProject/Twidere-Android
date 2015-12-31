@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map.Entry;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutConstants {
 
     public static final int MODIFIER_FLAG_CTRL = 0x00000001;

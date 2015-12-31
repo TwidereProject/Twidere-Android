@@ -44,9 +44,11 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 public abstract class AccountsListPreference extends PreferenceCategory implements Constants {
 
@@ -97,15 +99,17 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         private final ParcelableAccount mAccount;
         private final SharedPreferences mSwitchPreference;
-        private final MediaLoaderWrapper mImageLoader;
+
+        @Inject
+        MediaLoaderWrapper mImageLoader;
 
         public AccountItemPreference(final Context context, final ParcelableAccount account, final String switchKey,
                                      final boolean switchDefault) {
             super(context);
+            GeneralComponentHelper.build(context).inject(this);
             final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.account_id;
             mAccount = account;
             mSwitchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE);
-            mImageLoader = ApplicationModule.get(context).getMediaLoaderWrapper();
             mSwitchPreference.registerOnSharedPreferenceChangeListener(this);
         }
 

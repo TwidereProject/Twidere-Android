@@ -30,8 +30,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
@@ -42,7 +41,7 @@ public class BaseDialogFragment extends DialogFragment implements Constants {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(activity)).build().inject(this);
+        GeneralComponentHelper.build(activity).inject(this);
     }
 
     public TwidereApplication getApplication() {

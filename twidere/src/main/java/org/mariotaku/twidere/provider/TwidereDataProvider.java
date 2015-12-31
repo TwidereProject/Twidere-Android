@@ -125,8 +125,7 @@ import org.mariotaku.twidere.util.UriExtraUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
 
 import java.io.File;
@@ -144,12 +143,12 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import static org.mariotaku.twidere.util.DataStoreUtils.getTableId;
+import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameById;
 import static org.mariotaku.twidere.util.Utils.clearAccountColor;
 import static org.mariotaku.twidere.util.Utils.clearAccountName;
 import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getNotificationUri;
-import static org.mariotaku.twidere.util.DataStoreUtils.getTableId;
-import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameById;
 import static org.mariotaku.twidere.util.Utils.isNotificationsSilent;
 
 public final class TwidereDataProvider extends ContentProvider implements Constants, OnSharedPreferenceChangeListener,
@@ -592,7 +591,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     public boolean onCreate() {
         final Context context = getContext();
         assert context != null;
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+        GeneralComponentHelper.build(context).inject(this);
         mHandler = new Handler(Looper.getMainLooper());
         mDatabaseWrapper = new SQLiteDatabaseWrapper(this);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -1646,8 +1645,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     messagesCount, messagesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final UserColorNameManager manager = UserColorNameManager.getInstance(context);
-            final String displayName = manager.getUserNickname(userCursor.getLong(idxUserId),
+            final String displayName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
                     mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
             if (usersCount == 1) {
                 if (messagesCount == 1) {
@@ -1671,7 +1669,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 }
                 if (i < 5) {
                     final SpannableStringBuilder sb = new SpannableStringBuilder();
-                    sb.append(manager.getUserNickname(messageCursor.getLong(idxUserId),
+                    sb.append(mUserColorNameManager.getUserNickname(messageCursor.getLong(idxUserId),
                             mNameFirst ? messageCursor.getString(idxMessageUserName) : messageCursor.getString(idxMessageUserScreenName)));
                     sb.setSpan(new StyleSpan(Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     sb.append(' ');

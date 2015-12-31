@@ -32,7 +32,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -44,6 +44,8 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Singleton;
 
 import edu.tsinghua.hotmobi.model.BatteryRecord;
 import edu.tsinghua.hotmobi.model.LatLng;
@@ -60,6 +62,7 @@ import edu.tsinghua.hotmobi.model.TweetEvent;
 /**
  * Created by mariotaku on 15/8/10.
  */
+@Singleton
 public class HotMobiLogger {
 
     public static final long ACCOUNT_ID_NOT_NEEDED = -1;
@@ -122,8 +125,10 @@ public class HotMobiLogger {
         return uuid;
     }
 
+    @Deprecated
     public static HotMobiLogger getInstance(Context context) {
-        return ApplicationModule.get(context).getHotMobiLogger();
+        final DependencyHolder holder = new DependencyHolder(context);
+        return holder.getHotMobiLogger();
     }
 
     public static LatLng getCachedLatLng(Context context) {

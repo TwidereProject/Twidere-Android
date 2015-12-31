@@ -27,8 +27,8 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity.ParcelableBindingValue;
+import org.mariotaku.twidere.model.ParcelableBindingValue;
+import org.mariotaku.twidere.model.ParcelableCardEntity;
 
 /**
  * Created by mariotaku on 15/1/1.

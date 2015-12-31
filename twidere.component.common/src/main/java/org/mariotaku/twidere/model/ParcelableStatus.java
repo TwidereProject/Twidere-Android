@@ -19,30 +19,21 @@
 
 package org.mariotaku.twidere.model;
 
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.api.twitter.model.CardEntity;
-import org.mariotaku.twidere.api.twitter.model.CardEntity.BindingValue;
-import org.mariotaku.twidere.api.twitter.model.CardEntity.BooleanValue;
-import org.mariotaku.twidere.api.twitter.model.CardEntity.ImageValue;
-import org.mariotaku.twidere.api.twitter.model.CardEntity.StringValue;
-import org.mariotaku.twidere.api.twitter.model.CardEntity.UserValue;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
@@ -55,9 +46,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 @CursorObject(valuesCreator = true)
 @JsonObject
@@ -301,6 +289,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "card")
     @CursorField(value = Statuses.CARD, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableCardEntity card;
+
     @CursorField(value = Statuses._ID, excludeWrite = true)
     long _id;
     public static final Creator<ParcelableStatus> CREATOR = new Creator<ParcelableStatus>() {
@@ -531,204 +520,4 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         ParcelableStatusParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    @JsonObject
-    public static final class ParcelableCardEntity implements Parcelable {
-
-        public static final Parcelable.Creator<ParcelableCardEntity> CREATOR = new Parcelable.Creator<ParcelableCardEntity>() {
-            @Override
-            public ParcelableCardEntity createFromParcel(final Parcel in) {
-                return new ParcelableCardEntity(in);
-            }
-
-            @Override
-            public ParcelableCardEntity[] newArray(final int size) {
-                return new ParcelableCardEntity[size];
-            }
-        };
-
-        @ParcelableThisPlease
-        @JsonField(name = "name")
-        public String name;
-
-        @ParcelableThisPlease
-        @JsonField(name = "users")
-        public ParcelableUser[] users;
-
-        @ParcelableThisPlease
-        @JsonField(name = "values")
-        public Map<String, ParcelableBindingValue> values;
-
-        public ParcelableCardEntity(Parcel src) {
-            name = src.readString();
-            users = src.createTypedArray(ParcelableUser.CREATOR);
-            final Bundle bundle = src.readBundle(ParcelableBindingValue.class.getClassLoader());
-            for (String key : bundle.keySet()) {
-                if (values == null) {
-                    values = new HashMap<>();
-                }
-                final ParcelableBindingValue value = bundle.getParcelable(key);
-                values.put(key, value);
-            }
-        }
-
-        public ParcelableCardEntity() {
-
-        }
-
-        public ParcelableCardEntity(CardEntity card, long account_id) {
-            name = card.getName();
-            users = ParcelableUser.fromUsersArray(card.getUsers(), account_id);
-            values = ParcelableBindingValue.from(card.getBindingValues());
-        }
-
-        public static ParcelableCardEntity fromCardEntity(CardEntity card, long account_id) {
-            if (card == null) return null;
-            return new ParcelableCardEntity(card, account_id);
-        }
-
-        public static ParcelableCardEntity fromJSONString(final String json) {
-            if (TextUtils.isEmpty(json)) return null;
-            try {
-                return LoganSquare.parse(json, ParcelableCardEntity.class);
-            } catch (final IOException e) {
-                return null;
-            }
-        }
-
-        @Nullable
-        public static ParcelableBindingValue getValue(@Nullable ParcelableCardEntity entity, @Nullable String key) {
-            if (entity == null) return null;
-            return entity.getValue(key);
-        }
-
-        @Nullable
-        public ParcelableBindingValue getValue(@Nullable String key) {
-            if (key == null || values == null) return null;
-            return values.get(key);
-        }
-
-        public boolean getAsBoolean(@Nullable String key, boolean def) {
-            final ParcelableBindingValue value = getValue(key);
-            if (value == null) return def;
-            return Boolean.parseBoolean(value.value);
-        }
-
-        public String getAsString(@Nullable String key, String def) {
-            final ParcelableBindingValue value = getValue(key);
-            if (value == null) return def;
-            return value.value;
-        }
-
-        public int getAsInteger(@Nullable String key, int def) {
-            final ParcelableBindingValue value = getValue(key);
-            if (value == null) return def;
-            return NumberUtils.toInt(value.value, def);
-        }
-
-        public long getAsLong(@Nullable String key, long def) {
-            final ParcelableBindingValue value = getValue(key);
-            if (value == null) return def;
-            return NumberUtils.toLong(value.value, def);
-        }
-
-        @Override
-        public String toString() {
-            return "ParcelableCardEntity{" +
-                    "name='" + name + '\'' +
-                    ", users=" + Arrays.toString(users) +
-                    ", values=" + values +
-                    '}';
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(name);
-            dest.writeTypedArray(users, flags);
-            final Bundle bundle = new Bundle();
-            if (values != null) {
-                for (Entry<String, ParcelableBindingValue> entry : values.entrySet()) {
-                    bundle.putParcelable(entry.getKey(), entry.getValue());
-                }
-            }
-            dest.writeBundle(bundle);
-        }
-
-        @JsonObject
-        public static final class ParcelableBindingValue implements Parcelable {
-
-            public static final Parcelable.Creator<ParcelableBindingValue> CREATOR = new Parcelable.Creator<ParcelableBindingValue>() {
-                @Override
-                public ParcelableBindingValue createFromParcel(final Parcel in) {
-                    return new ParcelableBindingValue(in);
-                }
-
-                @Override
-                public ParcelableBindingValue[] newArray(final int size) {
-                    return new ParcelableBindingValue[size];
-                }
-            };
-
-            @ParcelableThisPlease
-            @JsonField(name = "type")
-            public String type;
-            @ParcelableThisPlease
-            @JsonField(name = "value")
-            public String value;
-
-            public ParcelableBindingValue() {
-            }
-
-            public ParcelableBindingValue(Parcel in) {
-                this.type = in.readString();
-                this.value = in.readString();
-            }
-
-            public ParcelableBindingValue(BindingValue value) {
-                if (value instanceof ImageValue) {
-                    this.type = BindingValue.TYPE_IMAGE;
-                    this.value = ((ImageValue) value).getUrl();
-                } else if (value instanceof StringValue) {
-                    this.type = BindingValue.TYPE_STRING;
-                    this.value = ((StringValue) value).getValue();
-                } else if (value instanceof BooleanValue) {
-                    this.type = BindingValue.TYPE_BOOLEAN;
-                    this.value = String.valueOf(((BooleanValue) value).getValue());
-                } else if (value instanceof UserValue) {
-                    this.type = BindingValue.TYPE_USER;
-                    this.value = String.valueOf(((UserValue) value).getUserId());
-                }
-            }
-
-            public static Map<String, ParcelableBindingValue> from(Map<String, BindingValue> bindingValues) {
-                if (bindingValues == null) return null;
-                final Map<String, ParcelableBindingValue> map = new HashMap<>();
-                for (Entry<String, BindingValue> entry : bindingValues.entrySet()) {
-                    map.put(entry.getKey(), new ParcelableBindingValue(entry.getValue()));
-                }
-                return map;
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeString(type);
-                dest.writeString(value);
-            }
-
-            @Override
-            public String toString() {
-                return value + " (" + type + ")";
-            }
-        }
-
-    }
 }

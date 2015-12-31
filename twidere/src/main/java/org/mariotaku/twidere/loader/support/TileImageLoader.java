@@ -37,19 +37,23 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ImageValidator;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.imageloader.AccountFullImageExtra;
+import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.inject.Inject;
 
 public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
     private final Uri mUri;
     private final Handler mHandler;
     private final DownloadListener mListener;
-    private final ImageDownloader mDownloader;
+    @Inject
+    ImageDownloader mDownloader;
     private final DiskCache mDiskCache;
 
     private final float mFallbackSize;
@@ -57,12 +61,12 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
     public TileImageLoader(final Context context, final DownloadListener listener, final long accountId, final Uri uri) {
         super(context);
+        GeneralComponentHelper.build(context).inject(this);
         mHandler = new Handler();
         mAccountId = accountId;
         mUri = uri;
         mListener = listener;
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mDownloader = ApplicationModule.get(context).getImageDownloader();
         mDiskCache = app.getFullDiskCache();
         final Resources res = context.getResources();
         final DisplayMetrics dm = res.getDisplayMetrics();

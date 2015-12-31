@@ -30,8 +30,7 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.ActionIconThemedTextView;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ForegroundColorView;
@@ -480,7 +479,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
 
         public DummyStatusHolderAdapter(Context context, TwidereLinkify linkify) {
-            DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+            GeneralComponentHelper.build(context).inject(this);
             this.context = context;
             preferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             handler = new MediaLoadingHandler(R.id.media_preview_progress);

@@ -33,6 +33,7 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.UriExtraUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.NotificationEvent;
@@ -49,19 +50,19 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
             case BROADCAST_NOTIFICATION_DELETED: {
                 final Uri uri = intent.getData();
                 if (uri == null) return;
+                DependencyHolder holder = new DependencyHolder(context);
                 final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
                 final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
                 final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
                 final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
                 final boolean itemUserFollowing = Boolean.parseBoolean(UriExtraUtils.getExtra(uri, "item_user_following"));
                 final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
-                final ApplicationModule module = ApplicationModule.get(context);
                 if (AUTHORITY_MENTIONS.equals(type) && accountId != -1 && itemId != -1 && timestamp != -1) {
-                    final HotMobiLogger logger = module.getHotMobiLogger();
+                    final HotMobiLogger logger = holder.getHotMobiLogger();
                     logger.log(accountId, NotificationEvent.deleted(context, timestamp, type, accountId,
                             itemId, itemUserId, itemUserFollowing));
                 }
-                final ReadStateManager manager = module.getReadStateManager();
+                final ReadStateManager manager = holder.getReadStateManager();
                 final String paramReadPosition, paramReadPositions;
                 final String tag = getPositionTag(type);
                 if (tag != null && !TextUtils.isEmpty(paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION))) {

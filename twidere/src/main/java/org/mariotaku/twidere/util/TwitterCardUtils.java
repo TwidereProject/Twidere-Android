@@ -24,8 +24,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.fragment.support.card.CardPollFragment;
+import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -54,7 +54,7 @@ public class TwitterCardUtils {
             final Fragment playerFragment = sFactory.createAnimatedGifFragment(card);
             if (playerFragment != null) return playerFragment;
             return TwitterCardFragmentFactory.createGenericPlayerFragment(card);
-        } else if (CardPollFragment.isPoll(card.name)) {
+        } else if (CardPollFragment.isPoll(card)) {
             return TwitterCardFragmentFactory.createCardPollFragment(status);
         }
         return null;
@@ -80,14 +80,14 @@ public class TwitterCardUtils {
                 return true;
             }
         }
-        if (CardPollFragment.isPoll(status.card_name)) {
+        if (CardPollFragment.isPoll(status.card)) {
             return true;
         }
         return false;
     }
 
     public static boolean isPoll(ParcelableStatus status) {
-        if (status.card_name == null) return false;
-        return CardPollFragment.isPoll(status.card_name);
+        if (status.card_name == null || status.card == null) return false;
+        return CardPollFragment.isPoll(status.card);
     }
 }

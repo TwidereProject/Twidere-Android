@@ -26,8 +26,7 @@ import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.AsyncTaskManager;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
 import javax.inject.Inject;
@@ -48,10 +47,7 @@ public abstract class ManagedAsyncTask<Params, Progress, Result> extends AsyncTa
 
     public ManagedAsyncTask(final Context context, final String tag) {
         //noinspection unchecked
-        DaggerGeneralComponent.builder()
-                .applicationModule(ApplicationModule.get(context))
-                .build()
-                .inject((ManagedAsyncTask<Object, Object, Object>) this);
+        GeneralComponentHelper.build(context).inject((ManagedAsyncTask<Object, Object, Object>) this);
         this.context = context;
         this.tag = tag;
     }

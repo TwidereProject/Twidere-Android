@@ -96,6 +96,7 @@ dependencies {
     compile 'com.github.uucky:ColorPicker-Android:0.9.7@aar'
     compile 'com.github.boxme:asyncmanager:1.0.0'
     compile 'com.sprylab.android.texturevideoview:texturevideoview:1.0.2'
+    compile 'com.danikula:videocache:2.3.4'
     compile 'com.squareup:pollexor:2.0.4'
     compile 'com.squareup:tape:1.2.3'
     compile 'org.apache.commons:commons-lang3:3.4'

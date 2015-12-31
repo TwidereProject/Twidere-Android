@@ -81,7 +81,6 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
         OnItemClickListener, MultiChoiceModeListener {
 
     private ContentResolver mResolver;
-    private SharedPreferences mPreferences;
 
     private DraftsAdapter mAdapter;
 
@@ -192,7 +191,6 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mResolver = getContentResolver();
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
         mAdapter = new DraftsAdapter(getActivity());
         mListView.setAdapter(mAdapter);

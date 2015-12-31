@@ -36,12 +36,12 @@ import android.support.v4.view.LayoutInflaterFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -53,9 +53,7 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
-import org.mariotaku.twidere.util.VideoLoader;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
@@ -69,8 +67,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     @Inject
     protected MediaLoaderWrapper mMediaLoader;
     @Inject
-    protected VideoLoader mVideoLoader;
-    @Inject
     protected Bus mBus;
     @Inject
     protected AsyncTaskManager mAsyncTaskManager;
@@ -82,6 +78,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected SharedPreferencesWrapper mPreferences;
     @Inject
     protected NotificationManagerWrapper mNotificationManager;
+    @Inject
+    protected HttpProxyCacheServer mHttpProxyCacheServer;
 
     public BaseSupportFragment() {
 
@@ -97,14 +95,7 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
-    }
-
-
-    public TwidereApplication getApplication() {
-        final Activity activity = getActivity();
-        if (activity != null) return (TwidereApplication) activity.getApplication();
-        return null;
+        GeneralComponentHelper.build(context).inject(this);
     }
 
     public ContentResolver getContentResolver() {

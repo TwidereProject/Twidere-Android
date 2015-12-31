@@ -40,8 +40,7 @@ import org.mariotaku.twidere.receiver.PowerStateReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.util.Arrays;
 
@@ -181,7 +180,7 @@ public class RefreshService extends Service implements Constants {
     @Override
     public void onCreate() {
         super.onCreate();
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(this)).build().inject(this);
+        GeneralComponentHelper.build(this).inject(this);
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         mPendingRefreshHomeTimelineIntent = PendingIntent.getBroadcast(this, 0, new Intent(
                 BROADCAST_REFRESH_HOME_TIMELINE), 0);

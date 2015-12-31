@@ -92,7 +92,7 @@ public class ParcelableMedia implements Parcelable {
         }
     };
     @ParcelableNoThanks
-    public ParcelableStatus.ParcelableCardEntity card;
+    public ParcelableCardEntity card;
 
     public ParcelableMedia() {
 
@@ -209,7 +209,7 @@ public class ParcelableMedia implements Parcelable {
         if ("animated_gif".equals(name) || "player".equals(name)) {
             final ParcelableMedia media = new ParcelableMedia();
             final BindingValue playerStreamUrl = card.getBindingValue("player_stream_url");
-            media.card = ParcelableStatus.ParcelableCardEntity.fromCardEntity(card, -1);
+            media.card = ParcelableCardEntity.fromCardEntity(card, -1);
             if ("animated_gif".equals(name)) {
                 media.media_url = ((StringValue) playerStreamUrl).getValue();
                 media.type = ParcelableMedia.TYPE_CARD_ANIMATED_GIF;
@@ -248,7 +248,7 @@ public class ParcelableMedia implements Parcelable {
                 return null;
 
             final ParcelableMedia media = new ParcelableMedia();
-            media.card = ParcelableStatus.ParcelableCardEntity.fromCardEntity(card, -1);
+            media.card = ParcelableCardEntity.fromCardEntity(card, -1);
             media.type = ParcelableMedia.TYPE_IMAGE;
             media.media_url = ((ImageValue) photoImageFullSize).getUrl();
             media.width = ((ImageValue) photoImageFullSize).getWidth();

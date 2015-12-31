@@ -31,8 +31,7 @@ import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.util.Collection;
 
@@ -62,7 +61,7 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
     public BaseArrayAdapter(final Context context, final int layoutRes, final Collection<? extends T> collection) {
         super(context, layoutRes, collection);
         //noinspection unchecked
-        DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject((BaseArrayAdapter<Object>) this);
+        GeneralComponentHelper.build(context).inject((BaseArrayAdapter<Object>) this);
         final TwidereApplication app = TwidereApplication.getInstance(context);
         mLinkify = new TwidereLinkify(new OnLinkClickHandler(context, mMultiSelectManager));
         mNicknamePrefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);

@@ -67,7 +67,6 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     private static final String FRAGMENT_TAG_ACCOUNT_DELETION = "account_deletion";
 
     private AccountsAdapter mAdapter;
-    private SharedPreferences mPreferences;
     private ParcelableAccount mSelectedAccount;
     private LongSparseArray<Boolean> mActivatedState = new LongSparseArray<>();
 
@@ -214,7 +213,6 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         final FragmentActivity activity = getActivity();
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         mAdapter = new AccountsAdapter(activity);
         Utils.configBaseAdapter(activity, mAdapter);

@@ -102,8 +102,7 @@ import org.mariotaku.twidere.util.TransitionUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
-import org.mariotaku.twidere.util.dagger.DaggerGeneralComponent;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.ShapedImageView;
 
 import java.util.ArrayList;
@@ -902,7 +901,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
         OptionItemsAdapter(final Context context) {
             super(context, R.layout.list_item_dashboard_menu);
-            DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build().inject(this);
+            GeneralComponentHelper.build(context).inject(this);
             mActionIconColor = ThemeUtils.getThemeForegroundColor(context);
         }
 

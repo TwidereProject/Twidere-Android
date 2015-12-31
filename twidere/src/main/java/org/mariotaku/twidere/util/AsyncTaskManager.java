@@ -36,9 +36,8 @@ public final class AsyncTaskManager {
     private final CopyOnWriteArrayList<ManagedAsyncTask<?, ?, ?>> mTasks = new CopyOnWriteArrayList<>();
     private final Handler mHandler;
     private final ExecutorService mExecutor;
-    private static AsyncTaskManager sInstance;
 
-    AsyncTaskManager() {
+    public AsyncTaskManager() {
         this(new Handler(Looper.getMainLooper()));
     }
 
@@ -135,12 +134,4 @@ public final class AsyncTaskManager {
         }
         return null;
     }
-
-    public static AsyncTaskManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new AsyncTaskManager();
-        }
-        return sInstance;
-    }
-
 }

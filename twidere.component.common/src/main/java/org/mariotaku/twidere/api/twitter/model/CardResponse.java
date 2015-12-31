@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,30 +17,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util;
+package org.mariotaku.twidere.api.twitter.model;
 
-import android.support.v4.app.Fragment;
-
-import org.mariotaku.twidere.model.ParcelableCardEntity;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
- * Created by mariotaku on 15/1/1.
+ * Created by mariotaku on 15/12/31.
  */
-public final class TwitterCardFragmentFactoryImpl extends TwitterCardFragmentFactory {
+@JsonObject
+public class CardResponse {
+    @JsonField(name = "card")
+    CardEntity card;
 
-    @Override
-    public Fragment createAnimatedGifFragment(ParcelableCardEntity card) {
-        return null;
+    public CardEntity getCard() {
+        return card;
     }
-
-    @Override
-    public Fragment createAudioFragment(ParcelableCardEntity card) {
-        return null;
-    }
-
-    @Override
-    public Fragment createPlayerFragment(ParcelableCardEntity card) {
-        return null;
-    }
-
 }

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support.card;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -29,34 +30,50 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.desmond.asyncmanager.AsyncManager;
+import com.desmond.asyncmanager.TaskRunnable;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.TwitterCaps;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.CardDataMap;
+import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
+import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatus.ParcelableCardEntity;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.support.ViewSupport;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by mariotaku on 15/12/20.
  */
-public class CardPollFragment extends BaseSupportFragment implements View.OnClickListener {
+public class CardPollFragment extends BaseSupportFragment implements
+        LoaderManager.LoaderCallbacks<ParcelableCardEntity>, View.OnClickListener {
 
     public static final Pattern PATTERN_POLL_TEXT_ONLY = Pattern.compile("poll([\\d]+)choice_text_only");
     private TableLayout mPollContainer;
-    private Button mVoteButton;
     private TextView mPollSummary;
+    private ParcelableCardEntity mCard;
+
 
     public static CardPollFragment show(ParcelableStatus status) {
         final CardPollFragment fragment = new CardPollFragment();
@@ -67,22 +84,22 @@ public class CardPollFragment extends BaseSupportFragment implements View.OnClic
         return fragment;
     }
 
-    public static boolean isPoll(@NonNull String name) {
-        return PATTERN_POLL_TEXT_ONLY.matcher(name).matches();
+    public static boolean isPoll(@NonNull ParcelableCardEntity card) {
+        return PATTERN_POLL_TEXT_ONLY.matcher(card.name).matches() && !TextUtils.isEmpty(card.url);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mVoteButton.setOnClickListener(this);
         initChoiceView(savedInstanceState);
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
     public void onBaseViewCreated(View view, Bundle savedInstanceState) {
         super.onBaseViewCreated(view, savedInstanceState);
         mPollContainer = (TableLayout) view.findViewById(R.id.poll_container);
-        mVoteButton = (Button) view.findViewById(R.id.vote);
         mPollSummary = (TextView) view.findViewById(R.id.poll_summary);
     }
 
@@ -103,21 +120,75 @@ public class CardPollFragment extends BaseSupportFragment implements View.OnClic
         final ParcelableStatus status = getStatus();
         final int choicesCount = getChoicesCount(card);
         final LayoutInflater inflater = getLayoutInflater(savedInstanceState);
+
+        for (int i = 0; i < choicesCount; i++) {
+            inflater.inflate(R.layout.layout_poll_item, mPollContainer, true);
+        }
+
+        displayPoll(card, status);
+    }
+
+    private void displayPoll(final ParcelableCardEntity card, final ParcelableStatus status) {
+        if (card == null || status == null) return;
+        mCard = card;
+        final int choicesCount = getChoicesCount(card);
         int votesSum = 0;
         final boolean countsAreFinal = card.getAsBoolean("counts_are_final", false);
-        final boolean showResult = countsAreFinal || status.account_id == status.user_id;
+        final int selectedChoice = card.getAsInteger("selected_choice", -1);
+        final Date endDatetimeUtc = card.getAsDate("end_datetime_utc", new Date());
+        final boolean hasChoice = selectedChoice != -1;
+        final boolean isMyPoll = status.account_id == status.user_id;
+        final boolean showResult = countsAreFinal || isMyPoll || hasChoice;
         for (int i = 0; i < choicesCount; i++) {
             final int choiceIndex = i + 1;
             votesSum += card.getAsInteger("choice" + choiceIndex + "_count", 0);
         }
 
         final View.OnClickListener clickListener = new View.OnClickListener() {
+            private boolean clickedChoice;
+
             @Override
             public void onClick(View v) {
+                if (hasChoice || clickedChoice) return;
                 for (int i = 0, j = mPollContainer.getChildCount(); i < j; i++) {
                     final View pollItem = mPollContainer.getChildAt(i);
+                    pollItem.setClickable(false);
+                    clickedChoice = true;
                     final RadioButton choiceRadioButton = (RadioButton) pollItem.findViewById(R.id.choice_button);
-                    choiceRadioButton.setChecked(v == pollItem);
+                    final boolean checked = v == pollItem;
+                    choiceRadioButton.setChecked(checked);
+                    if (checked) {
+                        final CardDataMap cardData = new CardDataMap();
+                        cardData.putLong("original_tweet_id", status.id);
+                        cardData.putString("card_uri", card.url);
+                        cardData.putString("cards_platform", TwitterAPIFactory.CARDS_PLATFORM_ANDROID_12);
+                        cardData.putString("response_card_name", card.name);
+                        cardData.putString("selected_choice", String.valueOf(i + 1));
+                        TaskRunnable<CardDataMap, ParcelableCardEntity, CardPollFragment> task
+                                = new TaskRunnable<CardDataMap, ParcelableCardEntity, CardPollFragment>() {
+
+                            @Override
+                            public void callback(CardPollFragment handler, ParcelableCardEntity result) {
+                                handler.displayPoll(result, status);
+                            }
+
+                            @Override
+                            public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) throws InterruptedException {
+                                final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(),
+                                        card.account_id, true, true, TwitterCaps.class);
+                                if (caps == null) return null;
+                                try {
+                                    final CardEntity cardEntity = caps.sendPassThrough(cardDataMap).getCard();
+                                    return ParcelableCardEntity.fromCardEntity(cardEntity, card.account_id);
+                                } catch (TwitterException e) {
+                                    Log.w(LOGTAG, e);
+                                }
+                                return null;
+                            }
+                        };
+                        task.setParams(cardData);
+                        AsyncManager.runBackgroundTask(task);
+                    }
                 }
             }
         };
@@ -125,7 +196,7 @@ public class CardPollFragment extends BaseSupportFragment implements View.OnClic
         final int color = ContextCompat.getColor(getContext(), R.color.material_light_blue_a200);
         final float radius = getResources().getDimension(R.dimen.element_spacing_small);
         for (int i = 0; i < choicesCount; i++) {
-            final View pollItem = inflater.inflate(R.layout.layout_poll_item, mPollContainer, false);
+            final View pollItem = mPollContainer.getChildAt(i);
 
             final TextView choicePercentView = (TextView) pollItem.findViewById(R.id.choice_percent);
             final TextView choiceLabelView = (TextView) pollItem.findViewById(R.id.choice_label);
@@ -137,29 +208,32 @@ public class CardPollFragment extends BaseSupportFragment implements View.OnClic
             if (label == null) throw new NullPointerException();
             final float choicePercent = votesSum == 0 ? 0 : value / (float) votesSum;
             choiceLabelView.setText(label);
-            ViewSupport.setBackground(choiceLabelView, new PercentDrawable(choicePercent, radius, color));
             choicePercentView.setText(String.format("%d%%", Math.round(choicePercent * 100)));
 
             pollItem.setOnClickListener(clickListener);
 
+            final boolean isSelected = selectedChoice == choiceIndex;
+
             if (showResult) {
                 choicePercentView.setVisibility(View.VISIBLE);
-                choiceRadioButton.setVisibility(View.GONE);
+                choiceRadioButton.setVisibility(hasChoice && isSelected ? View.VISIBLE : View.INVISIBLE);
+                ViewSupport.setBackground(choiceLabelView, new PercentDrawable(choicePercent, radius, color));
             } else {
                 choicePercentView.setVisibility(View.GONE);
                 choiceRadioButton.setVisibility(View.VISIBLE);
+                ViewSupport.setBackground(choiceLabelView, null);
             }
 
-            mPollContainer.addView(pollItem);
+            choiceRadioButton.setChecked(isSelected);
+            pollItem.setClickable(selectedChoice == -1);
+
         }
 
-        if (showResult) {
-            mVoteButton.setVisibility(View.GONE);
-        } else {
-            mVoteButton.setVisibility(View.VISIBLE);
-        }
         final String nVotes = getResources().getQuantityString(R.plurals.N_votes, votesSum, votesSum);
-        mPollSummary.setText(getString(R.string.poll_summary_format, nVotes, "final result"));
+
+        final CharSequence timeLeft = DateUtils.getRelativeTimeSpanString(getContext(),
+                endDatetimeUtc.getTime(), true);
+        mPollSummary.setText(getString(R.string.poll_summary_format, nVotes, timeLeft));
     }
 
     private int getChoicesCount(ParcelableCardEntity card) {
@@ -168,7 +242,9 @@ public class CardPollFragment extends BaseSupportFragment implements View.OnClic
         return NumberUtils.toInt(matcher.group(1));
     }
 
+    @NonNull
     private ParcelableCardEntity getCard() {
+        if (mCard != null) return mCard;
         final ParcelableCardEntity card = getArguments().getParcelable(EXTRA_CARD);
         assert card != null && card.name != null;
         return card;
@@ -180,6 +256,23 @@ public class CardPollFragment extends BaseSupportFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
+
+    }
+
+    @Override
+    public Loader<ParcelableCardEntity> onCreateLoader(int id, Bundle args) {
+        final ParcelableCardEntity card = getCard();
+        return new ParcelableCardEntityLoader(getContext(), card.account_id, card.url, card.name);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ParcelableCardEntity> loader, ParcelableCardEntity data) {
+        if (data == null) return;
+        displayPoll(data, getStatus());
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ParcelableCardEntity> loader) {
 
     }
 
@@ -223,6 +316,46 @@ public class CardPollFragment extends BaseSupportFragment implements View.OnClic
         @Override
         public int getOpacity() {
             return PixelFormat.TRANSLUCENT;
+        }
+    }
+
+    public static class ParcelableCardEntityLoader extends AsyncTaskLoader<ParcelableCardEntity> {
+        private final long mAccountId;
+        private final String mCardUri;
+        private final String mCardName;
+
+        public ParcelableCardEntityLoader(Context context, long accountId, String cardUri, String cardName) {
+            super(context);
+            mAccountId = accountId;
+            mCardUri = cardUri;
+            mCardName = cardName;
+        }
+
+        @Override
+        public ParcelableCardEntity loadInBackground() {
+            final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId,
+                    true, true, TwitterCaps.class);
+            if (caps == null) return null;
+            try {
+                final CardDataMap params = new CardDataMap();
+                params.putString("card_uri", mCardUri);
+                params.putString("cards_platform", TwitterAPIFactory.CARDS_PLATFORM_ANDROID_12);
+                params.putString("response_card_name", mCardName);
+                final CardEntity card = caps.getPassThrough(params).getCard();
+                if (card == null || card.getName() == null) {
+                    return null;
+                }
+                final ParcelableCardEntity parcelableCard = ParcelableCardEntity.fromCardEntity(card, mAccountId);
+
+                return parcelableCard;
+            } catch (TwitterException e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onStartLoading() {
+            forceLoad();
         }
     }
 }

@@ -33,8 +33,11 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.imageloader.AccountExtra;
 import org.mariotaku.twidere.util.imageloader.OvalBitmapDisplayer;
 
+import javax.inject.Singleton;
+
 import static org.mariotaku.twidere.util.Utils.getBestBannerUrl;
 
+@Singleton
 public class MediaLoaderWrapper implements Constants {
 
     private final ImageLoader mImageLoader;
@@ -42,11 +45,9 @@ public class MediaLoaderWrapper implements Constants {
     private final DisplayImageOptions mDashboardProfileImageDisplayOptions;
     private final DisplayImageOptions mOvalProfileImageDisplayOptions;
     private final DisplayImageOptions mImageDisplayOptions, mBannerDisplayOptions;
-    private final VideoLoader mVideoLoader;
 
-    public MediaLoaderWrapper(final ImageLoader imageLoader, VideoLoader videoLoader) {
-        mImageLoader = imageLoader;
-        mVideoLoader = videoLoader;
+    public MediaLoaderWrapper(final ImageLoader loader) {
+        mImageLoader = loader;
         final DisplayImageOptions.Builder profileOptsBuilder = new DisplayImageOptions.Builder();
         profileOptsBuilder.cacheInMemory(true);
         profileOptsBuilder.cacheOnDisk(true);

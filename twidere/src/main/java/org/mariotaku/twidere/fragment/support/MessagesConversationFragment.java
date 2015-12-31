@@ -81,7 +81,6 @@ import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
-import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.loader.support.UserSearchLoader;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -104,11 +103,10 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.TakeAllKeyboardShortc
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.ComposeEditText;
 
@@ -141,7 +139,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             final String query = args.getString(EXTRA_QUERY);
             final boolean fromCache = args.getBoolean(EXTRA_FROM_CACHE);
             final boolean fromUser = args.getBoolean(EXTRA_FROM_USER, false);
-            return new CacheUserSearchLoader(getActivity(), accountId, query, fromCache, fromUser);
+            return new CacheUserSearchLoader(MessagesConversationFragment.this, accountId, query,
+                    fromCache, fromUser);
         }
 
         @Override
@@ -162,7 +161,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     // Utility classes
     private TwidereValidator mValidator;
-    private SharedPreferencesWrapper mPreferences;
     private SharedPreferences mMessageDrafts;
     private EffectViewHelper mEffectHelper;
 
@@ -227,8 +225,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         super.onActivityCreated(savedInstanceState);
 
         final BaseAppCompatActivity activity = (BaseAppCompatActivity) getActivity();
-        mPreferences = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE, SharedPreferenceConstants.class);
         mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mValidator = new TwidereValidator(activity);
 
@@ -824,9 +820,11 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     public static class CacheUserSearchLoader extends UserSearchLoader {
         private final boolean mFromCache;
+        private final UserColorNameManager mUserColorNameManager;
 
-        public CacheUserSearchLoader(Context context, long accountId, String query, boolean fromCache, boolean fromUser) {
-            super(context, accountId, query, 0, null, fromUser);
+        public CacheUserSearchLoader(MessagesConversationFragment fragment, long accountId, String query, boolean fromCache, boolean fromUser) {
+            super(fragment.getContext(), accountId, query, 0, null, fromUser);
+            mUserColorNameManager = fragment.mUserColorNameManager;
             mFromCache = fromCache;
         }
 
@@ -841,8 +839,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 final Expression selection;
                 final String[] selectionArgs;
                 if (queryEscaped != null) {
-                    final UserColorNameManager nicknamePrefs = UserColorNameManager.getInstance(context);
-                    final long[] nicknameIds = Utils.getMatchedNicknameIds(query, nicknamePrefs);
+                    final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
                     selection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                             Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
                             Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
@@ -898,14 +895,14 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
     }
 
-    static class SetReadStateTask extends AsyncTask<Object, Object, Cursor> {
+    public static class SetReadStateTask extends AsyncTask<Object, Object, Cursor> {
         private final Context mContext;
-        private final ReadStateManager mReadStateManager;
+        ReadStateManager mReadStateManager;
         private final ParcelableCredentials mAccount;
         private final ParcelableUser mRecipient;
 
         public SetReadStateTask(Context context, ParcelableCredentials account, ParcelableUser recipient) {
-            mReadStateManager = ApplicationModule.get(context).getReadStateManager();
+            GeneralComponentHelper.build(context).inject(this);
             mContext = context;
             mAccount = account;
             mRecipient = recipient;
