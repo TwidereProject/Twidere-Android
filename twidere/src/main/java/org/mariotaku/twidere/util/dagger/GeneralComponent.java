@@ -41,8 +41,10 @@ import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
-import org.mariotaku.twidere.loader.support.TileImageLoader;
+import org.mariotaku.twidere.loader.support.CacheDownloadLoader;
+import org.mariotaku.twidere.loader.support.FullImageDownloadLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
+import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.provider.TwidereCommandProvider;
 import org.mariotaku.twidere.provider.TwidereDataProvider;
 import org.mariotaku.twidere.service.BackgroundOperationService;
@@ -51,8 +53,6 @@ import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
-import org.mariotaku.twidere.util.imageloader.TwidereSkiaImageDecoder;
-import org.mariotaku.twidere.util.imageloader.TwidereSkiaImageRegionDecoder;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
@@ -128,12 +128,12 @@ public interface GeneralComponent {
 
     void inject(MessagesConversationFragment.SetReadStateTask object);
 
-
     void inject(DependencyHolder object);
 
-    void inject(TileImageLoader object);
+    void inject(CacheDownloadLoader object);
 
-    void inject(TwidereSkiaImageRegionDecoder object);
+    void inject(FullImageDownloadLoader object);
 
-    void inject(TwidereSkiaImageDecoder object);
+    void inject(CacheProvider object);
+
 }

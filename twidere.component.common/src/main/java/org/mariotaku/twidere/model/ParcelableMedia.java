@@ -24,9 +24,9 @@ import org.mariotaku.twidere.api.twitter.model.MediaEntity.Size;
 import org.mariotaku.twidere.api.twitter.model.MediaEntity.Type;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
-import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
+import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -156,13 +156,8 @@ public class ParcelableMedia implements Parcelable {
         if (urlEntities != null) {
             for (final UrlEntity url : urlEntities) {
                 final String expanded = url.getExpandedUrl();
-                final String media_url = MediaPreviewUtils.getSupportedLink(expanded);
-                if (expanded != null && media_url != null) {
-                    final ParcelableMedia media = new ParcelableMedia();
-                    media.type = TYPE_IMAGE;
-                    media.page_url = expanded;
-                    media.media_url = media_url;
-                    media.preview_url = media_url;
+                final ParcelableMedia media = PreviewMediaExtractor.fromLink(expanded);
+                if (media != null) {
                     media.start = url.getStart();
                     media.end = url.getEnd();
                     list.add(media);

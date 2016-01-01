@@ -48,12 +48,12 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.RequestType;
-import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -108,7 +108,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     @Override
     protected InputStream getStreamFromNetwork(final String uriString, final Object extras) throws IOException {
         if (uriString == null) return null;
-        final ParcelableMedia media = MediaPreviewUtils.getAllAvailableImage(uriString, extras instanceof FullImageExtra, mClient);
+        final ParcelableMedia media = PreviewMediaExtractor.fromLink(uriString);
         try {
             final String mediaUrl = media != null ? media.media_url : uriString;
             if (isTwitterProfileImage(uriString)) {

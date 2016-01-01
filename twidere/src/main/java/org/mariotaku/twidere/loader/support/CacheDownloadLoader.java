@@ -20,102 +20,81 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.DisplayMetrics;
 
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
+import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
-import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.twidere.util.SimpleDiskCacheUtils;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.imageloader.AccountFullImageExtra;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
-import cz.fhucho.android.util.SimpleDiskCache;
-import okio.ByteString;
 
-public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
+public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadLoader.Result> {
 
     private final Uri mUri;
     private final Handler mHandler;
     private final DownloadListener mListener;
-    @Inject
-    ImageDownloader mDownloader;
-    @Inject
-    SimpleDiskCache mDiskCache;
 
-    private final float mFallbackSize;
-    private final long mAccountId;
+    @Inject
+    DiskCache mDiskCache;
 
-    public TileImageLoader(final Context context, final DownloadListener listener, final long accountId, final Uri uri) {
+    public CacheDownloadLoader(final Context context, final DownloadListener listener, final Uri uri) {
         super(context);
         GeneralComponentHelper.build(context).inject(this);
-        mHandler = new Handler();
-        mAccountId = accountId;
+        mHandler = new Handler(Looper.getMainLooper());
         mUri = uri;
         mListener = listener;
-        final Resources res = context.getResources();
-        final DisplayMetrics dm = res.getDisplayMetrics();
-        mFallbackSize = Math.max(dm.heightPixels, dm.widthPixels);
     }
 
     @Override
-    public TileImageLoader.Result loadInBackground() {
+    public CacheDownloadLoader.Result loadInBackground() {
         if (mUri == null) {
             return Result.nullInstance();
         }
         final String scheme = mUri.getScheme();
-        SimpleDiskCache.InputStreamEntry cacheEntry = null;
+        File cacheFile = null;
         if ("http".equals(scheme) || "https".equals(scheme)) {
             final String uriString = mUri.toString();
             if (uriString == null) return Result.nullInstance();
-            try {
-                cacheEntry = mDiskCache.getInputStream(uriString);
-            } catch (IOException e) {
-                // Ignore
-            }
-            if (isValid(cacheEntry)) {
-                return Result.getInstance(Uri.fromParts("cache",
-                        ByteString.encodeUtf8(uriString).base64Url(), null));
+            cacheFile = mDiskCache.get(uriString);
+            if (isValid(cacheFile)) {
+                return Result.getInstance(SimpleDiskCacheUtils.getCacheUri(uriString));
             }
             try {
                 // from SD cache
-                ContentLengthInputStream cis = null;
-                final InputStream is = mDownloader.getStream(uriString, new AccountFullImageExtra(mAccountId));
+                ContentLengthInputStream cis;
+                final InputStream is = getStreamFromNetwork(uriString);
                 if (is == null) return Result.nullInstance();
                 try {
                     final long length = is.available();
                     mHandler.post(new DownloadStartRunnable(this, mListener, length));
 
-                    final Map<String, String> metadata = new HashMap<>();
-                    metadata.put("length", String.valueOf(length));
-
                     cis = new ContentLengthInputStream(is, length);
-                    cis.setReadListener(new ContentLengthInputStream.ReadListener() {
+                    mDiskCache.save(uriString, cis, new IoUtils.CopyListener() {
                         @Override
-                        public void onRead(long length, long position) {
-                            mHandler.post(new ProgressUpdateRunnable(mListener, position));
+                        public boolean onBytesCopied(int length, int position) {
+                            mHandler.post(new ProgressUpdateRunnable(mListener, position, length));
+                            return !isAbandoned();
                         }
                     });
-                    mDiskCache.put(uriString, cis, metadata);
                     mHandler.post(new DownloadFinishRunnable(this, mListener));
                 } finally {
-                    IoUtils.closeSilently(is);
+                    Utils.closeSilently(is);
                 }
-                cacheEntry = mDiskCache.getInputStream(uriString);
-                if (isValid(cacheEntry)) {
-                    return Result.getInstance(Uri.fromParts("cache",
-                            ByteString.encodeUtf8(uriString).base64Url(), null));
+                cacheFile = mDiskCache.get(uriString);
+                if (isValid(cacheFile)) {
+                    return Result.getInstance(SimpleDiskCacheUtils.getCacheUri(uriString));
                 } else {
                     mDiskCache.remove(uriString);
                     throw new IOException();
@@ -128,11 +107,10 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
         return Result.getInstance(mUri);
     }
 
-    private static boolean isValid(SimpleDiskCache.InputStreamEntry entry) {
-        if (entry == null) return false;
-        final Map<String, String> metadata = entry.getMetadata();
-        final long length = NumberUtils.toLong(metadata.get("length"), -1);
-        return length == -1 || entry.getLength() == length;
+    protected abstract InputStream getStreamFromNetwork(String url) throws IOException;
+
+    private static boolean isValid(File entry) {
+        return entry != null;
     }
 
     @Override
@@ -148,7 +126,7 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
         void onDownloadStart(long total);
 
-        void onProgressUpdate(long downloaded);
+        void onProgressUpdate(long current, long total);
     }
 
     public static class Result {
@@ -175,11 +153,11 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
     private final static class DownloadErrorRunnable implements Runnable {
 
-        private final TileImageLoader loader;
+        private final CacheDownloadLoader loader;
         private final DownloadListener listener;
         private final Throwable t;
 
-        DownloadErrorRunnable(final TileImageLoader loader, final DownloadListener listener, final Throwable t) {
+        DownloadErrorRunnable(final CacheDownloadLoader loader, final DownloadListener listener, final Throwable t) {
             this.loader = loader;
             this.listener = listener;
             this.t = t;
@@ -194,10 +172,10 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
     private final static class DownloadFinishRunnable implements Runnable {
 
-        private final TileImageLoader loader;
+        private final CacheDownloadLoader loader;
         private final DownloadListener listener;
 
-        DownloadFinishRunnable(final TileImageLoader loader, final DownloadListener listener) {
+        DownloadFinishRunnable(final CacheDownloadLoader loader, final DownloadListener listener) {
             this.loader = loader;
             this.listener = listener;
         }
@@ -211,11 +189,11 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
 
     private final static class DownloadStartRunnable implements Runnable {
 
-        private final TileImageLoader loader;
+        private final CacheDownloadLoader loader;
         private final DownloadListener listener;
         private final long total;
 
-        DownloadStartRunnable(final TileImageLoader loader, final DownloadListener listener, final long total) {
+        DownloadStartRunnable(final CacheDownloadLoader loader, final DownloadListener listener, final long total) {
             this.loader = loader;
             this.listener = listener;
             this.total = total;
@@ -231,17 +209,18 @@ public class TileImageLoader extends AsyncTaskLoader<TileImageLoader.Result> {
     private final static class ProgressUpdateRunnable implements Runnable {
 
         private final DownloadListener listener;
-        private final long current;
+        private final long current, total;
 
-        ProgressUpdateRunnable(final DownloadListener listener, final long current) {
+        ProgressUpdateRunnable(final DownloadListener listener, final long current, final long total) {
             this.listener = listener;
             this.current = current;
+            this.total = total;
         }
 
         @Override
         public void run() {
             if (listener == null) return;
-            listener.onProgressUpdate(current);
+            listener.onProgressUpdate(current, total);
         }
     }
 }

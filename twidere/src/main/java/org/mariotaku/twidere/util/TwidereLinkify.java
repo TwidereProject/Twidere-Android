@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.mariotaku.twidere.util.MediaPreviewUtils.AVAILABLE_IMAGE_SHUFFIX;
 import static org.mariotaku.twidere.util.RegexUtils.matcherEnd;
 import static org.mariotaku.twidere.util.RegexUtils.matcherGroup;
 import static org.mariotaku.twidere.util.RegexUtils.matcherStart;
@@ -74,7 +73,7 @@ public final class TwidereLinkify implements Constants {
 
     public static final String TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES = "(bigger|normal|mini|reasonably_small)";
     private static final String STRING_PATTERN_TWITTER_PROFILE_IMAGES_NO_SCHEME = "(twimg[\\d\\w\\-]+\\.akamaihd\\.net|[\\w\\d]+\\.twimg\\.com)/profile_images/([\\d\\w\\-_]+)/([\\d\\w\\-_]+)_"
-            + TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES + "(\\.?" + AVAILABLE_IMAGE_SHUFFIX + ")?";
+            + TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES + "(\\.?" + "(png|jpeg|jpg|gif|bmp)" + ")?";
     private static final String STRING_PATTERN_TWITTER_PROFILE_IMAGES = AVAILABLE_URL_SCHEME_PREFIX
             + STRING_PATTERN_TWITTER_PROFILE_IMAGES_NO_SCHEME;
 

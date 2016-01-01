@@ -31,9 +31,13 @@ public class URLFileNameGenerator implements FileNameGenerator {
     }
 
     @Override
-    public String generate(final String imageUri) {
+    public String generate(String imageUri) {
         if (imageUri == null) return null;
-        return mGenerator.generate(imageUri.replaceFirst("https?://", ""));
+        int start = imageUri.indexOf("://");
+        if (start == -1) {
+            return mGenerator.generate(imageUri);
+        }
+        return mGenerator.generate(imageUri.substring(start + 3));
     }
 
 }

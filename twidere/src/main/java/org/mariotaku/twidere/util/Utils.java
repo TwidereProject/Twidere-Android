@@ -213,7 +213,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
-import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
@@ -2166,6 +2165,12 @@ public final class Utils implements Constants {
                                          final ParcelableStatus status, final ParcelableDirectMessage message,
                                          final ParcelableMedia current, final ParcelableMedia[] media, Bundle options) {
         if (context == null || media == null) return;
+        if (!BuildConfig.ENABLE_MEDIA_VIEWER) {
+            final Uri parse = Uri.parse(current.page_url);
+            context.startActivity(new Intent(Intent.ACTION_VIEW, parse));
+            return;
+        }
+        // TODO: enable media viewer after finish cache design
         final Intent intent = new Intent(INTENT_ACTION_VIEW_MEDIA);
         intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
         intent.putExtra(EXTRA_CURRENT_MEDIA, current);

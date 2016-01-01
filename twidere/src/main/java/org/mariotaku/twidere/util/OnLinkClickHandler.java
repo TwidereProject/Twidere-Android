@@ -31,6 +31,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
+import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.LinkEvent;
@@ -73,7 +74,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_LINK: {
-                if (MediaPreviewUtils.isLinkSupported(link)) {
+                if (PreviewMediaExtractor.isSupported(link)) {
                     openMedia(accountId, extraId, sensitive, link, start, end);
                 } else {
                     openLink(link);

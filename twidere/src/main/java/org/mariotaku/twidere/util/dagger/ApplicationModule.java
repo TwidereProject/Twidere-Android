@@ -28,7 +28,6 @@ import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.Dns;
 import com.squareup.otto.Bus;
@@ -63,7 +62,6 @@ import java.io.IOException;
 
 import javax.inject.Singleton;
 
-import cz.fhucho.android.util.SimpleDiskCache;
 import dagger.Module;
 import dagger.Provides;
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -146,7 +144,7 @@ public class ApplicationModule implements Constants {
 
     @Provides
     @Singleton
-    public ImageLoader imageLoader(ImageDownloader downloader, SharedPreferencesWrapper preferences) {
+    public ImageLoader imageLoader(SharedPreferencesWrapper preferences, RestHttpClient client) {
         final ImageLoader loader = ImageLoader.getInstance();
         final ImageLoaderConfiguration.Builder cb = new ImageLoaderConfiguration.Builder(application);
         cb.threadPriority(Thread.NORM_PRIORITY - 2);
@@ -154,16 +152,10 @@ public class ApplicationModule implements Constants {
         cb.tasksProcessingOrder(QueueProcessingType.LIFO);
         // cb.memoryCache(new ImageMemoryCache(40));
         cb.diskCache(createDiskCache("images", preferences));
-        cb.imageDownloader(downloader);
+        cb.imageDownloader(new TwidereImageDownloader(application, preferences, client, true));
         L.writeDebugLogs(BuildConfig.DEBUG);
         loader.init(cb.build());
         return loader;
-    }
-
-    @Provides
-    @Singleton
-    public ImageDownloader imageDownloader(SharedPreferencesWrapper preferences, RestHttpClient client) {
-        return new TwidereImageDownloader(application, preferences, client, true);
     }
 
     @Provides
@@ -202,21 +194,9 @@ public class ApplicationModule implements Constants {
 
     @Provides
     @Singleton
-    public SimpleDiskCache providesSimpleDiskCache() {
-        final File cacheDir = new File(application.getCacheDir(), "files");
-        final File reserveCacheDir = new File(application.getExternalCacheDir(), "files");
-        return openCache(cacheDir, reserveCacheDir);
+    public DiskCache providesDiskCache(SharedPreferencesWrapper preferences) {
+        return createDiskCache("files", preferences);
     }
-
-    private SimpleDiskCache openCache(File cacheDir, File reserveCacheDir) {
-        try {
-            return SimpleDiskCache.open(cacheDir, BuildConfig.VERSION_CODE, 512 * 1024 * 1024);
-        } catch (IOException e) {
-            if (reserveCacheDir == null) throw new RuntimeException(e);
-            return openCache(reserveCacheDir, null);
-        }
-    }
-
 
     private DiskCache createDiskCache(final String dirName, SharedPreferencesWrapper preferences) {
         final File cacheDir = Utils.getExternalCacheDir(application, dirName);

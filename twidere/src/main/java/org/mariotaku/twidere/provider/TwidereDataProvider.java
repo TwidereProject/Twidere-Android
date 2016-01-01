@@ -110,7 +110,6 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.DatabaseQueryUtils;
 import org.mariotaku.twidere.util.ImagePreloader;
-import org.mariotaku.twidere.util.MediaPreviewUtils;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.PermissionsManager;
@@ -1727,9 +1726,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
             if (mPreferences.getBoolean(KEY_PRELOAD_PREVIEW_IMAGES, false)) {
                 final String textHtml = v.getAsString(Statuses.TEXT_HTML);
-                for (final String link : MediaPreviewUtils.getSupportedLinksInStatus(textHtml)) {
-                    mImagePreloader.preloadImage(link);
-                }
+//                for (final String link : MediaPreviewUtils.getSupportedLinksInStatus(textHtml)) {
+//                    mImagePreloader.preloadImage(link);
+//                }
             }
         }
     }

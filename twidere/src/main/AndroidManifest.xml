@@ -79,7 +79,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="dc4ee756d3b705e00011782f1426fc8656ad3bd9" />
+            android:value="dc4ee756d3b705e00011782f1426fc8656ad3bd9"/>
 
         <meta-data
             android:name="com.google.android.backup.api_key"
@@ -539,6 +539,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+        <provider
+            android:name=".provider.CacheProvider"
+            android:authorities="twidere.cache"
+            android:exported="false"/>
 
         <receiver android:name=".receiver.ConnectivityStateReceiver">
             <intent-filter>
