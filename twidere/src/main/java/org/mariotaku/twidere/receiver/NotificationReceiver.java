@@ -32,7 +32,6 @@ import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.UriExtraUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -50,7 +49,7 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
             case BROADCAST_NOTIFICATION_DELETED: {
                 final Uri uri = intent.getData();
                 if (uri == null) return;
-                DependencyHolder holder = new DependencyHolder(context);
+                DependencyHolder holder = DependencyHolder.get(context);
                 final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
                 final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
                 final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), -1);

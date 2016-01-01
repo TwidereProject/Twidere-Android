@@ -125,10 +125,8 @@ public class HotMobiLogger {
         return uuid;
     }
 
-    @Deprecated
     public static HotMobiLogger getInstance(Context context) {
-        final DependencyHolder holder = new DependencyHolder(context);
-        return holder.getHotMobiLogger();
+        return DependencyHolder.get(context).getHotMobiLogger();
     }
 
     public static LatLng getCachedLatLng(Context context) {

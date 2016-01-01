@@ -51,7 +51,7 @@ public class DependencyHolder {
     @Inject
     Dns mDns;
 
-    public DependencyHolder(Context context) {
+    DependencyHolder(Context context) {
         GeneralComponentHelper.build(context).inject(this);
     }
 

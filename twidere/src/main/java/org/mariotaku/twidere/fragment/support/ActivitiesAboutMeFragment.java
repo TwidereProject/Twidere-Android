@@ -62,7 +62,7 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
 
     @Override
     protected String getReadPositionTag() {
-        return "activities_about_me";
+        return READ_POSITION_TAG_ACTIVITIES_ABOUT_ME;
     }
 
     @Override

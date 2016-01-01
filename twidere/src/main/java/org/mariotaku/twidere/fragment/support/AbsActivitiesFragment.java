@@ -381,40 +381,6 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         return ParcelableActivity.getActivityStatus(adapter.getActivity(position));
     }
 
-    //    @Override
-//    public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
-//        //TODO handle long click event
-//        return true;
-//    }
-
-//    @Override
-//    public void onStatusMenuClick(IStatusViewHolder holder, View menuView, int position) {
-//        if (mPopupMenu != null) {
-//            mPopupMenu.dismiss();
-//        }
-//        final AbsActivitiesAdapter<Data> adapter = getAdapter();
-//        final PopupMenu popupMenu = new PopupMenu(adapter.getContext(), menuView,
-//                Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0);
-//        popupMenu.setOnMenuItemClickListener(mOnStatusMenuItemClickListener);
-//        popupMenu.inflate(R.menu.action_status);
-//        final ParcelableActivity activity = adapter.getActivity(position);
-//        Utils.setMenuForStatus(adapter.getContext(), mPreferences, popupMenu.getMenu(), activity, mTwitterWrapper);
-//        popupMenu.show();
-//        mPopupMenu = popupMenu;
-//        mSelecteActivity = activity;
-//    }
-
-//    @Override
-//    public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
-//        final FragmentActivity activity = getActivity();
-//        final View profileImageView = holder.getProfileImageView();
-//        final View profileTypeView = holder.getProfileTypeView();
-//        final Bundle options = Utils.makeSceneTransitionOption(activity,
-//                new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-//                new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-//        Utils.openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name, options);
-//    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -526,7 +492,9 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
         if (activity == null) return;
-        mReadStateManager.setPosition(readPositionTag, activity.timestamp);
+        if (mReadStateManager.setPosition(readPositionTag, activity.timestamp)) {
+            mTwitterWrapper.setActivitiesAboutMeUnreadAsync(getAccountIds(), activity.timestamp);
+        }
         mReadStateManager.setPosition(getCurrentReadPositionTag(), activity.timestamp, true);
     }
 

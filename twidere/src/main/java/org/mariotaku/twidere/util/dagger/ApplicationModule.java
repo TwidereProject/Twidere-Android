@@ -175,9 +175,11 @@ public class ApplicationModule implements Constants {
     @Provides
     @Singleton
     public AsyncTwitterWrapper asyncTwitterWrapper(UserColorNameManager userColorNameManager,
+                                                   ReadStateManager readStateManager,
                                                    Bus bus, SharedPreferencesWrapper preferences,
                                                    AsyncTaskManager asyncTaskManager) {
-        return new AsyncTwitterWrapper(application, userColorNameManager, bus, preferences, asyncTaskManager);
+        return new AsyncTwitterWrapper(application, userColorNameManager, readStateManager, bus,
+                preferences, asyncTaskManager);
     }
 
     @Provides

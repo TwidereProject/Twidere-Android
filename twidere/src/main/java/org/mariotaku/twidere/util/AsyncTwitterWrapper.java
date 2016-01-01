@@ -48,6 +48,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.api.twitter.model.CursorTimestampResponse;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -121,6 +122,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private final SharedPreferencesWrapper mPreferences;
     private final Bus mBus;
     private final UserColorNameManager mUserColorNameManager;
+    private final ReadStateManager mReadStateManager;
 
     private int mGetHomeTimelineTaskId, mGetMentionsTaskId;
     private int mGetReceivedDirectMessagesTaskId, mGetSentDirectMessagesTaskId;
@@ -133,10 +135,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     private CopyOnWriteArraySet<Long> mSendingDraftIds = new CopyOnWriteArraySet<>();
 
-    public AsyncTwitterWrapper(Context context, UserColorNameManager userColorNameManager, Bus bus, SharedPreferencesWrapper preferences, AsyncTaskManager asyncTaskManager) {
+    public AsyncTwitterWrapper(Context context, UserColorNameManager userColorNameManager,
+                               ReadStateManager readStateManager, Bus bus,
+                               SharedPreferencesWrapper preferences, AsyncTaskManager asyncTaskManager) {
         mContext = context;
         mResolver = context.getContentResolver();
         mUserColorNameManager = userColorNameManager;
+        mReadStateManager = readStateManager;
         mBus = bus;
         mPreferences = preferences;
         mAsyncTaskManager = asyncTaskManager;
@@ -492,7 +497,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int updateUserListDetails(final long accountId, final long listId, final UserListUpdate update) {
-        final UpdateUserListDetailsTask task = new UpdateUserListDetailsTask(accountId, listId, update);
+        final UpdateUserListDetailsTask task = new UpdateUserListDetailsTask(mContext, accountId, listId, update);
         return mAsyncTaskManager.add(task, true);
     }
 
@@ -534,11 +539,22 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         mAsyncTaskManager.add(new GetActivitiesTask(this, TASK_TAG_GET_MENTIONS, accountIds, maxIds, sinceIds) {
 
             @Override
+            protected void getReadPosition(long accountId, Twitter twitter) {
+                try {
+                    CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
+                    final String tag = Utils.getReadPositionTagWithAccounts(READ_POSITION_TAG_ACTIVITIES_ABOUT_ME, accountIds);
+                    mReadStateManager.setPosition(tag, response.getCursor(), false);
+                } catch (TwitterException e) {
+                    // Ignore
+                }
+            }
+
+            @Override
             protected ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException {
                 if (Utils.isOfficialKeyAccount(getContext(), accountId)) {
                     return twitter.getActivitiesAboutMe(paging);
                 }
-                final ResponseList<Activity> activities = new ResponseList<Activity>();
+                final ResponseList<Activity> activities = new ResponseList<>();
                 for (org.mariotaku.twidere.api.twitter.model.Status status : twitter.getMentionsTimeline(paging)) {
                     activities.add(Activity.fromMention(accountId, status));
                 }
@@ -556,6 +572,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         mAsyncTaskManager.add(new GetActivitiesTask(this, "get_activities_by_friends", accountIds, maxIds, sinceIds) {
 
             @Override
+            protected void getReadPosition(long accountId, Twitter twitter) {
+
+            }
+
+            @Override
             protected ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException {
                 return twitter.getActivitiesByFriends(paging);
             }
@@ -567,12 +588,34 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }, true);
     }
 
+    public void setActivitiesAboutMeUnreadAsync(final long[] accountIds, final long cursor) {
+        TaskRunnable<Object, Object, AsyncTwitterWrapper> task = new TaskRunnable<Object, Object, AsyncTwitterWrapper>() {
+
+            @Override
+            public Object doLongOperation(Object o) throws InterruptedException {
+                for (long accountId : accountIds) {
+                    Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, false);
+                    if (Utils.isOfficialTwitterInstance(mContext, twitter)) continue;
+                    try {
+                        twitter.setActivitiesAboutMeUnread(cursor);
+                    } catch (TwitterException e) {
+                        if (BuildConfig.DEBUG) {
+                            Log.w(LOGTAG, e);
+                        }
+                    }
+                }
+                return null;
+            }
+        };
+        AsyncManager.runBackgroundTask(task);
+    }
+
     static abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object, Object> {
 
-        private final AsyncTwitterWrapper twitterWrapper;
-        private final long[] accountIds;
-        private final long[] maxIds;
-        private final long[] sinceIds;
+        final AsyncTwitterWrapper twitterWrapper;
+        final long[] accountIds;
+        final long[] maxIds;
+        final long[] sinceIds;
 
         public GetActivitiesTask(AsyncTwitterWrapper twitterWrapper, String tag, long[] accountIds, long[] maxIds, long[] sinceIds) {
             super(twitterWrapper.getContext(), tag);
@@ -631,12 +674,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         }
                     }
                     ContentResolverUtils.bulkInsert(cr, getContentUri(), valuesList);
+                    getReadPosition(accountId, twitter);
                 } catch (TwitterException e) {
 
                 }
             }
             return null;
         }
+
+        protected abstract void getReadPosition(long accountId, Twitter twitter);
 
         protected abstract ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException;
 
@@ -2569,25 +2615,28 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class StoreLocalTrendsTask extends StoreTrendsTask {
 
         public StoreLocalTrendsTask(final ListResponse<Trends> result) {
-            super(result, CachedTrends.Local.CONTENT_URI);
+            super(mContext, result, CachedTrends.Local.CONTENT_URI);
         }
 
     }
 
-    class StoreTrendsTask extends ManagedAsyncTask<Object, Object, SingleResponse<Boolean>> {
+    static class StoreTrendsTask extends ManagedAsyncTask<Object, Object, SingleResponse<Boolean>> {
 
         private final ListResponse<Trends> response;
         private final Uri uri;
+        private Context context;
 
-        public StoreTrendsTask(final ListResponse<Trends> result, final Uri uri) {
-            super(mContext, TASK_TAG_STORE_TRENDS);
-            response = result;
+        public StoreTrendsTask(Context context, final ListResponse<Trends> response, final Uri uri) {
+            super(context, TASK_TAG_STORE_TRENDS);
+            this.response = response;
             this.uri = uri;
+            this.context = context;
         }
 
         @Override
         protected SingleResponse<Boolean> doInBackground(final Object... args) {
             if (response == null) return SingleResponse.getInstance(false);
+            ContentResolver cr = context.getContentResolver();
             final List<Trends> messages = response.getData();
             final ArrayList<String> hashtags = new ArrayList<>();
             final ArrayList<ContentValues> hashtagValues = new ArrayList<>();
@@ -2603,10 +2652,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     hashtagValue.put(CachedHashtags.NAME, hashtag);
                     hashtagValues.add(hashtagValue);
                 }
-                mResolver.delete(uri, null, null);
-                ContentResolverUtils.bulkInsert(mResolver, uri, valuesArray);
-                ContentResolverUtils.bulkDelete(mResolver, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, hashtags, null, true);
-                ContentResolverUtils.bulkInsert(mResolver, CachedHashtags.CONTENT_URI,
+                cr.delete(uri, null, null);
+                ContentResolverUtils.bulkInsert(cr, uri, valuesArray);
+                ContentResolverUtils.bulkDelete(cr, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, hashtags, null, true);
+                ContentResolverUtils.bulkInsert(cr, CachedHashtags.CONTENT_URI,
                         hashtagValues.toArray(new ContentValues[hashtagValues.size()]));
             }
             return SingleResponse.getInstance(true);
@@ -2625,17 +2674,19 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class UpdateUserListDetailsTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
+    static class UpdateUserListDetailsTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final long accountId;
         private final long listId;
         private final UserListUpdate update;
+        private Context mContext;
 
-        public UpdateUserListDetailsTask(final long accountId, final long listId, UserListUpdate update) {
-            super(mContext);
+        public UpdateUserListDetailsTask(Context context, final long accountId, final long listId, UserListUpdate update) {
+            super(context);
             this.accountId = accountId;
             this.listId = listId;
             this.update = update;
+            this.mContext = context;
         }
 
         @Override

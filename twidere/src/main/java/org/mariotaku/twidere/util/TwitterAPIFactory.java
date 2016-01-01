@@ -55,7 +55,6 @@ import org.mariotaku.twidere.api.twitter.util.TwitterConverter;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.RequestType;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
@@ -228,7 +227,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         } else {
             userAgent = getTwidereUserAgent(context);
         }
-        DependencyHolder holder = new DependencyHolder(context);
+        DependencyHolder holder = DependencyHolder.get(context);
         factory.setClient(holder.getRestHttpClient());
         factory.setConverter(new TwitterConverter());
         factory.setEndpoint(endpoint);

@@ -149,7 +149,7 @@ public class ReadStateManager implements Constants {
     }
 
     public boolean setPosition(final String key, final long id, boolean acceptOlder) {
-        if (TextUtils.isEmpty(key) || !acceptOlder && getPosition(key) > id) return false;
+        if (TextUtils.isEmpty(key) || !acceptOlder && getPosition(key) >= id) return false;
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putLong(key, id);
         editor.apply();

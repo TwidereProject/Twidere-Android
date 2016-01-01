@@ -21,9 +21,11 @@ package org.mariotaku.twidere.util.net;
 
 import android.content.Context;
 import android.os.Looper;
+import android.util.Log;
 
 import com.squareup.okhttp.Dns;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.io.IOException;
@@ -82,6 +84,8 @@ public class TwidereProxySelector extends ProxySelector {
 
     @Override
     public void connectFailed(URI uri, SocketAddress address, IOException failure) {
-
+        if (BuildConfig.DEBUG) {
+            Log.w("TwidereProxy", String.format("%s: proxy %s connect failed", uri, address), failure);
+        }
     }
 }

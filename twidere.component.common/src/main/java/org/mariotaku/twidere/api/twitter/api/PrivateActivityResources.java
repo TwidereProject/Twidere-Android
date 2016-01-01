@@ -21,8 +21,11 @@ package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Body;
+import org.mariotaku.restfu.annotation.param.Form;
 import org.mariotaku.restfu.annotation.param.MethodExtra;
 import org.mariotaku.restfu.annotation.param.Query;
+import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.CursorTimestampResponse;
@@ -42,8 +45,8 @@ public interface PrivateActivityResources extends PrivateResources {
     CursorTimestampResponse getActivitiesAboutMeUnread(@Query("cursor") boolean cursor) throws TwitterException;
 
     @POST("/activity/about_me/unread.json")
-    CursorTimestampResponse setActivitiesAboutMeUnread(@Query("cursor") long cursor) throws TwitterException;
-
+    @Body(BodyType.FORM)
+    CursorTimestampResponse setActivitiesAboutMeUnread(@Form("cursor") long cursor) throws TwitterException;
 
     @GET("/activity/by_friends.json")
     ResponseList<Activity> getActivitiesByFriends(@Query Paging paging) throws TwitterException;
