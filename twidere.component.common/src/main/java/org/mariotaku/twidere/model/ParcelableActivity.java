@@ -105,10 +105,14 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @JsonField(name = "is_gap")
     @CursorField(value = Activities.IS_GAP)
     public boolean is_gap;
+    @ParcelableThisPlease
+    @JsonField(name = "status_user_following")
+    @CursorField(value = Activities.STATUS_USER_FOLLOWING, excludeWrite = true)
+    public boolean status_user_following;
 
 
-    public transient long[] filtered_source_ids;
-    public transient ParcelableUser[] filtered_sources;
+    public transient long[] after_filtered_source_ids;
+    public transient ParcelableUser[] after_filtered_sources;
 
     public ParcelableActivity() {
     }
@@ -204,19 +208,4 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         }
     };
 
-    public ParcelableUser[] getUnfilteredSources() {
-        if (filtered_sources != null) return filtered_sources;
-        if (filtered_source_ids == null || sources.length == filtered_source_ids.length) {
-            return sources;
-        }
-        ParcelableUser[] result = new ParcelableUser[filtered_source_ids.length];
-        for (int i = 0; i < filtered_source_ids.length; i++) {
-            for (ParcelableUser user : sources) {
-                if (user.id == filtered_source_ids[i]) {
-                    result[i] = user;
-                }
-            }
-        }
-        return filtered_sources = result;
-    }
 }

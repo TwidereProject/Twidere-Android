@@ -32,6 +32,7 @@ import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
@@ -75,7 +76,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
 
     public void displayActivity(ParcelableActivity activity, boolean byFriends) {
         final Context context = adapter.getContext();
-        final ParcelableUser[] sources = activity.getUnfilteredSources();
+        final ParcelableUser[] sources = ParcelableActivityUtils.getAfterFilteredSources(activity);
         final ActivityTitleSummaryMessage message = ActivityTitleSummaryMessage.get(context,
                 adapter.getUserColorNameManager(), activity, sources, activityTypeView.getDefaultColor(),
                 byFriends, adapter.shouldUseStarsForLikes(), adapter.isNameFirst());

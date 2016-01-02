@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.apache.commons.collections.primitives.ArrayLongList;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -42,6 +41,7 @@ import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -76,6 +76,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     private ActivityAdapterListener mActivityAdapterListener;
 
     private long[] mFilteredUserIds;
+    private boolean mFollowingOnly;
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         super(context);
@@ -224,8 +225,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             }
             case ITEM_VIEW_TYPE_EMPTY: {
                 final View view = new Space(getContext());
-                return new ViewHolder(view) {
-                };
+                return new EmptyViewHolder(view);
             }
         }
         throw new UnsupportedOperationException("Unsupported viewType " + viewType);
@@ -271,41 +271,38 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             if (ArrayUtils.isEmpty(activity.target_object_statuses)) {
                 return ITEM_VIEW_TYPE_STUB;
             }
+            if (mFollowingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY;
             return ITEM_VIEW_TYPE_STATUS;
         } else if (Activity.Action.REPLY.literal.equals(action)) {
             if (ArrayUtils.isEmpty(activity.target_statuses)) {
                 return ITEM_VIEW_TYPE_STUB;
             }
+            if (mFollowingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY;
             return ITEM_VIEW_TYPE_STATUS;
         } else if (Activity.Action.QUOTE.literal.equals(action)) {
             if (ArrayUtils.isEmpty(activity.target_statuses)) {
                 return ITEM_VIEW_TYPE_STUB;
             }
+            if (mFollowingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY;
             return ITEM_VIEW_TYPE_STATUS;
         } else if (Activity.Action.FOLLOW.literal.equals(action) || Activity.Action.FAVORITE.literal.equals(action)
                 || Activity.Action.RETWEET.literal.equals(action) || Activity.Action.FAVORITED_RETWEET.literal.equals(action)
                 || Activity.Action.RETWEETED_RETWEET.literal.equals(action) || Activity.Action.RETWEETED_MENTION.literal.equals(action)
                 || Activity.Action.FAVORITED_MENTION.literal.equals(action) || Activity.Action.LIST_CREATED.literal.equals(action)
                 || Activity.Action.LIST_MEMBER_ADDED.literal.equals(action)) {
-            if (activity.filtered_source_ids == null) {
-                if (!ArrayUtils.isEmpty(mFilteredUserIds)) {
-                    ArrayLongList list = new ArrayLongList();
-                    for (long id : ArrayUtils.nullToEmpty(activity.source_ids)) {
-                        if (!ArrayUtils.contains(mFilteredUserIds, id)) {
-                            list.add(id);
-                        }
-                    }
-                    activity.filtered_source_ids = list.toArray();
-                } else {
-                    activity.filtered_source_ids = activity.source_ids;
-                }
-            }
-            if (ArrayUtils.isEmpty(activity.filtered_source_ids)) {
+            ParcelableActivityUtils.getAfterFilteredSourceIds(activity, mFilteredUserIds,
+                    mFollowingOnly);
+            if (ArrayUtils.isEmpty(activity.after_filtered_source_ids)) {
                 return ITEM_VIEW_TYPE_EMPTY;
             }
             return ITEM_VIEW_TYPE_TITLE_SUMMARY;
         }
         return ITEM_VIEW_TYPE_STUB;
+    }
+
+    public void setFollowingOnly(boolean followingOnly) {
+        mFollowingOnly = followingOnly;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -404,4 +401,9 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
 
+    private static class EmptyViewHolder extends ViewHolder {
+        public EmptyViewHolder(View view) {
+            super(view);
+        }
+    }
 }

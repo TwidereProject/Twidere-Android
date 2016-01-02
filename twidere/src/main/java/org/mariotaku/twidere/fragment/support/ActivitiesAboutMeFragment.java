@@ -19,9 +19,12 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -58,6 +61,20 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
     @Override
     protected void updateRefreshState() {
         setRefreshing(mTwitterWrapper.isMentionsTimelineRefreshing());
+    }
+
+    @NonNull
+    @Override
+    protected ParcelableActivitiesAdapter onCreateAdapter(Context context, boolean compact) {
+        final ParcelableActivitiesAdapter adapter = super.onCreateAdapter(context, compact);
+        final Bundle arguments = getArguments();
+        if (arguments != null) {
+            final Bundle extras = arguments.getBundle(EXTRA_EXTRAS);
+            if (extras != null) {
+                adapter.setFollowingOnly(extras.getBoolean(EXTRA_MY_FOLLOWING_ONLY));
+            }
+        }
+        return adapter;
     }
 
     @Override
