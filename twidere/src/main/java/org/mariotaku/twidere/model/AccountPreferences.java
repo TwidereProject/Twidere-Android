@@ -105,7 +105,7 @@ public class AccountPreferences implements Constants {
         return mPreferences.getBoolean(KEY_HOME_TIMELINE_NOTIFICATION, DEFAULT_HOME_TIMELINE_NOTIFICATION);
     }
 
-    public boolean isMentionsNotificationEnabled() {
+    public boolean isInteractionsNotificationEnabled() {
         return mPreferences.getBoolean(KEY_MENTIONS_NOTIFICATION, DEFAULT_MENTIONS_NOTIFICATION);
     }
 

@@ -50,8 +50,17 @@ public class Paging extends SimpleValueMap {
         put("cursor", cursor);
     }
 
+    public void setLatestResults(boolean latestResults) {
+        put("latest_results", latestResults);
+    }
+
     public Paging sinceId(long sinceId) {
         setSinceId(sinceId);
+        return this;
+    }
+
+    public Paging latestResults(boolean latestResults) {
+        setLatestResults(latestResults);
         return this;
     }
 

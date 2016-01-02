@@ -56,6 +56,7 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
+import org.mariotaku.twidere.util.net.InetAddressUtils;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
@@ -165,8 +166,17 @@ public class TwitterAPIFactory implements TwidereConstants {
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);
             final int proxyPort = NumberUtils.toInt(prefs.getString(KEY_PROXY_PORT, null), -1);
             if (!isEmpty(proxyHost) && TwidereMathUtils.inRangeInclusiveInclusive(proxyPort, 0, 65535)) {
-                client.setProxySelector(new TwidereProxySelector(context, getProxyType(proxyType),
-                        proxyHost, proxyPort));
+                // If proxy host is an IP address, use proxy directly
+                if (InetAddressUtils.getInetAddressType(proxyHost) != 0) {
+                    client.setProxySelector(null);
+                    client.setProxy(new Proxy(getProxyType(proxyType),
+                            InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
+                } else {
+                    // ... otherwise use proxy selector to prevent proxy address from dns poisoning
+                    client.setProxy(null);
+                    client.setProxySelector(new TwidereProxySelector(context, getProxyType(proxyType),
+                            proxyHost, proxyPort));
+                }
             }
             final String username = prefs.getString(KEY_PROXY_USERNAME, null);
             final String password = prefs.getString(KEY_PROXY_PASSWORD, null);
@@ -187,6 +197,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                 }
             });
         } else {
+            client.setProxy(null);
             client.setProxySelector(null);
             client.setAuthenticator(null);
         }

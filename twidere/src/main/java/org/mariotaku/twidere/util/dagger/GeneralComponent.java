@@ -40,9 +40,9 @@ import org.mariotaku.twidere.fragment.BasePreferenceFragment;
 import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
+import org.mariotaku.twidere.fragment.support.DownloadingMediaPageFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.loader.support.CacheDownloadLoader;
-import org.mariotaku.twidere.loader.support.FullImageDownloadLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
 import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.provider.TwidereCommandProvider;
@@ -132,8 +132,7 @@ public interface GeneralComponent {
 
     void inject(CacheDownloadLoader object);
 
-    void inject(FullImageDownloadLoader object);
-
     void inject(CacheProvider object);
 
+    void inject(DownloadingMediaPageFragment.MediaDownloader object);
 }

@@ -19,7 +19,9 @@
 
 package org.mariotaku.twidere.task;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +33,7 @@ import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import okio.BufferedSink;
@@ -44,12 +47,14 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
     private final WeakReference<Context> contextRef;
 
     @NonNull
-    private final File source, destination;
+    private final Uri source;
     @NonNull
-    private final MimeTypeCallback getMimeType;
+    private final File destination;
+    @NonNull
+    private final FileInfoCallback getMimeType;
 
-    public SaveFileTask(@NonNull final Context context, @NonNull final File source,
-                        @NonNull final File destination, @NonNull final MimeTypeCallback getMimeType) {
+    public SaveFileTask(@NonNull final Context context, @NonNull final Uri source,
+                        @NonNull final File destination, @NonNull final FileInfoCallback getMimeType) {
         this.contextRef = new WeakReference<>(context);
         this.source = source;
         this.getMimeType = getMimeType;
@@ -57,21 +62,23 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
     }
 
     @Nullable
-    public static SaveFileResult saveFile(@NonNull final Context context, @NonNull final File source,
-                                          @NonNull final MimeTypeCallback mimeTypeCallback,
+    public static SaveFileResult saveFile(@NonNull final Context context, @NonNull final Uri source,
+                                          @NonNull final FileInfoCallback fileInfoCallback,
                                           @NonNull final File destinationDir) {
+        final ContentResolver cr = context.getContentResolver();
         Source ioSrc = null;
         BufferedSink sink = null;
         try {
-            final String name = source.getName();
+            final String name = fileInfoCallback.getFilename(source);
             if (isEmpty(name)) return null;
-            final String mimeType = mimeTypeCallback.getMimeType(source);
-            final String extension = mimeTypeCallback.getExtension(mimeType);
-            if (extension == null) return null;
+            final String mimeType = fileInfoCallback.getMimeType(source);
+            final String extension = fileInfoCallback.getExtension(mimeType);
             final String nameToSave = getFileNameWithExtension(name, extension);
             if (!destinationDir.isDirectory() && !destinationDir.mkdirs()) return null;
             final File saveFile = new File(destinationDir, nameToSave);
-            ioSrc = Okio.source(source);
+            final InputStream in = cr.openInputStream(source);
+            if (in == null) return null;
+            ioSrc = Okio.source(in);
             sink = Okio.buffer(Okio.sink(saveFile));
             sink.writeAll(ioSrc);
             sink.flush();
@@ -121,16 +128,22 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
         return contextRef.get();
     }
 
-    private static String getFileNameWithExtension(String name, String extension) {
+    private static String getFileNameWithExtension(String name, @Nullable String extension) {
+        if (extension == null) return name;
         int lastDotIdx = name.lastIndexOf('.');
         if (lastDotIdx < 0) return name + "." + extension;
         return name.substring(0, lastDotIdx) + "." + extension;
     }
 
-    public interface MimeTypeCallback {
-        String getMimeType(File source);
+    public interface FileInfoCallback {
+        @Nullable
+        String getFilename(@NonNull Uri source);
 
-        String getExtension(String mimeType);
+        @Nullable
+        String getMimeType(@NonNull Uri source);
+
+        @Nullable
+        String getExtension(@Nullable String mimeType);
     }
 
     public static final class SaveFileResult {
@@ -151,20 +164,30 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
         }
     }
 
-    public static class StringMimeTypeCallback implements MimeTypeCallback {
+    public static class StringFileInfoCallback implements FileInfoCallback {
+        private final String filename;
         private final String mimeType;
 
-        public StringMimeTypeCallback(String mimeType) {
+        public StringFileInfoCallback(String filename, String mimeType) {
+            this.filename = filename;
             this.mimeType = mimeType;
         }
 
+        @Nullable
         @Override
-        public String getMimeType(File source) {
+        public String getFilename(@NonNull Uri source) {
+            return filename;
+        }
+
+        @Override
+        @Nullable
+        public String getMimeType(@NonNull Uri source) {
             return mimeType;
         }
 
         @Override
-        public String getExtension(String mimeType) {
+        @Nullable
+        public String getExtension(@Nullable String mimeType) {
             return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
         }
     }

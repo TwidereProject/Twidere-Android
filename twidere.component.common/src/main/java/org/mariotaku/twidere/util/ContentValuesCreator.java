@@ -299,6 +299,7 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Activities.STATUS_QUOTED_USER_ID, status.quoted_user_id);
         }
         values.put(Activities.STATUS_USER_ID, status.user_id);
+        values.put(Activities.STATUS_USER_FOLLOWING, status.user_is_following);
         values.put(Activities.STATUS_TEXT_HTML, status.text_html);
         values.put(Activities.STATUS_TEXT_PLAIN, status.text_plain);
         values.put(Activities.STATUS_SOURCE, status.source);

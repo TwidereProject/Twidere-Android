@@ -20,15 +20,8 @@
 package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,17 +29,13 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
-import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
 import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
-import org.oshkimaadziig.george.androidutils.SpanFormatter;
 
 /**
  * Created by mariotaku on 15/1/3.
@@ -86,168 +75,20 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
 
     public void displayActivity(ParcelableActivity activity, boolean byFriends) {
         final Context context = adapter.getContext();
-        final Resources resources = adapter.getContext().getResources();
         final ParcelableUser[] sources = activity.getUnfilteredSources();
-        if (Activity.Action.FOLLOW.literal.equals(activity.action)) {
-            activityTypeView.setImageResource(R.drawable.ic_activity_action_follow);
-            activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_follow), Mode.SRC_ATOP);
-            if (byFriends) {
-                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_follow,
-                        R.string.activity_by_friends_follow_multi, sources, activity.target_users));
-            } else {
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_follow,
-                        R.string.activity_about_me_follow_multi, sources));
-            }
-            displayUserProfileImages(sources);
-            summaryView.setVisibility(View.GONE);
-        } else if (Activity.Action.FAVORITE.literal.equals(activity.action)) {
-            if (adapter.shouldUseStarsForLikes()) {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
-
-                if (byFriends) {
-                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_favorite,
-                            R.string.activity_by_friends_favorite_multi, sources, activity.target_statuses));
-                } else {
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorite,
-                            R.string.activity_about_me_favorite_multi, sources));
-                }
-            } else {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
-
-                if (byFriends) {
-                    titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_like,
-                            R.string.activity_by_friends_like_multi, sources, activity.target_statuses));
-                } else {
-                    titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_like,
-                            R.string.activity_about_me_like_multi, sources));
-                }
-            }
-            displayUserProfileImages(sources);
-            summaryView.setText(activity.target_statuses[0].text_unescaped);
-            summaryView.setVisibility(View.VISIBLE);
-        } else if (Activity.Action.RETWEET.literal.equals(activity.action)) {
-            activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-            activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
-            if (byFriends) {
-                titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_retweet,
-                        R.string.activity_by_friends_retweet_multi, sources, activity.target_statuses));
-            } else
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweet,
-                        R.string.activity_about_me_retweet_multi, sources));
-            displayUserProfileImages(sources);
-            summaryView.setText(activity.target_statuses[0].text_unescaped);
-            summaryView.setVisibility(View.VISIBLE);
-        } else if (Activity.Action.FAVORITED_RETWEET.literal.equals(activity.action)) {
-            if (byFriends) {
-                showNotSupported();
-                return;
-            }
-            if (adapter.shouldUseStarsForLikes()) {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_retweet,
-                        R.string.activity_about_me_favorited_retweet_multi, sources));
-            } else {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_retweet,
-                        R.string.activity_about_me_liked_retweet_multi, sources));
-            }
-            displayUserProfileImages(sources);
-            summaryView.setText(activity.target_statuses[0].text_unescaped);
-            summaryView.setVisibility(View.VISIBLE);
-        } else if (Activity.Action.RETWEETED_RETWEET.literal.equals(activity.action)) {
-            if (byFriends) {
-                showNotSupported();
-                return;
-            }
-            activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-            activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
-            titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_retweet,
-                    R.string.activity_about_me_retweeted_retweet_multi, sources));
-            displayUserProfileImages(sources);
-            summaryView.setText(activity.target_statuses[0].text_unescaped);
-            summaryView.setVisibility(View.VISIBLE);
-        } else if (Activity.Action.RETWEETED_MENTION.literal.equals(activity.action)) {
-            if (byFriends) {
-                showNotSupported();
-                return;
-            }
-            activityTypeView.setImageResource(R.drawable.ic_activity_action_retweet);
-            activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_retweet), Mode.SRC_ATOP);
-            titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_retweeted_mention,
-                    R.string.activity_about_me_retweeted_mention_multi, sources));
-            displayUserProfileImages(sources);
-            summaryView.setText(activity.target_statuses[0].text_unescaped);
-            summaryView.setVisibility(View.VISIBLE);
-        } else if (Activity.Action.FAVORITED_MENTION.literal.equals(activity.action)) {
-            if (byFriends) {
-                showNotSupported();
-                return;
-            }
-            if (adapter.shouldUseStarsForLikes()) {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_favorite);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_favorite), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_favorited_mention,
-                        R.string.activity_about_me_favorited_mention_multi, sources));
-            } else {
-                activityTypeView.setImageResource(R.drawable.ic_activity_action_like);
-                activityTypeView.setColorFilter(ContextCompat.getColor(context, R.color.highlight_like), Mode.SRC_ATOP);
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_liked_mention,
-                        R.string.activity_about_me_liked_mention_multi, sources));
-            }
-            displayUserProfileImages(sources);
-            summaryView.setText(activity.target_statuses[0].text_unescaped);
-            summaryView.setVisibility(View.VISIBLE);
-        } else if (Activity.Action.LIST_CREATED.literal.equals(activity.action)) {
-            if (!byFriends) {
-                showNotSupported();
-                return;
-            }
-            activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
-            activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
-            titleView.setText(getTitleStringByFriends(R.string.activity_by_friends_list_created,
-                    R.string.activity_by_friends_list_created_multi, sources,
-                    activity.target_object_user_lists));
-            displayUserProfileImages(sources);
-            boolean firstLine = true;
-            summaryView.setText("");
-            for (ParcelableUserList item : activity.target_object_user_lists) {
-                if (!firstLine) {
-                    summaryView.append("\n");
-                }
-                summaryView.append(item.description);
-                firstLine = false;
-            }
-            summaryView.setVisibility(View.VISIBLE);
-        } else if (Activity.Action.LIST_MEMBER_ADDED.literal.equals(activity.action)) {
-            if (byFriends) {
-                showNotSupported();
-                return;
-            }
-            activityTypeView.setImageResource(R.drawable.ic_activity_action_list_added);
-            activityTypeView.setColorFilter(activityTypeView.getDefaultColor(), Mode.SRC_ATOP);
-            if (sources.length == 1 && activity.target_object_user_lists != null
-                    && activity.target_object_user_lists.length == 1) {
-                final UserColorNameManager manager = adapter.getUserColorNameManager();
-                final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(
-                        sources[0], adapter.isNameFirst(), false));
-                final SpannableString listName = new SpannableString(activity.target_object_user_lists[0].name);
-                firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                listName.setSpan(new StyleSpan(Typeface.BOLD), 0, listName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                final String format = context.getString(R.string.activity_about_me_list_member_added_with_name);
-                final Configuration configuration = resources.getConfiguration();
-                titleView.setText(SpanFormatter.format(configuration.locale, format, firstDisplayName,
-                        listName));
-            } else {
-                titleView.setText(getTitleStringAboutMe(R.string.activity_about_me_list_member_added,
-                        R.string.activity_about_me_list_member_added_multi, sources));
-            }
-            displayUserProfileImages(sources);
-            summaryView.setVisibility(View.GONE);
+        final ActivityTitleSummaryMessage message = ActivityTitleSummaryMessage.get(context,
+                adapter.getUserColorNameManager(), activity, sources, activityTypeView.getDefaultColor(),
+                byFriends, adapter.shouldUseStarsForLikes(), adapter.isNameFirst());
+        if (message == null) {
+            showNotSupported();
+            return;
         }
+        activityTypeView.setColorFilter(message.getColor(), PorterDuff.Mode.SRC_ATOP);
+        activityTypeView.setImageResource(message.getIcon());
+        titleView.setText(message.getTitle());
+        summaryView.setText(message.getSummary());
+        summaryView.setVisibility(summaryView.length() > 0 ? View.VISIBLE : View.GONE);
+        displayUserProfileImages(sources);
     }
 
     private void showNotSupported() {
@@ -289,73 +130,6 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
             profileImageMoreNumber.setText(String.valueOf(moreNumber));
         } else {
             profileImageMoreNumber.setVisibility(View.GONE);
-        }
-    }
-
-    private Spanned getTitleStringAboutMe(int stringRes, int stringResMulti, ParcelableUser[] sources) {
-        if (sources == null || sources.length == 0) return null;
-        final Context context = adapter.getContext();
-        final boolean nameFirst = adapter.isNameFirst();
-        final UserColorNameManager manager = adapter.getUserColorNameManager();
-        final Resources resources = context.getResources();
-        final Configuration configuration = resources.getConfiguration();
-        final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(sources[0],
-                nameFirst, false));
-        firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        if (sources.length == 1) {
-            final String format = context.getString(stringRes);
-            return SpanFormatter.format(configuration.locale, format, firstDisplayName);
-        } else if (sources.length == 2) {
-            final String format = context.getString(stringResMulti);
-            final SpannableString secondDisplayName = new SpannableString(manager.getDisplayName(sources[1],
-                    nameFirst, false));
-            secondDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return SpanFormatter.format(configuration.locale, format, firstDisplayName,
-                    secondDisplayName);
-        } else {
-            final int othersCount = sources.length - 1;
-            final String nOthers = resources.getQuantityString(R.plurals.N_others, othersCount, othersCount);
-            final String format = context.getString(stringResMulti);
-            return SpanFormatter.format(configuration.locale, format, firstDisplayName, nOthers);
-        }
-    }
-
-    private Spanned getTitleStringByFriends(int stringRes, int stringResMulti, ParcelableUser[] sources, Object[] targets) {
-        if (sources == null || sources.length == 0) return null;
-        final Context context = adapter.getContext();
-        final Resources resources = context.getResources();
-        final Configuration configuration = resources.getConfiguration();
-        final UserColorNameManager manager = adapter.getUserColorNameManager();
-        final boolean nameFirst = adapter.isNameFirst();
-        final SpannableString firstSourceName = new SpannableString(manager.getDisplayName(
-                sources[0], nameFirst, false));
-        firstSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        final String displayName;
-        final Object target = targets[0];
-        if (target instanceof ParcelableUser) {
-            displayName = manager.getDisplayName((ParcelableUser) target, nameFirst, false);
-        } else if (target instanceof ParcelableStatus) {
-            displayName = manager.getDisplayName((ParcelableStatus) target, nameFirst, false);
-        } else {
-            throw new IllegalArgumentException();
-        }
-        final SpannableString firstTargetName = new SpannableString(displayName);
-        firstTargetName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstTargetName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        if (sources.length == 1) {
-            final String format = context.getString(stringRes);
-            return SpanFormatter.format(configuration.locale, format, firstSourceName, firstTargetName);
-        } else if (sources.length == 2) {
-            final String format = context.getString(stringResMulti);
-            final SpannableString secondSourceName = new SpannableString(manager.getDisplayName(sources[1],
-                    nameFirst, false));
-            secondSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return SpanFormatter.format(configuration.locale, format, firstSourceName,
-                    secondSourceName, firstTargetName);
-        } else {
-            final int othersCount = sources.length - 1;
-            final String nOthers = resources.getQuantityString(R.plurals.N_others, othersCount, othersCount);
-            final String format = context.getString(stringResMulti);
-            return SpanFormatter.format(configuration.locale, format, firstSourceName, nOthers, firstTargetName);
         }
     }
 

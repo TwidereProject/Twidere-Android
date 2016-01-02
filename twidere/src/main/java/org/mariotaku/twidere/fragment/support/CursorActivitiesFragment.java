@@ -203,6 +203,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
             public long[][] doLongOperation(Object o) throws InterruptedException {
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
+                result[2] = getNewestActivityIds(result[0]);
                 return result;
             }
 

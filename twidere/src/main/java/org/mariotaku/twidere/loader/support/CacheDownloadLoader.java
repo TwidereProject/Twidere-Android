@@ -23,12 +23,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
-import org.mariotaku.twidere.util.SimpleDiskCacheUtils;
+import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream;
@@ -40,24 +43,32 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 
-public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadLoader.Result> {
+public final class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadLoader.Result> {
 
     private final Uri mUri;
     private final Handler mHandler;
-    private final DownloadListener mListener;
+    private final Downloader mDownloader;
+    private final Listener mListener;
 
     @Inject
     DiskCache mDiskCache;
 
-    public CacheDownloadLoader(final Context context, final DownloadListener listener, final Uri uri) {
+    public CacheDownloadLoader(final Context context, @NonNull final Downloader downloader,
+                               @NonNull final Listener listener, final Uri uri) {
         super(context);
         GeneralComponentHelper.build(context).inject(this);
         mHandler = new Handler(Looper.getMainLooper());
         mUri = uri;
+        mDownloader = downloader;
         mListener = listener;
     }
 
+    private static boolean isValid(File entry) {
+        return entry != null;
+    }
+
     @Override
+    @NonNull
     public CacheDownloadLoader.Result loadInBackground() {
         if (mUri == null) {
             return Result.nullInstance();
@@ -69,12 +80,12 @@ public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadL
             if (uriString == null) return Result.nullInstance();
             cacheFile = mDiskCache.get(uriString);
             if (isValid(cacheFile)) {
-                return Result.getInstance(SimpleDiskCacheUtils.getCacheUri(uriString));
+                return Result.getInstance(CacheProvider.getCacheUri(uriString));
             }
             try {
                 // from SD cache
                 ContentLengthInputStream cis;
-                final InputStream is = getStreamFromNetwork(uriString);
+                final InputStream is = mDownloader.get(uriString);
                 if (is == null) return Result.nullInstance();
                 try {
                     final long length = is.available();
@@ -83,8 +94,8 @@ public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadL
                     cis = new ContentLengthInputStream(is, length);
                     mDiskCache.save(uriString, cis, new IoUtils.CopyListener() {
                         @Override
-                        public boolean onBytesCopied(int length, int position) {
-                            mHandler.post(new ProgressUpdateRunnable(mListener, position, length));
+                        public boolean onBytesCopied(int current, int total) {
+                            mHandler.post(new ProgressUpdateRunnable(mListener, current, total));
                             return !isAbandoned();
                         }
                     });
@@ -94,7 +105,7 @@ public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadL
                 }
                 cacheFile = mDiskCache.get(uriString);
                 if (isValid(cacheFile)) {
-                    return Result.getInstance(SimpleDiskCacheUtils.getCacheUri(uriString));
+                    return Result.getInstance(CacheProvider.getCacheUri(uriString));
                 } else {
                     mDiskCache.remove(uriString);
                     throw new IOException();
@@ -107,26 +118,29 @@ public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadL
         return Result.getInstance(mUri);
     }
 
-    protected abstract InputStream getStreamFromNetwork(String url) throws IOException;
-
-    private static boolean isValid(File entry) {
-        return entry != null;
-    }
-
     @Override
     protected void onStartLoading() {
         forceLoad();
     }
 
 
-    public interface DownloadListener {
+    public interface Listener {
+        @UiThread
         void onDownloadError(Throwable t);
 
+        @UiThread
         void onDownloadFinished();
 
+        @UiThread
         void onDownloadStart(long total);
 
+        @UiThread
         void onProgressUpdate(long current, long total);
+    }
+
+    public interface Downloader {
+        @WorkerThread
+        InputStream get(String url) throws IOException;
     }
 
     public static class Result {
@@ -154,10 +168,10 @@ public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadL
     private final static class DownloadErrorRunnable implements Runnable {
 
         private final CacheDownloadLoader loader;
-        private final DownloadListener listener;
+        private final Listener listener;
         private final Throwable t;
 
-        DownloadErrorRunnable(final CacheDownloadLoader loader, final DownloadListener listener, final Throwable t) {
+        DownloadErrorRunnable(final CacheDownloadLoader loader, final Listener listener, final Throwable t) {
             this.loader = loader;
             this.listener = listener;
             this.t = t;
@@ -173,9 +187,9 @@ public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadL
     private final static class DownloadFinishRunnable implements Runnable {
 
         private final CacheDownloadLoader loader;
-        private final DownloadListener listener;
+        private final Listener listener;
 
-        DownloadFinishRunnable(final CacheDownloadLoader loader, final DownloadListener listener) {
+        DownloadFinishRunnable(final CacheDownloadLoader loader, final Listener listener) {
             this.loader = loader;
             this.listener = listener;
         }
@@ -190,10 +204,10 @@ public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadL
     private final static class DownloadStartRunnable implements Runnable {
 
         private final CacheDownloadLoader loader;
-        private final DownloadListener listener;
+        private final Listener listener;
         private final long total;
 
-        DownloadStartRunnable(final CacheDownloadLoader loader, final DownloadListener listener, final long total) {
+        DownloadStartRunnable(final CacheDownloadLoader loader, final Listener listener, final long total) {
             this.loader = loader;
             this.listener = listener;
             this.total = total;
@@ -208,10 +222,10 @@ public abstract class CacheDownloadLoader extends AsyncTaskLoader<CacheDownloadL
 
     private final static class ProgressUpdateRunnable implements Runnable {
 
-        private final DownloadListener listener;
+        private final Listener listener;
         private final long current, total;
 
-        ProgressUpdateRunnable(final DownloadListener listener, final long current, final long total) {
+        ProgressUpdateRunnable(final Listener listener, final long current, final long total) {
             this.listener = listener;
             this.current = current;
             this.total = total;

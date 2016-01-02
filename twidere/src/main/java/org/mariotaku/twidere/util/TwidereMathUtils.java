@@ -72,4 +72,5 @@ public class TwidereMathUtils {
     public static boolean inRangeInclusiveInclusive(int num, int from, int to) {
         return num >= from && num <= to;
     }
+
 }

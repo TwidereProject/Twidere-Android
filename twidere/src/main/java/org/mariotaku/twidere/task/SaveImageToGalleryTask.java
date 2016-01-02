@@ -22,13 +22,13 @@ package org.mariotaku.twidere.task;
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.provider.CacheProvider;
 
 import java.io.File;
 
@@ -37,11 +37,11 @@ import java.io.File;
  */
 public class SaveImageToGalleryTask extends ProgressSaveFileTask {
 
-    public SaveImageToGalleryTask(@NonNull Activity activity, @NonNull File source, @NonNull File destination) {
-        super(activity, source, destination, new ImageMimeTypeCallback());
+    public SaveImageToGalleryTask(@NonNull Activity activity, @NonNull Uri source, @NonNull File destination) {
+        super(activity, source, destination, new CacheProvider.CacheFileTypeCallback(activity));
     }
 
-    public static SaveFileTask create(final Activity activity, final File source) {
+    public static SaveFileTask create(final Activity activity, final Uri source) {
         final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         final File saveDir = new File(pubDir, "Twidere");
         return new SaveImageToGalleryTask(activity, source, saveDir);
@@ -59,15 +59,4 @@ public class SaveImageToGalleryTask extends ProgressSaveFileTask {
         }
     }
 
-    public static final class ImageMimeTypeCallback implements MimeTypeCallback {
-        @Override
-        public String getMimeType(File source) {
-            return Utils.getImageMimeType(source);
-        }
-
-        @Override
-        public String getExtension(String mimeType) {
-            return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
-        }
-    }
 }

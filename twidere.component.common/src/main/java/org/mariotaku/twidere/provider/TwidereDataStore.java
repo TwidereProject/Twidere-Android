@@ -899,6 +899,7 @@ public interface TwidereDataStore {
         String STATUS_QUOTE_TEXT_PLAIN = "status_quote_text_plain";
         String STATUS_TEXT_HTML = "status_text_html";
         String STATUS_QUOTE_TEXT_HTML = "status_quote_text_html";
+        String STATUS_USER_FOLLOWING = "status_user_following";
         String IS_GAP = "status_is_gap";
         String MIN_POSITION = "min_position";
         String MAX_POSITION = "max_position";
@@ -916,11 +917,11 @@ public interface TwidereDataStore {
                 STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_TEXT_HTML, STATUS_QUOTE_TEXT_HTML,
                 IS_GAP, MIN_POSITION, MAX_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
                 TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS,
-                STATUS_RETWEET_ID};
+                STATUS_RETWEET_ID, STATUS_USER_FOLLOWING};
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN};
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC";
 

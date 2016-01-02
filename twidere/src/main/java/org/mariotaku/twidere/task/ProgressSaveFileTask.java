@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.net.Uri;
 
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
@@ -35,7 +36,7 @@ import java.io.File;
 public abstract class ProgressSaveFileTask extends SaveFileTask {
     private static final String PROGRESS_FRAGMENT_TAG = "progress";
 
-    public ProgressSaveFileTask(Context context, File source, File destination, MimeTypeCallback getMimeType) {
+    public ProgressSaveFileTask(Context context, Uri source, File destination, FileInfoCallback getMimeType) {
         super(context, source, destination, getMimeType);
     }
 

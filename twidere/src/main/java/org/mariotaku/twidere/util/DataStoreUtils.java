@@ -252,6 +252,30 @@ public class DataStoreUtils implements Constants {
         return maxPositions;
     }
 
+    public static long[] getNewestActivityTimestampsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
+        if (context == null || uri == null || accountIds == null) return null;
+        final String[] cols = new String[]{Activities.TIMESTAMP};
+        final ContentResolver resolver = context.getContentResolver();
+        final long[] maxPositions = new long[accountIds.length];
+        int idx = 0;
+        for (final long accountId : accountIds) {
+            final String where = Expression.equals(Activities.ACCOUNT_ID, accountId).getSQL();
+            final Cursor cur = ContentResolverUtils
+                    .query(resolver, uri, cols, where, null, Activities.DEFAULT_SORT_ORDER);
+            if (cur == null) {
+                continue;
+            }
+
+            if (cur.getCount() > 0) {
+                cur.moveToFirst();
+                maxPositions[idx] = cur.getLong(cur.getColumnIndexOrThrow(Activities.TIMESTAMP));
+            }
+            cur.close();
+            idx++;
+        }
+        return maxPositions;
+    }
+
     public static long[] getOldestMessageIdsFromDatabase(final Context context, final Uri uri) {
         final long[] account_ids = getActivatedAccountIds(context);
         return getOldestMessageIdsFromDatabase(context, uri, account_ids);
@@ -576,28 +600,6 @@ public class DataStoreUtils implements Constants {
                 buildActivityFilterWhereClause(getTableNameByUri(uri), null)
         );
         return queryCount(context, uri, selection.getSQL(), null);
-    }
-
-    @NonNull
-    public static long[] getAllStatusesIds(final Context context, final Uri uri) {
-        if (context == null) return new long[0];
-        final ContentResolver resolver = context.getContentResolver();
-        final String table = getTableNameByUri(uri);
-        if (table == null) return new long[0];
-        final Cursor cur = ContentResolverUtils.query(resolver, uri, new String[]{Statuses.STATUS_ID},
-                buildStatusFilterWhereClause(table, null).getSQL(),
-                null, null);
-        if (cur == null) return new long[0];
-        final long[] ids = new long[cur.getCount()];
-        cur.moveToFirst();
-        int i = 0;
-        while (!cur.isAfterLast()) {
-            ids[i] = cur.getLong(0);
-            cur.moveToNext();
-            i++;
-        }
-        cur.close();
-        return ids;
     }
 
     public static int getTableId(final Uri uri) {

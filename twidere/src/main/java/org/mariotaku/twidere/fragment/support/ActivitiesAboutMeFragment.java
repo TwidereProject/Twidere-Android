@@ -47,7 +47,7 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
 
     @Override
     protected int getNotificationType() {
-        return NOTIFICATION_ID_MENTIONS_TIMELINE;
+        return NOTIFICATION_ID_INTERACTIONS_TIMELINE;
     }
 
     @Override

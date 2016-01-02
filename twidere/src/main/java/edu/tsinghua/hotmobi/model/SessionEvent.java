@@ -29,7 +29,6 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
-import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.util.Utils;
@@ -96,7 +95,7 @@ public class SessionEvent extends BaseEvent implements Parcelable {
         for (AccountPreferences pref : AccountPreferences.getAccountPreferences(context, Utils.getAccountIds(context))) {
             final long accountId = pref.getAccountId();
             preferences.put("notification_" + accountId + "_home", String.valueOf(pref.isHomeTimelineNotificationEnabled()));
-            preferences.put("notification_" + accountId + "_interactions", String.valueOf(pref.isMentionsNotificationEnabled()));
+            preferences.put("notification_" + accountId + "_interactions", String.valueOf(pref.isInteractionsNotificationEnabled()));
         }
         setPreferences(preferences);
         final HashMap<String, String> devicePreferences = new HashMap<>();
