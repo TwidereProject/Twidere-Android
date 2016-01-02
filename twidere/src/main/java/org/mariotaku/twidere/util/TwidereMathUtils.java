@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.util;
 
+import android.support.annotation.NonNull;
+
 public class TwidereMathUtils {
     public static float clamp(final float num, final float bound1, final float bound2) {
         final float max = Math.max(bound1, bound2), min = Math.min(bound1, bound2);
@@ -61,10 +63,15 @@ public class TwidereMathUtils {
         return sum;
     }
 
-    public static int sum(int[] ints) {
+    public static int sum(@NonNull int[] array) {
+        return sum(array, 0, array.length - 1);
+    }
+
+    public static int sum(@NonNull int[] array, int start, int end) {
         int sum = 0;
-        for (int i : ints) {
-            sum += i;
+        for (int i = start; i <= end; i++) {
+            int num = array[i];
+            sum += num;
         }
         return sum;
     }

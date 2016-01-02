@@ -514,6 +514,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         }
         final RecyclerView recyclerView = getRecyclerView();
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        // Dividers are drawn on bottom of view
         recyclerView.addItemDecoration(new DividerItemDecoration(context, getLayoutManager().getOrientation()) {
 
             @Override
@@ -521,7 +522,15 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 if (childPos == RecyclerView.NO_POSITION || childPos == adapter.getItemCount() - 1) {
                     return false;
                 }
-                if (shouldUseDividerFor(adapter.getItemViewType(childPos))) {
+                final int itemViewType = adapter.getItemViewType(childPos);
+                if (itemViewType == AbsActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY) {
+                    //
+                    if (childPos != 0 && shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
+                        return true;
+                    }
+                    return false;
+                }
+                if (shouldUseDividerFor(itemViewType)) {
                     if (shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
                         return true;
                     }

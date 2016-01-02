@@ -95,9 +95,8 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.constant.IntentConstants;
+import org.mariotaku.twidere.loader.support.ConversationLoader;
 import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
-import org.mariotaku.twidere.loader.support.StatusRepliesLoader;
-import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
@@ -164,7 +163,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     // Constants
     private static final int LOADER_ID_DETAIL_STATUS = 1;
-    private static final int LOADER_ID_STATUS_REPLIES = 2;
+    private static final int LOADER_ID_STATUS_CONVERSATIONS = 2;
     private static final int LOADER_ID_STATUS_ACTIVITY = 3;
     private static final int STATE_LOADED = 1;
     private static final int STATE_LOADING = 2;
@@ -182,21 +181,21 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private StatusAdapter mStatusAdapter;
     private LinearLayoutManager mLayoutManager;
 
-    private LoadConversationTask mLoadConversationTask;
     private LoadTranslationTask mLoadTranslationTask;
     private RecyclerViewNavigationHelper mNavigationHelper;
 
     // Data fields
-    private boolean mRepliesLoaderInitialized;
+    private boolean mConversationLoaderInitialized;
     private boolean mActivityLoaderInitialized;
     private ParcelableStatus mSelectedStatus;
     private TweetEvent mStatusEvent;
 
     // Listeners
-    private LoaderCallbacks<List<ParcelableStatus>> mRepliesLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
+    private LoaderCallbacks<List<ParcelableStatus>> mConversationsLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
         @Override
         public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
             mStatusAdapter.setRepliesLoading(true);
+            mStatusAdapter.setConversationsLoading(true);
             mStatusAdapter.updateItemDecoration();
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
@@ -204,9 +203,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final long maxId = args.getLong(EXTRA_MAX_ID, -1);
             final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
             final boolean twitterOptimizedSearches = mPreferences.getBoolean(KEY_TWITTER_OPTIMIZED_SEARCHES);
-
-            final StatusRepliesLoader loader = new StatusRepliesLoader(getActivity(), accountId,
-                    screenName, statusId, maxId, sinceId, null, null, 0, true, twitterOptimizedSearches);
+            final ConversationLoader loader = new ConversationLoader(getActivity(), accountId,
+                    statusId, screenName, sinceId, maxId, null, true);
             loader.setComparator(ParcelableStatus.REVERSE_ID_COMPARATOR);
             return loader;
         }
@@ -214,7 +212,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public void onLoadFinished(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
             mStatusAdapter.updateItemDecoration();
-            setReplies(data);
+            setConversation(data);
             final ParcelableCredentials account = mStatusAdapter.getStatusAccount();
             if (Utils.hasOfficialAPIAccess(loader.getContext(), mPreferences, account)) {
                 mStatusAdapter.setReplyError(null);
@@ -243,6 +241,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 mStatusAdapter.setReplyError(error);
             }
+            mStatusAdapter.setConversationsLoading(false);
             mStatusAdapter.setRepliesLoading(false);
         }
 
@@ -540,10 +539,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final Bundle dataExtra = data.getExtras();
             final ParcelableCredentials credentials = dataExtra.getParcelable(EXTRA_ACCOUNT);
             if (mStatusAdapter.setStatus(status, credentials)) {
-                mStatusAdapter.setConversation(null);
-                mStatusAdapter.setReplies(null);
+                mStatusAdapter.setData(null);
                 loadConversation(status);
-                loadReplies(status);
                 loadActivity(status);
 
                 final int position = mStatusAdapter.getFirstPositionOfItem(StatusAdapter.ITEM_IDX_STATUS);
@@ -600,12 +597,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     private void setConversation(List<ParcelableStatus> data) {
         final Pair<Long, Integer> readPosition = saveReadPosition();
-        mStatusAdapter.setConversation(data);
+        mStatusAdapter.setData(data);
         restoreReadPosition(readPosition);
-    }
-
-    private void addConversation(ParcelableStatus status, int position) {
-        mStatusAdapter.addConversation(status, position);
     }
 
     private StatusAdapter getAdapter() {
@@ -621,25 +614,17 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     private void loadConversation(ParcelableStatus status) {
-        if (AsyncTaskUtils.isTaskRunning(mLoadConversationTask)) {
-            mLoadConversationTask.cancel(true);
-        }
-        mLoadConversationTask = new LoadConversationTask(this);
-        AsyncTaskUtils.executeTask(mLoadConversationTask, status);
-    }
-
-    private void loadReplies(ParcelableStatus status) {
         if (status == null) return;
         final Bundle args = new Bundle();
         args.putLong(EXTRA_ACCOUNT_ID, status.account_id);
         args.putLong(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
         args.putString(EXTRA_SCREEN_NAME, status.is_retweet ? status.retweeted_by_user_screen_name : status.user_screen_name);
-        if (mRepliesLoaderInitialized) {
-            getLoaderManager().restartLoader(LOADER_ID_STATUS_REPLIES, args, mRepliesLoaderCallback);
+        if (mConversationLoaderInitialized) {
+            getLoaderManager().restartLoader(LOADER_ID_STATUS_CONVERSATIONS, args, mConversationsLoaderCallback);
             return;
         }
-        getLoaderManager().initLoader(LOADER_ID_STATUS_REPLIES, args, mRepliesLoaderCallback);
-        mRepliesLoaderInitialized = true;
+        getLoaderManager().initLoader(LOADER_ID_STATUS_CONVERSATIONS, args, mConversationsLoaderCallback);
+        mConversationLoaderInitialized = true;
     }
 
 
@@ -696,13 +681,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         mLayoutManager.scrollToPositionWithOffset(adapterPosition, position.second);
     }
 
-    private void setReplies(List<ParcelableStatus> data) {
-        final Pair<Long, Integer> readPosition = saveReadPosition();
-        mStatusAdapter.setReplies(data);
-        //TODO maintain read position
-        restoreReadPosition(readPosition);
-    }
-
     private void setState(int state) {
         mStatusContent.setVisibility(state == STATE_LOADED ? View.VISIBLE : View.GONE);
         mProgressContainer.setVisibility(state == STATE_LOADING ? View.VISIBLE : View.GONE);
@@ -747,6 +725,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (status != null) {
             status.is_favorite = false;
         }
+    }
+
+    private void onUserClick(ParcelableUser user) {
+        Utils.openUserProfile(getContext(), user, null);
     }
 
     public static final class LoadSensitiveImageConfirmDialogFragment extends BaseSupportDialogFragment implements
@@ -825,90 +807,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 Utils.showErrorMessage(context, R.string.translate, result.getException(), false);
             }
         }
-    }
-
-
-    static class LoadConversationTask extends AsyncTask<ParcelableStatus, ParcelableStatus,
-            ListResponse<ParcelableStatus>> {
-
-        final Context context;
-        final StatusFragment fragment;
-
-        LoadConversationTask(final StatusFragment fragment) {
-            context = fragment.getActivity();
-            this.fragment = fragment;
-        }
-
-        @Override
-        protected ListResponse<ParcelableStatus> doInBackground(final ParcelableStatus... params) {
-            final ArrayList<ParcelableStatus> list = new ArrayList<>();
-            try {
-                ParcelableStatus status = params[0];
-                final long accountId = status.account_id;
-                if (Utils.isOfficialKeyAccount(context, accountId)) {
-                    final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, true);
-                    while (status.in_reply_to_status_id > 0 && !isCancelled()) {
-                        final ParcelableStatus cached = Utils.findStatusInDatabases(context, accountId, status.in_reply_to_status_id);
-                        if (cached == null) break;
-                        status = cached;
-                        publishProgress(status);
-                        list.add(0, status);
-                    }
-                    final Paging paging = new Paging();
-                    final long id = status.is_retweet ? status.retweet_id : status.id;
-                    paging.setMaxId(id);
-                    final List<ParcelableStatus> conversations = new ArrayList<>();
-                    for (org.mariotaku.twidere.api.twitter.model.Status item : twitter.showConversation(id, paging)) {
-                        if (item.getId() < id) {
-                            final ParcelableStatus conversation = new ParcelableStatus(item, accountId, false);
-                            publishProgress(conversation);
-                            conversations.add(conversation);
-                        }
-                    }
-                    list.addAll(0, conversations);
-                } else {
-                    while (status.in_reply_to_status_id > 0 && !isCancelled()) {
-                        status = Utils.findStatus(context, accountId, status.in_reply_to_status_id);
-                        publishProgress(status);
-                        list.add(0, status);
-                    }
-                }
-            } catch (final TwitterException e) {
-                return ListResponse.getListInstance(e);
-            }
-            return ListResponse.getListInstance(list);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            fragment.getAdapter().setConversationsLoading(true);
-        }
-
-        @Override
-        protected void onPostExecute(final ListResponse<ParcelableStatus> data) {
-            final StatusAdapter adapter = fragment.getAdapter();
-            if (data.hasData()) {
-                fragment.setConversation(data.getData());
-            } else if (data.hasException()) {
-                fragment.showConversationError(data.getException());
-            } else {
-                Utils.showErrorMessage(context, context.getString(R.string.action_getting_status), data.getException(), true);
-            }
-            adapter.setConversationsLoading(false);
-        }
-
-        @Override
-        protected void onProgressUpdate(ParcelableStatus... values) {
-            for (ParcelableStatus status : values) {
-//                fragment.addConversation(status, 0);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-        }
-
     }
 
     private static class DetailStatusViewHolder extends ViewHolder implements OnClickListener,
@@ -1374,6 +1272,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 return new ProfileImageViewHolder(this, mInflater.inflate(R.layout.adapter_item_status_interact_user, parent, false));
             }
 
+            private void notifyItemClick(int position) {
+                mFragment.onUserClick(getItem(position));
+            }
+
             static class ProfileImageViewHolder extends ViewHolder implements OnClickListener {
 
                 private final UserProfileImagesAdapter adapter;
@@ -1395,10 +1297,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 public void onClick(View v) {
                     adapter.notifyItemClick(getLayoutPosition());
                 }
-            }
-
-            private void notifyItemClick(int position) {
-                mFragment.onUserClick(getItem(position));
             }
         }
 
@@ -1436,10 +1334,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 adapter.setDetailMediaExpanded(true);
             }
         }
-    }
-
-    private void onUserClick(ParcelableUser user) {
-        Utils.openUserProfile(getContext(), user, null);
     }
 
     private static class SpaceViewHolder extends ViewHolder {
@@ -1494,7 +1388,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private TranslationResult mTranslationResult;
         private StatusActivity mStatusActivity;
         private ParcelableCredentials mStatusAccount;
-        private List<ParcelableStatus> mConversation, mReplies;
+        private List<ParcelableStatus> mData;
         private StatusAdapterListener mStatusAdapterListener;
         private RecyclerView mRecyclerView;
         private CharSequence mReplyError, mConversationError;
@@ -1532,16 +1426,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mCardLayoutResource = R.layout.card_item_status;
             }
             mTwidereLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this));
-        }
-
-        public void addConversation(ParcelableStatus status, int position) {
-            if (mConversation == null) {
-                mConversation = new ArrayList<>();
-            }
-            mConversation.add(position, status);
-            mItemCounts[ITEM_IDX_CONVERSATION] = mConversation.size();
-            notifyDataSetChanged();
-            updateItemDecoration();
         }
 
         public int findPositionById(long itemId) {
@@ -1582,24 +1466,23 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public ParcelableStatus getStatus(int position) {
-            final int itemStart = getItemTypeStart(position);
             final int itemType = getItemType(position);
-            return getStatusByItemType(position, itemStart, itemType);
-        }
-
-        private ParcelableStatus getStatusByItemType(int position, int itemStart, int itemType) {
             switch (itemType) {
-                case ITEM_IDX_CONVERSATION: {
-                    return mConversation != null ? mConversation.get(position - itemStart) : null;
-                }
+                case ITEM_IDX_CONVERSATION:
                 case ITEM_IDX_REPLY: {
-                    return mReplies != null ? mReplies.get(position - itemStart) : null;
+                    if (mData == null) return null;
+                    return mData.get(position - getIndexStart(ITEM_IDX_CONVERSATION));
                 }
                 case ITEM_IDX_STATUS: {
                     return mStatus;
                 }
             }
             return null;
+        }
+
+        public int getIndexStart(int index) {
+            if (index == 0) return 0;
+            return TwidereMathUtils.sum(mItemCounts, 0, index - 1);
         }
 
         @Override
@@ -1618,10 +1501,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public ParcelableStatus findStatusById(long accountId, long statusId) {
             if (mStatus != null && accountId == mStatus.account_id && statusId == mStatus.id)
                 return mStatus;
-            for (ParcelableStatus status : Nullables.list(mConversation)) {
-                if (accountId == status.account_id && status.id == statusId) return status;
-            }
-            for (ParcelableStatus status : Nullables.list(mReplies)) {
+            for (ParcelableStatus status : Nullables.list(mData)) {
                 if (accountId == status.account_id && status.id == statusId) return status;
             }
             return null;
@@ -1659,7 +1539,32 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public void setData(List<ParcelableStatus> data) {
-
+            final ParcelableStatus status = mStatus;
+            if (status == null) return;
+            mData = data;
+            if (data == null) {
+                setCount(ITEM_IDX_CONVERSATION, 0);
+                setCount(ITEM_IDX_REPLY, 0);
+            } else {
+                int conversationCount = 0, replyCount = 0;
+                boolean containsStatus = false;
+                for (ParcelableStatus item : data) {
+                    if (item.id < status.id) {
+                        conversationCount++;
+                    } else if (item.id > status.id) {
+                        replyCount++;
+                    } else {
+                        containsStatus = true;
+                    }
+                }
+                if (!containsStatus) {
+                    throw new IllegalArgumentException("Conversation data must contains original status");
+                }
+                setCount(ITEM_IDX_CONVERSATION, conversationCount);
+                setCount(ITEM_IDX_REPLY, replyCount);
+            }
+            notifyDataSetChanged();
+            updateItemDecoration();
         }
 
         @Override
@@ -1964,12 +1869,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
         }
 
-        public void setConversation(List<ParcelableStatus> conversation) {
-            mConversation = conversation;
-            setCount(ITEM_IDX_CONVERSATION, conversation != null ? conversation.size() : 0);
-            updateItemDecoration();
-        }
-
         private void setCount(int idx, int size) {
             mItemCounts[idx] = size;
             notifyDataSetChanged();
@@ -1991,12 +1890,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             updateItemDecoration();
         }
 
-        public void setReplies(List<ParcelableStatus> replies) {
-            mReplies = replies;
-            setCount(ITEM_IDX_REPLY, replies != null ? replies.size() : 0);
-            updateItemDecoration();
-        }
-
         public boolean setStatus(final ParcelableStatus status, final ParcelableCredentials credentials) {
             final ParcelableStatus old = mStatus;
             mStatus = status;
@@ -2010,7 +1903,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (mRecyclerView == null) return;
             final DividerItemDecoration decoration = mFragment.getItemDecoration();
             decoration.setDecorationStart(0);
-            if (mReplies == null) {
+            // Is loading replies
+            if (mRepliesLoading) {
                 decoration.setDecorationEndOffset(2);
             } else {
                 decoration.setDecorationEndOffset(1);

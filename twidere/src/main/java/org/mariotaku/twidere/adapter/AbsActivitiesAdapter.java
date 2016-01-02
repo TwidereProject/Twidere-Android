@@ -25,6 +25,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.Space;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,8 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
+import java.util.Random;
+
 /**
  * Created by mariotaku on 15/1/3.
  */
@@ -77,6 +80,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     private long[] mFilteredUserIds;
     private boolean mFollowingOnly;
+    private Random mRandom = new Random();
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         super(context);
@@ -224,8 +228,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
                 return new StubViewHolder(view);
             }
             case ITEM_VIEW_TYPE_EMPTY: {
-                final View view = new Space(getContext());
-                return new EmptyViewHolder(view);
+                return new EmptyViewHolder(new Space(getContext()));
             }
         }
         throw new UnsupportedOperationException("Unsupported viewType " + viewType);
