@@ -40,7 +40,7 @@ import javax.inject.Inject;
 /**
  * Created by mariotaku on 16/1/2.
  */
-public abstract class DownloadingMediaPageFragment extends BaseSupportFragment implements LoaderManager.LoaderCallbacks<CacheDownloadLoader.Result>, CacheDownloadLoader.Listener {
+public abstract class CacheDownloadFragment extends BaseSupportFragment implements LoaderManager.LoaderCallbacks<CacheDownloadLoader.Result>, CacheDownloadLoader.Listener {
 
     protected static final int REQUEST_SHARE_MEDIA = 201;
     private boolean mLoaderInitialized;
@@ -59,6 +59,10 @@ public abstract class DownloadingMediaPageFragment extends BaseSupportFragment i
                 break;
             }
         }
+    }
+
+    protected boolean hasDownloadedData() {
+        return mData != null && mData.cacheUri != null;
     }
 
     @Override
@@ -85,7 +89,7 @@ public abstract class DownloadingMediaPageFragment extends BaseSupportFragment i
         switch (requestCode) {
             case REQUEST_REQUEST_PERMISSIONS: {
                 if (PermissionUtils.hasPermission(permissions, grantResults, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    saveToGallery();
+                    saveToStorage();
                 } else {
                     Toast.makeText(getContext(), R.string.save_media_no_storage_permission_message, Toast.LENGTH_LONG).show();
                 }
@@ -102,11 +106,11 @@ public abstract class DownloadingMediaPageFragment extends BaseSupportFragment i
 
     @Override
     public final Loader<CacheDownloadLoader.Result> onCreateLoader(int id, Bundle args) {
-        return new CacheDownloadLoader(getContext(), new MediaDownloader(getContext()), this, getMediaUrl());
+        return new CacheDownloadLoader(getContext(), new MediaDownloader(getContext()), this, getDownloadUri());
     }
 
 
-    protected final void saveToGallery() {
+    protected final void saveToStorage() {
         if (mData == null) return;
         if (mSaveFileTask != null && mSaveFileTask.getStatus() == AsyncTask.Status.RUNNING) return;
         final Uri cacheUri = mData.cacheUri;
@@ -116,8 +120,8 @@ public abstract class DownloadingMediaPageFragment extends BaseSupportFragment i
         AsyncTaskUtils.executeTask(mSaveFileTask);
     }
 
-    public final void loadMedia() {
-        if (!hasValidMedia()) return;
+    public final void startLoading() {
+        if (!isAbleToLoad()) return;
         getLoaderManager().destroyLoader(0);
         if (!mLoaderInitialized) {
             getLoaderManager().initLoader(0, null, this);
@@ -127,7 +131,7 @@ public abstract class DownloadingMediaPageFragment extends BaseSupportFragment i
         }
     }
 
-    protected abstract boolean hasValidMedia();
+    protected abstract boolean isAbleToLoad();
 
 
     protected final void shareMedia() {
@@ -190,9 +194,9 @@ public abstract class DownloadingMediaPageFragment extends BaseSupportFragment i
         task.execute();
     }
 
-    protected final void requestAndSaveToGallery() {
+    protected final void requestAndSaveToStorage() {
         if (PermissionUtils.hasPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            saveToGallery();
+            saveToStorage();
         } else {
             final String[] permissions;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -205,16 +209,16 @@ public abstract class DownloadingMediaPageFragment extends BaseSupportFragment i
         }
     }
 
-    protected abstract Uri getMediaUrl();
+    protected abstract Uri getDownloadUri();
 
     @Override
     public final void onLoadFinished(Loader<CacheDownloadLoader.Result> loader, @NonNull CacheDownloadLoader.Result data) {
         mData = data;
         hideProgress();
-        displayMedia(data);
+        displayDownloaded(data);
     }
 
-    protected abstract void displayMedia(CacheDownloadLoader.Result data);
+    protected abstract void displayDownloaded(CacheDownloadLoader.Result data);
 
     @Override
     public final void onLoaderReset(Loader<CacheDownloadLoader.Result> loader) {

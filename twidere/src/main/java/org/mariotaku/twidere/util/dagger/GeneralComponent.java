@@ -40,12 +40,11 @@ import org.mariotaku.twidere.fragment.BasePreferenceFragment;
 import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
-import org.mariotaku.twidere.fragment.support.DownloadingMediaPageFragment;
+import org.mariotaku.twidere.fragment.support.CacheDownloadFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.loader.support.CacheDownloadLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
 import org.mariotaku.twidere.provider.CacheProvider;
-import org.mariotaku.twidere.provider.TwidereCommandProvider;
 import org.mariotaku.twidere.provider.TwidereDataProvider;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.service.RefreshService;
@@ -83,8 +82,6 @@ public interface GeneralComponent {
     void inject(RefreshService object);
 
     void inject(ThemedFragmentActivity object);
-
-    void inject(TwidereCommandProvider object);
 
     void inject(TwidereDataProvider object);
 
@@ -134,5 +131,5 @@ public interface GeneralComponent {
 
     void inject(CacheProvider object);
 
-    void inject(DownloadingMediaPageFragment.MediaDownloader object);
+    void inject(CacheDownloadFragment.MediaDownloader object);
 }

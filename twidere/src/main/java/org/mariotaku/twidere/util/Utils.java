@@ -924,8 +924,8 @@ public final class Utils implements Constants {
     public static Intent createStatusShareIntent(@NonNull final Context context, @NonNull final ParcelableStatus status) {
         final Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, getStatusShareSubject(context, status));
-        intent.putExtra(Intent.EXTRA_TEXT, getStatusShareText(context, status));
+        intent.putExtra(Intent.EXTRA_SUBJECT, IntentUtils.getStatusShareSubject(context, status));
+        intent.putExtra(Intent.EXTRA_TEXT, IntentUtils.getStatusShareText(context, status));
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         return intent;
     }
@@ -965,18 +965,6 @@ public final class Utils implements Constants {
         final long[] accountIdsClone = accountIds.clone();
         Arrays.sort(accountIdsClone);
         return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
-    }
-
-    public static String getStatusShareText(@NonNull final Context context, @NonNull final ParcelableStatus status) {
-        final Uri link = LinkCreator.getTwitterStatusLink(status);
-        return context.getString(R.string.status_share_text_format_with_link,
-                status.text_plain, link.toString());
-    }
-
-    public static String getStatusShareSubject(@NonNull final Context context, @NonNull final ParcelableStatus status) {
-        final String timeString = formatToLongTimeString(context, status.timestamp);
-        return context.getString(R.string.status_share_subject_format_with_time,
-                status.user_name, status.user_screen_name, timeString);
     }
 
     public static String encodeQueryParams(final String value) throws IOException {

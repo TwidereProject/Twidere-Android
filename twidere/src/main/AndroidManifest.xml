@@ -522,11 +522,6 @@
             android:label="@string/label_data_provider"
             tools:ignore="ExportedContentProvider"/>
         <provider
-            android:name=".provider.TwidereCommandProvider"
-            android:authorities="twidere.command"
-            android:exported="true"
-            tools:ignore="ExportedContentProvider"/>
-        <provider
             android:name=".provider.RecentSearchProvider"
             android:authorities="org.mariotaku.twidere.provider.SearchRecentSuggestions"
             tools:ignore="ExportedContentProvider"/>
