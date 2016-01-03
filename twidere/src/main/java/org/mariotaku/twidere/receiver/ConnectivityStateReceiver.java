@@ -31,12 +31,12 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ConnectivityUtils;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.UploadLogsTask;
 import edu.tsinghua.hotmobi.model.NetworkEvent;
-import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
 
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 
@@ -64,7 +64,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
         final int networkType = ConnectivityUtils.getActiveNetworkType(context.getApplicationContext());
         NetworkUsageUtils.setNetworkType(networkType);
         final boolean isWifi = networkType == ConnectivityManager.TYPE_WIFI;
-        final boolean isCharging = SpiceProfilingUtil.isCharging(context.getApplicationContext());
+        final boolean isCharging = Utils.isCharging(context.getApplicationContext());
         if (isWifi && isCharging) {
             final long currentTime = System.currentTimeMillis();
             final long lastSuccessfulTime = HotMobiLogger.getLastUploadTime(context);

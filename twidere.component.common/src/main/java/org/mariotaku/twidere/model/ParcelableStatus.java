@@ -86,19 +86,19 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     @JsonField(name = "user_id")
     @CursorField(Statuses.USER_ID)
-    public long user_id;
+    public long user_id = -1;
     @ParcelableThisPlease
     @JsonField(name = "retweet_id")
     @CursorField(Statuses.RETWEET_ID)
-    public long retweet_id;
+    public long retweet_id = -1;
     @ParcelableThisPlease
     @JsonField(name = "retweeted_by_user_id")
     @CursorField(Statuses.RETWEETED_BY_USER_ID)
-    public long retweeted_by_user_id;
+    public long retweeted_by_user_id = -1;
     @ParcelableThisPlease
     @JsonField(name = "retweet_timestamp")
     @CursorField(Statuses.RETWEET_TIMESTAMP)
-    public long retweet_timestamp;
+    public long retweet_timestamp = -1;
     @ParcelableThisPlease
     @JsonField(name = "retweet_count")
     @CursorField(Statuses.RETWEET_COUNT)

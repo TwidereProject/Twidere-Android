@@ -32,8 +32,9 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.Utils;
 
-import static org.mariotaku.twidere.util.Utils.getAccountId;
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
 public class UserTimelineLoader extends TwitterAPIStatusesLoader {
@@ -49,7 +50,7 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
         super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
         mUserId = userId;
         mUserScreenName = screenName;
-        mIsMyTimeline = userId > 0 ? accountId == userId : accountId == getAccountId(context, screenName);
+        mIsMyTimeline = userId > 0 ? accountId == userId : accountId == DataStoreUtils.getAccountId(context, screenName);
     }
 
     @NonNull

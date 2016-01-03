@@ -27,7 +27,9 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.BatteryManager;
 import android.text.TextUtils;
+import android.util.Log;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.JsonSerializer;
@@ -58,6 +60,7 @@ import edu.tsinghua.hotmobi.model.ScreenEvent;
 import edu.tsinghua.hotmobi.model.ScrollRecord;
 import edu.tsinghua.hotmobi.model.SessionEvent;
 import edu.tsinghua.hotmobi.model.TweetEvent;
+import edu.tsinghua.hotmobi.model.UploadLogEvent;
 
 /**
  * Created by mariotaku on 15/8/10.
@@ -107,6 +110,8 @@ public class HotMobiLogger {
             return "notification";
         } else if (event instanceof ScreenEvent) {
             return "screen";
+        } else if (event instanceof UploadLogEvent) {
+            return "upload_log";
         }
         throw new UnsupportedOperationException("Unknown event type " + event);
     }
@@ -185,6 +190,18 @@ public class HotMobiLogger {
         record.setTimestamp(System.currentTimeMillis());
         record.setTimeOffset(TimeZone.getDefault().getRawOffset());
         getInstance(context).log(record, null);
+    }
+
+    public static boolean log(final String msg) {
+        if (BuildConfig.DEBUG) {
+            final StackTraceElement ste = new Throwable().fillInStackTrace().getStackTrace()[1];
+            final String fullName = ste.getClassName();
+            final String name = fullName.substring(fullName.lastIndexOf('.'));
+            final String tag = name + "." + ste.getMethodName();
+            Log.d(tag, msg);
+            return true;
+        } else
+            return false;
     }
 
     public <T> void log(long accountId, final T event, final PreProcessing<T> preProcessing) {

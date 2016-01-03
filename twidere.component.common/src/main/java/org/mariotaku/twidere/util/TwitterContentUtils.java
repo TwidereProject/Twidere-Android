@@ -171,10 +171,16 @@ public class TwitterContentUtils {
     }
 
     private static final CharSequenceTranslator UNESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_UNESCAPE());
+    private static final CharSequenceTranslator ESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
     public static String unescapeTwitterStatusText(final CharSequence text) {
         if (text == null) return null;
         return UNESCAPE_TWITTER_RAW_TEXT.translate(text);
+    }
+
+    public static String escapeTwitterStatusText(final CharSequence text) {
+        if (text == null) return null;
+        return ESCAPE_TWITTER_RAW_TEXT.translate(text);
     }
 
     public static <T extends List<Status>> T getStatusesWithQuoteData(Twitter twitter, @NonNull T list) throws TwitterException {

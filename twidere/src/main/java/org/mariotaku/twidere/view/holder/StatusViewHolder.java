@@ -22,6 +22,7 @@ import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
@@ -236,7 +237,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
 
         if (adapter.shouldShowAccountsColor()) {
-            itemContent.drawEnd(Utils.getAccountColor(context, status.account_id));
+            itemContent.drawEnd(DataStoreUtils.getAccountColor(context, status.account_id));
         } else {
             itemContent.drawEnd();
         }

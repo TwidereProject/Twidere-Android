@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -74,7 +75,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.GravityCompat;
@@ -116,16 +116,12 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
-import org.mariotaku.restfu.RestAPIFactory;
-import org.mariotaku.restfu.RestClient;
-import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.OrderBy;
 import org.mariotaku.sqliteqb.library.RawItemArray;
-import org.mariotaku.sqliteqb.library.SQLFunctions;
 import org.mariotaku.sqliteqb.library.Selectable;
 import org.mariotaku.sqliteqb.library.Tables;
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
@@ -140,7 +136,6 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.auth.OAuthSupport;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
@@ -186,7 +181,6 @@ import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.menu.SupportStatusShareProvider;
 import org.mariotaku.twidere.model.AccountPreferences;
-import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
@@ -302,8 +296,6 @@ public final class Utils implements Constants {
         HOME_TABS_URI_MATCHER.addURI(AUTHORITY_DIRECT_MESSAGES, null, CustomTabUtils.TAB_CODE_DIRECT_MESSAGES);
     }
 
-
-    private static LongSparseArray<Integer> sAccountColors = new LongSparseArray<>();
 
     private Utils() {
         throw new AssertionError("You are trying to create an instance for this utility class!");
@@ -457,7 +449,7 @@ public final class Utils implements Constants {
         final int itemLimit = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getInt(
                 KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT);
 
-        for (final long accountId : getAccountIds(context)) {
+        for (final long accountId : DataStoreUtils.getAccountIds(context)) {
             // Clean statuses.
             for (final Uri uri : STATUSES_URIS) {
                 if (CachedStatuses.CONTENT_URI.equals(uri)) {
@@ -500,7 +492,7 @@ public final class Utils implements Constants {
     }
 
     public static void clearAccountColor() {
-        sAccountColors.clear();
+        DataStoreUtils.sAccountColors.clear();
     }
 
     public static void clearAccountName() {
@@ -909,7 +901,7 @@ public final class Utils implements Constants {
         } else {
             final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
             if (paramAccountName != null) {
-                args.putLong(EXTRA_ACCOUNT_ID, getAccountId(context, paramAccountName));
+                args.putLong(EXTRA_ACCOUNT_ID, DataStoreUtils.getAccountId(context, paramAccountName));
             } else {
                 final long accountId = getDefaultAccountId(context);
                 if (isMyAccount(context, accountId)) {
@@ -1100,124 +1092,6 @@ public final class Utils implements Constants {
         return DateUtils.formatDateTime(context, timestamp, format_flags);
     }
 
-    public static int getAccountColor(final Context context, final long accountId) {
-        if (context == null) return Color.TRANSPARENT;
-        final Integer cached = sAccountColors.get(accountId);
-        if (cached != null) return cached;
-        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                new String[]{Accounts.COLOR}, Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(),
-                null, null);
-        if (cur == null) return Color.TRANSPARENT;
-        try {
-            if (cur.getCount() > 0 && cur.moveToFirst()) {
-                final int color = cur.getInt(0);
-                sAccountColors.put(accountId, color);
-                return color;
-            }
-            return Color.TRANSPARENT;
-        } finally {
-            cur.close();
-        }
-    }
-
-    public static int[] getAccountColors(final Context context, final long[] accountIds) {
-        if (context == null || accountIds == null) return new int[0];
-        final String[] cols = new String[]{Accounts.ACCOUNT_ID, Accounts.COLOR};
-        final String where = Expression.in(new Column(Accounts.ACCOUNT_ID), new RawItemArray(accountIds)).getSQL();
-        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI, cols, where,
-                null, null);
-        if (cur == null) return new int[0];
-        try {
-            final int[] colors = new int[cur.getCount()];
-            for (int i = 0, j = cur.getCount(); i < j; i++) {
-                cur.moveToPosition(i);
-                colors[ArrayUtils.indexOf(accountIds, cur.getLong(0))] = cur.getInt(1);
-            }
-            return colors;
-        } finally {
-            cur.close();
-        }
-    }
-
-    public static String getAccountDisplayName(final Context context, final long accountId, final boolean nameFirst) {
-        final String name;
-        if (nameFirst) {
-            name = getAccountName(context, accountId);
-        } else {
-            name = String.format("@%s", DataStoreUtils.getAccountScreenName(context, accountId));
-        }
-        return name;
-    }
-
-    public static long getAccountId(final Context context, final String screenName) {
-        if (context == null || isEmpty(screenName)) return -1;
-        final Cursor cur = ContentResolverUtils
-                .query(context.getContentResolver(), Accounts.CONTENT_URI, new String[]{Accounts.ACCOUNT_ID},
-                        Expression.equalsArgs(Accounts.SCREEN_NAME).getSQL(), new String[]{screenName}, null);
-        if (cur == null) return -1;
-        try {
-            if (cur.getCount() > 0 && cur.moveToFirst()) return cur.getLong(0);
-            return -1;
-        } finally {
-            cur.close();
-        }
-    }
-
-    @NonNull
-    public static long[] getAccountIds(final Context context) {
-        if (context == null) return new long[0];
-        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                new String[]{Accounts.ACCOUNT_ID}, null, null, null);
-        if (cur == null) return new long[0];
-        try {
-            cur.moveToFirst();
-            final long[] ids = new long[cur.getCount()];
-            int i = 0;
-            while (!cur.isAfterLast()) {
-                ids[i++] = cur.getLong(0);
-                cur.moveToNext();
-            }
-            return ids;
-        } finally {
-            cur.close();
-        }
-    }
-
-    public static boolean hasAccount(final Context context) {
-        if (context == null) return false;
-        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                new String[]{SQLFunctions.COUNT()}, null, null, null);
-        try {
-            cur.moveToFirst();
-            return cur.getInt(0) > 0;
-        } finally {
-            cur.close();
-        }
-    }
-
-    public static String getAccountName(final Context context, final long accountId) {
-        if (context == null) return null;
-        final String cached = DataStoreUtils.sAccountNames.get(accountId);
-        if (!isEmpty(cached)) return cached;
-        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                new String[]{Accounts.NAME}, Accounts.ACCOUNT_ID + " = " + accountId, null, null);
-        if (cur == null) return null;
-        try {
-            if (cur.getCount() > 0 && cur.moveToFirst()) {
-                final String name = cur.getString(0);
-                DataStoreUtils.sAccountNames.put(accountId, name);
-                return name;
-            }
-            return null;
-        } finally {
-            cur.close();
-        }
-    }
-
-    public static String[] getAccountNames(final Context context) {
-        return DataStoreUtils.getAccountScreenNames(context, null);
-    }
-
     public static int getAccountNotificationId(final int notificationType, final long accountId) {
         return Arrays.hashCode(new long[]{notificationType, accountId});
     }
@@ -1385,7 +1259,7 @@ public final class Utils implements Constants {
         if (context == null) return -1;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final long accountId = prefs.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
-        final long[] accountIds = Utils.getAccountIds(context);
+        final long[] accountIds = DataStoreUtils.getAccountIds(context);
         if (accountIds.length > 0 && !ArrayUtils.contains(accountIds, accountId) && accountIds.length > 0) {
              /* TODO: this is just a quick fix */
             return accountIds[0];
@@ -1816,7 +1690,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean hasAutoRefreshAccounts(final Context context) {
-        final long[] accountIds = getAccountIds(context);
+        final long[] accountIds = DataStoreUtils.getAccountIds(context);
         return !ArrayUtils.isEmpty(AccountPreferences.getAutoRefreshEnabledAccountIds(context, accountIds));
     }
 
@@ -1832,7 +1706,7 @@ public final class Utils implements Constants {
         final int id_idx = cur.getColumnIndex(Accounts.ACCOUNT_ID), color_idx = cur.getColumnIndex(Accounts.COLOR);
         cur.moveToFirst();
         while (!cur.isAfterLast()) {
-            sAccountColors.put(cur.getLong(id_idx), cur.getInt(color_idx));
+            DataStoreUtils.sAccountColors.put(cur.getLong(id_idx), cur.getInt(color_idx));
             cur.moveToNext();
         }
         cur.close();
@@ -1980,36 +1854,6 @@ public final class Utils implements Constants {
         return prefs.getBoolean("silent_notifications_at_" + now.get(Calendar.HOUR_OF_DAY), false);
     }
 
-    public static boolean isOfficialKeyAccount(final Context context, final long accountId) {
-        return getOfficialKeyType(context, accountId) != ConsumerKeyType.UNKNOWN;
-    }
-
-    @NonNull
-    public static ConsumerKeyType getOfficialKeyType(final Context context, final long accountId) {
-        if (context == null) return ConsumerKeyType.UNKNOWN;
-        final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
-        final String selection = Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL();
-        final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection, selection, null, null);
-        //noinspection TryFinallyCanBeTryWithResources
-        try {
-            if (c.moveToPosition(0))
-                return TwitterContentUtils.getOfficialKeyType(context, c.getString(0), c.getString(1));
-        } finally {
-            c.close();
-        }
-        return ConsumerKeyType.UNKNOWN;
-    }
-
-    public static boolean isOfficialTwitterInstance(final Context context, final Twitter twitter) {
-        if (context == null || twitter == null) return false;
-        final RestClient restClient = RestAPIFactory.getRestClient(twitter);
-        final Authorization auth = restClient.getAuthorization();
-        if (!(auth instanceof OAuthSupport)) return false;
-        final String consumerKey = ((OAuthSupport) auth).getConsumerKey();
-        final String consumerSecret = ((OAuthSupport) auth).getConsumerSecret();
-        return TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
-    }
-
     public static boolean isRedirected(final int code) {
         return code == 301 || code == 302 || code == 307;
     }
@@ -2025,7 +1869,7 @@ public final class Utils implements Constants {
 
     public static boolean isUserLoggedIn(final Context context, final long accountId) {
         if (context == null) return false;
-        final long[] ids = getAccountIds(context);
+        final long[] ids = DataStoreUtils.getAccountIds(context);
         if (ids == null) return false;
         for (final long id : ids) {
             if (id == accountId) return true;
@@ -3056,18 +2900,6 @@ public final class Utils implements Constants {
         return in.size() != out.size();
     }
 
-    public static boolean truncateActivities(final List<org.mariotaku.twidere.api.twitter.model.Activity> in, final List<org.mariotaku.twidere.api.twitter.model.Activity> out,
-                                             final long sinceId) {
-        if (in == null) return false;
-        for (final org.mariotaku.twidere.api.twitter.model.Activity status : in) {
-            if (sinceId > 0 && status.getMaxPosition() <= sinceId) {
-                continue;
-            }
-            out.add(status);
-        }
-        return in.size() != out.size();
-    }
-
     public static void updateRelationship(Context context, Relationship relationship, long accountId) {
         final ContentResolver resolver = context.getContentResolver();
         final ContentValues values = ContentValuesCreator.createCachedRelationship(relationship, accountId);
@@ -3401,6 +3233,17 @@ public final class Utils implements Constants {
         int result = baseId;
         result = 31 * result + (int) (accountId ^ (accountId >>> 32));
         return result;
+    }
+
+    @SuppressLint("InlinedApi")
+    public static boolean isCharging(final Context context) {
+        if (context == null) return false;
+        final Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if (intent == null) return false;
+        final int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+        return plugged == BatteryManager.BATTERY_PLUGGED_AC
+                || plugged == BatteryManager.BATTERY_PLUGGED_USB
+                || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
     }
 
     static class UtilsL {

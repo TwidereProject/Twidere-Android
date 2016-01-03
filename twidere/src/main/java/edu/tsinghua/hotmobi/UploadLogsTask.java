@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import edu.tsinghua.spice.Utilies.SpiceProfilingUtil;
+import edu.tsinghua.hotmobi.model.UploadLogEvent;
 
 /**
  * Upload logs to target server
@@ -67,7 +67,7 @@ public class UploadLogsTask implements Runnable {
             final double deltaDays = (System.currentTimeMillis() - lastUpload) /
                     (double) HotMobiLogger.UPLOAD_INTERVAL_MILLIS;
             if (deltaDays < 1) {
-                SpiceProfilingUtil.log("Last uploaded was conducted in 1 day ago.");
+                HotMobiLogger.log("Last uploaded was conducted in 1 day ago.");
                 return;
             }
         }
@@ -106,8 +106,13 @@ public class UploadLogsTask implements Runnable {
                     builder.headers(headers);
                     body = new FileTypedData(logFile);
                     builder.body(body);
+                    final UploadLogEvent uploadLogEvent = UploadLogEvent.create(context, logFile);
                     response = client.execute(builder.build());
                     if (response.isSuccessful()) {
+                        uploadLogEvent.markEnd();
+                        if (!uploadLogEvent.shouldSkip()) {
+                            HotMobiLogger.getInstance(context).log(uploadLogEvent);
+                        }
                         succeeded &= logFile.delete();
                     }
                 } catch (IOException e) {

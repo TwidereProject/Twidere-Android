@@ -23,10 +23,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
@@ -70,6 +72,7 @@ import static android.text.TextUtils.isEmpty;
  */
 public class DataStoreUtils implements Constants {
     static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+    static LongSparseArray<Integer> sAccountColors = new LongSparseArray<>();
 
     static {
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Accounts.CONTENT_PATH,
@@ -713,5 +716,123 @@ public class DataStoreUtils implements Constants {
             return Expression.and(filterExpression, extraSelection);
         }
         return filterExpression;
+    }
+
+    public static int getAccountColor(final Context context, final long accountId) {
+        if (context == null) return Color.TRANSPARENT;
+        final Integer cached = sAccountColors.get(accountId);
+        if (cached != null) return cached;
+        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
+                new String[]{Accounts.COLOR}, Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(),
+                null, null);
+        if (cur == null) return Color.TRANSPARENT;
+        try {
+            if (cur.getCount() > 0 && cur.moveToFirst()) {
+                final int color = cur.getInt(0);
+                sAccountColors.put(accountId, color);
+                return color;
+            }
+            return Color.TRANSPARENT;
+        } finally {
+            cur.close();
+        }
+    }
+
+    public static int[] getAccountColors(final Context context, final long[] accountIds) {
+        if (context == null || accountIds == null) return new int[0];
+        final String[] cols = new String[]{Accounts.ACCOUNT_ID, Accounts.COLOR};
+        final String where = Expression.in(new Columns.Column(Accounts.ACCOUNT_ID), new RawItemArray(accountIds)).getSQL();
+        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI, cols, where,
+                null, null);
+        if (cur == null) return new int[0];
+        try {
+            final int[] colors = new int[cur.getCount()];
+            for (int i = 0, j = cur.getCount(); i < j; i++) {
+                cur.moveToPosition(i);
+                colors[ArrayUtils.indexOf(accountIds, cur.getLong(0))] = cur.getInt(1);
+            }
+            return colors;
+        } finally {
+            cur.close();
+        }
+    }
+
+    public static String getAccountDisplayName(final Context context, final long accountId, final boolean nameFirst) {
+        final String name;
+        if (nameFirst) {
+            name = getAccountName(context, accountId);
+        } else {
+            name = String.format("@%s", getAccountScreenName(context, accountId));
+        }
+        return name;
+    }
+
+    public static long getAccountId(final Context context, final String screenName) {
+        if (context == null || isEmpty(screenName)) return -1;
+        final Cursor cur = ContentResolverUtils
+                .query(context.getContentResolver(), Accounts.CONTENT_URI, new String[]{Accounts.ACCOUNT_ID},
+                        Expression.equalsArgs(Accounts.SCREEN_NAME).getSQL(), new String[]{screenName}, null);
+        if (cur == null) return -1;
+        try {
+            if (cur.getCount() > 0 && cur.moveToFirst()) return cur.getLong(0);
+            return -1;
+        } finally {
+            cur.close();
+        }
+    }
+
+    @NonNull
+    public static long[] getAccountIds(final Context context) {
+        if (context == null) return new long[0];
+        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
+                new String[]{Accounts.ACCOUNT_ID}, null, null, null);
+        if (cur == null) return new long[0];
+        try {
+            cur.moveToFirst();
+            final long[] ids = new long[cur.getCount()];
+            int i = 0;
+            while (!cur.isAfterLast()) {
+                ids[i++] = cur.getLong(0);
+                cur.moveToNext();
+            }
+            return ids;
+        } finally {
+            cur.close();
+        }
+    }
+
+    public static boolean hasAccount(final Context context) {
+        if (context == null) return false;
+        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
+                new String[]{SQLFunctions.COUNT()}, null, null, null);
+        try {
+            cur.moveToFirst();
+            return cur.getInt(0) > 0;
+        } finally {
+            cur.close();
+        }
+    }
+
+    public static String getAccountName(final Context context, final long accountId) {
+        if (context == null) return null;
+        final String cached = sAccountNames.get(accountId);
+        if (!isEmpty(cached)) return cached;
+        final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
+                new String[]{Accounts.NAME}, Accounts.ACCOUNT_ID + " = " + accountId, null, null);
+        if (cur == null) return null;
+        try {
+            if (cur.getCount() > 0 && cur.moveToFirst()) {
+                final String name = cur.getString(0);
+                sAccountNames.put(accountId, name);
+                return name;
+            }
+            return null;
+        } finally {
+            cur.close();
+        }
+    }
+
+    public static String[] getAccountNames(final Context context) {
+        return getAccountScreenNames(context, null);
     }
 }

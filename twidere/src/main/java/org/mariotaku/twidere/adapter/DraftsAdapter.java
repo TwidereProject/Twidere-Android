@@ -33,6 +33,7 @@ import org.mariotaku.twidere.model.DraftItemCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -42,8 +43,6 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.holder.DraftViewHolder;
 
 import javax.inject.Inject;
-
-import static org.mariotaku.twidere.util.Utils.getAccountColors;
 
 public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
 
@@ -81,7 +80,7 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
         } else {
             holder.media_preview_container.setVisibility(View.GONE);
         }
-        holder.content.drawEnd(getAccountColors(context, accountIds));
+        holder.content.drawEnd(DataStoreUtils.getAccountColors(context, accountIds));
         holder.setTextSize(mTextSize);
         final boolean emptyContent = TextUtils.isEmpty(text);
         if (emptyContent) {

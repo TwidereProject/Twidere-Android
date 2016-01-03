@@ -474,7 +474,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                             intent.putExtra(EXTRA_ACCOUNT_IDS, accountIds);
                             if (accountIds.length > 0) {
                                 final long account_id = accountIds[0];
-                                intent.putExtra(EXTRA_NAME, Utils.getAccountName(this, account_id));
+                                intent.putExtra(EXTRA_NAME, DataStoreUtils.getAccountName(this, account_id));
                                 intent.putExtra(EXTRA_SCREEN_NAME, DataStoreUtils.getAccountScreenName(this, account_id));
                             }
                             if (mInReplyToStatusId > 0) {
@@ -605,7 +605,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mValidator = new TwidereValidator(this);
         setContentView(R.layout.activity_compose);
         setFinishOnTouchOutside(false);
-        final long[] defaultAccountIds = Utils.getAccountIds(this);
+        final long[] defaultAccountIds = DataStoreUtils.getAccountIds(this);
         if (defaultAccountIds.length <= 0) {
             final Intent intent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
             intent.setClass(this, SignInActivity.class);

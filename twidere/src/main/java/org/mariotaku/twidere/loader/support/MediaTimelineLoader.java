@@ -23,17 +23,16 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.model.ParcelableStatus;
-
-import java.util.List;
-
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.DataStoreUtils;
 
-import static org.mariotaku.twidere.util.Utils.getAccountId;
+import java.util.List;
+
 import static org.mariotaku.twidere.util.Utils.isFiltered;
 
 public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
@@ -48,7 +47,7 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
         super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
         mUserId = userId;
         mUserScreenName = screenName;
-        mIsMyTimeline = userId > 0 ? accountId == userId : accountId == getAccountId(context, screenName);
+        mIsMyTimeline = userId > 0 ? accountId == userId : accountId == DataStoreUtils.getAccountId(context, screenName);
     }
 
     @NonNull

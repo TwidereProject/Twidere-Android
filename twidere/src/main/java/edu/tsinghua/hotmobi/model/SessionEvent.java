@@ -31,7 +31,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.model.AccountPreferences;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 
 import java.util.HashMap;
 
@@ -92,7 +92,7 @@ public class SessionEvent extends BaseEvent implements Parcelable {
 
     public void dumpPreferences(Context context) {
         final HashMap<String, String> preferences = new HashMap<>();
-        for (AccountPreferences pref : AccountPreferences.getAccountPreferences(context, Utils.getAccountIds(context))) {
+        for (AccountPreferences pref : AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountIds(context))) {
             final long accountId = pref.getAccountId();
             preferences.put("notification_" + accountId + "_home", String.valueOf(pref.isHomeTimelineNotificationEnabled()));
             preferences.put("notification_" + accountId + "_interactions", String.valueOf(pref.isInteractionsNotificationEnabled()));

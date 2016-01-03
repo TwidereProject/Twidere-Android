@@ -347,7 +347,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         }
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
-        if (!Utils.hasAccount(this)) {
+        if (!DataStoreUtils.hasAccount(this)) {
             final Intent signInIntent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
             signInIntent.setClass(this, SignInActivity.class);
             startActivity(signInIntent);

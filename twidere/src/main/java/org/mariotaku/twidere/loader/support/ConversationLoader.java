@@ -26,27 +26,74 @@ import android.support.annotation.NonNull;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.api.twitter.model.StatusUtils;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
+import org.mariotaku.twidere.util.Nullables;
+import org.mariotaku.twidere.util.ParcelUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConversationLoader extends TwitterAPIStatusesLoader {
 
-    private final long mInReplyToStatusId;
+    private final boolean mTwitterOptimizedSearches;
 
-    public ConversationLoader(final Context context, final long accountId, final long statusId,
-                              final String screenName, final long sinceId, final long maxId,
-                              final List<ParcelableStatus> data, final boolean fromUser) {
-        super(context, accountId, sinceId, maxId, data, null, -1, fromUser);
-        mInReplyToStatusId = statusId;
+    @NonNull
+    private final ParcelableStatus mStatus;
+
+    public ConversationLoader(final Context context, @NonNull final ParcelableStatus status,
+                              final long sinceId, final long maxId, final List<ParcelableStatus> data,
+                              final boolean fromUser, final boolean twitterOptimizedSearches) {
+        super(context, status.account_id, sinceId, maxId, data, null, -1, fromUser);
+        mStatus = Nullables.assertNonNull(ParcelUtils.clone(status));
+        ParcelableStatusUtils.makeOriginalStatus(mStatus);
+        mTwitterOptimizedSearches = twitterOptimizedSearches;
     }
 
     @NonNull
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        return twitter.showConversation(mInReplyToStatusId, paging);
+        final ParcelableStatus status = mStatus;
+        if (Utils.shouldForceUsingPrivateAPIs(getContext()) || TwitterAPIFactory.isOfficialTwitterInstance(getContext(), twitter)) {
+            return twitter.showConversation(status.id, paging);
+        }
+        final List<Status> statuses = new ArrayList<>();
+        final long maxId = getMaxId(), sinceId = getSinceId();
+        boolean getConversations = maxId < status.id || (maxId <= 0 && sinceId <= 0);
+        boolean getReplies = sinceId > status.id || (maxId <= 0 && sinceId <= 0);
+        if (getConversations) {
+            long inReplyToId = status.in_reply_to_status_id;
+            int count = 0;
+            while (inReplyToId > 0 && count < 10) {
+                final Status item = twitter.showStatus(inReplyToId);
+                inReplyToId = item.getInReplyToStatusId();
+                statuses.add(item);
+                count++;
+            }
+        }
+        if ((sinceId <= 0 && maxId <= 0) || (sinceId > 0 && sinceId < status.id) || (maxId > 0 && maxId >= status.id)) {
+            statuses.add(StatusUtils.fromParcelableStatus(status));
+        }
+        if (getReplies) {
+            SearchQuery query = new SearchQuery();
+            if (mTwitterOptimizedSearches) {
+                query.query("to:" + status.user_screen_name);
+            } else {
+                query.query("@" + status.user_screen_name);
+            }
+            query.sinceId(status.id);
+            for (Status item : twitter.search(query)) {
+                if (item.getInReplyToStatusId() == status.id) {
+                    statuses.add(item);
+                }
+            }
+        }
+        return statuses;
     }
 
     @Override

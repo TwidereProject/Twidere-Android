@@ -116,7 +116,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private final UserColorNameManager mUserColorNameManager;
     private final ReadStateManager mReadStateManager;
 
-    private int mGetHomeTimelineTaskId, mGetMentionsTaskId;
     private int mGetReceivedDirectMessagesTaskId, mGetSentDirectMessagesTaskId;
     private int mGetLocalTrendsTaskId;
 
@@ -282,9 +281,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public boolean getHomeTimelineAsync(final long[] accountIds, final long[] max_ids, final long[] since_ids) {
-        mAsyncTaskManager.cancel(mGetHomeTimelineTaskId);
-        final GetHomeTimelineTask task = new GetHomeTimelineTask(accountIds, max_ids, since_ids);
-        mGetHomeTimelineTaskId = mAsyncTaskManager.add(task, true);
+        final GetHomeTimelineTask task = new GetHomeTimelineTask(this, accountIds, max_ids, since_ids);
+        mAsyncTaskManager.add(task, true);
         return true;
     }
 
@@ -544,7 +542,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
             @Override
             protected ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException {
-                if (Utils.isOfficialKeyAccount(getContext(), accountId)) {
+                if (TwitterAPIFactory.isOfficialKeyAccount(getContext(), accountId)) {
                     return twitter.getActivitiesAboutMe(paging);
                 }
                 final ResponseList<Activity> activities = new ResponseList<>();
@@ -588,7 +586,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             public Object doLongOperation(Object o) throws InterruptedException {
                 for (long accountId : accountIds) {
                     Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, false);
-                    if (Utils.isOfficialTwitterInstance(mContext, twitter)) continue;
+                    if (TwitterAPIFactory.isOfficialTwitterInstance(mContext, twitter)) continue;
                     try {
                         twitter.setActivitiesAboutMeUnread(cursor);
                     } catch (TwitterException e) {
@@ -2125,10 +2123,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class GetHomeTimelineTask extends GetStatusesTask {
+    static class GetHomeTimelineTask extends GetStatusesTask {
 
-        public GetHomeTimelineTask(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
-            super(AsyncTwitterWrapper.this, accountIds, maxIds, sinceIds, TASK_TAG_GET_HOME_TIMELINE);
+        private AsyncTwitterWrapper twitterWrapper;
+
+        public GetHomeTimelineTask(AsyncTwitterWrapper asyncTwitterWrapper, final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+            super(asyncTwitterWrapper, accountIds, maxIds, sinceIds, TASK_TAG_GET_HOME_TIMELINE);
+            this.twitterWrapper = asyncTwitterWrapper;
         }
 
         @Override
@@ -2152,13 +2153,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final List<StatusListResponse> result) {
             super.onPostExecute(result);
-            mGetHomeTimelineTaskId = -1;
         }
 
         @Override
         protected void onPreExecute() {
             final Intent intent = new Intent(BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING);
-            mContext.sendBroadcast(intent);
+            twitterWrapper.getContext().sendBroadcast(intent);
             super.onPreExecute();
         }
 

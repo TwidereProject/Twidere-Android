@@ -111,6 +111,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.CompareUtils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
@@ -197,14 +198,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mStatusAdapter.setRepliesLoading(true);
             mStatusAdapter.setConversationsLoading(true);
             mStatusAdapter.updateItemDecoration();
-            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            final String screenName = args.getString(EXTRA_SCREEN_NAME);
-            final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
+            final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
             final long maxId = args.getLong(EXTRA_MAX_ID, -1);
             final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
             final boolean twitterOptimizedSearches = mPreferences.getBoolean(KEY_TWITTER_OPTIMIZED_SEARCHES);
-            final ConversationLoader loader = new ConversationLoader(getActivity(), accountId,
-                    statusId, screenName, sinceId, maxId, null, true);
+            assert status != null;
+            final ConversationLoader loader = new ConversationLoader(getActivity(), status, sinceId,
+                    maxId, null, true, twitterOptimizedSearches);
             loader.setComparator(ParcelableStatus.REVERSE_ID_COMPARATOR);
             return loader;
         }
@@ -618,7 +618,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final Bundle args = new Bundle();
         args.putLong(EXTRA_ACCOUNT_ID, status.account_id);
         args.putLong(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
-        args.putString(EXTRA_SCREEN_NAME, status.is_retweet ? status.retweeted_by_user_screen_name : status.user_screen_name);
+        args.putParcelable(EXTRA_STATUS, status);
         if (mConversationLoaderInitialized) {
             getLoaderManager().restartLoader(LOADER_ID_STATUS_CONVERSATIONS, args, mConversationsLoaderCallback);
             return;
@@ -917,7 +917,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 retweetedByView.setVisibility(View.GONE);
             }
 
-            profileContainer.drawEnd(Utils.getAccountColor(context, status.account_id));
+            profileContainer.drawEnd(DataStoreUtils.getAccountColor(context, status.account_id));
 
             final int layoutPosition = getLayoutPosition();
             if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
@@ -1542,16 +1542,17 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus status = mStatus;
             if (status == null) return;
             mData = data;
-            if (data == null) {
+            if (data == null || data.isEmpty()) {
                 setCount(ITEM_IDX_CONVERSATION, 0);
                 setCount(ITEM_IDX_REPLY, 0);
             } else {
                 int conversationCount = 0, replyCount = 0;
                 boolean containsStatus = false;
+                final long statusId = status.is_retweet ? status.retweet_id : status.id;
                 for (ParcelableStatus item : data) {
-                    if (item.id < status.id) {
+                    if (item.id < statusId) {
                         conversationCount++;
-                    } else if (item.id > status.id) {
+                    } else if (item.id > statusId) {
                         replyCount++;
                     } else {
                         containsStatus = true;

@@ -49,7 +49,6 @@ import javax.inject.Inject;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.ScreenEvent;
 
-import static org.mariotaku.twidere.util.Utils.getAccountIds;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.hasAutoRefreshAccounts;
 import static org.mariotaku.twidere.util.Utils.isBatteryOkay;
@@ -84,7 +83,7 @@ public class RefreshService extends Service implements Constants {
             } else if (BROADCAST_RESCHEDULE_TRENDS_REFRESHING.equals(action)) {
                 rescheduleTrendsRefreshing();
             } else if (isAutoRefreshAllowed()) {
-                final long[] accountIds = getAccountIds(context);
+                final long[] accountIds = DataStoreUtils.getAccountIds(context);
                 final AccountPreferences[] accountPrefs = AccountPreferences.getAccountPreferences(context, accountIds);
                 if (BROADCAST_REFRESH_HOME_TIMELINE.equals(action)) {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new HomeRefreshableFilter());

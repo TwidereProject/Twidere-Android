@@ -64,6 +64,7 @@ import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
@@ -80,7 +81,6 @@ import static org.mariotaku.twidere.util.CustomTabUtils.getTabIconObject;
 import static org.mariotaku.twidere.util.CustomTabUtils.getTabTypeName;
 import static org.mariotaku.twidere.util.CustomTabUtils.isTabAdded;
 import static org.mariotaku.twidere.util.CustomTabUtils.isTabTypeValid;
-import static org.mariotaku.twidere.util.Utils.getAccountIds;
 
 public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<Cursor>,
         MultiChoiceModeListener, OnItemClickListener {
@@ -221,7 +221,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         final Resources res = getResources();
         final boolean hasOfficialKeyAccounts = Utils.hasAccountSignedWithOfficialKeys(getActivity());
         final boolean forcePrivateAPI = mPreferences.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false);
-        final long[] accountIds = getAccountIds(getActivity());
+        final long[] accountIds = DataStoreUtils.getAccountIds(getActivity());
         final MenuItem itemAdd = menu.findItem(R.id.add_submenu);
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             final SubMenu subMenu = itemAdd.getSubMenu();

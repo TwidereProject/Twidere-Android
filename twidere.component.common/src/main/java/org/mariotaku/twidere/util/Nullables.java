@@ -36,4 +36,9 @@ public class Nullables {
         return list;
     }
 
+    @NonNull
+    public static <T> T assertNonNull(@Nullable T object) {
+        if (object == null) throw new NullPointerException();
+        return object;
+    }
 }
