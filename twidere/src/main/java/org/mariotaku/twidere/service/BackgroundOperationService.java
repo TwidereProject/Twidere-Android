@@ -527,7 +527,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, account.account_id, true, true);
                 final TwitterUpload upload = TwitterAPIFactory.getTwitterInstance(this, account.account_id, true, true, TwitterUpload.class);
                 final StatusUpdate status = new StatusUpdate(shortenedText);
-                status.inReplyToStatusId(statusUpdate.in_reply_to_status_id);
+                if (statusUpdate.in_reply_to_status_id > 0) {
+                    status.inReplyToStatusId(statusUpdate.in_reply_to_status_id);
+                }
                 if (statusUpdate.location != null) {
                     status.location(ParcelableLocation.toGeoLocation(statusUpdate.location));
                 }
