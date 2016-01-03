@@ -20,16 +20,16 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
 
 public class UserListSubscribersLoader extends CursorSupportUsersLoader {
 
@@ -47,17 +47,17 @@ public class UserListSubscribersLoader extends CursorSupportUsersLoader {
         mListName = listName;
     }
 
+    @NonNull
     @Override
-    public PageableResponseList<User> getCursoredUsers(final Twitter twitter, final Paging paging)
+    public PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
             throws TwitterException {
-        if (twitter == null) return null;
         if (mListId > 0)
             return twitter.getUserListSubscribers(mListId, paging);
         else if (mUserId > 0)
             return twitter.getUserListSubscribers(mListName.replace(' ', '-'), mUserId, paging);
         else if (mScreenName != null)
             return twitter.getUserListSubscribers(mListName.replace(' ', '-'), mScreenName, paging);
-        return null;
+        throw new TwitterException("list_id or list_name and user_id (or screen_name) required");
     }
 
 }

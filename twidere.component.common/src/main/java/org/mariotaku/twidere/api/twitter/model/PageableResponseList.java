@@ -29,8 +29,8 @@ import java.util.ArrayList;
  */
 public class PageableResponseList<T> extends ArrayList<T> implements TwitterResponse, CursorSupport {
 
-    private int accessLevel;
-    private RateLimitStatus rateLimitStatus;
+    int accessLevel;
+    RateLimitStatus rateLimitStatus;
     long previousCursor;
     long nextCursor;
 
@@ -53,12 +53,12 @@ public class PageableResponseList<T> extends ArrayList<T> implements TwitterResp
 
     @Override
     public long getNextCursor() {
-        return 0;
+        return nextCursor;
     }
 
     @Override
     public long getPreviousCursor() {
-        return 0;
+        return previousCursor;
     }
 
     @Override

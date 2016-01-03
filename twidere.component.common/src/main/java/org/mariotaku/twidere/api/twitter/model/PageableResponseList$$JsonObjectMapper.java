@@ -70,15 +70,17 @@ public final class PageableResponseList$$JsonObjectMapper<T> extends JsonMapper<
             }
             case "previous_cursor": {
                 instance.previousCursor = jsonParser.getValueAsLong();
+                break;
             }
             case "next_cursor": {
                 instance.nextCursor = jsonParser.getValueAsLong();
+                break;
             }
         }
     }
 
     @Override
     public void serialize(PageableResponseList<T> object, JsonGenerator jsonGenerator, boolean writeStartAndEnd) throws IOException {
-
+        throw new UnsupportedOperationException();
     }
 }

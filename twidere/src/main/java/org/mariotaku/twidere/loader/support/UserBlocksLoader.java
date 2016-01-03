@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 
@@ -38,10 +39,10 @@ public class UserBlocksLoader extends CursorSupportUsersLoader {
         super(context, accountId, cursor, data, fromUser);
     }
 
+    @NonNull
     @Override
-    protected final PageableResponseList<User> getCursoredUsers(final Twitter twitter, final Paging paging)
+    protected final PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
             throws TwitterException {
-        if (twitter == null) return null;
         return twitter.getBlocksList(paging);
     }
 

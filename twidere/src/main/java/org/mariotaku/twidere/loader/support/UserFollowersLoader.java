@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 
@@ -44,14 +45,14 @@ public class UserFollowersLoader extends CursorSupportUsersLoader {
         mScreenName = screenName;
     }
 
+    @NonNull
     @Override
-    protected PageableResponseList<User> getCursoredUsers(final Twitter twitter, final Paging paging)
+    protected PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
             throws TwitterException {
-        if (twitter == null) return null;
         if (mUserId > 0)
             return twitter.getFollowersList(mUserId, paging);
         else if (mScreenName != null) return twitter.getFollowersList(mScreenName, paging);
-        return null;
+        throw new TwitterException("user_id or screen_name required");
     }
 
 }

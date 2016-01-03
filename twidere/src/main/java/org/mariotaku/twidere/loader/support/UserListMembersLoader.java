@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 
@@ -47,17 +48,17 @@ public class UserListMembersLoader extends CursorSupportUsersLoader {
         mListName = listName;
     }
 
+    @NonNull
     @Override
-    public PageableResponseList<User> getCursoredUsers(final Twitter twitter, final Paging paging)
+    public PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
             throws TwitterException {
-        if (twitter == null) return null;
         if (mListId > 0)
             return twitter.getUserListMembers(mListId, paging);
         else if (mUserId > 0)
             return twitter.getUserListMembers(mListName.replace(' ', '-'), mUserId, paging);
         else if (mScreenName != null)
             return twitter.getUserListMembers(mListName.replace(' ', '-'), mScreenName, paging);
-        return null;
+        throw new TwitterException("list_id or list_name and user_id (or screen_name) required");
     }
 
 }
