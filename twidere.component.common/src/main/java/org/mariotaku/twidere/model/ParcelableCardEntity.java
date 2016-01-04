@@ -192,4 +192,72 @@ public final class ParcelableCardEntity implements Parcelable {
 
     }
 
+    /**
+     * Created by mariotaku on 15/12/31.
+     */
+    @ParcelablePlease
+    @JsonObject
+    public static final class ParcelableBindingValue implements Parcelable {
+
+        public static final Creator<ParcelableBindingValue> CREATOR = new Creator<ParcelableBindingValue>() {
+            public ParcelableBindingValue createFromParcel(Parcel source) {
+                ParcelableBindingValue target = new ParcelableBindingValue();
+                ParcelableCardEntity$ParcelableBindingValueParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            public ParcelableBindingValue[] newArray(int size) {
+                return new ParcelableBindingValue[size];
+            }
+        };
+        @ParcelableThisPlease
+        @JsonField(name = "type")
+        public String type;
+        @ParcelableThisPlease
+        @JsonField(name = "value")
+        public String value;
+
+        public ParcelableBindingValue() {
+        }
+
+        public ParcelableBindingValue(CardEntity.BindingValue value) {
+            if (value instanceof CardEntity.ImageValue) {
+                this.type = CardEntity.BindingValue.TYPE_IMAGE;
+                this.value = ((CardEntity.ImageValue) value).getUrl();
+            } else if (value instanceof CardEntity.StringValue) {
+                this.type = CardEntity.BindingValue.TYPE_STRING;
+                this.value = ((CardEntity.StringValue) value).getValue();
+            } else if (value instanceof CardEntity.BooleanValue) {
+                this.type = CardEntity.BindingValue.TYPE_BOOLEAN;
+                this.value = String.valueOf(((CardEntity.BooleanValue) value).getValue());
+            } else if (value instanceof CardEntity.UserValue) {
+                this.type = CardEntity.BindingValue.TYPE_USER;
+                this.value = String.valueOf(((CardEntity.UserValue) value).getUserId());
+            }
+        }
+
+        public static Map<String, ParcelableBindingValue> from(Map<String, CardEntity.BindingValue> bindingValues) {
+            if (bindingValues == null) return null;
+            final ArrayMap<String, ParcelableBindingValue> map = new ArrayMap<>();
+            for (Map.Entry<String, CardEntity.BindingValue> entry : bindingValues.entrySet()) {
+                map.put(entry.getKey(), new ParcelableBindingValue(entry.getValue()));
+            }
+            return map;
+        }
+
+        @Override
+        public String toString() {
+            return value + " (" + type + ")";
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            ParcelableCardEntity$ParcelableBindingValueParcelablePlease.writeToParcel(this, dest, flags);
+        }
+    }
 }

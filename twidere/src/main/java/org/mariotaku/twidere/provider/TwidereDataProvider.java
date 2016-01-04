@@ -849,8 +849,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             if (!hasName) {
                 final Matcher m = PATTERN_SCREEN_NAME.matcher(query);
                 if (m.matches()) {
+                    final String screenName = m.group(1);
                     screenNameCursor.addRow(new Object[]{0, Suggestions.Search.TYPE_SCREEN_NAME,
-                            query, null, null, 0, null, query});
+                            screenName, null, null, 0, null, screenName});
                 }
             }
             cursors = new Cursor[3];

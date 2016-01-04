@@ -70,6 +70,7 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
         return mPreferences;
     }
 
+    @NonNull
     public final UserColorNameManager getUserColorNameManager() {
         return mUserColorNameManager;
     }
@@ -78,6 +79,7 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
         return mMultiSelectManager;
     }
 
+    @NonNull
     public final MediaLoaderWrapper getMediaLoader() {
         return mMediaLoader;
     }
@@ -86,10 +88,12 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
         return mReadStateManager;
     }
 
+    @NonNull
     public final AsyncTwitterWrapper getTwitterWrapper() {
         return mTwitterWrapper;
     }
 
+    @NonNull
     public final BidiFormatter getBidiFormatter() {
         return mBidiFormatter;
     }

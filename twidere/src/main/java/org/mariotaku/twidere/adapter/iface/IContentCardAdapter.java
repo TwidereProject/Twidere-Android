@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter.iface;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.text.BidiFormatter;
 
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -52,4 +53,7 @@ public interface IContentCardAdapter extends ILoadMoreSupportAdapter {
 
     @NonNull
     MediaLoaderWrapper getMediaLoader();
+
+    @NonNull
+    BidiFormatter getBidiFormatter();
 }

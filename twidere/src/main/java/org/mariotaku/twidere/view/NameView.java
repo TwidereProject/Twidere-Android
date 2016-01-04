@@ -22,6 +22,8 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
+import android.support.v4.text.BidiFormatter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -89,13 +91,21 @@ public class NameView extends ThemedTextView {
     }
 
     public void updateText() {
+        updateText(null);
+    }
+
+    public void updateText(@Nullable BidiFormatter formatter) {
         if (isInEditMode()) return;
         final SpannableStringBuilder sb = new SpannableStringBuilder();
         final String primaryText = mNameFirst ? mName : mScreenName;
         final String secondaryText = mNameFirst ? mScreenName : mName;
         if (primaryText != null) {
             int start = sb.length();
-            sb.append(primaryText);
+            if (formatter != null) {
+                sb.append(formatter.unicodeWrap(primaryText));
+            } else {
+                sb.append(primaryText);
+            }
             int end = sb.length();
             sb.setSpan(mPrimaryTextColor, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.setSpan(mPrimaryTextStyle, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -104,7 +114,11 @@ public class NameView extends ThemedTextView {
         sb.append(" ");
         if (secondaryText != null) {
             int start = sb.length();
-            sb.append(secondaryText);
+            if (formatter != null) {
+                sb.append(formatter.unicodeWrap(secondaryText));
+            } else {
+                sb.append(secondaryText);
+            }
             int end = sb.length();
             sb.setSpan(mSecondaryTextColor, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.setSpan(mSecondaryTextStyle, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
