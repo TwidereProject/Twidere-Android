@@ -108,7 +108,7 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     @Override
     protected InputStream getStreamFromNetwork(final String uriString, final Object extras) throws IOException {
         if (uriString == null) return null;
-        final ParcelableMedia media = PreviewMediaExtractor.fromLink(uriString);
+        final ParcelableMedia media = PreviewMediaExtractor.fromLink(uriString, mClient, extras);
         try {
             final String mediaUrl = media != null ? media.media_url : uriString;
             if (isTwitterProfileImage(uriString)) {

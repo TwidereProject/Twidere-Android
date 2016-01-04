@@ -534,6 +534,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                 map.put("include_descendent_reply_count", "true");
                 map.put("full_text", "true");
                 map.put("model_version", "7");
+                map.put("skip_aggregation", "true");
             } finally {
                 sDefaultRequestParams = Collections.unmodifiableMap(map);
             }

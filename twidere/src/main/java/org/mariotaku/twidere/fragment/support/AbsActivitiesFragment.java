@@ -307,8 +307,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         final ParcelableActivity activity = adapter.getActivity(position);
         final long[] accountIds = {activity.account_id};
         final long[] maxIds = {activity.min_position};
-        final long[] sinceIds = null;
-        getActivities(accountIds, maxIds, sinceIds);
+        getActivities(accountIds, maxIds, null);
     }
 
     @Override

@@ -35,21 +35,23 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 @SuppressWarnings("RedundantThrows")
 @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
         "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count",
-        "model_version"})
+        "model_version", "skip_aggregation"})
 public interface PrivateActivityResources extends PrivateResources {
 
     @GET("/activity/about_me.json")
     ResponseList<Activity> getActivitiesAboutMe(@Query Paging paging) throws TwitterException;
 
+    @GET("/activity/by_friends.json")
+    ResponseList<Activity> getActivitiesByFriends(@Query Paging paging) throws TwitterException;
+
+    @MethodExtra(name = "extra_params", values = {})
     @GET("/activity/about_me/unread.json")
     CursorTimestampResponse getActivitiesAboutMeUnread(@Query("cursor") boolean cursor) throws TwitterException;
 
+    @MethodExtra(name = "extra_params", values = {})
     @POST("/activity/about_me/unread.json")
     @Body(BodyType.FORM)
     CursorTimestampResponse setActivitiesAboutMeUnread(@Form("cursor") long cursor) throws TwitterException;
-
-    @GET("/activity/by_friends.json")
-    ResponseList<Activity> getActivitiesByFriends(@Query Paging paging) throws TwitterException;
 
 
 }

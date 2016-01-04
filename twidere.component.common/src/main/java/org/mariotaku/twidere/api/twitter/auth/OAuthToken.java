@@ -23,6 +23,7 @@ package org.mariotaku.twidere.api.twitter.auth;
 import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.Utils;
 import org.mariotaku.restfu.http.ContentType;
+import org.mariotaku.restfu.http.HeaderValue;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.ValueMap;
 import org.mariotaku.restfu.http.mime.TypedData;

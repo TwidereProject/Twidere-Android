@@ -225,7 +225,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 if (resultCode == Activity.RESULT_OK) {
                     final Uri src = intent.getData();
                     mTask = AsyncTaskUtils.executeTask(new AddMediaTask(this, src,
-                            createTempImageUri(), ParcelableMedia.TYPE_IMAGE, true));
+                            createTempImageUri(), ParcelableMedia.Type.TYPE_IMAGE, true));
                 }
                 break;
             }
@@ -887,14 +887,14 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         final Uri extraStream = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         //TODO handle share_screenshot extra (Bitmap)
         if (extraStream != null) {
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, extraStream, createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false));
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, extraStream, createTempImageUri(), ParcelableMedia.Type.TYPE_IMAGE, false));
         } else if (data != null) {
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, data, createTempImageUri(), ParcelableMedia.TYPE_IMAGE, false));
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, data, createTempImageUri(), ParcelableMedia.Type.TYPE_IMAGE, false));
         } else if (intent.hasExtra(EXTRA_SHARE_SCREENSHOT) && Utils.useShareScreenshot()) {
             final Bitmap bitmap = intent.getParcelableExtra(EXTRA_SHARE_SCREENSHOT);
             if (bitmap != null) {
                 try {
-                    AsyncTaskUtils.executeTask(new AddBitmapTask(this, bitmap, createTempImageUri(), ParcelableMedia.TYPE_IMAGE));
+                    AsyncTaskUtils.executeTask(new AddBitmapTask(this, bitmap, createTempImageUri(), ParcelableMedia.Type.TYPE_IMAGE));
                 } catch (IOException e) {
                     // ignore
                     bitmap.recycle();

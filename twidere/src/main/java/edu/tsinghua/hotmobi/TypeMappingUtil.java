@@ -53,14 +53,16 @@ public class TypeMappingUtil {
 
     public static String getMediaType(int type) {
         switch (type) {
-            case ParcelableMedia.TYPE_IMAGE:
+            case ParcelableMedia.Type.TYPE_IMAGE:
                 return "image";
-            case ParcelableMedia.TYPE_VIDEO:
+            case ParcelableMedia.Type.TYPE_VIDEO:
                 return "video";
-            case ParcelableMedia.TYPE_ANIMATED_GIF:
+            case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
                 return "animated_gif";
-            case ParcelableMedia.TYPE_CARD_ANIMATED_GIF:
+            case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF:
                 return "card_animated_gif";
+            case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER:
+                return "external_player";
             default:
                 return "unknown";
         }

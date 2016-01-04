@@ -237,7 +237,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     }
 
     protected long[] getOldestActivityIds(long[] accountIds) {
-        return DataStoreUtils.getOldestActivityIdsFromDatabase(getActivity(), getContentUri(), accountIds);
+        return DataStoreUtils.getOldestActivityMinPositions(getActivity(), getContentUri(), accountIds);
     }
 
     protected abstract boolean isFilterEnabled();

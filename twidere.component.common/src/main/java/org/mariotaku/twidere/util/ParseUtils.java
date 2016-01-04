@@ -140,26 +140,6 @@ public final class ParseUtils {
         return String.valueOf(object);
     }
 
-    public static URI parseURI(final String uriString) {
-        if (uriString == null) return null;
-        try {
-            return new URI(uriString);
-        } catch (final URISyntaxException e) {
-            // This should not happen.
-        }
-        return null;
-    }
-
-    public static URL parseURL(final String urlString) {
-        if (urlString == null) return null;
-        try {
-            return new URL(urlString);
-        } catch (final MalformedURLException e) {
-            // This should not happen.
-        }
-        return null;
-    }
-
     private static boolean shouldPutLong(final String key) {
         return IntentConstants.EXTRA_ACCOUNT_ID.equals(key) || IntentConstants.EXTRA_USER_ID.equals(key) || IntentConstants.EXTRA_STATUS_ID.equals(key)
                 || IntentConstants.EXTRA_LIST_ID.equals(key);

@@ -23,6 +23,8 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
+import org.mariotaku.twidere.util.BugReporter;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -146,6 +148,7 @@ public class MediaEntity extends UrlEntity {
             } else if ("animated_gif".equalsIgnoreCase(typeString)) {
                 return ANIMATED_GIF;
             }
+            BugReporter.error("Unknown MediaEntity.Type " + typeString);
             return UNKNOWN;
         }
 

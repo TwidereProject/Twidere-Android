@@ -34,6 +34,14 @@ public class Paging extends SimpleValueMap {
         put("max_id", maxId);
     }
 
+    public void setMinPosition(long minPosition) {
+        put("min_position", minPosition);
+    }
+
+    public void setMaxPosition(long maxPosition) {
+        put("max_position", maxPosition);
+    }
+
     public void setCount(int count) {
         put("count", count);
     }
@@ -66,6 +74,16 @@ public class Paging extends SimpleValueMap {
 
     public Paging maxId(long maxId) {
         setMaxId(maxId);
+        return this;
+    }
+
+    public Paging maxPosition(long maxPosition) {
+        setMaxPosition(maxPosition);
+        return this;
+    }
+
+    public Paging minPosition(long minPosition) {
+        setMinPosition(minPosition);
         return this;
     }
 

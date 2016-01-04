@@ -109,7 +109,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     }
 
     protected void openMedia(long accountId, long extraId, boolean sensitive, String link, int start, int end) {
-        final ParcelableMedia[] media = {ParcelableMedia.newImage(link, link)};
+        final ParcelableMedia[] media = {ParcelableMedia.image(link)};
         //TODO open media animation
         Bundle options = null;
         Utils.openMedia(context, accountId, sensitive, null, media, options);

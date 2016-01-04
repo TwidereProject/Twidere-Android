@@ -1998,7 +1998,7 @@ public final class Utils implements Constants {
                                          final ParcelableMedia current, final ParcelableMedia[] media, Bundle options) {
         if (context == null || media == null) return;
         if (!BuildConfig.ENABLE_MEDIA_VIEWER) {
-            final Uri parse = Uri.parse(current.page_url);
+            final Uri parse = Uri.parse(current.url);
             context.startActivity(new Intent(Intent.ACTION_VIEW, parse));
             return;
         }

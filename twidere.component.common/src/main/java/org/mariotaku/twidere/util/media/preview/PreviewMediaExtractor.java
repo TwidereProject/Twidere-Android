@@ -1,15 +1,17 @@
 package org.mariotaku.twidere.util.media.preview;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
+import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.HtmlLinkExtractor;
 import org.mariotaku.twidere.util.media.preview.provider.InstagramProvider;
 import org.mariotaku.twidere.util.media.preview.provider.Provider;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,35 +26,34 @@ public class PreviewMediaExtractor {
     };
 
     @Nullable
-    public static ParcelableMedia fromLink(@Nullable String link) {
+    public static ParcelableMedia fromLink(@NonNull String link) {
+        final Provider provider = providerFor(link);
+        if (provider == null) return null;
+        return provider.from(link);
+    }
+
+    @Nullable
+    @WorkerThread
+    public static ParcelableMedia fromLink(@NonNull String link, RestHttpClient client, Object extra) throws IOException {
+        final Provider provider = providerFor(link);
+        if (provider == null) return null;
+        return provider.from(link, client, extra);
+    }
+
+    @Nullable
+    private static Provider providerFor(String link) {
         if (TextUtils.isEmpty(link)) return null;
         for (Provider provider : sProviders) {
-            if (provider.supportsAuthority(getAuthority(link))) {
-                return provider.from(Uri.parse(link));
+            if (provider.supports(link)) {
+                return provider;
             }
         }
         return null;
     }
 
-    @Nullable
-    private static String getAuthority(@NonNull String link) {
-        int start = link.indexOf("://");
-        if (start < 0) return null;
-        int end = link.indexOf('/', start + 3);
-        if (end < 0) {
-            end = link.length();
-        }
-        return link.substring(start + 3, end);
-    }
 
     public static boolean isSupported(@Nullable String link) {
-        if (TextUtils.isEmpty(link)) return false;
-        for (Provider provider : sProviders) {
-            if (provider.supportsAuthority(getAuthority(link))) {
-                return true;
-            }
-        }
-        return false;
+        return providerFor(link) != null;
     }
 
     public static List<String> getSupportedLinksInStatus(final String statusString) {
@@ -66,5 +67,16 @@ public class PreviewMediaExtractor {
             }
         }
         return links;
+    }
+
+    @Nullable
+    public static String getAuthority(@NonNull String link) {
+        int start = link.indexOf("://");
+        if (start < 0) return null;
+        int end = link.indexOf('/', start + 3);
+        if (end < 0) {
+            end = link.length();
+        }
+        return link.substring(start + 3, end);
     }
 }

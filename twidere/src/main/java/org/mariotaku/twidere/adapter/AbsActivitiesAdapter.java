@@ -80,7 +80,6 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     private long[] mFilteredUserIds;
     private boolean mFollowingOnly;
-    private Random mRandom = new Random();
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         super(context);

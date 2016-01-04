@@ -54,7 +54,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.ColorUtils;
-import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -1223,7 +1222,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.profile_image: {
                 final String url = Utils.getOriginalTwitterProfileImage(user.profile_image_url);
-                final ParcelableMedia[] media = {ParcelableMedia.newImage(url, url)};
+                final ParcelableMedia[] media = {ParcelableMedia.image(url)};
                 Bundle options = Utils.createMediaViewerActivityOption(view);
                 Utils.openMedia(activity, user.account_id, false, null, media, options);
                 break;
@@ -1231,7 +1230,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.profile_banner: {
                 if (user.profile_banner_url == null) return;
                 final String url = user.profile_banner_url + "/ipad_retina";
-                final ParcelableMedia[] media = {ParcelableMedia.newImage(url, url)};
+                final ParcelableMedia[] media = {ParcelableMedia.image(url)};
                 Bundle options = Utils.createMediaViewerActivityOption(view);
                 Utils.openMedia(activity, user.account_id, false, null, media, options);
                 break;

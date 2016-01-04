@@ -41,11 +41,11 @@ public enum TweetType {
             boolean hasImage = false;
             for (ParcelableMedia media : status.media) {
                 switch (media.type) {
-                    case ParcelableMedia.TYPE_ANIMATED_GIF:
-                    case ParcelableMedia.TYPE_CARD_ANIMATED_GIF:
-                    case ParcelableMedia.TYPE_VIDEO:
+                    case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
+                    case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF:
+                    case ParcelableMedia.Type.TYPE_VIDEO:
                         return VIDEO;
-                    case ParcelableMedia.TYPE_IMAGE: {
+                    case ParcelableMedia.Type.TYPE_IMAGE: {
                         hasImage = true;
                         break;
                     }

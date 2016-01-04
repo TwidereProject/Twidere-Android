@@ -65,6 +65,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
+import java.util.Arrays;
+
 import static android.text.TextUtils.isEmpty;
 
 /**
@@ -307,54 +309,68 @@ public class DataStoreUtils implements Constants {
         return status_ids;
     }
 
-    public static long[] getOldestStatusIdsFromDatabase(final Context context, final Uri uri) {
-        final long[] account_ids = getActivatedAccountIds(context);
-        return getOldestStatusIdsFromDatabase(context, uri, account_ids);
-    }
-
-    public static long[] getOldestStatusIdsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
-        if (context == null || uri == null || accountIds == null) return null;
+    @NonNull
+    public static long[] getOldestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
+                                            @NonNull final long[] accountIds) {
         final String[] cols = new String[]{Statuses.STATUS_ID};
         final ContentResolver resolver = context.getContentResolver();
         final long[] statusIds = new long[accountIds.length];
-        int idx = 0;
-        for (final long accountId : accountIds) {
+        Arrays.fill(statusIds, -1);
+        for (int i = 0, j = accountIds.length; i < j; i++) {
+            long accountId = accountIds[i];
             final String where = Expression.equals(Statuses.ACCOUNT_ID, accountId).getSQL();
             final Cursor cur = ContentResolverUtils.query(resolver, uri, cols, where, null, Statuses.STATUS_ID);
             if (cur == null) {
                 continue;
             }
 
-            if (cur.getCount() > 0) {
-                cur.moveToFirst();
-                statusIds[idx] = cur.getLong(cur.getColumnIndexOrThrow(Statuses.STATUS_ID));
+            try {
+                if (cur.moveToFirst()) {
+                    statusIds[i] = cur.getLong(cur.getColumnIndexOrThrow(Statuses.STATUS_ID));
+                }
+            } finally {
+                cur.close();
             }
-            cur.close();
-            idx++;
         }
         return statusIds;
     }
 
+    @NonNull
+    public static long[] getOldestActivityMinPositions(@NonNull final Context context,
+                                                       @NonNull final Uri uri,
+                                                       @NonNull final long[] accountIds) {
+        return getOldestActivityLongField(context, uri, accountIds, Activities.MIN_POSITION);
+    }
 
-    public static long[] getOldestActivityIdsFromDatabase(final Context context, final Uri uri, final long[] accountIds) {
-        if (context == null || uri == null || accountIds == null) return null;
-        final String[] cols = new String[]{Activities.MIN_POSITION};
+    @NonNull
+    public static long[] getOldestActivityMaxPositions(@NonNull final Context context,
+                                                       @NonNull final Uri uri,
+                                                       @NonNull final long[] accountIds) {
+        return getOldestActivityLongField(context, uri, accountIds, Activities.MAX_POSITION);
+    }
+
+    @NonNull
+    public static long[] getOldestActivityLongField(@NonNull final Context context,
+                                                    @NonNull final Uri uri,
+                                                    @NonNull final long[] accountIds,
+                                                    @NonNull final String column) {
+        final String[] cols = new String[]{column};
         final ContentResolver resolver = context.getContentResolver();
         final long[] activityIds = new long[accountIds.length];
-        int idx = 0;
-        for (final long accountId : accountIds) {
+        for (int i = 0, j = accountIds.length; i < j; i++) {
+            long accountId = accountIds[i];
             final String where = Expression.equals(Activities.ACCOUNT_ID, accountId).getSQL();
             final Cursor cur = ContentResolverUtils.query(resolver, uri, cols, where, null, Activities.TIMESTAMP);
             if (cur == null) {
                 continue;
             }
-
-            if (cur.getCount() > 0) {
-                cur.moveToFirst();
-                activityIds[idx] = cur.getLong(cur.getColumnIndexOrThrow(Activities.MIN_POSITION));
+            try {
+                if (cur.moveToFirst()) {
+                    activityIds[i] = cur.getLong(cur.getColumnIndexOrThrow(column));
+                }
+            } finally {
+                cur.close();
             }
-            cur.close();
-            idx++;
         }
         return activityIds;
     }

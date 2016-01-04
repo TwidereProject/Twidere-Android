@@ -318,8 +318,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             final ParcelableMedia media = getMedia();
             final Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
-            if (media.page_url != null) {
-                intent.setData(Uri.parse(media.page_url));
+            if (media.url != null) {
+                intent.setData(Uri.parse(media.url));
             } else {
                 intent.setData(Uri.parse(media.media_url));
             }
@@ -431,21 +431,21 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             args.putLong(EXTRA_ACCOUNT_ID, mAccountId);
             args.putParcelable(EXTRA_MEDIA, media);
             switch (media.type) {
-                case ParcelableMedia.TYPE_ANIMATED_GIF:
-                case ParcelableMedia.TYPE_CARD_ANIMATED_GIF: {
+                case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
+                case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF: {
                     args.putBoolean(EXTRA_LOOP, true);
                     return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
                 }
-                case ParcelableMedia.TYPE_VIDEO: {
+                case ParcelableMedia.Type.TYPE_VIDEO: {
                     return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
                 }
-                case ParcelableMedia.TYPE_IMAGE: {
+                case ParcelableMedia.Type.TYPE_IMAGE: {
                     if (ANIMATED_GIF_SUPPORTED) {
                         return Fragment.instantiate(mActivity, GifSupportedImagePageFragment.class.getName(), args);
                     }
                     return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
                 }
-                case ParcelableMedia.TYPE_EXTERNAL_PLAYER: {
+                case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER: {
                     return TwitterCardFragmentFactory.createGenericPlayerFragment(media.card);
                 }
             }
@@ -653,8 +653,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         private Pair<String, String> getBestVideoUrlAndType(ParcelableMedia media) {
             if (media == null) return null;
             switch (media.type) {
-                case ParcelableMedia.TYPE_VIDEO:
-                case ParcelableMedia.TYPE_ANIMATED_GIF: {
+                case ParcelableMedia.Type.TYPE_VIDEO:
+                case ParcelableMedia.Type.TYPE_ANIMATED_GIF: {
                     if (media.video_info == null) {
                         return Pair.create(media.media_url, null);
                     }
@@ -666,7 +666,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     }
                     return null;
                 }
-                case ParcelableMedia.TYPE_CARD_ANIMATED_GIF: {
+                case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF: {
                     return Pair.create(media.media_url, "video/mp4");
                 }
                 default: {

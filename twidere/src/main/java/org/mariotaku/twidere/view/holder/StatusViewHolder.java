@@ -445,8 +445,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
     private boolean hasVideo(ParcelableMedia[] media) {
         for (ParcelableMedia mediaItem : media) {
-            if (mediaItem.type == ParcelableMedia.TYPE_VIDEO
-                    || mediaItem.type == ParcelableMedia.TYPE_ANIMATED_GIF)
+            if (mediaItem.type == ParcelableMedia.Type.TYPE_VIDEO
+                    || mediaItem.type == ParcelableMedia.Type.TYPE_ANIMATED_GIF)
                 return true;
         }
         return false;

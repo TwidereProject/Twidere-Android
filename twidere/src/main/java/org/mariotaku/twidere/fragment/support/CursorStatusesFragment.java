@@ -277,7 +277,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     protected long[] getOldestStatusIds(long[] accountIds) {
-        return DataStoreUtils.getOldestStatusIdsFromDatabase(getActivity(), getContentUri(), accountIds);
+        return DataStoreUtils.getOldestStatusIds(getActivity(), getContentUri(), accountIds);
     }
 
     protected abstract boolean isFilterEnabled();

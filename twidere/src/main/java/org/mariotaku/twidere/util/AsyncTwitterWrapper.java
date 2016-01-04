@@ -57,7 +57,6 @@ import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -79,6 +78,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
+import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.task.twitter.GetStatusesTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
@@ -86,7 +86,6 @@ import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.util.message.FriendshipUserUpdatedEvent;
-import org.mariotaku.twidere.util.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.util.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
@@ -95,7 +94,6 @@ import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -599,107 +597,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             }
         };
         AsyncManager.runBackgroundTask(task);
-    }
-
-    static abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object, Object> {
-
-        final AsyncTwitterWrapper twitterWrapper;
-        final long[] accountIds;
-        final long[] maxIds;
-        final long[] sinceIds;
-
-        public GetActivitiesTask(AsyncTwitterWrapper twitterWrapper, String tag, long[] accountIds, long[] maxIds, long[] sinceIds) {
-            super(twitterWrapper.getContext(), tag);
-            this.twitterWrapper = twitterWrapper;
-            this.accountIds = accountIds;
-            this.maxIds = maxIds;
-            this.sinceIds = sinceIds;
-        }
-
-        @Override
-        protected Object doInBackground(Object... params) {
-            final Context context = twitterWrapper.getContext();
-            final ContentResolver cr = context.getContentResolver();
-            final int loadItemLimit = twitterWrapper.mPreferences.getInt(KEY_LOAD_ITEM_LIMIT);
-            boolean getReadPosition = false;
-            for (int i = 0; i < accountIds.length; i++) {
-                final long accountId = accountIds[i];
-                final boolean noItemsBefore = DataStoreUtils.getActivityCountInDatabase(context,
-                        getContentUri(), accountId) <= 0;
-                final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId,
-                        true);
-                final Paging paging = new Paging();
-                paging.count(loadItemLimit);
-                if (maxIds != null && maxIds[i] > 0) {
-                    paging.maxId(maxIds[i]);
-                }
-                if (sinceIds != null && sinceIds[i] > 0) {
-                    paging.sinceId(sinceIds[i]);
-                    if (maxIds == null || maxIds[i] <= 0) {
-                        paging.setLatestResults(true);
-                        getReadPosition = true;
-                    }
-                }
-                // We should delete old activities has intersection with new items
-                long[] deleteBound = new long[2];
-                Arrays.fill(deleteBound, -1);
-                try {
-                    List<ContentValues> valuesList = new ArrayList<>();
-                    for (Activity activity : getActivities(accountId, twitter, paging)) {
-                        final ParcelableActivity parcelableActivity = new ParcelableActivity(activity, accountId, false);
-                        if (deleteBound[0] < 0) {
-                            deleteBound[0] = parcelableActivity.min_position;
-                        } else {
-                            deleteBound[0] = Math.min(deleteBound[0], parcelableActivity.min_position);
-                        }
-                        if (deleteBound[1] < 0) {
-                            deleteBound[1] = parcelableActivity.max_position;
-                        } else {
-                            deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_position);
-                        }
-                        valuesList.add(ContentValuesCreator.createActivity(parcelableActivity));
-                    }
-                    if (deleteBound[0] > 0 && deleteBound[1] > 0) {
-                        Expression where = Expression.and(
-                                Expression.equals(Activities.ACCOUNT_ID, accountId),
-                                Expression.greaterEquals(Activities.MIN_POSITION, deleteBound[0]),
-                                Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
-                        );
-                        int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), null);
-                        boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
-                                && rowsDeleted <= 0;
-                        if (insertGap && !valuesList.isEmpty()) {
-                            valuesList.get(valuesList.size() - 1).put(Activities.IS_GAP, true);
-                        }
-                    }
-                    ContentResolverUtils.bulkInsert(cr, getContentUri(), valuesList);
-                    if (getReadPosition) {
-                        getReadPosition(accountId, twitter);
-                    }
-                } catch (TwitterException e) {
-
-                }
-            }
-            return null;
-        }
-
-        protected abstract void getReadPosition(long accountId, Twitter twitter);
-
-        protected abstract ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException;
-
-        @Override
-        protected void onPostExecute(Object result) {
-            super.onPostExecute(result);
-            bus.post(new GetActivitiesTaskEvent(getContentUri(), false, null));
-        }
-
-        protected abstract Uri getContentUri();
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            bus.post(new GetActivitiesTaskEvent(getContentUri(), true, null));
-        }
     }
 
     static class GetSavedSearchesTask extends ManagedAsyncTask<Long, Object, SingleResponse<Object>> {

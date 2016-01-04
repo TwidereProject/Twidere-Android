@@ -1313,7 +1313,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final ParcelableStatus status = adapter.getStatus();
                 if (status.media != null) {
                     for (final ParcelableMedia media : status.media) {
-                        if (link.equals(media.page_url)) {
+                        if (link.equals(media.url)) {
                             expandOrOpenMedia();
                             return;
                         }

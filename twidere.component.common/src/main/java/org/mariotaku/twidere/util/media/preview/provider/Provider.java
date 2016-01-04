@@ -1,9 +1,10 @@
 package org.mariotaku.twidere.util.media.preview.provider;
 
-import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
+import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
 
 /**
@@ -11,10 +12,12 @@ import org.mariotaku.twidere.model.ParcelableMedia;
  */
 public interface Provider {
 
-    @WorkerThread
-    boolean supportsAuthority(@Nullable String authority);
+    boolean supports(@NonNull String link);
 
-    @WorkerThread
-    ParcelableMedia from(Uri uri);
+    @Nullable
+    ParcelableMedia from(@NonNull String url);
 
+    @Nullable
+    @WorkerThread
+    ParcelableMedia from(@NonNull String link, @NonNull RestHttpClient client, @Nullable Object extra);
 }
