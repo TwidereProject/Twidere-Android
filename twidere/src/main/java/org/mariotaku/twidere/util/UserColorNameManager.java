@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.support.v4.util.LongSparseArray;
+import android.text.TextUtils;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.TwidereConstants;
@@ -151,6 +152,11 @@ public class UserColorNameManager implements TwidereConstants {
 
     public Set<? extends Map.Entry<String, ?>> getNameEntries() {
         return mNicknamePreferences.getAll().entrySet();
+    }
+
+    public String getName(long id, String name) {
+        final String nick = getUserNickname(id, true);
+        return TextUtils.isEmpty(nick) ? name : nick;
     }
 
     public interface OnUserColorChangedListener {

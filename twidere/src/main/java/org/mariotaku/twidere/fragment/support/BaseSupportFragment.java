@@ -31,6 +31,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManagerAccessor;
+import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.view.LayoutInflater;
@@ -77,6 +78,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected SharedPreferencesWrapper mPreferences;
     @Inject
     protected NotificationManagerWrapper mNotificationManager;
+    @Inject
+    protected BidiFormatter mBidiFormatter;
 
     public BaseSupportFragment() {
 

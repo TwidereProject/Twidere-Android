@@ -115,6 +115,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import me.uucky.colorpicker.internal.EffectViewHelper;
 
 import static org.mariotaku.twidere.util.Utils.buildDirectMessageConversationUri;
@@ -897,9 +899,11 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     public static class SetReadStateTask extends AsyncTask<Object, Object, Cursor> {
         private final Context mContext;
-        ReadStateManager mReadStateManager;
         private final ParcelableCredentials mAccount;
         private final ParcelableUser mRecipient;
+
+        @Inject
+        ReadStateManager mReadStateManager;
 
         public SetReadStateTask(Context context, ParcelableCredentials account, ParcelableUser recipient) {
             GeneralComponentHelper.build(context).inject(this);

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.text.BidiFormatter;
 import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -51,6 +52,8 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     protected UserColorNameManager mUserColorNameManager;
     @Inject
     protected SharedPreferencesWrapper mPreferences;
+    @Inject
+    protected BidiFormatter mBidiFormatter;
 
     public BaseRecyclerViewAdapter(Context context) {
         mContext = context;
@@ -85,5 +88,9 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
 
     public final AsyncTwitterWrapper getTwitterWrapper() {
         return mTwitterWrapper;
+    }
+
+    public final BidiFormatter getBidiFormatter() {
+        return mBidiFormatter;
     }
 }

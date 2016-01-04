@@ -54,6 +54,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.ColorUtils;
+import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -495,7 +496,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
         mProfileNameContainer.drawEnd(DataStoreUtils.getAccountColor(activity, user.account_id));
         final String nick = mUserColorNameManager.getUserNickname(user.id, true);
-        mNameView.setText(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick));
+        mNameView.setText(mBidiFormatter.unicodeWrap(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick)));
         final int typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected);
         if (typeIconRes != 0) {
             mProfileTypeView.setImageResource(typeIconRes);

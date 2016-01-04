@@ -109,7 +109,7 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.1.1'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
-    compile 'com.github.mariotaku:PickNCrop:6c9d888a9d'
+    compile 'com.github.mariotaku:PickNCrop:0.9.2'
     compile 'com.github.mariotaku.RestFu:library:0.9.8'
     compile 'com.github.mariotaku.RestFu:okhttp:0.9.8'
     compile 'com.diogobernardino:williamchart:2.1'
