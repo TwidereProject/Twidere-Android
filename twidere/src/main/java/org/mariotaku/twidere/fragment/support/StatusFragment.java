@@ -1361,10 +1361,17 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private static final int ITEM_IDX_REPLY_ERROR = 6;
         private static final int ITEM_IDX_SPACE = 7;
         private static final int ITEM_TYPES_SUM = 8;
+
+
         private final StatusFragment mFragment;
         private final LayoutInflater mInflater;
         private final MediaLoadingHandler mMediaLoadingHandler;
         private final TwidereLinkify mTwidereLinkify;
+
+        private StatusAdapterListener mStatusAdapterListener;
+        private RecyclerView mRecyclerView;
+        private DetailStatusViewHolder mStatusViewHolder;
+
         private final int[] mItemCounts;
 
         private final boolean mNameFirst;
@@ -1388,9 +1395,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private TranslationResult mTranslationResult;
         private StatusActivity mStatusActivity;
         private ParcelableCredentials mStatusAccount;
+
         private List<ParcelableStatus> mData;
-        private StatusAdapterListener mStatusAdapterListener;
-        private RecyclerView mRecyclerView;
         private CharSequence mReplyError, mConversationError;
         private boolean mRepliesLoading, mConversationsLoading;
 
@@ -1650,6 +1656,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
                 case VIEW_TYPE_DETAIL_STATUS: {
+                    if (mStatusViewHolder != null) {
+                        return mStatusViewHolder;
+                    }
                     final View view;
                     if (mIsCompact) {
                         view = mInflater.inflate(R.layout.header_status_compact, parent, false);
@@ -1735,6 +1744,23 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
             }
         }
+
+        @Override
+        public void onViewDetachedFromWindow(ViewHolder holder) {
+            if (holder instanceof DetailStatusViewHolder) {
+                mStatusViewHolder = (DetailStatusViewHolder) holder;
+            }
+            super.onViewDetachedFromWindow(holder);
+        }
+
+        @Override
+        public void onViewAttachedToWindow(ViewHolder holder) {
+            if (holder == mStatusViewHolder) {
+                mStatusViewHolder = null;
+            }
+            super.onViewAttachedToWindow(holder);
+        }
+
 
         private TranslationResult getTranslationResult() {
             return mTranslationResult;

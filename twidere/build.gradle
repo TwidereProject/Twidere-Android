@@ -1,18 +1,8 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.2'
-    }
-}
 import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
 
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'androidsvgdrawable'
 
@@ -119,6 +109,9 @@ dependencies {
     compile 'com.j256.simplemagic:simplemagic:1.6'
     googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4'
+    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     fdroidCompile 'org.osmdroid:osmdroid-android:5.0.1'
     debugCompile 'com.facebook.stetho:stetho:1.2.0'
@@ -130,9 +123,6 @@ dependencies {
     compile fileTree(dir: 'libs/main', include: ['*.jar'])
     provided 'javax.annotation:jsr250-api:1.0'
 //    googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true;
-    }
 }
 
 task svgToDrawable(type: SvgDrawableTask) {
