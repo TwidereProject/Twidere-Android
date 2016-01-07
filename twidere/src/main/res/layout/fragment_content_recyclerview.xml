@@ -18,13 +18,12 @@
   -->
 
 <FrameLayout
-    android:id="@+id/fragment_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <include layout="@layout/layout_content_fragment_common" />
+    <include layout="@layout/layout_content_fragment_common"/>
 
     <org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout
         android:id="@+id/swipe_layout"
@@ -38,7 +37,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:focusable="true"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"/>
 
     </org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout>
 </FrameLayout>

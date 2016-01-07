@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -121,9 +122,10 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
         }
 
         @Override
+        @NonNull
         protected SingleResponse<ParcelableUserList> doInBackground(final Object... params) {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getActivity(), accountId, true);
-            if (twitter == null) return null;
+            if (twitter == null) return SingleResponse.getInstance();
             try {
                 final UserList list;
                 if (listId > 0) {
@@ -133,7 +135,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
                 } else if (screenName != null) {
                     list = twitter.showUserList(listName, screenName);
                 } else
-                    return null;
+                    throw new TwitterException("list_id or list_name and user_id (or screen_name) required");
                 return SingleResponse.getInstance(new ParcelableUserList(list, accountId));
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);

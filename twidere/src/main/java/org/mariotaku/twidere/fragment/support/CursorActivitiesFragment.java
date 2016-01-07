@@ -132,16 +132,16 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         mContentObserver = new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange) {
-                reloadStatuses();
+                reloadActivities();
             }
         };
         cr.registerContentObserver(Accounts.CONTENT_URI, true, mContentObserver);
         cr.registerContentObserver(Filters.CONTENT_URI, true, mContentObserver);
         updateRefreshState();
-        reloadStatuses();
+        reloadActivities();
     }
 
-    protected void reloadStatuses() {
+    protected void reloadActivities() {
         if (getActivity() == null || isDetached()) return;
         final Bundle args = new Bundle(), fragmentArgs = getArguments();
         if (fragmentArgs != null) {

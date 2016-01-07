@@ -73,7 +73,7 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
     }
 
     private void storeStatus(long accountId, List<org.mariotaku.twidere.api.twitter.model.Status> statuses,
-                             long maxId, boolean notify, int loadItemLimit) {
+                             long sinceId, long maxId, boolean notify, int loadItemLimit) {
         if (statuses == null || statuses.isEmpty() || accountId <= 0) {
             return;
         }
@@ -85,10 +85,14 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
         final long[] statusIds = new long[statuses.size()];
         long minId = -1;
         int minIdx = -1;
+        boolean hasIntersection = false;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final org.mariotaku.twidere.api.twitter.model.Status status = statuses.get(i);
             values[i] = ContentValuesCreator.createStatus(status, accountId);
             final long id = status.getId();
+            if (sinceId > 0 && id <= sinceId) {
+                hasIntersection = true;
+            }
             if (minId == -1 || id < minId) {
                 minId = id;
                 minIdx = i;
@@ -122,7 +126,7 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
         final boolean insertGap = minId > 0 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
-                && statuses.size() >= loadItemLimit;
+                && !hasIntersection;
         if (insertGap && minIdx != -1) {
             values[minIdx].put(TwidereDataStore.Statuses.IS_GAP, true);
         }
@@ -176,7 +180,7 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
                 }
                 if (sinceIds != null && sinceIds[idx] > 0) {
                     sinceId = sinceIds[idx];
-                    paging.sinceId(sinceId);
+                    paging.sinceId(sinceId - 1);
                     if (maxIds == null || sinceIds[idx] <= 0) {
                         paging.setLatestResults(true);
                     }
@@ -185,7 +189,7 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
                 }
                 final List<org.mariotaku.twidere.api.twitter.model.Status> statuses = getStatuses(twitter, paging);
                 TwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
-                storeStatus(accountId, statuses, maxId, true, loadItemLimit);
+                storeStatus(accountId, statuses, sinceId, maxId, true, loadItemLimit);
                 publishProgress(new TwitterWrapper.StatusListResponse(accountId, statuses));
             } catch (final TwitterException e) {
                 Log.w(LOGTAG, e);

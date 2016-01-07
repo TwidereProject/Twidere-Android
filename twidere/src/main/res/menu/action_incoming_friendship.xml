@@ -3,7 +3,7 @@
 
     <item
         android:id="@id/accept"
-        android:icon="@drawable/ic_action_ok"
+        android:icon="@drawable/ic_action_confirm"
         android:title="@string/accept"/>
     <item
         android:id="@id/deny"

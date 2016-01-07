@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:layout_height="?actionBarSize"
-    tools:layout_width="match_parent">
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
+       tools:layout_height="?actionBarSize"
+       tools:layout_width="match_parent">
 
     <android.support.v7.widget.TwidereToolbar
         android:id="@+id/action_bar"
@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             app:tabDisplayOption="icon"
             app:tabExpandEnabled="true"
-            app:tabHorizontalPadding="@dimen/element_spacing_normal" />
+            app:tabHorizontalPadding="@dimen/element_spacing_normal"/>
     </android.support.v7.widget.TwidereToolbar>
 
 </merge>
