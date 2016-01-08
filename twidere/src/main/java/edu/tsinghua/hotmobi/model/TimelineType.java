@@ -19,41 +19,25 @@
 
 package edu.tsinghua.hotmobi.model;
 
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by mariotaku on 15/8/18.
  */
-public enum TimelineType {
-    HOME("home"), INTERACTIONS("interactions"), DETAILS("details"), SEARCH("search"), USER("user"),
-    OTHER("other");
+@StringDef({TimelineType.HOME, TimelineType.INTERACTIONS, TimelineType.DETAILS, TimelineType.SEARCH,
+        TimelineType.USER, TimelineType.OTHER})
+@Retention(RetentionPolicy.CLASS)
+@Inherited
+public @interface TimelineType {
+    String HOME = "home";
+    String INTERACTIONS = "interactions";
+    String DETAILS = "details";
+    String SEARCH = "search";
+    String USER = "user";
+    String OTHER = "other";
 
-    private final String value;
-
-    TimelineType(String value) {
-        this.value = value;
-    }
-
-    public static TimelineType parse(String type) {
-        if (HOME.value.equalsIgnoreCase(type)) {
-            return HOME;
-        } else if (INTERACTIONS.value.equalsIgnoreCase(type)) {
-            return INTERACTIONS;
-        }
-        return OTHER;
-    }
-
-    public static class Converter extends StringBasedTypeConverter<TimelineType> {
-
-        @Override
-        public TimelineType getFromString(String string) {
-            return TimelineType.parse(string);
-        }
-
-        @Override
-        public String convertToString(TimelineType timelineType) {
-            if (timelineType == null) return null;
-            return timelineType.value;
-        }
-    }
 }

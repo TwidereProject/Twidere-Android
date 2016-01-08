@@ -39,7 +39,8 @@ public class StatusesSearchFragment extends ParcelableStatusesFragment {
 
     @NonNull
     @Override
-    protected TimelineType getTimelineType() {
+    @TimelineType
+    protected String getTimelineType() {
         return TimelineType.SEARCH;
     }
 

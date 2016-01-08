@@ -19,71 +19,15 @@
 
 package edu.tsinghua.hotmobi.model;
 
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
-
-import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.model.ParcelableStatus;
+import android.support.annotation.StringDef;
 
 /**
  * Created by mariotaku on 15/8/13.
  */
-public enum TweetType {
-    TEXT("text"), PHOTO("photo"), VIDEO("video"), OTHER("other");
-
-    private final String value;
-
-    TweetType(String value) {
-        this.value = value;
-    }
-
-    public static TweetType getTweetType(ParcelableStatus status) {
-        if (status.media != null) {
-            boolean hasImage = false;
-            for (ParcelableMedia media : status.media) {
-                switch (media.type) {
-                    case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
-                    case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF:
-                    case ParcelableMedia.Type.TYPE_VIDEO:
-                        return VIDEO;
-                    case ParcelableMedia.Type.TYPE_IMAGE: {
-                        hasImage = true;
-                        break;
-                    }
-                }
-            }
-            if (hasImage) {
-                return PHOTO;
-            }
-        }
-        return TEXT;
-    }
-
-    public static TweetType parse(String type) {
-        if (TEXT.value.equalsIgnoreCase(type)) {
-            return TEXT;
-        } else if (PHOTO.value.equalsIgnoreCase(type)) {
-            return PHOTO;
-        } else if (VIDEO.value.equalsIgnoreCase(type)) {
-            return VIDEO;
-        }
-        return OTHER;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public static class Converter extends StringBasedTypeConverter<TweetType> {
-
-        @Override
-        public TweetType getFromString(String string) {
-            return TweetType.parse(string);
-        }
-
-        @Override
-        public String convertToString(TweetType tweetType) {
-            if (tweetType == null) return null;
-            return tweetType.value;
-        }
-    }
+@StringDef({TweetType.TEXT, TweetType.PHOTO, TweetType.VIDEO, TweetType.OTHER})
+public @interface TweetType {
+    String TEXT = "text";
+    String PHOTO = "photo";
+    String VIDEO = "video";
+    String OTHER = "other";
 }

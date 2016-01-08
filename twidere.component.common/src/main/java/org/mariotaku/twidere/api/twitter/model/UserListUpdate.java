@@ -34,7 +34,7 @@ public class UserListUpdate extends SimpleValueMap {
         put("name", name);
     }
 
-    public void setMode(UserList.Mode mode) {
-        put("mode", mode.getMode());
+    public void setMode(@UserList.Mode String mode) {
+        put("mode", mode);
     }
 }

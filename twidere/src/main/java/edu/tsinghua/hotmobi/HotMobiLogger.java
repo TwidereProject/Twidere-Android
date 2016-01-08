@@ -32,6 +32,8 @@ import android.util.Log;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
@@ -60,6 +62,7 @@ import edu.tsinghua.hotmobi.model.ScreenEvent;
 import edu.tsinghua.hotmobi.model.ScrollRecord;
 import edu.tsinghua.hotmobi.model.SessionEvent;
 import edu.tsinghua.hotmobi.model.TweetEvent;
+import edu.tsinghua.hotmobi.model.TweetType;
 import edu.tsinghua.hotmobi.model.UploadLogEvent;
 
 /**
@@ -204,6 +207,30 @@ public class HotMobiLogger {
             return false;
     }
 
+    public static
+    @TweetType
+    String getTweetType(ParcelableStatus status) {
+        if (status.media != null) {
+            boolean hasImage = false;
+            for (ParcelableMedia media : status.media) {
+                switch (media.type) {
+                    case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
+                    case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF:
+                    case ParcelableMedia.Type.TYPE_VIDEO:
+                        return TweetType.VIDEO;
+                    case ParcelableMedia.Type.TYPE_IMAGE: {
+                        hasImage = true;
+                        break;
+                    }
+                }
+            }
+            if (hasImage) {
+                return TweetType.PHOTO;
+            }
+        }
+        return TweetType.TEXT;
+    }
+
     public <T> void log(long accountId, final T event, final PreProcessing<T> preProcessing) {
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, event, preProcessing));
     }
@@ -228,7 +255,7 @@ public class HotMobiLogger {
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, type, events, preProcessing));
     }
 
-    public static void logScreenEvent(Context context, ScreenEvent.Action action, long presentDuration) {
+    public static void logScreenEvent(Context context, @ScreenEvent.Action String action, long presentDuration) {
         getInstance(context).log(ScreenEvent.create(context, action, presentDuration), null);
     }
 

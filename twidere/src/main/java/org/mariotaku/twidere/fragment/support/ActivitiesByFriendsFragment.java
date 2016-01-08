@@ -36,7 +36,8 @@ public class ActivitiesByFriendsFragment extends CursorActivitiesFragment {
 
     @NonNull
     @Override
-    protected TimelineType getTimelineType() {
+    @TimelineType
+    protected String getTimelineType() {
         return TimelineType.OTHER;
     }
 

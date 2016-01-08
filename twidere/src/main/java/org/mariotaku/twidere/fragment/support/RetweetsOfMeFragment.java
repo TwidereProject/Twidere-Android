@@ -65,7 +65,7 @@ public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
 
     @NonNull
     @Override
-    protected TimelineType getTimelineType() {
+    protected String getTimelineType() {
         return TimelineType.INTERACTIONS;
     }
 }

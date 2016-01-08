@@ -20,10 +20,10 @@
 package org.mariotaku.twidere.api.twitter.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
@@ -49,8 +49,9 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
     @JsonField(name = "member_count")
     long memberCount;
 
-    @JsonField(name = "mode", typeConverter = Mode.Converter.class)
-    Mode mode;
+    @Mode
+    @JsonField(name = "mode")
+    String mode;
 
     @JsonField(name = "description")
     String description;
@@ -91,7 +92,8 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
         return memberCount;
     }
 
-    public Mode getMode() {
+    @Mode
+    public String getMode() {
         return mode;
     }
 
@@ -142,40 +144,10 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
                 "} " + super.toString();
     }
 
-    public enum Mode {
-        PUBLIC("public"), PRIVATE("private");
+    @StringDef({Mode.PRIVATE, Mode.PUBLIC})
+    public @interface Mode {
+        String PUBLIC = "public";
+        String PRIVATE = "private";
 
-        private final String mode;
-
-        Mode(String mode) {
-            this.mode = mode;
-        }
-
-        public static Mode parse(String str) {
-            switch (str) {
-                case "public":
-                    return PUBLIC;
-                case "private":
-                    return PRIVATE;
-            }
-            throw new UnsupportedOperationException();
-        }
-
-        public String getMode() {
-            return mode;
-        }
-
-        public static class Converter extends StringBasedTypeConverter<Mode> {
-
-            @Override
-            public Mode getFromString(String string) {
-                return Mode.parse(string);
-            }
-
-            @Override
-            public String convertToString(Mode object) {
-                return object.mode;
-            }
-        }
     }
 }

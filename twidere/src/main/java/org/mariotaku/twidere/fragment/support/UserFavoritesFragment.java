@@ -63,7 +63,8 @@ public class UserFavoritesFragment extends ParcelableStatusesFragment {
 
     @NonNull
     @Override
-    protected TimelineType getTimelineType() {
+    @TimelineType
+    protected String getTimelineType() {
         return TimelineType.OTHER;
     }
 }

@@ -83,7 +83,8 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
 
     @NonNull
     @Override
-    protected TimelineType getTimelineType() {
+    @TimelineType
+    protected String getTimelineType() {
         return TimelineType.HOME;
     }
 

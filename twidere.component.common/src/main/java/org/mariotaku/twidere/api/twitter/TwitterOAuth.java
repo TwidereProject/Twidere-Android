@@ -40,25 +40,15 @@ public interface TwitterOAuth {
     @Body(BodyType.FORM)
     OAuthToken getAccessToken(@Form("x_auth_username") String xauthUsername,
                               @Form("x_auth_password") String xauthPassword,
-                              @Form("x_auth_mode") XAuthMode xauthMode)throws TwitterException;
+                              @Form("x_auth_mode") @XAuthMode String xauthMode) throws TwitterException;
 
 
     @POST("/oauth/access_token")
     @Body(BodyType.FORM)
-    OAuthToken getAccessToken(@Extra({"oauth_token", "oauth_token_secret"}) OAuthToken requestToken, @Form("oauth_verifier") String oauthVerifier)throws TwitterException;
+    OAuthToken getAccessToken(@Extra({"oauth_token", "oauth_token_secret"}) OAuthToken requestToken, @Form("oauth_verifier") String oauthVerifier) throws TwitterException;
 
-    enum XAuthMode {
-        CLIENT("client_auth");
+    @interface XAuthMode {
+        String CLIENT = "client_auth";
 
-        @Override
-        public String toString() {
-            return mode;
-        }
-
-        private final String mode;
-
-        XAuthMode(String mode) {
-            this.mode = mode;
-        }
     }
 }

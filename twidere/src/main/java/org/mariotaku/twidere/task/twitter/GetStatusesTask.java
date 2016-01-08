@@ -136,7 +136,8 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
 
     }
 
-    protected abstract TimelineType getTimelineType();
+    @TimelineType
+    protected abstract String getTimelineType();
 
     @SafeVarargs
     @Override

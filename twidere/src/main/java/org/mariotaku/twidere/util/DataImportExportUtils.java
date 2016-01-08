@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.annotation.Preference;
+import org.mariotaku.twidere.annotation.Preference.Type;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 
 import java.io.BufferedOutputStream;
@@ -44,8 +45,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
-import static org.mariotaku.twidere.annotation.Preference.Type.INVALID;
 
 public class DataImportExportUtils implements Constants {
 
@@ -123,7 +122,7 @@ public class DataImportExportUtils implements Constants {
         for (final Field field : fields) {
             final Preference annotation = field.getAnnotation(Preference.class);
             if (Modifier.isStatic(field.getModifiers()) && CompareUtils.classEquals(field.getType(), String.class)
-                    && annotation != null && annotation.exportable() && annotation.type() != INVALID) {
+                    && annotation != null && annotation.exportable() && annotation.type() != Type.INVALID) {
                 try {
                     supportedPrefsMap.put((String) field.get(null), annotation);
                 } catch (final IllegalAccessException | IllegalArgumentException e) {
@@ -152,7 +151,7 @@ public class DataImportExportUtils implements Constants {
         if (hasFlag(flags, FLAG_KEYBOARD_SHORTCUTS)) {
             importSharedPreferencesData(zipFile, context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME, ENTRY_KEYBOARD_SHORTCUTS, ConvertToStringProcessStrategy.SINGLETON);
         }
-        if (hasFlag(flags,FLAG_FILTERS)) {
+        if (hasFlag(flags, FLAG_FILTERS)) {
 
         }
         zipFile.close();
@@ -256,19 +255,19 @@ public class DataImportExportUtils implements Constants {
             final Preference preference = supportedMap.get(key);
             if (preference == null || !preference.exportable()) return false;
             switch (preference.type()) {
-                case BOOLEAN:
+                case Type.BOOLEAN:
                     editor.putBoolean(key, json.optBoolean(key, preference.defaultBoolean()));
                     break;
-                case INT:
+                case Type.INT:
                     editor.putInt(key, json.optInt(key, preference.defaultInt()));
                     break;
-                case LONG:
+                case Type.LONG:
                     editor.putLong(key, json.optLong(key, preference.defaultLong()));
                     break;
-                case FLOAT:
+                case Type.FLOAT:
                     editor.putFloat(key, (float) json.optDouble(key, preference.defaultFloat()));
                     break;
-                case STRING:
+                case Type.STRING:
                     editor.putString(key, json.optString(key, preference.defaultString()));
                     break;
                 default:
@@ -283,19 +282,19 @@ public class DataImportExportUtils implements Constants {
             if (preference == null || !preference.exportable()) return false;
             try {
                 switch (preference.type()) {
-                    case BOOLEAN:
+                    case Type.BOOLEAN:
                         json.put(key, preferences.getBoolean(key, preference.defaultBoolean()));
                         break;
-                    case INT:
+                    case Type.INT:
                         json.put(key, preferences.getInt(key, preference.defaultInt()));
                         break;
-                    case LONG:
+                    case Type.LONG:
                         json.put(key, preferences.getLong(key, preference.defaultLong()));
                         break;
-                    case FLOAT:
+                    case Type.FLOAT:
                         json.put(key, preferences.getFloat(key, preference.defaultFloat()));
                         break;
-                    case STRING:
+                    case Type.STRING:
                         json.put(key, preferences.getString(key, preference.defaultString()));
                         break;
                     default:

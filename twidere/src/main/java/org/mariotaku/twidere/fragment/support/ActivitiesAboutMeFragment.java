@@ -39,7 +39,8 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
 
     @NonNull
     @Override
-    protected TimelineType getTimelineType() {
+    @TimelineType
+    protected String getTimelineType() {
         return TimelineType.INTERACTIONS;
     }
 

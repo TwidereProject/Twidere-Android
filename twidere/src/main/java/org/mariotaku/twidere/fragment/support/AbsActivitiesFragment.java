@@ -325,7 +325,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     }
 
     @NonNull
-    protected abstract TimelineType getTimelineType();
+    @TimelineType
+    protected abstract String getTimelineType();
 
     @Override
     public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {

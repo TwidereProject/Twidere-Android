@@ -20,23 +20,27 @@
 package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/11/11.
  */
+@ParcelablePlease
 @JsonObject
-public class ScreenEvent extends BaseEvent {
+public class ScreenEvent extends BaseEvent implements Parcelable {
 
-    @JsonField(name = "action", typeConverter = Action.Conveter.class)
-    Action action;
+    @JsonField(name = "action")
+    @Action
+    String action;
     @JsonField(name = "present_duration")
     long presentDuration;
 
-    public static ScreenEvent create(Context context, Action action, long presentDuration) {
+    public static ScreenEvent create(Context context, @Action String action, long presentDuration) {
         final ScreenEvent event = new ScreenEvent();
         event.markStart(context);
         event.setAction(action);
@@ -44,11 +48,13 @@ public class ScreenEvent extends BaseEvent {
         return event;
     }
 
-    public Action getAction() {
+    public
+    @Action
+    String getAction() {
         return action;
     }
 
-    public void setAction(Action action) {
+    public void setAction(@Action String action) {
         this.action = action;
     }
 
@@ -68,38 +74,29 @@ public class ScreenEvent extends BaseEvent {
                 "} " + super.toString();
     }
 
-    public enum Action {
-        ON("on"), OFF("off"), PRESENT("present"), UNKNOWN("unknown");
-        private final String value;
-
-        Action(String value) {
-            this.value = value;
-        }
-
-        public static Action parse(String action) {
-            if (ON.value.equalsIgnoreCase(action)) {
-                return ON;
-            } else if (OFF.value.equalsIgnoreCase(action)) {
-                return OFF;
-            } else if (PRESENT.value.equalsIgnoreCase(action)) {
-                return PRESENT;
-            }
-            return UNKNOWN;
-        }
-
-
-        public static class Conveter extends StringBasedTypeConverter<Action> {
-
-            @Override
-            public Action getFromString(String string) {
-                return Action.parse(string);
-            }
-
-            @Override
-            public String convertToString(Action action) {
-                if (action == null) return null;
-                return action.value;
-            }
-        }
+    public @interface Action {
+        String ON = "on", OFF = "off", PRESENT = "present", UNKNOWN = "unknown";
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ScreenEventParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<ScreenEvent> CREATOR = new Creator<ScreenEvent>() {
+        public ScreenEvent createFromParcel(Parcel source) {
+            ScreenEvent target = new ScreenEvent();
+            ScreenEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ScreenEvent[] newArray(int size) {
+            return new ScreenEvent[size];
+        }
+    };
 }

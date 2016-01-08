@@ -2041,8 +2041,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             return Statuses.CONTENT_URI;
         }
 
+        @TimelineType
         @Override
-        protected TimelineType getTimelineType() {
+        protected String getTimelineType() {
             return TimelineType.HOME;
         }
 

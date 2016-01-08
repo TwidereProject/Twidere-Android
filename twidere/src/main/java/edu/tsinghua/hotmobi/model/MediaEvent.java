@@ -30,6 +30,8 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
+import edu.tsinghua.hotmobi.HotMobiLogger;
+
 /**
  * Created by mariotaku on 15/8/7.
  */
@@ -43,11 +45,13 @@ public class MediaEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "user_id")
     long userId;
 
-    @JsonField(name = "tweet_type", typeConverter = TweetType.Converter.class)
-    TweetType tweetType;
+    @JsonField(name = "tweet_type")
+    @TweetType
+    String tweetType;
 
-    @JsonField(name = "timeline_type", typeConverter = TimelineType.Converter.class)
-    TimelineType timelineType;
+    @JsonField(name = "timeline_type")
+    @TimelineType
+    String timelineType;
 
     @JsonField(name = "preview_url")
     String previewUrl;
@@ -58,7 +62,8 @@ public class MediaEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "preview_enabled")
     boolean previewEnabled;
 
-    public static MediaEvent create(Context context, ParcelableStatus status, ParcelableMedia media, TimelineType timelineType, boolean previewEnabled) {
+    public static MediaEvent create(Context context, ParcelableStatus status, ParcelableMedia media,
+                                    @TimelineType String timelineType, boolean previewEnabled) {
         final MediaEvent event = new MediaEvent();
         event.markStart(context);
         event.setId(status.id);
@@ -67,7 +72,7 @@ public class MediaEvent extends BaseEvent implements Parcelable {
         event.setPreviewUrl(media.preview_url);
         event.setPreviewEnabled(previewEnabled);
         event.setTimelineType(timelineType);
-        event.setTweetType(TweetType.getTweetType(status));
+        event.setTweetType(HotMobiLogger.getTweetType(status));
         return event;
     }
 
@@ -91,11 +96,11 @@ public class MediaEvent extends BaseEvent implements Parcelable {
         this.userId = userId;
     }
 
-    public void setTweetType(TweetType tweetType) {
+    public void setTweetType(@TweetType String tweetType) {
         this.tweetType = tweetType;
     }
 
-    public void setTimelineType(TimelineType timelineType) {
+    public void setTimelineType(@TimelineType String timelineType) {
         this.timelineType = timelineType;
     }
 

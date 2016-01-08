@@ -40,11 +40,12 @@ public class RefreshEvent extends BaseEvent implements Parcelable {
     @ParcelableThisPlease
     long[] ids;
 
-    @JsonField(name = "timeline_type", typeConverter = TimelineType.Converter.class)
+    @JsonField(name = "timeline_type")
     @ParcelableThisPlease
-    TimelineType timelineType;
+    @TimelineType
+    String timelineType;
 
-    public static RefreshEvent create(final Context context, long[] ids, TimelineType timelineType) {
+    public static RefreshEvent create(final Context context, long[] ids, @TimelineType String timelineType) {
         final RefreshEvent event = new RefreshEvent();
         event.markStart(context);
         event.setIds(ids);
@@ -56,7 +57,7 @@ public class RefreshEvent extends BaseEvent implements Parcelable {
         this.ids = ids;
     }
 
-    public void setTimelineType(TimelineType timelineType) {
+    public void setTimelineType(@TimelineType String timelineType) {
         this.timelineType = timelineType;
     }
 

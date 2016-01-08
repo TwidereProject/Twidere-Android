@@ -25,11 +25,12 @@ import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
+
+import edu.tsinghua.hotmobi.HotMobiLogger;
 
 /**
  * Created by mariotaku on 15/8/7.
@@ -48,26 +49,29 @@ public class TweetEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "user_id")
     long userId;
     @ParcelableThisPlease
-    @JsonField(name = "tweet_type", typeConverter = TweetType.Converter.class)
-    TweetType tweetType;
+    @JsonField(name = "tweet_type")
+    @TweetType
+    String tweetType;
     @ParcelableThisPlease
-    @JsonField(name = "timeline_type", typeConverter = TimelineType.Converter.class)
-    TimelineType timelineType;
+    @JsonField(name = "timeline_type")
+    @TimelineType
+    String timelineType;
     @ParcelableThisPlease
-    @JsonField(name = "action", typeConverter = Action.Converter.class)
-    Action action;
+    @JsonField(name = "action")
+    @Action
+    String action;
     @ParcelableThisPlease
     @JsonField(name = "following")
     boolean following;
 
-    public static TweetEvent create(Context context, ParcelableStatus status, TimelineType timelineType) {
+    public static TweetEvent create(Context context, ParcelableStatus status, @TimelineType String timelineType) {
         final TweetEvent event = new TweetEvent();
         event.markStart(context);
         event.setId(status.id);
         event.setAccountId(status.account_id);
         event.setUserId(status.user_id);
         event.setTimelineType(timelineType);
-        event.setTweetType(TweetType.getTweetType(status));
+        event.setTweetType(HotMobiLogger.getTweetType(status));
         event.setFollowing(status.user_is_following);
         return event;
     }
@@ -76,7 +80,7 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         this.following = following;
     }
 
-    public void setAction(Action action) {
+    public void setAction(@Action String action) {
         this.action = action;
     }
 
@@ -88,11 +92,11 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         this.userId = userId;
     }
 
-    public void setTweetType(TweetType tweetType) {
+    public void setTweetType(@TweetType String tweetType) {
         this.tweetType = tweetType;
     }
 
-    public void setTimelineType(TimelineType timelineType) {
+    public void setTimelineType(@TimelineType String timelineType) {
         this.timelineType = timelineType;
     }
 
@@ -116,43 +120,9 @@ public class TweetEvent extends BaseEvent implements Parcelable {
                 "} " + super.toString();
     }
 
-    public enum Action {
-        OPEN("open"), RETWEET("retweet"), FAVORITE("favorite"), UNFAVORITE("unfavorite"),
-        TWEET("tweet"), UNKNOWN("unknown");
-
-        private final String value;
-
-        Action(String value) {
-            this.value = value;
-        }
-
-        public static Action parse(String action) {
-            if (OPEN.value.equalsIgnoreCase(action)) {
-                return OPEN;
-            } else if (RETWEET.value.equalsIgnoreCase(action)) {
-                return RETWEET;
-            } else if (FAVORITE.value.equalsIgnoreCase(action)) {
-                return FAVORITE;
-            } else if (UNFAVORITE.value.equalsIgnoreCase(action)) {
-                return UNFAVORITE;
-            }
-            return UNKNOWN;
-        }
-
-
-        public static class Converter extends StringBasedTypeConverter<Action> {
-
-            @Override
-            public Action getFromString(String string) {
-                return Action.parse(string);
-            }
-
-            @Override
-            public String convertToString(Action action) {
-                if (action == null) return null;
-                return action.value;
-            }
-        }
+    public @interface Action {
+        String OPEN = "open", RETWEET = "retweet", FAVORITE = "favorite", UNFAVORITE = "unfavorite",
+                TWEET = "tweet", UNKNOWN = "unknown";
     }
 
     @Override

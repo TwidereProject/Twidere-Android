@@ -37,18 +37,8 @@ import org.mariotaku.restfu.http.SimpleValueMap;
  */
 public final class SearchQuery extends SimpleValueMap {
 
-    enum Unit {
-        MILES("mi"), KILOMETERS("km");
-
-        private final String value;
-
-        Unit(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
+    @interface Unit {
+        String MILES = "mi", KILOMETERS = "km";
     }
 
 
@@ -82,7 +72,8 @@ public final class SearchQuery extends SimpleValueMap {
      * @return the instance
      * @since Twitter4J 2.1.0
      */
-    public SearchQuery geoCode(final GeoLocation location, final double radius, final Unit unit) {
+    public SearchQuery geoCode(final GeoLocation location, final double radius,
+                               final @Unit String unit) {
         setGeoCode(location, radius, unit);
         return this;
     }
@@ -191,8 +182,9 @@ public final class SearchQuery extends SimpleValueMap {
      * @param radius   radius
      * @param unit     {@link Unit#KILOMETERS} or {@link Unit#MILES}
      */
-    public void setGeoCode(@NonNull final GeoLocation location, final double radius, @NonNull final Unit unit) {
-        put("geocode", location.getLatitude() + "," + location.getLongitude() + "," + radius + unit.getValue());
+    public void setGeoCode(@NonNull final GeoLocation location, final double radius,
+                           @NonNull final @Unit String unit) {
+        put("geocode", location.getLatitude() + "," + location.getLongitude() + "," + radius + unit);
     }
 
     /**
