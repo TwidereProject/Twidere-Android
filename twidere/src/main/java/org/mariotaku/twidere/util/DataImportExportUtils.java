@@ -28,7 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.annotation.Preference;
-import org.mariotaku.twidere.annotation.Preference.Type;
+import org.mariotaku.twidere.annotation.PreferenceType;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 
 import java.io.BufferedOutputStream;
@@ -122,7 +122,7 @@ public class DataImportExportUtils implements Constants {
         for (final Field field : fields) {
             final Preference annotation = field.getAnnotation(Preference.class);
             if (Modifier.isStatic(field.getModifiers()) && CompareUtils.classEquals(field.getType(), String.class)
-                    && annotation != null && annotation.exportable() && annotation.type() != Type.INVALID) {
+                    && annotation != null && annotation.exportable() && annotation.type() != PreferenceType.INVALID) {
                 try {
                     supportedPrefsMap.put((String) field.get(null), annotation);
                 } catch (final IllegalAccessException | IllegalArgumentException e) {
@@ -255,19 +255,19 @@ public class DataImportExportUtils implements Constants {
             final Preference preference = supportedMap.get(key);
             if (preference == null || !preference.exportable()) return false;
             switch (preference.type()) {
-                case Type.BOOLEAN:
+                case PreferenceType.BOOLEAN:
                     editor.putBoolean(key, json.optBoolean(key, preference.defaultBoolean()));
                     break;
-                case Type.INT:
+                case PreferenceType.INT:
                     editor.putInt(key, json.optInt(key, preference.defaultInt()));
                     break;
-                case Type.LONG:
+                case PreferenceType.LONG:
                     editor.putLong(key, json.optLong(key, preference.defaultLong()));
                     break;
-                case Type.FLOAT:
+                case PreferenceType.FLOAT:
                     editor.putFloat(key, (float) json.optDouble(key, preference.defaultFloat()));
                     break;
-                case Type.STRING:
+                case PreferenceType.STRING:
                     editor.putString(key, json.optString(key, preference.defaultString()));
                     break;
                 default:
@@ -282,19 +282,19 @@ public class DataImportExportUtils implements Constants {
             if (preference == null || !preference.exportable()) return false;
             try {
                 switch (preference.type()) {
-                    case Type.BOOLEAN:
+                    case PreferenceType.BOOLEAN:
                         json.put(key, preferences.getBoolean(key, preference.defaultBoolean()));
                         break;
-                    case Type.INT:
+                    case PreferenceType.INT:
                         json.put(key, preferences.getInt(key, preference.defaultInt()));
                         break;
-                    case Type.LONG:
+                    case PreferenceType.LONG:
                         json.put(key, preferences.getLong(key, preference.defaultLong()));
                         break;
-                    case Type.FLOAT:
+                    case PreferenceType.FLOAT:
                         json.put(key, preferences.getFloat(key, preference.defaultFloat()));
                         break;
-                    case Type.STRING:
+                    case PreferenceType.STRING:
                         json.put(key, preferences.getString(key, preference.defaultString()));
                         break;
                     default:

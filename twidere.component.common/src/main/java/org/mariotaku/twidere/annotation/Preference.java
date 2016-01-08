@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.annotation;
 
-import android.support.annotation.IntDef;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -46,10 +44,6 @@ public @interface Preference {
 
     boolean hasDefault() default false;
 
-    @Type int type() default Type.NULL;
+    @PreferenceType int type() default PreferenceType.NULL;
 
-    @IntDef({Type.BOOLEAN, Type.INT, Type.LONG, Type.FLOAT, Type.STRING, Type.NULL, Type.INVALID})
-    @interface Type {
-        int BOOLEAN = 1, INT = 2, LONG = 3, FLOAT = 4, STRING = 5, NULL = 0, INVALID = -1;
-    }
 }

@@ -21,8 +21,8 @@ package org.mariotaku.twidere;
 
 import org.mariotaku.twidere.annotation.Preference;
 
-import static org.mariotaku.twidere.annotation.Preference.Type.BOOLEAN;
-import static org.mariotaku.twidere.annotation.Preference.Type.STRING;
+import static org.mariotaku.twidere.annotation.PreferenceType.BOOLEAN;
+import static org.mariotaku.twidere.annotation.PreferenceType.STRING;
 
 /**
  * Constants requires full application to build or useless for other

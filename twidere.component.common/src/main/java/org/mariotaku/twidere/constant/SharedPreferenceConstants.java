@@ -23,10 +23,10 @@ import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.Preference;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 
-import static org.mariotaku.twidere.annotation.Preference.Type.BOOLEAN;
-import static org.mariotaku.twidere.annotation.Preference.Type.INT;
-import static org.mariotaku.twidere.annotation.Preference.Type.LONG;
-import static org.mariotaku.twidere.annotation.Preference.Type.STRING;
+import static org.mariotaku.twidere.annotation.PreferenceType.BOOLEAN;
+import static org.mariotaku.twidere.annotation.PreferenceType.INT;
+import static org.mariotaku.twidere.annotation.PreferenceType.LONG;
+import static org.mariotaku.twidere.annotation.PreferenceType.STRING;
 
 public interface SharedPreferenceConstants {
 
