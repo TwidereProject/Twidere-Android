@@ -129,7 +129,6 @@ dependencies {
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.3'
     compile fileTree(dir: 'libs/main', include: ['*.jar'])
     provided 'javax.annotation:jsr250-api:1.0'
-//    googleCompile fileTree(dir: 'libs/google', include: ['*.jar'])
 }
 
 task svgToDrawable(type: SvgDrawableTask) {
