@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.fragment.support.card;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -37,7 +38,7 @@ public class CardBrowserFragment extends SupportBrowserFragment {
         settings.setBuiltInZoomControls(false);
     }
 
-    public static CardBrowserFragment show(String uri) {
+    public static CardBrowserFragment show(@NonNull String uri) {
         final Bundle args = new Bundle();
         args.putString(EXTRA_URI, uri);
         final CardBrowserFragment fragment = new CardBrowserFragment();

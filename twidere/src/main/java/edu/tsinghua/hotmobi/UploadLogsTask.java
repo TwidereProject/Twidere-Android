@@ -30,6 +30,7 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.restfu.http.RestHttpResponse;
 import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import edu.tsinghua.hotmobi.model.UploadLogEvent;
 
@@ -103,13 +105,16 @@ public class UploadLogsTask implements Runnable {
                     headers.add(Pair.create("X-HotMobi-UUID", uuid));
                     headers.add(Pair.create("X-HotMobi-Date", dayLogsDir.getName()));
                     headers.add(Pair.create("X-HotMobi-FileName", logFile.getName()));
+                    headers.add(Pair.create("User-Agent", String.format(Locale.ROOT,
+                            "HotMobi (Twidere %s %d)", BuildConfig.VERSION_NAME,
+                            BuildConfig.VERSION_CODE)));
                     builder.headers(headers);
                     body = new FileTypedData(logFile);
                     builder.body(body);
                     final UploadLogEvent uploadLogEvent = UploadLogEvent.create(context, logFile);
                     response = client.execute(builder.build());
                     if (response.isSuccessful()) {
-                        uploadLogEvent.markEnd();
+                        uploadLogEvent.finish(response);
                         if (!uploadLogEvent.shouldSkip()) {
                             HotMobiLogger.getInstance(context).log(uploadLogEvent);
                         }

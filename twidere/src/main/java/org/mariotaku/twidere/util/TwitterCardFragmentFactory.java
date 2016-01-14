@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.fragment.support.card.CardBrowserFragment;
@@ -41,7 +42,9 @@ public abstract class TwitterCardFragmentFactory {
         return new TwitterCardFragmentFactoryImpl();
     }
 
-    public static Fragment createGenericPlayerFragment(ParcelableCardEntity card) {
+    @Nullable
+    public static Fragment createGenericPlayerFragment(@Nullable ParcelableCardEntity card) {
+        if (card == null) return null;
         final String playerUrl = card.getString("player_url");
         if (playerUrl == null) return null;
         return CardBrowserFragment.show(playerUrl);

@@ -28,6 +28,15 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class MediaUploadResponse extends TwitterResponseObject implements TwitterResponse {
 
+    @JsonField(name = "media_id")
+    long mediaId;
+    @JsonField(name = "size")
+    long size;
+    @JsonField(name = "image")
+    Image image;
+    @JsonField(name = "video")
+    Video video;
+
     public long getId() {
         return mediaId;
     }
@@ -40,13 +49,19 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
         return size;
     }
 
-    @JsonField(name = "media_id")
-    long mediaId;
-    @JsonField(name = "size")
-    long size;
-    @JsonField(name = "image")
-    Image image;
+    public Video getVideo() {
+        return video;
+    }
 
+    @JsonObject
+    public static class Video {
+        @JsonField(name = "video_type")
+        String videoType;
+
+        public String getVideoType() {
+            return videoType;
+        }
+    }
 
     @JsonObject
     public static class Image {

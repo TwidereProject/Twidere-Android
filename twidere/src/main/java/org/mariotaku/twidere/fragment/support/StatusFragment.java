@@ -1399,6 +1399,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private List<ParcelableStatus> mData;
         private CharSequence mReplyError, mConversationError;
         private boolean mRepliesLoading, mConversationsLoading;
+        private int mReplyStart;
 
         public StatusAdapter(StatusFragment fragment, boolean compact) {
             super(fragment.getContext());
@@ -1474,10 +1475,15 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public ParcelableStatus getStatus(int position) {
             final int itemType = getItemType(position);
             switch (itemType) {
-                case ITEM_IDX_CONVERSATION:
-                case ITEM_IDX_REPLY: {
+                case ITEM_IDX_CONVERSATION: {
                     if (mData == null) return null;
                     return mData.get(position - getIndexStart(ITEM_IDX_CONVERSATION));
+                }
+                case ITEM_IDX_REPLY: {
+                    if (mData == null || mReplyStart < 0) return null;
+                    return mData.get(position - getIndexStart(ITEM_IDX_CONVERSATION)
+                            - mItemCounts[ITEM_IDX_CONVERSATION] - mItemCounts[ITEM_IDX_STATUS]
+                            + mReplyStart);
                 }
                 case ITEM_IDX_STATUS: {
                     return mStatus;
@@ -1551,24 +1557,25 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (data == null || data.isEmpty()) {
                 setCount(ITEM_IDX_CONVERSATION, 0);
                 setCount(ITEM_IDX_REPLY, 0);
+                mReplyStart = -1;
             } else {
                 int conversationCount = 0, replyCount = 0;
-                boolean containsStatus = false;
+                int replyStart = -1;
                 final long statusId = status.is_retweet ? status.retweet_id : status.id;
-                for (ParcelableStatus item : data) {
+                for (int i = 0, j = data.size(); i < j; i++) {
+                    ParcelableStatus item = data.get(i);
                     if (item.id < statusId) {
                         conversationCount++;
                     } else if (item.id > statusId) {
+                        if (replyStart < 0) {
+                            replyStart = i;
+                        }
                         replyCount++;
-                    } else {
-                        containsStatus = true;
                     }
-                }
-                if (!containsStatus) {
-                    throw new IllegalArgumentException("Conversation data must contains original status");
                 }
                 setCount(ITEM_IDX_CONVERSATION, conversationCount);
                 setCount(ITEM_IDX_REPLY, replyCount);
+                mReplyStart = replyStart;
             }
             notifyDataSetChanged();
             updateItemDecoration();
