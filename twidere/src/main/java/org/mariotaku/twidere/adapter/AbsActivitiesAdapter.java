@@ -200,7 +200,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {
                 final View view;
                 if (mCompactCards) {
-                    view = mInflater.inflate(R.layout.card_item_activity_summary_common, parent, false);
+                    view = mInflater.inflate(R.layout.card_item_activity_summary_compact, parent, false);
                 } else {
                     view = mInflater.inflate(R.layout.card_item_activity_summary, parent, false);
                 }
