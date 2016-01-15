@@ -75,6 +75,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     private final ForegroundColorView quoteIndicator;
     private final View actionButtons;
     private final View itemMenu;
+    private final View profileImageSpace;
+    private final View statusInfoSpace;
 
     private StatusClickListener statusClickListener;
 
@@ -92,6 +94,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         statusInfoIcon = (ImageView) itemView.findViewById(R.id.status_info_icon);
         statusInfoLabel = (TextView) itemView.findViewById(R.id.status_info_label);
         timeView = (ShortTimeView) itemView.findViewById(R.id.time);
+        profileImageSpace = itemView.findViewById(R.id.profile_image_space);
+        statusInfoSpace = itemView.findViewById(R.id.status_info_space);
 
         mediaPreview = (CardMediaContainer) itemView.findViewById(R.id.media_preview);
 
@@ -113,6 +117,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
     public void displaySampleStatus() {
         profileImageView.setVisibility(adapter.isProfileImageEnabled() ? View.VISIBLE : View.GONE);
+        if (profileImageSpace != null) {
+            profileImageSpace.setVisibility(adapter.isProfileImageEnabled() ? View.VISIBLE : View.GONE);
+        }
+        if (statusInfoSpace != null) {
+            statusInfoSpace.setVisibility(adapter.isProfileImageEnabled() ? View.VISIBLE : View.GONE);
+        }
         profileImageView.setImageResource(R.mipmap.ic_launcher);
         nameView.setName(TWIDERE_PREVIEW_NAME);
         nameView.setScreenName("@" + TWIDERE_PREVIEW_SCREEN_NAME);
@@ -222,6 +232,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
 
         if (adapter.isProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
+            if (profileImageSpace != null) {
+                profileImageSpace.setVisibility(View.VISIBLE);
+            }
+            if (statusInfoSpace != null) {
+                statusInfoSpace.setVisibility(View.VISIBLE);
+            }
             final String user_profile_image_url = status.user_profile_image_url;
 
             loader.displayProfileImage(profileImageView, user_profile_image_url);
@@ -231,6 +247,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         } else {
             profileTypeView.setVisibility(View.GONE);
             profileImageView.setVisibility(View.GONE);
+            if (profileImageSpace != null) {
+                profileImageSpace.setVisibility(View.GONE);
+            }
+            if (statusInfoSpace != null) {
+                statusInfoSpace.setVisibility(View.GONE);
+            }
 
             loader.cancelDisplayTask(profileImageView);
 

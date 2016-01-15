@@ -16,13 +16,14 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<org.mariotaku.twidere.view.ColorLabelFrameLayout android:id="@+id/item_content"
-                                                  xmlns:android="http://schemas.android.com/apk/res/android"
-                                                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                  xmlns:tools="http://schemas.android.com/tools"
-                                                  android:layout_width="match_parent"
-                                                  android:layout_height="wrap_content"
-                                                  tools:background="?cardItemBackgroundColor">
+<org.mariotaku.twidere.view.ColorLabelFrameLayout
+    android:id="@+id/item_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="?cardItemBackgroundColor">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -53,11 +54,11 @@
             android:id="@+id/status_info_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/element_spacing_minus_small"
-            android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginStart="@dimen/element_spacing_small"
-            android:layout_toEndOf="@id/status_info_icon"
-            android:layout_toRightOf="@id/status_info_icon"
+            android:layout_marginLeft="@dimen/element_spacing_small"
+            android:layout_marginBottom="@dimen/element_spacing_minus_small"
+            android:layout_toEndOf="@+id/status_info_icon"
+            android:layout_toRightOf="@+id/status_info_icon"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
             android:minHeight="@dimen/element_size_small"
@@ -83,7 +84,7 @@
             android:layout_marginRight="@dimen/element_spacing_small"
             android:contentDescription="@string/profile_image"
             android:scaleType="centerCrop"
-            tools:visibility="visible"/>
+            tools:visibility="gone"/>
 
         <org.mariotaku.twidere.view.BoundsImageView
             android:id="@+id/profile_type"

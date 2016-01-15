@@ -20,7 +20,9 @@
 package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
+import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +54,11 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     private final ViewGroup profileImagesContainer;
     private final BadgeView profileImageMoreNumber;
     private final ImageView[] profileImageViews;
+    private final View profileImageSpace;
+
     private ActivityClickListener activityClickListener;
 
-    public ActivityTitleSummaryViewHolder(AbsActivitiesAdapter adapter, View itemView) {
+    public ActivityTitleSummaryViewHolder(AbsActivitiesAdapter adapter, View itemView, boolean isCompact) {
         super(itemView);
         this.adapter = adapter;
 
@@ -62,7 +66,17 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
 
         activityTypeView = (ActionIconView) itemView.findViewById(R.id.activity_type);
         titleView = (TextView) itemView.findViewById(R.id.title);
+
+        if (isCompact) {
+            final Resources resources = adapter.getContext().getResources();
+            final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) titleView.getLayoutParams();
+            final int spacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
+            lp.leftMargin = spacing;
+            MarginLayoutParamsCompat.setMarginStart(lp, spacing);
+        }
+
         summaryView = (TextView) itemView.findViewById(R.id.summary);
+        profileImageSpace = itemView.findViewById(R.id.profile_image_space);
 
         profileImagesContainer = (ViewGroup) itemView.findViewById(R.id.profile_images_container);
         profileImageViews = new ImageView[5];
@@ -102,6 +116,10 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     }
 
     private void displayUserProfileImages(final ParcelableUser[] statuses) {
+        final boolean shouldDisplayImages = adapter.isProfileImageEnabled();
+        profileImagesContainer.setVisibility(shouldDisplayImages ? View.VISIBLE : View.GONE);
+        profileImageSpace.setVisibility(shouldDisplayImages ? View.VISIBLE : View.GONE);
+        if (!shouldDisplayImages) return;
         final MediaLoaderWrapper imageLoader = adapter.getMediaLoader();
         if (statuses == null) {
             for (final ImageView view : profileImageViews) {
@@ -111,9 +129,6 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
             return;
         }
         final int length = Math.min(profileImageViews.length, statuses.length);
-        final boolean shouldDisplayImages = adapter.isProfileImageEnabled();
-        profileImagesContainer.setVisibility(shouldDisplayImages ? View.VISIBLE : View.GONE);
-        if (!shouldDisplayImages) return;
         for (int i = 0, j = profileImageViews.length; i < j; i++) {
             final ImageView view = profileImageViews[i];
             view.setImageDrawable(null);

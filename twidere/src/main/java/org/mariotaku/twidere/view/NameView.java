@@ -68,6 +68,11 @@ public class NameView extends ThemedTextView {
         mSecondaryTextStyle = new StyleSpan(a.getInt(R.styleable.NameView_nv_secondaryTextStyle, 0));
         a.recycle();
         setNameFirst(true);
+        if (isInEditMode()) {
+            setName("Name");
+            setScreenName("@screenname");
+            updateText();
+        }
     }
 
     public void setPrimaryTextColor(final int color) {
@@ -95,13 +100,12 @@ public class NameView extends ThemedTextView {
     }
 
     public void updateText(@Nullable BidiFormatter formatter) {
-        if (isInEditMode()) return;
         final SpannableStringBuilder sb = new SpannableStringBuilder();
         final String primaryText = mNameFirst ? mName : mScreenName;
         final String secondaryText = mNameFirst ? mScreenName : mName;
         if (primaryText != null) {
             int start = sb.length();
-            if (formatter != null) {
+            if (formatter != null && !isInEditMode()) {
                 sb.append(formatter.unicodeWrap(primaryText));
             } else {
                 sb.append(primaryText);
@@ -114,7 +118,7 @@ public class NameView extends ThemedTextView {
         sb.append(" ");
         if (secondaryText != null) {
             int start = sb.length();
-            if (formatter != null) {
+            if (formatter != null && !isInEditMode()) {
                 sb.append(formatter.unicodeWrap(secondaryText));
             } else {
                 sb.append(secondaryText);
