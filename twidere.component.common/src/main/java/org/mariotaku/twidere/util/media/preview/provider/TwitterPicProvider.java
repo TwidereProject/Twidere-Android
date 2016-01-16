@@ -3,7 +3,6 @@ package org.mariotaku.twidere.util.media.preview.provider;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -25,7 +24,6 @@ public class TwitterPicProvider implements Provider {
     @Nullable
     @Override
     public ParcelableMedia from(@NonNull String link) {
-        Log.i("image viewer","from() called with: " + "link = [" + link + "]");
         final Uri uri = Uri.parse(link);
         final ParcelableMedia media = new ParcelableMedia();
         media.type = ParcelableMedia.Type.TYPE_IMAGE;
