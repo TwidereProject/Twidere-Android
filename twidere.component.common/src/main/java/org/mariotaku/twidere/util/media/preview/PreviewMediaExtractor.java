@@ -10,6 +10,7 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.HtmlLinkExtractor;
 import org.mariotaku.twidere.util.media.preview.provider.InstagramProvider;
 import org.mariotaku.twidere.util.media.preview.provider.Provider;
+import org.mariotaku.twidere.util.media.preview.provider.TwitterPicProvider;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ import java.util.List;
 public class PreviewMediaExtractor {
 
     private static final Provider[] sProviders = {
-            new InstagramProvider()
+            new InstagramProvider(),
+            new TwitterPicProvider()
     };
 
     @Nullable
