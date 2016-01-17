@@ -44,6 +44,7 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -1222,7 +1223,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.profile_image: {
                 final String url = Utils.getOriginalTwitterProfileImage(user.profile_image_url);
-                final ParcelableMedia[] media = {ParcelableMedia.image(url)};
+                ParcelableMedia profileImage = ParcelableMedia.image(url);
+                profileImage.type = ParcelableMedia.Type.TYPE_IMAGE;
+                final ParcelableMedia[] media = {profileImage};
                 Bundle options = Utils.createMediaViewerActivityOption(view);
                 Utils.openMedia(activity, user.account_id, false, null, media, options);
                 break;
@@ -1230,7 +1233,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.profile_banner: {
                 if (user.profile_banner_url == null) return;
                 final String url = user.profile_banner_url + "/ipad_retina";
-                final ParcelableMedia[] media = {ParcelableMedia.image(url)};
+                ParcelableMedia profileBanner = ParcelableMedia.image(url);
+                profileBanner.type = ParcelableMedia.Type.TYPE_IMAGE;
+                final ParcelableMedia[] media = {profileBanner};
                 Bundle options = Utils.createMediaViewerActivityOption(view);
                 Utils.openMedia(activity, user.account_id, false, null, media, options);
                 break;
