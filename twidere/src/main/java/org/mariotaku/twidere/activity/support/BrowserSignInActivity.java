@@ -265,7 +265,7 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
                 return;
             }
             final OAuthEndpoint endpoint = new OAuthEndpoint(TwitterAPIFactory.getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api", null));
-            mActivity.loadUrl(endpoint.construct("/oauth/authorize", Pair.create("oauth_token", data.getOauthToken())));
+            mActivity.loadUrl(endpoint.construct("/oauth/authorize", new String[]{"oauth_token", data.getOauthToken()}));
         }
 
         @Override

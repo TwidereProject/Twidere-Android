@@ -20,24 +20,22 @@
 package org.mariotaku.twidere.api.twitter;
 
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.Body;
-import org.mariotaku.restfu.annotation.param.Part;
+import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.http.BodyType;
-import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.restfu.http.mime.FileBody;
+import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
 
 import java.io.File;
-
-import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
 
 @SuppressWarnings("RedundantThrows")
 public interface TwitterUpload {
 
     @POST("/media/upload.json")
-    @Body(BodyType.MULTIPART)
-    MediaUploadResponse uploadMedia(@Part("media") File file) throws TwitterException;
+    @BodyType(BodyType.MULTIPART)
+    MediaUploadResponse uploadMedia(@Param("media") File file) throws TwitterException;
 
     @POST("/media/upload.json")
-    @Body(BodyType.MULTIPART)
-    MediaUploadResponse uploadMedia(@Part("media") FileTypedData data) throws TwitterException;
+    @BodyType(BodyType.MULTIPART)
+    MediaUploadResponse uploadMedia(@Param("media") FileBody data) throws TwitterException;
 
 }

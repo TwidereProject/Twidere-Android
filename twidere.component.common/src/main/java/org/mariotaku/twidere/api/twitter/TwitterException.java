@@ -22,8 +22,8 @@ package org.mariotaku.twidere.api.twitter;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.restfu.http.RestHttpRequest;
-import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.HttpRequest;
+import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
@@ -52,13 +52,13 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     boolean nested = false;
     private int statusCode = -1;
     private RateLimitStatus rateLimitStatus;
-    private RestHttpRequest httpRequest;
-    private RestHttpResponse httpResponse;
+    private HttpRequest httpRequest;
+    private HttpResponse httpResponse;
 
     public TwitterException() {
     }
 
-    public TwitterException(RestHttpResponse httpResponse) {
+    public TwitterException(HttpResponse httpResponse) {
         setHttpResponse(httpResponse);
     }
 
@@ -78,23 +78,23 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         setStatusCode(statusCode);
     }
 
-    public TwitterException(final String message, final RestHttpRequest req, final RestHttpResponse res) {
+    public TwitterException(final String message, final HttpRequest req, final HttpResponse res) {
         this(message);
         setHttpResponse(res);
         setHttpRequest(req);
     }
 
-    public TwitterException(final String message, final Throwable cause, final RestHttpRequest req, final RestHttpResponse res) {
+    public TwitterException(final String message, final Throwable cause, final HttpRequest req, final HttpResponse res) {
         this(message, cause);
         setHttpResponse(res);
         setHttpRequest(req);
     }
 
-    public TwitterException(final String message, final RestHttpResponse res) {
+    public TwitterException(final String message, final HttpResponse res) {
         this(message, null, null, res);
     }
 
-    public TwitterException(final String message, final Throwable cause, final RestHttpResponse res) {
+    public TwitterException(final String message, final Throwable cause, final HttpResponse res) {
         this(message, cause, null, res);
     }
 
@@ -102,7 +102,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         super(message, cause);
     }
 
-    private void setHttpRequest(RestHttpRequest httpRequest) {
+    private void setHttpRequest(HttpRequest httpRequest) {
         this.httpRequest = httpRequest;
     }
 
@@ -113,7 +113,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         return errors;
     }
 
-    public void setHttpResponse(RestHttpResponse res) {
+    public void setHttpResponse(HttpResponse res) {
         httpResponse = res;
         if (res != null) {
             rateLimitStatus = RateLimitStatus.createFromResponseHeader(res);
@@ -139,7 +139,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     }
 
     @Override
-    public void processResponseHeader(RestHttpResponse resp) {
+    public void processResponseHeader(HttpResponse resp) {
 
     }
 
@@ -156,11 +156,11 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         return errors[0].getCode();
     }
 
-    public RestHttpRequest getHttpRequest() {
+    public HttpRequest getHttpRequest() {
         return httpRequest;
     }
 
-    public RestHttpResponse getHttpResponse() {
+    public HttpResponse getHttpResponse() {
         return httpResponse;
     }
 

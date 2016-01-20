@@ -21,7 +21,7 @@ package org.mariotaku.twidere.api.twitter.auth;
 
 import android.util.Base64;
 
-import org.mariotaku.restfu.RestRequestInfo;
+import org.mariotaku.restfu.RestRequest;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
 
@@ -39,7 +39,7 @@ public final class BasicAuthorization implements Authorization {
     }
 
     @Override
-    public String getHeader(Endpoint endpoint, RestRequestInfo info) {
+    public String getHeader(Endpoint endpoint, RestRequest info) {
         if (!hasAuthorization()) return null;
         return "Basic " + Base64.encodeToString((user + ":" + password).getBytes(), Base64.NO_WRAP);
     }

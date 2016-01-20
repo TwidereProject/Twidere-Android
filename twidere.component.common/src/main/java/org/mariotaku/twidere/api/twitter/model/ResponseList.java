@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
 import java.util.AbstractList;
@@ -64,7 +64,7 @@ public class ResponseList<T> extends AbstractList<T> implements TwitterResponse 
     }
 
     @Override
-    public final void processResponseHeader(RestHttpResponse resp) {
+    public final void processResponseHeader(HttpResponse resp) {
         rateLimitStatus = RateLimitStatus.createFromResponseHeader(resp);
         accessLevel = InternalParseUtil.toAccessLevel(resp);
     }

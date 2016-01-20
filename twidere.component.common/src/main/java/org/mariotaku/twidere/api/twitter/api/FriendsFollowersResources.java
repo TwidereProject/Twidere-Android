@@ -21,9 +21,9 @@ package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.Body;
-import org.mariotaku.restfu.annotation.param.Form;
-import org.mariotaku.restfu.annotation.param.MethodExtra;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -37,32 +37,32 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
 
 @SuppressWarnings("RedundantThrows")
-@MethodExtra(name = "extra_params", values = {"include_entities"})
+@Queries({@KeyValue(key = "include_entities", valueKey = "include_entities")})
 public interface FriendsFollowersResources {
 
     @POST("/friendships/create.json")
-    @Body(BodyType.FORM)
-    User createFriendship(@Form("user_id") long userId) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User createFriendship(@Param("user_id") long userId) throws TwitterException;
 
     @POST("/friendships/create.json")
-    @Body(BodyType.FORM)
-    User createFriendship(@Form("user_id") long userId, @Form("follow") boolean follow) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User createFriendship(@Param("user_id") long userId, @Param("follow") boolean follow) throws TwitterException;
 
     @POST("/friendships/create.json")
-    @Body(BodyType.FORM)
-    User createFriendship(@Form("screen_name") String screenName) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User createFriendship(@Param("screen_name") String screenName) throws TwitterException;
 
     @POST("/friendships/create.json")
-    @Body(BodyType.FORM)
-    User createFriendship(@Form("screen_name") String screenName, @Form("follow") boolean follow) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User createFriendship(@Param("screen_name") String screenName, @Param("follow") boolean follow) throws TwitterException;
 
     @POST("/friendships/destroy.json")
-    @Body(BodyType.FORM)
-    User destroyFriendship(@Form("user_id") long userId) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User destroyFriendship(@Param("user_id") long userId) throws TwitterException;
 
     @POST("/friendships/destroy.json")
-    @Body(BodyType.FORM)
-    User destroyFriendship(@Form("screen_name") String screenName) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User destroyFriendship(@Param("screen_name") String screenName) throws TwitterException;
 
     IDs getFollowersIDs(@Query Paging paging) throws TwitterException;
 
@@ -100,9 +100,10 @@ public interface FriendsFollowersResources {
     @GET("/friendships/outgoing.json")
     IDs getOutgoingFriendships(@Query Paging paging) throws TwitterException;
 
-    ResponseList<Friendship> lookupFriendships(long[] ids) throws TwitterException;
-
-    ResponseList<Friendship> lookupFriendships(String[] screenNames) throws TwitterException;
+    @POST("/friendships/lookup.json")
+    ResponseList<Friendship> lookupFriendships(@Param(value = "id",arrayDelimiter = ',')long[] ids) throws TwitterException;
+    @POST("/friendships/lookup.json")
+    ResponseList<Friendship> lookupFriendships(@Param(value = "id",arrayDelimiter = ',')String[] screenNames) throws TwitterException;
 
     @GET("/friendships/show.json")
     Relationship showFriendship(@Query("source_id") long sourceId, @Query("target_id") long targetId) throws TwitterException;
@@ -115,10 +116,10 @@ public interface FriendsFollowersResources {
                                 @Query("target_screen_name") String targetScreenName) throws TwitterException;
 
     @POST("/friendships/update.json")
-    @Body(BodyType.FORM)
-    Relationship updateFriendship(@Form("user_id") long userId, @Form FriendshipUpdate update) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    Relationship updateFriendship(@Param("user_id") long userId, @Param FriendshipUpdate update) throws TwitterException;
 
     @POST("/friendships/update.json")
-    @Body(BodyType.FORM)
-    Relationship updateFriendship(@Form("screen_name") String screenName, @Form FriendshipUpdate update) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    Relationship updateFriendship(@Param("screen_name") String screenName, @Param FriendshipUpdate update) throws TwitterException;
 }

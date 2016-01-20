@@ -20,15 +20,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
-    <application>
+    <application tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
         <activity
             android:name="com.squareup.leakcanary.internal.DisplayLeakActivity"
             android:enabled="false"
-            android:icon="@drawable/__leak_canary_icon"
-            android:label="@string/__leak_canary_display_activity_label"
+            android:icon="@drawable/leak_canary_icon"
+            android:label="@string/leak_canary_display_activity_label"
             android:taskAffinity="com.squareup.leakcanary"
-            android:theme="@style/__LeakCanary.Base">
+            android:theme="@style/leak_canary_LeakCanary.Base">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"

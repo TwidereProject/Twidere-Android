@@ -45,7 +45,7 @@ import com.twitter.Extractor;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.http.ContentType;
-import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -554,8 +554,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                             } else {
                                 contentType = ContentType.parse(o.outMimeType);
                             }
-                            final MediaUploadResponse uploadResp = upload.uploadMedia(new FileTypedData(is,
-                                    file.getName(), file.length(), contentType));
+                            final MediaUploadResponse uploadResp = upload.uploadMedia(
+                                    new FileBody(is, file.getName(), file.length(), contentType));
                             mediaIds[i] = uploadResp.getId();
                         }
                     } catch (final FileNotFoundException e) {

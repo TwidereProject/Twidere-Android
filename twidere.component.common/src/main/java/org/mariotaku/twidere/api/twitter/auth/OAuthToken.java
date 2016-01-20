@@ -20,21 +20,18 @@
 package org.mariotaku.twidere.api.twitter.auth;
 
 
-import org.mariotaku.restfu.Pair;
+import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.Utils;
 import org.mariotaku.restfu.http.ContentType;
-import org.mariotaku.restfu.http.HeaderValue;
-import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.ValueMap;
-import org.mariotaku.restfu.http.mime.TypedData;
+import org.mariotaku.restfu.http.mime.Body;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mariotaku on 15/2/4.
@@ -68,28 +65,30 @@ public class OAuthToken implements ValueMap {
     }
 
     public OAuthToken(String body, Charset charset) throws ParseException {
-        List<Pair<String, String>> params = new ArrayList<>();
-        Utils.parseGetParameters(body, params, charset.name());
-        for (Pair<String, String> param : params) {
-            switch (param.first) {
-                case "oauth_token": {
-                    oauthToken = param.second;
-                    break;
-                }
-                case "oauth_token_secret": {
-                    oauthTokenSecret = param.second;
-                    break;
-                }
-                case "user_id": {
-                    userId = Long.parseLong(param.second);
-                    break;
-                }
-                case "screen_name": {
-                    screenName = param.second;
-                    break;
+        Utils.parseQuery(body, charset.name(), new Utils.KeyValueConsumer() {
+
+            @Override
+            public void consume(String key, String value) {
+                switch (key) {
+                    case "oauth_token": {
+                        oauthToken = value;
+                        break;
+                    }
+                    case "oauth_token_secret": {
+                        oauthTokenSecret = value;
+                        break;
+                    }
+                    case "user_id": {
+                        userId = Long.parseLong(value);
+                        break;
+                    }
+                    case "screen_name": {
+                        screenName = value;
+                        break;
+                    }
                 }
             }
-        }
+        });
         if (oauthToken == null || oauthTokenSecret == null) {
             throw new ParseException("Unable to parse request token", -1);
         }
@@ -125,10 +124,10 @@ public class OAuthToken implements ValueMap {
         return new String[]{"oauth_token", "oauth_token_secret"};
     }
 
-    public static class Converter implements org.mariotaku.restfu.Converter {
+    public static class Converter implements RestConverter<HttpResponse, OAuthToken> {
         @Override
-        public Object convert(RestHttpResponse response, Type type) throws IOException {
-            final TypedData body = response.getBody();
+        public OAuthToken convert(HttpResponse response) throws IOException {
+            final Body body = response.getBody();
             try {
                 final ContentType contentType = body.contentType();
                 final ByteArrayOutputStream os = new ByteArrayOutputStream();

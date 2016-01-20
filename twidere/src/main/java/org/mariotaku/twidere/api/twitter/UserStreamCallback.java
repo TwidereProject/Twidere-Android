@@ -26,7 +26,7 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.jr.tree.JacksonJrSimpleTreeCodec;
 
 import org.mariotaku.restfu.callback.RawCallback;
-import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusDeletionNotice;
@@ -49,7 +49,7 @@ public abstract class UserStreamCallback implements RawCallback {
     private boolean disconnected;
 
     @Override
-    public final void result(final RestHttpResponse response) throws IOException {
+    public final void result(final HttpResponse response) throws IOException {
         if (!response.isSuccessful()) {
             final TwitterException cause = new TwitterException();
             cause.setHttpResponse(response);

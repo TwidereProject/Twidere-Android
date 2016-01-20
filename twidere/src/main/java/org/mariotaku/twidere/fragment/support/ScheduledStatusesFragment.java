@@ -61,7 +61,7 @@ public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragmen
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
-        final ScheduledStatus.State[] states = {ScheduledStatus.State.SCHEDULED, ScheduledStatus.State.FAILED};
+        final String[] states = {ScheduledStatus.State.SCHEDULED, ScheduledStatus.State.FAILED};
         return new ScheduledStatusesLoader(getActivity(), accountId, sinceId, maxId, states, null);
     }
 

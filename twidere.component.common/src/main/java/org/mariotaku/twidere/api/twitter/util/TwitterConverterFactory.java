@@ -26,10 +26,9 @@ import com.bluelinelabs.logansquare.ParameterizedType;
 import com.bluelinelabs.logansquare.ParameterizedTypeAccessor;
 import com.fasterxml.jackson.core.JsonParseException;
 
-import org.mariotaku.restfu.Converter;
-import org.mariotaku.restfu.Utils;
-import org.mariotaku.restfu.http.RestHttpResponse;
-import org.mariotaku.restfu.http.mime.TypedData;
+import org.mariotaku.restfu.RestConverter;
+import org.mariotaku.restfu.http.HttpResponse;
+import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
@@ -44,18 +43,19 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/5/5.
  */
-public class TwitterConverter implements Converter {
+public class TwitterConverterFactory extends RestConverter.SimpleFactory {
 
-    private static SimpleArrayMap<Type, Converter> sConverters = new SimpleArrayMap<>();
+    private static SimpleArrayMap<Type, RestConverter<HttpResponse, ?>> sResponseConverters = new SimpleArrayMap<>();
+    private static SimpleArrayMap<Type, RestConverter<?, Body>> sBodyConverters = new SimpleArrayMap<>();
 
     static {
-        sConverters.put(ResponseCode.class, new ResponseCode.Converter());
-        sConverters.put(OAuthToken.class, new OAuthToken.Converter());
+        sResponseConverters.put(ResponseCode.class, new ResponseCode.Converter());
+        sResponseConverters.put(OAuthToken.class, new OAuthToken.Converter());
     }
 
-    public static TwitterException parseTwitterException(RestHttpResponse resp) {
+    public static TwitterException parseTwitterException(HttpResponse resp) {
         try {
-            final TypedData body = resp.getBody();
+            final Body body = resp.getBody();
             if (body == null) return new TwitterException(resp);
             final TwitterException parse = LoganSquare.parse(body.stream(), TwitterException.class);
             if (parse != null) return parse;
@@ -67,7 +67,7 @@ public class TwitterConverter implements Converter {
         }
     }
 
-    private static <T> T parseOrThrow(RestHttpResponse resp, InputStream stream, Type type) throws IOException, TwitterException {
+    private static <T> T parseOrThrow(HttpResponse resp, InputStream stream, Type type) throws IOException, TwitterException {
         try {
             final ParameterizedType<T> parameterizedType = ParameterizedTypeAccessor.create(type);
             final T parse = LoganSquare.parse(stream, parameterizedType);
@@ -80,7 +80,7 @@ public class TwitterConverter implements Converter {
         }
     }
 
-    private static <T> List<T> parseListOrThrow(RestHttpResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
+    private static <T> List<T> parseListOrThrow(HttpResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
         try {
             return LoganSquare.parseList(stream, elementCls);
         } catch (JsonParseException e) {
@@ -88,38 +88,57 @@ public class TwitterConverter implements Converter {
         }
     }
 
-    @Override
-    public Object convert(RestHttpResponse response, Type type) throws Exception {
-        final TypedData body = response.getBody();
-        if (!response.isSuccessful()) {
-            throw TwitterConverter.<TwitterException>parseOrThrow(response, body.stream(), TwitterException.class);
-        }
-        try {
-            Converter converter = sConverters.get(type);
-            if (converter != null) {
-                return converter.convert(response, type);
-            }
-            final InputStream stream = body.stream();
-            final Object object = parseOrThrow(response, stream, type);
-            checkResponse(type, object, response);
-            if (object instanceof TwitterResponseObject) {
-                ((TwitterResponseObject) object).processResponseHeader(response);
-            }
-            return object;
-        } finally {
-            Utils.closeSilently(body);
+    private static void checkResponse(Type type, Object object, HttpResponse response) throws TwitterException {
+        if (User.class == type) {
+            if (object == null) throw new TwitterException("User is null");
         }
     }
 
-    private void checkResponse(Type type, Object object, RestHttpResponse response) throws TwitterException {
-        if (User.class.equals(type)) {
-            if (object == null) throw new TwitterException("User is null");
+    @Override
+    public RestConverter<HttpResponse, ?> fromResponse(Type type) {
+        RestConverter<HttpResponse, ?> converter = sResponseConverters.get(type);
+        if (converter != null) {
+            return converter;
         }
+        return new TwitterConverter(type);
+    }
+
+    @Override
+    public RestConverter<?, Body> toParam(Type type) {
+        final RestConverter<?, Body> converter = sBodyConverters.get(type);
+        if (converter != null) {
+            return converter;
+        }
+        return super.toParam(type);
     }
 
     public static class UnsupportedTypeException extends UnsupportedOperationException {
         public UnsupportedTypeException(Type type) {
             super("Unsupported type " + type);
+        }
+    }
+
+    public static class TwitterConverter implements RestConverter<HttpResponse, Object> {
+        private final Type type;
+
+        public TwitterConverter(Type type) {
+            this.type = type;
+        }
+
+        @Override
+        public Object convert(HttpResponse httpResponse) throws IOException {
+            try {
+                final Body body = httpResponse.getBody();
+                final InputStream stream = body.stream();
+                final Object object = parseOrThrow(httpResponse, stream, type);
+                checkResponse(type, object, httpResponse);
+                if (object instanceof TwitterResponseObject) {
+                    ((TwitterResponseObject) object).processResponseHeader(httpResponse);
+                }
+                return object;
+            } catch (TwitterException e) {
+                throw new IOException(e);
+            }
         }
     }
 }

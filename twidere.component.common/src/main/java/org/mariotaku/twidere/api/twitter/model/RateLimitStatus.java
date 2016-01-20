@@ -22,7 +22,7 @@ package org.mariotaku.twidere.api.twitter.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.HttpResponse;
 
 /**
  * A data class representing Twitter REST API's rate limit status
@@ -122,7 +122,7 @@ public final class RateLimitStatus {
                 '}';
     }
 
-    public static RateLimitStatus createFromResponseHeader(final RestHttpResponse res) {
+    public static RateLimitStatus createFromResponseHeader(final HttpResponse res) {
         if (null == res) return null;
         int remainingHits;// "X-Rate-Limit-Remaining"
         int limit;// "X-Rate-Limit-Limit"

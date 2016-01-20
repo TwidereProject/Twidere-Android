@@ -38,9 +38,11 @@ public class ScheduledStatusesLoader extends AsyncTaskLoader<List<ScheduledStatu
     private final long mAccountId;
     private final long mSinceId;
     private final long mMaxId;
-    private final ScheduledStatus.State[] mStates;
+    @ScheduledStatus.State
+    private final String[] mStates;
 
-    public ScheduledStatusesLoader(Context context, long accountId, long sinceId, long maxId, ScheduledStatus.State[] states, List<ScheduledStatus> data) {
+    public ScheduledStatusesLoader(Context context, long accountId, long sinceId, long maxId,
+                                   @ScheduledStatus.State String[] states, List<ScheduledStatus> data) {
         super(context);
         mAccountId = accountId;
         mSinceId = sinceId;
@@ -60,7 +62,7 @@ public class ScheduledStatusesLoader extends AsyncTaskLoader<List<ScheduledStatu
             paging.setMaxId(mMaxId);
         }
         try {
-            return twitter.getScheduledStatusesList(paging, mStates);
+            return twitter.getScheduledStatuses(paging, mStates);
         } catch (TwitterException e) {
             return null;
         }

@@ -24,12 +24,12 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.http.HttpRequest;
+import org.mariotaku.restfu.http.HttpResponse;
+import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.http.RestHttpRequest;
-import org.mariotaku.restfu.http.RestHttpResponse;
-import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -38,9 +38,7 @@ import org.mariotaku.twidere.util.Utils;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import edu.tsinghua.hotmobi.model.UploadLogEvent;
@@ -95,24 +93,24 @@ public class UploadLogsTask implements Runnable {
             boolean succeeded = true;
             for (Object logFileObj : ArrayUtils.nullToEmpty(dayLogsDir.listFiles())) {
                 File logFile = (File) logFileObj;
-                FileTypedData body = null;
-                RestHttpResponse response = null;
+                FileBody body = null;
+                HttpResponse response = null;
                 try {
-                    final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
+                    final HttpRequest.Builder builder = new HttpRequest.Builder();
                     builder.method(POST.METHOD);
                     builder.url("http://www.dnext.xyz/usage/upload");
-                    final List<Pair<String, String>> headers = new ArrayList<>();
-                    headers.add(Pair.create("X-HotMobi-UUID", uuid));
-                    headers.add(Pair.create("X-HotMobi-Date", dayLogsDir.getName()));
-                    headers.add(Pair.create("X-HotMobi-FileName", logFile.getName()));
-                    headers.add(Pair.create("User-Agent", String.format(Locale.ROOT,
+                    final MultiValueMap<String> headers = new MultiValueMap<>();
+                    headers.add("X-HotMobi-UUID", uuid);
+                    headers.add("X-HotMobi-Date", dayLogsDir.getName());
+                    headers.add("X-HotMobi-FileName", logFile.getName());
+                    headers.add("User-Agent", String.format(Locale.ROOT,
                             "HotMobi (Twidere %s %d)", BuildConfig.VERSION_NAME,
-                            BuildConfig.VERSION_CODE)));
+                            BuildConfig.VERSION_CODE));
                     builder.headers(headers);
-                    body = new FileTypedData(logFile);
+                    body = new FileBody(logFile);
                     builder.body(body);
                     final UploadLogEvent uploadLogEvent = UploadLogEvent.create(context, logFile);
-                    response = client.execute(builder.build());
+                    response = client.newCall(builder.build()).execute();
                     if (response.isSuccessful()) {
                         uploadLogEvent.finish(response);
                         if (!uploadLogEvent.shouldSkip()) {

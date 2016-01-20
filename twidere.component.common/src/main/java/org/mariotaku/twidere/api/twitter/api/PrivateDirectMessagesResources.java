@@ -21,7 +21,6 @@ package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.Body;
 import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
@@ -34,11 +33,11 @@ import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @POST("/dm/conversation/{conversation_id}/delete.json")
-    @Body(BodyType.FORM)
+    @BodyType(BodyType.FORM)
     ResponseCode destroyDirectMessagesConversation(@Path("conversation_id") String conversationId) throws TwitterException;
 
     @POST("/dm/conversation/{account_id}-{user_id}/delete.json")
-    @Body(BodyType.FORM)
+    @BodyType(BodyType.FORM)
     ResponseCode destroyDirectMessagesConversation(@Path("account_id") long accountId, @Path("user_id") long userId) throws TwitterException;
 
     @GET("/dm/user_updates.json")

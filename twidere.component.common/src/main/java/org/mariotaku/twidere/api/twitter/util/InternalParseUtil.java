@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.util;
 
-import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
 
 /**
@@ -34,7 +34,7 @@ public final class InternalParseUtil {
         throw new AssertionError("This class should never be instantiated");
     }
 
-    public static int toAccessLevel(final RestHttpResponse res) {
+    public static int toAccessLevel(final HttpResponse res) {
         if (null == res) return -1;
         final String xAccessLevel = res.getHeader("X-Access-Level");
         int accessLevel;

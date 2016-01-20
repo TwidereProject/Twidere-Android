@@ -23,12 +23,11 @@ import org.mariotaku.restfu.annotation.method.DELETE;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.method.PUT;
-import org.mariotaku.restfu.annotation.param.Body;
-import org.mariotaku.restfu.annotation.param.Form;
-import org.mariotaku.restfu.annotation.param.MethodExtra;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Path;
+import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
-import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -41,18 +40,19 @@ import org.mariotaku.twidere.api.twitter.model.StatusSchedule;
 public interface PrivateScheduleResources {
 
     @POST("/schedule/status/tweet.json")
-    @Body(BodyType.FORM)
-    ScheduledStatus scheduleTweet(@Form StatusSchedule schedule) throws TwitterException;
+    ScheduledStatus scheduleTweet(@Param StatusSchedule schedule) throws TwitterException;
 
     @DELETE("/schedule/status/{id}.json")
     ScheduledStatus destroyScheduleTweet(@Path("id") long id) throws TwitterException;
 
     @PUT("/schedule/status/{id}.json")
-    @Body(BodyType.FORM)
-    ScheduledStatus updateScheduleTweet(@Path("id") long id, @Form StatusSchedule schedule) throws TwitterException;
+    ScheduledStatus updateScheduleTweet(@Path("id") long id, @Param StatusSchedule schedule) throws TwitterException;
 
     @GET("/schedule/status/list.json")
-    @MethodExtra(name = "extra_params", values = {"include_entities", "include_cards", "cards_platform"})
-    ResponseList<ScheduledStatus> getScheduledStatusesList(@Query Paging paging, @Query("state") ScheduledStatus.State[] states) throws TwitterException;
+    @Queries({@KeyValue(key = "include_entities", valueKey = "include_entities"),
+            @KeyValue(key = "include_cards", valueKey = "include_cards"),
+            @KeyValue(key = "cards_platform", valueKey = "cards_platform")})
+    ResponseList<ScheduledStatus> getScheduledStatuses(@Query Paging paging,
+                                                       @Query(value = "state", arrayDelimiter = ',') @ScheduledStatus.State String[] states) throws TwitterException;
 
 }

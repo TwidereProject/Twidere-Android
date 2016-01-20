@@ -21,9 +21,6 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
-
-import org.mariotaku.twidere.util.BugReporter;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,8 +48,9 @@ public class MediaEntity extends UrlEntity {
     String displayUrl;
     @JsonField(name = "expanded_url")
     String expandedUrl;
-    @JsonField(name = "type", typeConverter = Type.Converter.class)
-    Type type;
+    @JsonField(name = "type")
+    @Type
+    String type;
     @JsonField(name = "sizes")
     HashMap<String, Size> sizes;
     @JsonField(name = "source_status_id")
@@ -111,7 +109,9 @@ public class MediaEntity extends UrlEntity {
         return url;
     }
 
-    public Type getType() {
+    public
+    @Type
+    String getType() {
         return type;
     }
 
@@ -131,39 +131,11 @@ public class MediaEntity extends UrlEntity {
         return id;
     }
 
-    public enum Type {
-        PHOTO("photo"), VIDEO("video"), ANIMATED_GIF("animated_gif"), UNKNOWN(null);
+    public @interface Type {
+        String PHOTO = "photo";
+        String VIDEO = "video";
+        String ANIMATED_GIF = "animated_gif";
 
-        private final String literal;
-
-        Type(String literal) {
-            this.literal = literal;
-        }
-
-        public static Type parse(String typeString) {
-            if ("photo".equalsIgnoreCase(typeString)) {
-                return PHOTO;
-            } else if ("video".equalsIgnoreCase(typeString)) {
-                return VIDEO;
-            } else if ("animated_gif".equalsIgnoreCase(typeString)) {
-                return ANIMATED_GIF;
-            }
-            BugReporter.error("Unknown MediaEntity.Type " + typeString);
-            return UNKNOWN;
-        }
-
-        public static class Converter extends StringBasedTypeConverter<Type> {
-
-            @Override
-            public Type getFromString(String string) {
-                return Type.parse(string);
-            }
-
-            @Override
-            public String convertToString(Type object) {
-                return object.literal;
-            }
-        }
     }
 
 

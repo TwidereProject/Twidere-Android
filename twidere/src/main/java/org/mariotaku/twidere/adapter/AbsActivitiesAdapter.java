@@ -265,29 +265,29 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             return ITEM_VIEW_TYPE_GAP;
         }
         final String action = getActivityAction(position);
-        if (Activity.Action.MENTION.literal.equals(action)) {
+        if (Activity.Action.MENTION.equals(action)) {
             if (ArrayUtils.isEmpty(activity.target_object_statuses)) {
                 return ITEM_VIEW_TYPE_STUB;
             }
             if (mFollowingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY;
             return ITEM_VIEW_TYPE_STATUS;
-        } else if (Activity.Action.REPLY.literal.equals(action)) {
+        } else if (Activity.Action.REPLY.equals(action)) {
             if (ArrayUtils.isEmpty(activity.target_statuses)) {
                 return ITEM_VIEW_TYPE_STUB;
             }
             if (mFollowingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY;
             return ITEM_VIEW_TYPE_STATUS;
-        } else if (Activity.Action.QUOTE.literal.equals(action)) {
+        } else if (Activity.Action.QUOTE.equals(action)) {
             if (ArrayUtils.isEmpty(activity.target_statuses)) {
                 return ITEM_VIEW_TYPE_STUB;
             }
             if (mFollowingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY;
             return ITEM_VIEW_TYPE_STATUS;
-        } else if (Activity.Action.FOLLOW.literal.equals(action) || Activity.Action.FAVORITE.literal.equals(action)
-                || Activity.Action.RETWEET.literal.equals(action) || Activity.Action.FAVORITED_RETWEET.literal.equals(action)
-                || Activity.Action.RETWEETED_RETWEET.literal.equals(action) || Activity.Action.RETWEETED_MENTION.literal.equals(action)
-                || Activity.Action.FAVORITED_MENTION.literal.equals(action) || Activity.Action.LIST_CREATED.literal.equals(action)
-                || Activity.Action.LIST_MEMBER_ADDED.literal.equals(action)) {
+        } else if (Activity.Action.FOLLOW.equals(action) || Activity.Action.FAVORITE.equals(action)
+                || Activity.Action.RETWEET.equals(action) || Activity.Action.FAVORITED_RETWEET.equals(action)
+                || Activity.Action.RETWEETED_RETWEET.equals(action) || Activity.Action.RETWEETED_MENTION.equals(action)
+                || Activity.Action.FAVORITED_MENTION.equals(action) || Activity.Action.LIST_CREATED.equals(action)
+                || Activity.Action.LIST_MEMBER_ADDED.equals(action)) {
             ParcelableActivityUtils.getAfterFilteredSourceIds(activity, mFilteredUserIds,
                     mFollowingOnly);
             if (ArrayUtils.isEmpty(activity.after_filtered_source_ids)) {

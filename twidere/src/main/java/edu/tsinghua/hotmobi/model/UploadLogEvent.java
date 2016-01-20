@@ -14,7 +14,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mariotaku.restfu.Pair;
-import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.HttpResponse;
 
 import java.io.File;
 import java.util.HashMap;
@@ -82,9 +82,9 @@ public class UploadLogEvent extends BaseEvent implements Parcelable {
         UploadLogEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public void finish(RestHttpResponse response) {
+    public void finish(HttpResponse response) {
         HashMap<String, String> extraHeaders = new HashMap<>();
-        for (Pair<String, String> pair : response.getHeaders()) {
+        for (Pair<String, String> pair : response.getHeaders().toList()) {
             if (StringUtils.startsWithIgnoreCase(pair.first, "X-Dnext")) {
                 extraHeaders.put(pair.first, pair.second);
             }

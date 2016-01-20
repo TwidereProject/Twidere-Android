@@ -789,7 +789,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
-            final OAuthToken accessToken = oauth.getAccessToken(username, password, TwitterOAuth.XAuthMode.CLIENT);
+            final OAuthToken accessToken = oauth.getAccessToken(username, password);
             final long userId = accessToken.getUserId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);

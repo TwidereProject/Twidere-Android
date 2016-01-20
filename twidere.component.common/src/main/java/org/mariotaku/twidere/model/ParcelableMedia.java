@@ -243,13 +243,13 @@ public class ParcelableMedia implements Parcelable {
         return null;
     }
 
-    private static int getTypeInt(MediaEntity.Type type) {
+    private static int getTypeInt(String type) {
         switch (type) {
-            case PHOTO:
+            case MediaEntity.Type.PHOTO:
                 return Type.TYPE_IMAGE;
-            case VIDEO:
+            case MediaEntity.Type.VIDEO:
                 return Type.TYPE_VIDEO;
-            case ANIMATED_GIF:
+            case MediaEntity.Type.ANIMATED_GIF:
                 return Type.TYPE_ANIMATED_GIF;
         }
         return Type.TYPE_UNKNOWN;

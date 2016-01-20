@@ -34,16 +34,16 @@ import org.attoparser.markup.MarkupAttoParser;
 import org.attoparser.markup.html.AbstractStandardNonValidatingHtmlAttoHandler;
 import org.attoparser.markup.html.HtmlParsingConfiguration;
 import org.attoparser.markup.html.elements.IHtmlElement;
-import org.mariotaku.restfu.Pair;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestClient;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.http.Endpoint;
-import org.mariotaku.restfu.http.RestHttpRequest;
-import org.mariotaku.restfu.http.RestHttpResponse;
-import org.mariotaku.restfu.http.mime.BaseTypedData;
-import org.mariotaku.restfu.http.mime.FormTypedBody;
+import org.mariotaku.restfu.http.HttpRequest;
+import org.mariotaku.restfu.http.HttpResponse;
+import org.mariotaku.restfu.http.MultiValueMap;
+import org.mariotaku.restfu.http.mime.BaseBody;
+import org.mariotaku.restfu.http.mime.FormBody;
 import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -55,8 +55,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.CookieManager;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class OAuthPasswordAuthenticator implements Constants {
@@ -149,32 +147,32 @@ public class OAuthPasswordAuthenticator implements Constants {
 
     private AuthorizeRequestData getVerificationData(AuthorizeResponseData authorizeResponseData,
                                                      @Nullable String challengeResponse) throws IOException, LoginVerificationException {
-        RestHttpResponse response = null;
+        HttpResponse response = null;
         try {
             final AuthorizeRequestData data = new AuthorizeRequestData();
-            final List<Pair<String, String>> params = new ArrayList<>();
+            final MultiValueMap<String> params = new MultiValueMap<>();
             final AuthorizeResponseData.Verification verification = authorizeResponseData.verification;
-            params.add(Pair.create("authenticity_token", verification.authenticityToken));
-            params.add(Pair.create("user_id", verification.userId));
-            params.add(Pair.create("challenge_id", verification.challengeId));
-            params.add(Pair.create("challenge_type", verification.challengeType));
-            params.add(Pair.create("platform", verification.platform));
-            params.add(Pair.create("redirect_after_login", verification.redirectAfterLogin));
-            final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
-            requestHeaders.add(Pair.create("User-Agent", userAgent));
+            params.add("authenticity_token", verification.authenticityToken);
+            params.add("user_id", verification.userId);
+            params.add("challenge_id", verification.challengeId);
+            params.add("challenge_type", verification.challengeType);
+            params.add("platform", verification.platform);
+            params.add("redirect_after_login", verification.redirectAfterLogin);
+            final MultiValueMap<String> requestHeaders = new MultiValueMap<>();
+            requestHeaders.add("User-Agent", userAgent);
 
             if (!TextUtils.isEmpty(challengeResponse)) {
-                params.add(Pair.create("challenge_response", challengeResponse));
+                params.add("challenge_response", challengeResponse);
             }
-            final FormTypedBody authorizationResultBody = new FormTypedBody(params);
+            final FormBody authorizationResultBody = new FormBody(params);
 
-            final RestHttpRequest.Builder authorizeResultBuilder = new RestHttpRequest.Builder();
+            final HttpRequest.Builder authorizeResultBuilder = new HttpRequest.Builder();
             authorizeResultBuilder.method(POST.METHOD);
             authorizeResultBuilder.url(endpoint.construct("/account/login_verification"));
             authorizeResultBuilder.headers(requestHeaders);
             authorizeResultBuilder.body(authorizationResultBody);
-            authorizeResultBuilder.extra(RequestType.API);
-            response = client.execute(authorizeResultBuilder.build());
+            authorizeResultBuilder.tag(RequestType.API);
+            response = client.newCall(authorizeResultBuilder.build()).execute();
             parseAuthorizeRequestData(response, data);
             if (TextUtils.isEmpty(data.authenticityToken)) {
                 throw new LoginVerificationException();
@@ -187,7 +185,7 @@ public class OAuthPasswordAuthenticator implements Constants {
         }
     }
 
-    private void parseAuthorizeRequestData(RestHttpResponse response, final AuthorizeRequestData data) throws AttoParseException, IOException {
+    private void parseAuthorizeRequestData(HttpResponse response, final AuthorizeRequestData data) throws AttoParseException, IOException {
         final HtmlParsingConfiguration conf = new HtmlParsingConfiguration();
         final IAttoHandler handler = new AbstractStandardNonValidatingHtmlAttoHandler(conf) {
             boolean isOAuthFormOpened;
@@ -233,35 +231,35 @@ public class OAuthPasswordAuthenticator implements Constants {
                 }
             }
         };
-        PARSER.parse(BaseTypedData.reader(response.getBody()), handler);
+        PARSER.parse(BaseBody.reader(response.getBody()), handler);
     }
 
     private AuthorizeResponseData getAuthorizeResponseData(OAuthToken requestToken,
                                                            AuthorizeRequestData authorizeRequestData,
                                                            String username, String password) throws IOException, AuthenticationException {
-        RestHttpResponse response = null;
+        HttpResponse response = null;
         try {
             final AuthorizeResponseData data = new AuthorizeResponseData();
-            final List<Pair<String, String>> params = new ArrayList<>();
-            params.add(Pair.create("oauth_token", requestToken.getOauthToken()));
-            params.add(Pair.create("authenticity_token", authorizeRequestData.authenticityToken));
-            params.add(Pair.create("redirect_after_login", authorizeRequestData.redirectAfterLogin));
+            final MultiValueMap<String> params = new MultiValueMap<>();
+            params.add("oauth_token", requestToken.getOauthToken());
+            params.add("authenticity_token", authorizeRequestData.authenticityToken);
+            params.add("redirect_after_login", authorizeRequestData.redirectAfterLogin);
             if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-                params.add(Pair.create("session[username_or_email]", username));
-                params.add(Pair.create("session[password]", password));
+                params.add("session[username_or_email]", username);
+                params.add("session[password]", password);
             }
-            final FormTypedBody authorizationResultBody = new FormTypedBody(params);
-            final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
-            requestHeaders.add(Pair.create("User-Agent", userAgent));
+            final FormBody authorizationResultBody = new FormBody(params);
+            final MultiValueMap<String> requestHeaders = new MultiValueMap<>();
+            requestHeaders.add("User-Agent", userAgent);
             data.referer = authorizeRequestData.referer;
 
-            final RestHttpRequest.Builder authorizeResultBuilder = new RestHttpRequest.Builder();
+            final HttpRequest.Builder authorizeResultBuilder = new HttpRequest.Builder();
             authorizeResultBuilder.method(POST.METHOD);
             authorizeResultBuilder.url(endpoint.construct("/oauth/authorize"));
             authorizeResultBuilder.headers(requestHeaders);
             authorizeResultBuilder.body(authorizationResultBody);
-            authorizeResultBuilder.extra(RequestType.API);
-            response = client.execute(authorizeResultBuilder.build());
+            authorizeResultBuilder.tag(RequestType.API);
+            response = client.newCall(authorizeResultBuilder.build()).execute();
             final HtmlParsingConfiguration conf = new HtmlParsingConfiguration();
             final IAttoHandler handler = new AbstractStandardNonValidatingHtmlAttoHandler(conf) {
                 boolean isOAuthPinDivOpened;
@@ -363,7 +361,7 @@ public class OAuthPasswordAuthenticator implements Constants {
                     }
                 }
             };
-            PARSER.parse(BaseTypedData.reader(response.getBody()), handler);
+            PARSER.parse(BaseBody.reader(response.getBody()), handler);
             return data;
         } catch (AttoParseException e) {
             throw new AuthenticationException("Malformed HTML", e);
@@ -374,21 +372,21 @@ public class OAuthPasswordAuthenticator implements Constants {
 
     private AuthorizeRequestData getAuthorizeRequestData(OAuthToken requestToken) throws IOException,
             AuthenticationException {
-        RestHttpResponse response = null;
+        HttpResponse response = null;
         try {
             final AuthorizeRequestData data = new AuthorizeRequestData();
-            final RestHttpRequest.Builder authorizePageBuilder = new RestHttpRequest.Builder();
+            final HttpRequest.Builder authorizePageBuilder = new HttpRequest.Builder();
             authorizePageBuilder.method(GET.METHOD);
-            authorizePageBuilder.url(endpoint.construct("/oauth/authorize",
-                    Pair.create("oauth_token", requestToken.getOauthToken())));
+            authorizePageBuilder.url(endpoint.construct("/oauth/authorize", new String[]{"oauth_token",
+                    requestToken.getOauthToken()}));
             data.referer = Endpoint.constructUrl("https://api.twitter.com/oauth/authorize",
-                    Pair.create("oauth_token", requestToken.getOauthToken()));
-            final ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
-            requestHeaders.add(Pair.create("User-Agent", userAgent));
+                    new String[]{"oauth_token", requestToken.getOauthToken()});
+            final MultiValueMap<String> requestHeaders = new MultiValueMap<>();
+            requestHeaders.add("User-Agent", userAgent);
             authorizePageBuilder.headers(requestHeaders);
-            authorizePageBuilder.extra(RequestType.API);
-            final RestHttpRequest authorizePageRequest = authorizePageBuilder.build();
-            response = client.execute(authorizePageRequest);
+            authorizePageBuilder.tag(RequestType.API);
+            final HttpRequest authorizePageRequest = authorizePageBuilder.build();
+            response = client.newCall(authorizePageRequest).execute();
             parseAuthorizeRequestData(response, data);
             if (TextUtils.isEmpty(data.authenticityToken)) {
                 throw new AuthenticationException();

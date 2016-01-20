@@ -20,19 +20,15 @@
 package org.mariotaku.twidere.api.twitter.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Locale;
 
 public class Activity extends TwitterResponseObject implements TwitterResponse, Comparable<Activity> {
 
-    Action action;
+    @Action
+    String action;
     String rawAction;
 
     Date createdAt;
@@ -48,10 +44,6 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
     Activity() {
     }
 
-    public String getRawAction() {
-        return rawAction;
-    }
-
     public User[] getTargetObjectUsers() {
         return targetObjectUsers;
     }
@@ -63,7 +55,9 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         return thisDate.compareTo(thatDate);
     }
 
-    public Action getAction() {
+    public
+    @Action
+    String getAction() {
         return action;
     }
 
@@ -160,70 +154,44 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         return activity;
     }
 
-    public enum Action {
-        FAVORITE("favorite"),
+    @StringDef({Action.FAVORITE, Action.FOLLOW, Action.MENTION, Action.REPLY, Action.RETWEET,
+            Action.LIST_MEMBER_ADDED, Action.LIST_CREATED, Action.FAVORITED_RETWEET,
+            Action.RETWEETED_RETWEET, Action.QUOTE, Action.RETWEETED_MENTION,
+            Action.FAVORITED_MENTION, Action.JOINED_TWITTER, Action.MEDIA_TAGGED,
+            Action.FAVORITED_MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED})
+    public @interface Action {
+        String FAVORITE = ("favorite");
         /**
          * Sources: followers to targets (User)
          * Targets: following user (User)
          */
-        FOLLOW("follow"),
+        String FOLLOW = ("follow");
         /**
          * Targets: mentioned users (User)
          * Target objects: mention status (Status)
          */
-        MENTION("mention"),
+        String MENTION = ("mention");
         /**
          * Targets: reply status (Status)
          * Target objects: in reply to status (Status)
          */
-        REPLY("reply"),
-        RETWEET("retweet"),
-        LIST_MEMBER_ADDED("list_member_added"),
-        LIST_CREATED("list_created"),
-        FAVORITED_RETWEET("favorited_retweet"),
-        RETWEETED_RETWEET("retweeted_retweet"),
+        String REPLY = ("reply");
+        String RETWEET = ("retweet");
+        String LIST_MEMBER_ADDED = ("list_member_added");
+        String LIST_CREATED = ("list_created");
+        String FAVORITED_RETWEET = ("favorited_retweet");
+        String RETWEETED_RETWEET = ("retweeted_retweet");
         /**
          * Targets: Quote result (Status)
          * Target objects: Original status (Status)
          */
-        QUOTE("quote"),
-        RETWEETED_MENTION("retweeted_mention"),
-        FAVORITED_MENTION("favorited_mention"),
-        JOINED_TWITTER("joined_twitter"),
-        MEDIA_TAGGED("media_tagged"),
-        FAVORITED_MEDIA_TAGGED("favorited_media_tagged"),
-        RETWEETED_MEDIA_TAGGED("retweeted_media_tagged"),
-        UNKNOWN(null);
+        String QUOTE = ("quote");
+        String RETWEETED_MENTION = ("retweeted_mention");
+        String FAVORITED_MENTION = ("favorited_mention");
+        String JOINED_TWITTER = ("joined_twitter");
+        String MEDIA_TAGGED = ("media_tagged");
+        String FAVORITED_MEDIA_TAGGED = ("favorited_media_tagged");
+        String RETWEETED_MEDIA_TAGGED = ("retweeted_media_tagged");
 
-        public final String literal;
-
-        Action(final String literal) {
-            this.literal = literal;
-        }
-
-        public static Action parse(final String string) {
-            for (Action action : values()) {
-                if (StringUtils.equalsIgnoreCase(action.literal, string)) return action;
-            }
-            return UNKNOWN;
-        }
-
-        public String getLiteral() {
-            return literal;
-        }
-
-        public static class Converter extends StringBasedTypeConverter<Action> {
-
-            @Override
-            public Action getFromString(String string) {
-                return Action.parse(string);
-            }
-
-            @Override
-            public String convertToString(Action object) {
-                if (object == null) return null;
-                return object.literal;
-            }
-        }
     }
 }

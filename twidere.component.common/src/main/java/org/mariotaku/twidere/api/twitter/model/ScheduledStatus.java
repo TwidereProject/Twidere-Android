@@ -19,9 +19,10 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.support.annotation.StringDef;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
@@ -49,8 +50,9 @@ public class ScheduledStatus {
     boolean possiblySensitive;
     @JsonField(name = "user_id")
     long userId;
-    @JsonField(name = "state", typeConverter = State.Converter.class)
-    State state;
+    @JsonField(name = "state")
+    @State
+    String state;
 
     public long getUserId() {
         return userId;
@@ -84,46 +86,15 @@ public class ScheduledStatus {
         return text;
     }
 
-    public State getState() {
+    public
+    @State
+    String getState() {
         return state;
     }
 
-    public enum State {
-        SCHEDULED("scheduled"), FAILED("failed"), CANCELED("canceled");
+    @StringDef({State.SCHEDULED, State.FAILED, State.CANCELED})
+    public @interface State {
+        String SCHEDULED = ("scheduled"), FAILED = ("failed"), CANCELED = ("canceled");
 
-        private final String literal;
-
-        State(String literal) {
-            this.literal = literal;
-        }
-
-        public static State parse(String value) {
-            if (SCHEDULED.literal.equalsIgnoreCase(value)) {
-                return SCHEDULED;
-            } else if (FAILED.literal.equalsIgnoreCase(value)) {
-                return FAILED;
-            } else if (CANCELED.literal.equalsIgnoreCase(value)) {
-                return CANCELED;
-            }
-            return null;
-        }
-
-        @Override
-        public String toString() {
-            return literal;
-        }
-
-        public static class Converter extends StringBasedTypeConverter<State> {
-
-            @Override
-            public State getFromString(String string) {
-                return State.parse(string);
-            }
-
-            @Override
-            public String convertToString(State object) {
-                return object.literal;
-            }
-        }
     }
 }

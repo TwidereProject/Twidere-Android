@@ -120,7 +120,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     public ParcelableActivity(final Activity activity, final long accountId, boolean isGap) {
         this.account_id = accountId;
         timestamp = activity.getCreatedAt().getTime();
-        action = activity.getRawAction();
+        action = activity.getAction();
         max_position = activity.getMaxPosition();
         min_position = activity.getMinPosition();
         sources = ParcelableUser.fromUsers(activity.getSources(), accountId);
@@ -141,11 +141,11 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
 
     @Nullable
     public static ParcelableStatus getActivityStatus(ParcelableActivity activity) {
-        if (Activity.Action.MENTION.literal.equals(activity.action)) {
+        if (Activity.Action.MENTION.equals(activity.action)) {
             return activity.target_object_statuses[0];
-        } else if (Activity.Action.REPLY.literal.equals(activity.action)) {
+        } else if (Activity.Action.REPLY.equals(activity.action)) {
             return activity.target_statuses[0];
-        } else if (Activity.Action.QUOTE.literal.equals(activity.action)) {
+        } else if (Activity.Action.QUOTE.equals(activity.action)) {
             return activity.target_statuses[0];
         }
         return null;

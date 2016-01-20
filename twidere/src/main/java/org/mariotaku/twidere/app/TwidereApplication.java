@@ -38,6 +38,8 @@ import android.support.multidex.MultiDexApplication;
 import com.squareup.okhttp.Dns;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.AssistLauncherActivity;
@@ -49,6 +51,7 @@ import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereBugReporter;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
@@ -200,8 +203,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onLowMemory() {
-        final ApplicationModule module = getApplicationModule();
-        module.onLowMemory();
+        final DependencyHolder holder = DependencyHolder.get(this);
         super.onLowMemory();
     }
 
@@ -252,7 +254,12 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     }
 
     public void reloadConnectivitySettings() {
-        getApplicationModule().reloadConnectivitySettings();
+        DependencyHolder holder = DependencyHolder.get(this);
+        final RestHttpClient client = holder.getRestHttpClient();
+        if (client instanceof OkHttpRestClient) {
+            TwitterAPIFactory.initDefaultHttpClient(this, getSharedPreferences(),
+                    ((OkHttpRestClient) client).getClient());
+        }
     }
 
 

@@ -21,8 +21,7 @@ package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.Body;
-import org.mariotaku.restfu.annotation.param.Form;
+import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -33,11 +32,11 @@ import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 public interface SavedSearchesResources {
 
     @POST("/saved_searches/create.json")
-    @Body(BodyType.FORM)
-    SavedSearch createSavedSearch(@Form("query") String query) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    SavedSearch createSavedSearch(@Param("query") String query) throws TwitterException;
 
     @POST("/saved_searches/destroy/{id}.json")
-    @Body(BodyType.FORM)
+    @BodyType(BodyType.FORM)
     SavedSearch destroySavedSearch(@Path("id") long id) throws TwitterException;
 
     @GET("/saved_searches/list.json")

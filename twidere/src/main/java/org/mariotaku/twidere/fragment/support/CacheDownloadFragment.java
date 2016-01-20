@@ -18,8 +18,8 @@ import android.support.v4.content.Loader;
 import android.widget.Toast;
 
 import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.http.RestHttpRequest;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
@@ -242,10 +242,10 @@ public abstract class CacheDownloadFragment extends BaseSupportFragment implemen
 
         @Override
         public InputStream get(String url) throws IOException {
-            final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
+            final HttpRequest.Builder builder = new HttpRequest.Builder();
             builder.method(GET.METHOD);
             builder.url(url);
-            return mRestHttpClient.execute(builder.build()).getBody().stream();
+            return mRestHttpClient.newCall(builder.build()).execute().getBody().stream();
         }
     }
 }

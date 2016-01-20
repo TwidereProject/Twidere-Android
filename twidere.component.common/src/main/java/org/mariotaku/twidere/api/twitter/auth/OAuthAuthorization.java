@@ -19,14 +19,19 @@
 
 package org.mariotaku.twidere.api.twitter.auth;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import org.mariotaku.restfu.Pair;
-import org.mariotaku.restfu.RestRequestInfo;
+import org.mariotaku.restfu.RestRequest;
 import org.mariotaku.restfu.Utils;
 import org.mariotaku.restfu.http.Authorization;
+import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.restfu.http.Endpoint;
+import org.mariotaku.restfu.http.MultiValueMap;
+import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.restfu.http.mime.StringBody;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -40,8 +45,6 @@ import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import okio.ByteString;
 
 /**
  * Created by mariotaku on 15/2/4.
@@ -82,8 +85,9 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
     private String generateOAuthSignature(String method, String url,
                                           String oauthNonce, long timestamp,
                                           String oauthToken, String oauthTokenSecret,
-                                          @Nullable List<Pair<String, String>> queries,
-                                          @Nullable List<Pair<String, String>> forms) {
+                                          @Nullable MultiValueMap<String> queries,
+                                          @Nullable MultiValueMap<Body> params,
+                                          @NonNull String bodyType) {
         final List<String> encodeParams = new ArrayList<>();
         encodeParams.add(encodeParameter("oauth_consumer_key", consumerKey));
         encodeParams.add(encodeParameter("oauth_nonce", oauthNonce));
@@ -94,13 +98,13 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
             encodeParams.add(encodeParameter("oauth_token", oauthToken));
         }
         if (queries != null) {
-            for (Pair<String, String> query : queries) {
+            for (Pair<String, String> query : queries.toList()) {
                 encodeParams.add(encodeParameter(query.first, query.second));
             }
         }
-        if (forms != null) {
-            for (Pair<String, String> form : forms) {
-                encodeParams.add(encodeParameter(form.first, form.second));
+        if (params != null && BodyType.FORM.equals(bodyType)) {
+            for (Pair<String, Body> form : params.toList()) {
+                encodeParams.add(encodeParameter(form.first, ((StringBody) form.second).value()));
             }
         }
         Collections.sort(encodeParams);
@@ -133,7 +137,7 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
     }
 
     @Override
-    public String getHeader(Endpoint endpoint, RestRequestInfo request) {
+    public String getHeader(Endpoint endpoint, RestRequest request) {
         if (!(endpoint instanceof OAuthEndpoint))
             throw new IllegalArgumentException("OAuthEndpoint required");
         final Map<String, Object> extras = request.getExtras();
@@ -148,10 +152,10 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
         final OAuthEndpoint oauthEndpoint = (OAuthEndpoint) endpoint;
         final String method = request.getMethod();
         final String url = Endpoint.constructUrl(oauthEndpoint.getSignUrl(), request);
-        final List<Pair<String, String>> queries = request.getQueries();
-        final List<Pair<String, String>> forms = request.getForms();
+        final MultiValueMap<String> queries = request.getQueries();
+        final MultiValueMap<Body> params = request.getParams();
         final List<Pair<String, String>> encodeParams = generateOAuthParams(oauthToken, oauthTokenSecret,
-                method, url, queries, forms);
+                method, url, queries, params, request.getBodyType());
         final StringBuilder headerBuilder = new StringBuilder();
         headerBuilder.append("OAuth ");
         for (int i = 0, j = encodeParams.size(); i < j; i++) {
@@ -169,12 +173,13 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
 
     public List<Pair<String, String>> generateOAuthParams(String oauthToken,
                                                           String oauthTokenSecret, String method,
-                                                          String url, List<Pair<String, String>> queries,
-                                                          List<Pair<String, String>> forms) {
+                                                          String url, MultiValueMap<String> queries,
+                                                          MultiValueMap<Body> params,
+                                                          String bodyType) {
         final String oauthNonce = generateOAuthNonce();
         final long timestamp = System.currentTimeMillis() / 1000;
         final String oauthSignature = generateOAuthSignature(method, url, oauthNonce, timestamp, oauthToken,
-                oauthTokenSecret, queries, forms);
+                oauthTokenSecret, queries, params, bodyType);
         final List<Pair<String, String>> encodeParams = new ArrayList<>();
         encodeParams.add(Pair.create("oauth_consumer_key", consumerKey));
         encodeParams.add(Pair.create("oauth_nonce", oauthNonce));
@@ -210,10 +215,9 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
     private String generateOAuthNonce() {
         final byte[] input = new byte[32];
         secureRandom.nextBytes(input);
-        final ByteString byteString = ByteString.of(input);
-        final String encodedString = byteString.base64Url();
+        final String encodedString = Base64.encodeToString(input, Base64.URL_SAFE);
         if (encodedString == null) {
-            throw new IllegalStateException("Bad nonce " + byteString.hex());
+            throw new IllegalStateException("Bad nonce " + Utils.bytesToHex(input));
         }
         return encodedString.replaceAll("[^\\w\\d]", "");
     }

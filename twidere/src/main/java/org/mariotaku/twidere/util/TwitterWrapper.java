@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
-import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -174,7 +174,7 @@ public class TwitterWrapper implements Constants {
         InputStream is = null;
         try {
             is = context.getContentResolver().openInputStream(imageUri);
-            twitter.updateProfileBannerImage(new FileTypedData(is, "image", -1, null));
+            twitter.updateProfileBannerImage(new FileBody(is, "image", -1, null));
         } finally {
             Utils.closeSilently(is);
             if (deleteImage && "file".equals(imageUri.getScheme())) {
@@ -192,7 +192,7 @@ public class TwitterWrapper implements Constants {
         InputStream is = null;
         try {
             is = context.getContentResolver().openInputStream(imageUri);
-            return twitter.updateProfileImage(new FileTypedData(is, "image", -1, null));
+            return twitter.updateProfileImage(new FileBody(is, "image", -1, null));
         } finally {
             Utils.closeSilently(is);
             if (deleteImage && "file".equals(imageUri.getScheme())) {
@@ -274,12 +274,12 @@ public class TwitterWrapper implements Constants {
         }
 
         public ActivityListResponse(final long accountId, final long maxId, final long sinceId,
-                                  final List<Activity> list, final boolean truncated) {
+                                    final List<Activity> list, final boolean truncated) {
             this(accountId, maxId, sinceId, list, truncated, null);
         }
 
         ActivityListResponse(final long accountId, final long maxId, final long sinceId, final List<Activity> list,
-                           final boolean truncated, final Exception exception) {
+                             final boolean truncated, final Exception exception) {
             super(accountId, maxId, sinceId, list, exception);
             this.truncated = truncated;
         }

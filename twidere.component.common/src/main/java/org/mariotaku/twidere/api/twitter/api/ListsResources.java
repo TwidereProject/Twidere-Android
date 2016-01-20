@@ -21,11 +21,10 @@ package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.Body;
-import org.mariotaku.restfu.annotation.param.Form;
-import org.mariotaku.restfu.annotation.param.MethodExtra;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
-import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -38,52 +37,40 @@ import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 @SuppressWarnings("RedundantThrows")
 public interface ListsResources {
     @POST("/lists/members/create.json")
-    @Body(BodyType.FORM)
     UserList addUserListMember(@Query("list_id") long listId, @Query("user_id") long userId) throws TwitterException;
 
     @POST("/lists/members/create.json")
-    @Body(BodyType.FORM)
     UserList addUserListMember(@Query("list_id") long listId, @Query("screen_name") String userScreenName) throws TwitterException;
 
     @POST("/lists/members/create_all.json")
-    @Body(BodyType.FORM)
-    UserList addUserListMembers(@Form("list_id") long listId, @Form("user_id") long[] userIds) throws TwitterException;
+    UserList addUserListMembers(@Param("list_id") long listId, @Param(value = "user_id", arrayDelimiter = ',') long[] userIds) throws TwitterException;
 
     @POST("/lists/members/create_all.json")
-    @Body(BodyType.FORM)
-    UserList addUserListMembers(@Form("list_id") long listId, @Form("screen_name") String[] screenNames) throws TwitterException;
+    UserList addUserListMembers(@Param("list_id") long listId, @Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
 
     @POST("/lists/create.json")
-    @Body(BodyType.FORM)
-    UserList createUserList(@Form UserListUpdate update) throws TwitterException;
+    UserList createUserList(@Param UserListUpdate update) throws TwitterException;
 
     @POST("/lists/subscribers/create.json")
-    @Body(BodyType.FORM)
-    UserList createUserListSubscription(@Form("list_id") long listId) throws TwitterException;
+    UserList createUserListSubscription(@Param("list_id") long listId) throws TwitterException;
 
     @POST("/lists/members/destroy.json")
-    @Body(BodyType.FORM)
     UserList deleteUserListMember(@Query("list_id") long listId, @Query("user_id") long userId) throws TwitterException;
 
     @POST("/lists/members/destroy.json")
-    @Body(BodyType.FORM)
-    UserList deleteUserListMember(@Query("list_id") long listId, @Form("screen_name") String screenName) throws TwitterException;
+    UserList deleteUserListMember(@Query("list_id") long listId, @Param("screen_name") String screenName) throws TwitterException;
 
     @POST("/lists/members/destroy_all.json")
-    @Body(BodyType.FORM)
-    UserList deleteUserListMembers(@Form("list_id") long listId, @Form("user_id") long[] userIds) throws TwitterException;
+    UserList deleteUserListMembers(@Param("list_id") long listId, @Param(value = "user_id", arrayDelimiter = ',') long[] userIds) throws TwitterException;
 
     @POST("/lists/members/destroy_all.json")
-    @Body(BodyType.FORM)
-    UserList deleteUserListMembers(@Query("list_id") long listId, @Form("screen_name") String[] screenNames) throws TwitterException;
+    UserList deleteUserListMembers(@Query("list_id") long listId, @Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
 
     @POST("/lists/destroy.json")
-    @Body(BodyType.FORM)
-    UserList destroyUserList(@Form("list_id") long listId) throws TwitterException;
+    UserList destroyUserList(@Param("list_id") long listId) throws TwitterException;
 
     @POST("/lists/subscribers/destroy.json")
-    @Body(BodyType.FORM)
-    UserList destroyUserListSubscription(@Form("list_id") long listId) throws TwitterException;
+    UserList destroyUserListSubscription(@Param("list_id") long listId) throws TwitterException;
 
     @GET("/lists/members.json")
     PageableResponseList<User> getUserListMembers(@Query("list_id") long listId, @Query Paging paging) throws TwitterException;
@@ -131,18 +118,33 @@ public interface ListsResources {
     ResponseList<UserList> getUserLists(@Query("screen_name") String screenName, @Query("reverse") boolean reverse) throws TwitterException;
 
     @GET("/lists/statuses.json")
-    @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
-            "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count"})
+    @Queries({@KeyValue(key = "include_my_retweet", valueKey = "include_my_retweet"),
+            @KeyValue(key = "include_rts", valueKey = "include_entities"),
+            @KeyValue(key = "include_entities", valueKey = "include_entities"),
+            @KeyValue(key = "include_cards", valueKey = "include_cards"),
+            @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
+            @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
+            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
     ResponseList<Status> getUserListStatuses(@Query("list_id") long listId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/statuses.json")
-    @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
-            "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count"})
+    @Queries({@KeyValue(key = "include_my_retweet", valueKey = "include_my_retweet"),
+            @KeyValue(key = "include_rts", valueKey = "include_entities"),
+            @KeyValue(key = "include_entities", valueKey = "include_entities"),
+            @KeyValue(key = "include_cards", valueKey = "include_cards"),
+            @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
+            @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
+            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
     ResponseList<Status> getUserListStatuses(@Query("slug") String slug, @Query("owner_id") long ownerId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/statuses.json")
-    @MethodExtra(name = "extra_params", values = {"include_my_retweet", "include_rts", "include_entities",
-            "include_cards", "cards_platform", "include_reply_count", "include_descendent_reply_count"})
+    @Queries({@KeyValue(key = "include_my_retweet", valueKey = "include_my_retweet"),
+            @KeyValue(key = "include_rts", valueKey = "include_entities"),
+            @KeyValue(key = "include_entities", valueKey = "include_entities"),
+            @KeyValue(key = "include_cards", valueKey = "include_cards"),
+            @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
+            @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
+            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
     ResponseList<Status> getUserListStatuses(@Query("slug") String slug, @Query("owner_screen_name") String ownerScreenName, @Query Paging paging)
             throws TwitterException;
 
@@ -176,6 +178,5 @@ public interface ListsResources {
     UserList showUserList(@Query("slug") String slug, @Query("owner_screen_name") String ownerScreenName) throws TwitterException;
 
     @POST("/lists/update.json")
-    @Body(BodyType.FORM)
-    UserList updateUserList(@Form("list_id") long listId, @Form UserListUpdate update) throws TwitterException;
+    UserList updateUserList(@Param("list_id") long listId, @Param UserListUpdate update) throws TwitterException;
 }

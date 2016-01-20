@@ -21,13 +21,12 @@ package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.Body;
-import org.mariotaku.restfu.annotation.param.Form;
-import org.mariotaku.restfu.annotation.param.MethodExtra;
-import org.mariotaku.restfu.annotation.param.Part;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
-import org.mariotaku.restfu.http.mime.FileTypedData;
+import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.AccountSettings;
 import org.mariotaku.twidere.api.twitter.model.Category;
@@ -41,39 +40,41 @@ import org.mariotaku.twidere.api.twitter.model.SettingsUpdate;
 import org.mariotaku.twidere.api.twitter.model.User;
 
 @SuppressWarnings("RedundantThrows")
-@MethodExtra(name = "extra_params", values = {"include_entities"})
+@Queries({@KeyValue(key = "include_entities", valueKey = "include_entities"),
+        @KeyValue(key = "include_cards", valueKey = "include_cards"),
+        @KeyValue(key = "cards_platform", valueKey = "cards_platform")})
 public interface UsersResources {
 
     @POST("/blocks/create.json")
-    @Body(BodyType.FORM)
-    User createBlock(@Form("user_id") long userId) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User createBlock(@Param("user_id") long userId) throws TwitterException;
 
     @POST("/blocks/create.json")
-    @Body(BodyType.FORM)
+    @BodyType(BodyType.FORM)
     User createBlock(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/mutes/users/create.json")
-    @Body(BodyType.FORM)
-    User createMute(@Form("user_id") long userId) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User createMute(@Param("user_id") long userId) throws TwitterException;
 
     @POST("/mutes/users/create.json")
-    @Body(BodyType.FORM)
+    @BodyType(BodyType.FORM)
     User createMute(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/blocks/destroy.json")
-    @Body(BodyType.FORM)
-    User destroyBlock(@Form("user_id") long userId) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User destroyBlock(@Param("user_id") long userId) throws TwitterException;
 
     @POST("/blocks/destroy.json")
-    @Body(BodyType.FORM)
+    @BodyType(BodyType.FORM)
     User destroyBlock(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/mutes/users/destroy.json")
-    @Body(BodyType.FORM)
-    User destroyMute(@Form("user_id") long userId) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User destroyMute(@Param("user_id") long userId) throws TwitterException;
 
     @POST("/mutes/users/destroy.json")
-    @Body(BodyType.FORM)
+    @BodyType(BodyType.FORM)
     User destroyMute(@Query("screen_name") String screenName) throws TwitterException;
 
     @GET("/account/settings.json")
@@ -98,14 +99,14 @@ public interface UsersResources {
     ResponseList<User> getUserSuggestions(String categorySlug) throws TwitterException;
 
     @POST("/users/lookup.json")
-    @Body(BodyType.FORM)
-    ResponseList<User> lookupUsers(@Form("user_id") long[] ids) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    ResponseList<User> lookupUsers(@Param(value = "user_id", arrayDelimiter = ',') long[] ids) throws TwitterException;
 
     @GET("/users/lookup.json")
-    ResponseList<User> lookupUsers(@Form("screen_name") String[] screenNames) throws TwitterException;
+    ResponseList<User> lookupUsers(@Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
 
     @POST("/account/remove_profile_banner.json")
-    @Body(BodyType.FORM)
+    @BodyType(BodyType.FORM)
     ResponseCode removeProfileBannerImage() throws TwitterException;
 
     @GET("/users/search.json")
@@ -118,35 +119,35 @@ public interface UsersResources {
     User showUser(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/account/settings.json")
-    @Body(BodyType.FORM)
-    AccountSettings updateAccountSettings(@Form SettingsUpdate settingsUpdate) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    AccountSettings updateAccountSettings(@Param SettingsUpdate settingsUpdate) throws TwitterException;
 
     @POST("/account/update_profile.json")
-    @Body(BodyType.FORM)
-    User updateProfile(@Form ProfileUpdate profileUpdate) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User updateProfile(@Param ProfileUpdate profileUpdate) throws TwitterException;
 
     @POST("/account/update_profile_background_image.json")
-    @Body(BodyType.MULTIPART)
-    User updateProfileBackgroundImage(@Part("image") FileTypedData data, @Part("tile") boolean tile) throws TwitterException;
+    @BodyType(BodyType.MULTIPART)
+    User updateProfileBackgroundImage(@Param("image") FileBody data, @Param("tile") boolean tile) throws TwitterException;
 
     @POST("/account/update_profile_background_image.json")
-    @Body(BodyType.FORM)
-    User updateProfileBackgroundImage(@Form("media_id") long mediaId, @Part("tile") boolean tile) throws TwitterException;
+    @BodyType(BodyType.FORM)
+    User updateProfileBackgroundImage(@Param("media_id") long mediaId, @Param("tile") boolean tile) throws TwitterException;
 
     @POST("/account/update_profile_banner.json")
-    @Body(BodyType.MULTIPART)
-    ResponseCode updateProfileBannerImage(@Part("banner") FileTypedData data, @Part("width") int width,
-                                          @Part("height") int height, @Part("offset_left") int offsetLeft,
-                                          @Part("offset_top") int offsetTop)
+    @BodyType(BodyType.MULTIPART)
+    ResponseCode updateProfileBannerImage(@Param("banner") FileBody data, @Param("width") int width,
+                                          @Param("height") int height, @Param("offset_left") int offsetLeft,
+                                          @Param("offset_top") int offsetTop)
             throws TwitterException;
 
     @POST("/account/update_profile_banner.json")
-    @Body(BodyType.MULTIPART)
-    ResponseCode updateProfileBannerImage(@Part("banner") FileTypedData data) throws TwitterException;
+    @BodyType(BodyType.MULTIPART)
+    ResponseCode updateProfileBannerImage(@Param("banner") FileBody data) throws TwitterException;
 
     @POST("/account/update_profile_image.json")
-    @Body(BodyType.MULTIPART)
-    User updateProfileImage(@Part("image") FileTypedData data) throws TwitterException;
+    @BodyType(BodyType.MULTIPART)
+    User updateProfileImage(@Param("image") FileBody data) throws TwitterException;
 
     @GET("/account/verify_credentials.json")
     User verifyCredentials() throws TwitterException;

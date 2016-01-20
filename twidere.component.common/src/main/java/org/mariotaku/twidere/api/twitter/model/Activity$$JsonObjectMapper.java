@@ -65,9 +65,8 @@ public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
 
     public void parseField(Activity instance, String fieldName, JsonParser jsonParser) throws IOException {
         if ("action".equals(fieldName)) {
-            final String rawAction = jsonParser.getValueAsString();
-            instance.action = Activity.Action.parse(rawAction);
-            instance.rawAction = rawAction;
+            //noinspection ResourceType
+            instance.action = jsonParser.getValueAsString();
         } else if ("created_at".equals(fieldName)) {
             try {
                 instance.createdAt = DATE_FORMAT.parse(jsonParser.getValueAsString());
@@ -89,27 +88,27 @@ public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
         } else if ("targets".equals(fieldName)) {
             if (instance.action == null) throw new IOException();
             switch (instance.action) {
-                case FAVORITE:
-                case REPLY:
-                case RETWEET:
-                case QUOTE:
-                case FAVORITED_RETWEET:
-                case RETWEETED_RETWEET:
-                case RETWEETED_MENTION:
-                case FAVORITED_MENTION:
-                case MEDIA_TAGGED:
-                case FAVORITED_MEDIA_TAGGED:
-                case RETWEETED_MEDIA_TAGGED: {
+                case Activity.Action.FAVORITE:
+                case Activity.Action.REPLY:
+                case Activity.Action.RETWEET:
+                case Activity.Action.QUOTE:
+                case Activity.Action.FAVORITED_RETWEET:
+                case Activity.Action.RETWEETED_RETWEET:
+                case Activity.Action.RETWEETED_MENTION:
+                case Activity.Action.FAVORITED_MENTION:
+                case Activity.Action.MEDIA_TAGGED:
+                case Activity.Action.FAVORITED_MEDIA_TAGGED:
+                case Activity.Action.RETWEETED_MEDIA_TAGGED: {
                     instance.targetStatuses = LoganSquare.mapperFor(Status.class).parseList(jsonParser).toArray(new Status[instance.targetsSize]);
                     break;
                 }
-                case FOLLOW:
-                case MENTION:
-                case LIST_MEMBER_ADDED: {
+                case Activity.Action.FOLLOW:
+                case Activity.Action.MENTION:
+                case Activity.Action.LIST_MEMBER_ADDED: {
                     instance.targetUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetsSize]);
                     break;
                 }
-                case LIST_CREATED: {
+                case Activity.Action.LIST_CREATED: {
                     instance.targetUserLists = LoganSquare.mapperFor(UserList.class).parseList(jsonParser).toArray(new UserList[instance.targetsSize]);
                     break;
                 }
@@ -117,27 +116,27 @@ public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
         } else if ("target_objects".equals(fieldName)) {
             if (instance.action == null) throw new IOException();
             switch (instance.action) {
-                case FAVORITE:
-                case FOLLOW:
-                case MENTION:
-                case REPLY:
-                case RETWEET:
-                case LIST_CREATED:
-                case QUOTE: {
+                case Activity.Action.FAVORITE:
+                case Activity.Action.FOLLOW:
+                case Activity.Action.MENTION:
+                case Activity.Action.REPLY:
+                case Activity.Action.RETWEET:
+                case Activity.Action.LIST_CREATED:
+                case Activity.Action.QUOTE: {
                     instance.targetObjectStatuses = LoganSquare.mapperFor(Status.class).parseList(jsonParser).toArray(new Status[instance.targetObjectsSize]);
                     break;
                 }
-                case LIST_MEMBER_ADDED: {
+                case Activity.Action.LIST_MEMBER_ADDED: {
                     instance.targetObjectUserLists = LoganSquare.mapperFor(UserList.class).parseList(jsonParser).toArray(new UserList[instance.targetObjectsSize]);
                     break;
                 }
-                case FAVORITED_RETWEET:
-                case RETWEETED_RETWEET:
-                case RETWEETED_MENTION:
-                case FAVORITED_MENTION:
-                case MEDIA_TAGGED:
-                case FAVORITED_MEDIA_TAGGED:
-                case RETWEETED_MEDIA_TAGGED: {
+                case Activity.Action.FAVORITED_RETWEET:
+                case Activity.Action.RETWEETED_RETWEET:
+                case Activity.Action.RETWEETED_MENTION:
+                case Activity.Action.FAVORITED_MENTION:
+                case Activity.Action.MEDIA_TAGGED:
+                case Activity.Action.FAVORITED_MEDIA_TAGGED:
+                case Activity.Action.RETWEETED_MEDIA_TAGGED: {
                     instance.targetObjectUsers = LoganSquare.mapperFor(User.class).parseList(jsonParser).toArray(new User[instance.targetObjectsSize]);
                     break;
                 }

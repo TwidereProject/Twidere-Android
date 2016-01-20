@@ -31,15 +31,15 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.squareup.pollexor.Thumbor;
 import com.squareup.pollexor.ThumborUrlBuilder;
 
-import org.mariotaku.restfu.Pair;
-import org.mariotaku.restfu.RestRequestInfo;
+import org.mariotaku.restfu.RestRequest;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
+import org.mariotaku.restfu.http.HttpRequest;
+import org.mariotaku.restfu.http.HttpResponse;
+import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.http.RestHttpRequest;
-import org.mariotaku.restfu.http.RestHttpResponse;
-import org.mariotaku.restfu.http.mime.TypedData;
+import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
@@ -58,8 +58,6 @@ import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class TwidereImageDownloader extends BaseImageDownloader implements Constants {
@@ -161,11 +159,11 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
         }
         Uri modifiedUri = getReplacedUri(uri, account != null ? account.api_url_format : null);
 
-        final List<Pair<String, String>> additionalHeaders = new ArrayList<>();
+        final MultiValueMap<String> additionalHeaders = new MultiValueMap<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            additionalHeaders.add(Pair.create("Accept", "image/webp, */*"));
+            additionalHeaders.add("Accept", "image/webp, */*");
         }
-        additionalHeaders.add(Pair.create("User-Agent", mUserAgent));
+        additionalHeaders.add("User-Agent", mUserAgent);
         final String method = GET.METHOD;
         final String requestUri;
         if (auth != null && auth.hasAuthorization()) {
@@ -175,28 +173,28 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
             } else {
                 endpoint = new Endpoint(getEndpoint(modifiedUri));
             }
-            final List<Pair<String, String>> queries = new ArrayList<>();
+            final MultiValueMap<String> queries = new MultiValueMap<>();
             for (String name : uri.getQueryParameterNames()) {
                 for (String value : uri.getQueryParameters(name)) {
-                    queries.add(Pair.create(name, value));
+                    queries.add(name, value);
                 }
             }
-            final RestRequestInfo info = new RestRequestInfo(method, uri.getPath(), queries, null,
-                    additionalHeaders, null, null, null, null);
-            additionalHeaders.add(Pair.create("Authorization", auth.getHeader(endpoint, info)));
+            final RestRequest info = new RestRequest(method, false, uri.getPath(), additionalHeaders,
+                    queries, null, null, null, null);
+            additionalHeaders.add("Authorization", auth.getHeader(endpoint, info));
             requestUri = modifiedUri.toString();
         } else if (mThumbor != null) {
             requestUri = mThumbor.buildImage(modifiedUri.toString()).filter(ThumborUrlBuilder.quality(85)).toUrl();
         } else {
             requestUri = modifiedUri.toString();
         }
-        final RestHttpRequest.Builder builder = new RestHttpRequest.Builder();
+        final HttpRequest.Builder builder = new HttpRequest.Builder();
         builder.method(method);
         builder.url(requestUri);
         builder.headers(additionalHeaders);
-        builder.extra(RequestType.MEDIA);
-        final RestHttpResponse resp = mClient.execute(builder.build());
-        final TypedData body = resp.getBody();
+        builder.tag(RequestType.MEDIA);
+        final HttpResponse resp = mClient.newCall(builder.build()).execute();
+        final Body body = resp.getBody();
         return new ContentLengthInputStream(body.stream(), (int) body.length());
     }
 

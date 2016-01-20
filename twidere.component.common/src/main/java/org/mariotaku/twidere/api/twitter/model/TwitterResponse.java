@@ -19,29 +19,29 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.restfu.http.RestHttpResponse;
+import org.mariotaku.restfu.http.HttpResponse;
 
 /**
  * Super interface of Twitter Response data interfaces which indicates that rate
  * limit status is avaialble.
- * 
+ *
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @see DirectMessage
  * @see Status
  * @see User
  */
-public interface TwitterResponse  {
-	int NONE = 0;
+public interface TwitterResponse {
+    int NONE = 0;
 
-	int READ = 1;
+    int READ = 1;
 
-	int READ_WRITE = 2;
-	int READ_WRITE_DIRECTMESSAGES = 3;
+    int READ_WRITE = 2;
+    int READ_WRITE_DIRECTMESSAGES = 3;
 
-	void processResponseHeader(RestHttpResponse resp);
+    void processResponseHeader(HttpResponse resp);
 
-	int getAccessLevel();
+    int getAccessLevel();
 
-	RateLimitStatus getRateLimitStatus();
+    RateLimitStatus getRateLimitStatus();
 
 }
