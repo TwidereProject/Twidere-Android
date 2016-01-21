@@ -59,8 +59,6 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private View mErrorContainer;
-    private ImageView mErrorIconView;
-    private TextView mErrorTextView;
 
     private L mLayoutManager;
     private A mAdapter;
@@ -272,8 +270,6 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mErrorContainer = view.findViewById(R.id.error_container);
-        mErrorIconView = (ImageView) view.findViewById(R.id.error_icon);
-        mErrorTextView = (TextView) view.findViewById(R.id.error_text);
     }
 
     @Override
@@ -333,16 +329,20 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mErrorContainer.setVisibility(View.VISIBLE);
         mProgressContainer.setVisibility(View.GONE);
         mSwipeRefreshLayout.setVisibility(View.GONE);
-        mErrorIconView.setImageResource(icon);
-        mErrorTextView.setText(text);
+        final ImageView errorIconView = (ImageView) mErrorContainer.findViewById(R.id.error_icon);
+        final TextView errorTextView = (TextView) mErrorContainer.findViewById(R.id.error_text);
+        errorIconView.setImageResource(icon);
+        errorTextView.setText(text);
     }
 
     protected final void showEmpty(int icon, CharSequence text) {
         mErrorContainer.setVisibility(View.VISIBLE);
         mProgressContainer.setVisibility(View.GONE);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        mErrorIconView.setImageResource(icon);
-        mErrorTextView.setText(text);
+        final ImageView errorIconView = (ImageView) mErrorContainer.findViewById(R.id.error_icon);
+        final TextView errorTextView = (TextView) mErrorContainer.findViewById(R.id.error_text);
+        errorIconView.setImageResource(icon);
+        errorTextView.setText(text);
     }
 
     protected void updateRefreshProgressOffset() {

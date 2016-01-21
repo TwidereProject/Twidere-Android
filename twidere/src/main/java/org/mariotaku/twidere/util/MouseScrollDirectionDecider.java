@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
 import android.view.InputDevice;
 import android.view.MotionEvent;
@@ -35,15 +36,14 @@ import android.widget.ScrollView;
 public class MouseScrollDirectionDecider {
 
     private final float factor;
-    private final View verticalView, horizontalView;
+    @Nullable
+    private View verticalView, horizontalView;
 
     private int horizontalDirection = 0, verticalDirection = 0;
     private float horizontalScroll, verticalScroll;
 
-    public MouseScrollDirectionDecider(Context context, float factor) {
+    public MouseScrollDirectionDecider(float factor) {
         this.factor = factor;
-        this.verticalView = new InternalScrollView(context, this);
-        this.horizontalView = new InternalHorizontalScrollView(context, this);
     }
 
     public float getHorizontalDirection() {
@@ -71,6 +71,7 @@ public class MouseScrollDirectionDecider {
     }
 
     public boolean guessDirection(MotionEvent event) {
+        if (verticalView == null || horizontalView == null) return false;
         if ((event.getSource() & InputDevice.SOURCE_CLASS_POINTER) == 0) {
             return false;
         }
@@ -80,6 +81,17 @@ public class MouseScrollDirectionDecider {
         verticalView.onGenericMotionEvent(event);
         horizontalView.onGenericMotionEvent(event);
         return verticalScroll != 0 || horizontalScroll != 0;
+    }
+
+    public void attach(View view) {
+        final Context context = view.getContext();
+        verticalView = new InternalScrollView(context, this);
+        horizontalView = new InternalHorizontalScrollView(context, this);
+    }
+
+    public void detach() {
+        verticalView = null;
+        horizontalView = null;
     }
 
     @SuppressLint("ViewConstructor")

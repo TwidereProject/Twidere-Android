@@ -18,16 +18,15 @@
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    tools:menu="menu_media_viewer_image_page">
+       xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       tools:menu="menu_media_viewer_image_page">
 
     <org.mariotaku.twidere.view.MediaViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <LinearLayout
         android:id="@+id/media_status_container"
@@ -40,13 +39,13 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_spacing_small"
-            android:background="@drawable/shadow_top" />
+            android:background="@drawable/shadow_top"/>
 
         <FrameLayout
             android:id="@+id/media_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#80000000" />
+            android:background="#80000000"/>
     </LinearLayout>
 
 </merge>

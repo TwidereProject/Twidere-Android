@@ -48,7 +48,19 @@ public class ExtendedRecyclerView extends RecyclerView {
 
     public ExtendedRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mMouseScrollDirectionDecider = new MouseScrollDirectionDecider(context, getScrollFactorBackport());
+        mMouseScrollDirectionDecider = new MouseScrollDirectionDecider(getScrollFactorBackport());
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mMouseScrollDirectionDecider.attach(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        mMouseScrollDirectionDecider.detach();
+        super.onDetachedFromWindow();
     }
 
     @Override

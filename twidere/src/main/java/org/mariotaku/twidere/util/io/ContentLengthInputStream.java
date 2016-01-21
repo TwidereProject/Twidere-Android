@@ -39,6 +39,10 @@ public class ContentLengthInputStream extends InputStream {
         this(new FileInputStream(file), file.length());
     }
 
+    public ContentLengthInputStream(final InputStream stream) throws IOException {
+        this(stream, stream.available());
+    }
+
     public ContentLengthInputStream(final InputStream stream, final long length) {
         this.stream = stream;
         this.length = length;

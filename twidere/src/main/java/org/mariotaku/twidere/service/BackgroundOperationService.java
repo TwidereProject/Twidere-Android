@@ -93,6 +93,8 @@ import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -534,31 +536,29 @@ public class BackgroundOperationService extends IntentService implements Constan
                     status.location(ParcelableLocation.toGeoLocation(statusUpdate.location));
                 }
                 if (!mUseUploader && hasMedia) {
-                    final BitmapFactory.Options o = new BitmapFactory.Options();
-                    o.inJustDecodeBounds = true;
                     final long[] mediaIds = new long[statusUpdate.media.length];
-                    ContentLengthInputStream is = null;
+                    ContentLengthInputStream cis = null;
                     try {
                         for (int i = 0, j = mediaIds.length; i < j; i++) {
                             final ParcelableMediaUpdate media = statusUpdate.media[i];
-                            final String path = getImagePathFromUri(this, Uri.parse(media.uri));
-                            if (path == null) throw new FileNotFoundException();
-                            BitmapFactory.decodeFile(path, o);
-                            final File file = new File(path);
-                            is = new ContentLengthInputStream(file);
-                            is.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,
+                            final Uri mediaUri = Uri.parse(media.uri);
+                            final String mediaType = mResolver.getType(mediaUri);
+                            final InputStream is = mResolver.openInputStream(mediaUri);
+                            final long length = is.available();
+                            cis = new ContentLengthInputStream(is, length);
+                            cis.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,
                                     statusUpdate));
                             final ContentType contentType;
-                            if (TextUtils.isEmpty(o.outMimeType)) {
-                                contentType = ContentType.parse("image/*");
+                            if (TextUtils.isEmpty(mediaType)) {
+                                contentType = ContentType.parse("application/octet-stream");
                             } else {
-                                contentType = ContentType.parse(o.outMimeType);
+                                contentType = ContentType.parse(mediaType);
                             }
-                            final MediaUploadResponse uploadResp = upload.uploadMedia(
-                                    new FileBody(is, file.getName(), file.length(), contentType));
+                            final FileBody body = new FileBody(cis, "attachment", length, contentType);
+                            final MediaUploadResponse uploadResp = upload.uploadMedia(body);
                             mediaIds[i] = uploadResp.getId();
                         }
-                    } catch (final FileNotFoundException e) {
+                    } catch (final IOException e) {
                         Log.w(LOGTAG, e);
                     } catch (final TwitterException e) {
                         Log.w(LOGTAG, e);
@@ -566,7 +566,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                         results.add(response);
                         continue;
                     } finally {
-                        IoUtils.closeSilently(is);
+                        IoUtils.closeSilently(cis);
                     }
                     status.mediaIds(mediaIds);
                 }

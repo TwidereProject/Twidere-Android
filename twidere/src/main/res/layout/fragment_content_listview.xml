@@ -17,18 +17,17 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/layout_content_fragment_common" />
+    <include layout="@layout/layout_content_fragment_common"/>
 
     <org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
         android:clipToPadding="false">
 
         <ListView
@@ -37,7 +36,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:focusable="true"
-            android:listSelector="?selectableItemBackground" />
+            android:listSelector="?selectableItemBackground"/>
 
     </org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout>
 </FrameLayout>
