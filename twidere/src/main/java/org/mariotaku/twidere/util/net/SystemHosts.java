@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util.net;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.mariotaku.inetaddrjni.library.InetAddressUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.BufferedReader;

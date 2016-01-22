@@ -43,7 +43,6 @@ cache:
 
 before_install:
   - ./travis/scripts/extract_private_build_config.sh
-  - ./travis/scripts/install_android_ndk.sh
   - export PATH=$HOME/.local/bin:$PATH
   - pip install -r ./travis/configs/requirements.txt --user
 

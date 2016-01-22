@@ -33,6 +33,7 @@ import com.squareup.okhttp.Dns;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.mariotaku.inetaddrjni.library.InetAddressUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
