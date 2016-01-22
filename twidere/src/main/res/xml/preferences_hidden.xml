@@ -37,9 +37,4 @@
             android:targetPackage="org.mariotaku.twidere"/>
     </Preference>
 
-    <Preference android:title="Leaks">
-        <intent
-            android:targetClass="com.squareup.leakcanary.internal.DisplayLeakActivity"
-            android:targetPackage="org.mariotaku.twidere"/>
-    </Preference>
 </PreferenceScreen>

@@ -986,11 +986,21 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             textView.setText(linkify.applyAllLinks(text, status.account_id, layoutPosition,
                     status.is_possibly_sensitive));
 
-            if (!TextUtils.isEmpty(status.place_full_name)) {
+            final ParcelableLocation location;
+            final String placeFullName;
+            if (status.is_quote) {
+                location = status.quoted_location;
+                placeFullName = status.quoted_place_full_name;
+            } else {
+                location = status.location;
+                placeFullName = status.place_full_name;
+            }
+
+            if (!TextUtils.isEmpty(placeFullName)) {
                 locationView.setVisibility(View.VISIBLE);
-                locationView.setText(status.place_full_name);
-                locationView.setClickable(ParcelableLocation.isValidLocation(status.location));
-            } else if (ParcelableLocation.isValidLocation(status.location)) {
+                locationView.setText(placeFullName);
+                locationView.setClickable(ParcelableLocation.isValidLocation(location));
+            } else if (ParcelableLocation.isValidLocation(location)) {
                 locationView.setVisibility(View.VISIBLE);
                 locationView.setText(R.string.view_map);
                 locationView.setClickable(true);

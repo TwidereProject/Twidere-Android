@@ -31,6 +31,7 @@ import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
@@ -265,6 +266,14 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.QUOTED_USER_PROFILE_IMAGE)
     public String quoted_user_profile_image;
     @ParcelableThisPlease
+    @JsonField(name = "quoted_location")
+    @CursorField(value = Statuses.LOCATION, converter = ParcelableLocation.Converter.class)
+    public ParcelableLocation quoted_location;
+    @ParcelableThisPlease
+    @JsonField(name = "quoted_place_full_name")
+    @CursorField(value = Statuses.PLACE_FULL_NAME, converter = LoganSquareCursorFieldConverter.class)
+    public String quoted_place_full_name;
+    @ParcelableThisPlease
     @JsonField(name = "location")
     @CursorField(value = Statuses.LOCATION, converter = ParcelableLocation.Converter.class)
     public ParcelableLocation location;
@@ -338,6 +347,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             quoted_timestamp = quoted.getCreatedAt().getTime();
             quoted_source = quoted.getSource();
             quoted_media = ParcelableMedia.fromStatus(quoted);
+            quoted_location = ParcelableLocation.fromGeoLocation(quoted.getGeoLocation());
+            quoted_place_full_name = getPlaceFullName(quoted.getPlace());
 
             quoted_user_id = quoted_user.getId();
             quoted_user_name = quoted_user.getName();
@@ -448,60 +459,65 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     @Override
     public String toString() {
-        return "ParcelableStatus{" +
-                "id=" + id +
-                ", account_id=" + account_id +
-                ", timestamp=" + timestamp +
-                ", user_id=" + user_id +
-                ", retweet_id=" + retweet_id +
-                ", retweeted_by_user_id=" + retweeted_by_user_id +
-                ", retweet_timestamp=" + retweet_timestamp +
-                ", retweet_count=" + retweet_count +
-                ", favorite_count=" + favorite_count +
-                ", reply_count=" + reply_count +
-                ", in_reply_to_status_id=" + in_reply_to_status_id +
-                ", in_reply_to_user_id=" + in_reply_to_user_id +
-                ", my_retweet_id=" + my_retweet_id +
-                ", quoted_id=" + quoted_id +
-                ", quoted_timestamp=" + quoted_timestamp +
-                ", quoted_user_id=" + quoted_user_id +
-                ", is_gap=" + is_gap +
-                ", is_retweet=" + is_retweet +
-                ", is_favorite=" + is_favorite +
-                ", is_possibly_sensitive=" + is_possibly_sensitive +
-                ", user_is_following=" + user_is_following +
-                ", user_is_protected=" + user_is_protected +
-                ", user_is_verified=" + user_is_verified +
-                ", is_quote=" + is_quote +
-                ", quoted_user_is_protected=" + quoted_user_is_protected +
-                ", quoted_user_is_verified=" + quoted_user_is_verified +
-                ", retweeted_by_user_name='" + retweeted_by_user_name + '\'' +
-                ", retweeted_by_user_screen_name='" + retweeted_by_user_screen_name + '\'' +
-                ", retweeted_by_user_profile_image='" + retweeted_by_user_profile_image + '\'' +
-                ", text_html='" + text_html + '\'' +
-                ", text_plain='" + text_plain + '\'' +
-                ", user_name='" + user_name + '\'' +
-                ", user_screen_name='" + user_screen_name + '\'' +
-                ", in_reply_to_name='" + in_reply_to_name + '\'' +
-                ", in_reply_to_screen_name='" + in_reply_to_screen_name + '\'' +
-                ", source='" + source + '\'' +
-                ", user_profile_image_url='" + user_profile_image_url + '\'' +
-                ", text_unescaped='" + text_unescaped + '\'' +
-                ", card_name='" + card_name + '\'' +
-                ", quoted_text_html='" + quoted_text_html + '\'' +
-                ", quoted_text_plain='" + quoted_text_plain + '\'' +
-                ", quoted_text_unescaped='" + quoted_text_unescaped + '\'' +
-                ", quoted_source='" + quoted_source + '\'' +
-                ", quoted_user_name='" + quoted_user_name + '\'' +
-                ", quoted_user_screen_name='" + quoted_user_screen_name + '\'' +
-                ", quoted_user_profile_image='" + quoted_user_profile_image + '\'' +
-                ", location=" + location +
-                ", place_full_name='" + place_full_name + '\'' +
-                ", mentions=" + Arrays.toString(mentions) +
-                ", media=" + Arrays.toString(media) +
-                ", quoted_media=" + Arrays.toString(quoted_media) +
-                ", card=" + card +
-                '}';
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("account_id", account_id)
+                .append("timestamp", timestamp)
+                .append("user_id", user_id)
+                .append("retweet_id", retweet_id)
+                .append("retweeted_by_user_id", retweeted_by_user_id)
+                .append("retweet_timestamp", retweet_timestamp)
+                .append("retweet_count", retweet_count)
+                .append("favorite_count", favorite_count)
+                .append("reply_count", reply_count)
+                .append("in_reply_to_status_id", in_reply_to_status_id)
+                .append("in_reply_to_user_id", in_reply_to_user_id)
+                .append("my_retweet_id", my_retweet_id)
+                .append("quoted_id", quoted_id)
+                .append("quoted_timestamp", quoted_timestamp)
+                .append("quoted_user_id", quoted_user_id)
+                .append("is_gap", is_gap)
+                .append("is_retweet", is_retweet)
+                .append("retweeted", retweeted)
+                .append("is_favorite", is_favorite)
+                .append("is_possibly_sensitive", is_possibly_sensitive)
+                .append("user_is_following", user_is_following)
+                .append("user_is_protected", user_is_protected)
+                .append("user_is_verified", user_is_verified)
+                .append("is_quote", is_quote)
+                .append("quoted_user_is_protected", quoted_user_is_protected)
+                .append("quoted_user_is_verified", quoted_user_is_verified)
+                .append("retweeted_by_user_name", retweeted_by_user_name)
+                .append("retweeted_by_user_screen_name", retweeted_by_user_screen_name)
+                .append("retweeted_by_user_profile_image", retweeted_by_user_profile_image)
+                .append("text_html", text_html)
+                .append("text_plain", text_plain)
+                .append("lang", lang)
+                .append("user_name", user_name)
+                .append("user_screen_name", user_screen_name)
+                .append("in_reply_to_name", in_reply_to_name)
+                .append("in_reply_to_screen_name", in_reply_to_screen_name)
+                .append("source", source)
+                .append("user_profile_image_url", user_profile_image_url)
+                .append("text_unescaped", text_unescaped)
+                .append("card_name", card_name)
+                .append("quoted_text_html", quoted_text_html)
+                .append("quoted_text_plain", quoted_text_plain)
+                .append("quoted_text_unescaped", quoted_text_unescaped)
+                .append("quoted_source", quoted_source)
+                .append("quoted_user_name", quoted_user_name)
+                .append("quoted_user_screen_name", quoted_user_screen_name)
+                .append("quoted_user_profile_image", quoted_user_profile_image)
+                .append("quoted_location", quoted_location)
+                .append("quoted_place_full_name", quoted_place_full_name)
+                .append("location", location)
+                .append("place_full_name", place_full_name)
+                .append("mentions", mentions)
+                .append("media", media)
+                .append("quoted_media", quoted_media)
+                .append("card", card)
+                .append("_id", _id)
+                .toString();
     }
 
     @OnJsonParseComplete

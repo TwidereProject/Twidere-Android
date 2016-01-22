@@ -38,6 +38,10 @@
                     android:name="android.intent.category.LAUNCHER"
                     tools:node="remove"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.HIDDEN_SETTINGS_ENTRY"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
     </application>
 </manifest>

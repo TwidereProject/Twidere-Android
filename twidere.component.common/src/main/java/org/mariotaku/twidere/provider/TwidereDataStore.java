@@ -854,6 +854,8 @@ public interface TwidereDataStore {
         String QUOTED_USER_PROFILE_IMAGE = "quoted_user_profile_image";
         String QUOTED_USER_IS_VERIFIED = "quoted_user_is_verified";
         String QUOTED_USER_IS_PROTECTED = "quoted_user_is_protected";
+        String QUOTED_LOCATION = "quoted_location";
+        String QUOTED_PLACE_FULL_NAME = "quoted_place_full_name";
 
         String RETWEETED = "retweeted";
 
@@ -868,7 +870,7 @@ public interface TwidereDataStore {
                 QUOTED_USER_IS_VERIFIED, QUOTED_USER_IS_PROTECTED, MY_RETWEET_ID, IS_RETWEET,
                 IS_QUOTE, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
                 IS_POSSIBLY_SENSITIVE, MEDIA_JSON, MENTIONS_JSON, QUOTED_MEDIA_JSON, CARD_NAME, CARD,
-                PLACE_FULL_NAME, LANG, RETWEETED};
+                PLACE_FULL_NAME, LANG, RETWEETED, QUOTED_LOCATION, QUOTED_PLACE_FULL_NAME};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
@@ -878,7 +880,7 @@ public interface TwidereDataStore {
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT};
 
     }
 
