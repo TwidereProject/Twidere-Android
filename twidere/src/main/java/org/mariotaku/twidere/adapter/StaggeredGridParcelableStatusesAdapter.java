@@ -150,7 +150,7 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
         }
 
         public void setOnClickListeners() {
-            setStatusClickListener(adapter);
+            setStatusClickListener(adapter.getStatusClickListener());
         }
 
         public void setupViewOptions() {

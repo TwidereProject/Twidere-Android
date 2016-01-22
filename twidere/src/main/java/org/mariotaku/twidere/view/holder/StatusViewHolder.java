@@ -2,7 +2,6 @@ package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.widget.TextViewCompat;
@@ -26,13 +25,10 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.ActionIconThemedTextView;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ForegroundColorView;
@@ -41,9 +37,8 @@ import org.mariotaku.twidere.view.ShortTimeView;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
+import java.lang.ref.WeakReference;
 import java.util.Locale;
-
-import javax.inject.Inject;
 
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
@@ -53,36 +48,37 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
  * <p/>
  * Created by mariotaku on 14/11/19.
  */
-public class StatusViewHolder extends ViewHolder implements Constants, OnClickListener,
-        OnLongClickListener, IStatusViewHolder {
+public class StatusViewHolder extends ViewHolder implements Constants, IStatusViewHolder {
 
     @NonNull
-    private final IStatusesAdapter<?> adapter;
+    final IStatusesAdapter<?> adapter;
 
-    private final ImageView statusInfoIcon;
-    private final ImageView profileImageView;
-    private final ImageView profileTypeView;
-    private final ImageView extraTypeView;
-    private final TextView textView;
-    private final TextView quotedTextView;
-    private final NameView nameView;
-    private final NameView quotedNameView;
-    private final TextView statusInfoLabel;
-    private final ShortTimeView timeView;
-    private final CardMediaContainer mediaPreview;
-    private final ActionIconThemedTextView replyCountView, retweetCountView, favoriteCountView;
-    private final IColorLabelView itemContent;
-    private final ForegroundColorView quoteIndicator;
-    private final View actionButtons;
-    private final View itemMenu;
-    private final View profileImageSpace;
-    private final View statusInfoSpace;
+    final ImageView statusInfoIcon;
+    final ImageView profileImageView;
+    final ImageView profileTypeView;
+    final ImageView extraTypeView;
+    final TextView textView;
+    final TextView quotedTextView;
+    final NameView nameView;
+    final NameView quotedNameView;
+    final TextView statusInfoLabel;
+    final ShortTimeView timeView;
+    final CardMediaContainer mediaPreview;
+    final ActionIconThemedTextView replyCountView, retweetCountView, favoriteCountView;
+    final IColorLabelView itemContent;
+    final ForegroundColorView quoteIndicator;
+    final View actionButtons;
+    final View itemMenu;
+    final View profileImageSpace;
+    final View statusInfoSpace;
+    final EventListener eventListener;
 
-    private StatusClickListener statusClickListener;
+    StatusClickListener statusClickListener;
 
     public StatusViewHolder(@NonNull final IStatusesAdapter<?> adapter, @NonNull final View itemView) {
         super(itemView);
         this.adapter = adapter;
+        this.eventListener = new EventListener(this);
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
         profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
         profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
@@ -344,43 +340,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         return profileTypeView;
     }
 
-    @Override
-    public void onClick(View v) {
-        if (statusClickListener == null) return;
-        final int position = getLayoutPosition();
-        switch (v.getId()) {
-            case R.id.item_content: {
-                statusClickListener.onStatusClick(this, position);
-                break;
-            }
-            case R.id.item_menu: {
-                statusClickListener.onItemMenuClick(this, v, position);
-                break;
-            }
-            case R.id.profile_image: {
-                statusClickListener.onUserProfileClick(this, position);
-                break;
-            }
-            case R.id.reply_count:
-            case R.id.retweet_count:
-            case R.id.favorite_count: {
-                statusClickListener.onItemActionClick(this, v.getId(), position);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (statusClickListener == null) return false;
-        final int position = getLayoutPosition();
-        switch (v.getId()) {
-            case R.id.item_content: {
-                return statusClickListener.onStatusLongClick(this, position);
-            }
-        }
-        return false;
-    }
 
     @Override
     public void onMediaClick(View view, ParcelableMedia media, long accountId) {
@@ -390,20 +349,20 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
     }
 
     public void setOnClickListeners() {
-        setStatusClickListener(adapter);
+        setStatusClickListener(adapter.getStatusClickListener());
     }
 
     @Override
     public void setStatusClickListener(StatusClickListener listener) {
         statusClickListener = listener;
-        ((View) itemContent).setOnClickListener(this);
-        ((View) itemContent).setOnLongClickListener(this);
+        ((View) itemContent).setOnClickListener(eventListener);
+        ((View) itemContent).setOnLongClickListener(eventListener);
 
-        itemMenu.setOnClickListener(this);
-        profileImageView.setOnClickListener(this);
-        replyCountView.setOnClickListener(this);
-        retweetCountView.setOnClickListener(this);
-        favoriteCountView.setOnClickListener(this);
+        itemMenu.setOnClickListener(eventListener);
+        profileImageView.setOnClickListener(eventListener);
+        replyCountView.setOnClickListener(eventListener);
+        retweetCountView.setOnClickListener(eventListener);
+        favoriteCountView.setOnClickListener(eventListener);
     }
 
     @Override
@@ -440,7 +399,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
     }
 
-    private void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location, String placeFullName, boolean sensitive) {
+    void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location, String placeFullName, boolean sensitive) {
         if (TwitterCardUtils.CARD_NAME_AUDIO.equals(cardName)) {
             extraTypeView.setImageResource(sensitive ? R.drawable.ic_action_warning : R.drawable.ic_action_music);
             extraTypeView.setVisibility(View.VISIBLE);
@@ -465,7 +424,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         }
     }
 
-    private boolean hasVideo(ParcelableMedia[] media) {
+    boolean hasVideo(ParcelableMedia[] media) {
         for (ParcelableMedia mediaItem : media) {
             if (mediaItem.type == ParcelableMedia.Type.TYPE_VIDEO
                     || mediaItem.type == ParcelableMedia.Type.TYPE_ANIMATED_GIF)
@@ -474,260 +433,57 @@ public class StatusViewHolder extends ViewHolder implements Constants, OnClickLi
         return false;
     }
 
-    public static final class DummyStatusHolderAdapter implements IStatusesAdapter<Object> {
+    static class EventListener implements OnClickListener, OnLongClickListener {
 
-        private final Context context;
-        private final SharedPreferencesWrapper preferences;
-        private final TwidereLinkify linkify;
-        private final MediaLoadingHandler handler;
-        @Inject
-        MediaLoaderWrapper loader;
-        @Inject
-        AsyncTwitterWrapper twitter;
-        @Inject
-        UserColorNameManager manager;
-        @Inject
-        BidiFormatter formatter;
+        final WeakReference<StatusViewHolder> holderRef;
 
-        private int profileImageStyle;
-        private int mediaPreviewStyle;
-        private int textSize;
-        private int linkHighlightStyle;
-        private boolean nameFirst;
-        private boolean displayProfileImage;
-        private boolean sensitiveContentEnabled;
-        private boolean hideCardActions;
-        private boolean displayMediaPreview;
-        private boolean shouldShowAccountsColor;
-        private boolean useStarsForLikes;
-
-        public DummyStatusHolderAdapter(Context context) {
-            this(context, new TwidereLinkify(null));
-        }
-
-        public DummyStatusHolderAdapter(Context context, TwidereLinkify linkify) {
-            GeneralComponentHelper.build(context).inject(this);
-            this.context = context;
-            preferences = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            handler = new MediaLoadingHandler(R.id.media_preview_progress);
-            this.linkify = linkify;
-            updateOptions();
-        }
-
-        public void setShouldShowAccountsColor(boolean shouldShowAccountsColor) {
-            this.shouldShowAccountsColor = shouldShowAccountsColor;
-        }
-
-        @NonNull
-        @Override
-        public MediaLoaderWrapper getMediaLoader() {
-            return loader;
-        }
-
-        @NonNull
-        @Override
-        public BidiFormatter getBidiFormatter() {
-            return formatter;
-        }
-
-        @NonNull
-        @Override
-        public Context getContext() {
-            return context;
+        EventListener(StatusViewHolder holder) {
+            this.holderRef = new WeakReference<>(holder);
         }
 
         @Override
-        public MediaLoadingHandler getMediaLoadingHandler() {
-            return handler;
-        }
-
-        @NonNull
-        @Override
-        public UserColorNameManager getUserColorNameManager() {
-            return manager;
-        }
-
-        @Override
-        public int getItemCount() {
-            return 0;
-        }
-
-        @Override
-        public int getProfileImageStyle() {
-            return profileImageStyle;
-        }
-
-        @Override
-        public int getMediaPreviewStyle() {
-            return mediaPreviewStyle;
-        }
-
-        @NonNull
-        @Override
-        public AsyncTwitterWrapper getTwitterWrapper() {
-            return twitter;
+        public void onClick(View v) {
+            StatusViewHolder holder = holderRef.get();
+            if (holder == null) return;
+            StatusClickListener listener = holder.statusClickListener;
+            if (listener == null) return;
+            final int position = holder.getLayoutPosition();
+            switch (v.getId()) {
+                case R.id.item_content: {
+                    listener.onStatusClick(holder, position);
+                    break;
+                }
+                case R.id.item_menu: {
+                    listener.onItemMenuClick(holder, v, position);
+                    break;
+                }
+                case R.id.profile_image: {
+                    listener.onUserProfileClick(holder, position);
+                    break;
+                }
+                case R.id.reply_count:
+                case R.id.retweet_count:
+                case R.id.favorite_count: {
+                    listener.onItemActionClick(holder, v.getId(), position);
+                    break;
+                }
+            }
         }
 
         @Override
-        public float getTextSize() {
-            return textSize;
-        }
-
-        @Override
-        public boolean isLoadMoreIndicatorVisible() {
+        public boolean onLongClick(View v) {
+            StatusViewHolder holder = holderRef.get();
+            if (holder == null) return false;
+            StatusClickListener listener = holder.statusClickListener;
+            if (listener == null) return false;
+            final int position = holder.getLayoutPosition();
+            switch (v.getId()) {
+                case R.id.item_content: {
+                    return listener.onStatusLongClick(holder, position);
+                }
+            }
             return false;
-        }
-
-        @Override
-        public void setLoadMoreIndicatorVisible(boolean enabled) {
-
-        }
-
-        @Override
-        public boolean isLoadMoreSupported() {
-            return false;
-        }
-
-        @Override
-        public void setLoadMoreSupported(boolean supported) {
-
-        }
-
-        @Override
-        public ParcelableStatus getStatus(int position) {
-            return null;
-        }
-
-        @Override
-        public int getStatusesCount() {
-            return 0;
-        }
-
-        @Override
-        public long getStatusId(int position) {
-            return 0;
-        }
-
-        @Override
-        public long getAccountId(int position) {
-            return 0;
-        }
-
-        @Nullable
-        @Override
-        public ParcelableStatus findStatusById(long accountId, long statusId) {
-            return null;
-        }
-
-        @Override
-        public TwidereLinkify getTwidereLinkify() {
-            return linkify;
-        }
-
-        @Override
-        public boolean isMediaPreviewEnabled() {
-            return displayMediaPreview;
-        }
-
-        public void setMediaPreviewEnabled(boolean enabled) {
-            displayMediaPreview = enabled;
-        }
-
-        @Override
-        public int getLinkHighlightingStyle() {
-            return linkHighlightStyle;
-        }
-
-        @Override
-        public boolean isNameFirst() {
-            return nameFirst;
-        }
-
-        @Override
-        public boolean isSensitiveContentEnabled() {
-            return sensitiveContentEnabled;
-        }
-
-        @Override
-        public boolean isCardActionsHidden() {
-            return hideCardActions;
-        }
-
-        @Override
-        public void setData(Object o) {
-
-        }
-
-        @Override
-        public boolean shouldUseStarsForLikes() {
-            return useStarsForLikes;
-        }
-
-        public void setUseStarsForLikes(boolean useStarsForLikes) {
-            this.useStarsForLikes = useStarsForLikes;
-        }
-
-        @Override
-        public boolean shouldShowAccountsColor() {
-            return shouldShowAccountsColor;
-        }
-
-        @Override
-        public boolean isGapItem(int position) {
-            return false;
-        }
-
-        @Override
-        public void onGapClick(ViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public boolean isProfileImageEnabled() {
-            return displayProfileImage;
-        }
-
-        @Override
-        public void onStatusClick(IStatusViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
-            return false;
-        }
-
-        @Override
-        public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
-
-        }
-
-        @Override
-        public void onUserProfileClick(IStatusViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public void onItemActionClick(ViewHolder holder, int id, int position) {
-
-        }
-
-        @Override
-        public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
-
-        }
-
-        public void updateOptions() {
-            profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-            mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
-            textSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-            nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
-            displayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-            displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
-            sensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
-            hideCardActions = preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
-            linkHighlightStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
-            useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
         }
     }
+
 }

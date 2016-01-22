@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
+import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -56,7 +57,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     private final ImageView[] profileImageViews;
     private final View profileImageSpace;
 
-    private ActivityClickListener activityClickListener;
+    private IActivitiesAdapter.ActivityClickListener activityClickListener;
 
     public ActivityTitleSummaryViewHolder(AbsActivitiesAdapter adapter, View itemView, boolean isCompact) {
         super(itemView);
@@ -150,10 +151,10 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     }
 
     public void setOnClickListeners() {
-        setActivityClickListener(adapter);
+        setActivityClickListener(adapter.getActivityClickListener());
     }
 
-    public void setActivityClickListener(ActivityClickListener listener) {
+    public void setActivityClickListener(IActivitiesAdapter.ActivityClickListener listener) {
         activityClickListener = listener;
         ((View) itemContent).setOnClickListener(this);
 //        ((View) itemContent).setOnLongClickListener(this);
@@ -172,8 +173,4 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
         }
     }
 
-    public interface ActivityClickListener {
-
-        void onActivityClick(ActivityTitleSummaryViewHolder holder, int position);
-    }
 }

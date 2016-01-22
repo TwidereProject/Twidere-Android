@@ -42,7 +42,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
@@ -155,8 +154,7 @@ public class TwitterWrapper implements Constants {
         try {
             return showUser(twitter, id, screenName);
         } catch (final TwitterException e) {
-            if (e.getCause() instanceof IOException)
-                throw e;
+            if (e.isCausedByNetworkIssue()) throw e;
         }
         return showUserAlternative(twitter, id, screenName);
     }

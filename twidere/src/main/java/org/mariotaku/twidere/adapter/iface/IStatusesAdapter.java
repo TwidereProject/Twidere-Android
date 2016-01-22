@@ -1,18 +1,20 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
+import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 /**
  * Created by mariotaku on 14/11/18.
  */
-public interface IStatusesAdapter<Data> extends IContentCardAdapter, IStatusViewHolder.StatusClickListener,
-        IGapSupportedAdapter, ContentCardClickListener {
+public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupportedAdapter {
 
     int getLinkHighlightingStyle();
 
@@ -48,4 +50,24 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IStatusView
 
     MediaLoadingHandler getMediaLoadingHandler();
 
+    @Nullable
+    IStatusViewHolder.StatusClickListener getStatusClickListener();
+
+    StatusAdapterListener getStatusAdapterListener();
+
+    interface StatusAdapterListener {
+        void onGapClick(GapViewHolder holder, int position);
+
+        void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition);
+
+        void onStatusActionClick(IStatusViewHolder holder, int id, int position);
+
+        void onStatusClick(IStatusViewHolder holder, int position);
+
+        boolean onStatusLongClick(IStatusViewHolder holder, int position);
+
+        void onStatusMenuClick(IStatusViewHolder holder, View menuView, int position);
+
+        void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position);
+    }
 }

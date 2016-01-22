@@ -229,7 +229,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     public static <T> T getInstance(final Context context, final Endpoint endpoint,
                                     final Authorization auth, final Map<String, String> extraRequestParams,
                                     final Class<T> cls) {
-        final RestAPIFactory factory = new RestAPIFactory();
+        final RestAPIFactory<TwitterException> factory = new RestAPIFactory<>();
         final String userAgent;
         if (auth instanceof OAuthAuthorization) {
             final String consumerKey = ((OAuthAuthorization) auth).getConsumerKey();
@@ -245,12 +245,11 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
         DependencyHolder holder = DependencyHolder.get(context);
         factory.setHttpClient(holder.getRestHttpClient());
-        final TwitterConverterFactory restConverterFactory = new TwitterConverterFactory();
-        factory.setRestConverterFactory(restConverterFactory);
-        factory.setEndpoint(endpoint);
         factory.setAuthorization(auth);
-        factory.setHttpRequestFactory(new TwidereHttpRequestFactory(userAgent));
+        factory.setEndpoint(endpoint);
         factory.setConstantPool(sConstantPoll);
+        factory.setRestConverterFactory(new TwitterConverterFactory());
+        factory.setHttpRequestFactory(new TwidereHttpRequestFactory(userAgent));
         factory.setExceptionFactory(new TwidereExceptionFactory());
         return factory.build(cls);
     }
@@ -545,9 +544,9 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
     }
 
-    public static class TwidereExceptionFactory implements ExceptionFactory {
+    public static class TwidereExceptionFactory implements ExceptionFactory<TwitterException> {
         @Override
-        public Exception newException(Throwable cause, HttpRequest request, HttpResponse response) {
+        public TwitterException newException(Throwable cause, HttpRequest request, HttpResponse response) {
             final TwitterException te;
             if (cause != null) {
                 te = new TwitterException(cause);

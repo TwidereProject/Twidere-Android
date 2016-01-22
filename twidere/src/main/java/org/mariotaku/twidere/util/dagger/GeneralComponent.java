@@ -31,6 +31,7 @@ import org.mariotaku.twidere.adapter.BaseArrayAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
+import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment;
@@ -53,7 +54,6 @@ import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 import javax.inject.Singleton;
 
@@ -65,7 +65,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface GeneralComponent {
-    void inject(StatusViewHolder.DummyStatusHolderAdapter object);
+    void inject(DummyStatusHolderAdapter object);
 
     void inject(BaseFragment object);
 

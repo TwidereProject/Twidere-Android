@@ -43,7 +43,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.bluelinelabs:logansquare:1.3.4'
     compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.github.mariotaku.RestFu:library:0.9.10'
+    compile 'com.github.mariotaku.RestFu:library:0.9.11'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.3'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.3'

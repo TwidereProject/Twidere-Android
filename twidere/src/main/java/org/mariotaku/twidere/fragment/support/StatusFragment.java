@@ -84,11 +84,12 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
-import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
+import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -1343,7 +1344,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
     }
 
-    private static class StatusAdapter extends BaseRecyclerViewAdapter<ViewHolder> implements IStatusesAdapter<List<ParcelableStatus>> {
+    private static class StatusAdapter extends BaseRecyclerViewAdapter<ViewHolder>
+            implements IStatusesAdapter<List<ParcelableStatus>> {
 
         private static final int VIEW_TYPE_LIST_STATUS = 0;
         private static final int VIEW_TYPE_DETAIL_STATUS = 1;
@@ -1387,6 +1389,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final boolean mSensitiveContentEnabled;
         private final boolean mHideCardActions;
         private final boolean mUseStarsForLikes;
+        private final AbsStatusesAdapter.EventListener mEventListener;
         private boolean mLoadMoreSupported;
         private boolean mLoadMoreIndicatorVisible;
         private boolean mDetailMediaExpanded;
@@ -1433,6 +1436,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mCardLayoutResource = R.layout.card_item_status;
             }
             mTwidereLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this));
+            mEventListener = new AbsStatusesAdapter.EventListener(this);
         }
 
         public int findPositionById(long itemId) {
@@ -1596,6 +1600,17 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return mMediaLoadingHandler;
         }
 
+        @Nullable
+        @Override
+        public IStatusViewHolder.StatusClickListener getStatusClickListener() {
+            return mEventListener;
+        }
+
+        @Override
+        public StatusAdapterListener getStatusAdapterListener() {
+            return mStatusAdapterListener;
+        }
+
         public ParcelableStatus getStatus() {
             return mStatus;
         }
@@ -1624,12 +1639,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return false;
         }
 
+        @Nullable
         @Override
-        public final void onGapClick(ViewHolder holder, int position) {
-            if (mStatusAdapterListener != null) {
-                mStatusAdapterListener.onGapClick((GapViewHolder) holder, position);
-            }
+        public GapClickListener getGapClickListener() {
+            return mEventListener;
         }
+
 
         @Override
         public boolean isLoadMoreIndicatorVisible() {
@@ -1852,55 +1867,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
             super.onDetachedFromRecyclerView(recyclerView);
             mRecyclerView = null;
-        }
-
-        @Override
-        public void onItemActionClick(ViewHolder holder, int id, int position) {
-            if (mStatusAdapterListener != null) {
-                mStatusAdapterListener.onStatusActionClick((IStatusViewHolder) holder, id, position);
-            }
-        }
-
-        @Override
-        public void onItemMenuClick(ViewHolder holder, View itemView, int position) {
-            if (mStatusAdapterListener != null) {
-                mStatusAdapterListener.onStatusMenuClick((IStatusViewHolder) holder, itemView, position);
-            }
-        }
-
-        @Override
-        public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
-            if (mStatusAdapterListener != null) {
-                mStatusAdapterListener.onMediaClick(holder, view, media, statusPosition);
-            }
-        }
-
-        @Override
-        public final void onStatusClick(IStatusViewHolder holder, int position) {
-            if (mStatusAdapterListener != null) {
-                mStatusAdapterListener.onStatusClick(holder, position);
-            }
-        }
-
-        @Override
-        public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
-            return false;
-        }
-
-        @Override
-        public void onUserProfileClick(IStatusViewHolder holder, int position) {
-            final Context context = getContext();
-            final ParcelableStatus status = getStatus(position);
-            final View profileImageView = holder.getProfileImageView();
-            final View profileTypeView = holder.getProfileTypeView();
-            if (context instanceof FragmentActivity) {
-                final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-                        new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                        new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-                Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
-            } else {
-                Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
-            }
         }
 
         private void setCount(int idx, int size) {

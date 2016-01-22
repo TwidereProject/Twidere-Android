@@ -52,7 +52,7 @@ import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.view.ComposeEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
-import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;

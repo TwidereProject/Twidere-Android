@@ -30,6 +30,7 @@ import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -54,6 +55,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
     private RateLimitStatus rateLimitStatus;
     private HttpRequest httpRequest;
     private HttpResponse httpResponse;
+    private boolean causedByNetworkIssue;
 
     public TwitterException() {
     }
@@ -100,10 +102,7 @@ public class TwitterException extends Exception implements TwitterResponse, Http
 
     public TwitterException(final String message, final Throwable cause) {
         super(message, cause);
-    }
-
-    private void setHttpRequest(HttpRequest httpRequest) {
-        this.httpRequest = httpRequest;
+        setCausedByNetworkIssue(cause instanceof IOException);
     }
 
     public ErrorInfo[] getErrors() {
@@ -111,17 +110,6 @@ public class TwitterException extends Exception implements TwitterResponse, Http
             return new ErrorInfo[]{new SingleErrorInfo(errorMessage, requestPath)};
         }
         return errors;
-    }
-
-    public void setHttpResponse(HttpResponse res) {
-        httpResponse = res;
-        if (res != null) {
-            rateLimitStatus = RateLimitStatus.createFromResponseHeader(res);
-            statusCode = res.getStatus();
-        } else {
-            rateLimitStatus = null;
-            statusCode = -1;
-        }
     }
 
     /**
@@ -160,8 +148,23 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         return httpRequest;
     }
 
+    private void setHttpRequest(HttpRequest httpRequest) {
+        this.httpRequest = httpRequest;
+    }
+
     public HttpResponse getHttpResponse() {
         return httpResponse;
+    }
+
+    public void setHttpResponse(HttpResponse res) {
+        httpResponse = res;
+        if (res != null) {
+            rateLimitStatus = RateLimitStatus.createFromResponseHeader(res);
+            statusCode = res.getStatus();
+        } else {
+            rateLimitStatus = null;
+            statusCode = -1;
+        }
     }
 
     /**
@@ -245,7 +248,11 @@ public class TwitterException extends Exception implements TwitterResponse, Http
      * @since Twitter4J 2.1.2
      */
     public boolean isCausedByNetworkIssue() {
-        return getCause() instanceof java.io.IOException;
+        return causedByNetworkIssue;
+    }
+
+    public void setCausedByNetworkIssue(boolean causedByNetworkIssue) {
+        this.causedByNetworkIssue = causedByNetworkIssue;
     }
 
     /**

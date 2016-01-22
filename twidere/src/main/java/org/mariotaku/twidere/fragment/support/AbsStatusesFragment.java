@@ -46,7 +46,7 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
-import org.mariotaku.twidere.adapter.AbsStatusesAdapter.StatusAdapterListener;
+import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;

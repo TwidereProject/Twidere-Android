@@ -33,7 +33,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
-import org.mariotaku.twidere.view.holder.StatusViewHolder.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 
 public class CardPreviewPreference extends Preference implements Constants, OnSharedPreferenceChangeListener {
 

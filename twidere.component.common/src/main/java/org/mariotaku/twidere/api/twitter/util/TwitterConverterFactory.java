@@ -38,15 +38,14 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * Created by mariotaku on 15/5/5.
  */
-public class TwitterConverterFactory extends RestConverter.SimpleFactory {
+public class TwitterConverterFactory extends RestConverter.SimpleFactory<TwitterException> {
 
-    private static SimpleArrayMap<Type, RestConverter<HttpResponse, ?>> sResponseConverters = new SimpleArrayMap<>();
-    private static SimpleArrayMap<Type, RestConverter<?, Body>> sBodyConverters = new SimpleArrayMap<>();
+    private static SimpleArrayMap<Type, RestConverter<HttpResponse, ?, TwitterException>> sResponseConverters = new SimpleArrayMap<>();
+    private static SimpleArrayMap<Type, RestConverter<?, Body, TwitterException>> sBodyConverters = new SimpleArrayMap<>();
 
     static {
         sResponseConverters.put(ResponseCode.class, new ResponseCode.Converter());
@@ -67,7 +66,8 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory {
         }
     }
 
-    private static <T> T parseOrThrow(HttpResponse resp, InputStream stream, Type type) throws IOException, TwitterException {
+    private static <T> T parseOrThrow(HttpResponse resp, InputStream stream, Type type)
+            throws IOException, TwitterException, RestConverter.ConvertException {
         try {
             final ParameterizedType<T> parameterizedType = ParameterizedTypeAccessor.create(type);
             final T parse = LoganSquare.parse(stream, parameterizedType);
@@ -76,15 +76,7 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory {
             }
             return parse;
         } catch (JsonParseException e) {
-            throw new TwitterException("Malformed JSON Data", resp);
-        }
-    }
-
-    private static <T> List<T> parseListOrThrow(HttpResponse resp, InputStream stream, Class<T> elementCls) throws IOException, TwitterException {
-        try {
-            return LoganSquare.parseList(stream, elementCls);
-        } catch (JsonParseException e) {
-            throw new TwitterException("Malformed JSON Data", e, resp);
+            throw new RestConverter.ConvertException("Malformed JSON Data");
         }
     }
 
@@ -95,8 +87,8 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory {
     }
 
     @Override
-    public RestConverter<HttpResponse, ?> fromResponse(Type type) {
-        RestConverter<HttpResponse, ?> converter = sResponseConverters.get(type);
+    public RestConverter<HttpResponse, ?, TwitterException> fromResponse(Type type) {
+        RestConverter<HttpResponse, ?, TwitterException> converter = sResponseConverters.get(type);
         if (converter != null) {
             return converter;
         }
@@ -104,8 +96,8 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory {
     }
 
     @Override
-    public RestConverter<?, Body> toParam(Type type) {
-        final RestConverter<?, Body> converter = sBodyConverters.get(type);
+    public RestConverter<?, Body, TwitterException> toParam(Type type) {
+        final RestConverter<?, Body, TwitterException> converter = sBodyConverters.get(type);
         if (converter != null) {
             return converter;
         }
@@ -118,7 +110,7 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory {
         }
     }
 
-    public static class TwitterConverter implements RestConverter<HttpResponse, Object> {
+    public static class TwitterConverter implements RestConverter<HttpResponse, Object, TwitterException> {
         private final Type type;
 
         public TwitterConverter(Type type) {
@@ -126,19 +118,15 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory {
         }
 
         @Override
-        public Object convert(HttpResponse httpResponse) throws IOException {
-            try {
-                final Body body = httpResponse.getBody();
-                final InputStream stream = body.stream();
-                final Object object = parseOrThrow(httpResponse, stream, type);
-                checkResponse(type, object, httpResponse);
-                if (object instanceof TwitterResponseObject) {
-                    ((TwitterResponseObject) object).processResponseHeader(httpResponse);
-                }
-                return object;
-            } catch (TwitterException e) {
-                throw new IOException(e);
+        public Object convert(HttpResponse httpResponse) throws IOException, ConvertException, TwitterException {
+            final Body body = httpResponse.getBody();
+            final InputStream stream = body.stream();
+            final Object object = parseOrThrow(httpResponse, stream, type);
+            checkResponse(type, object, httpResponse);
+            if (object instanceof TwitterResponseObject) {
+                ((TwitterResponseObject) object).processResponseHeader(httpResponse);
             }
+            return object;
         }
     }
 }

@@ -40,6 +40,8 @@ public class GapViewHolder extends RecyclerView.ViewHolder implements OnClickLis
 
     @Override
     public void onClick(View v) {
-        adapter.onGapClick(this, getLayoutPosition());
+        final IGapSupportedAdapter.GapClickListener listener = adapter.getGapClickListener();
+        if (listener == null) return;
+        listener.onGapClick(this, getLayoutPosition());
     }
 }

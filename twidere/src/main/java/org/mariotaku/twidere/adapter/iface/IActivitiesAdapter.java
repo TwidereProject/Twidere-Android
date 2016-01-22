@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter.iface;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
+import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 
 /**
  * Created by mariotaku on 14/11/18.
@@ -44,4 +45,11 @@ public interface IActivitiesAdapter<Data> extends IContentCardAdapter, IGapSuppo
     boolean isMediaPreviewEnabled();
 
     boolean shouldShowAccountsColor();
+
+    ActivityClickListener getActivityClickListener();
+
+    interface ActivityClickListener {
+
+        void onActivityClick(ActivityTitleSummaryViewHolder holder, int position);
+    }
 }
