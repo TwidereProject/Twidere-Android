@@ -22,6 +22,13 @@ package org.mariotaku.twidere.util;
 import android.support.annotation.NonNull;
 
 public class TwidereMathUtils {
+    public static final int RANGE_EXCLUSIVE_EXCLUSIVE = 0b00;
+    public static final int RANGE_EXCLUSIVE_INCLUSIVE = 0b01;
+    public static final int RANGE_INCLUSIVE_EXCLUSIVE = 0b10;
+    public static final int RANGE_INCLUSIVE_INCLUSIVE = 0b11;
+    static final int MASK_LEFT_BOUND = 0b10;
+    static final int MASK_RIGHT_BOUND = 0b01;
+
     public static float clamp(final float num, final float bound1, final float bound2) {
         final float max = Math.max(bound1, bound2), min = Math.min(bound1, bound2);
         return Math.max(Math.min(num, max), min);
@@ -76,8 +83,14 @@ public class TwidereMathUtils {
         return sum;
     }
 
-    public static boolean inRangeInclusiveInclusive(int num, int from, int to) {
-        return num >= from && num <= to;
+    public static boolean inRange(int num, int from, int to, int flag) {
+        return ((flag & MASK_LEFT_BOUND) == 0 ? num > from : num >= from)
+                && ((flag & MASK_RIGHT_BOUND) == 0 ? num < to : num <= to);
+    }
+
+    public static boolean inRange(float num, float from, float to, int flag) {
+        return ((flag & MASK_LEFT_BOUND) == 0 ? num > from : num >= from)
+                && ((flag & MASK_RIGHT_BOUND) == 0 ? num < to : num <= to);
     }
 
 }

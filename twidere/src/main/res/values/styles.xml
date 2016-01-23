@@ -28,6 +28,7 @@
 
     <style name="Widget.ProfileImage" parent="Widget.Base">
         <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">false</item>
         <item name="sivBorderWidth">1dp</item>
         <item name="sivCornerRadiusRatio">10%p</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
@@ -38,6 +39,7 @@
 
     <style name="Widget.Light.ProfileImage" parent="Widget.Base">
         <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">false</item>
         <item name="sivBorderWidth">1dp</item>
         <item name="sivCornerRadiusRatio">10%p</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>

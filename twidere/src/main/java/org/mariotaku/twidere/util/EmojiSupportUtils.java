@@ -135,11 +135,13 @@ public class EmojiSupportUtils {
     }
 
     private static boolean isPhoneNumberSymbol(int codePoint) {
-        return codePoint == 0x0023 || codePoint == 0x002a || TwidereMathUtils.inRangeInclusiveInclusive(codePoint, 0x0030, 0x0039);
+        return codePoint == 0x0023 || codePoint == 0x002a || TwidereMathUtils.inRange(codePoint,
+                0x0030, 0x0039, TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE);
     }
 
     private static boolean isModifier(int codePoint) {
-        return TwidereMathUtils.inRangeInclusiveInclusive(codePoint, 0x1f3fb, 0x1f3ff);
+        return TwidereMathUtils.inRange(codePoint, 0x1f3fb, 0x1f3ff,
+                TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE);
     }
 
     private static boolean isEmoji(int codePoint) {
@@ -147,7 +149,8 @@ public class EmojiSupportUtils {
     }
 
     private static boolean isRegionalIndicatorSymbol(int codePoint) {
-        return TwidereMathUtils.inRangeInclusiveInclusive(codePoint, 0x1f1e6, 0x1f1ff);
+        return TwidereMathUtils.inRange(codePoint, 0x1f1e6, 0x1f1ff,
+                TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE);
     }
 
     private static boolean isKeyCap(int codePoint) {

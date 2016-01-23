@@ -95,6 +95,7 @@ import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
@@ -127,6 +128,7 @@ import org.mariotaku.twidere.util.PermissionUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
+import org.mariotaku.twidere.util.TwidereViewUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ActionIconView;
@@ -204,7 +206,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     private int mKeyMetaState;
 
     // Listeners
-    private LocationListener mLocationListener;
+    private final LocationListener mLocationListener = new ComposeLocationListener(this);
 
     @Override
     public int getThemeColor() {
@@ -324,8 +326,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 break;
             }
             case R.id.account_selector_button: {
-                final boolean isVisible = mAccountSelectorContainer.getVisibility() == View.VISIBLE;
-                mAccountSelectorContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+                setAccountSelectorVisible(!isAccountSelectorVisible());
                 break;
             }
             case R.id.location_container: {
@@ -333,6 +334,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 break;
             }
         }
+    }
+
+    private boolean isAccountSelectorVisible() {
+        return mAccountSelectorContainer.getVisibility() == View.VISIBLE;
     }
 
     private void confirmAndUpdateStatus() {
@@ -385,36 +390,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 contentView.getPaddingRight(), contentView.getPaddingBottom());
     }
 
-    static class ComposeLocationListener implements LocationListener {
-
-        private final WeakReference<ComposeActivity> mActivityRef;
-
-        ComposeLocationListener(ComposeActivity activity) {
-            mActivityRef = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void onLocationChanged(final Location location) {
-            final ComposeActivity activity = mActivityRef.get();
-            if (activity == null) return;
-            activity.setRecentLocation(ParcelableLocation.fromLocation(location));
-        }
-
-        @Override
-        public void onStatusChanged(final String provider, final int status, final Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(final String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(final String provider) {
-        }
-
-    }
-
     @Override
     public boolean onLongClick(final View v) {
         switch (v.getId()) {
@@ -447,7 +422,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 break;
             }
             case R.id.delete: {
-                AsyncTaskUtils.executeTask(new DeleteImageTask(this));
+                AsyncTaskUtils.executeTask(new DeleteMediaTask(this));
                 break;
             }
             case R.id.toggle_sensitive: {
@@ -513,19 +488,28 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     @Override
-    public boolean onTouchEvent(final MotionEvent event) {
-        switch (event.getActionMasked()) {
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
-                final Rect rect = new Rect();
-                getWindow().getDecorView().getHitRect(rect);
-                if (!rect.contains(Math.round(event.getX()), Math.round(event.getY()))) {
+                final float x = ev.getRawX(), y = ev.getRawY();
+                if (isAccountSelectorVisible()) {
+                    if (!TwidereViewUtils.hitView(x, y, mAccountSelectorButton)) {
+                        for (int i = 0, j = mAccountSelector.getChildCount(); i < j; i++) {
+                            if (TwidereViewUtils.hitView(x, y, mAccountSelector.getChildAt(i))) {
+                                break;
+                            }
+                        }
+                        setAccountSelectorVisible(false);
+                        return true;
+                    }
+                } else if (!TwidereViewUtils.hitView(x, y, getWindow().getDecorView())) {
                     onBackPressed();
                     return true;
                 }
                 break;
             }
         }
-        return super.onTouchEvent(event);
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -600,7 +584,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationListener = new ComposeLocationListener(this);
         mResolver = getContentResolver();
         mValidator = new TwidereValidator(this);
         setContentView(R.layout.activity_compose);
@@ -829,7 +812,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mMediaPreviewAdapter.add(media);
         updateAttachedMediaView();
     }
-
 
     private void addMedia(final List<ParcelableMediaUpdate> media) {
         mMediaPreviewAdapter.addAll(media);
@@ -1312,10 +1294,40 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mSendTextCountView.setTextCount(validatedCount);
     }
 
-    private static class SetProgressVisibleRunnable implements Runnable {
+    static class ComposeLocationListener implements LocationListener {
 
-        private final ComposeActivity activity;
-        private final boolean visible;
+        final WeakReference<ComposeActivity> mActivityRef;
+
+        ComposeLocationListener(ComposeActivity activity) {
+            mActivityRef = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void onLocationChanged(final Location location) {
+            final ComposeActivity activity = mActivityRef.get();
+            if (activity == null) return;
+            activity.setRecentLocation(ParcelableLocation.fromLocation(location));
+        }
+
+        @Override
+        public void onStatusChanged(final String provider, final int status, final Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(final String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(final String provider) {
+        }
+
+    }
+
+    static class SetProgressVisibleRunnable implements Runnable {
+
+        final ComposeActivity activity;
+        final boolean visible;
 
         SetProgressVisibleRunnable(ComposeActivity activity, boolean visible) {
             this.activity = activity;
@@ -1338,9 +1350,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     static class AccountIconViewHolder extends ViewHolder implements OnClickListener {
 
-        private final AccountIconsAdapter adapter;
-        private final ShapedImageView iconView;
-        private final TextView nameView;
+        final AccountIconsAdapter adapter;
+        final ShapedImageView iconView;
+        final TextView nameView;
 
         public AccountIconViewHolder(AccountIconsAdapter adapter, View itemView) {
             super(itemView);
@@ -1353,8 +1365,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         public void showAccount(AccountIconsAdapter adapter, ParcelableAccount account, boolean isSelected) {
             itemView.setAlpha(isSelected ? 1 : 0.33f);
             final MediaLoaderWrapper loader = adapter.getImageLoader();
-            loader.displayProfileImage(iconView, account.profile_image_url);
+            if (ObjectUtils.notEqual(account.profile_image_url, iconView.getTag()) || iconView.getDrawable() == null) {
+                loader.displayProfileImage(iconView, account.profile_image_url);
+            }
             iconView.setBorderColor(account.color);
+            iconView.setTag(account.profile_image_url);
             nameView.setText(adapter.isNameFirst() ? account.name : ("@" + account.screen_name));
         }
 
@@ -1366,7 +1381,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     }
 
-    private static class AccountIconsAdapter extends BaseRecyclerViewAdapter<AccountIconViewHolder> {
+    static class AccountIconsAdapter extends BaseRecyclerViewAdapter<AccountIconViewHolder> {
 
         private final ComposeActivity mActivity;
         private final LayoutInflater mInflater;
@@ -1386,6 +1401,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         public MediaLoaderWrapper getImageLoader() {
             return mMediaLoader;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return mAccounts[position].account_id;
         }
 
         @NonNull
@@ -1468,9 +1488,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         }
     }
 
-    private static class AddBitmapTask extends AddMediaTask {
+    static class AddBitmapTask extends AddMediaTask {
 
-        private final Bitmap mBitmap;
+        final Bitmap mBitmap;
 
         AddBitmapTask(ComposeActivity activity, Bitmap bitmap, Uri dst, int media_type) throws IOException {
             super(activity, Uri.fromFile(File.createTempFile("tmp_bitmap", null)), dst, media_type,
@@ -1496,24 +1516,26 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     }
 
-    private static class AddMediaTask extends AsyncTask<Object, Object, Boolean> {
+    static class AddMediaTask extends AsyncTask<Object, Object, Boolean> {
 
-        private final ComposeActivity activity;
-        private final int media_type;
-        private final Uri src, dst;
-        private final boolean delete_src;
+        final WeakReference<ComposeActivity> mActivityRef;
+        final int mMediaType;
+        final Uri src, dst;
+        final boolean mDeleteSrc;
 
-        AddMediaTask(final ComposeActivity activity, final Uri src, final Uri dst, final int media_type,
-                     final boolean delete_src) {
-            this.activity = activity;
+        AddMediaTask(final ComposeActivity activity, final Uri src, final Uri dst, final int mediaType,
+                     final boolean deleteSrc) {
+            this.mActivityRef = new WeakReference<>(activity);
             this.src = src;
             this.dst = dst;
-            this.media_type = media_type;
-            this.delete_src = delete_src;
+            this.mMediaType = mediaType;
+            this.mDeleteSrc = deleteSrc;
         }
 
         @Override
         protected Boolean doInBackground(final Object... params) {
+            final ComposeActivity activity = this.mActivityRef.get();
+            if (activity == null) return false;
             InputStream is = null;
             OutputStream os = null;
             try {
@@ -1521,7 +1543,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 is = resolver.openInputStream(src);
                 os = resolver.openOutputStream(dst);
                 Utils.copyStream(is, os);
-                if (ContentResolver.SCHEME_FILE.equals(src.getScheme()) && delete_src) {
+                if (ContentResolver.SCHEME_FILE.equals(src.getScheme()) && mDeleteSrc) {
                     final File file = new File(src.getPath());
                     if (!file.delete()) {
                         Log.d(LOGTAG, String.format("Unable to delete %s", file));
@@ -1543,8 +1565,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         protected void onPostExecute(final Boolean result) {
+            final ComposeActivity activity = mActivityRef.get();
+            if (activity == null) return;
             activity.setProgressVisible(false);
-            activity.addMedia(new ParcelableMediaUpdate(dst.toString(), media_type));
+            activity.addMedia(new ParcelableMediaUpdate(dst.toString(), mMediaType));
             activity.setMenu();
             activity.updateTextCount();
             if (!result) {
@@ -1554,17 +1578,19 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         protected void onPreExecute() {
+            final ComposeActivity activity = mActivityRef.get();
+            if (activity == null) return;
             activity.setProgressVisible(true);
         }
     }
 
-    private static class DeleteImageTask extends AsyncTask<Object, Object, Boolean> {
+    static class DeleteMediaTask extends AsyncTask<Object, Object, Boolean> {
 
-        final ComposeActivity mActivity;
-        private final ParcelableMediaUpdate[] mMedia;
+        final WeakReference<ComposeActivity> mActivity;
+        final ParcelableMediaUpdate[] mMedia;
 
-        DeleteImageTask(final ComposeActivity activity, final ParcelableMediaUpdate... media) {
-            this.mActivity = activity;
+        DeleteMediaTask(final ComposeActivity activity, final ParcelableMediaUpdate... media) {
+            this.mActivity = new WeakReference<>(activity);
             this.mMedia = media;
         }
 
@@ -1589,31 +1615,37 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         protected void onPostExecute(final Boolean result) {
-            mActivity.setProgressVisible(false);
-            mActivity.removeAllMedia(Arrays.asList(mMedia));
-            mActivity.setMenu();
+            final ComposeActivity activity = mActivity.get();
+            if (activity == null) return;
+            activity.setProgressVisible(false);
+            activity.removeAllMedia(Arrays.asList(mMedia));
+            activity.setMenu();
             if (!result) {
-                Toast.makeText(mActivity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         protected void onPreExecute() {
-            mActivity.setProgressVisible(true);
+            final ComposeActivity activity = mActivity.get();
+            if (activity == null) return;
+            activity.setProgressVisible(true);
         }
     }
 
-    private static class DiscardTweetTask extends AsyncTask<Object, Object, Object> {
+    static class DiscardTweetTask extends AsyncTask<Object, Object, Object> {
 
-        final ComposeActivity mActivity;
+        final WeakReference<ComposeActivity> mActivity;
 
         DiscardTweetTask(final ComposeActivity activity) {
-            this.mActivity = activity;
+            this.mActivity = new WeakReference<>(activity);
         }
 
         @Override
         protected Object doInBackground(final Object... params) {
-            for (final ParcelableMediaUpdate media : mActivity.getMediaList()) {
+            final ComposeActivity activity = mActivity.get();
+            if (activity == null) return null;
+            for (final ParcelableMediaUpdate media : activity.getMediaList()) {
                 final Uri uri = Uri.parse(media.uri);
                 if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
                     final File file = new File(uri.getPath());
@@ -1627,27 +1659,31 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         protected void onPostExecute(final Object result) {
-            mActivity.setProgressVisible(false);
-            mActivity.finish();
+            final ComposeActivity activity = mActivity.get();
+            if (activity == null) return;
+            activity.setProgressVisible(false);
+            activity.finish();
         }
 
         @Override
         protected void onPreExecute() {
-            mActivity.setProgressVisible(true);
+            final ComposeActivity activity = mActivity.get();
+            if (activity == null) return;
+            activity.setProgressVisible(true);
         }
     }
 
     public static class MediaPreviewAdapter extends ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>
             implements SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
 
-        private final LayoutInflater mInflater;
+        final LayoutInflater mInflater;
 
-        private final SimpleItemTouchHelperCallback.OnStartDragListener mDragStartListener;
+        final SimpleItemTouchHelperCallback.OnStartDragListener mDragStartListener;
 
-        public MediaPreviewAdapter(final ComposeActivity activity, SimpleItemTouchHelperCallback.OnStartDragListener dragStartListener) {
+        public MediaPreviewAdapter(final ComposeActivity activity, SimpleItemTouchHelperCallback.OnStartDragListener listener) {
             super(activity);
             mInflater = LayoutInflater.from(activity);
-            mDragStartListener = dragStartListener;
+            mDragStartListener = listener;
         }
 
         public void onStartDrag(ViewHolder viewHolder) {
@@ -1668,7 +1704,19 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         @Override
         public MediaPreviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             final View view = mInflater.inflate(R.layout.grid_item_media_editor, parent, false);
-            return new MediaPreviewViewHolder(this, view);
+            return new MediaPreviewViewHolder(view);
+        }
+
+        @Override
+        public void onViewAttachedToWindow(MediaPreviewViewHolder holder) {
+            super.onViewAttachedToWindow(holder);
+            holder.setAdapter(this);
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(MediaPreviewViewHolder holder) {
+            holder.setAdapter(null);
+            super.onViewDetachedFromWindow(holder);
         }
 
         @Override
@@ -1689,12 +1737,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     static class MediaPreviewViewHolder extends ViewHolder implements OnLongClickListener {
 
-        private final ImageView image;
-        private final MediaPreviewAdapter adapter;
+        final ImageView image;
+        MediaPreviewAdapter adapter;
 
-        public MediaPreviewViewHolder(MediaPreviewAdapter adapter, View itemView) {
+        public MediaPreviewViewHolder(View itemView) {
             super(itemView);
-            this.adapter = adapter;
             itemView.setOnLongClickListener(this);
             image = (ImageView) itemView.findViewById(R.id.image);
         }
@@ -1705,8 +1752,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         public boolean onLongClick(View v) {
+            if (adapter == null) return false;
             adapter.onStartDrag(this);
             return true;
+        }
+
+        public void setAdapter(final MediaPreviewAdapter adapter) {
+            this.adapter = adapter;
         }
 
     }
@@ -1740,9 +1792,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         }
     }
 
-    private static class SpacingItemDecoration extends ItemDecoration {
+    static class SpacingItemDecoration extends ItemDecoration {
 
-        private final int mSpacingSmall, mSpacingNormal;
+        final int mSpacingSmall, mSpacingNormal;
 
         SpacingItemDecoration(Context context) {
             final Resources resources = context.getResources();
