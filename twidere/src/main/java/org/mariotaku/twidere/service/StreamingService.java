@@ -44,6 +44,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
@@ -107,6 +108,7 @@ public class StreamingService extends Service implements Constants {
             Log.d(Constants.LOGTAG, "Stream service stopped.");
         }
         super.onDestroy();
+        DebugModeUtils.watchReferenceLeak(this);
     }
 
     private void clearTwitterInstances() {

@@ -78,6 +78,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.StatusCodeMessageUtils;
@@ -148,6 +149,12 @@ public class BackgroundOperationService extends IntentService implements Constan
         mUseShortener = !ServicePickerPreference.isNoneValue(shortenerComponent);
         mUploader = mUseUploader ? MediaUploaderInterface.getInstance(app, uploaderComponent) : null;
         mShortener = mUseShortener ? StatusShortenerInterface.getInstance(app, shortenerComponent) : null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        DebugModeUtils.watchReferenceLeak(this);
     }
 
     @Override

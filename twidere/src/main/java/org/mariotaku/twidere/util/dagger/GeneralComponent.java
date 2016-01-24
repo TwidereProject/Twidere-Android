@@ -44,6 +44,7 @@ import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.CacheDownloadFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.loader.support.CacheDownloadLoader;
+import org.mariotaku.twidere.loader.support.TwitterAPIStatusesLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
 import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.provider.TwidereDataProvider;
@@ -132,4 +133,6 @@ public interface GeneralComponent {
     void inject(CacheProvider object);
 
     void inject(CacheDownloadFragment.MediaDownloader object);
+
+    void inject(TwitterAPIStatusesLoader loader);
 }

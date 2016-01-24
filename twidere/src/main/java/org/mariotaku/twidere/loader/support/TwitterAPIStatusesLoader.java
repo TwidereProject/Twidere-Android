@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.nostra13.universalimageloader.cache.disc.DiskCache;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -37,16 +38,21 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.JsonSerializer;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.inject.Inject;
 
 public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader {
 
@@ -56,11 +62,14 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     @Nullable
     private final Object[] mSavedStatusesFileArgs;
     private Comparator<ParcelableStatus> mComparator;
+    @Inject
+    DiskCache mFileCache;
 
     public TwitterAPIStatusesLoader(final Context context, final long accountId, final long sinceId,
                                     final long maxId, final List<ParcelableStatus> data,
                                     @Nullable final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
         super(context, data, tabPosition, fromUser);
+        GeneralComponentHelper.build(context).inject(this);
         mContext = context;
         mAccountId = accountId;
         mMaxId = maxId;
@@ -71,13 +80,12 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     @SuppressWarnings("unchecked")
     @Override
     public final ListResponse<ParcelableStatus> loadInBackground() {
-        final File serializationFile = getSerializationFile();
         List<ParcelableStatus> data = getData();
         if (data == null) {
             data = new CopyOnWriteArrayList<>();
         }
-        if (isFirstLoad() && getTabPosition() >= 0 && serializationFile != null) {
-            final List<ParcelableStatus> cached = getCachedData(serializationFile);
+        if (isFirstLoad() && getTabPosition() >= 0) {
+            final List<ParcelableStatus> cached = getCachedData();
             if (cached != null) {
                 data.addAll(cached);
                 if (mComparator != null) {
@@ -160,7 +168,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         } else {
             Collections.sort(data);
         }
-        saveCachedData(serializationFile, data);
+        saveCachedData(data);
         return ListResponse.getListInstance(new CopyOnWriteArrayList<>(data));
     }
 
@@ -194,7 +202,10 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         return true;
     }
 
-    private List<ParcelableStatus> getCachedData(final File file) {
+    private List<ParcelableStatus> getCachedData() {
+        final String key = getSerializationKey();
+        if (key == null) return null;
+        final File file = mFileCache.get(key);
         if (file == null) return null;
         try {
             return JsonSerializer.parseList(file, ParcelableStatus.class);
@@ -204,22 +215,31 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         return null;
     }
 
-    private File getSerializationFile() {
+    private String getSerializationKey() {
         if (mSavedStatusesFileArgs == null) return null;
-        try {
-            return JsonSerializer.getSerializationFile(mContext, mSavedStatusesFileArgs);
-        } catch (final IOException e) {
-            return null;
-        }
+        return TwidereArrayUtils.toString(mSavedStatusesFileArgs, '_', false);
     }
 
-    private void saveCachedData(final File file, final List<ParcelableStatus> data) {
-        if (file == null || data == null) return;
+    private void saveCachedData(final List<ParcelableStatus> data) {
+        final String key = getSerializationKey();
+        if (key == null || data == null) return;
         final SharedPreferences prefs = mContext.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int databaseItemLimit = prefs.getInt(KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT);
         try {
             final List<ParcelableStatus> statuses = data.subList(0, Math.min(databaseItemLimit, data.size()));
-            LoganSquare.serialize(statuses, new FileOutputStream(file), ParcelableStatus.class);
+            final PipedOutputStream pos = new PipedOutputStream();
+            final PipedInputStream pis = new PipedInputStream(pos);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        LoganSquare.mapperFor(ParcelableStatus.class).serialize(statuses, pos);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+            mFileCache.save(key, pis, null);
         } catch (final IOException e) {
             // Ignore
         }

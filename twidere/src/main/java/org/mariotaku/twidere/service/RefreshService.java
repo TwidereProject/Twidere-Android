@@ -39,6 +39,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.receiver.PowerStateReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -227,6 +228,7 @@ public class RefreshService extends Service implements Constants {
             startService(new Intent(this, getClass()));
         }
         super.onDestroy();
+        DebugModeUtils.watchReferenceLeak(this);
     }
 
     protected boolean isAutoRefreshAllowed() {

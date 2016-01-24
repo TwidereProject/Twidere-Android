@@ -58,6 +58,9 @@ android {
                            project.file("src/$name/res-svg2png")]
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 repositories {

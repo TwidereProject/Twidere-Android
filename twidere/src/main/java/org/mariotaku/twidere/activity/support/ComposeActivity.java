@@ -502,14 +502,25 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                         setAccountSelectorVisible(false);
                         return true;
                     }
-                } else if (!TwidereViewUtils.hitView(x, y, getWindow().getDecorView())) {
-                    onBackPressed();
-                    return true;
                 }
                 break;
             }
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            final float x = event.getRawX(), y = event.getRawY();
+            final Window window = getWindow();
+            if (!TwidereViewUtils.hitView(x, y, window.getDecorView())
+                    && window.peekDecorView() != null) {
+                onBackPressed();
+                return true;
+            }
+        }
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -1635,15 +1646,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     static class DiscardTweetTask extends AsyncTask<Object, Object, Object> {
 
-        final WeakReference<ComposeActivity> mActivity;
+        final WeakReference<ComposeActivity> activityRef;
 
         DiscardTweetTask(final ComposeActivity activity) {
-            this.mActivity = new WeakReference<>(activity);
+            this.activityRef = new WeakReference<>(activity);
         }
 
         @Override
         protected Object doInBackground(final Object... params) {
-            final ComposeActivity activity = mActivity.get();
+            final ComposeActivity activity = activityRef.get();
             if (activity == null) return null;
             for (final ParcelableMediaUpdate media : activity.getMediaList()) {
                 final Uri uri = Uri.parse(media.uri);
@@ -1659,7 +1670,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         protected void onPostExecute(final Object result) {
-            final ComposeActivity activity = mActivity.get();
+            final ComposeActivity activity = activityRef.get();
             if (activity == null) return;
             activity.setProgressVisible(false);
             activity.finish();
@@ -1667,7 +1678,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         protected void onPreExecute() {
-            final ComposeActivity activity = mActivity.get();
+            final ComposeActivity activity = activityRef.get();
             if (activity == null) return;
             activity.setProgressVisible(true);
         }
