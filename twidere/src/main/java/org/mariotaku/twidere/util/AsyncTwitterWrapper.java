@@ -2029,6 +2029,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             this.twitterWrapper = asyncTwitterWrapper;
         }
 
+        @NonNull
         @Override
         public ResponseList<org.mariotaku.twidere.api.twitter.model.Status> getStatuses(final Twitter twitter, final Paging paging)
                 throws TwitterException {

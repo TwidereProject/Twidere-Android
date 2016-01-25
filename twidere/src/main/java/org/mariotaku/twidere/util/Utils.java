@@ -1742,41 +1742,48 @@ public final class Utils implements Constants {
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final long user_id, final String text_plain,
-                                     final String text_html, final String source, final long retweeted_by_id) {
-        return isFiltered(database, user_id, text_plain, text_html, source, retweeted_by_id, true);
+                                     final String text_html, final String source, final long retweeted_by_id, final long quotedUserId) {
+        return isFiltered(database, user_id, text_plain, text_html, source, retweeted_by_id, quotedUserId, true);
     }
 
-    public static boolean isFiltered(final SQLiteDatabase database, final long user_id, final String text_plain,
-                                     final String text_html, final String source, final long retweeted_by_id, final boolean filter_rts) {
+    public static boolean isFiltered(final SQLiteDatabase database, final long userId,
+                                     final String textPlain, final String textHtml, final String source,
+                                     final long retweetedById, final long quotedUserId, final boolean filterRts) {
         if (database == null) return false;
-        if (text_plain == null && text_html == null && user_id <= 0 && source == null) return false;
+        if (textPlain == null && textHtml == null && userId <= 0 && source == null) return false;
         final StringBuilder builder = new StringBuilder();
         final List<String> selection_args = new ArrayList<>();
         builder.append("SELECT NULL WHERE");
-        if (text_plain != null) {
-            selection_args.add(text_plain);
+        if (textPlain != null) {
+            selection_args.add(textPlain);
             builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.VALUE
                     + "||'%' FROM " + Filters.Keywords.TABLE_NAME + "))");
         }
-        if (text_html != null) {
+        if (textHtml != null) {
             if (!selection_args.isEmpty()) {
                 builder.append(" OR ");
             }
-            selection_args.add(text_html);
+            selection_args.add(textHtml);
             builder.append("(SELECT 1 IN (SELECT ? LIKE '%<a href=\"%'||" + Filters.Links.TABLE_NAME + "."
                     + Filters.VALUE + "||'%\">%' FROM " + Filters.Links.TABLE_NAME + "))");
         }
-        if (user_id > 0) {
+        if (userId > 0) {
             if (!selection_args.isEmpty()) {
                 builder.append(" OR ");
             }
-            builder.append("(SELECT ").append(user_id).append(" IN (SELECT ").append(Users.USER_ID).append(" FROM ").append(Users.TABLE_NAME).append("))");
+            builder.append("(SELECT ").append(userId).append(" IN (SELECT ").append(Users.USER_ID).append(" FROM ").append(Users.TABLE_NAME).append("))");
         }
-        if (retweeted_by_id > 0) {
+        if (retweetedById > 0) {
             if (!selection_args.isEmpty()) {
                 builder.append(" OR ");
             }
-            builder.append("(SELECT ").append(retweeted_by_id).append(" IN (SELECT ").append(Users.USER_ID).append(" FROM ").append(Users.TABLE_NAME).append("))");
+            builder.append("(SELECT ").append(retweetedById).append(" IN (SELECT ").append(Users.USER_ID).append(" FROM ").append(Users.TABLE_NAME).append("))");
+        }
+        if (quotedUserId > 0) {
+            if (!selection_args.isEmpty()) {
+                builder.append(" OR ");
+            }
+            builder.append("(SELECT ").append(quotedUserId).append(" IN (SELECT ").append(Users.USER_ID).append(" FROM ").append(Users.TABLE_NAME).append("))");
         }
         if (source != null) {
             if (!selection_args.isEmpty()) {
@@ -1800,7 +1807,7 @@ public final class Utils implements Constants {
                                      final boolean filter_rts) {
         if (database == null || status == null) return false;
         return isFiltered(database, status.user_id, status.text_plain, status.text_html, status.source,
-                status.retweeted_by_user_id, filter_rts);
+                status.retweeted_by_user_id, status.quoted_user_id, filter_rts);
     }
 
     public static boolean isMyAccount(final Context context, final long accountId) {

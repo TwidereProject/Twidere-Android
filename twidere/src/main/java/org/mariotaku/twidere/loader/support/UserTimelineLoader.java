@@ -23,19 +23,16 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.model.ParcelableStatus;
-
-import java.util.List;
-
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.Utils;
 
-import static org.mariotaku.twidere.util.Utils.isFiltered;
+import java.util.List;
 
 public class UserTimelineLoader extends TwitterAPIStatusesLoader {
 
@@ -66,6 +63,8 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
 
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        return !mIsMyTimeline && isFiltered(database, -1, status.text_plain, status.text_html, status.source, -1);
+        final long retweetUserId = status.is_retweet ? status.user_id : -1;
+        return !mIsMyTimeline && Utils.isFiltered(database, retweetUserId, status.text_plain,
+                status.text_html, status.source, -1, status.quoted_user_id);
     }
 }

@@ -87,7 +87,7 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
     }
 
     @Override
-    public RestConverter<HttpResponse, ?, TwitterException> fromResponse(Type type) {
+    public RestConverter<HttpResponse, ?, TwitterException> forResponse(Type type) {
         RestConverter<HttpResponse, ?, TwitterException> converter = sResponseConverters.get(type);
         if (converter != null) {
             return converter;
@@ -96,12 +96,12 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
     }
 
     @Override
-    public RestConverter<?, Body, TwitterException> toParam(Type type) {
+    public RestConverter<?, Body, TwitterException> forRequest(Type type) {
         final RestConverter<?, Body, TwitterException> converter = sBodyConverters.get(type);
         if (converter != null) {
             return converter;
         }
-        return super.toParam(type);
+        return super.forRequest(type);
     }
 
     public static class UnsupportedTypeException extends UnsupportedOperationException {

@@ -58,6 +58,7 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
         this.twitterWrapper = twitterWrapper;
     }
 
+    @NonNull
     public abstract ResponseList<org.mariotaku.twidere.api.twitter.model.Status> getStatuses(Twitter twitter, Paging paging)
             throws TwitterException;
 

@@ -37,7 +37,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
         @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
         @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
         @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
-public interface TimelinesResources {
+public interface TimelineResources {
 
     @GET("/statuses/home_timeline.json")
     ResponseList<Status> getHomeTimeline(@Query Paging paging) throws TwitterException;

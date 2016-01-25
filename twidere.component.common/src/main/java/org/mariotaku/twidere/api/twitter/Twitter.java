@@ -34,7 +34,7 @@ import org.mariotaku.twidere.api.twitter.api.PrivateTweetResources;
 import org.mariotaku.twidere.api.twitter.api.SavedSearchesResources;
 import org.mariotaku.twidere.api.twitter.api.SearchResource;
 import org.mariotaku.twidere.api.twitter.api.SpamReportingResources;
-import org.mariotaku.twidere.api.twitter.api.TimelinesResources;
+import org.mariotaku.twidere.api.twitter.api.TimelineResources;
 import org.mariotaku.twidere.api.twitter.api.TrendsResources;
 import org.mariotaku.twidere.api.twitter.api.TweetResources;
 import org.mariotaku.twidere.api.twitter.api.UsersResources;
@@ -43,7 +43,7 @@ import org.mariotaku.twidere.api.twitter.api.UsersResources;
  * @author Yusuke Yamamoto - yusuke at mac.com
  * @since Twitter4J 2.2.0
  */
-public interface Twitter extends SearchResource, TimelinesResources,
+public interface Twitter extends SearchResource, TimelineResources,
         TweetResources, UsersResources, ListsResources, DirectMessagesResources, FriendsFollowersResources,
         FavoritesResources, SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
         HelpResources, PrivateActivityResources, PrivateTweetResources, PrivateTimelinesResources,

@@ -58,6 +58,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
+import javax.net.SocketFactory;
 
 @Singleton
 public class TwidereDns implements Constants, Dns {
