@@ -29,7 +29,7 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
 
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        return Utils.isFiltered(database, -1, status.text_plain, status.text_html, status.source,
+        return TwitterContentUtils.isFiltered(database, -1, status.text_plain, status.text_html, status.source,
                 status.retweeted_by_user_id, status.quoted_user_id);
     }
 }

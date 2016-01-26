@@ -40,6 +40,7 @@ import org.mariotaku.twidere.util.MediaLoadingHandler;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by mariotaku on 14/12/17.
@@ -87,15 +88,16 @@ public class CardMediaContainer extends ViewGroup implements Constants {
 
     public void displayMedia(@Nullable final ParcelableMedia[] mediaArray,
                              @NonNull final MediaLoaderWrapper loader,
-                             final long accountId,
+                             final long accountId, final long extraId,
                              final OnMediaClickListener mediaClickListener,
                              final MediaLoadingHandler loadingHandler) {
-        displayMedia(mediaArray, loader, accountId, false, mediaClickListener, loadingHandler);
+        displayMedia(mediaArray, loader, accountId, extraId, false, mediaClickListener,
+                loadingHandler);
     }
 
     public void displayMedia(@Nullable final ParcelableMedia[] mediaArray,
                              @NonNull final MediaLoaderWrapper loader,
-                             final long accountId, boolean withCredentials,
+                             final long accountId, final long extraId, boolean withCredentials,
                              final OnMediaClickListener mediaClickListener,
                              final MediaLoadingHandler loadingHandler) {
         if (mediaArray == null || mMediaPreviewStyle == VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE) {
@@ -106,7 +108,8 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             }
             return;
         }
-        final View.OnClickListener clickListener = new ImageGridClickListener(mediaClickListener, accountId);
+        final View.OnClickListener clickListener = new ImageGridClickListener(mediaClickListener,
+                accountId, extraId);
         for (int i = 0, j = getChildCount(), k = mediaArray.length; i < j; i++) {
             final View child = getChildAt(i);
             child.setOnClickListener(clickListener);
@@ -288,22 +291,26 @@ public class CardMediaContainer extends ViewGroup implements Constants {
     }
 
     public interface OnMediaClickListener {
-        void onMediaClick(View view, ParcelableMedia media, long accountId);
+        void onMediaClick(View view, ParcelableMedia media, long accountId, long id);
     }
 
     private static class ImageGridClickListener implements View.OnClickListener {
-        private final OnMediaClickListener mListener;
+        private final WeakReference<OnMediaClickListener> mListenerRef;
         private final long mAccountId;
+        private final long mExtraId;
 
-        ImageGridClickListener(final OnMediaClickListener listener, final long accountId) {
-            mListener = listener;
+        ImageGridClickListener(final OnMediaClickListener listener, final long accountId,
+                               final long extraId) {
+            mListenerRef = new WeakReference<>(listener);
             mAccountId = accountId;
+            mExtraId = extraId;
         }
 
         @Override
         public void onClick(final View v) {
-            if (mListener == null) return;
-            mListener.onMediaClick(v, (ParcelableMedia) v.getTag(), mAccountId);
+            final OnMediaClickListener listener = mListenerRef.get();
+            if (listener == null) return;
+            listener.onMediaClick(v, (ParcelableMedia) v.getTag(), mAccountId, mExtraId);
         }
 
     }

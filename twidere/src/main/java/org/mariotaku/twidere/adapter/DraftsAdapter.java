@@ -76,7 +76,8 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
         if (actionType == Drafts.ACTION_UPDATE_STATUS) {
             final ParcelableMedia[] media = ParcelableMedia.fromMediaUpdates(mediaUpdates);
             holder.media_preview_container.setVisibility(View.VISIBLE);
-            holder.media_preview_container.displayMedia(media, mImageLoader, -1L, null, mMediaLoadingHandler);
+            holder.media_preview_container.displayMedia(media, mImageLoader, -1, -1, null,
+                    mMediaLoadingHandler);
         } else {
             holder.media_preview_container.setVisibility(View.GONE);
         }

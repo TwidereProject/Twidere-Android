@@ -45,7 +45,7 @@ public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListen
     ImageView getProfileTypeView();
 
     @Override
-    void onMediaClick(View view, ParcelableMedia media, long accountId);
+    void onMediaClick(View view, ParcelableMedia media, long accountId, long extraId);
 
     void setStatusClickListener(StatusClickListener listener);
 

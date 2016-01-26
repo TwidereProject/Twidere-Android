@@ -269,7 +269,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             final boolean hasMedia = !ArrayUtils.isEmpty(media);
             if (hasMedia && (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive)) {
                 mediaPreview.setVisibility(View.VISIBLE);
-                mediaPreview.displayMedia(media, loader, status.account_id, this,
+                mediaPreview.displayMedia(media, loader, status.account_id, -1, this,
                         adapter.getMediaLoadingHandler());
             } else {
                 mediaPreview.setVisibility(View.GONE);
@@ -342,7 +342,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
 
     @Override
-    public void onMediaClick(View view, ParcelableMedia media, long accountId) {
+    public void onMediaClick(View view, ParcelableMedia media, long accountId, long extraId) {
         if (statusClickListener == null) return;
         final int position = getLayoutPosition();
         statusClickListener.onMediaClick(this, view, media, position);

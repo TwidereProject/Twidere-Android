@@ -29,7 +29,7 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
 
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        return Utils.isFiltered(database, status, true);
+        return TwitterContentUtils.isFiltered(database, status, true);
     }
 
     @Override

@@ -135,7 +135,7 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
         }
 
         @Override
-        public void onMediaClick(View view, ParcelableMedia media, long accountId) {
+        public void onMediaClick(View view, ParcelableMedia media, long accountId, long extraId) {
         }
 
         @Override

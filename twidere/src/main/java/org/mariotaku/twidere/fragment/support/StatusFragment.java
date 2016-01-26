@@ -450,7 +450,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public void onMediaClick(View view, ParcelableMedia media, long accountId) {
+    public void onMediaClick(View view, ParcelableMedia media, long accountId, long extraId) {
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
         final Bundle options = Utils.createMediaViewerActivityOption(view);
@@ -1056,8 +1056,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreview.setVisibility(View.VISIBLE);
                 mediaPreviewLoad.setVisibility(View.GONE);
-                mediaPreview.displayMedia(media, loader, status.account_id,
-                        adapter.getFragment(), adapter.getMediaLoadingHandler());
+                mediaPreview.displayMedia(media, loader, status.account_id, -1, adapter.getFragment(),
+                        adapter.getMediaLoadingHandler());
             } else {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreview.setVisibility(View.GONE);
