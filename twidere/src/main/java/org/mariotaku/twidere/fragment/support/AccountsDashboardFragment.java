@@ -99,6 +99,7 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
@@ -652,7 +653,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         final Resources res = getResources();
         final int defWidth = res.getDisplayMetrics().widthPixels;
         final int width = bannerWidth > 0 ? bannerWidth : defWidth;
-        final String bannerUrl = Utils.getBestBannerUrl(account.profile_banner_url, width);
+        final String bannerUrl = TwitterContentUtils.getBestBannerUrl(account.profile_banner_url, width);
         final ImageView bannerView = mAccountProfileBannerView;
         if (bannerView.getDrawable() == null || !CompareUtils.objectEquals(bannerUrl, bannerView.getTag())) {
             mMediaLoader.displayProfileBanner(mAccountProfileBannerView, bannerUrl, this);

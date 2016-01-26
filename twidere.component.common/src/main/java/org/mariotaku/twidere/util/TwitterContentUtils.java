@@ -44,6 +44,7 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
+import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -327,5 +328,28 @@ public class TwitterContentUtils {
         if (database == null || status == null) return false;
         return isFiltered(database, status.user_id, status.text_plain, status.text_html, status.source,
                 status.retweeted_by_user_id, status.quoted_user_id, filter_rts);
+    }
+
+    @Nullable
+    public static String getBestBannerUrl(@Nullable final String baseUrl, final int width) {
+        if (baseUrl == null) return null;
+        final String type = getBestBannerType(width);
+        final String authority = PreviewMediaExtractor.getAuthority(baseUrl);
+        return authority != null && authority.endsWith(".twimg.com") ? baseUrl + "/" + type : baseUrl;
+    }
+
+    public static String getBestBannerType(final int width) {
+        if (width <= 320)
+            return "mobile";
+        else if (width <= 520)
+            return "web";
+        else if (width <= 626)
+            return "ipad";
+        else if (width <= 640)
+            return "mobile_retina";
+        else if (width <= 1040)
+            return "web_retina";
+        else
+            return "ipad_retina";
     }
 }

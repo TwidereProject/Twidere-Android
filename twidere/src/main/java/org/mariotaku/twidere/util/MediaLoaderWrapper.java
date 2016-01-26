@@ -35,7 +35,7 @@ import org.mariotaku.twidere.util.imageloader.OvalBitmapDisplayer;
 
 import javax.inject.Singleton;
 
-import static org.mariotaku.twidere.util.Utils.getBestBannerUrl;
+import static org.mariotaku.twidere.util.TwitterContentUtils.getBestBannerUrl;
 
 @Singleton
 public class MediaLoaderWrapper implements Constants {

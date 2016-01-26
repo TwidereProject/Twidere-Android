@@ -37,7 +37,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -201,14 +200,13 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
-import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters.Users;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
+import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
-import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
@@ -1148,27 +1146,6 @@ public final class Utils implements Constants {
         }
         final Expression where = Expression.equals(CachedUsers.USER_ID, userId);
         return cr.update(CachedUsers.CONTENT_URI, values, where.getSQL(), null) != 0;
-    }
-
-
-    public static String getBestBannerUrl(final String baseUrl, final int width) {
-        final String type = getBestBannerType(width);
-        return TextUtils.isEmpty(baseUrl) ? null : baseUrl + "/" + type;
-    }
-
-    public static String getBestBannerType(final int width) {
-        if (width <= 320)
-            return "mobile";
-        else if (width <= 520)
-            return "web";
-        else if (width <= 626)
-            return "ipad";
-        else if (width <= 640)
-            return "mobile_retina";
-        else if (width <= 1040)
-            return "web_retina";
-        else
-            return "ipad_retina";
     }
 
     public static File getBestCacheDir(final Context context, final String cacheDirName) {

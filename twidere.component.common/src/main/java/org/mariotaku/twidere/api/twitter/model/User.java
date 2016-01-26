@@ -114,6 +114,11 @@ public class User extends TwitterResponseObject implements Comparable<User> {
 
     @JsonField(name = "profile_background_color")
     String profileBackgroundColor;
+    /**
+     * For GNU social compatibility
+     */
+    @JsonField(name = "backgroundcolor")
+    String backgroundcolor;
 
     @JsonField(name = "profile_background_image_url")
     String profileBackgroundImageUrl;
@@ -133,8 +138,20 @@ public class User extends TwitterResponseObject implements Comparable<User> {
     @JsonField(name = "profile_banner_url")
     String profileBannerUrl;
 
+    /**
+     * For GNU social compatibility
+     */
+    @JsonField(name = "cover_photo")
+    String coverPhoto;
+
     @JsonField(name = "profile_link_color")
     String profileLinkColor;
+
+    /**
+     * For GNU social compatibility
+     */
+    @JsonField(name = "linkcolor")
+    String linkcolor;
 
     @JsonField(name = "profile_sidebar_border_color")
     String profileSidebarBorderColor;
@@ -301,7 +318,8 @@ public class User extends TwitterResponseObject implements Comparable<User> {
 
 
     public String getProfileBackgroundColor() {
-        return profileBackgroundColor;
+        if (profileBackgroundColor != null) return profileBackgroundColor;
+        return backgroundcolor;
     }
 
 
@@ -316,7 +334,8 @@ public class User extends TwitterResponseObject implements Comparable<User> {
 
 
     public String getProfileBannerImageUrl() {
-        return profileBannerUrl;
+        if (profileBannerUrl != null) return profileBannerUrl;
+        return coverPhoto;
     }
 
 
@@ -331,7 +350,8 @@ public class User extends TwitterResponseObject implements Comparable<User> {
 
 
     public String getProfileLinkColor() {
-        return profileLinkColor;
+        if (profileLinkColor != null) return profileLinkColor;
+        return linkcolor;
     }
 
 
