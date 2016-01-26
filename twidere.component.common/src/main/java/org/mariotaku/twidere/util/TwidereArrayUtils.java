@@ -24,6 +24,7 @@ import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,17 +87,18 @@ public final class TwidereArrayUtils {
         return fromList(list1);
     }
 
-    public static void mergeArray(final Object[] dest, final Object[]... arrays) {
+    @SuppressWarnings("SuspiciousSystemArraycopy")
+    public static void mergeArray(final Object dest, final Object... arrays) {
         if (arrays == null || arrays.length == 0) return;
         if (arrays.length == 1) {
-            final Object[] array = arrays[0];
-            System.arraycopy(array, 0, dest, 0, array.length);
+            final Object array = arrays[0];
+            System.arraycopy(array, 0, dest, 0, Array.getLength(array));
             return;
         }
         for (int i = 0, j = arrays.length - 1; i < j; i++) {
-            final Object[] array1 = arrays[i], array2 = arrays[i + 1];
-            System.arraycopy(array1, 0, dest, 0, array1.length);
-            System.arraycopy(array2, 0, dest, array1.length, array2.length);
+            final Object array1 = arrays[i], array2 = arrays[i + 1];
+            System.arraycopy(array1, 0, dest, 0, Array.getLength(array1));
+            System.arraycopy(array2, 0, dest, Array.getLength(array1), Array.getLength(array2));
         }
     }
 

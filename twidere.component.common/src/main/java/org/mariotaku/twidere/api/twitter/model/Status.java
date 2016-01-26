@@ -26,6 +26,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
+import org.mariotaku.twidere.api.gnusocial.model.Attachment;
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
 import java.io.IOException;
@@ -116,10 +117,12 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "possibly_sensitive")
     boolean possiblySensitive;
 
-    public static void setQuotedStatus(Status status, Status quoted) {
-        if (status == null) return;
-        status.quotedStatus = quoted;
-    }
+
+    @JsonField(name = "attachments")
+    Attachment[] attachments;
+
+    @JsonField(name = "external_url")
+    String externalUrl;
 
 
     public User getUser() {
@@ -294,7 +297,15 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return contributors;
     }
 
+    public Attachment[] getAttachments() {
+        return attachments;
+    }
 
+    public String getExternalUrl() {
+        return externalUrl;
+    }
+
+    @Override
     public int compareTo(@NonNull final Status that) {
         final long delta = id - that.getId();
         if (delta < Integer.MIN_VALUE)
@@ -420,6 +431,12 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     public String getLang() {
         return lang;
     }
+
+    public static void setQuotedStatus(Status status, Status quoted) {
+        if (status == null) return;
+        status.quotedStatus = quoted;
+    }
+
 
     @JsonObject
     public static class CurrentUserRetweet {
