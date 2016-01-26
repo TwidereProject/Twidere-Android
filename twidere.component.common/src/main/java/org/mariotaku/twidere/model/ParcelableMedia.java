@@ -181,7 +181,8 @@ public class ParcelableMedia implements Parcelable {
             final ParcelableMedia media = new ParcelableMedia();
             final BindingValue playerStreamUrl = card.getBindingValue("player_stream_url");
             media.card = ParcelableCardEntity.fromCardEntity(card, -1);
-            media.url = card.getUrl();
+            StringValue appUrlResolved = (StringValue) card.getBindingValue("app_url_resolved");
+            media.url = appUrlResolved != null ? appUrlResolved.getValue() : card.getUrl();
             if ("animated_gif".equals(name)) {
                 media.media_url = ((StringValue) playerStreamUrl).getValue();
                 media.type = Type.TYPE_CARD_ANIMATED_GIF;
@@ -189,6 +190,10 @@ public class ParcelableMedia implements Parcelable {
                 media.media_url = ((StringValue) playerStreamUrl).getValue();
                 media.type = Type.TYPE_VIDEO;
             } else {
+                StringValue playerUrl = (StringValue) card.getBindingValue("player_url");
+                if (playerUrl != null) {
+                    media.media_url = playerUrl.getValue();
+                }
                 media.type = Type.TYPE_EXTERNAL_PLAYER;
             }
             final BindingValue playerImage = card.getBindingValue("player_image");

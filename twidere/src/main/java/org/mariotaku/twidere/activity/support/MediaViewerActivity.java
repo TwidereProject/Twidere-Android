@@ -61,6 +61,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.support.SupportFixedFragmentStatePagerAdapter;
 import org.mariotaku.twidere.fragment.support.CacheDownloadFragment;
 import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
+import org.mariotaku.twidere.fragment.support.card.CardBrowserFragment;
 import org.mariotaku.twidere.loader.support.CacheDownloadLoader.Listener;
 import org.mariotaku.twidere.loader.support.CacheDownloadLoader.Result;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -70,7 +71,6 @@ import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwitterCardFragmentFactory;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.concurrent.TimeUnit;
@@ -424,6 +424,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             return mMedia.length;
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             final ParcelableMedia media = mMedia[position];
@@ -446,7 +447,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
                 }
                 case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER: {
-                    return TwitterCardFragmentFactory.createGenericPlayerFragment(media.card);
+                    return CardBrowserFragment.show(media.media_url != null ? media.media_url : media.url, args);
                 }
             }
             return new UnsupportedPageFragment();
