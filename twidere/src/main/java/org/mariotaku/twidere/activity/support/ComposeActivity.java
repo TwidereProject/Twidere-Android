@@ -494,13 +494,18 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 final float x = ev.getRawX(), y = ev.getRawY();
                 if (isAccountSelectorVisible()) {
                     if (!TwidereViewUtils.hitView(x, y, mAccountSelectorButton)) {
-                        for (int i = 0, j = mAccountSelector.getChildCount(); i < j; i++) {
-                            if (TwidereViewUtils.hitView(x, y, mAccountSelector.getChildAt(i))) {
+                        boolean clickedItem = false;
+                        final RecyclerView.LayoutManager layoutManager = mAccountSelector.getLayoutManager();
+                        for (int i = 0, j = layoutManager.getChildCount(); i < j; i++) {
+                            if (TwidereViewUtils.hitView(x, y, layoutManager.getChildAt(i))) {
+                                clickedItem = true;
                                 break;
                             }
                         }
-                        setAccountSelectorVisible(false);
-                        return true;
+                        if (!clickedItem) {
+                            setAccountSelectorVisible(false);
+                            return true;
+                        }
                     }
                 }
                 break;

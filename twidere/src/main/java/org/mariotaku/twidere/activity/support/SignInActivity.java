@@ -464,6 +464,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                     Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof WrongUserPassException) {
                     Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show();
+                } else if (result.exception instanceof SignInTask.WrongBasicCredentialException) {
+                    Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof LoginVerificationException) {
                     Toast.makeText(this, R.string.login_verification_failed, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof AuthenticationException) {
@@ -730,23 +732,39 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             } catch (final AuthenticationException e) {
                 Log.w(LOGTAG, e);
                 return new SignInResponse(false, false, e);
+            } catch (final WrongBasicCredentialException e) {
+                Log.w(LOGTAG, e);
+                return new SignInResponse(false, false, e);
             }
         }
 
-        private SignInResponse authBasic() throws TwitterException {
+        private SignInResponse authBasic() throws TwitterException, WrongUserPassException,
+                WrongBasicCredentialException {
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
             final String versionSuffix = noVersionSuffix ? null : "1.1";
             final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
             final Authorization auth = new BasicAuthorization(username, password);
             final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
-            final User user = twitter.verifyCredentials();
+            User user = null;
+            try {
+                user = twitter.verifyCredentials();
+            } catch (TwitterException e) {
+                if (e.getStatusCode() == 401) {
+                    throw new WrongBasicCredentialException();
+                }
+            }
+            if (user == null) throw new NullPointerException();
             final long userId = user.getId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             if (isUserLoggedIn(activity, userId)) return new SignInResponse(true, false, null);
             final int color = analyseUserProfileColor(user);
             return new SignInResponse(isUserLoggedIn(activity, userId), username, password, user,
                     color, apiUrlFormat, noVersionSuffix);
+        }
+
+        static class WrongBasicCredentialException extends Exception {
+
         }
 
         private SignInResponse authOAuth() throws AuthenticationException, TwitterException {

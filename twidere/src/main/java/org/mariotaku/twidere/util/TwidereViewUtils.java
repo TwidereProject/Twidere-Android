@@ -12,6 +12,6 @@ public class TwidereViewUtils {
         int[] location = new int[2];
         view.getLocationOnScreen(location);
         return TwidereMathUtils.inRange(x, location[0], location[0] + view.getWidth(), TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE) &&
-                TwidereMathUtils.inRange(x, location[1], location[1] + view.getHeight(), TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE);
+                TwidereMathUtils.inRange(y, location[1], location[1] + view.getHeight(), TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE);
     }
 }

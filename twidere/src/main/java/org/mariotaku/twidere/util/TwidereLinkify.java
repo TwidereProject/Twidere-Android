@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -106,22 +107,23 @@ public final class TwidereLinkify implements Constants {
         setHighlightOption(highlightOption);
     }
 
-    public SpannableString applyAllLinks(CharSequence text, final long accountId, final long extraId, final boolean sensitive) {
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId, final long extraId, final boolean sensitive) {
         return applyAllLinks(text, mOnLinkClickListener, accountId, extraId, sensitive, mHighlightOption);
     }
 
-    public SpannableString applyAllLinks(CharSequence text, final long accountId, final boolean sensitive) {
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId, final boolean sensitive) {
         return applyAllLinks(text, mOnLinkClickListener, accountId, -1, sensitive, mHighlightOption);
     }
 
-    public SpannableString applyAllLinks(CharSequence text, final long accountId, final long extraId,
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId, final long extraId,
                                          final boolean sensitive, final int highlightOption) {
         return applyAllLinks(text, mOnLinkClickListener, accountId, extraId, sensitive, highlightOption);
     }
 
-    public SpannableString applyAllLinks(final CharSequence text, final OnLinkClickListener listener,
+    public SpannableString applyAllLinks(@Nullable final CharSequence text, final OnLinkClickListener listener,
                                          final long accountId, final long extraId, final boolean sensitive,
                                          final int highlightOption) {
+        if (text == null) return null;
         final SpannableString string = SpannableString.valueOf(text);
         for (final int type : ALL_LINK_TYPES) {
             addLinks(string, accountId, extraId, type, sensitive, listener, highlightOption);
