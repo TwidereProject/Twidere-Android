@@ -87,10 +87,14 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
                 query.query("@" + status.user_screen_name);
             }
             query.sinceId(status.id);
-            for (Status item : twitter.search(query)) {
-                if (item.getInReplyToStatusId() == status.id) {
-                    statuses.add(item);
+            try {
+                for (Status item : twitter.search(query)) {
+                    if (item.getInReplyToStatusId() == status.id) {
+                        statuses.add(item);
+                    }
                 }
+            } catch (TwitterException e) {
+                // Ignore for now
             }
         }
         return statuses;

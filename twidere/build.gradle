@@ -111,7 +111,6 @@ dependencies {
     compile 'com.github.mariotaku.RestFu:library:0.9.13'
     compile 'com.github.mariotaku.RestFu:okhttp:0.9.13'
     compile 'com.github.mariotaku:InetAddressJni:0.9.1'
-    compile 'com.diogobernardino:williamchart:2.1'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'

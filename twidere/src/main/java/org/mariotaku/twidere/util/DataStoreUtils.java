@@ -53,7 +53,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.twidere.provider.TwidereDataStore.NetworkUsages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
 import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Preferences;
@@ -123,8 +122,6 @@ public class DataStoreUtils implements Constants {
                 TABLE_ID_SAVED_SEARCHES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SearchHistory.CONTENT_PATH,
                 TABLE_ID_SEARCH_HISTORY);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, NetworkUsages.CONTENT_PATH,
-                TABLE_ID_NETWORK_USAGES);
 
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
@@ -670,8 +667,6 @@ public class DataStoreUtils implements Constants {
                 return SavedSearches.TABLE_NAME;
             case TwidereConstants.TABLE_ID_SEARCH_HISTORY:
                 return SearchHistory.TABLE_NAME;
-            case TwidereConstants.TABLE_ID_NETWORK_USAGES:
-                return NetworkUsages.TABLE_NAME;
             default:
                 return null;
         }

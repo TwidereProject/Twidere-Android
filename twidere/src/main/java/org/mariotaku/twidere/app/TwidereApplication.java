@@ -49,9 +49,9 @@ import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
+import org.mariotaku.twidere.util.HttpClientFactory;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.TwidereBugReporter;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
@@ -257,7 +257,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         DependencyHolder holder = DependencyHolder.get(this);
         final RestHttpClient client = holder.getRestHttpClient();
         if (client instanceof OkHttpRestClient) {
-            TwitterAPIFactory.initDefaultHttpClient(this, getSharedPreferences(),
+            HttpClientFactory.initDefaultHttpClient(this, getSharedPreferences(),
                     ((OkHttpRestClient) client).getClient());
         }
     }

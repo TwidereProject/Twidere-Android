@@ -54,6 +54,7 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupport
     @Nullable
     IStatusViewHolder.StatusClickListener getStatusClickListener();
 
+    @Nullable
     StatusAdapterListener getStatusAdapterListener();
 
     interface StatusAdapterListener {

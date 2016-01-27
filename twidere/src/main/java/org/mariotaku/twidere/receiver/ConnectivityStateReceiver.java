@@ -32,7 +32,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.ConnectivityUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.net.NetworkUsageUtils;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.UploadLogsTask;
@@ -62,7 +61,6 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
             // END HotMobi
         }
         final int networkType = ConnectivityUtils.getActiveNetworkType(context.getApplicationContext());
-        NetworkUsageUtils.setNetworkType(networkType);
         final boolean isWifi = networkType == ConnectivityManager.TYPE_WIFI;
         final boolean isCharging = Utils.isCharging(context.getApplicationContext());
         if (isWifi && isCharging) {

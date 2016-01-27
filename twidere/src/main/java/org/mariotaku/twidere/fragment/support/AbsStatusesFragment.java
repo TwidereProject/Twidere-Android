@@ -460,6 +460,13 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     }
 
     @Override
+    public void onDestroy() {
+        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        adapter.setListener(null);
+        super.onDestroy();
+    }
+
+    @Override
     public final boolean scrollToStart() {
         final boolean result = super.scrollToStart();
         if (result) {

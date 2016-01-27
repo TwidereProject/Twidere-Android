@@ -32,7 +32,7 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.BugReporter;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.HttpClientFactory;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
@@ -54,7 +54,7 @@ public class UploadLogsTask implements Runnable {
 
     public UploadLogsTask(Context context) {
         this.context = context;
-        this.client = TwitterAPIFactory.getDefaultHttpClient(context);
+        this.client = HttpClientFactory.getDefaultHttpClient(context);
     }
 
     @Override

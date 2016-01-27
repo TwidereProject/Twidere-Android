@@ -61,6 +61,11 @@ public interface TwidereDataStore {
     Uri[] DIRECT_MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI,
             DirectMessages.Outbox.CONTENT_URI};
 
+    interface InsertedDateColumns {
+        String INSERTED_DATE = "inserted_date";
+        String INSERTED_DATE_TYPE = TYPE_INT;
+    }
+
     interface Accounts extends BaseColumns {
 
         String TABLE_NAME = "accounts";
@@ -351,7 +356,7 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, NAME, PATH};
     }
 
-    interface DirectMessages extends BaseColumns {
+    interface DirectMessages extends BaseColumns, InsertedDateColumns {
 
         String TABLE_NAME = "messages";
         String CONTENT_PATH = TABLE_NAME;
@@ -382,10 +387,10 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, ACCOUNT_ID, MESSAGE_ID, MESSAGE_TIMESTAMP,
                 SENDER_ID, RECIPIENT_ID, CONVERSATION_ID, IS_OUTGOING, TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED,
                 SENDER_NAME, RECIPIENT_NAME, SENDER_SCREEN_NAME, RECIPIENT_SCREEN_NAME, SENDER_PROFILE_IMAGE_URL,
-                RECIPIENT_PROFILE_IMAGE_URL, MEDIA_JSON};
+                RECIPIENT_PROFILE_IMAGE_URL, MEDIA_JSON, INSERTED_DATE};
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_INT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, INSERTED_DATE_TYPE};
 
         String DEFAULT_SORT_ORDER = MESSAGE_ID + " DESC";
 
@@ -698,7 +703,7 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, KEY, VALUE, TYPE};
     }
 
-    interface Statuses extends BaseColumns {
+    interface Statuses extends BaseColumns, InsertedDateColumns {
 
         String TABLE_NAME = "statuses";
         String CONTENT_PATH = TABLE_NAME;
@@ -870,7 +875,7 @@ public interface TwidereDataStore {
                 QUOTED_USER_IS_VERIFIED, QUOTED_USER_IS_PROTECTED, MY_RETWEET_ID, IS_RETWEET,
                 IS_QUOTE, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
                 IS_POSSIBLY_SENSITIVE, MEDIA_JSON, MENTIONS_JSON, QUOTED_MEDIA_JSON, CARD_NAME, CARD,
-                PLACE_FULL_NAME, LANG, RETWEETED, QUOTED_LOCATION, QUOTED_PLACE_FULL_NAME};
+                PLACE_FULL_NAME, LANG, RETWEETED, QUOTED_LOCATION, QUOTED_PLACE_FULL_NAME, INSERTED_DATE};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
@@ -880,11 +885,11 @@ public interface TwidereDataStore {
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, INSERTED_DATE_TYPE};
 
     }
 
-    interface Activities extends BaseColumns {
+    interface Activities extends BaseColumns, InsertedDateColumns {
 
         String ACCOUNT_ID = "account_id";
         String ACTION = "action";
@@ -919,11 +924,11 @@ public interface TwidereDataStore {
                 STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_TEXT_HTML, STATUS_QUOTE_TEXT_HTML,
                 IS_GAP, MIN_POSITION, MAX_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
                 TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS,
-                STATUS_RETWEET_ID, STATUS_USER_FOLLOWING};
+                STATUS_RETWEET_ID, STATUS_USER_FOLLOWING, INSERTED_DATE};
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, INSERTED_DATE_TYPE};
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC";
 
@@ -1028,27 +1033,4 @@ public interface TwidereDataStore {
         }
     }
 
-    interface NetworkUsages extends BaseColumns {
-
-        String TABLE_NAME = "network_usages";
-        String CONTENT_PATH = TABLE_NAME;
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
-        String TIME_IN_HOURS = "time_in_hours";
-
-        String REQUEST_TYPE = "request_type";
-
-        String REQUEST_NETWORK = "request_network";
-
-        String KILOBYTES_SENT = "kilobytes_sent";
-
-        String KILOBYTES_RECEIVED = "kilobytes_received";
-
-        String[] COLUMNS = {_ID, TIME_IN_HOURS, REQUEST_TYPE, REQUEST_NETWORK, KILOBYTES_SENT,
-                KILOBYTES_RECEIVED};
-
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL,
-                TYPE_DOUBLE_NOT_NULL, TYPE_DOUBLE_NOT_NULL};
-    }
 }

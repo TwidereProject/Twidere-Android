@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/network">
+                  android:title="@string/network">
 
-    <org.mariotaku.twidere.preference.NetworkUsageSummaryPreferences />
     <org.mariotaku.twidere.preference.ImagePreloadPreference
         android:key="image_preload_options"
-        android:title="@string/media_preload" />
+        android:title="@string/media_preload"/>
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="preload_wifi_only"
-        android:title="@string/preload_wifi_only" />
+        android:title="@string/preload_wifi_only"/>
     <Preference
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
         android:title="@string/advanced">
         <extra
             android:name="resid"
-            android:value="@xml/preferences_advanced_network" />
+            android:value="@xml/preferences_advanced_network"/>
     </Preference>
 
 </PreferenceScreen>

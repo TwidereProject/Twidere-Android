@@ -1616,6 +1616,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return mEventListener;
         }
 
+        @Nullable
         @Override
         public StatusAdapterListener getStatusAdapterListener() {
             return mStatusAdapterListener;

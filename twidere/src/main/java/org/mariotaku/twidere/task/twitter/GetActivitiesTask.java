@@ -12,7 +12,8 @@ import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -84,19 +85,21 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
                     } else {
                         deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_position);
                     }
-                    valuesList.add(ContentValuesCreator.createActivity(parcelableActivity));
+                    final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity);
+                    values.put(Statuses.INSERTED_DATE, System.currentTimeMillis());
+                    valuesList.add(values);
                 }
                 if (deleteBound[0] > 0 && deleteBound[1] > 0) {
                     Expression where = Expression.and(
-                            Expression.equals(TwidereDataStore.Activities.ACCOUNT_ID, accountId),
-                            Expression.greaterEquals(TwidereDataStore.Activities.MIN_POSITION, deleteBound[0]),
-                            Expression.lesserEquals(TwidereDataStore.Activities.MAX_POSITION, deleteBound[1])
+                            Expression.equals(Activities.ACCOUNT_ID, accountId),
+                            Expression.greaterEquals(Activities.MIN_POSITION, deleteBound[0]),
+                            Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
                     );
                     int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), null);
                     boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
                             && rowsDeleted <= 0;
                     if (insertGap && !valuesList.isEmpty()) {
-                        valuesList.get(valuesList.size() - 1).put(TwidereDataStore.Activities.IS_GAP, true);
+                        valuesList.get(valuesList.size() - 1).put(Activities.IS_GAP, true);
                     }
                 }
                 ContentResolverUtils.bulkInsert(cr, getContentUri(), valuesList);

@@ -61,6 +61,8 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     private View mErrorContainer;
 
     private L mLayoutManager;
+    @SuppressWarnings("NullableProblems")
+    @NonNull
     private A mAdapter;
 
     // Callbacks and listeners
@@ -154,6 +156,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mDrawerCallback.topChanged(offset);
     }
 
+    @NonNull
     @Override
     public A getAdapter() {
         return mAdapter;

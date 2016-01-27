@@ -43,7 +43,7 @@ public class RestFuNetworkStreamDownloader extends ThemedImagePickerActivity.Net
     }
 
     public DownloadResult get(Uri uri) throws IOException {
-        final RestHttpClient client = TwitterAPIFactory.getDefaultHttpClient(getContext());
+        final RestHttpClient client = HttpClientFactory.getDefaultHttpClient(getContext());
         final HttpRequest.Builder builder = new HttpRequest.Builder();
         builder.method(GET.METHOD);
         builder.url(uri.toString());

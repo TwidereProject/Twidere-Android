@@ -838,4 +838,5 @@
     <string name="action_vote">Vote</string>
     <string name="label_poll">Poll</string>
     <string name="poll_summary_format"><xliff:g id="poll_count">%s</xliff:g> · <xliff:g id="poll_time_left">%s</xliff:g></string>
+    <string name="N_more" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> more</string>
 </resources>

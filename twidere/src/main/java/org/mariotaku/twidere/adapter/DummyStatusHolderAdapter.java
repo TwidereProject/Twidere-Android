@@ -98,6 +98,7 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object> 
         return null;
     }
 
+    @Nullable
     @Override
     public StatusAdapterListener getStatusAdapterListener() {
         return null;
