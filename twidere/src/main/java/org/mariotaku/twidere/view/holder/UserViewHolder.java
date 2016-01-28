@@ -85,6 +85,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         }
         nameView.setName(manager.getUserNickname(user.id, user.name, false));
         nameView.setScreenName("@" + user.screen_name);
+        nameView.updateText(adapter.getBidiFormatter());
         descriptionView.setVisibility(TextUtils.isEmpty(user.description_unescaped) ? View.GONE : View.VISIBLE);
         descriptionView.setText(user.description_unescaped);
         locationView.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);

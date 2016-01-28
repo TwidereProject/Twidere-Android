@@ -89,7 +89,11 @@
                 android:paddingEnd="0dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="0dp"
-                android:paddingStart="8dp"/>
+                android:paddingStart="8dp"
+                app:nv_primaryTextColor="?android:textColorPrimary"
+                app:nv_primaryTextStyle="bold"
+                app:nv_secondaryTextColor="?android:textColorSecondary"
+                app:nv_twoLine="true"/>
 
         </RelativeLayout>
 
