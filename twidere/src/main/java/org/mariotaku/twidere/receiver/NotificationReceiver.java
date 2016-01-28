@@ -88,6 +88,7 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
             case AUTHORITY_HOME: {
                 return TAB_TYPE_HOME_TIMELINE;
             }
+            case AUTHORITY_ACTIVITIES_ABOUT_ME:
             case AUTHORITY_MENTIONS: {
                 return TAB_TYPE_NOTIFICATIONS_TIMELINE;
             }

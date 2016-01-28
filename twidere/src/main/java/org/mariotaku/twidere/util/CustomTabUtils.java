@@ -194,7 +194,7 @@ public class CustomTabUtils implements Constants {
         return CUSTOM_TABS_CONFIGURATION_MAP.get(getTabTypeAlias(tabType));
     }
 
-    private static String getTabTypeAlias(String key) {
+    public static String getTabTypeAlias(String key) {
         if (key == null) return null;
         switch (key) {
             case "mentions_timeline":

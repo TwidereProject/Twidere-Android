@@ -1280,6 +1280,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setDeleteIntent(getMarkReadDeleteIntent(context, AUTHORITY_HOME, accountId,
                     statusId, false));
             builder.setNumber(statusesCount);
+            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
             applyNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
             try {
                 nm.notify("home_" + accountId, Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountId), builder.build());
@@ -1320,19 +1321,24 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final String accountName = DataStoreUtils.getAccountDisplayName(context, accountId, mNameFirst);
             builder.setContentTitle(title);
             builder.setContentText(accountName);
-            InboxStyle style = new InboxStyle();
+            final InboxStyle style = new InboxStyle();
             builder.setStyle(style);
+            builder.setAutoCancel(true);
             style.setBigContentTitle(title);
             style.setSummaryText(accountName);
             final ParcelableActivityCursorIndices ci = new ParcelableActivityCursorIndices(c);
             int messageLines = 0;
 
+            long timestamp = -1;
             while (!c.isAfterLast()) {
                 if (messageLines == 5) {
                     style.addLine(resources.getString(R.string.and_N_more, count - c.getPosition()));
                     break;
                 }
                 final ParcelableActivity activity = ci.newObject(c);
+                if (timestamp == -1) {
+                    timestamp = activity.timestamp;
+                }
                 final ActivityTitleSummaryMessage message = ActivityTitleSummaryMessage.get(context,
                         mUserColorNameManager, activity, activity.sources, 0, false,
                         mUseStarForLikes, mNameFirst);
@@ -1347,6 +1353,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     messageLines++;
                 }
                 c.moveToNext();
+            }
+            builder.setContentIntent(getContentIntent(context, AUTHORITY_ACTIVITIES_ABOUT_ME,
+                    accountId));
+            if (timestamp != -1) {
+                builder.setDeleteIntent(getMarkReadDeleteIntent(context, AUTHORITY_ACTIVITIES_ABOUT_ME,
+                        accountId, timestamp, false));
             }
         } finally {
             c.close();
@@ -1530,7 +1542,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setTicker(notificationTitle);
             builder.setContentTitle(notificationTitle);
             builder.setContentText(notificationContent);
-            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
+            builder.setCategory(NotificationCompat.CATEGORY_MESSAGE);
             builder.setContentIntent(getContentIntent(context, AUTHORITY_DIRECT_MESSAGES, accountId));
             builder.setDeleteIntent(getMarkReadDeleteIntent(context, AUTHORITY_DIRECT_MESSAGES, accountId, positions));
             builder.setNumber(messagesCount);

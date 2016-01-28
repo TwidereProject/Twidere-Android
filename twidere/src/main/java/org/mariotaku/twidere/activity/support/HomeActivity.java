@@ -89,11 +89,11 @@ import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
-import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
@@ -715,7 +715,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
             for (int i = mPagerAdapter.getCount() - 1; i > -1; i--) {
                 final SupportTabSpec tab = mPagerAdapter.getTab(i);
-                if (tabType.equals(tab.type)) {
+                if (tabType.equals(CustomTabUtils.getTabTypeAlias(tab.type))) {
                     initialTab = i;
                     if (hasAccountId(tab.args, accountId)) {
                         break;

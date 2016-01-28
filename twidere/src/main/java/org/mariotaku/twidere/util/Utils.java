@@ -205,7 +205,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
-import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -289,9 +288,10 @@ public final class Utils implements Constants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_FILTERS, null, LINK_ID_FILTERS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_PROFILE_EDITOR, null, LINK_ID_PROFILE_EDITOR);
 
-        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_HOME, null, CustomTabUtils.TAB_CODE_HOME_TIMELINE);
-        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_MENTIONS, null, CustomTabUtils.TAB_CODE_NOTIFICATIONS_TIMELINE);
-        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_DIRECT_MESSAGES, null, CustomTabUtils.TAB_CODE_DIRECT_MESSAGES);
+        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_HOME, null, TAB_CODE_HOME_TIMELINE);
+        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_MENTIONS, null, TAB_CODE_NOTIFICATIONS_TIMELINE);
+        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_ACTIVITIES_ABOUT_ME, null, TAB_CODE_NOTIFICATIONS_TIMELINE);
+        HOME_TABS_URI_MATCHER.addURI(AUTHORITY_DIRECT_MESSAGES, null, TAB_CODE_DIRECT_MESSAGES);
     }
 
 
