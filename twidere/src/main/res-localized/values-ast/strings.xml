@@ -372,7 +372,7 @@
   <string name="none">Dengún</string>
   <string name="large">Grande</string>
   <string name="small">Pequeñu</string>
-  <string name="and_more">y <xliff:g id="count">%d</xliff:g> más</string>
+  <string name="and_N_more">y <xliff:g id="count">%d</xliff:g> más</string>
   <string name="clear_search_history">Llimpiar historia de guetes</string>
   <string name="permission_description_none">Nun se necesiten permisos</string>
   <string name="permission_description_refresh">Anovar llinia temporal (incluyendo mensaxes direutos)</string>

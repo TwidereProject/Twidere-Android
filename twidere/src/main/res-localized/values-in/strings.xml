@@ -361,7 +361,7 @@
   <string name="none">Tidak ada</string>
   <string name="large">Banyak</string>
   <string name="small">Sedikit</string>
-  <string name="and_more">dan <xliff:g id="count">%d</xliff:g> lebih lagi</string>
+  <string name="and_N_more">dan <xliff:g id="count">%d</xliff:g> lebih lagi</string>
   <string name="clear_search_history">Bersihkan riwayat pencarian</string>
   <string name="permission_description_none">Tidak ada ijin yang diperlukan</string>
   <string name="permission_description_refresh">Memperbaharui timeline (termasuk direct messages)</string>

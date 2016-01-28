@@ -354,7 +354,7 @@
   <string name="none">Nessuno</string>
   <string name="large">Grande</string>
   <string name="small">Piccolo</string>
-  <string name="and_more">e altri <xliff:g id="count">%d</xliff:g></string>
+  <string name="and_N_more">e altri <xliff:g id="count">%d</xliff:g></string>
   <string name="clear_search_history">Cancella cronologia ricerche</string>
   <string name="permission_description_none">Nessun permesso richiesto</string>
   <string name="permission_description_refresh">Aggiorna timeline (inclusi DM)</string>

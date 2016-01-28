@@ -334,7 +334,7 @@
   <string name="none">Brak</string>
   <string name="large">Duży</string>
   <string name="small">Mały</string>
-  <string name="and_more">oraz <xliff:g id="count">%d</xliff:g> więcej</string>
+  <string name="and_N_more">oraz <xliff:g id="count">%d</xliff:g> więcej</string>
   <string name="clear_search_history">Wyczyść historię wyszukiwania</string>
   <string name="permission_description_none">Nie są wymagane pozwolenia</string>
   <string name="permission_description_refresh">Odśwież strumień (razem z wiadomościami)</string>

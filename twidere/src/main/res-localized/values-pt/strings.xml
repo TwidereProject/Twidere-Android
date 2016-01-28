@@ -368,7 +368,7 @@
   <string name="none">Nenhum</string>
   <string name="large">Grande</string>
   <string name="small">Pequeno</string>
-  <string name="and_more">e <xliff:g id="count">%d</xliff:g> mais</string>
+  <string name="and_N_more">e <xliff:g id="count">%d</xliff:g> mais</string>
   <string name="clear_search_history">Limpar histórico de buscas</string>
   <string name="permission_description_none">Nenhuma permissão requerida</string>
   <string name="permission_description_refresh">Atualizar timeline (inclusive MD)</string>

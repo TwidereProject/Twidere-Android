@@ -373,7 +373,7 @@
   <string name="none">无</string>
   <string name="large">大尺寸</string>
   <string name="small">小尺寸</string>
-  <string name="and_more">和其他<xliff:g id="count">%d</xliff:g>个</string>
+  <string name="and_N_more">和其他<xliff:g id="count">%d</xliff:g>个</string>
   <string name="clear_search_history">清除搜索历史</string>
   <string name="permission_description_none">没有需要的权限</string>
   <string name="permission_description_refresh">刷新时间线（包括私信）</string>

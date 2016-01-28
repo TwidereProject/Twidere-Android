@@ -288,6 +288,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         builder.setTicker(title);
         builder.setContentTitle(title);
         builder.setContentText(text);
+        builder.setCategory(NotificationCompat.CATEGORY_PROGRESS);
         builder.setOngoing(true);
         final Notification notification = builder.build();
         startForeground(NOTIFICATION_ID_SEND_DIRECT_MESSAGE, notification);

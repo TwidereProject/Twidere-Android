@@ -373,7 +373,7 @@
   <string name="none">Aucun</string>
   <string name="large">Grand</string>
   <string name="small">Petit</string>
-  <string name="and_more">et <xliff:g id="count">%d</xliff:g> de plus</string>
+  <string name="and_N_more">et <xliff:g id="count">%d</xliff:g> de plus</string>
   <string name="clear_search_history">Supprimer l\'historique de recherche</string>
   <string name="permission_description_none">Aucune permission nécessaire</string>
   <string name="permission_description_refresh">Actualiser le fil d\'actualité (inclu les messages privés)</string>

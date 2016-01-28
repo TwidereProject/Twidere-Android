@@ -370,7 +370,7 @@
   <string name="none">Nichts</string>
   <string name="large">Groß</string>
   <string name="small">Klein</string>
-  <string name="and_more">und <xliff:g id="count">%d</xliff:g> weitere</string>
+  <string name="and_N_more">und <xliff:g id="count">%d</xliff:g> weitere</string>
   <string name="clear_search_history">Suchbegriffe löschen</string>
   <string name="permission_description_none">Keine Erlaubnis notwendig</string>
   <string name="permission_description_refresh">Zeit zwischen Aktualisierungen (auch für Direct Messages)</string>

@@ -360,7 +360,7 @@
   <string name="none">無</string>
   <string name="large">大尺寸</string>
   <string name="small">小尺寸</string>
-  <string name="and_more">和其他<xliff:g id="count">%d</xliff:g>個</string>
+  <string name="and_N_more">和其他<xliff:g id="count">%d</xliff:g>個</string>
   <string name="clear_search_history">清除搜尋歷史</string>
   <string name="permission_description_none">沒有需要的權限</string>
   <string name="permission_description_refresh">刷新時間軸（包括私信）</string>

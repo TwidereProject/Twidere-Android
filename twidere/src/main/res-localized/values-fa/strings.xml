@@ -373,7 +373,7 @@
   <string name="none">هیچ‌کدام</string>
   <string name="large">بزرگ</string>
   <string name="small">کوچک</string>
-  <string name="and_more">و <xliff:g id="count">%d</xliff:g> بیش‌تر</string>
+  <string name="and_N_more">و <xliff:g id="count">%d</xliff:g> بیش‌تر</string>
   <string name="clear_search_history">پاک‌سازی تاریخچه‌ی جستجو</string>
   <string name="permission_description_none">هیچ دسترسی‌ای نیاز نیست</string>
   <string name="permission_description_refresh">تازه‌سازی خط‌زمان (شامل پیام‌های مستقیم)</string>

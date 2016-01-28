@@ -266,16 +266,20 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     @Override
     public void onBackPressed() {
         if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) return;
-        final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
-        final boolean textChanged = text != null && !text.isEmpty() && !text.equals(mOriginalText);
-        final boolean isEditingDraft = INTENT_ACTION_EDIT_DRAFT.equals(getIntent().getAction());
-        if (textChanged || hasMedia() || isEditingDraft) {
+        if (hasComposingStatus()) {
             saveToDrafts();
             Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show();
             finish();
         } else {
             mTask = AsyncTaskUtils.executeTask(new DiscardTweetTask(this));
         }
+    }
+
+    protected boolean hasComposingStatus() {
+        final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
+        final boolean textChanged = text != null && !text.isEmpty() && !text.equals(mOriginalText);
+        final boolean isEditingDraft = INTENT_ACTION_EDIT_DRAFT.equals(getIntent().getAction());
+        return textChanged || hasMedia() || isEditingDraft;
     }
 
     @Override
@@ -520,7 +524,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             final float x = event.getRawX(), y = event.getRawY();
             final Window window = getWindow();
             if (!TwidereViewUtils.hitView(x, y, window.getDecorView())
-                    && window.peekDecorView() != null) {
+                    && window.peekDecorView() != null && !hasComposingStatus()) {
                 onBackPressed();
                 return true;
             }

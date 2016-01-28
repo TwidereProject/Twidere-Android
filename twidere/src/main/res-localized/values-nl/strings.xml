@@ -337,7 +337,7 @@
   <string name="none">Geen</string>
   <string name="large">Groot</string>
   <string name="small">Klein</string>
-  <string name="and_more">en <xliff:g id="count">%d</xliff:g> meer</string>
+  <string name="and_N_more">en <xliff:g id="count">%d</xliff:g> meer</string>
   <string name="clear_search_history">Wis zoek geschiedenis</string>
   <string name="permission_description_none">Geen toestemming nodig</string>
   <string name="permission_description_refresh">Vernieuw tijdlijn (inclusief berichten)</string>

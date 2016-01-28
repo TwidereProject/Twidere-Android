@@ -355,7 +355,7 @@
   <string name="none">Cap</string>
   <string name="large">Gran</string>
   <string name="small">Petit</string>
-  <string name="and_more">i <xliff:g id="count">%d</xliff:g> més</string>
+  <string name="and_N_more">i <xliff:g id="count">%d</xliff:g> més</string>
   <string name="clear_search_history">Neteja l\'historial de cerques</string>
   <string name="permission_description_none">No calen permisos</string>
   <string name="permission_description_refresh">Actualitza la cronologia (inclou els missatges directes)</string>

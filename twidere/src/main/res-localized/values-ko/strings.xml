@@ -354,7 +354,7 @@
   <string name="none">없음</string>
   <string name="large">크게</string>
   <string name="small">작게</string>
-  <string name="and_more">등 <xliff:g id="count">%d</xliff:g>개 이상</string>
+  <string name="and_N_more">등 <xliff:g id="count">%d</xliff:g>개 이상</string>
   <string name="clear_search_history">검색 기록 지우기</string>
   <string name="permission_description_none">아무런 권한을 필요로 하지 않습니다</string>
   <string name="permission_description_refresh">타임라인 새로고침 (쪽지 포함)</string>

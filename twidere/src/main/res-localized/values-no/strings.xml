@@ -373,7 +373,7 @@
   <string name="none">Ingen</string>
   <string name="large">Stor</string>
   <string name="small">Liten</string>
-  <string name="and_more">og <xliff:g id="count">%d</xliff:g> flere</string>
+  <string name="and_N_more">og <xliff:g id="count">%d</xliff:g> flere</string>
   <string name="clear_search_history">Tøm søkehistorikken</string>
   <string name="permission_description_none">Ingen tillatelser trengs</string>
   <string name="permission_description_refresh">Oppdater tidslinje (inkludert direktemeldinger)</string>

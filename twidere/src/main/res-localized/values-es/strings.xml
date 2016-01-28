@@ -373,7 +373,7 @@
   <string name="none">Ninguno</string>
   <string name="large">Grande</string>
   <string name="small">Pequeño</string>
-  <string name="and_more">y <xliff:g id="count">%d</xliff:g> más</string>
+  <string name="and_N_more">y <xliff:g id="count">%d</xliff:g> más</string>
   <string name="clear_search_history">Limpiar historial de búsqueda</string>
   <string name="permission_description_none">No se necesitan permisos</string>
   <string name="permission_description_refresh">Actualizar cronología (incluyendo mensajes directos)</string>

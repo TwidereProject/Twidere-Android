@@ -367,7 +367,7 @@
   <string name="none">Никак</string>
   <string name="large">Большой</string>
   <string name="small">Маленький</string>
-  <string name="and_more">и еще <xliff:g id="count">%d</xliff:g></string>
+  <string name="and_N_more">и еще <xliff:g id="count">%d</xliff:g></string>
   <string name="clear_search_history">Очистить историю поиска</string>
   <string name="permission_description_none">Разрешения не требуются</string>
   <string name="permission_description_refresh">Обновить ленту (вкл. личн. сообщения)</string>

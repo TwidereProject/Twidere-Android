@@ -373,7 +373,7 @@
   <string name="none">Semmi</string>
   <string name="large">Nagy</string>
   <string name="small">Kicsi</string>
-  <string name="and_more">és még <xliff:g id="count">%d</xliff:g> további elem</string>
+  <string name="and_N_more">és még <xliff:g id="count">%d</xliff:g> további elem</string>
   <string name="clear_search_history">Keresési történet törlése</string>
   <string name="permission_description_none">Nincs szükség engedélyekre</string>
   <string name="permission_description_refresh">Kezdőlap (és privát üzenetek) frissítése</string>

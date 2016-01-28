@@ -359,7 +359,7 @@
   <string name="none">Hiçbiri</string>
   <string name="large">Büyük</string>
   <string name="small">Küçük</string>
-  <string name="and_more">ve <xliff:g id="count">%d</xliff:g> daha</string>
+  <string name="and_N_more">ve <xliff:g id="count">%d</xliff:g> daha</string>
   <string name="clear_search_history">Arama geçmişini temizle</string>
   <string name="permission_description_none">Herhangi bir izin gerekmez</string>
   <string name="permission_description_refresh">Zaman akışını yenile (Direkt mesajlar dahil)</string>

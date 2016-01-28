@@ -379,7 +379,7 @@
     <string name="none">None</string>
     <string name="large">Large</string>
     <string name="small">Small</string>
-    <string name="and_more">and <xliff:g id="count">%d</xliff:g> more</string>
+    <string name="and_N_more">and <xliff:g id="count">%d</xliff:g> more</string>
     <string name="clear_search_history">Clear search history</string>
     <string name="permission_description_none">No permissions needed</string>
     <string name="permission_description_refresh">Refresh timeline (including direct messages)</string>
@@ -837,6 +837,6 @@
     <string name="open_poll_in_official_app">Open poll in official app</string>
     <string name="action_vote">Vote</string>
     <string name="label_poll">Poll</string>
-    <string name="poll_summary_format"><xliff:g id="poll_count">%s</xliff:g> · <xliff:g id="poll_time_left">%s</xliff:g></string>
-    <string name="N_more" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> more</string>
+    <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+    <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
 </resources>

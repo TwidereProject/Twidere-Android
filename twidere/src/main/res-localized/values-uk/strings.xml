@@ -354,7 +354,7 @@
   <string name="none">Нічого</string>
   <string name="large">Великий</string>
   <string name="small">Малий</string>
-  <string name="and_more">і ще <xliff:g id="count">%d</xliff:g></string>
+  <string name="and_N_more">і ще <xliff:g id="count">%d</xliff:g></string>
   <string name="clear_search_history">Очистити історію пошуку</string>
   <string name="permission_description_none">Дозволи не потрібні</string>
   <string name="permission_description_refresh">Оновити стрічку (включаючи особисті повідомленння)</string>

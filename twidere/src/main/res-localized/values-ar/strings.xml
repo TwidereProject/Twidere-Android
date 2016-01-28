@@ -367,7 +367,7 @@
   <string name="none">لا شيء</string>
   <string name="large">كبير</string>
   <string name="small">صغير</string>
-  <string name="and_more">و <xliff:g id="count">%d</xliff:g> أخرون</string>
+  <string name="and_N_more">و <xliff:g id="count">%d</xliff:g> أخرون</string>
   <string name="clear_search_history">محو سجل البحث</string>
   <string name="permission_description_none">لا يوجد صلاحيات مُحتاجة.</string>
   <string name="permission_description_refresh">تحديث الخط الزمني (بما في ذلك الرسائل الخاصة)</string>

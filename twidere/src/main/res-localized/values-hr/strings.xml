@@ -354,7 +354,7 @@
   <string name="none">Ništa</string>
   <string name="large">Veliko</string>
   <string name="small">Malo</string>
-  <string name="and_more">i <xliff:g id="count">%d</xliff:g> više</string>
+  <string name="and_N_more">i <xliff:g id="count">%d</xliff:g> više</string>
   <string name="clear_search_history">Očisti povijest pretraživanja</string>
   <string name="permission_description_none">Dopuštenja nisu potrebna</string>
   <string name="permission_description_refresh">Osvježi timeline (uključujući izravne poruke)</string>

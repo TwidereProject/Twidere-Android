@@ -354,7 +354,7 @@
   <string name="none">Ei mitään</string>
   <string name="large">Suuri</string>
   <string name="small">Pieni</string>
-  <string name="and_more">ja <xliff:g id="count">%d</xliff:g> muuta</string>
+  <string name="and_N_more">ja <xliff:g id="count">%d</xliff:g> muuta</string>
   <string name="clear_search_history">Tyhjennä hakuhistoria</string>
   <string name="permission_description_none">Oikeuksia ei tarvita</string>
   <string name="permission_description_refresh">Päivitä aikajana (mukaanlukien yksityisviestit)</string>
