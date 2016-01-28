@@ -86,7 +86,6 @@ dependencies {
     compile 'dnsjava:dnsjava:2.1.7'
     compile 'com.commonsware.cwac:merge:1.1.1'
     compile 'com.commonsware.cwac:layouts:0.4.2'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'com.squareup.okhttp:okhttp:2.7.0'
@@ -115,6 +114,8 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
     compile 'com.j256.simplemagic:simplemagic:1.6'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9'
     googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4'
     googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }

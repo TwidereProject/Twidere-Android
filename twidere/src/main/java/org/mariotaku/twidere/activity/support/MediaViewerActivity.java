@@ -16,467 +16,163 @@
 
 package org.mariotaku.twidere.activity.support;
 
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.ActionBar;
-import android.view.KeyEvent;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnGenericMotionListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.sprylab.android.widget.TextureVideoView;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.mediaviewer.library.AbsMediaViewerActivity;
+import org.mariotaku.mediaviewer.library.CacheDownloadLoader;
+import org.mariotaku.mediaviewer.library.FileCache;
+import org.mariotaku.mediaviewer.library.MediaDownloader;
+import org.mariotaku.mediaviewer.library.MediaViewerFragment;
+import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.support.SupportFixedFragmentStatePagerAdapter;
-import org.mariotaku.twidere.fragment.support.CacheDownloadFragment;
-import org.mariotaku.twidere.fragment.support.ViewStatusDialogFragment;
-import org.mariotaku.twidere.fragment.support.card.CardBrowserFragment;
-import org.mariotaku.twidere.loader.support.CacheDownloadLoader.Listener;
-import org.mariotaku.twidere.loader.support.CacheDownloadLoader.Result;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.model.ParcelableMedia.VideoInfo.Variant;
-import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.IntentUtils;
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MenuUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.util.concurrent.TimeUnit;
 
-import pl.droidsonroids.gif.GifSupportChecker;
-import pl.droidsonroids.gif.GifTextureView;
+import javax.inject.Inject;
 
 
-public final class MediaViewerActivity extends BaseAppCompatActivity implements Constants,
-        OnPageChangeListener, CacheDownloadFragment.ShareIntentProcessor {
+public final class MediaViewerActivity extends AbsMediaViewerActivity implements Constants {
 
-    private static final String EXTRA_LOOP = "loop";
-    private static boolean ANIMATED_GIF_SUPPORTED = GifSupportChecker.isSupported();
-    private ViewPager mViewPager;
-    private MediaPagerAdapter mPagerAdapter;
-    private View mMediaStatusContainer;
+    @Inject
+    FileCache mFileCache;
+    @Inject
+    MediaDownloader mMediaDownloader;
 
-    @Override
-    public int getThemeColor() {
-        return ThemeUtils.getUserAccentColor(this);
-    }
-
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getViewerThemeResource(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                finish();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    private ParcelableMedia[] mMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        GeneralComponentHelper.build(this).inject(this);
         super.onCreate(savedInstanceState);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        setContentView(R.layout.activity_media_viewer);
-        mPagerAdapter = new MediaPagerAdapter(this);
-        mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.element_spacing_normal));
-        mViewPager.addOnPageChangeListener(this);
-        final Intent intent = getIntent();
-        final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
-        final ParcelableMedia[] media = Utils.newParcelableArray(intent.getParcelableArrayExtra(EXTRA_MEDIA), ParcelableMedia.CREATOR);
-        final ParcelableMedia currentMedia = intent.getParcelableExtra(EXTRA_CURRENT_MEDIA);
-        mPagerAdapter.setMedia(accountId, media);
-        final int currentIndex = ArrayUtils.indexOf(media, currentMedia);
-        if (currentIndex != -1) {
-            mViewPager.setCurrentItem(currentIndex, false);
-        }
-        if (isMediaStatusEnabled() && intent.hasExtra(EXTRA_STATUS)) {
-            mMediaStatusContainer.setVisibility(View.VISIBLE);
-            final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            final Fragment f = new ViewStatusDialogFragment();
-            final Bundle args = new Bundle();
-            args.putParcelable(EXTRA_STATUS, intent.getParcelableExtra(EXTRA_STATUS));
-            args.putBoolean(EXTRA_SHOW_MEDIA_PREVIEW, false);
-            args.putBoolean(EXTRA_SHOW_EXTRA_TYPE, false);
-            f.setArguments(args);
-            ft.replace(R.id.media_status, f);
-            ft.commit();
-        } else {
-            mMediaStatusContainer.setVisibility(View.GONE);
-        }
-        updatePositionTitle();
-    }
-
-    public boolean hasStatus() {
-        return getIntent().hasExtra(EXTRA_STATUS);
     }
 
     @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        mMediaStatusContainer = findViewById(R.id.media_status_container);
+    protected int getInitialPosition() {
+        return ArrayUtils.indexOf(getMedia(), getCurrentMedia());
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    protected int getLayoutRes() {
+        return R.layout.activity_media_viewer;
     }
 
     @Override
-    public void onPageSelected(int position) {
-        updatePositionTitle();
-        setBarVisibility(true);
+    protected ViewPager findViewPager() {
+        return (ViewPager) findViewById(R.id.view_pager);
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
-        if (action != null) {
-            switch (action) {
-                case ACTION_NAVIGATION_PREVIOUS_TAB: {
-                    final int previous = mViewPager.getCurrentItem() - 1;
-                    if (previous < 0) {
-                    } else if (previous < mPagerAdapter.getCount()) {
-                        mViewPager.setCurrentItem(previous, true);
-                    }
-                    return true;
-                }
-                case ACTION_NAVIGATION_NEXT_TAB: {
-                    final int next = mViewPager.getCurrentItem() + 1;
-                    if (next >= mPagerAdapter.getCount()) {
-                    } else if (next >= 0) {
-                        mViewPager.setCurrentItem(next, true);
-                    }
-                    return true;
-                }
-                case ACTION_NAVIGATION_BACK: {
-                    onBackPressed();
-                    return true;
-                }
-            }
-        }
-        return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
-    }
-
-    @Override
-    protected boolean shouldApplyWindowBackground() {
+    public boolean isBarShowing() {
         return false;
     }
 
-    private ParcelableStatus getStatus() {
-        return getIntent().getParcelableExtra(EXTRA_STATUS);
-    }
+    @Override
+    public void setBarVisibility(boolean visible) {
 
-    private boolean isBarShowing() {
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) return false;
-        return actionBar.isShowing();
-    }
-
-    private boolean isMediaStatusEnabled() {
-        return Boolean.parseBoolean("false");
-    }
-
-    private void setBarVisibility(boolean visible) {
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) return;
-        if (visible) {
-            actionBar.show();
-        } else {
-            actionBar.hide();
-        }
-
-        mMediaStatusContainer.setVisibility(isMediaStatusEnabled() && visible ? View.VISIBLE : View.GONE);
-    }
-
-    private void toggleBar() {
-        setBarVisibility(!isBarShowing());
-    }
-
-    private void updatePositionTitle() {
-        setTitle(String.format("%d / %d", mViewPager.getCurrentItem() + 1, mPagerAdapter.getCount()));
     }
 
     @Override
-    public void processShareIntent(Intent intent) {
-        if (!hasStatus()) return;
-        final ParcelableStatus status = getStatus();
-        intent.putExtra(Intent.EXTRA_SUBJECT, IntentUtils.getStatusShareSubject(this, status));
-        intent.putExtra(Intent.EXTRA_TEXT, IntentUtils.getStatusShareText(this, status));
+    public MediaDownloader getDownloader() {
+        return mMediaDownloader;
     }
 
-    public static class ImagePageFragment extends MediaPageFragment implements OnClickListener {
+    @Override
+    public FileCache getFileCache() {
+        return mFileCache;
+    }
 
-        private SubsamplingScaleImageView mImageView;
-        private ProgressWheel mProgressBar;
-
-        @Override
-        public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onBaseViewCreated(view, savedInstanceState);
-            mImageView = (SubsamplingScaleImageView) view.findViewById(R.id.image_view);
-            mProgressBar = (ProgressWheel) view.findViewById(R.id.load_progress);
-        }
-
-        @Override
-        public void onClick(View v) {
-            final MediaViewerActivity activity = (MediaViewerActivity) getActivity();
-            if (activity == null) return;
-            activity.toggleBar();
-        }
-
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_media_page_image_compat, container, false);
-        }
-
-
-        @Override
-        protected void showProgress(boolean indeterminate, float progress) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            if (indeterminate) {
-                if (mProgressBar.isSpinning()) {
-                    mProgressBar.spin();
-                }
-            } else {
-                mProgressBar.setProgress(progress);
+    @Override
+    protected MediaViewerFragment instantiateMediaFragment(int position) {
+        final ParcelableMedia media = getMedia()[position];
+        switch (media.type) {
+            case ParcelableMedia.Type.TYPE_IMAGE: {
+                final Bundle args = new Bundle();
+                args.putParcelable(ImagePageFragment.EXTRA_MEDIA_URI, Uri.parse(media.media_url));
+                return (MediaViewerFragment) Fragment.instantiate(this,
+                        ImagePageFragment.class.getName(), args);
+            }
+            case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
+            case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF: {
+                final Bundle args = new Bundle();
+                args.putBoolean(VideoPageFragment.EXTRA_LOOP, true);
+                args.putParcelable(EXTRA_MEDIA, media);
+                return (MediaViewerFragment) Fragment.instantiate(this,
+                        VideoPageFragment.class.getName(), args);
+            }
+            case ParcelableMedia.Type.TYPE_VIDEO: {
+                final Bundle args = new Bundle();
+                args.putParcelable(EXTRA_MEDIA, media);
+                return (MediaViewerFragment) Fragment.instantiate(this,
+                        VideoPageFragment.class.getName(), args);
             }
         }
-
-        @Override
-        protected void hideProgress() {
-            mProgressBar.setVisibility(View.GONE);
-        }
-
-        @Override
-        protected boolean isAbleToLoad() {
-            return true;
-        }
-
-        @Override
-        protected Uri getDownloadUri() {
-            return Uri.parse(getMedia().media_url);
-        }
-
-        @Override
-        protected void displayDownloaded(Result data) {
-            mImageView.setImage(ImageSource.uri(data.cacheUri));
-        }
-
-        @Override
-        protected void recycleMedia() {
-            mImageView.recycle();
-        }
-
-        private void openInBrowser() {
-            final ParcelableMedia media = getMedia();
-            final Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-            if (media.url != null) {
-                intent.setData(Uri.parse(media.url));
-            } else {
-                intent.setData(Uri.parse(media.media_url));
-            }
-            startActivity(intent);
-        }
-
-        @Override
-        public void onPrepareOptionsMenu(Menu menu) {
-            final boolean isLoading = getLoaderManager().hasRunningLoaders();
-            final boolean isDownloaded = hasDownloadedData();
-            MenuUtils.setMenuItemAvailability(menu, R.id.save, !isLoading && isDownloaded);
-            MenuUtils.setMenuItemAvailability(menu, R.id.share, !isLoading && isDownloaded);
-            MenuUtils.setMenuItemAvailability(menu, R.id.refresh, !isLoading && !isDownloaded);
-        }
-
-
-        @Override
-        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            inflater.inflate(R.menu.menu_media_viewer_image_page, menu);
-        }
-
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.open_in_browser: {
-                    openInBrowser();
-                    return true;
-                }
-                case R.id.save: {
-                    requestAndSaveToStorage();
-                    return true;
-                }
-                case R.id.refresh: {
-                    startLoading();
-                    return true;
-                }
-                case R.id.share: {
-                    shareMedia();
-                    return true;
-                }
-            }
-            return super.onOptionsItemSelected(item);
-        }
-
-
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            setHasOptionsMenu(true);
-            mImageView.setOnClickListener(this);
-            mImageView.setOnGenericMotionListener(new OnGenericMotionListener() {
-                @Override
-                public boolean onGenericMotion(View v, MotionEvent event) {
-                    final SubsamplingScaleImageView iv = (SubsamplingScaleImageView) v;
-                    return false;
-                }
-            });
-            startLoading();
-        }
-
+        throw new UnsupportedOperationException();
     }
 
-    public static final class GifSupportedImagePageFragment extends ImagePageFragment
-            implements Listener, LoaderCallbacks<Result>, OnClickListener {
-
-        private GifTextureView mGifImageView;
-
-        @Override
-        public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onBaseViewCreated(view, savedInstanceState);
-            mGifImageView = (GifTextureView) view.findViewById(R.id.gif_image_view);
-        }
-
-        @Override
-        protected boolean isAbleToLoad() {
-            return true;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_media_page_image, container, false);
-        }
-
-
+    @Override
+    protected int getMediaCount() {
+        return getMedia().length;
     }
 
-    private static class MediaPagerAdapter extends SupportFixedFragmentStatePagerAdapter {
+    private ParcelableMedia getCurrentMedia() {
+        return getIntent().getParcelableExtra(EXTRA_CURRENT_MEDIA);
+    }
 
-        private final MediaViewerActivity mActivity;
-        private long mAccountId;
-        private ParcelableMedia[] mMedia;
+    private ParcelableMedia[] getMedia() {
+        if (mMedia != null) return mMedia;
+        return mMedia = Utils.newParcelableArray(getIntent().getParcelableArrayExtra(EXTRA_MEDIA),
+                ParcelableMedia.CREATOR);
+    }
 
-        public MediaPagerAdapter(MediaViewerActivity activity) {
-            super(activity.getSupportFragmentManager());
-            mActivity = activity;
+    private Object getDownloadExtra() {
+        return null;
+    }
+
+    public static class ImagePageFragment extends SubsampleImageViewerFragment {
+        @Override
+        protected Object getDownloadExtra() {
+            return ((MediaViewerActivity) getActivity()).getDownloadExtra();
         }
+    }
+
+    public static class VideoPageFragment extends MediaViewerFragment implements MediaPlayer.OnPreparedListener,
+            MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, View.OnClickListener {
+
+        private static final String EXTRA_LOOP = "loop";
 
         @Override
-        public int getCount() {
-            if (mMedia == null) return 0;
-            return mMedia.length;
+        protected Object getDownloadExtra() {
+            return null;
         }
 
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            final ParcelableMedia media = mMedia[position];
-            final Bundle args = new Bundle();
-            args.putLong(EXTRA_ACCOUNT_ID, mAccountId);
-            args.putParcelable(EXTRA_MEDIA, media);
-            switch (media.type) {
-                case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
-                case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF: {
-                    args.putBoolean(EXTRA_LOOP, true);
-                    return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
-                }
-                case ParcelableMedia.Type.TYPE_VIDEO: {
-                    return Fragment.instantiate(mActivity, VideoPageFragment.class.getName(), args);
-                }
-                case ParcelableMedia.Type.TYPE_IMAGE: {
-                    if (ANIMATED_GIF_SUPPORTED) {
-                        return Fragment.instantiate(mActivity, GifSupportedImagePageFragment.class.getName(), args);
-                    }
-                    return Fragment.instantiate(mActivity, ImagePageFragment.class.getName(), args);
-                }
-                case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER: {
-                    return CardBrowserFragment.show(media.media_url != null ? media.media_url : media.url, args);
-                }
-            }
-            return new UnsupportedPageFragment();
-        }
-
-        public void setMedia(long accountId, ParcelableMedia[] media) {
-            mAccountId = accountId;
-            mMedia = media;
-            notifyDataSetChanged();
-        }
-
-    }
-
-    public static class UnsupportedPageFragment extends Fragment {
-    }
-
-    private static abstract class MediaPageFragment extends CacheDownloadFragment implements
-            LoaderCallbacks<Result>, Listener {
-
-        protected final ParcelableMedia getMedia() {
-            final Bundle args = getArguments();
-            return args.getParcelable(EXTRA_MEDIA);
-        }
-
-
-    }
-
-    public static final class VideoPageFragment extends MediaPageFragment
-            implements OnPreparedListener, OnErrorListener, OnCompletionListener, OnClickListener {
 
         private static final String[] SUPPORTED_VIDEO_TYPES;
 
@@ -533,9 +229,13 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             return Uri.parse(bestVideoUrlAndType.first);
         }
 
+        private ParcelableMedia getMedia() {
+            return getArguments().getParcelable(EXTRA_MEDIA);
+        }
+
         @Override
-        protected void displayDownloaded(Result data) {
-            mVideoView.setVideoURI(data.cacheUri);
+        protected void displayMedia(CacheDownloadLoader.Result result) {
+            mVideoView.setVideoURI(result.cacheUri);
         }
 
         @Override
@@ -566,7 +266,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
             mVideoViewProgress.removeCallbacks(mVideoProgressRunnable);
             mVideoViewProgress.setVisibility(View.GONE);
             mMediaPlayerError = what;
-            invalidateOptionsMenu();
+//            invalidateOptionsMenu();
             return true;
         }
 
@@ -584,7 +284,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 mVideoViewProgress.post(mVideoProgressRunnable);
                 updatePlayerState();
                 mVideoControl.setVisibility(View.VISIBLE);
-                invalidateOptionsMenu();
+//                invalidateOptionsMenu();
             }
         }
 
@@ -604,8 +304,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
 
 
         @Override
-        public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-            super.onBaseViewCreated(view, savedInstanceState);
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
             mVideoView = (TextureVideoView) view.findViewById(R.id.video_view);
             mVideoViewOverlay = view.findViewById(R.id.video_view_overlay);
             mVideoViewProgress = (ProgressBar) view.findViewById(R.id.video_view_progress);
@@ -660,7 +360,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                         return Pair.create(media.media_url, null);
                     }
                     for (String supportedType : SUPPORTED_VIDEO_TYPES) {
-                        for (Variant variant : media.video_info.variants) {
+                        for (ParcelableMedia.VideoInfo.Variant variant : media.video_info.variants) {
                             if (supportedType.equalsIgnoreCase(variant.content_type))
                                 return Pair.create(variant.url, variant.content_type);
                         }
@@ -721,8 +421,8 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_media_page_video, container, false);
+        public View onCreateMediaView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.layout_media_viewer_texture_video_view, container, false);
         }
 
         @Override
@@ -743,7 +443,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.save: {
-                    requestAndSaveToStorage();
+//                    requestAndSaveToStorage();
                     return true;
                 }
                 case R.id.refresh: {
@@ -751,7 +451,7 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                     return true;
                 }
                 case R.id.share: {
-                    shareMedia();
+//                    shareMedia();
                 }
             }
             return super.onOptionsItemSelected(item);
@@ -802,6 +502,5 @@ public final class MediaViewerActivity extends BaseAppCompatActivity implements 
                 mHandler.postDelayed(this, 16);
             }
         }
-
     }
 }

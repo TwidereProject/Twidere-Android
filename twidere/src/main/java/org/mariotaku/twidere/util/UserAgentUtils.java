@@ -71,11 +71,15 @@ public class UserAgentUtils {
     @WorkerThread
     @Nullable
     public static String getDefaultUserAgentStringSafe(Context context) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            //noinspection ResourceType
+            return getDefaultUserAgentString(context);
+        }
         final Handler handler = new Handler(Looper.getMainLooper());
-        final FetchUserAgentRunnable runnable = new FetchUserAgentRunnable(context);
-        handler.post(runnable);
-        runnable.waitForExecution();
         try {
+            final FetchUserAgentRunnable runnable = new FetchUserAgentRunnable(context);
+            handler.post(runnable);
+            runnable.waitForExecution();
             return runnable.getUserAgent();
         } finally {
             handler.removeCallbacksAndMessages(null);

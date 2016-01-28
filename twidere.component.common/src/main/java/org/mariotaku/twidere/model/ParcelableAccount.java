@@ -197,10 +197,12 @@ public class ParcelableAccount implements Parcelable {
         return accounts;
     }
 
+    @Nullable
     public static ParcelableCredentials getCredentials(final Context context, final long accountId) {
         if (context == null) return null;
         Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS, Accounts.ACCOUNT_ID + " = " + accountId, null, null);
+                Accounts.COLUMNS, Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null,
+                null);
         if (cur == null) return null;
         try {
             if (cur.moveToFirst()) {

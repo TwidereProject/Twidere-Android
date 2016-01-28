@@ -54,9 +54,9 @@
             android:id="@+id/status_info_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/element_spacing_small"
-            android:layout_marginLeft="@dimen/element_spacing_small"
             android:layout_marginBottom="@dimen/element_spacing_minus_small"
+            android:layout_marginLeft="@dimen/element_spacing_small"
+            android:layout_marginStart="@dimen/element_spacing_small"
             android:layout_toEndOf="@+id/status_info_icon"
             android:layout_toRightOf="@+id/status_info_icon"
             android:ellipsize="end"
@@ -164,9 +164,8 @@
                 android:id="@+id/quote_indicator"
                 android:layout_width="@dimen/element_spacing_small"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/quoted_text"
+                android:layout_alignBottom="@+id/status_content_space"
                 android:layout_alignTop="@+id/quoted_name"
-                android:layout_marginBottom="@dimen/element_spacing_normal"
                 android:layout_marginEnd="@dimen/element_spacing_normal"
                 android:layout_marginRight="@dimen/element_spacing_normal"
                 android:background="?quoteIndicatorBackgroundColor"
@@ -207,8 +206,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/quoted_text"
-                android:layout_marginBottom="@dimen/element_spacing_msmall"
-                android:layout_marginTop="@dimen/element_spacing_small"
+                android:layout_marginBottom="@dimen/element_spacing_small"
+                android:layout_marginTop="@dimen/element_spacing_xsmall"
                 android:layout_toEndOf="@+id/quote_indicator"
                 android:layout_toRightOf="@+id/quote_indicator"
                 android:horizontalSpacing="@dimen/element_spacing_xsmall"
@@ -217,6 +216,12 @@
                 <!-- Child views will be inflated if media preview enabled in ViewHolder -->
 
             </org.mariotaku.twidere.view.CardMediaContainer>
+
+            <Space
+                android:id="@+id/status_content_space"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/media_preview"/>
 
         </RelativeLayout>
 

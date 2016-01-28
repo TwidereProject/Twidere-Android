@@ -30,8 +30,8 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.util.imageloader.AccountExtra;
 import org.mariotaku.twidere.util.imageloader.OvalBitmapDisplayer;
+import org.mariotaku.twidere.util.media.MediaExtra;
 
 import javax.inject.Singleton;
 
@@ -111,7 +111,9 @@ public class MediaLoaderWrapper implements Constants {
         }
         final DisplayImageOptions.Builder b = new DisplayImageOptions.Builder();
         b.cloneFrom(mImageDisplayOptions);
-        b.extraForDownloader(new AccountExtra(accountId));
+        MediaExtra extra = new MediaExtra();
+        extra.setAccountId(accountId);
+        b.extraForDownloader(extra);
         mImageLoader.displayImage(url, view, b.build(), loadingHandler, loadingHandler);
     }
 

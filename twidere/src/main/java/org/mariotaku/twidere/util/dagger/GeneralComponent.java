@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import org.mariotaku.twidere.activity.BasePreferenceActivity;
 import org.mariotaku.twidere.activity.BaseThemedActivity;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
+import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.activity.support.ThemedFragmentActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
@@ -130,9 +131,11 @@ public interface GeneralComponent {
 
     void inject(CacheDownloadLoader object);
 
-    void inject(CacheProvider object);
+    void inject(CacheProvider provider);
 
-    void inject(CacheDownloadFragment.MediaDownloader object);
+    void inject(CacheDownloadFragment.MediaDownloader downloader);
 
     void inject(TwitterAPIStatusesLoader loader);
+
+    void inject(MediaViewerActivity activity);
 }

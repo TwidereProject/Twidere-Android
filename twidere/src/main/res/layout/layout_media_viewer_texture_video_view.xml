@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+
+    <com.sprylab.android.widget.TextureVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+    <FrameLayout
+        android:id="@+id/video_view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:id="@+id/video_control"
+            style="?actionBarSplitStyle"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_gravity="bottom"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <ImageButton
+                android:id="@+id/play_pause_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/play"
+                android:minWidth="@dimen/element_size_normal"
+                android:src="@drawable/ic_action_play_arrow"/>
+
+            <TextView
+                android:id="@+id/position_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/video_view_progress"
+                android:layout_alignStart="@+id/video_view_progress"
+                android:layout_below="@+id/video_view_progress"
+                android:gravity="center"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="@dimen/text_size_extra_small"
+                tools:text="--:--"/>
+
+            <ProgressBar
+                android:id="@+id/video_view_progress"
+                style="?android:progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/play_pause_button"
+                android:layout_toLeftOf="@+id/volume_button"
+                android:layout_toRightOf="@+id/play_pause_button"
+                android:layout_toStartOf="@+id/volume_button"
+                android:indeterminate="false"/>
+
+            <TextView
+                android:id="@+id/duration_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/video_view_progress"
+                android:layout_alignRight="@+id/video_view_progress"
+                android:layout_below="@+id/video_view_progress"
+                android:gravity="center"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="@dimen/text_size_extra_small"
+                tools:text="--:--"/>
+
+
+            <ImageButton
+                android:id="@+id/volume_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/mute"
+                android:minWidth="@dimen/element_size_normal"
+                android:src="@drawable/ic_action_speaker_max"/>
+
+
+        </RelativeLayout>
+    </FrameLayout>
+</RelativeLayout>

@@ -121,7 +121,7 @@ public class NameView extends ThemedTextView {
             sb.setSpan(mPrimaryTextStyle, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.setSpan(mPrimaryTextSize, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        sb.append(mTwoLine ? "\n" : "");
+        sb.append(mTwoLine ? '\n' : ' ');
         if (secondaryText != null) {
             int start = sb.length();
             if (formatter != null && !isInEditMode()) {

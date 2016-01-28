@@ -28,24 +28,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <LinearLayout
-        android:id="@+id/media_status_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/element_spacing_small"
-            android:background="@drawable/shadow_top"/>
-
-        <FrameLayout
-            android:id="@+id/media_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#80000000"/>
-    </LinearLayout>
-
 </merge>

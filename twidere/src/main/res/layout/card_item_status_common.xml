@@ -198,7 +198,7 @@
             android:id="@+id/quote_indicator"
             android:layout_width="@dimen/element_spacing_small"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/media_preview"
+            android:layout_alignBottom="@+id/status_content_space"
             android:layout_alignTop="@+id/quoted_name"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginStart="@dimen/element_spacing_normal"

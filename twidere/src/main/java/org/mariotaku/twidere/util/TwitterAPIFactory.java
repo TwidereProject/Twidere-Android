@@ -222,7 +222,9 @@ public class TwitterAPIFactory implements TwidereConstants {
         return new Endpoint(endpointUrl);
     }
 
-    public static Authorization getAuthorization(ParcelableCredentials credentials) {
+    @Nullable
+    public static Authorization getAuthorization(@Nullable ParcelableCredentials credentials) {
+        if (credentials == null) return null;
         switch (credentials.auth_type) {
             case ParcelableCredentials.AUTH_TYPE_OAUTH:
             case ParcelableCredentials.AUTH_TYPE_XAUTH: {
