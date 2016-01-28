@@ -22,8 +22,6 @@ package org.mariotaku.twidere.api.twitter.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.api.gnusocial.model.Attachment;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

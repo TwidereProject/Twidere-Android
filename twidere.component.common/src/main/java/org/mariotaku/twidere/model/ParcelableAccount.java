@@ -199,13 +199,17 @@ public class ParcelableAccount implements Parcelable {
 
     public static ParcelableCredentials getCredentials(final Context context, final long accountId) {
         if (context == null) return null;
-        try (Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS, Accounts.ACCOUNT_ID + " = " + accountId, null, null)) {
-            if (cur != null && cur.moveToFirst()) {
+        Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
+                Accounts.COLUMNS, Accounts.ACCOUNT_ID + " = " + accountId, null, null);
+        if (cur == null) return null;
+        try {
+            if (cur.moveToFirst()) {
                 return ParcelableCredentialsCursorIndices.fromCursor(cur);
             }
-            return null;
+        } finally {
+            cur.close();
         }
+        return null;
     }
 
     public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly) {

@@ -51,8 +51,6 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Language;
 
-import static org.mariotaku.twidere.util.TwitterAPIFactory.getDefaultTwitterInstance;
-
 public class TranslationDestinationPreference extends Preference implements Constants, OnClickListener {
 
     private SharedPreferences mPreferences;

@@ -39,7 +39,7 @@ public final class GeoQuery implements ValueMap {
     /**
      * Creates a GeoQuery with the specified location
      *
-     * @param location
+     * @param location Query location
      */
     public GeoQuery(final GeoLocation location) {
         this.location = location;

@@ -36,6 +36,8 @@ import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.annotation.CustomTabType;
+import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.support.ActivitiesAboutMeFragment;
 import org.mariotaku.twidere.fragment.support.ActivitiesByFriendsFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
@@ -66,42 +68,42 @@ public class CustomTabUtils implements Constants {
     private static final HashMap<String, Integer> CUSTOM_TABS_ICON_NAME_MAP = new HashMap<>();
 
     static {
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_HOME_TIMELINE, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.HOME_TIMELINE, new CustomTabConfiguration(
                 HomeTimelineFragment.class, R.string.home, R.drawable.ic_action_home,
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false));
 
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_NOTIFICATIONS_TIMELINE, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.NOTIFICATIONS_TIMELINE, new CustomTabConfiguration(
                 ActivitiesAboutMeFragment.class, R.string.notifications, R.drawable.ic_action_notification,
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 1, false,
                 ExtraConfiguration.newBoolean(EXTRA_MY_FOLLOWING_ONLY, R.string.following_only, false)));
 
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_DIRECT_MESSAGES, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
                 DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
 
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_TRENDS_SUGGESTIONS, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.TRENDS_SUGGESTIONS, new CustomTabConfiguration(
                 TrendsSuggestionsFragment.class, R.string.trends, R.drawable.ic_action_hashtag,
                 CustomTabConfiguration.ACCOUNT_NONE, CustomTabConfiguration.FIELD_TYPE_NONE, 3, true));
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_FAVORITES, new CustomTabConfiguration(UserFavoritesFragment.class,
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.FAVORITES, new CustomTabConfiguration(UserFavoritesFragment.class,
                 R.string.likes, R.drawable.ic_action_heart, CustomTabConfiguration.ACCOUNT_REQUIRED,
                 CustomTabConfiguration.FIELD_TYPE_USER, 4));
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_USER_TIMELINE, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.USER_TIMELINE, new CustomTabConfiguration(
                 UserTimelineFragment.class, R.string.users_statuses, R.drawable.ic_action_quote,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER, 5));
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_SEARCH_STATUSES, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.SEARCH_STATUSES, new CustomTabConfiguration(
                 StatusesSearchFragment.class, R.string.search_statuses, R.drawable.ic_action_search,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_TEXT, R.string.query,
                 EXTRA_QUERY, 6));
 
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_LIST_TIMELINE, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.LIST_TIMELINE, new CustomTabConfiguration(
                 UserListTimelineFragment.class, R.string.list_timeline, R.drawable.ic_action_list,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER_LIST, 7));
 
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_ACTIVITIES_BY_FRIENDS, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.ACTIVITIES_BY_FRIENDS, new CustomTabConfiguration(
                 ActivitiesByFriendsFragment.class, R.string.activities_by_friends,
                 R.drawable.ic_action_accounts, CustomTabConfiguration.ACCOUNT_REQUIRED,
                 CustomTabConfiguration.FIELD_TYPE_NONE, 9));
-        CUSTOM_TABS_CONFIGURATION_MAP.put(TAB_TYPE_RETWEETS_OF_ME, new CustomTabConfiguration(
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.RETWEETS_OF_ME, new CustomTabConfiguration(
                 RetweetsOfMeFragment.class, R.string.retweets_of_me, R.drawable.ic_action_retweet,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_NONE, 10));
 
@@ -154,18 +156,22 @@ public class CustomTabUtils implements Constants {
                 .getColumnIndex(Tabs.TYPE), idxArguments = cur.getColumnIndex(Tabs.ARGUMENTS), idxExtras = cur
                 .getColumnIndex(Tabs.EXTRAS), idxPosition = cur.getColumnIndex(Tabs.POSITION);
         while (!cur.isAfterLast()) {
-            final String type = cur.getString(idxType);
+            @CustomTabType
+            final String type = getTabTypeAlias(cur.getString(idxType));
             final int position = cur.getInt(idxPosition);
             final String iconType = cur.getString(idxIcon);
             final String name = cur.getString(idxName);
             final Bundle args = ParseUtils.jsonToBundle(cur.getString(idxArguments));
+            @ReadPositionTag
             final String tag = getTagByType(type);
             args.putInt(EXTRA_TAB_POSITION, position);
             args.putBundle(EXTRA_EXTRAS, ParseUtils.jsonToBundle(cur.getString(idxExtras)));
             final CustomTabConfiguration conf = getTabConfiguration(type);
             final Class<? extends Fragment> cls = conf != null ? conf.getFragmentClass() : InvalidTabFragment.class;
-            tabs.add(new SupportTabSpec(TextUtils.isEmpty(name) ? getTabTypeName(context, type) : name,
-                    getTabIconObject(iconType), type, cls, args, position, tag));
+            final String tabTypeName = getTabTypeName(context, type);
+            final Object tabIconObject = getTabIconObject(iconType);
+            tabs.add(new SupportTabSpec(TextUtils.isEmpty(name) ? tabTypeName : name, tabIconObject,
+                    type, cls, args, position, tag));
             cur.moveToNext();
         }
         cur.close();
@@ -174,13 +180,16 @@ public class CustomTabUtils implements Constants {
     }
 
     @Nullable
-    private static String getTagByType(@NonNull String tabType) {
+    @ReadPositionTag
+    private static String getTagByType(@NonNull @CustomTabType String tabType) {
         switch (getTabTypeAlias(tabType)) {
-            case TAB_TYPE_HOME_TIMELINE:
-            case TAB_TYPE_NOTIFICATIONS_TIMELINE:
-            case TAB_TYPE_ACTIVITIES_ABOUT_ME:
-            case TAB_TYPE_DIRECT_MESSAGES:
-                return tabType;
+            case CustomTabType.HOME_TIMELINE:
+                return ReadPositionTag.HOME_TIMELINE;
+            case "activities_about_me":
+            case CustomTabType.NOTIFICATIONS_TIMELINE:
+                return ReadPositionTag.ACTIVITIES_ABOUT_ME;
+            case CustomTabType.DIRECT_MESSAGES:
+                return ReadPositionTag.DIRECT_MESSAGES;
         }
         return null;
     }
@@ -194,12 +203,13 @@ public class CustomTabUtils implements Constants {
         return CUSTOM_TABS_CONFIGURATION_MAP.get(getTabTypeAlias(tabType));
     }
 
+    @CustomTabType
     public static String getTabTypeAlias(String key) {
         if (key == null) return null;
         switch (key) {
             case "mentions_timeline":
             case "activities_about_me":
-                return TAB_TYPE_NOTIFICATIONS_TIMELINE;
+                return CustomTabType.NOTIFICATIONS_TIMELINE;
         }
         return key;
     }

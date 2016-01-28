@@ -23,8 +23,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
+import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -78,9 +80,11 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
         return adapter;
     }
 
+    @Nullable
     @Override
+    @ReadPositionTag
     protected String getReadPositionTag() {
-        return READ_POSITION_TAG_ACTIVITIES_ABOUT_ME;
+        return ReadPositionTag.ACTIVITIES_ABOUT_ME;
     }
 
     @Override

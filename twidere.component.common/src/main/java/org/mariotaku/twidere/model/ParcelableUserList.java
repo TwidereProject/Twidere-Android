@@ -108,7 +108,7 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
         this.position = position;
         this.account_id = account_id;
         id = list.getId();
-        is_public = list.getMode() == UserList.Mode.PUBLIC;
+        is_public = UserList.Mode.PUBLIC.equals(list.getMode());
         this.is_following = is_following;
         name = list.getName();
         description = list.getDescription();

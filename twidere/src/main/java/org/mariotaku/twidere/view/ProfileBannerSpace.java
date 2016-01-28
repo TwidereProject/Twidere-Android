@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -43,6 +44,7 @@ public class ProfileBannerSpace extends View {
      *
      * @param canvas an unused parameter.
      */
+    @SuppressLint("MissingSuperCall")
     @Override
     public void draw(@NonNull final Canvas canvas) {
     }

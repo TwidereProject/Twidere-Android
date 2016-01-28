@@ -183,11 +183,9 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, sender_profile_image_url);
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, recipient_profile_image_url);
         final ParcelableMedia[] mediaArray = ParcelableMedia.fromEntities(message);
-        if (mediaArray != null) {
-            try {
-                values.put(DirectMessages.MEDIA_JSON, LoganSquare.serialize(Arrays.asList(mediaArray), ParcelableMedia.class));
-            } catch (IOException ignored) {
-            }
+        try {
+            values.put(DirectMessages.MEDIA_JSON, LoganSquare.serialize(Arrays.asList(mediaArray), ParcelableMedia.class));
+        } catch (IOException ignored) {
         }
         return values;
     }

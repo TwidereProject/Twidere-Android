@@ -42,7 +42,7 @@ public class HtmlLinkExtractor {
      * @return Vector links and link text
      */
     public Vector<HtmlLink> grabLinks(final String html) {
-        final Vector<HtmlLink> result = new Vector<HtmlLink>();
+        final Vector<HtmlLink> result = new Vector<>();
         final Matcher matcherTag = patternTag.matcher(html);
         while (matcherTag.find()) {
             final String href = matcherTag.group(1); // href

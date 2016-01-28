@@ -42,6 +42,7 @@ import org.mariotaku.twidere.view.themed.ThemedTextView;
 public class NameView extends ThemedTextView {
 
     private boolean mNameFirst;
+    private boolean mTwoLine;
 
     private String mName, mScreenName;
 
@@ -59,11 +60,16 @@ public class NameView extends ThemedTextView {
 
     public NameView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setSingleLine(true);
         setEllipsize(TextUtils.TruncateAt.END);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.NameView, defStyleAttr, 0);
         setPrimaryTextColor(a.getColor(R.styleable.NameView_nv_primaryTextColor, 0));
         setSecondaryTextColor(a.getColor(R.styleable.NameView_nv_secondaryTextColor, 0));
+        if (mTwoLine = a.getBoolean(R.styleable.NameView_nv_twoLine, false)) {
+            setSingleLine(false);
+            setMaxLines(2);
+        } else {
+            setSingleLine(true);
+        }
         mPrimaryTextStyle = new StyleSpan(a.getInt(R.styleable.NameView_nv_primaryTextStyle, 0));
         mSecondaryTextStyle = new StyleSpan(a.getInt(R.styleable.NameView_nv_secondaryTextStyle, 0));
         a.recycle();
@@ -115,7 +121,7 @@ public class NameView extends ThemedTextView {
             sb.setSpan(mPrimaryTextStyle, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.setSpan(mPrimaryTextSize, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        sb.append(" ");
+        sb.append(mTwoLine ? "\n" : "");
         if (secondaryText != null) {
             int start = sb.length();
             if (formatter != null && !isInEditMode()) {

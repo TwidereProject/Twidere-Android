@@ -33,7 +33,7 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
-import org.mariotaku.twidere.view.ShapedImageView;
+import org.mariotaku.twidere.view.NameView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.Locale;
@@ -48,7 +48,8 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     private final IColorLabelView itemContent;
     private final ImageView profileImageView;
     private final ImageView profileTypeView;
-    private final TextView nameView, screenNameView, descriptionView, locationView, urlView,
+    private final NameView nameView;
+    private final TextView descriptionView, locationView, urlView,
             statusesCountView, followersCountView, friendsCountView;
 
     private UserClickListener userClickListener;
@@ -59,8 +60,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
         profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
         profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
-        nameView = (TextView) itemView.findViewById(R.id.name);
-        screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
+        nameView = (NameView) itemView.findViewById(R.id.name);
         descriptionView = (TextView) itemView.findViewById(R.id.description);
         locationView = (TextView) itemView.findViewById(R.id.location);
         urlView = (TextView) itemView.findViewById(R.id.url);
@@ -83,8 +83,8 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         } else {
             profileTypeView.setImageDrawable(null);
         }
-        nameView.setText(manager.getUserNickname(user.id, user.name, false));
-        screenNameView.setText("@" + user.screen_name);
+        nameView.setName(manager.getUserNickname(user.id, user.name, false));
+        nameView.setScreenName("@" + user.screen_name);
         descriptionView.setVisibility(TextUtils.isEmpty(user.description_unescaped) ? View.GONE : View.VISIBLE);
         descriptionView.setText(user.description_unescaped);
         locationView.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
@@ -141,7 +141,6 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     public void setTextSize(final float textSize) {
         descriptionView.setTextSize(textSize);
         nameView.setTextSize(textSize);
-        screenNameView.setTextSize(textSize * 0.75f);
         locationView.setTextSize(textSize);
         urlView.setTextSize(textSize);
         statusesCountView.setTextSize(textSize);

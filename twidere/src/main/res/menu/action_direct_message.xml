@@ -6,18 +6,8 @@
         android:icon="@drawable/ic_action_copy"
         android:title="@android:string/copy"/>
     <item
-        android:id="@+id/delete_submenu"
+        android:id="@id/delete"
         android:icon="@drawable/ic_action_delete"
-        android:title="@string/delete">
-        <menu>
-            <item
-                android:id="@id/delete"
-                android:icon="@drawable/ic_action_delete"
-                android:title="@string/delete"/>
-            <item
-                android:icon="@drawable/ic_action_cancel"
-                android:title="@android:string/cancel"/>
-        </menu>
-    </item>
+        android:title="@string/delete"/>
 
 </menu>

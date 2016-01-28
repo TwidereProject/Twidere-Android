@@ -38,7 +38,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.nyan.NyanDaydreamService;
 import org.mariotaku.twidere.nyan.NyanSurfaceHelper;
 import org.mariotaku.twidere.nyan.NyanWallpaperService;
-import org.mariotaku.twidere.util.DebugModeUtils;
 
 public class NyanActivity extends Activity implements Constants, OnLongClickListener, OnSharedPreferenceChangeListener {
 

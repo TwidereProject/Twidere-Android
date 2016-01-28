@@ -22,7 +22,6 @@ package org.mariotaku.twidere.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.AttributeSet;
-import android.view.View;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
 

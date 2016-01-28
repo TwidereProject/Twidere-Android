@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,8 +38,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
 
-import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
+import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
 
 public class TrendsSuggestionsFragment extends AbsContentListViewFragment<TrendsAdapter>

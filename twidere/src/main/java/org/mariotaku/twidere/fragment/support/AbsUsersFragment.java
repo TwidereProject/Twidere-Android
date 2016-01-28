@@ -69,8 +69,6 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        final FragmentActivity activity = getActivity();
         final AbsUsersAdapter<Data> adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();

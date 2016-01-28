@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
+import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.ReadStateManager.OnReadStateChangeListener;
@@ -182,7 +183,7 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
     }
 
     public void updateReadState() {
-        mPositionPairs = mReadStateManager.getPositionPairs(TAB_TYPE_DIRECT_MESSAGES);
+        mPositionPairs = mReadStateManager.getPositionPairs(CustomTabType.DIRECT_MESSAGES);
         notifyDataSetChanged();
     }
 

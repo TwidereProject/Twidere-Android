@@ -49,7 +49,6 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         final List<User> users;
         try {
             users = getUsers(twitter);
-            if (users == null) return data;
         } catch (final TwitterException e) {
             Log.w(LOGTAG, e);
             return data;
@@ -66,5 +65,6 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         return data;
     }
 
+    @NonNull
     protected abstract List<User> getUsers(@NonNull Twitter twitter) throws TwitterException;
 }

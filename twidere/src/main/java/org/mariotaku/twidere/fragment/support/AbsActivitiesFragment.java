@@ -43,6 +43,7 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
+import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -475,6 +476,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         adapter.setData(data);
     }
 
+    @ReadPositionTag
+    @Nullable
     protected String getReadPositionTag() {
         return null;
     }

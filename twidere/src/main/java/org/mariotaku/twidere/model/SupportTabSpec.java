@@ -21,9 +21,12 @@ package org.mariotaku.twidere.model;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.annotation.CustomTabType;
 
 import static org.mariotaku.twidere.util.CompareUtils.bundleEquals;
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
@@ -33,6 +36,8 @@ public class SupportTabSpec implements Comparable<SupportTabSpec>, TwidereConsta
 
     public CharSequence name;
     public final Object icon;
+    @CustomTabType
+    @Nullable
     public final String type;
     public final Class<? extends Fragment> cls;
     public final Bundle args;
@@ -44,8 +49,9 @@ public class SupportTabSpec implements Comparable<SupportTabSpec>, TwidereConsta
         this(name, icon, null, cls, args, position, tag);
     }
 
-    public SupportTabSpec(final String name, final Object icon, final String type, final Class<? extends Fragment> cls,
-                          final Bundle args, final int position, final String tag) {
+    public SupportTabSpec(final String name, final Object icon, @CustomTabType @Nullable final String type,
+                          final Class<? extends Fragment> cls, final Bundle args, final int position,
+                          final String tag) {
         if (cls == null) throw new IllegalArgumentException("Fragment cannot be null!");
         if (name == null && icon == null)
             throw new IllegalArgumentException("You must specify a name or icon for this tab!");
@@ -73,15 +79,15 @@ public class SupportTabSpec implements Comparable<SupportTabSpec>, TwidereConsta
 
     @Override
     public String toString() {
-        return "SupportTabSpec{" +
-                "name='" + name + '\'' +
-                ", icon=" + icon +
-                ", type='" + type + '\'' +
-                ", cls=" + cls +
-                ", args=" + args +
-                ", position=" + position +
-                ", tag='" + tag + '\'' +
-                '}';
+        return new ToStringBuilder(this)
+                .append("name", name)
+                .append("icon", icon)
+                .append("type", type)
+                .append("cls", cls)
+                .append("args", args)
+                .append("position", position)
+                .append("tag", tag)
+                .toString();
     }
 
 }

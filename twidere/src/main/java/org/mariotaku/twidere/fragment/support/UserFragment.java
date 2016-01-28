@@ -414,6 +414,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             return;
         }
         final SupportTabSpec spec = mPagerAdapter.getTab(mViewPager.getCurrentItem());
+        assert spec.type != null;
         switch (spec.type) {
             case TAB_TYPE_STATUSES: {
                 actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_statuses,
@@ -1637,7 +1638,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
-        public void getOutline(Outline outline) {
+        public void getOutline(@NonNull Outline outline) {
             mColorDrawable.getOutline(outline);
             outline.setAlpha(mFactor * mOutlineAlphaFactor * 0.99f);
         }

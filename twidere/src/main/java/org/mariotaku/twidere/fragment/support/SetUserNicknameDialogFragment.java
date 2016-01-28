@@ -35,7 +35,6 @@ import android.widget.FrameLayout;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.UserColorNameManager;
 
 public class SetUserNicknameDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
 

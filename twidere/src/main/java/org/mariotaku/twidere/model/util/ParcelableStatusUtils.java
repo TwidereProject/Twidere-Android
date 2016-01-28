@@ -2,7 +2,6 @@ package org.mariotaku.twidere.model.util;
 
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 /**

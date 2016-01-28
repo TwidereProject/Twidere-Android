@@ -22,7 +22,6 @@ package org.mariotaku.twidere.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 

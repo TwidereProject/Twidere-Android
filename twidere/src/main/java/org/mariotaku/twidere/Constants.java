@@ -105,5 +105,4 @@ public interface Constants extends TwidereConstants {
     @Preference(type = STRING, exportable = false)
     String KEY_DEVICE_SERIAL = "device_serial";
 
-    String READ_POSITION_TAG_ACTIVITIES_ABOUT_ME = "activities_about_me";
 }

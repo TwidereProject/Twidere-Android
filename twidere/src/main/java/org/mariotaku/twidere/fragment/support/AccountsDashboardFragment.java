@@ -414,7 +414,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         final View view = getView();
         assert view != null;
         final Context context = view.getContext();
-        final TwidereApplication application = TwidereApplication.getInstance(context);
         mListView.setItemsCanFocus(true);
         mAdapter = new MergeAdapter();
         final LayoutInflater inflater = getLayoutInflater(savedInstanceState);

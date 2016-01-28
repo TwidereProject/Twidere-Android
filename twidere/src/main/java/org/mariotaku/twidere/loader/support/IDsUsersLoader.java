@@ -39,6 +39,7 @@ public abstract class IDsUsersLoader extends BaseCursorSupportUsersLoader {
         super(context, accountId, cursor, data, fromUser);
     }
 
+    @NonNull
     @Override
     public List<User> getUsers(@NonNull final Twitter twitter) throws TwitterException {
         final Paging paging = new Paging();
@@ -47,11 +48,11 @@ public abstract class IDsUsersLoader extends BaseCursorSupportUsersLoader {
             paging.setCursor(getCursor());
         }
         final IDs ids = getIDs(twitter, paging);
-        if (ids == null) return null;
         setCursorIds(ids);
         return twitter.lookupUsers(ids.getIDs());
     }
 
+    @NonNull
     protected abstract IDs getIDs(@NonNull Twitter twitter, Paging paging) throws TwitterException;
 
 }

@@ -194,6 +194,7 @@ public class HeaderDrawerLayout extends ViewGroup {
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         if (getChildCount() != 1) {
             throw new IllegalArgumentException("Add subview by XML is not allowed.");
         }

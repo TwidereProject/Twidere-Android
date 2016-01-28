@@ -50,9 +50,9 @@ public class UserSearchLoader extends TwitterAPIUsersLoader {
         return mQuery;
     }
 
+    @NonNull
     @Override
     public List<User> getUsers(@NonNull final Twitter twitter) throws TwitterException {
-        if (twitter == null) return null;
         final Paging paging = new Paging();
         paging.page(mPage);
         return twitter.searchUsers(mQuery, paging);

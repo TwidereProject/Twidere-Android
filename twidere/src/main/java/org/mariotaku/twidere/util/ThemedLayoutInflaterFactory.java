@@ -171,7 +171,6 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         } else {
             // View context is derived from ActionBar and it's light theme, so we use contrast color
             final int actionBarColor = activity.getCurrentThemeColor();
-            final int actionBarTheme = ThemeUtils.getActionBarThemeResource(activity.getThemeResourceId(), actionBarColor);
             accentColor = ThemeUtils.getColorFromAttribute(viewContext, android.R.attr.colorForeground, 0);
             noTintColor = ThemeUtils.getColorFromAttribute(viewContext, android.R.attr.colorBackground, 0);
             backgroundTintColor = accentColor;

@@ -30,7 +30,6 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 

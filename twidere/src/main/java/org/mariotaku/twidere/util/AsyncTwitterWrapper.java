@@ -40,6 +40,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
@@ -531,7 +532,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             protected void getReadPosition(long accountId, Twitter twitter) {
                 try {
                     CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
-                    final String tag = Utils.getReadPositionTagWithAccounts(READ_POSITION_TAG_ACTIVITIES_ABOUT_ME, accountIds);
+                    final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME, accountIds);
                     mReadStateManager.setPosition(tag, response.getCursor(), false);
                 } catch (TwitterException e) {
                     // Ignore

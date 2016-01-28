@@ -37,6 +37,7 @@ public class IncomingFriendshipsLoader extends IDsUsersLoader {
         super(context, accountId, maxId, data, fromUser);
     }
 
+    @NonNull
     @Override
     protected IDs getIDs(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         return twitter.getIncomingFriendships(paging);

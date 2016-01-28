@@ -50,6 +50,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.DataImportActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.TabsAdapter;
+import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
@@ -536,9 +537,9 @@ public class SettingsWizardActivity extends Activity implements Constants {
 
         private static final String FRAGMENT_TAG = "initial_settings_dialog";
 
-        private static final String[] DEFAULT_TAB_TYPES = {TAB_TYPE_HOME_TIMELINE,
-                TAB_TYPE_NOTIFICATIONS_TIMELINE, TAB_TYPE_TRENDS_SUGGESTIONS,
-                TAB_TYPE_DIRECT_MESSAGES};
+        private static final String[] DEFAULT_TAB_TYPES = {CustomTabType.HOME_TIMELINE,
+                CustomTabType.NOTIFICATIONS_TIMELINE, CustomTabType.TRENDS_SUGGESTIONS,
+                CustomTabType.DIRECT_MESSAGES};
 
         private final SettingsWizardActivity mActivity;
 

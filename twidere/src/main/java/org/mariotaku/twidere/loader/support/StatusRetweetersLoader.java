@@ -40,6 +40,7 @@ public class StatusRetweetersLoader extends IDsUsersLoader {
         mStatusId = statusId;
     }
 
+    @NonNull
     @Override
     protected IDs getIDs(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         return twitter.getRetweetersIDs(mStatusId, paging);

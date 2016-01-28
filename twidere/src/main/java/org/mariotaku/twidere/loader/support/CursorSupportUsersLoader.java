@@ -42,6 +42,7 @@ public abstract class CursorSupportUsersLoader extends BaseCursorSupportUsersLoa
     protected abstract PageableResponseList<User> getCursoredUsers(@NonNull Twitter twitter, Paging paging)
             throws TwitterException;
 
+    @NonNull
     @Override
     protected final List<User> getUsers(@NonNull final Twitter twitter) throws TwitterException {
         final Paging paging = new Paging();

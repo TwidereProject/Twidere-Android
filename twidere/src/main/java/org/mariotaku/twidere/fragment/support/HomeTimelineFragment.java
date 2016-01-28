@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
+import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
@@ -89,8 +90,9 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
     }
 
     @Override
+    @ReadPositionTag
     protected String getReadPositionTag() {
-        return TAB_TYPE_HOME_TIMELINE;
+        return ReadPositionTag.HOME_TIMELINE;
     }
 
 }

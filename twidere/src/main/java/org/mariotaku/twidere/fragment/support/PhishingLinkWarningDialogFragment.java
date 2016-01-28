@@ -19,50 +19,45 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
+import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 public class PhishingLinkWarningDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
 
-	@Override
-	public void onClick(final DialogInterface dialog, final int which) {
-		switch (which) {
-			case DialogInterface.BUTTON_POSITIVE: {
-				final Bundle args = getArguments();
-				if (args == null) return;
-				final Uri uri = args.getParcelable(EXTRA_URI);
-				if (uri == null) return;
-				final Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(uri);
-				startActivity(intent);
-				break;
-			}
-		}
-
-	}
-
-	@NonNull
     @Override
-	public Dialog onCreateDialog(final Bundle savedInstanceState) {
-		final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-		final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-		final LayoutInflater inflater = LayoutInflater.from(wrapped);
-		builder.setTitle(android.R.string.dialog_alert_title);
-		builder.setView(inflater.inflate(R.layout.dialog_phishing_link_warning, null));
-		builder.setPositiveButton(android.R.string.ok, this);
-		builder.setNegativeButton(android.R.string.cancel, null);
-		return builder.create();
-	}
+    public void onClick(final DialogInterface dialog, final int which) {
+        switch (which) {
+            case DialogInterface.BUTTON_POSITIVE: {
+                final Bundle args = getArguments();
+                if (args == null) return;
+                final Uri uri = args.getParcelable(EXTRA_URI);
+                if (uri == null) return;
+                final Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(uri);
+                startActivity(intent);
+                break;
+            }
+        }
+
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.setView(R.layout.dialog_phishing_link_warning);
+        builder.setPositiveButton(android.R.string.ok, this);
+        builder.setNegativeButton(android.R.string.cancel, null);
+        return builder.create();
+    }
 
 }

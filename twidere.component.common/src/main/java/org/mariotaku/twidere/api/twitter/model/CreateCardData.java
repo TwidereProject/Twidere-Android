@@ -19,12 +19,6 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import com.bluelinelabs.logansquare.LoganSquare;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * Example
  * <pre>

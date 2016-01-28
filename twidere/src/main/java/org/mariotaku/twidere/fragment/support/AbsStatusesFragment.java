@@ -47,6 +47,7 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListener;
+import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -509,6 +510,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         adapter.setData(data);
     }
 
+    @ReadPositionTag
+    @Nullable
     protected String getReadPositionTag() {
         return null;
     }

@@ -61,6 +61,7 @@ import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
+import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
@@ -234,8 +235,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
                 final String type = entry.getKey();
                 final CustomTabConfiguration conf = entry.getValue();
 
-                final boolean isOfficialKeyAccountRequired = TAB_TYPE_ACTIVITIES_ABOUT_ME.equals(type)
-                        || TAB_TYPE_ACTIVITIES_BY_FRIENDS.equals(type);
+                final boolean isOfficialKeyAccountRequired = CustomTabType.ACTIVITIES_BY_FRIENDS.equals(type);
                 final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
 
                 final Intent intent = new Intent(INTENT_ACTION_ADD_TAB);

@@ -294,7 +294,7 @@ public class NyanDrawingHelper {
 
         private final Paint mPaint;
 
-        private final ArrayList<Star> mStars = new ArrayList<Star>();
+        private final ArrayList<Star> mStars = new ArrayList<>();
 
         private final Random mRandom = new Random();
 

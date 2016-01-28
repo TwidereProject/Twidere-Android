@@ -44,7 +44,6 @@ import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 

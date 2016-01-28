@@ -55,6 +55,7 @@
     <declare-styleable name="NameView">
         <attr name="nv_primaryTextColor" format="color"/>
         <attr name="nv_secondaryTextColor" format="color"/>
+        <attr name="nv_twoLine" format="boolean"/>
         <attr name="nv_primaryTextStyle"/>
         <attr name="nv_secondaryTextStyle"/>
     </declare-styleable>

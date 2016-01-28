@@ -101,7 +101,6 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         final Twitter twitter = getTwitter();
         if (twitter == null) return null;
         final List<Status> statuses;
-        final boolean truncated;
         final Context context = getContext();
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int loadItemLimit = prefs.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);

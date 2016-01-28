@@ -23,6 +23,7 @@ import android.annotation.TargetApi;
 import android.graphics.Outline;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 /**
  * Created by mariotaku on 14/12/8.
@@ -38,7 +39,7 @@ public class ActionBarColorDrawable extends ActionBarColorDrawableBase {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void getOutline(Outline outline) {
+    public void getOutline(@NonNull Outline outline) {
         if (!isOutlineEnabled()) return;
         final Rect bounds = getBounds();
         // Very very dirty hack to make outline shadow in action bar not visible beneath status bar

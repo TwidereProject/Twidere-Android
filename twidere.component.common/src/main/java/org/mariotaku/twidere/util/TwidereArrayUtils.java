@@ -46,8 +46,8 @@ public final class TwidereArrayUtils {
         if (array1 == null || array2 == null) return array1 == array2;
         if (array1.length != array2.length) return false;
         final int length = array1.length;
-        for (int i = 0; i < length; i++) {
-            if (!ArrayUtils.contains(array2, array1[i])) return false;
+        for (long anArray1 : array1) {
+            if (!ArrayUtils.contains(array2, anArray1)) return false;
         }
         return true;
     }
@@ -55,9 +55,8 @@ public final class TwidereArrayUtils {
     public static boolean contentMatch(final Object[] array1, final Object[] array2) {
         if (array1 == null || array2 == null) return array1 == array2;
         if (array1.length != array2.length) return false;
-        final int length = array1.length;
-        for (int i = 0; i < length; i++) {
-            if (!ArrayUtils.contains(array2, array1[i])) return false;
+        for (Object item : array1) {
+            if (!ArrayUtils.contains(array2, item)) return false;
         }
         return true;
     }
@@ -75,11 +74,11 @@ public final class TwidereArrayUtils {
 
     public static long[] intersection(final long[] array1, final long[] array2) {
         if (array1 == null || array2 == null) return new long[0];
-        final List<Long> list1 = new ArrayList<Long>();
+        final List<Long> list1 = new ArrayList<>();
         for (final long item : array1) {
             list1.add(item);
         }
-        final List<Long> list2 = new ArrayList<Long>();
+        final List<Long> list2 = new ArrayList<>();
         for (final long item : array2) {
             list2.add(item);
         }

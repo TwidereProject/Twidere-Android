@@ -100,7 +100,7 @@
                     android:layout_height="@dimen/minimum_element_size"
                     android:layout_weight="0"
                     android:background="?selectableItemBackground"
-                    android:contentDescription="@android:string/search_go"
+                    android:contentDescription="@string/search"
                     android:onClick="onClick"
                     android:src="@android:drawable/ic_menu_search"/>
             </LinearLayout>

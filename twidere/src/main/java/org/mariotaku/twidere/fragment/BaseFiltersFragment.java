@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.fragment;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -39,6 +37,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -50,7 +51,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.mariotaku.sqliteqb.library.Columns.Column;
@@ -256,19 +256,18 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
 
     public static final class AddItemFragment extends BaseSupportDialogFragment implements OnClickListener {
 
-        private AutoCompleteTextView mEditText;
-
-        private android.support.v4.widget.SimpleCursorAdapter mUserAutoCompleteAdapter;
 
         @Override
         public void onClick(final DialogInterface dialog, final int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    if (mEditText.length() <= 0) return;
+                    final String text = getText();
+                    if (TextUtils.isEmpty(text)) return;
                     final ContentValues values = new ContentValues();
-                    values.put(Filters.VALUE, getText());
+                    values.put(Filters.VALUE, text);
                     final Bundle args = getArguments();
                     final Uri uri = args.getParcelable(EXTRA_URI);
+                    assert uri != null;
                     getContentResolver().insert(uri, values);
                     break;
             }
@@ -282,33 +281,44 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
             final Context wrapped = ThemeUtils.getDialogThemedContext(activity);
             final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
             buildDialog(builder);
-            final View view = LayoutInflater.from(wrapped).inflate(R.layout.dialog_auto_complete_textview, null);
-            builder.setView(view);
-            mEditText = (AutoCompleteTextView) view.findViewById(R.id.edit_text);
-            final Bundle args = getArguments();
-            final int auto_complete_type = args != null ? args.getInt(EXTRA_AUTO_COMPLETE_TYPE, 0) : 0;
-            if (auto_complete_type != 0) {
-                if (auto_complete_type == AUTO_COMPLETE_TYPE_SOURCES) {
-                    mUserAutoCompleteAdapter = new SourceAutoCompleteAdapter(activity);
-                } else {
-                    final ComposeAutoCompleteAdapter adapter = new ComposeAutoCompleteAdapter(activity);
-                    adapter.setAccountId(Utils.getDefaultAccountId(activity));
-                    mUserAutoCompleteAdapter = adapter;
-                }
-                mEditText.setAdapter(mUserAutoCompleteAdapter);
-                mEditText.setThreshold(1);
-            }
+            builder.setView(R.layout.dialog_auto_complete_textview);
+
             builder.setTitle(R.string.add_rule);
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
-            return builder.create();
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    AlertDialog alertDialog = (AlertDialog) dialog;
+                    final AutoCompleteTextView editText = (AutoCompleteTextView) alertDialog.findViewById(R.id.edit_text);
+                    final Bundle args = getArguments();
+                    final int autoCompleteType;
+                    autoCompleteType = args.getInt(EXTRA_AUTO_COMPLETE_TYPE, 0);
+                    if (autoCompleteType != 0) {
+                        SimpleCursorAdapter mUserAutoCompleteAdapter;
+                        if (autoCompleteType == AUTO_COMPLETE_TYPE_SOURCES) {
+                            mUserAutoCompleteAdapter = new SourceAutoCompleteAdapter(activity);
+                        } else {
+                            final ComposeAutoCompleteAdapter adapter = new ComposeAutoCompleteAdapter(activity);
+                            adapter.setAccountId(Utils.getDefaultAccountId(activity));
+                            mUserAutoCompleteAdapter = adapter;
+                        }
+                        editText.setAdapter(mUserAutoCompleteAdapter);
+                        editText.setThreshold(1);
+                    }
+                }
+            });
+            return dialog;
         }
 
         protected String getText() {
-            return ParseUtils.parseString(mEditText.getText());
+            AlertDialog alertDialog = (AlertDialog) getDialog();
+            final AutoCompleteTextView editText = (AutoCompleteTextView) alertDialog.findViewById(R.id.edit_text);
+            return ParseUtils.parseString(editText.getText());
         }
 
-        private void buildDialog(final Builder builder) {
+        private void buildDialog(final AlertDialog.Builder builder) {
 
         }
     }

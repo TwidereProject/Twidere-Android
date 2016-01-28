@@ -8,7 +8,6 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
-import java.util.List;
 import java.util.Locale;
 
 /**

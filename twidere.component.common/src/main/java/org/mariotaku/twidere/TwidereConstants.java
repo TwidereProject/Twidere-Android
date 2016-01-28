@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere;
 
+import android.content.ContentResolver;
+
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 
@@ -30,7 +32,6 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 public interface TwidereConstants extends SharedPreferenceConstants, IntentConstants {
 
     String TWIDERE_APP_NAME = "Twidere";
-    String TWIDERE_PACKAGE_NAME = "org.mariotaku.twidere";
     String TWIDERE_PROJECT_URL = "https://github.com/mariotaku/twidere";
     String TWIDERE_PROJECT_EMAIL = "twidere.project@gmail.com";
 
@@ -57,10 +58,9 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
 
     String SCHEME_HTTP = "http";
     String SCHEME_HTTPS = "https";
-    String SCHEME_CONTENT = "content";
+    String SCHEME_CONTENT = ContentResolver.SCHEME_CONTENT;
     String SCHEME_TWIDERE = "twidere";
     String SCHEME_DATA = "data";
-    String SCHEME_FILE = "file";
 
     String PROTOCOL_HTTP = SCHEME_HTTP + "://";
     String PROTOCOL_HTTPS = SCHEME_HTTPS + "://";
@@ -71,9 +71,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_TWIDERE_CACHE = "twidere.cache";
 
     String AUTHORITY_USER = "user";
-    String AUTHORITY_HOME = "home";
-    String AUTHORITY_MENTIONS = "mentions";
-    String AUTHORITY_DIRECT_MESSAGES = "direct_messages";
     String AUTHORITY_USERS = "users";
     String AUTHORITY_USER_TIMELINE = "user_timeline";
     String AUTHORITY_USER_MEDIA_TIMELINE = "user_media_timeline";
@@ -228,12 +225,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String TASK_TAG_GET_TRENDS = "get_trends";
     String TASK_TAG_STORE_TRENDS = "store_trends";
 
-    String SERVICE_COMMAND_REFRESH_ALL = "refresh_all";
-    String SERVICE_COMMAND_GET_HOME_TIMELINE = "get_home_timeline";
-    String SERVICE_COMMAND_GET_MENTIONS = "get_mentions";
-    String SERVICE_COMMAND_GET_SENT_DIRECT_MESSAGES = "get_sent_direct_messages";
-    String SERVICE_COMMAND_GET_RECEIVED_DIRECT_MESSAGES = "get_received_direct_messages";
-
     String METADATA_KEY_EXTENSION = "org.mariotaku.twidere.extension";
     String METADATA_KEY_EXTENSION_PERMISSIONS = "org.mariotaku.twidere.extension.permissions";
     String METADATA_KEY_EXTENSION_SETTINGS = "org.mariotaku.twidere.extension.settings";
@@ -250,19 +241,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String PERMISSION_DIRECT_MESSAGES = "direct_messages";
     String PERMISSION_ACCOUNTS = "accounts";
     String PERMISSION_PREFERENCES = "preferences";
-
-    String TAB_TYPE_HOME_TIMELINE = "home_timeline";
-    String TAB_TYPE_NOTIFICATIONS_TIMELINE = "notifications_timeline";
-    String TAB_TYPE_TRENDS_SUGGESTIONS = "trends_suggestions";
-    String TAB_TYPE_DIRECT_MESSAGES = "direct_messages";
-    String TAB_TYPE_FAVORITES = "favorites";
-    String TAB_TYPE_USER_TIMELINE = "user_timeline";
-    String TAB_TYPE_SEARCH_STATUSES = "search_statuses";
-    String TAB_TYPE_LIST_TIMELINE = "list_timeline";
-    String TAB_TYPE_ACTIVITIES_ABOUT_ME = "activities_about_me";
-    String TAB_TYPE_ACTIVITIES_BY_FRIENDS = "activities_by_friends";
-    String TAB_TYPE_RETWEETS_OF_ME = "retweets_of_me";
-
 
     int TAB_CODE_HOME_TIMELINE = 1;
     int TAB_CODE_NOTIFICATIONS_TIMELINE = 2;

@@ -81,6 +81,7 @@ import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
+import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.loader.support.UserSearchLoader;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -857,6 +858,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                         CachedUsers.BASIC_COLUMNS, selection != null ? selection.getSQL() : null,
                         selectionArgs, orderBy.getSQL());
                 final ParcelableUserCursorIndices i = new ParcelableUserCursorIndices(c);
+                assert c != null;
                 c.moveToFirst();
                 while (!c.isAfterLast()) {
                     cachedList.add(i.newObject(c));
@@ -929,7 +931,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             if (cursor.moveToFirst()) {
                 final int messageIdIdx = cursor.getColumnIndex(ConversationEntries.MESSAGE_ID);
                 final String key = mAccount.account_id + "-" + mRecipient.id;
-                mReadStateManager.setPosition(TAB_TYPE_DIRECT_MESSAGES, key, cursor.getLong(messageIdIdx), false);
+                mReadStateManager.setPosition(CustomTabType.DIRECT_MESSAGES, key, cursor.getLong(messageIdIdx), false);
             }
             cursor.close();
         }
