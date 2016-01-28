@@ -141,7 +141,8 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
 
     public void setTextSize(final float textSize) {
         descriptionView.setTextSize(textSize);
-        nameView.setTextSize(textSize);
+        nameView.setPrimaryTextSize(textSize);
+        nameView.setSecondaryTextSize(textSize * 0.75f);
         locationView.setTextSize(textSize);
         urlView.setTextSize(textSize);
         statusesCountView.setTextSize(textSize);
