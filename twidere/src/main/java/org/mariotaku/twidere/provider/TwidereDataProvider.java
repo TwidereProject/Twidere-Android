@@ -139,6 +139,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -165,11 +167,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     Bus mBus;
     @Inject
     UserColorNameManager mUserColorNameManager;
+
     private Handler mHandler;
     private ContentResolver mContentResolver;
     private SQLiteDatabaseWrapper mDatabaseWrapper;
     private PermissionsManager mPermissionsManager;
     private ImagePreloader mImagePreloader;
+    private Executor mBackgroundExecutor;
     private boolean mHomeActivityInBackground;
     private boolean mNameFirst;
     private boolean mUseStarForLikes;
@@ -561,6 +565,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         mHandler = new Handler(Looper.getMainLooper());
         mDatabaseWrapper = new SQLiteDatabaseWrapper(this);
         mPreferences.registerOnSharedPreferenceChangeListener(this);
+        mBackgroundExecutor = Executors.newSingleThreadExecutor();
         updatePreferences();
         mPermissionsManager = new PermissionsManager(context);
         mImagePreloader = new ImagePreloader(context, mMediaLoader);
@@ -1186,25 +1191,36 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return;
         switch (tableId) {
             case TABLE_ID_STATUSES: {
-                final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                        DataStoreUtils.getAccountIds(context));
-                for (final AccountPreferences pref : prefs) {
-                    if (!pref.isHomeTimelineNotificationEnabled()) continue;
-                    showTimelineNotification(pref, getPositionTag(CustomTabType.HOME_TIMELINE, pref.getAccountId()));
-                }
-                notifyUnreadCountChanged(NOTIFICATION_ID_HOME_TIMELINE);
+                mBackgroundExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
+                                DataStoreUtils.getAccountIds(context));
+                        for (final AccountPreferences pref : prefs) {
+                            if (!pref.isHomeTimelineNotificationEnabled()) continue;
+                            final long positionTag = getPositionTag(CustomTabType.HOME_TIMELINE, pref.getAccountId());
+                            showTimelineNotification(pref, positionTag);
+                        }
+                        notifyUnreadCountChanged(NOTIFICATION_ID_HOME_TIMELINE);
+                    }
+                });
                 break;
             }
             case TABLE_ID_ACTIVITIES_ABOUT_ME: {
-                final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                        DataStoreUtils.getAccountIds(context));
-                final boolean combined = mPreferences.getBoolean(KEY_COMBINED_NOTIFICATIONS);
-                for (final AccountPreferences pref : prefs) {
-                    if (!pref.isInteractionsNotificationEnabled()) continue;
-                    showInteractionsNotification(pref, getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME,
-                            pref.getAccountId()), combined);
-                }
-                notifyUnreadCountChanged(NOTIFICATION_ID_INTERACTIONS_TIMELINE);
+                mBackgroundExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
+                                DataStoreUtils.getAccountIds(context));
+                        final boolean combined = mPreferences.getBoolean(KEY_COMBINED_NOTIFICATIONS);
+                        for (final AccountPreferences pref : prefs) {
+                            if (!pref.isInteractionsNotificationEnabled()) continue;
+                            showInteractionsNotification(pref, getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME,
+                                    pref.getAccountId()), combined);
+                        }
+                        notifyUnreadCountChanged(NOTIFICATION_ID_INTERACTIONS_TIMELINE);
+                    }
+                });
                 break;
             }
             case TABLE_ID_DIRECT_MESSAGES_INBOX: {
@@ -1234,6 +1250,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showTimelineNotification(AccountPreferences pref, long position) {
         final long accountId = pref.getAccountId();
         final Context context = getContext();
+        if (context == null) return;
         final Resources resources = context.getResources();
         final NotificationManagerWrapper nm = mNotificationManager;
         final Expression selection = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),

@@ -51,6 +51,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.MenuUtils;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -161,6 +162,13 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         protected Object getDownloadExtra() {
             return ((MediaViewerActivity) getActivity()).getDownloadExtra();
         }
+
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            final ProgressWheel progressWheel = (ProgressWheel) view.findViewById(org.mariotaku.mediaviewer.library.R.id.load_progress);
+            progressWheel.setBarColor(ThemeUtils.getUserAccentColor(getContext()));
+        }
     }
 
     public static class VideoPageFragment extends MediaViewerFragment implements MediaPlayer.OnPreparedListener,
@@ -189,7 +197,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         private ProgressBar mVideoViewProgress;
         private TextView mDurationLabel, mPositionLabel;
         private ImageButton mPlayPauseButton, mVolumeButton;
-        private ProgressWheel mProgressBar;
         private View mVideoControl;
 
         private boolean mPlayAudio;
@@ -201,21 +208,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             return getArguments().getBoolean(EXTRA_LOOP, false);
         }
 
-
-        @Override
-        protected void showProgress(boolean indeterminate, float progress) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            if (indeterminate) {
-                mProgressBar.spin();
-            } else {
-                mProgressBar.setProgress(progress);
-            }
-        }
-
-        @Override
-        protected void hideProgress() {
-            mProgressBar.setVisibility(View.GONE);
-        }
 
         @Override
         protected boolean isAbleToLoad() {
@@ -310,12 +302,14 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             mVideoView = (TextureVideoView) view.findViewById(R.id.video_view);
             mVideoViewOverlay = view.findViewById(R.id.video_view_overlay);
             mVideoViewProgress = (ProgressBar) view.findViewById(R.id.video_view_progress);
-            mProgressBar = (ProgressWheel) view.findViewById(R.id.load_progress);
             mDurationLabel = (TextView) view.findViewById(R.id.duration_label);
             mPositionLabel = (TextView) view.findViewById(R.id.position_label);
             mPlayPauseButton = (ImageButton) view.findViewById(R.id.play_pause_button);
             mVolumeButton = (ImageButton) view.findViewById(R.id.volume_button);
             mVideoControl = view.findViewById(R.id.video_control);
+
+            final ProgressWheel progressWheel = (ProgressWheel) view.findViewById(org.mariotaku.mediaviewer.library.R.id.load_progress);
+            progressWheel.setBarColor(ThemeUtils.getUserAccentColor(getContext()));
         }
 
 
