@@ -236,6 +236,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         @Override
         protected void displayMedia(CacheDownloadLoader.Result result) {
             mVideoView.setVideoURI(result.cacheUri);
+            setMediaViewVisible(true);
         }
 
         @Override
@@ -348,6 +349,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             mPlayPauseButton.setOnClickListener(this);
             mVolumeButton.setOnClickListener(this);
             startLoading();
+            setMediaViewVisible(false);
             updateVolume();
         }
 

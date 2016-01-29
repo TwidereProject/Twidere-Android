@@ -35,11 +35,13 @@ public class ForegroundImageView extends ImageView implements IForegroundView {
     private final ForegroundViewHelper mForegroundViewHelper;
 
     public ForegroundImageView(final Context context) {
-        this(context, null);
+        super(context);
+        mForegroundViewHelper = new ForegroundViewHelper(this, context, null, 0);
     }
 
     public ForegroundImageView(final Context context, final AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        mForegroundViewHelper = new ForegroundViewHelper(this, context, attrs, 0);
     }
 
     public ForegroundImageView(final Context context, final AttributeSet attrs, final int defStyle) {

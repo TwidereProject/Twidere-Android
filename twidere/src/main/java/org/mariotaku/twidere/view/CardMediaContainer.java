@@ -132,6 +132,9 @@ public class CardMediaContainer extends ViewGroup implements Constants {
                 } else {
                     loader.displayPreviewImage(imageView, url, loadingHandler);
                 }
+                if (imageView instanceof MediaPreviewImageView) {
+                    ((MediaPreviewImageView) imageView).setHasPlayIcon(ParcelableMedia.hasPlayIcon(media.type));
+                }
                 child.setTag(media);
                 child.setVisibility(VISIBLE);
                 if (i == j - 1) {

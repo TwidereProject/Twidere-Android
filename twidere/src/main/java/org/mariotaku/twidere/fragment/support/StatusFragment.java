@@ -111,6 +111,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.CheckUtils;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
@@ -1092,7 +1093,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
 
             final String lang = status.lang;
-            if (!Utils.isOfficialCredentials(context, account) || TextUtils.isEmpty(lang)) {
+            if (!Utils.isOfficialCredentials(context, account) || !CheckUtils.isValidLocale(lang)) {
                 translateLabelView.setText(R.string.unknown_language);
                 translateContainer.setVisibility(View.GONE);
             } else {
@@ -1108,6 +1109,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             textView.setTextIsSelectable(true);
             quotedTextView.setTextIsSelectable(true);
+            translateResultView.setTextIsSelectable(true);
 
             textView.setMovementMethod(LinkMovementMethod.getInstance());
             quotedTextView.setMovementMethod(LinkMovementMethod.getInstance());

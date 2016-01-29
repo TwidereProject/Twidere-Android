@@ -108,7 +108,6 @@ public class StreamingService extends Service implements Constants {
             Log.d(Constants.LOGTAG, "Stream service stopped.");
         }
         super.onDestroy();
-        DebugModeUtils.watchReferenceLeak(this);
     }
 
     private void clearTwitterInstances() {

@@ -371,6 +371,17 @@ public class ParcelableMedia implements Parcelable {
         ParcelableMediaParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    public static boolean hasPlayIcon(@Type int type) {
+        switch (type) {
+            case Type.TYPE_VIDEO:
+            case Type.TYPE_ANIMATED_GIF:
+            case Type.TYPE_CARD_ANIMATED_GIF:
+            case Type.TYPE_EXTERNAL_PLAYER:
+                return true;
+        }
+        return false;
+    }
+
     @IntDef({Type.TYPE_UNKNOWN, Type.TYPE_IMAGE, Type.TYPE_VIDEO, Type.TYPE_ANIMATED_GIF,
             Type.TYPE_CARD_ANIMATED_GIF, Type.TYPE_EXTERNAL_PLAYER, Type.TYPE_VARIABLE_TYPE})
     @Retention(RetentionPolicy.SOURCE)

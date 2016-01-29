@@ -77,6 +77,8 @@ import java.lang.reflect.Field;
 public class ThemeUtils implements Constants {
 
     public static final int ACCENT_COLOR_THRESHOLD = 192;
+    public static final int DARK_COLOR_THRESHOLD = 64;
+
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY = {android.R.attr.textColorPrimary};
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY_AND_INVERSE = {android.R.attr.textColorPrimary,
             android.R.attr.textColorPrimaryInverse};
@@ -353,18 +355,18 @@ public class ThemeUtils implements Constants {
         return R.style.Theme_Twidere_Light_NoDisplay;
     }
 
-    public static int getOptimalLinkColor(int linkColor, int textColor) {
+    public static int getOptimalAccentColor(int accentColor, int foregroundColor) {
         final int[] yiq = new int[3];
-        TwidereColorUtils.colorToYIQ(textColor, yiq);
-        final int y = yiq[0];
-        TwidereColorUtils.colorToYIQ(linkColor, yiq);
-        if (y < 32 && yiq[0] <= ACCENT_COLOR_THRESHOLD) {
-            return linkColor;
-        } else if (y > ACCENT_COLOR_THRESHOLD && yiq[0] > 32) {
-            return linkColor;
+        TwidereColorUtils.colorToYIQ(foregroundColor, yiq);
+        final int foregroundColorY = yiq[0];
+        TwidereColorUtils.colorToYIQ(accentColor, yiq);
+        if (foregroundColorY < DARK_COLOR_THRESHOLD && yiq[0] <= ACCENT_COLOR_THRESHOLD) {
+            return accentColor;
+        } else if (foregroundColorY > ACCENT_COLOR_THRESHOLD && yiq[0] > DARK_COLOR_THRESHOLD) {
+            return accentColor;
         }
-        yiq[0] = yiq[0] + (y - yiq[0]) / 2;
-        return TwidereColorUtils.YIQToColor(Color.alpha(linkColor), yiq);
+        yiq[0] = yiq[0] + (foregroundColorY - yiq[0]) / 2;
+        return TwidereColorUtils.YIQToColor(Color.alpha(accentColor), yiq);
     }
 
     public static int getQuickSearchBarThemeResource(final Context context) {
