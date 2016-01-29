@@ -47,7 +47,6 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
     private static final String[] MONTH_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
             "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-    private static final long ONE_MINUTE = TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES);
     private static final TimeZone TIME_ZONE = TimeZone.getTimeZone("UTC");
     private static final Locale LOCALE = Locale.ENGLISH;
     private final DateFormat mDateFormat;
@@ -99,13 +98,18 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSegs[0]));
         calendar.set(Calendar.MINUTE, Integer.parseInt(timeSegs[1]));
         calendar.set(Calendar.SECOND, Integer.parseInt(timeSegs[2]));
-        calendar.set(Calendar.ZONE_OFFSET, SimpleTimeZone.getTimeZone("GMT" + segs[4]).getRawOffset());
+        calendar.setTimeZone(SimpleTimeZone.getTimeZone(getTimezoneText(segs[4])));
         final Date date = calendar.getTime();
         if (!WEEK_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1].equals(segs[0])) {
             BugReporter.error("Week mismatch " + string + " => " + date);
             return null;
         }
         return date;
+    }
+
+    private String getTimezoneText(String seg) {
+        if (seg.startsWith("GMT") || seg.startsWith("UTC")) return seg;
+        return "GMT" + seg;
     }
 
     @Override
