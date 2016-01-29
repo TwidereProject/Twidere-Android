@@ -22,6 +22,7 @@ package edu.tsinghua.hotmobi.model;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -30,7 +31,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.util.TwidereDataUtils;
 
 /**
  * Created by mariotaku on 15/8/7.
@@ -63,6 +64,17 @@ public class TweetEvent extends BaseEvent implements Parcelable {
     @ParcelableThisPlease
     @JsonField(name = "following")
     boolean following;
+    public static final Creator<TweetEvent> CREATOR = new Creator<TweetEvent>() {
+        public TweetEvent createFromParcel(Parcel source) {
+            TweetEvent target = new TweetEvent();
+            TweetEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public TweetEvent[] newArray(int size) {
+            return new TweetEvent[size];
+        }
+    };
 
     public static TweetEvent create(Context context, ParcelableStatus status, @TimelineType String timelineType) {
         final TweetEvent event = new TweetEvent();
@@ -71,7 +83,7 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         event.setAccountId(status.account_id);
         event.setUserId(status.user_id);
         event.setTimelineType(timelineType);
-        event.setTweetType(HotMobiLogger.getTweetType(status));
+        event.setTweetType(TwidereDataUtils.getTweetType(status));
         event.setFollowing(status.user_is_following);
         return event;
     }
@@ -120,9 +132,10 @@ public class TweetEvent extends BaseEvent implements Parcelable {
                 "} " + super.toString();
     }
 
-    public @interface Action {
-        String OPEN = "open", RETWEET = "retweet", FAVORITE = "favorite", UNFAVORITE = "unfavorite",
-                TWEET = "tweet", UNKNOWN = "unknown";
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "tweet";
     }
 
     @Override
@@ -135,15 +148,8 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         TweetEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static final Creator<TweetEvent> CREATOR = new Creator<TweetEvent>() {
-        public TweetEvent createFromParcel(Parcel source) {
-            TweetEvent target = new TweetEvent();
-            TweetEventParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        public TweetEvent[] newArray(int size) {
-            return new TweetEvent[size];
-        }
-    };
+    public @interface Action {
+        String OPEN = "open", RETWEET = "retweet", FAVORITE = "favorite", UNFAVORITE = "unfavorite",
+                TWEET = "tweet", UNKNOWN = "unknown";
+    }
 }

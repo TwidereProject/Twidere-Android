@@ -3,6 +3,7 @@ package edu.tsinghua.hotmobi.model;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -10,11 +11,11 @@ import com.hannesdorfmann.parcelableplease.ParcelBagger;
 import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.mariotaku.restfu.Pair;
-import org.mariotaku.restfu.http.HttpResponse;
 
 import java.io.File;
 import java.util.HashMap;
@@ -82,11 +83,13 @@ public class UploadLogEvent extends BaseEvent implements Parcelable {
         UploadLogEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public void finish(HttpResponse response) {
+    public void finish(Response response) {
         HashMap<String, String> extraHeaders = new HashMap<>();
-        for (Pair<String, String> pair : response.getHeaders().toList()) {
-            if (StringUtils.startsWithIgnoreCase(pair.first, "X-Dnext")) {
-                extraHeaders.put(pair.first, pair.second);
+        final Headers headers = response.headers();
+        for (int i = 0, j = headers.size(); i < j; i++) {
+            final String name = headers.name(i);
+            if (StringUtils.startsWithIgnoreCase(name, "X-Dnext")) {
+                extraHeaders.put(name, headers.value(i));
             }
         }
         setExtraHeaders(extraHeaders);
@@ -103,15 +106,21 @@ public class UploadLogEvent extends BaseEvent implements Parcelable {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("fileName", fileName)
-                .append("fileLength", fileLength)
-                .append("extraHeaders", extraHeaders)
-                .toString();
+        return "UploadLogEvent{" +
+                "fileName='" + fileName + '\'' +
+                ", fileLength=" + fileLength +
+                ", extraHeaders=" + extraHeaders +
+                "} " + super.toString();
     }
 
     public boolean shouldSkip() {
-        return fileName.contains("upload_log");
+        return fileName.contains(getLogFileName());
+    }
+
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "upload_log";
     }
 
     public static class StringMapBagger implements ParcelBagger<Map<String, String>> {

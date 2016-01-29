@@ -17,17 +17,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package edu.tsinghua.hotmobi;
+package edu.tsinghua.hotmobi.util;
 
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.TwidereLinkify;
+
+import edu.tsinghua.hotmobi.model.TweetType;
 
 /**
  * Created by Denny C. Ng on 2/26/15.
  */
 
 
-public class TypeMappingUtil {
+public class TwidereDataUtils {
 
     public static String getLinkType(int type) {
         switch (type) {
@@ -66,5 +69,28 @@ public class TypeMappingUtil {
             default:
                 return "unknown";
         }
+    }
+
+    @TweetType
+    public static String getTweetType(ParcelableStatus status) {
+        if (status.media != null) {
+            boolean hasImage = false;
+            for (ParcelableMedia media : status.media) {
+                switch (media.type) {
+                    case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
+                    case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF:
+                    case ParcelableMedia.Type.TYPE_VIDEO:
+                        return TweetType.VIDEO;
+                    case ParcelableMedia.Type.TYPE_IMAGE: {
+                        hasImage = true;
+                        break;
+                    }
+                }
+            }
+            if (hasImage) {
+                return TweetType.PHOTO;
+            }
+        }
+        return TweetType.TEXT;
     }
 }

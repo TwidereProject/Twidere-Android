@@ -19,6 +19,8 @@
 
 package edu.tsinghua.hotmobi.model;
 
+import android.support.annotation.NonNull;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -26,7 +28,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  * Created by mariotaku on 15/8/8.
  */
 @JsonObject
-public class ScrollRecord {
+public class ScrollRecord implements LogModel {
     @JsonField(name = "id")
     long id;
     @JsonField(name = "account_id")
@@ -77,5 +79,11 @@ public class ScrollRecord {
                 ", timeOffset=" + timeOffset +
                 ", scrollState=" + scrollState +
                 '}';
+    }
+
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "scroll";
     }
 }

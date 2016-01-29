@@ -23,7 +23,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.mariotaku.twidere.fragment.support.GoogleMapFragment;
 import org.mariotaku.twidere.fragment.support.WebMapFragment;
@@ -34,7 +34,7 @@ import org.mariotaku.twidere.fragment.support.WebMapFragment;
 public class MapFragmentFactoryImpl extends MapFragmentFactory {
     @Override
     public Fragment createMapFragment(Context context) {
-        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
             return new GoogleMapFragment();
         }
         return new WebMapFragment();

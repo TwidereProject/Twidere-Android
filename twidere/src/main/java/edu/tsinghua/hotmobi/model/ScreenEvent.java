@@ -22,10 +22,15 @@ package edu.tsinghua.hotmobi.model;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
+
+import edu.tsinghua.hotmobi.HotMobiLogger;
 
 /**
  * Created by mariotaku on 15/11/11.
@@ -36,9 +41,22 @@ public class ScreenEvent extends BaseEvent implements Parcelable {
 
     @JsonField(name = "action")
     @Action
+    @ParcelableThisPlease
     String action;
     @JsonField(name = "present_duration")
+    @ParcelableThisPlease
     long presentDuration;
+    public static final Creator<ScreenEvent> CREATOR = new Creator<ScreenEvent>() {
+        public ScreenEvent createFromParcel(Parcel source) {
+            ScreenEvent target = new ScreenEvent();
+            ScreenEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ScreenEvent[] newArray(int size) {
+            return new ScreenEvent[size];
+        }
+    };
 
     public static ScreenEvent create(Context context, @Action String action, long presentDuration) {
         final ScreenEvent event = new ScreenEvent();
@@ -46,6 +64,10 @@ public class ScreenEvent extends BaseEvent implements Parcelable {
         event.setAction(action);
         event.setPresentDuration(presentDuration);
         return event;
+    }
+
+    public static void log(Context context, @Action String action, long presentDuration) {
+        HotMobiLogger.getInstance(context).log(create(context, action, presentDuration), null);
     }
 
     public
@@ -74,8 +96,10 @@ public class ScreenEvent extends BaseEvent implements Parcelable {
                 "} " + super.toString();
     }
 
-    public @interface Action {
-        String ON = "on", OFF = "off", PRESENT = "present", UNKNOWN = "unknown";
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "screen";
     }
 
     @Override
@@ -88,15 +112,8 @@ public class ScreenEvent extends BaseEvent implements Parcelable {
         ScreenEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static final Creator<ScreenEvent> CREATOR = new Creator<ScreenEvent>() {
-        public ScreenEvent createFromParcel(Parcel source) {
-            ScreenEvent target = new ScreenEvent();
-            ScreenEventParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        public ScreenEvent[] newArray(int size) {
-            return new ScreenEvent[size];
-        }
-    };
+    @StringDef({Action.ON, Action.OFF, Action.PRESENT, Action.UNKNOWN})
+    public @interface Action {
+        String ON = "on", OFF = "off", PRESENT = "present", UNKNOWN = "unknown";
+    }
 }

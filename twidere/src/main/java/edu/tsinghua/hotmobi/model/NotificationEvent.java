@@ -23,15 +23,17 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import java.util.TimeZone;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.util.LocationUtils;
 
 /**
  * Created by mariotaku on 15/10/10.
@@ -41,39 +43,37 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
 public class NotificationEvent extends BaseEvent implements Parcelable {
 
     @JsonField(name = "item_id")
+    @ParcelableThisPlease
     long itemId;
 
     @JsonField(name = "item_user_id")
+    @ParcelableThisPlease
     long itemUserId;
 
     @JsonField(name = "account_id")
+    @ParcelableThisPlease
     long accountId;
 
     @JsonField(name = "type")
+    @ParcelableThisPlease
     String type;
 
-    @JsonField(name = "action", typeConverter = Action.Converter.class)
-    Action action;
+    @JsonField(name = "action")
+    @ParcelableThisPlease
+    @Action
+    String action;
 
     @JsonField(name = "ringer_mode")
+    @ParcelableThisPlease
     int ringerMode;
-
-    public void setItemUserFollowing(boolean itemUserFollowing) {
-        this.itemUserFollowing = itemUserFollowing;
-    }
-
     @JsonField(name = "item_user_following")
+    @ParcelableThisPlease
     boolean itemUserFollowing;
 
     public NotificationEvent() {
     }
 
-    public NotificationEvent(Parcel in) {
-        super(in);
-        NotificationEventParcelablePlease.readFromParcel(this, in);
-    }
-
-    public static NotificationEvent create(Context context, Action action, long postTime,
+    public static NotificationEvent create(Context context, @Action String action, long postTime,
                                            long respondTime, String type, long accountId, long itemId,
                                            long itemUserId, boolean itemUserFollowing) {
         final NotificationEvent event = new NotificationEvent();
@@ -81,7 +81,7 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         event.setStartTime(postTime);
         event.setEndTime(respondTime);
         event.setTimeOffset(TimeZone.getDefault().getOffset(postTime));
-        event.setLocation(HotMobiLogger.getCachedLatLng(context));
+        event.setLocation(LocationUtils.getCachedLatLng(context));
         event.setRingerMode(((AudioManager) context.getSystemService(Context.AUDIO_SERVICE)).getRingerMode());
         event.setType(type);
         event.setAccountId(accountId);
@@ -104,11 +104,28 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
                 itemId, itemUserId, itemUserFollowing);
     }
 
-    public Action getAction() {
+    public static boolean isSupported(String type) {
+        if (type == null) return false;
+        switch (type) {
+            case "status":
+            case "statuses":
+            case "mention":
+            case "mentions":
+                return true;
+        }
+        return false;
+    }
+
+    public void setItemUserFollowing(boolean itemUserFollowing) {
+        this.itemUserFollowing = itemUserFollowing;
+    }
+
+    @Action
+    public String getAction() {
         return action;
     }
 
-    public void setAction(Action action) {
+    public void setAction(@Action String action) {
         this.action = action;
     }
 
@@ -144,58 +161,25 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         this.itemUserId = itemUserId;
     }
 
-    public void setRingerMode(int ringerMode) {
-        this.ringerMode = ringerMode;
-    }
-
     public int getRingerMode() {
         return ringerMode;
     }
 
-    public static boolean isSupported(String type) {
-        if (type == null) return false;
-        switch (type) {
-            case "status":
-            case "statuses":
-            case "mention":
-            case "mentions":
-                return true;
-        }
-        return false;
+    public void setRingerMode(int ringerMode) {
+        this.ringerMode = ringerMode;
     }
 
-    public enum Action {
-        OPEN("open"), DELETE("delete"), UNKNOWN("unknown");
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "notification";
+    }
 
-        private final String value;
-
-        Action(String value) {
-            this.value = value;
-        }
-
-        public static Action parse(String action) {
-            if (OPEN.value.equalsIgnoreCase(action)) {
-                return OPEN;
-            } else if (DELETE.value.equalsIgnoreCase(action)) {
-                return DELETE;
-            }
-            return UNKNOWN;
-        }
-
-
-        public static class Converter extends StringBasedTypeConverter<Action> {
-
-            @Override
-            public Action getFromString(String string) {
-                return Action.parse(string);
-            }
-
-            @Override
-            public String convertToString(Action action) {
-                if (action == null) return null;
-                return action.value;
-            }
-        }
+    @StringDef({Action.OPEN, Action.DELETE, Action.UNKNOWN})
+    public @interface Action {
+        String OPEN = "open";
+        String DELETE = "delete";
+        String UNKNOWN = "unknown";
     }
 
     @Override

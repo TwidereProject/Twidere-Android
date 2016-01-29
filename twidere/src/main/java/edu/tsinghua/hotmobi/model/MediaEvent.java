@@ -22,15 +22,17 @@ package edu.tsinghua.hotmobi.model;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.util.TwidereDataUtils;
 
 /**
  * Created by mariotaku on 15/8/7.
@@ -40,26 +42,33 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
 public class MediaEvent extends BaseEvent implements Parcelable {
 
     @JsonField(name = "id")
+    @ParcelableThisPlease
     long id;
 
     @JsonField(name = "user_id")
+    @ParcelableThisPlease
     long userId;
 
     @JsonField(name = "tweet_type")
     @TweetType
+    @ParcelableThisPlease
     String tweetType;
 
     @JsonField(name = "timeline_type")
     @TimelineType
+    @ParcelableThisPlease
     String timelineType;
 
     @JsonField(name = "preview_url")
+    @ParcelableThisPlease
     String previewUrl;
 
     @JsonField(name = "media_url")
+    @ParcelableThisPlease
     String mediaUrl;
 
     @JsonField(name = "preview_enabled")
+    @ParcelableThisPlease
     boolean previewEnabled;
 
     public static MediaEvent create(Context context, ParcelableStatus status, ParcelableMedia media,
@@ -72,7 +81,7 @@ public class MediaEvent extends BaseEvent implements Parcelable {
         event.setPreviewUrl(media.preview_url);
         event.setPreviewEnabled(previewEnabled);
         event.setTimelineType(timelineType);
-        event.setTweetType(HotMobiLogger.getTweetType(status));
+        event.setTweetType(TwidereDataUtils.getTweetType(status));
         return event;
     }
 
@@ -138,4 +147,10 @@ public class MediaEvent extends BaseEvent implements Parcelable {
             return new MediaEvent[size];
         }
     };
+
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "media";
+    }
 }

@@ -22,62 +22,39 @@ package edu.tsinghua.hotmobi.model;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import edu.tsinghua.hotmobi.TypeMappingUtil;
+import edu.tsinghua.hotmobi.util.TwidereDataUtils;
 
 /**
  * Created by mariotaku on 15/8/20.
  */
 @JsonObject
+@ParcelablePlease
 public class LinkEvent extends BaseEvent implements Parcelable {
 
-    public static final Creator<LinkEvent> CREATOR = new Creator<LinkEvent>() {
-        @Override
-        public LinkEvent createFromParcel(Parcel in) {
-            return new LinkEvent(in);
-        }
-
-        @Override
-        public LinkEvent[] newArray(int size) {
-            return new LinkEvent[size];
-        }
-    };
     @JsonField(name = "link")
+    @ParcelableThisPlease
     String link;
     @JsonField(name = "type")
+    @ParcelableThisPlease
     String type;
 
     public LinkEvent() {
 
     }
 
-    protected LinkEvent(Parcel in) {
-        super(in);
-        link = in.readString();
-        type = in.readString();
-    }
-
     public static LinkEvent create(Context context, String link, int typeInt) {
         final LinkEvent event = new LinkEvent();
         event.markStart(context);
         event.setLink(link);
-        event.setType(TypeMappingUtil.getLinkType(typeInt));
+        event.setType(TwidereDataUtils.getLinkType(typeInt));
         return event;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(link);
-        dest.writeString(type);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public void setLink(String link) {
@@ -95,4 +72,32 @@ public class LinkEvent extends BaseEvent implements Parcelable {
                 ", type='" + type + '\'' +
                 "} " + super.toString();
     }
+
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "link";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        LinkEventParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<LinkEvent> CREATOR = new Creator<LinkEvent>() {
+        public LinkEvent createFromParcel(Parcel source) {
+            LinkEvent target = new LinkEvent();
+            LinkEventParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public LinkEvent[] newArray(int size) {
+            return new LinkEvent[size];
+        }
+    };
 }

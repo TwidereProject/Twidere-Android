@@ -25,10 +25,12 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -44,16 +46,18 @@ public class SessionEvent extends BaseEvent implements Parcelable {
 
 
     @JsonField(name = "configuration")
+    @ParcelableThisPlease
     String configuration;
 
     @JsonField(name = "preferences")
+    @ParcelableThisPlease
     HashMap<String, String> preferences;
 
     @JsonField(name = "device_preferences")
+    @ParcelableThisPlease
     HashMap<String, String> devicePreferences;
 
     protected SessionEvent(Parcel in) {
-        super(in);
         SessionEventParcelablePlease.readFromParcel(this, in);
     }
 
@@ -147,4 +151,10 @@ public class SessionEvent extends BaseEvent implements Parcelable {
             return new SessionEvent[size];
         }
     };
+
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "session";
+    }
 }

@@ -38,10 +38,12 @@ import java.nio.channels.FileLock;
 import java.util.Collections;
 import java.util.List;
 
+import edu.tsinghua.hotmobi.model.LogModel;
+
 /**
  * Created by mariotaku on 15/8/23.
  */
-public class WriteLogTask<T> implements Runnable, Constants {
+public class WriteLogTask<T extends LogModel> implements Runnable, Constants {
 
     private static final byte[] LF = {'\n'};
 

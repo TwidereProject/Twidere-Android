@@ -21,21 +21,12 @@ package edu.tsinghua.hotmobi;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.os.BatteryManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.JsonSerializer;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.io.File;
@@ -51,25 +42,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
-import edu.tsinghua.hotmobi.model.BatteryRecord;
-import edu.tsinghua.hotmobi.model.LatLng;
-import edu.tsinghua.hotmobi.model.LinkEvent;
-import edu.tsinghua.hotmobi.model.MediaEvent;
-import edu.tsinghua.hotmobi.model.NetworkEvent;
-import edu.tsinghua.hotmobi.model.NotificationEvent;
-import edu.tsinghua.hotmobi.model.RefreshEvent;
-import edu.tsinghua.hotmobi.model.ScreenEvent;
-import edu.tsinghua.hotmobi.model.ScrollRecord;
-import edu.tsinghua.hotmobi.model.SessionEvent;
-import edu.tsinghua.hotmobi.model.TweetEvent;
-import edu.tsinghua.hotmobi.model.TweetType;
-import edu.tsinghua.hotmobi.model.UploadLogEvent;
+import edu.tsinghua.hotmobi.model.LogModel;
 
 /**
  * Created by mariotaku on 15/8/10.
  */
 @Singleton
-public class HotMobiLogger {
+public class HotMobiLogger implements HotMobiConstants {
 
     public static final long ACCOUNT_ID_NOT_NEEDED = -1;
 
@@ -92,31 +71,8 @@ public class HotMobiLogger {
         mExecutor = Executors.newSingleThreadExecutor();
     }
 
-    public static String getLogFilename(Object event) {
-        if (event instanceof RefreshEvent) {
-            return "refresh";
-        } else if (event instanceof SessionEvent) {
-            return "session";
-        } else if (event instanceof TweetEvent) {
-            return "tweet";
-        } else if (event instanceof MediaEvent) {
-            return "media";
-        } else if (event instanceof LinkEvent) {
-            return "link";
-        } else if (event instanceof NetworkEvent) {
-            return "network";
-        } else if (event instanceof ScrollRecord) {
-            return "scroll";
-        } else if (event instanceof BatteryRecord) {
-            return "battery";
-        } else if (event instanceof NotificationEvent) {
-            return "notification";
-        } else if (event instanceof ScreenEvent) {
-            return "screen";
-        } else if (event instanceof UploadLogEvent) {
-            return "upload_log";
-        }
-        throw new UnsupportedOperationException("Unknown event type " + event);
+    public static String getLogFilename(LogModel logModel) {
+        return logModel.getLogFileName();
     }
 
     public static String getInstallationSerialId(Context context) {
@@ -135,22 +91,6 @@ public class HotMobiLogger {
 
     public static HotMobiLogger getInstance(Context context) {
         return DependencyHolder.get(context).getHotMobiLogger();
-    }
-
-    public static LatLng getCachedLatLng(Context context) {
-        final Location location = Utils.getCachedLocation(context);
-        if (location == null) {
-            return getFallbackCachedLocation(context);
-        }
-        final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
-        prefs.edit().putString(FALLBACK_CACHED_LOCATION, JsonSerializer.serialize(latLng, LatLng.class)).apply();
-        return latLng;
-    }
-
-    private static LatLng getFallbackCachedLocation(Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
-        return JsonSerializer.parse(prefs.getString(FALLBACK_CACHED_LOCATION, null), LatLng.class);
     }
 
     public static File getLogFile(Context context, long accountId, String type) {
@@ -173,26 +113,8 @@ public class HotMobiLogger {
     }
 
     public static long getLastUploadTime(final Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
+        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         return prefs.getLong(LAST_UPLOAD_TIME, -1);
-    }
-
-    public static void logPowerBroadcast(Context context) {
-        final TwidereApplication app = TwidereApplication.getInstance(context);
-        logPowerBroadcast(context, app.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED)));
-    }
-
-    public static void logPowerBroadcast(Context context, Intent intent) {
-        if (intent == null) return;
-        if (!intent.hasExtra(BatteryManager.EXTRA_LEVEL) || !intent.hasExtra(BatteryManager.EXTRA_SCALE) ||
-                !intent.hasExtra(BatteryManager.EXTRA_STATUS)) return;
-        final BatteryRecord record = new BatteryRecord();
-        record.setLevel(intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) / (float)
-                intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1));
-        record.setState(intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1));
-        record.setTimestamp(System.currentTimeMillis());
-        record.setTimeOffset(TimeZone.getDefault().getRawOffset());
-        getInstance(context).log(record, null);
     }
 
     public static boolean log(final String msg) {
@@ -207,56 +129,28 @@ public class HotMobiLogger {
             return false;
     }
 
-    public static
-    @TweetType
-    String getTweetType(ParcelableStatus status) {
-        if (status.media != null) {
-            boolean hasImage = false;
-            for (ParcelableMedia media : status.media) {
-                switch (media.type) {
-                    case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
-                    case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF:
-                    case ParcelableMedia.Type.TYPE_VIDEO:
-                        return TweetType.VIDEO;
-                    case ParcelableMedia.Type.TYPE_IMAGE: {
-                        hasImage = true;
-                        break;
-                    }
-                }
-            }
-            if (hasImage) {
-                return TweetType.PHOTO;
-            }
-        }
-        return TweetType.TEXT;
-    }
-
-    public <T> void log(long accountId, final T event, final PreProcessing<T> preProcessing) {
+    public <T extends LogModel> void log(long accountId, final T event, final PreProcessing<T> preProcessing) {
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, event, preProcessing));
     }
 
-    public <T> void log(long accountId, final T event) {
+    public <T extends LogModel> void log(long accountId, final T event) {
         log(accountId, event, null);
     }
 
-    public <T> void log(final T event) {
+    public <T extends LogModel> void log(final T event) {
         log(event, null);
     }
 
-    public void log(final Object event, final PreProcessing preProcessing) {
+    public void log(final LogModel event, final PreProcessing preProcessing) {
         log(ACCOUNT_ID_NOT_NEEDED, event, preProcessing);
     }
 
-    public <T> void logList(List<T> events, long accountId, String type) {
+    public <T extends LogModel> void logList(List<T> events, long accountId, String type) {
         logList(events, accountId, type, null);
     }
 
-    public <T> void logList(List<T> events, long accountId, String type, final PreProcessing<T> preProcessing) {
+    public <T extends LogModel> void logList(List<T> events, long accountId, String type, final PreProcessing<T> preProcessing) {
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, type, events, preProcessing));
-    }
-
-    public static void logScreenEvent(Context context, @ScreenEvent.Action String action, long presentDuration) {
-        getInstance(context).log(ScreenEvent.create(context, action, presentDuration), null);
     }
 
 }

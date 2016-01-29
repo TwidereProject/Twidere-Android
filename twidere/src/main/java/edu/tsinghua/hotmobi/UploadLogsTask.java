@@ -23,17 +23,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
 import org.apache.commons.lang3.ArrayUtils;
-import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.http.HttpRequest;
-import org.mariotaku.restfu.http.HttpResponse;
-import org.mariotaku.restfu.http.MultiValueMap;
-import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.BugReporter;
-import org.mariotaku.twidere.util.HttpClientFactory;
-import org.mariotaku.twidere.util.Utils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -50,11 +48,11 @@ import edu.tsinghua.hotmobi.model.UploadLogEvent;
 public class UploadLogsTask implements Runnable {
 
     private final Context context;
-    private final RestHttpClient client;
+    private final OkHttpClient client;
 
     public UploadLogsTask(Context context) {
         this.context = context;
-        this.client = HttpClientFactory.getDefaultHttpClient(context);
+        this.client = new OkHttpClient();
     }
 
     @Override
@@ -93,24 +91,18 @@ public class UploadLogsTask implements Runnable {
             boolean succeeded = true;
             for (Object logFileObj : ArrayUtils.nullToEmpty(dayLogsDir.listFiles())) {
                 File logFile = (File) logFileObj;
-                FileBody body = null;
-                HttpResponse response = null;
                 try {
-                    final HttpRequest.Builder builder = new HttpRequest.Builder();
-                    builder.method(POST.METHOD);
+                    final Request.Builder builder = new Request.Builder();
                     builder.url("http://www.dnext.xyz/usage/upload");
-                    final MultiValueMap<String> headers = new MultiValueMap<>();
-                    headers.add("X-HotMobi-UUID", uuid);
-                    headers.add("X-HotMobi-Date", dayLogsDir.getName());
-                    headers.add("X-HotMobi-FileName", logFile.getName());
-                    headers.add("User-Agent", String.format(Locale.ROOT,
+                    builder.header("X-HotMobi-UUID", uuid);
+                    builder.header("X-HotMobi-Date", dayLogsDir.getName());
+                    builder.header("X-HotMobi-FileName", logFile.getName());
+                    builder.header("User-Agent", String.format(Locale.ROOT,
                             "HotMobi (Twidere %s %d)", BuildConfig.VERSION_NAME,
                             BuildConfig.VERSION_CODE));
-                    builder.headers(headers);
-                    body = new FileBody(logFile);
-                    builder.body(body);
+                    builder.method("POST", RequestBody.create(MediaType.parse("text/plain"), logFile));
                     final UploadLogEvent uploadLogEvent = UploadLogEvent.create(context, logFile);
-                    response = client.newCall(builder.build()).execute();
+                    final Response response = client.newCall(builder.build()).execute();
                     if (response.isSuccessful()) {
                         uploadLogEvent.finish(response);
                         if (!uploadLogEvent.shouldSkip()) {
@@ -122,9 +114,6 @@ public class UploadLogsTask implements Runnable {
                     Log.w(HotMobiLogger.LOGTAG, e);
                     succeeded = false;
                     hasErrors = true;
-                } finally {
-                    Utils.closeSilently(body);
-                    Utils.closeSilently(response);
                 }
             }
             if (succeeded) {

@@ -24,10 +24,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 /**
  * Created by mariotaku on 15/8/20.
@@ -37,6 +39,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 public class NetworkEvent extends BaseEvent implements Parcelable {
 
     @JsonField(name = "network_type")
+    @ParcelableThisPlease
     int networkType;
 
     public static NetworkEvent create(Context context) {
@@ -82,4 +85,10 @@ public class NetworkEvent extends BaseEvent implements Parcelable {
             return new NetworkEvent[size];
         }
     };
+
+    @NonNull
+    @Override
+    public String getLogFileName() {
+        return "network";
+    }
 }
