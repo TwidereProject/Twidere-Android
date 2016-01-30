@@ -372,7 +372,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (result > 0) {
             onDatabaseUpdated(tableId, uri);
         }
-        onNewItemsInserted(uri, tableId, valuesArray, newIds);
+        onNewItemsInserted(uri, tableId, valuesArray);
         return result;
     }
 
@@ -504,7 +504,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             return null;
         }
         onDatabaseUpdated(tableId, uri);
-        onNewItemsInserted(uri, tableId, values, rowId);
+        onNewItemsInserted(uri, tableId, values);
         return Uri.withAppendedPath(uri, String.valueOf(rowId));
     }
 
@@ -1104,13 +1104,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         return c;
     }
 
-    private Bitmap getProfileImageForNotification(final String profile_image_url) {
+    private Bitmap getProfileImageForNotification(final String profileImageUrl) {
         final Context context = getContext();
         assert context != null;
         final Resources res = context.getResources();
         final int w = res.getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
         final int h = res.getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
-        final File profile_image_file = mImagePreloader.getCachedImageFile(profile_image_url);
+        final File profile_image_file = mImagePreloader.getCachedImageFile(profileImageUrl);
         final Bitmap profile_image = profile_image_file != null && profile_image_file.isFile() ? BitmapFactory
                 .decodeFile(profile_image_file.getPath()) : null;
         if (profile_image != null) return Bitmap.createScaledBitmap(profile_image, w, h, true);
@@ -1131,15 +1131,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private Cursor getUnreadCountsCursorByType(final String type) {
         final MatrixCursor c = new MatrixCursor(UnreadCounts.MATRIX_COLUMNS);
         return c;
-    }
-
-    private int getUsersCount(final List<ParcelableStatus> items) {
-        if (items == null || items.isEmpty()) return 0;
-        final Set<Long> ids = new HashSet<>();
-        for (final ParcelableStatus item : items.toArray(new ParcelableStatus[items.size()])) {
-            ids.add(item.user_id);
-        }
-        return ids.size();
     }
 
     private boolean isNotificationAudible() {
@@ -1179,11 +1170,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         notifyContentObserver(Utils.getNotificationUri(tableId, uri));
     }
 
-    private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues values, final long newId) {
-        onNewItemsInserted(uri, tableId, new ContentValues[]{values}, new long[]{newId});
+    private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues values) {
+        onNewItemsInserted(uri, tableId, new ContentValues[]{values});
     }
 
-    private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues[] valuesArray, final long[] newIds) {
+    private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues[] valuesArray) {
         final Context context = getContext();
         if (uri == null || valuesArray == null || valuesArray.length == 0 || context == null)
             return;

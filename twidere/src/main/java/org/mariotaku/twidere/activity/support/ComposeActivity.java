@@ -271,8 +271,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            mTask = AsyncTaskUtils.executeTask(new DiscardTweetTask(this));
+            discardTweet();
         }
+    }
+
+    protected void discardTweet() {
+        if (isFinishing() || mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) return;
+        mTask = AsyncTaskUtils.executeTask(new DiscardTweetTask(this));
     }
 
     protected boolean hasComposingStatus() {
@@ -1655,18 +1660,18 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     static class DiscardTweetTask extends AsyncTask<Object, Object, Object> {
 
-        final WeakReference<ComposeActivity> activityRef;
+        final ComposeActivity activity;
+        private final List<ParcelableMediaUpdate> media;
 
         DiscardTweetTask(final ComposeActivity activity) {
-            this.activityRef = new WeakReference<>(activity);
+            this.activity = activity;
+            this.media = activity.getMediaList();
         }
 
         @Override
         protected Object doInBackground(final Object... params) {
-            final ComposeActivity activity = activityRef.get();
-            if (activity == null) return null;
-            for (final ParcelableMediaUpdate media : activity.getMediaList()) {
-                final Uri uri = Uri.parse(media.uri);
+            for (final ParcelableMediaUpdate item : media) {
+                final Uri uri = Uri.parse(item.uri);
                 if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
                     final File file = new File(uri.getPath());
                     if (!file.delete()) {
@@ -1679,16 +1684,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         protected void onPostExecute(final Object result) {
-            final ComposeActivity activity = activityRef.get();
-            if (activity == null) return;
             activity.setProgressVisible(false);
             activity.finish();
         }
 
         @Override
         protected void onPreExecute() {
-            final ComposeActivity activity = activityRef.get();
-            if (activity == null) return;
             activity.setProgressVisible(true);
         }
     }

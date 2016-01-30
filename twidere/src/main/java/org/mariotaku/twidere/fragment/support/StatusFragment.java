@@ -1048,7 +1048,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             final ParcelableMedia[] media = Utils.getPrimaryMedia(status);
 
-            if (media == null) {
+            if (ArrayUtils.isEmpty(media)) {
                 mediaPreviewContainer.setVisibility(View.GONE);
                 mediaPreview.setVisibility(View.GONE);
                 mediaPreviewLoad.setVisibility(View.GONE);

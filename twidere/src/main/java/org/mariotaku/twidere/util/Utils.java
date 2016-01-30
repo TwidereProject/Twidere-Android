@@ -1902,6 +1902,7 @@ public final class Utils implements Constants {
         openMediaDirectly(context, accountId, status, null, current, getPrimaryMedia(status), options);
     }
 
+    @NonNull
     public static ParcelableMedia[] getPrimaryMedia(ParcelableStatus status) {
         if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
             return status.quoted_media;
