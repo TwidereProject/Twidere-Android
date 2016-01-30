@@ -90,7 +90,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         final Authorization auth;
         final ParcelableCredentials account;
         final MediaExtra mediaExtra = extra instanceof MediaExtra ? (MediaExtra) extra : null;
-        final boolean useThumbor = mediaExtra != null && mediaExtra.isUseThumbor();
+        final boolean useThumbor = mediaExtra == null || mediaExtra.isUseThumbor();
         if (isTwitterAuthRequired(uri) && mediaExtra != null) {
             account = ParcelableAccount.getCredentials(mContext, mediaExtra.getAccountId());
             auth = TwitterAPIFactory.getAuthorization(account);
