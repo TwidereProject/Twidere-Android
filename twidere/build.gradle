@@ -115,8 +115,8 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
     compile 'com.j256.simplemagic:simplemagic:1.6'
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.2'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.2'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.2-SNAPSHOT'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.2-SNAPSHOT'
     googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
 //    googleCompile 'com.google.maps.android:android-maps-utils:0.4'
     googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
