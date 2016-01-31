@@ -113,6 +113,10 @@ public class AccountPreferences implements Constants {
         return mPreferences.getBoolean(KEY_NOTIFICATION_FOLLOWING_ONLY, false);
     }
 
+    public boolean isNotificationMentionsOnly() {
+        return mPreferences.getBoolean(KEY_NOTIFICATION_FOLLOWING_ONLY, false);
+    }
+
     public boolean isNotificationEnabled() {
         return mPreferences.getBoolean(KEY_NOTIFICATION, DEFAULT_NOTIFICATION);
     }

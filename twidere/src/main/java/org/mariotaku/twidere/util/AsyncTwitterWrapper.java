@@ -47,6 +47,7 @@ import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.CursorTimestampResponse;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
@@ -114,6 +115,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private final Bus mBus;
     private final UserColorNameManager mUserColorNameManager;
     private final ReadStateManager mReadStateManager;
+    private final ErrorInfoStore mErrorInfoStore;
 
     private int mGetReceivedDirectMessagesTaskId, mGetSentDirectMessagesTaskId;
     private int mGetLocalTrendsTaskId;
@@ -127,7 +129,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     public AsyncTwitterWrapper(Context context, UserColorNameManager userColorNameManager,
                                ReadStateManager readStateManager, Bus bus,
-                               SharedPreferencesWrapper preferences, AsyncTaskManager asyncTaskManager) {
+                               SharedPreferencesWrapper preferences, AsyncTaskManager asyncTaskManager, ErrorInfoStore errorInfoStore) {
         mContext = context;
         mResolver = context.getContentResolver();
         mUserColorNameManager = userColorNameManager;
@@ -135,6 +137,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         mBus = bus;
         mPreferences = preferences;
         mAsyncTaskManager = asyncTaskManager;
+        mErrorInfoStore = errorInfoStore;
     }
 
     public int acceptFriendshipAsync(final long accountId, final long userId) {
@@ -1465,7 +1468,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         private boolean isMessageNotFound(final Exception e) {
             if (!(e instanceof TwitterException)) return false;
             final TwitterException te = (TwitterException) e;
-            return te.getErrorCode() == StatusCodeMessageUtils.PAGE_NOT_FOUND
+            return te.getErrorCode() == ErrorInfo.PAGE_NOT_FOUND
                     || te.getStatusCode() == HttpResponseCode.NOT_FOUND;
         }
 
@@ -1523,7 +1526,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         private boolean isMessageNotFound(final Exception e) {
             if (!(e instanceof TwitterException)) return false;
             final TwitterException te = (TwitterException) e;
-            return te.getErrorCode() == StatusCodeMessageUtils.PAGE_NOT_FOUND
+            return te.getErrorCode() == ErrorInfo.PAGE_NOT_FOUND
                     || te.getStatusCode() == HttpResponseCode.NOT_FOUND;
         }
 
@@ -1948,13 +1951,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (account_ids == null) return result;
 
             int idx = 0;
-            final int load_item_limit = mPreferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
+            final int loadItemLimit = mPreferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
             for (final long accountId : account_ids) {
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, true);
                 if (twitter == null) continue;
                 try {
                     final Paging paging = new Paging();
-                    paging.setCount(load_item_limit);
+                    paging.setCount(loadItemLimit);
                     long max_id = -1, since_id = -1;
                     if (isMaxIdsValid() && max_ids[idx] > 0) {
                         max_id = max_ids[idx];
@@ -1970,7 +1973,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     result.add(new MessageListResponse(accountId, max_id, since_id, messages,
                             truncated));
                     storeMessages(accountId, messages, isOutgoing(), true);
+                    mErrorInfoStore.remove(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountId);
                 } catch (final TwitterException e) {
+                    if (e.getErrorCode() == 93) {
+                        mErrorInfoStore.put(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountId,
+                                ErrorInfoStore.CODE_NO_DM_PERMISSION);
+                    }
                     if (BuildConfig.DEBUG) {
                         Log.w(LOGTAG, e);
                     }

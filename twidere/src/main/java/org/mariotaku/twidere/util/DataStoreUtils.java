@@ -601,8 +601,9 @@ public class DataStoreUtils implements Constants {
         return queryCount(context, uri, selection.getSQL(), null);
     }
 
-    public static int getActivitiesCount(final Context context, final Uri uri, final long sinceTimestamp,
-                                         final long... accountIds) {
+    public static int getActivitiesCount(final Context context, final Uri uri,
+                                         final Expression extraWhere, final String[] extraWhereArgs,
+                                         final long sinceTimestamp, final long... accountIds) {
         if (context == null) return 0;
         final RawItemArray idsIn;
         if (accountIds == null || accountIds.length == 0 || (accountIds.length == 1 && accountIds[0] < 0)) {
@@ -610,12 +611,18 @@ public class DataStoreUtils implements Constants {
         } else {
             idsIn = new RawItemArray(accountIds);
         }
-        final Expression selection = Expression.and(
-                Expression.in(new Columns.Column(Activities.ACCOUNT_ID), idsIn),
-                Expression.greaterThan(Activities.TIMESTAMP, sinceTimestamp),
-                buildActivityFilterWhereClause(getTableNameByUri(uri), null)
-        );
-        return queryCount(context, uri, selection.getSQL(), null);
+        Expression[] expressions;
+        if (extraWhere != null) {
+            expressions = new Expression[4];
+            expressions[3] = extraWhere;
+        } else {
+            expressions = new Expression[3];
+        }
+        expressions[0] = Expression.in(new Columns.Column(Activities.ACCOUNT_ID), idsIn);
+        expressions[1] = Expression.greaterThan(Activities.TIMESTAMP, sinceTimestamp);
+        expressions[2] = buildActivityFilterWhereClause(getTableNameByUri(uri), null);
+        final Expression selection = Expression.and(expressions);
+        return queryCount(context, uri, selection.getSQL(), extraWhereArgs);
     }
 
     public static int getTableId(final Uri uri) {

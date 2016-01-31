@@ -67,12 +67,14 @@ import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
 import org.mariotaku.twidere.activity.UsageStatisticsActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
+import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
@@ -955,8 +957,20 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext,
                                 true, spec.tag, accountIds);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
+
+                        Expression extraWhere = null;
+                        String[] extraWhereArgs = null;
+                        if (spec.args != null) {
+                            Bundle extras = spec.args.getBundle(EXTRA_EXTRAS);
+                            if (extras != null && extras.getBoolean(EXTRA_MENTIONS_ONLY)) {
+                                extraWhere = Expression.inArgs(Activities.ACTION, 3);
+                                extraWhereArgs = new String[]{Activity.Action.MENTION,
+                                        Activity.Action.REPLY, Activity.Action.QUOTE};
+                            }
+                        }
                         result.put(spec.position, DataStoreUtils.getActivitiesCount(mContext,
-                                Activities.AboutMe.CONTENT_URI, position, accountIds));
+                                Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
+                                position, accountIds));
                         break;
                     }
                     case CustomTabType.DIRECT_MESSAGES: {

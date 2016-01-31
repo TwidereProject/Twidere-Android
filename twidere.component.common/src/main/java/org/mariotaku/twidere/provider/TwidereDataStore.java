@@ -893,7 +893,6 @@ public interface TwidereDataStore {
 
         String ACCOUNT_ID = "account_id";
         String ACTION = "action";
-        String RAW_ACTION = "raw_action";
         String TIMESTAMP = "timestamp";
         String STATUS_ID = "status_id";
         String STATUS_RETWEET_ID = "status_retweet_id";
@@ -925,7 +924,7 @@ public interface TwidereDataStore {
                 IS_GAP, MIN_POSITION, MAX_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
                 TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS,
                 STATUS_RETWEET_ID, STATUS_USER_FOLLOWING, INSERTED_DATE};
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, INSERTED_DATE_TYPE};

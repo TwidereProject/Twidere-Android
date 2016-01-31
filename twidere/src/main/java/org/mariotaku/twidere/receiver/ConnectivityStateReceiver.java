@@ -25,12 +25,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.util.ConnectivityUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -60,14 +60,16 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
             HotMobiLogger.getInstance(context).log(event);
             // END HotMobi
         }
-        final int networkType = ConnectivityUtils.getActiveNetworkType(context.getApplicationContext());
-        final boolean isWifi = networkType == ConnectivityManager.TYPE_WIFI;
-        final boolean isCharging = Utils.isCharging(context.getApplicationContext());
-        if (isWifi && isCharging) {
+
+        final Context appContext = context.getApplicationContext();
+        final ConnectivityManager cm = (ConnectivityManager) appContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final boolean isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm);
+        final boolean isCharging = Utils.isCharging(appContext);
+        if (!isNetworkMetered && isCharging) {
             final long currentTime = System.currentTimeMillis();
-            final long lastSuccessfulTime = HotMobiLogger.getLastUploadTime(context);
+            final long lastSuccessfulTime = HotMobiLogger.getLastUploadTime(appContext);
             if ((currentTime - lastSuccessfulTime) > HotMobiLogger.UPLOAD_INTERVAL_MILLIS) {
-                AsyncTask.execute(new UploadLogsTask(context.getApplicationContext()));
+                AsyncTask.execute(new UploadLogsTask(appContext));
             }
         }
 

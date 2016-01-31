@@ -51,8 +51,9 @@ import org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout;
 /**
  * Created by mariotaku on 15/10/26.
  */
-public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAdapter, L extends RecyclerView.LayoutManager> extends BaseSupportFragment
-        implements SwipeRefreshLayout.OnRefreshListener, HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
+public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAdapter, L extends RecyclerView.LayoutManager>
+        extends BaseSupportFragment implements SwipeRefreshLayout.OnRefreshListener,
+        HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
         ContentListScrollListener.ContentListSupport, IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener {
 
     private View mProgressContainer;

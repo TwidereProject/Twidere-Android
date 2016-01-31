@@ -21,6 +21,8 @@ package org.mariotaku.twidere.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.text.TextUtils;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
@@ -29,8 +31,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.mariotaku.twidere.Constants;
 
 import java.io.File;
-
-import static org.mariotaku.twidere.util.ConnectivityUtils.isOnWifi;
 
 /**
  * @author mariotaku
@@ -43,9 +43,11 @@ public class ImagePreloader implements Constants {
     private final SharedPreferences mPreferences;
     private final DiskCache mDiskCache;
     private final ImageLoader mImageLoader;
+    private final ConnectivityManager mConnectivityManager;
 
     public ImagePreloader(final Context context, final ImageLoader loader) {
         mContext = context;
+        mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mImageLoader = loader;
         mDiskCache = loader.getDiskCache();
@@ -64,7 +66,8 @@ public class ImagePreloader implements Constants {
 
     public void preloadImage(final String url) {
         if (TextUtils.isEmpty(url)) return;
-        if (!isOnWifi(mContext) && mPreferences.getBoolean(KEY_PRELOAD_WIFI_ONLY, true)) return;
+        if (ConnectivityManagerCompat.isActiveNetworkMetered(mConnectivityManager)
+                && mPreferences.getBoolean(KEY_PRELOAD_WIFI_ONLY, true)) return;
         mImageLoader.loadImage(url, null);
     }
 

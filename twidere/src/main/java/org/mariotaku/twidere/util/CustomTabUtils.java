@@ -75,7 +75,8 @@ public class CustomTabUtils implements Constants {
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.NOTIFICATIONS_TIMELINE, new CustomTabConfiguration(
                 ActivitiesAboutMeFragment.class, R.string.notifications, R.drawable.ic_action_notification,
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 1, false,
-                ExtraConfiguration.newBoolean(EXTRA_MY_FOLLOWING_ONLY, R.string.following_only, false)));
+                ExtraConfiguration.newBoolean(EXTRA_MY_FOLLOWING_ONLY, R.string.following_only, false),
+                ExtraConfiguration.newBoolean(EXTRA_MENTIONS_ONLY, R.string.mentions_only, false)));
 
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
                 DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,

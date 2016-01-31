@@ -25,8 +25,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
+import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -66,6 +69,21 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
         setRefreshing(mTwitterWrapper.isMentionsTimelineRefreshing());
     }
 
+    @Override
+    @NonNull
+    protected Where processWhere(@NonNull Expression where, @NonNull String[] whereArgs) {
+        final Bundle arguments = getArguments();
+        if (arguments != null) {
+            final Bundle extras = arguments.getBundle(EXTRA_EXTRAS);
+            if (extras != null && extras.getBoolean(EXTRA_MENTIONS_ONLY)) {
+                final Expression expression = Expression.and(where, Expression.inArgs(Activities.ACTION, 3));
+                return new Where(expression, ArrayUtils.addAll(whereArgs, Activity.Action.MENTION,
+                        Activity.Action.REPLY, Activity.Action.QUOTE));
+            }
+        }
+        return super.processWhere(where, whereArgs);
+    }
+
     @NonNull
     @Override
     protected ParcelableActivitiesAdapter onCreateAdapter(Context context, boolean compact) {
@@ -75,6 +93,7 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
             final Bundle extras = arguments.getBundle(EXTRA_EXTRAS);
             if (extras != null) {
                 adapter.setFollowingOnly(extras.getBoolean(EXTRA_MY_FOLLOWING_ONLY));
+                adapter.setMentionsOnly(extras.getBoolean(EXTRA_MENTIONS_ONLY));
             }
         }
         return adapter;

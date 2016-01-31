@@ -44,6 +44,7 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.ExternalThemeManager;
 import org.mariotaku.twidere.util.HttpClientFactory;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -174,9 +175,9 @@ public class ApplicationModule implements Constants {
     public AsyncTwitterWrapper asyncTwitterWrapper(UserColorNameManager userColorNameManager,
                                                    ReadStateManager readStateManager,
                                                    Bus bus, SharedPreferencesWrapper preferences,
-                                                   AsyncTaskManager asyncTaskManager) {
+                                                   AsyncTaskManager asyncTaskManager, ErrorInfoStore errorInfoStore) {
         return new AsyncTwitterWrapper(application, userColorNameManager, readStateManager, bus,
-                preferences, asyncTaskManager);
+                preferences, asyncTaskManager, errorInfoStore);
     }
 
     @Provides
@@ -213,6 +214,12 @@ public class ApplicationModule implements Constants {
     @Singleton
     public MediaDownloader mediaDownloader(SharedPreferencesWrapper preferences, RestHttpClient client) {
         return new TwidereMediaDownloader(application, preferences, client);
+    }
+
+    @Provides
+    @Singleton
+    public ErrorInfoStore errorInfoStore() {
+        return new ErrorInfoStore(application);
     }
 
     @Provides

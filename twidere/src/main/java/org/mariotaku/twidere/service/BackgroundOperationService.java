@@ -54,6 +54,7 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterUpload;
+import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
@@ -78,10 +79,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
-import org.mariotaku.twidere.util.StatusCodeMessageUtils;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereListUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
@@ -367,7 +366,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                 // If the status is a duplicate, there's no need to save it to
                 // drafts.
                 if (exception instanceof TwitterException
-                        && ((TwitterException) exception).getErrorCode() == StatusCodeMessageUtils.STATUS_IS_DUPLICATE) {
+                        && ((TwitterException) exception).getErrorCode() == ErrorInfo.STATUS_IS_DUPLICATE) {
                     showErrorMessage(getString(R.string.status_is_duplicate), false);
                 } else {
                     final ContentValues accountIdsValues = new ContentValues();

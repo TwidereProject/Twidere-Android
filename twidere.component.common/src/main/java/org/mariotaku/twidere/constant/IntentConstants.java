@@ -209,6 +209,7 @@ public interface IntentConstants {
     String EXTRA_CURRENT_MEDIA = "current_media";
     String EXTRA_EXTRAS = "extras";
     String EXTRA_MY_FOLLOWING_ONLY = "my_following_only";
+    String EXTRA_MENTIONS_ONLY = "mentions_only";
     String EXTRA_CHANGED = "changed";
     String EXTRA_NOTIFY_CHANGE = "notify_change";
     String EXTRA_RESTART_ACTIVITY = "restart_activity";

@@ -46,6 +46,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DebugModeUtils;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
@@ -80,6 +81,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected NotificationManagerWrapper mNotificationManager;
     @Inject
     protected BidiFormatter mBidiFormatter;
+    @Inject
+    protected ErrorInfoStore mErrorInfoStore;
 
     public BaseSupportFragment() {
 

@@ -78,6 +78,7 @@ import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.NotificationType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
+import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
@@ -85,9 +86,10 @@ import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.DraftItemCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
-import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.model.UnreadItem;
+import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
@@ -135,7 +137,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1348,18 +1349,28 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             int messageLines = 0;
 
             long timestamp = -1;
-            while (!c.isAfterLast()) {
+            c.moveToFirst();
+            while (c.moveToNext()) {
                 if (messageLines == 5) {
                     style.addLine(resources.getString(R.string.and_N_more, count - c.getPosition()));
                     break;
                 }
                 final ParcelableActivity activity = ci.newObject(c);
+                if (pref.isNotificationMentionsOnly() && ArrayUtils.contains(Activity.Action.MENTION_ACTIONS,
+                        activity.action)) {
+                    continue;
+                }
+                final long[] filteredUserIds = DataStoreUtils.getFilteredUserIds(context);
                 if (timestamp == -1) {
                     timestamp = activity.timestamp;
                 }
+                ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds,
+                        pref.isNotificationFollowingOnly());
+                final ParcelableUser[] sources = ParcelableActivityUtils.getAfterFilteredSources(activity);
+                if (ArrayUtils.isEmpty(sources)) continue;
                 final ActivityTitleSummaryMessage message = ActivityTitleSummaryMessage.get(context,
-                        mUserColorNameManager, activity, activity.sources, 0, false,
-                        mUseStarForLikes, mNameFirst);
+                        mUserColorNameManager, activity, sources,
+                        0, false, mUseStarForLikes, mNameFirst);
                 if (message != null) {
                     final CharSequence summary = message.getSummary();
                     if (TextUtils.isEmpty(summary)) {
@@ -1370,7 +1381,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     }
                     messageLines++;
                 }
-                c.moveToNext();
             }
             builder.setContentIntent(getContentIntent(context, CustomTabType.NOTIFICATIONS_TIMELINE,
                     NotificationType.INTERACTIONS, accountId));

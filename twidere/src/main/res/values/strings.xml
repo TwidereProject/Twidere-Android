@@ -839,4 +839,6 @@
     <string name="label_poll">Poll</string>
     <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
     <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+    <string name="mentions_only">Mentions only</string>
+    <string name="error_no_dm_permission">No direct message permission, check your Twitter application permission setting.</string>
 </resources>

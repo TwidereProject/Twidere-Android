@@ -87,27 +87,13 @@ public final class TwidereArrayUtils {
     }
 
     @SuppressWarnings("SuspiciousSystemArraycopy")
-    public static void mergeArray(final Object dest, final Object... arrays) {
-        if (arrays == null || arrays.length == 0) return;
-        if (arrays.length == 1) {
-            final Object array = arrays[0];
-            System.arraycopy(array, 0, dest, 0, Array.getLength(array));
-            return;
+    public static void mergeArray(final Object dest, @NonNull final Object... arrays) {
+        for (int i = 0, j = arrays.length, k = 0; i < j; i++) {
+            final Object array = arrays[i];
+            final int length = Array.getLength(array);
+            System.arraycopy(array, 0, dest, k, length);
+            k += length;
         }
-        for (int i = 0, j = arrays.length - 1; i < j; i++) {
-            final Object array1 = arrays[i], array2 = arrays[i + 1];
-            System.arraycopy(array1, 0, dest, 0, Array.getLength(array1));
-            System.arraycopy(array2, 0, dest, Array.getLength(array1), Array.getLength(array2));
-        }
-    }
-
-    public static String mergeArrayToString(final String[] array) {
-        if (array == null) return null;
-        final StringBuilder builder = new StringBuilder();
-        for (final String c : array) {
-            builder.append(c);
-        }
-        return builder.toString();
     }
 
     public static long min(final long[] array) {

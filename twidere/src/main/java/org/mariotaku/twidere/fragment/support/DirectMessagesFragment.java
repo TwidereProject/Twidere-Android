@@ -57,6 +57,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
@@ -150,17 +151,25 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (getActivity() == null) return;
+        final boolean isEmpty = cursor != null && cursor.getCount() == 0;
         mFirstVisibleItem = -1;
         final MessageEntriesAdapter adapter = getAdapter();
         adapter.setCursor(cursor);
         adapter.setLoadMoreIndicatorVisible(false);
-        adapter.setLoadMoreSupported(cursor != null && cursor.getCount() > 0);
+        adapter.setLoadMoreSupported(!isEmpty);
         adapter.setLoadMoreSupported(hasMoreData(cursor));
         final long[] accountIds = getAccountIds();
         adapter.setShowAccountsColor(accountIds.length > 1);
         setRefreshEnabled(true);
+
         if (accountIds.length > 0) {
-            showContent();
+            final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
+                    mErrorInfoStore.get(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountIds[0]));
+            if (isEmpty && errorInfo != null) {
+                showError(errorInfo.getIcon(), errorInfo.getMessage());
+            } else {
+                showContent();
+            }
         } else {
             showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
         }

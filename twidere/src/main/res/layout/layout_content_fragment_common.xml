@@ -44,7 +44,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/element_spacing_large"
         android:visibility="gone">
 
         <org.mariotaku.twidere.view.ActionIconView
@@ -59,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:padding="@dimen/element_spacing_large"
             android:textAppearance="?android:textAppearanceMedium"/>
     </LinearLayout>
 

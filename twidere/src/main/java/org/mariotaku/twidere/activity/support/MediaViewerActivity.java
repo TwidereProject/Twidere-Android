@@ -116,7 +116,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
 
     @Override
     public void setBarVisibility(boolean visible) {
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
         if (visible) {
             actionBar.show();
