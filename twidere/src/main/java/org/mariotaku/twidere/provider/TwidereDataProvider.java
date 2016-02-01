@@ -1335,15 +1335,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             applyNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
 
             final Resources resources = context.getResources();
-            final String title = resources.getQuantityString(R.plurals.N_new_interactions,
-                    count, count);
             final String accountName = DataStoreUtils.getAccountDisplayName(context, accountId, mNameFirst);
-            builder.setContentTitle(title);
             builder.setContentText(accountName);
             final InboxStyle style = new InboxStyle();
             builder.setStyle(style);
             builder.setAutoCancel(true);
-            style.setBigContentTitle(title);
             style.setSummaryText(accountName);
             final ParcelableActivityCursorIndices ci = new ParcelableActivityCursorIndices(c);
             int messageLines = 0;
@@ -1382,6 +1378,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     messageLines++;
                 }
             }
+            if (messageLines == 0) return;
+            final int displayCount = messageLines + count - c.getPosition();
+            final String title = resources.getQuantityString(R.plurals.N_new_interactions,
+                    displayCount, displayCount);
+            builder.setContentTitle(title);
+            style.setBigContentTitle(title);
             builder.setContentIntent(getContentIntent(context, CustomTabType.NOTIFICATIONS_TIMELINE,
                     NotificationType.INTERACTIONS, accountId));
             if (timestamp != -1) {
