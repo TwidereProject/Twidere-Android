@@ -19,10 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.Loader;
@@ -30,31 +27,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.squareup.otto.Subscribe;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsUserListsAdapter;
 import org.mariotaku.twidere.loader.support.UserListsLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.message.UserListDestroyedEvent;
 
 import java.util.List;
 
 public class UserListsFragment extends ParcelableUserListsFragment {
-
-    private final BroadcastReceiver mStatusReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            if (getActivity() == null || !isAdded() || isDetached()) return;
-            final String action = intent.getAction();
-            if (BROADCAST_USER_LIST_DELETED.equals(action)) {
-                final ParcelableUserList list = intent.getParcelableExtra(EXTRA_USER_LIST);
-                if (list != null) {
-                    removeUserList(list.id);
-                }
-            }
-        }
-    };
 
     @Override
     public Loader<List<ParcelableUserList>> onCreateUserListsLoader(final Context context,
@@ -114,13 +99,18 @@ public class UserListsFragment extends ParcelableUserListsFragment {
     @Override
     public void onStart() {
         super.onStart();
-        registerReceiver(mStatusReceiver, new IntentFilter(BROADCAST_USER_LIST_DELETED));
+        mBus.register(this);
     }
 
     @Override
     public void onStop() {
-        unregisterReceiver(mStatusReceiver);
+        mBus.unregister(this);
         super.onStop();
+    }
+
+    @Subscribe
+    void onUserListDestroyed(UserListDestroyedEvent event) {
+        removeUserList(event.userList.id);
     }
 
     private void removeUserList(final long id) {

@@ -24,11 +24,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Outline;
@@ -45,6 +42,7 @@ import android.nfc.NfcEvent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -65,6 +63,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.TwidereToolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -81,9 +80,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.desmond.asyncmanager.AsyncManager;
+import com.desmond.asyncmanager.TaskRunnable;
 import com.meizu.flyme.reflect.StatusBarProxy;
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
@@ -98,13 +100,14 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
+import org.mariotaku.twidere.model.CachedRelationship;
+import org.mariotaku.twidere.model.CachedRelationshipValuesCreator;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -112,6 +115,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.SupportTabSpec;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -122,13 +126,13 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
@@ -151,17 +155,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class UserFragment extends BaseSupportFragment implements OnClickListener,
-        OnLinkClickListener, OnSizeChangedListener, OnSharedPreferenceChangeListener,
-        OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback,
-        RefreshScrollTopInterface, OnPageChangeListener, KeyboardShortcutCallback {
-
-    private static final ArgbEvaluator sArgbEvaluator = new ArgbEvaluator();
+public class UserFragment extends BaseSupportFragment implements OnClickListener, OnLinkClickListener,
+        OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
+        SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener, KeyboardShortcutCallback,
+        UserColorNameManager.UserColorChangedListener, UserColorNameManager.UserNicknameChangedListener {
 
     public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
     public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
-    public static final String TRANSITION_NAME_CARD = "card";
-
+    private static final ArgbEvaluator sArgbEvaluator = new ArgbEvaluator();
     private static final int LOADER_ID_USER = 1;
     private static final int LOADER_ID_FRIENDSHIP = 2;
 
@@ -172,6 +173,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private static final String TAB_TYPE_MEDIA = "media";
     private static final String TAB_TYPE_FAVORITES = "favorites";
 
+    // Views
     private ShapedImageView mProfileImageView;
     private ImageView mProfileTypeView;
     private ProfileBannerImageView mProfileBannerView;
@@ -201,12 +203,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private View mProfileDetailsContainer;
     private View mFollowingYouIndicator;
 
-
     private ActionBarDrawable mActionBarBackground;
     private SupportTabsAdapter mPagerAdapter;
 
+    // Data fields
     private ParcelableUser mUser;
-    private Relationship mRelationship;
+    private UserRelationship mRelationship;
     private Locale mLocale;
     private boolean mGetUserInfoLoaderInitialized, mGetFriendShipLoaderInitialized;
     private int mBannerWidth;
@@ -217,85 +219,35 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private int mPreviousTabItemIsDark, mPreviousActionBarItemIsDark;
     private boolean mHideBirthdayView;
 
+    private final LoaderCallbacks<SingleResponse<UserRelationship>> mFriendshipLoaderCallbacks =
+            new LoaderCallbacks<SingleResponse<UserRelationship>>() {
 
-    private final LoaderCallbacks<SingleResponse<Relationship>> mFriendshipLoaderCallbacks = new LoaderCallbacks<SingleResponse<Relationship>>() {
+                @Override
+                public Loader<SingleResponse<UserRelationship>> onCreateLoader(final int id, final Bundle args) {
+                    invalidateOptionsMenu();
+                    mFollowButton.setVisibility(View.GONE);
+                    mFollowProgress.setVisibility(View.VISIBLE);
+                    mFollowingYouIndicator.setVisibility(View.GONE);
+                    final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+                    final long userId = args.getLong(EXTRA_USER_ID, -1);
+                    return new UserRelationshipLoader(getActivity(), accountId, userId);
+                }
 
-        @Override
-        public Loader<SingleResponse<Relationship>> onCreateLoader(final int id, final Bundle args) {
-            invalidateOptionsMenu();
-            mFollowButton.setVisibility(View.GONE);
-            mFollowProgress.setVisibility(View.VISIBLE);
-            mFollowingYouIndicator.setVisibility(View.GONE);
-            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            final long userId = args.getLong(EXTRA_USER_ID, -1);
-            return new RelationshipLoader(getActivity(), accountId, userId);
-        }
+                @Override
+                public void onLoaderReset(final Loader<SingleResponse<UserRelationship>> loader) {
 
-        @Override
-        public void onLoaderReset(final Loader<SingleResponse<Relationship>> loader) {
+                }
 
-        }
+                @Override
+                public void onLoadFinished(final Loader<SingleResponse<UserRelationship>> loader,
+                                           final SingleResponse<UserRelationship> data) {
+                    mFollowProgress.setVisibility(View.GONE);
+                    final ParcelableUser user = getUser();
+                    final UserRelationship relationship = data.getData();
+                    showRelationship(user, relationship);
+                }
 
-        @Override
-        public void onLoadFinished(final Loader<SingleResponse<Relationship>> loader,
-                                   final SingleResponse<Relationship> data) {
-            mFollowProgress.setVisibility(View.GONE);
-            final ParcelableUser user = getUser();
-            final Relationship relationship = data.getData();
-            showRelationship(user, relationship);
-        }
-
-    };
-
-    private void showRelationship(ParcelableUser user, Relationship relationship) {
-        mRelationship = relationship;
-        if (user == null) return;
-        invalidateOptionsMenu();
-        final boolean isMyself = user.account_id == user.id;
-        if (isMyself) {
-            mFollowButton.setText(R.string.edit);
-            mFollowButton.setVisibility(View.VISIBLE);
-        } else if (relationship != null) {
-            mFollowButton.setEnabled(!relationship.isSourceBlockedByTarget());
-            if (relationship.isSourceBlockedByTarget()) {
-                mPagesErrorContainer.setVisibility(View.GONE);
-                mPagesErrorText.setText(null);
-                mPagesContent.setVisibility(View.VISIBLE);
-            } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
-                mPagesErrorContainer.setVisibility(View.VISIBLE);
-                final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
-                mPagesErrorText.setText(getString(R.string.user_protected_summary, displayName));
-                mPagesErrorIcon.setImageResource(R.drawable.ic_info_locked);
-                mPagesContent.setVisibility(View.GONE);
-            } else {
-                mPagesErrorContainer.setVisibility(View.GONE);
-                mPagesErrorText.setText(null);
-                mPagesContent.setVisibility(View.VISIBLE);
-            }
-            if (relationship.isSourceBlockingTarget()) {
-                mFollowButton.setText(R.string.unblock);
-            } else if (relationship.isSourceFollowingTarget()) {
-                mFollowButton.setText(R.string.unfollow);
-            } else if (user.is_follow_request_sent) {
-                mFollowButton.setText(R.string.requested);
-            } else {
-                mFollowButton.setText(R.string.follow);
-            }
-            mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
-            mFollowingYouIndicator.setVisibility(relationship.isTargetFollowingSource() ? View.VISIBLE : View.GONE);
-
-            final ContentResolver resolver = getContentResolver();
-            final ContentValues cachedValues = ContentValuesCreator.makeCachedUserContentValues(user);
-            resolver.insert(CachedUsers.CONTENT_URI, cachedValues);
-            mFollowButton.setVisibility(View.VISIBLE);
-        } else {
-            mFollowButton.setText(null);
-            mFollowButton.setVisibility(View.GONE);
-            mPagesErrorContainer.setVisibility(View.GONE);
-            mPagesContent.setVisibility(View.VISIBLE);
-        }
-    }
-
+            };
     private final LoaderCallbacks<SingleResponse<ParcelableUser>> mUserInfoLoaderCallbacks = new LoaderCallbacks<SingleResponse<ParcelableUser>>() {
 
         @Override
@@ -361,6 +313,69 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
     };
+
+    private static void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
+        final View windowOverlay = activity.findViewById(R.id.window_overlay);
+        if (windowOverlay != null) {
+            windowOverlay.setAlpha(alpha);
+            return;
+        }
+        final Drawable drawable = ThemeUtils.getCompatToolbarOverlay(activity);
+        if (drawable == null) return;
+        drawable.setAlpha(Math.round(alpha * 255));
+    }
+
+    private void showRelationship(@Nullable ParcelableUser user, @Nullable UserRelationship userRelationship) {
+        if (user == null) {
+            mRelationship = null;
+            return;
+        } else if (userRelationship != null && userRelationship.check(user)) {
+            mRelationship = userRelationship;
+        } else {
+            mRelationship = null;
+        }
+        invalidateOptionsMenu();
+        if (mRelationship == null && user.account_id == user.id) {
+            mFollowButton.setText(R.string.edit);
+            mFollowButton.setVisibility(View.VISIBLE);
+            return;
+        }
+        final Relationship relationship = mRelationship.relationship;
+        mFollowButton.setEnabled(relationship.isSourceBlockingTarget() ||
+                !relationship.isSourceBlockedByTarget());
+        if (relationship.isSourceBlockedByTarget()) {
+            mPagesErrorContainer.setVisibility(View.GONE);
+            mPagesErrorText.setText(null);
+            mPagesContent.setVisibility(View.VISIBLE);
+        } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
+            mPagesErrorContainer.setVisibility(View.VISIBLE);
+            final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
+            mPagesErrorText.setText(getString(R.string.user_protected_summary, displayName));
+            mPagesErrorIcon.setImageResource(R.drawable.ic_info_locked);
+            mPagesContent.setVisibility(View.GONE);
+        } else {
+            mPagesErrorContainer.setVisibility(View.GONE);
+            mPagesErrorText.setText(null);
+            mPagesContent.setVisibility(View.VISIBLE);
+        }
+        if (relationship.isSourceBlockingTarget()) {
+            mFollowButton.setText(R.string.unblock);
+        } else if (relationship.isSourceFollowingTarget()) {
+            mFollowButton.setText(R.string.unfollow);
+        } else if (user.is_follow_request_sent) {
+            mFollowButton.setText(R.string.requested);
+        } else {
+            mFollowButton.setText(R.string.follow);
+        }
+        mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
+        mFollowingYouIndicator.setVisibility(relationship.isTargetFollowingSource() ? View.VISIBLE : View.GONE);
+
+        final CacheUserInfoRunnable task = new CacheUserInfoRunnable(getContext().getApplicationContext());
+        task.setParams(Pair.create(user, relationship));
+        AsyncManager.runBackgroundTask(task);
+        mFollowButton.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public boolean canScroll(float dy) {
@@ -487,14 +502,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
-        final boolean userIsMe = user.account_id == user.id;
         mCardContent.setVisibility(View.VISIBLE);
         mHeaderErrorContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
         final int userColor = mUserColorNameManager.getUserColor(user.id, true);
         mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
-        mProfileNameContainer.drawEnd(DataStoreUtils.getAccountColor(activity, user.account_id));
+        if (user.account_color != 0) {
+            mProfileNameContainer.drawEnd(user.account_color);
+        } else {
+            mProfileNameContainer.drawEnd(DataStoreUtils.getAccountColor(activity, user.account_id));
+        }
         final String nick = mUserColorNameManager.getUserNickname(user.id, true);
         mNameView.setText(mBidiFormatter.unicodeWrap(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick)));
         final int typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected);
@@ -533,9 +551,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         final int defWidth = resources.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
-        mMediaLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, width);
-        final Relationship relationship = mRelationship;
-        if (relationship == null || relationship.getTargetUserId() != user.id) {
+        if (ObjectUtils.notEqual(mProfileBannerView.getTag(), user.profile_banner_url) ||
+                mProfileBannerView.getDrawable() == null) {
+            mProfileBannerView.setTag(user.profile_banner_url);
+            mMediaLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, width);
+        }
+        final UserRelationship relationship = mRelationship;
+        if (relationship == null) {
             getFriendship();
         }
         activity.setTitle(mUserColorNameManager.getDisplayName(user, mNameFirst, true));
@@ -570,6 +592,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return false;
     }
 
+    @Nullable
     public ParcelableUser getUser() {
         return mUser;
     }
@@ -678,17 +701,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         super.onActivityCreated(savedInstanceState);
         final FragmentActivity activity = getActivity();
         setHasOptionsMenu(true);
-        getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .registerOnSharedPreferenceChangeListener(this);
-        getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .registerOnSharedPreferenceChangeListener(this);
+        mUserColorNameManager.registerColorChangedListener(this);
+        mUserColorNameManager.registerNicknameChangedListener(this);
         mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
         mLocale = getResources().getConfiguration().locale;
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
                 ThemeUtils.getThemeBackgroundOption(activity),
                 ThemeUtils.getUserThemeBackgroundAlpha(activity));
         mActionBarShadowColor = 0xA0000000;
-        final TwidereApplication app = TwidereApplication.getInstance(activity);
         final Bundle args = getArguments();
         long accountId = -1, userId = -1;
         String screenName = null;
@@ -777,16 +797,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final float actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity);
         ViewCompat.setElevation(mPagerIndicator, actionBarElevation);
 
+        setupBaseActionBar();
+        setupUserPages();
+
         if (activity instanceof IThemedActivity) {
             ViewSupport.setBackground(mPagerOverlay, ThemeUtils.getNormalWindowContentOverlay(activity,
                     ((IThemedActivity) activity).getCurrentThemeResourceId()));
             ViewSupport.setBackground(mErrorOverlay, ThemeUtils.getNormalWindowContentOverlay(activity,
                     ((IThemedActivity) activity).getCurrentThemeResourceId()));
-        }
-
-        setupBaseActionBar();
-        setupUserPages();
-        if (activity instanceof IThemedActivity) {
             setUiColor(((IThemedActivity) activity).getCurrentThemeColor());
         }
 
@@ -830,8 +848,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void onPrepareOptionsMenu(final Menu menu) {
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
-        final Relationship relationship = mRelationship;
-        if (twitter == null || user == null) return;
+        final UserRelationship userRelationship = mRelationship;
+        if (twitter == null || user == null || userRelationship == null) return;
+        final Relationship relationship = userRelationship.relationship;
 
         final boolean isMyself = user.account_id == user.id;
         final MenuItem mentionItem = menu.findItem(R.id.mention);
@@ -857,7 +876,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 //            followItem.setTitle(null);
 //            followItem.setIcon(null);
 //        }
-        if (!isMyself && relationship != null) {
+        if (!isMyself) {
             MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, relationship.canSourceDMTarget());
             MenuUtils.setMenuItemAvailability(menu, R.id.block, true);
             MenuUtils.setMenuItemAvailability(menu, R.id.mute_user, true);
@@ -873,9 +892,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             final MenuItem filterItem = menu.findItem(R.id.add_to_filter);
             if (filterItem != null) {
-                final boolean filtering = Utils.isFilteringUser(getActivity(), user.id);
-                ActionIconDrawable.setMenuHighlight(filterItem, new TwidereMenuInfo(filtering));
-                filterItem.setTitle(filtering ? R.string.remove_from_filter : R.string.add_to_filter);
+                ActionIconDrawable.setMenuHighlight(filterItem, new TwidereMenuInfo(userRelationship.isFiltering));
+                filterItem.setTitle(userRelationship.isFiltering ? R.string.remove_from_filter : R.string.add_to_filter);
             }
             final MenuItem wantRetweetsItem = menu.findItem(R.id.enable_retweets);
             if (wantRetweetsItem != null) {
@@ -909,16 +927,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public boolean onOptionsItemSelected(final MenuItem item) {
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
-        final Relationship relationship = mRelationship;
+        final UserRelationship userRelationship = mRelationship;
         if (user == null || twitter == null) return false;
         switch (item.getItemId()) {
             case R.id.block: {
-                if (mRelationship != null) {
-                    if (mRelationship.isSourceBlockingTarget()) {
-                        twitter.destroyBlockAsync(user.account_id, user.id);
-                    } else {
-                        CreateUserBlockDialogFragment.show(getFragmentManager(), user);
-                    }
+                if (userRelationship == null) return true;
+                if (userRelationship.relationship.isSourceBlockingTarget()) {
+                    twitter.destroyBlockAsync(user.account_id, user.id);
+                } else {
+                    CreateUserBlockDialogFragment.show(getFragmentManager(), user);
                 }
                 break;
             }
@@ -927,9 +944,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.add_to_filter: {
-                final boolean filtering = Utils.isFilteringUser(getActivity(), user.id);
+                if (userRelationship == null) return true;
                 final ContentResolver cr = getContentResolver();
-                if (filtering) {
+                if (userRelationship.isFiltering) {
                     final Expression where = Expression.equals(Filters.Users.USER_ID, user.id);
                     cr.delete(Filters.Users.CONTENT_URI, where.getSQL(), null);
                     Utils.showInfoMessage(getActivity(), R.string.message_user_unmuted, false);
@@ -940,12 +957,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.mute_user: {
-                if (mRelationship != null) {
-                    if (mRelationship.isSourceMutingTarget()) {
-                        twitter.destroyMuteAsync(user.account_id, user.id);
-                    } else {
-                        CreateUserMuteDialogFragment.show(getFragmentManager(), user);
-                    }
+                if (userRelationship == null) return true;
+                if (userRelationship.relationship.isSourceMutingTarget()) {
+                    twitter.destroyMuteAsync(user.account_id, user.id);
+                } else {
+                    CreateUserMuteDialogFragment.show(getFragmentManager(), user);
                 }
                 break;
             }
@@ -1002,8 +1018,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.follow: {
-                if (relationship == null) return false;
-                final boolean isFollowing = relationship.isSourceFollowingTarget();
+                if (userRelationship == null) return true;
+                final boolean isFollowing = userRelationship.relationship.isSourceFollowingTarget();
                 final boolean isCreatingFriendship = twitter.isCreatingFriendship(user.account_id, user.id);
                 final boolean isDestroyingFriendship = twitter.isDestroyingFriendship(user.account_id, user.id);
                 if (!isCreatingFriendship && !isDestroyingFriendship) {
@@ -1211,12 +1227,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     Utils.openProfileEditor(getActivity(), user.account_id);
                     break;
                 }
-                final Relationship relationship = mRelationship;
+                final UserRelationship userRelationship = mRelationship;
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
-                if (relationship == null || twitter == null) return;
-                if (relationship.isSourceBlockingTarget()) {
+                if (userRelationship == null || twitter == null) return;
+                if (userRelationship.relationship.isSourceBlockingTarget()) {
                     twitter.destroyBlockAsync(user.account_id, user.id);
-                } else if (relationship.isSourceFollowingTarget()) {
+                } else if (userRelationship.relationship.isSourceFollowingTarget()) {
                     DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
                 } else {
                     twitter.createFriendshipAsync(user.account_id, user.id);
@@ -1310,8 +1326,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        if (mUser == null || !ParseUtils.parseString(mUser.id).equals(key)) return;
+    public void onUserNicknameChanged(long userId, String nick) {
+        if (mUser == null || mUser.id != userId) return;
+        displayUser(mUser);
+    }
+
+    @Override
+    public void onUserColorChanged(long userId, int color) {
+        if (mUser == null || mUser.id != userId) return;
         displayUser(mUser);
     }
 
@@ -1354,8 +1376,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     private void getFriendship() {
-        mRelationship = null;
         final ParcelableUser user = getUser();
+        if (user == null) return;
+        mRelationship = null;
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
@@ -1375,20 +1398,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         getUserInfo(user.account_id, user.id, user.screen_name, omitIntentExtra);
     }
 
-    private static void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
-        final View windowOverlay = activity.findViewById(R.id.window_overlay);
-        if (windowOverlay != null) {
-            windowOverlay.setAlpha(alpha);
-            return;
-        }
-        final Drawable drawable = ThemeUtils.getCompatToolbarOverlay(activity);
-        if (drawable == null) return;
-        drawable.setAlpha(Math.round(alpha * 255));
-    }
-
     private void setUiColor(int color) {
         mUiColor = color;
+        mPreviousActionBarItemIsDark = 0;
+        mPreviousTabItemIsDark = 0;
         if (mActionBarBackground == null) {
             setupBaseActionBar();
         }
@@ -1674,32 +1687,34 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     }
 
-    static class RelationshipLoader extends AsyncTaskLoader<SingleResponse<Relationship>> {
+    static class UserRelationshipLoader extends AsyncTaskLoader<SingleResponse<UserRelationship>> {
 
         private final Context context;
-        private final long account_id, user_id;
+        private final long accountId, userId;
 
-        public RelationshipLoader(final Context context, final long account_id, final long user_id) {
+        public UserRelationshipLoader(final Context context, final long accountId, final long userId) {
             super(context);
             this.context = context;
-            this.account_id = account_id;
-            this.user_id = user_id;
+            this.accountId = accountId;
+            this.userId = userId;
         }
 
         @Override
-        public SingleResponse<Relationship> loadInBackground() {
-            if (account_id == user_id) return SingleResponse.getInstance();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, account_id, false);
+        public SingleResponse<UserRelationship> loadInBackground() {
+            final boolean isFiltering = Utils.isFilteringUser(context, userId);
+            if (accountId == userId)
+                return SingleResponse.getInstance();
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final Relationship relationship = twitter.showFriendship(user_id);
+                final Relationship relationship = twitter.showFriendship(userId);
                 if (relationship.isSourceBlockingTarget() || relationship.isSourceBlockedByTarget()) {
-                    Utils.setLastSeen(context, user_id, -1);
+                    Utils.setLastSeen(context, userId, -1);
                 } else {
-                    Utils.setLastSeen(context, user_id, System.currentTimeMillis());
+                    Utils.setLastSeen(context, userId, System.currentTimeMillis());
                 }
-                Utils.updateRelationship(context, relationship, account_id);
-                return SingleResponse.getInstance(relationship);
+                Utils.updateRelationship(context, relationship, accountId);
+                return SingleResponse.getInstance(new UserRelationship(relationship, isFiltering));
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
             }
@@ -1711,4 +1726,37 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
     }
 
+    static class UserRelationship {
+        @NonNull
+        Relationship relationship;
+        boolean isFiltering;
+
+        public UserRelationship(@NonNull Relationship relationship, boolean isFiltering) {
+            this.relationship = relationship;
+            this.isFiltering = isFiltering;
+        }
+
+        public boolean check(@NonNull ParcelableUser user) {
+            return relationship.getSourceUserId() == user.account_id
+                    && relationship.getTargetUserId() == user.id;
+        }
+    }
+
+    private static class CacheUserInfoRunnable extends TaskRunnable<Pair<ParcelableUser, Relationship>, Object, Object> {
+        private final Context context;
+
+        public CacheUserInfoRunnable(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public Object doLongOperation(Pair<ParcelableUser, Relationship> args) throws InterruptedException {
+            final ContentResolver resolver = context.getContentResolver();
+            final ParcelableUser user = args.first;
+            resolver.insert(CachedUsers.CONTENT_URI, ContentValuesCreator.makeCachedUserContentValues(user));
+            resolver.insert(CachedRelationships.CONTENT_URI, CachedRelationshipValuesCreator.create(
+                    new CachedRelationship(user.account_id, user.id, args.second)));
+            return null;
+        }
+    }
 }

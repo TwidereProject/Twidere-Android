@@ -27,6 +27,7 @@ import android.util.AttributeSet;
 
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
+import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.util.Locale;
 
@@ -48,7 +49,7 @@ public class StatusTextCountView extends AppCompatTextView {
 
     public StatusTextCountView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        mValidator = new TwidereValidator(context);
+        mValidator = DependencyHolder.get(context).getValidator();
         if (isInEditMode()) {
             mTextColor = 0;
             mLocale = Locale.getDefault();

@@ -409,7 +409,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         } else if (TwitterCardUtils.CARD_NAME_PLAYER.equals(cardName)) {
             extraTypeView.setImageResource(sensitive ? R.drawable.ic_action_warning : R.drawable.ic_action_play_circle);
             extraTypeView.setVisibility(View.VISIBLE);
-        } else if (media != null && media.length > 0) {
+        } else if (!ArrayUtils.isEmpty(media)) {
             if (hasVideo(media)) {
                 extraTypeView.setImageResource(sensitive ? R.drawable.ic_action_warning : R.drawable.ic_action_movie);
             } else {
@@ -426,9 +426,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
     boolean hasVideo(ParcelableMedia[] media) {
         for (ParcelableMedia mediaItem : media) {
-            if (mediaItem.type == ParcelableMedia.Type.TYPE_VIDEO
-                    || mediaItem.type == ParcelableMedia.Type.TYPE_ANIMATED_GIF)
-                return true;
+            switch (mediaItem.type) {
+                case ParcelableMedia.Type.TYPE_VIDEO:
+                case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
+                    return true;
+            }
         }
         return false;
     }

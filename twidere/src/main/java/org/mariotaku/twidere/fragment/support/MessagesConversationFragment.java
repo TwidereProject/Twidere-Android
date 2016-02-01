@@ -104,7 +104,6 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.TakeAllKeyboardShortc
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
-import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
@@ -162,8 +161,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     };
     private PanelShowHideListener mScrollListener;
 
-    // Utility classes
-    private TwidereValidator mValidator;
     private SharedPreferences mMessageDrafts;
     private EffectViewHelper mEffectHelper;
 
@@ -228,8 +225,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         super.onActivityCreated(savedInstanceState);
 
         final BaseAppCompatActivity activity = (BaseAppCompatActivity) getActivity();
-        mMessageDrafts = getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mValidator = new TwidereValidator(activity);
+        mMessageDrafts = activity.getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
 
         final View view = getView();
         assert view != null;

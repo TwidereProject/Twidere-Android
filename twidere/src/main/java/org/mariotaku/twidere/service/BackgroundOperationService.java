@@ -26,7 +26,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -81,6 +80,7 @@ import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereListUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
@@ -112,16 +112,18 @@ import static org.mariotaku.twidere.util.Utils.getImageUploadStatus;
 
 public class BackgroundOperationService extends IntentService implements Constants {
 
-    private TwidereValidator mValidator;
-    private final Extractor extractor = new Extractor();
 
     private Handler mHandler;
-    private SharedPreferences mPreferences;
-    private ContentResolver mResolver;
+    @Inject
+    SharedPreferencesWrapper mPreferences;
     @Inject
     AsyncTwitterWrapper mTwitter;
     @Inject
     NotificationManagerWrapper mNotificationManager;
+    @Inject
+    TwidereValidator mValidator;
+    @Inject
+    Extractor mExtractor;
 
     private MediaUploaderInterface mUploader;
     private StatusShortenerInterface mShortener;
@@ -138,9 +140,6 @@ public class BackgroundOperationService extends IntentService implements Constan
         GeneralComponentHelper.build(this).inject(this);
         final TwidereApplication app = TwidereApplication.getInstance(this);
         mHandler = new Handler();
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
-        mValidator = new TwidereValidator(this);
-        mResolver = getContentResolver();
         final String uploaderComponent = mPreferences.getString(KEY_MEDIA_UPLOADER, null);
         final String shortenerComponent = mPreferences.getString(KEY_STATUS_SHORTENER, null);
         mUseUploader = !ServicePickerPreference.isNoneValue(uploaderComponent);
@@ -292,16 +291,17 @@ public class BackgroundOperationService extends IntentService implements Constan
         final SingleResponse<ParcelableDirectMessage> result = sendDirectMessage(builder, accountId, recipientId, text,
                 imageUri);
 
+        final ContentResolver resolver = getContentResolver();
         if (result.getData() != null && result.getData().id > 0) {
             final ContentValues values = ContentValuesCreator.createDirectMessage(result.getData());
             final String delete_where = DirectMessages.ACCOUNT_ID + " = " + accountId + " AND "
                     + DirectMessages.MESSAGE_ID + " = " + result.getData().id;
-            mResolver.delete(DirectMessages.Outbox.CONTENT_URI, delete_where, null);
-            mResolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
+            resolver.delete(DirectMessages.Outbox.CONTENT_URI, delete_where, null);
+            resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
             showOkMessage(R.string.direct_message_sent, false);
         } else {
             final ContentValues values = createMessageDraft(accountId, recipientId, text, imageUri);
-            mResolver.insert(Drafts.CONTENT_URI, values);
+            resolver.insert(Drafts.CONTENT_URI, values);
             showErrorMessage(R.string.action_sending_direct_message, result.getException(), true);
         }
         stopForeground(false);
@@ -333,7 +333,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                     updateUpdateStatusNotification(this, builder, 0, item));
             final ContentValues draftValues = ContentValuesCreator.createStatusDraft(item,
                     ParcelableAccount.getAccountIds(item.accounts));
-            final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, draftValues);
+            final ContentResolver resolver = getContentResolver();
+            final Uri draftUri = resolver.insert(Drafts.CONTENT_URI, draftValues);
             final long def = -1;
             final long draftId = draftUri != null ? NumberUtils.toLong(draftUri.getLastPathSegment(), def) : -1;
             mTwitter.addSendingDraftId(draftId);
@@ -371,15 +372,15 @@ public class BackgroundOperationService extends IntentService implements Constan
                 } else {
                     final ContentValues accountIdsValues = new ContentValues();
                     accountIdsValues.put(Drafts.ACCOUNT_IDS, TwidereListUtils.toString(failedAccountIds, ',', false));
-                    mResolver.update(Drafts.CONTENT_URI, accountIdsValues, where.getSQL(), null);
+                    resolver.update(Drafts.CONTENT_URI, accountIdsValues, where.getSQL(), null);
                     showErrorMessage(R.string.action_updating_status, exception, true);
                     final ContentValues notifValues = new ContentValues();
                     notifValues.put(BaseColumns._ID, draftId);
-                    mResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, notifValues);
+                    resolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, notifValues);
                 }
             } else {
                 showOkMessage(R.string.status_updated, false);
-                mResolver.delete(Drafts.CONTENT_URI, where.getSQL(), null);
+                resolver.delete(Drafts.CONTENT_URI, where.getSQL(), null);
                 if (item.media != null) {
                     for (final ParcelableMediaUpdate media : item.media) {
                         final String path = getImagePathFromUri(this, Uri.parse(media.uri));
@@ -453,7 +454,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     private List<SingleResponse<ParcelableStatus>> updateStatus(final Builder builder,
                                                                 final ParcelableStatusUpdate statusUpdate) {
         final ArrayList<ContentValues> hashTagValues = new ArrayList<>();
-        final Collection<String> hashTags = extractor.extractHashtags(statusUpdate.text);
+        final Collection<String> hashTags = mExtractor.extractHashtags(statusUpdate.text);
         for (final String hashTag : hashTags) {
             final ContentValues values = new ContentValues();
             values.put(CachedHashtags.NAME, hashTag);
@@ -464,7 +465,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                 && statusUpdate.text.contains(EASTER_EGG_RESTORE_TEXT_PART2)
                 && statusUpdate.text.contains(EASTER_EGG_RESTORE_TEXT_PART3);
         boolean mentionedHondaJOJO = false, notReplyToOther = false;
-        mResolver.bulkInsert(CachedHashtags.CONTENT_URI,
+        final ContentResolver resolver = getContentResolver();
+        resolver.bulkInsert(CachedHashtags.CONTENT_URI,
                 hashTagValues.toArray(new ContentValues[hashTagValues.size()]));
 
         final List<SingleResponse<ParcelableStatus>> results = new ArrayList<>();
@@ -547,8 +549,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                         for (int i = 0, j = mediaIds.length; i < j; i++) {
                             final ParcelableMediaUpdate media = statusUpdate.media[i];
                             final Uri mediaUri = Uri.parse(media.uri);
-                            final String mediaType = mResolver.getType(mediaUri);
-                            final InputStream is = mResolver.openInputStream(mediaUri);
+                            final String mediaType = resolver.getType(mediaUri);
+                            final InputStream is = resolver.openInputStream(mediaUri);
                             final long length = is.available();
                             cis = new ContentLengthInputStream(is, length);
                             cis.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,

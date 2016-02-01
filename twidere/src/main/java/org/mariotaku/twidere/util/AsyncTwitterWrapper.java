@@ -93,6 +93,8 @@ import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.util.message.StatusListChangedEvent;
 import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
+import org.mariotaku.twidere.util.message.UserListCreatedEvent;
+import org.mariotaku.twidere.util.message.UserListDestroyedEvent;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -207,9 +209,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int createUserListAsync(final long accountId, final String list_name, final boolean is_public,
+    public int createUserListAsync(final long accountId, final String listName, final boolean isPublic,
                                    final String description) {
-        final CreateUserListTask task = new CreateUserListTask(accountId, list_name, is_public, description);
+        final CreateUserListTask task = new CreateUserListTask(mContext, accountId, listName, isPublic,
+                description);
         return mAsyncTaskManager.add(task, true);
     }
 
@@ -269,7 +272,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int destroyUserListAsync(final long accountId, final long listId) {
-        final DestroyUserListTask task = new DestroyUserListTask(accountId, listId);
+        final DestroyUserListTask task = new DestroyUserListTask(mContext, accountId, listId);
         return mAsyncTaskManager.add(task, true);
     }
 
@@ -1245,48 +1248,47 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class CreateUserListTask extends ManagedAsyncTask<Object, Object, SingleResponse<UserList>> {
+    static class CreateUserListTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
-        private final long account_id;
-        private final String list_name, description;
-        private final boolean is_public;
+        private final long accountId;
+        private final String listName, description;
+        private final boolean isPublic;
 
-        public CreateUserListTask(final long account_id, final String list_name, final boolean is_public,
+        public CreateUserListTask(Context context, final long accountId, final String listName, final boolean isPublic,
                                   final String description) {
-            super(mContext);
-            this.account_id = account_id;
-            this.list_name = list_name;
+            super(context);
+            this.accountId = accountId;
+            this.listName = listName;
             this.description = description;
-            this.is_public = is_public;
+            this.isPublic = isPublic;
         }
 
         @Override
-        protected SingleResponse<UserList> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, account_id, false);
-            if (twitter == null || list_name == null) return SingleResponse.getInstance();
+        protected SingleResponse<ParcelableUserList> doInBackground(final Object... params) {
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), accountId, false);
+            if (twitter == null || listName == null) return SingleResponse.getInstance();
             try {
                 final UserListUpdate userListUpdate = new UserListUpdate();
-                userListUpdate.setName(list_name);
-                userListUpdate.setMode(is_public ? UserList.Mode.PUBLIC : UserList.Mode.PRIVATE);
+                userListUpdate.setName(listName);
+                userListUpdate.setMode(isPublic ? UserList.Mode.PUBLIC : UserList.Mode.PRIVATE);
                 userListUpdate.setDescription(description);
                 final UserList list = twitter.createUserList(userListUpdate);
-                return SingleResponse.getInstance(list, null);
+                return SingleResponse.getInstance(new ParcelableUserList(list, accountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<UserList> result) {
+        protected void onPostExecute(final SingleResponse<ParcelableUserList> result) {
+            final Context context = getContext();
             if (result.hasData()) {
-                final UserList userList = result.getData();
-                final String message = mContext.getString(R.string.created_list, userList.getName());
-                Utils.showOkMessage(mContext, message, false);
-                final Intent intent = new Intent(BROADCAST_USER_LIST_CREATED);
-                intent.putExtra(EXTRA_USER_LIST, new ParcelableUserList(userList, account_id));
-                mContext.sendBroadcast(intent);
+                final ParcelableUserList userList = result.getData();
+                final String message = context.getString(R.string.created_list, userList.name);
+                Utils.showOkMessage(context, message, false);
+                bus.post(new UserListCreatedEvent(userList));
             } else {
-                Utils.showErrorMessage(mContext, R.string.action_creating_list, result.getException(), true);
+                Utils.showErrorMessage(context, R.string.action_creating_list, result.getException(), true);
             }
             super.onPostExecute(result);
         }
@@ -1870,13 +1872,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class DestroyUserListTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
+    static class DestroyUserListTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final long mAccountId;
         private final long mListId;
 
-        public DestroyUserListTask(final long accountId, final long listId) {
-            super(mContext);
+        public DestroyUserListTask(Context context, final long accountId, final long listId) {
+            super(context);
             mAccountId = accountId;
             mListId = listId;
         }
@@ -1884,7 +1886,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected SingleResponse<ParcelableUserList> doInBackground(final Object... params) {
 
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, false);
             if (twitter != null) {
                 try {
                     if (mListId > 0) {
@@ -1902,14 +1904,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableUserList> result) {
             final boolean succeed = result.hasData();
+            final Context context = getContext();
             if (succeed) {
-                final String message = mContext.getString(R.string.deleted_list, result.getData().name);
-                Utils.showInfoMessage(mContext, message, false);
-                final Intent intent = new Intent(BROADCAST_USER_LIST_DELETED);
-                intent.putExtra(EXTRA_USER_LIST, result.getData());
-                mContext.sendBroadcast(intent);
+                final String message = context.getString(R.string.deleted_list, result.getData().name);
+                Utils.showInfoMessage(context, message, false);
+                bus.post(new UserListDestroyedEvent(result.getData()));
             } else {
-                Utils.showErrorMessage(mContext, R.string.action_deleting, result.getException(), true);
+                Utils.showErrorMessage(context, R.string.action_deleting, result.getException(), true);
             }
             super.onPostExecute(result);
         }

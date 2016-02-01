@@ -31,6 +31,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.squareup.otto.Bus;
+
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -66,6 +68,8 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     protected UserColorNameManager mUserColorNameManager;
     @Inject
     protected SharedPreferencesWrapper mPreferences;
+    @Inject
+    protected Bus mBus;
 
     // Data fields
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;

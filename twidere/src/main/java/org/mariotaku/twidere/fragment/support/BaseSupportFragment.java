@@ -24,7 +24,6 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -53,6 +52,7 @@ import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
+import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -83,6 +83,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     protected BidiFormatter mBidiFormatter;
     @Inject
     protected ErrorInfoStore mErrorInfoStore;
+    @Inject
+    TwidereValidator mValidator;
 
     public BaseSupportFragment() {
 
@@ -106,19 +108,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
         if (activity != null) return activity.getContentResolver();
         return null;
     }
-
-    public SharedPreferences getSharedPreferences(final String name, final int mode) {
-        final Activity activity = getActivity();
-        if (activity != null) return activity.getSharedPreferences(name, mode);
-        return null;
-    }
-
-    public Object getSystemService(final String name) {
-        final Activity activity = getActivity();
-        if (activity != null) return activity.getSystemService(name);
-        return null;
-    }
-
 
     public void invalidateOptionsMenu() {
         final FragmentActivity activity = getActivity();

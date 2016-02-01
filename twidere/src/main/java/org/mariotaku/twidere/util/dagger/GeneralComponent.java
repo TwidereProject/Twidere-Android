@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import org.mariotaku.twidere.activity.BasePreferenceActivity;
 import org.mariotaku.twidere.activity.BaseThemedActivity;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
+import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.activity.support.ThemedFragmentActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
@@ -84,6 +85,8 @@ public interface GeneralComponent {
     void inject(RefreshService object);
 
     void inject(ThemedFragmentActivity object);
+
+    void inject(ComposeActivity object);
 
     void inject(TwidereDataProvider object);
 

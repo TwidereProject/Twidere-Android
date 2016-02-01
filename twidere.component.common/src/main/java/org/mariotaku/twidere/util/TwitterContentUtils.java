@@ -63,6 +63,8 @@ public class TwitterContentUtils {
 
     public static final int TWITTER_BULK_QUERY_COUNT = 100;
     private static final Pattern PATTERN_TWITTER_STATUS_LINK = Pattern.compile("https?://twitter\\.com/(?:#!/)?(\\w+)/status(es)?/(\\d+)");
+    private static final CharSequenceTranslator UNESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_UNESCAPE());
+    private static final CharSequenceTranslator ESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
     public static String formatDirectMessageText(final DirectMessage message) {
         if (message == null) return null;
@@ -175,9 +177,6 @@ public class TwitterContentUtils {
         }
         return ConsumerKeyType.UNKNOWN;
     }
-
-    private static final CharSequenceTranslator UNESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_UNESCAPE());
-    private static final CharSequenceTranslator ESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
     public static String unescapeTwitterStatusText(final CharSequence text) {
         if (text == null) return null;

@@ -16,7 +16,7 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<LinearLayout
+<org.mariotaku.twidere.view.CheckableLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
@@ -57,4 +57,4 @@
             tool:text="Name"/>
 
     </android.support.v7.widget.CardView>
-</LinearLayout>
+</org.mariotaku.twidere.view.CheckableLinearLayout>

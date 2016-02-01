@@ -27,6 +27,7 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.ExternalThemeManager;
 import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.TwidereValidator;
 
 import javax.inject.Inject;
 
@@ -50,6 +51,8 @@ public class DependencyHolder {
     ActivityTracker mActivityTracker;
     @Inject
     Dns mDns;
+    @Inject
+    TwidereValidator mValidator;
 
     DependencyHolder(Context context) {
         GeneralComponentHelper.build(context).inject(this);
@@ -82,5 +85,9 @@ public class DependencyHolder {
 
     public Dns getDns() {
         return mDns;
+    }
+
+    public TwidereValidator getValidator() {
+        return mValidator;
     }
 }

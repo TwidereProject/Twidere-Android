@@ -131,8 +131,10 @@ import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.TwidereViewUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
+import org.mariotaku.twidere.view.CheckableLinearLayout;
 import org.mariotaku.twidere.view.ComposeEditText;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextCountView;
@@ -151,6 +153,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+
 public class ComposeActivity extends ThemedFragmentActivity implements OnMenuItemClickListener,
         OnClickListener, OnLongClickListener, Callback {
 
@@ -163,13 +167,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     private static final String DISCARD_STATUS_DIALOG_FRAGMENT_TAG = "discard_status";
 
     // Utility classes
-    private final Extractor mExtractor = new Extractor();
-    private TwidereValidator mValidator;
+    @Inject
+    Extractor mExtractor;
+    @Inject
+    TwidereValidator mValidator;
     private LocationManager mLocationManager;
-    private ContentResolver mResolver;
     private AsyncTask<Object, Object, ?> mTask;
     private SupportMenuInflater mMenuInflater;
     private ItemTouchHelper mItemTouchHelper;
+    private SetProgressVisibleRunnable mSetProgressVisibleRunnable;
 
     // Views
     private RecyclerView mAttachedMediaPreview;
@@ -201,12 +207,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     private boolean mImageUploaderUsed, mStatusShortenerUsed;
     private boolean mNavigateBackPressed;
     private boolean mTextChanged;
-    private SetProgressVisibleRunnable mSetProgressVisibleRunnable;
     private boolean mFragmentResumed;
     private int mKeyMetaState;
 
     // Listeners
-    private final LocationListener mLocationListener = new ComposeLocationListener(this);
+    private LocationListener mLocationListener;
 
     @Override
     public int getThemeColor() {
@@ -317,8 +322,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     protected void onStop() {
         saveAccountSelection();
         try {
-            mLocationManager.removeUpdates(mLocationListener);
+            if (mLocationListener != null) {
+                mLocationManager.removeUpdates(mLocationListener);
+                mLocationListener = null;
+            }
         } catch (SecurityException ignore) {
+            // That should not happen
         }
         super.onStop();
     }
@@ -580,7 +589,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             builder.media(getMedia());
         }
         final ContentValues values = ContentValuesCreator.createStatusDraft(builder.build());
-        final Uri draftUri = mResolver.insert(Drafts.CONTENT_URI, values);
+        final Uri draftUri = getContentResolver().insert(Drafts.CONTENT_URI, values);
         displayNewDraftNotification(text, draftUri);
     }
 
@@ -608,19 +617,19 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GeneralComponentHelper.build(this).inject(this);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mResolver = getContentResolver();
-        mValidator = new TwidereValidator(this);
         setContentView(R.layout.activity_compose);
         setFinishOnTouchOutside(false);
-        final long[] defaultAccountIds = DataStoreUtils.getAccountIds(this);
-        if (defaultAccountIds.length <= 0) {
+        final ParcelableCredentials[] accounts = ParcelableCredentials.getCredentialsArray(this, false, false);
+        if (accounts.length <= 0) {
             final Intent intent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
             intent.setClass(this, SignInActivity.class);
             startActivity(intent);
             finish();
             return;
         }
+        final long[] defaultAccountIds = ParcelableAccount.getAccountIds(accounts);
         mMenuBar.setOnMenuItemClickListener(this);
         setupEditText();
         mAccountSelectorContainer.setOnClickListener(this);
@@ -635,15 +644,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mAccountSelector.setItemAnimator(new DefaultItemAnimator());
         mAccountsAdapter = new AccountIconsAdapter(this);
         mAccountSelector.setAdapter(mAccountsAdapter);
-        mAccountsAdapter.setAccounts(ParcelableCredentials.getCredentialsArray(this, false, false));
+        mAccountsAdapter.setAccounts(accounts);
 
 
-        mMediaPreviewAdapter = new MediaPreviewAdapter(this, new SimpleItemTouchHelperCallback.OnStartDragListener() {
-            @Override
-            public void onStartDrag(ViewHolder viewHolder) {
-                mItemTouchHelper.startDrag(viewHolder);
-            }
-        });
+        mMediaPreviewAdapter = new MediaPreviewAdapter(this, new PreviewGridOnStartDragListener(mItemTouchHelper));
         mItemTouchHelper = new ItemTouchHelper(new AttachedMediaItemTouchHelperCallback(mMediaPreviewAdapter));
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -651,12 +655,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mAttachedMediaPreview.setAdapter(mMediaPreviewAdapter);
         mItemTouchHelper.attachToRecyclerView(mAttachedMediaPreview);
         final int previewGridSpacing = getResources().getDimensionPixelSize(R.dimen.element_spacing_small);
-        mAttachedMediaPreview.addItemDecoration(new ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-                outRect.left = outRect.right = previewGridSpacing;
-            }
-        });
+        mAttachedMediaPreview.addItemDecoration(new PreviewGridItemDecoration(previewGridSpacing));
 
         final Intent intent = getIntent();
 
@@ -685,8 +684,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             if (!handleIntent(intent)) {
                 handleDefaultIntent(intent);
             }
-            final long[] accountIds = mAccountsAdapter.getSelectedAccountIds();
-            if (accountIds.length == 0) {
+            final long[] selectedAccountIds = mAccountsAdapter.getSelectedAccountIds();
+            if (selectedAccountIds.length == 0) {
                 final long[] idsInPrefs = TwidereArrayUtils.parseLongArray(
                         mPreferences.getString(KEY_COMPOSE_ACCOUNTS, null), ',');
                 final long[] intersection = TwidereArrayUtils.intersection(idsInPrefs, defaultAccountIds);
@@ -736,18 +735,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     private void setupEditText() {
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
-        EditTextEnterHandler.attach(mEditText, new EnterListener() {
-            @Override
-            public boolean shouldCallListener() {
-                return mKeyMetaState == 0;
-            }
-
-            @Override
-            public boolean onHitEnter() {
-                confirmAndUpdateStatus();
-                return true;
-            }
-        }, sendByEnter);
+        EditTextEnterHandler.attach(mEditText, new ComposeEnterListener(this), sendByEnter);
         mEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -1146,6 +1134,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     private void setProgressVisible(final boolean visible) {
+        if (isFinishing()) return;
         mSetProgressVisibleRunnable = new SetProgressVisibleRunnable(this, visible);
         if (mFragmentResumed) {
             runOnUiThread(mSetProgressVisibleRunnable);
@@ -1174,7 +1163,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (PermissionUtils.getPermission(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 PermissionUtils.getPermission(permissions, grantResults, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            startLocationUpdateIfEnabled();
+            try {
+                startLocationUpdateIfEnabled();
+            } catch (SecurityException e) {
+                // That should not happen
+            }
         } else {
             Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
         }
@@ -1194,29 +1187,22 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
      * the best provider of data (GPS, WiFi/cell phone tower lookup, some other
      * mechanism) and finds the last known location.
      */
-    private boolean startLocationUpdateIfEnabled() {
-        final LocationManager lm = mLocationManager;
-        try {
-            lm.removeUpdates(mLocationListener);
-        } catch (SecurityException ignore) {
-        }
+    private boolean startLocationUpdateIfEnabled() throws SecurityException {
+        if (mLocationListener != null) return true;
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
         if (!attachLocation) {
             return false;
         }
         final Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        final String provider = lm.getBestProvider(criteria, true);
+        final String provider = mLocationManager.getBestProvider(criteria, true);
         if (provider != null) {
-            try {
-                mLocationText.setText(R.string.getting_location);
-                lm.requestLocationUpdates(provider, 0, 0, mLocationListener);
-                final Location location = Utils.getCachedLocation(this);
-                if (location != null) {
-                    mLocationListener.onLocationChanged(location);
-                }
-            } catch (SecurityException e) {
-                return false;
+            mLocationText.setText(R.string.getting_location);
+            mLocationListener = new ComposeLocationListener(this);
+            mLocationManager.requestLocationUpdates(provider, 0, 0, mLocationListener);
+            final Location location = Utils.getCachedLocation(this);
+            if (location != null) {
+                mLocationListener.onLocationChanged(location);
             }
         } else {
             Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
@@ -1351,16 +1337,18 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     static class SetProgressVisibleRunnable implements Runnable {
 
-        final ComposeActivity activity;
+        final WeakReference<ComposeActivity> activityRef;
         final boolean visible;
 
         SetProgressVisibleRunnable(ComposeActivity activity, boolean visible) {
-            this.activity = activity;
+            this.activityRef = new WeakReference<>(activity);
             this.visible = visible;
         }
 
         @Override
         public void run() {
+            final ComposeActivity activity = activityRef.get();
+            if (activity == null) return;
             final FragmentManager fm = activity.getSupportFragmentManager();
             final Fragment f = fm.findFragmentByTag(DISCARD_STATUS_DIALOG_FRAGMENT_TAG);
             if (!visible && f instanceof DialogFragment) {
@@ -1389,6 +1377,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         public void showAccount(AccountIconsAdapter adapter, ParcelableAccount account, boolean isSelected) {
             itemView.setAlpha(isSelected ? 1 : 0.33f);
+            ((CheckableLinearLayout) itemView).setChecked(isSelected);
             final MediaLoaderWrapper loader = adapter.getImageLoader();
             if (ObjectUtils.notEqual(account.profile_image_url, iconView.getTag()) || iconView.getDrawable() == null) {
                 loader.displayProfileImage(iconView, account.profile_image_url);
@@ -1400,6 +1389,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         public void onClick(View v) {
+            ((CheckableLinearLayout) itemView).toggle();
             adapter.toggleSelection(getAdapterPosition());
         }
 
@@ -1660,11 +1650,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     static class DiscardTweetTask extends AsyncTask<Object, Object, Object> {
 
-        final ComposeActivity activity;
+        final WeakReference<ComposeActivity> activityRef;
         private final List<ParcelableMediaUpdate> media;
 
         DiscardTweetTask(final ComposeActivity activity) {
-            this.activity = activity;
+            this.activityRef = new WeakReference<>(activity);
             this.media = activity.getMediaList();
         }
 
@@ -1684,17 +1674,21 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         protected void onPostExecute(final Object result) {
+            final ComposeActivity activity = activityRef.get();
+            if (activity == null) return;
             activity.setProgressVisible(false);
             activity.finish();
         }
 
         @Override
         protected void onPreExecute() {
+            final ComposeActivity activity = activityRef.get();
+            if (activity == null) return;
             activity.setProgressVisible(true);
         }
     }
 
-    public static class MediaPreviewAdapter extends ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>
+    static class MediaPreviewAdapter extends ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>
             implements SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
 
         final LayoutInflater mInflater;
@@ -1882,6 +1876,56 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         public void clearView(RecyclerView recyclerView, ViewHolder viewHolder) {
             super.clearView(recyclerView, viewHolder);
             viewHolder.itemView.setAlpha(ALPHA_FULL);
+        }
+    }
+
+    private static class PreviewGridItemDecoration extends ItemDecoration {
+        private final int mPreviewGridSpacing;
+
+        public PreviewGridItemDecoration(int previewGridSpacing) {
+            mPreviewGridSpacing = previewGridSpacing;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
+            outRect.left = outRect.right = mPreviewGridSpacing;
+        }
+    }
+
+    private static class PreviewGridOnStartDragListener implements SimpleItemTouchHelperCallback.OnStartDragListener {
+        private final WeakReference<ItemTouchHelper> helperRef;
+
+        public PreviewGridOnStartDragListener(ItemTouchHelper helper) {
+            helperRef = new WeakReference<>(helper);
+        }
+
+        @Override
+        public void onStartDrag(ViewHolder viewHolder) {
+            final ItemTouchHelper helper = helperRef.get();
+            if (helper == null) return;
+            helper.startDrag(viewHolder);
+        }
+    }
+
+    private static class ComposeEnterListener implements EnterListener {
+        private final WeakReference<ComposeActivity> activityRef;
+
+        public ComposeEnterListener(ComposeActivity activity) {
+            activityRef = new WeakReference<>(activity);
+        }
+
+        @Override
+        public boolean shouldCallListener() {
+            final ComposeActivity activity = activityRef.get();
+            return activity != null && activity.mKeyMetaState == 0;
+        }
+
+        @Override
+        public boolean onHitEnter() {
+            final ComposeActivity activity = activityRef.get();
+            if (activity == null) return false;
+            activity.confirmAndUpdateStatus();
+            return true;
         }
     }
 }

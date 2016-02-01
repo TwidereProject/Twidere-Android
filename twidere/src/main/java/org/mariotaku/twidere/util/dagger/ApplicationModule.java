@@ -33,6 +33,7 @@ import com.nostra13.universalimageloader.utils.L;
 import com.squareup.okhttp.Dns;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
+import com.twitter.Extractor;
 
 import org.mariotaku.mediaviewer.library.FileCache;
 import org.mariotaku.mediaviewer.library.MediaDownloader;
@@ -54,6 +55,7 @@ import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereMathUtils;
+import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache;
@@ -214,6 +216,18 @@ public class ApplicationModule implements Constants {
     @Singleton
     public MediaDownloader mediaDownloader(SharedPreferencesWrapper preferences, RestHttpClient client) {
         return new TwidereMediaDownloader(application, preferences, client);
+    }
+
+    @Provides
+    @Singleton
+    public TwidereValidator twidereValidator(SharedPreferencesWrapper preferences) {
+        return new TwidereValidator(preferences);
+    }
+
+    @Provides
+    @Singleton
+    public Extractor extractor() {
+        return new Extractor();
     }
 
     @Provides

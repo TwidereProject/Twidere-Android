@@ -104,8 +104,11 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     }
 
     @Override
+    @NonNull
     protected ViewPager findViewPager() {
-        return (ViewPager) findViewById(R.id.view_pager);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        if (viewPager == null) throw new NullPointerException();
+        return viewPager;
     }
 
     @Override

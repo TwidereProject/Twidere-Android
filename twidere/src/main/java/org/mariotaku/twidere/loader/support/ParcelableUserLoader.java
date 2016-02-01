@@ -38,6 +38,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
@@ -67,11 +68,13 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
     public SingleResponse<ParcelableUser> loadInBackground() {
         final Context context = getContext();
         final ContentResolver resolver = context.getContentResolver();
+        int accountColor = DataStoreUtils.getAccountColor(context, mAccountId);
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
             if (user != null) {
                 final ContentValues values = ContentValuesCreator.makeCachedUserContentValues(user);
                 resolver.insert(CachedUsers.CONTENT_URI, values);
+                user.account_color = accountColor;
                 return SingleResponse.getInstance(user);
             }
         }
@@ -89,33 +92,37 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             }
             final Cursor cur = resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS,
                     where.getSQL(), whereArgs, null);
-            final int count = cur.getCount();
-            try {
-                if (count > 0) {
-                    final ParcelableUserCursorIndices indices = new ParcelableUserCursorIndices(cur);
-                    cur.moveToFirst();
-                    return SingleResponse.getInstance(new ParcelableUser(cur, indices, mAccountId));
+            if (cur != null) {
+                try {
+                    if (cur.moveToFirst()) {
+                        final ParcelableUserCursorIndices indices = new ParcelableUserCursorIndices(cur);
+                        final ParcelableUser user = indices.newObject(cur);
+                        user.account_id = mAccountId;
+                        user.account_color = accountColor;
+                        return SingleResponse.getInstance(user);
+                    }
+                } finally {
+                    cur.close();
                 }
-            } finally {
-                cur.close();
             }
         }
         try {
-            final User user = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName);
-            final ContentValues cachedUserValues = createCachedUser(user);
-            final long userId = user.getId();
+            final User twitterUser = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName);
+            final ContentValues cachedUserValues = createCachedUser(twitterUser);
+            final long userId = twitterUser.getId();
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
-            final ParcelableUser result = new ParcelableUser(user, mAccountId);
+            final ParcelableUser user = new ParcelableUser(twitterUser, mAccountId);
             if (isMyAccount(context, userId)) {
                 final ContentValues accountValues = new ContentValues();
-                accountValues.put(Accounts.NAME, result.name);
-                accountValues.put(Accounts.SCREEN_NAME, result.screen_name);
-                accountValues.put(Accounts.PROFILE_IMAGE_URL, result.profile_image_url);
-                accountValues.put(Accounts.PROFILE_BANNER_URL, result.profile_banner_url);
+                accountValues.put(Accounts.NAME, user.name);
+                accountValues.put(Accounts.SCREEN_NAME, user.screen_name);
+                accountValues.put(Accounts.PROFILE_IMAGE_URL, user.profile_image_url);
+                accountValues.put(Accounts.PROFILE_BANNER_URL, user.profile_banner_url);
                 final String accountWhere = Expression.equals(Accounts.ACCOUNT_ID, userId).getSQL();
                 resolver.update(Accounts.CONTENT_URI, accountValues, accountWhere, null);
             }
-            return SingleResponse.getInstance(result);
+            user.account_color = accountColor;
+            return SingleResponse.getInstance(user);
         } catch (final TwitterException e) {
             Log.w(LOGTAG, e);
             return SingleResponse.getInstance(e);

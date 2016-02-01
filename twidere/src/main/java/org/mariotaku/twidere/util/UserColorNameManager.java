@@ -49,19 +49,14 @@ public class UserColorNameManager implements TwidereConstants {
         mNicknamePreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public static void registerOnUserColorChangedListener(final Context context,
-                                                          final OnUserColorChangedListener listener) {
+    public void registerColorChangedListener(final UserColorChangedListener listener) {
 
-        final SharedPreferences prefs = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        prefs.registerOnSharedPreferenceChangeListener(new OnColorPreferenceChangeListener(listener));
+        mColorPreferences.registerOnSharedPreferenceChangeListener(new OnColorPreferenceChangeListener(listener));
     }
 
-    public static void registerOnUserNicknameChangedListener(final Context context,
-                                                             final OnUserNicknameChangedListener listener) {
+    public void registerNicknameChangedListener(final UserNicknameChangedListener listener) {
 
-        final SharedPreferences prefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME,
-                Context.MODE_PRIVATE);
-        prefs.registerOnSharedPreferenceChangeListener(new OnNickPreferenceChangeListener(listener));
+        mNicknamePreferences.registerOnSharedPreferenceChangeListener(new OnNickPreferenceChangeListener(listener));
     }
 
     public void clearUserColor(final long userId) {
@@ -159,19 +154,19 @@ public class UserColorNameManager implements TwidereConstants {
         return TextUtils.isEmpty(nick) ? name : nick;
     }
 
-    public interface OnUserColorChangedListener {
+    public interface UserColorChangedListener {
         void onUserColorChanged(long userId, int color);
     }
 
-    public interface OnUserNicknameChangedListener {
+    public interface UserNicknameChangedListener {
         void onUserNicknameChanged(long userId, String nick);
     }
 
     private static final class OnColorPreferenceChangeListener implements OnSharedPreferenceChangeListener {
 
-        private final OnUserColorChangedListener mListener;
+        private final UserColorChangedListener mListener;
 
-        OnColorPreferenceChangeListener(final OnUserColorChangedListener listener) {
+        OnColorPreferenceChangeListener(final UserColorChangedListener listener) {
             mListener = listener;
         }
 
@@ -188,9 +183,9 @@ public class UserColorNameManager implements TwidereConstants {
 
     private static final class OnNickPreferenceChangeListener implements OnSharedPreferenceChangeListener {
 
-        private final OnUserNicknameChangedListener mListener;
+        private final UserNicknameChangedListener mListener;
 
-        OnNickPreferenceChangeListener(final OnUserNicknameChangedListener listener) {
+        OnNickPreferenceChangeListener(final UserNicknameChangedListener listener) {
             mListener = listener;
         }
 
