@@ -543,7 +543,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onLoadFinished(final Loader<SingleResponse<ParcelableStatus>> loader,
                                final SingleResponse<ParcelableStatus> data) {
         if (data.hasData()) {
-            final Pair<Long, Integer> readPosition = saveReadPosition();
+            final ReadPosition readPosition = saveReadPosition();
             final ParcelableStatus status = data.getData();
             final Bundle dataExtra = data.getExtras();
             final ParcelableCredentials credentials = dataExtra.getParcelable(EXTRA_ACCOUNT);
@@ -607,7 +607,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     private void setConversation(List<ParcelableStatus> data) {
-        final Pair<Long, Integer> readPosition = saveReadPosition();
+        final ReadPosition readPosition = saveReadPosition();
         mStatusAdapter.setData(data);
         restoreReadPosition(readPosition);
     }
@@ -644,12 +644,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public boolean isReachingEnd() {
-        return false;
+        return mLayoutManager.findLastCompletelyVisibleItemPosition() >= mStatusAdapter.getItemCount() - 1;
     }
 
     @Override
     public boolean isReachingStart() {
-        return false;
+        return mLayoutManager.findFirstCompletelyVisibleItemPosition() <= 1;
     }
 
     private DividerItemDecoration getItemDecoration() {
@@ -705,7 +705,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Nullable
-    private Pair<Long, Integer> saveReadPosition() {
+    private ReadPosition saveReadPosition() {
         final int position = mLayoutManager.findFirstVisibleItemPosition();
         if (position == RecyclerView.NO_POSITION) return null;
         final int itemType = mStatusAdapter.getItemType(position);
@@ -713,21 +713,20 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final View positionView;
         if (itemType == StatusAdapter.ITEM_IDX_CONVERSATION_LOAD_MORE) {
             // Should be next item
-            final int statusPosition = mStatusAdapter.getFirstPositionOfItem(StatusAdapter.ITEM_IDX_STATUS);
-            positionView = mLayoutManager.findViewByPosition(statusPosition);
-            itemId = mStatusAdapter.getItemId(statusPosition);
+            positionView = mLayoutManager.findViewByPosition(position + 1);
+            itemId = mStatusAdapter.getItemId(position + 1);
         } else {
             positionView = mLayoutManager.findViewByPosition(position);
         }
-        return new Pair<>(itemId, positionView != null ? positionView.getTop() : 0);
+        return new ReadPosition(itemId, positionView != null ? positionView.getTop() : 0);
     }
 
-    private void restoreReadPosition(@Nullable Pair<Long, Integer> position) {
+    private void restoreReadPosition(@Nullable ReadPosition position) {
         if (position == null) return;
-        final int adapterPosition = mStatusAdapter.findPositionById(position.first);
+        final int adapterPosition = mStatusAdapter.findPositionById(position.statusId);
         if (adapterPosition < 0) return;
         //TODO maintain read position
-        mLayoutManager.scrollToPositionWithOffset(adapterPosition, position.second);
+        mLayoutManager.scrollToPositionWithOffset(adapterPosition, position.offsetTop);
     }
 
     private void setState(int state) {
@@ -2193,5 +2192,23 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             this.retweetCount = retweetCount;
         }
 
+    }
+
+    static class ReadPosition {
+        long statusId;
+        int offsetTop;
+
+        public ReadPosition(long statusId, int offsetTop) {
+            this.statusId = statusId;
+            this.offsetTop = offsetTop;
+        }
+
+        @Override
+        public String toString() {
+            return "ReadPosition{" +
+                    "statusId=" + statusId +
+                    ", offsetTop=" + offsetTop +
+                    '}';
+        }
     }
 }
