@@ -16,6 +16,7 @@
 
 package org.mariotaku.twidere.activity.support;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -39,12 +40,14 @@ import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
@@ -56,6 +59,7 @@ import com.sprylab.android.widget.TextureVideoView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.mediaviewer.library.AbsMediaViewerActivity;
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader;
+import org.mariotaku.mediaviewer.library.CacheDownloadMediaViewerFragment;
 import org.mariotaku.mediaviewer.library.FileCache;
 import org.mariotaku.mediaviewer.library.MediaDownloader;
 import org.mariotaku.mediaviewer.library.MediaViewerFragment;
@@ -162,6 +166,12 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         VideoPageFragment.class.getName(), args);
             }
+            case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER: {
+                final Bundle args = new Bundle();
+                args.putString(EXTRA_URL, TextUtils.isEmpty(media.media_url) ? media.url : media.media_url);
+                return (MediaViewerFragment) Fragment.instantiate(this,
+                        ExternalBrowserPageFragment.class.getName(), args);
+            }
         }
         throw new UnsupportedOperationException();
     }
@@ -199,8 +209,9 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         }
     }
 
-    public static class VideoPageFragment extends MediaViewerFragment implements MediaPlayer.OnPreparedListener,
-            MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, View.OnClickListener {
+    public static class VideoPageFragment extends CacheDownloadMediaViewerFragment
+            implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
+            MediaPlayer.OnCompletionListener, View.OnClickListener {
 
         private static final String EXTRA_LOOP = "loop";
 
@@ -658,34 +669,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     }
 
     /**
-     * @deprecated Progress bars are no longer provided in AppCompat.
-     */
-    @Deprecated
-    public void setSupportProgressBarVisibility(boolean visible) {
-    }
-
-    /**
-     * @deprecated Progress bars are no longer provided in AppCompat.
-     */
-    @Deprecated
-    public void setSupportProgressBarIndeterminateVisibility(boolean visible) {
-    }
-
-    /**
-     * @deprecated Progress bars are no longer provided in AppCompat.
-     */
-    @Deprecated
-    public void setSupportProgressBarIndeterminate(boolean indeterminate) {
-    }
-
-    /**
-     * @deprecated Progress bars are no longer provided in AppCompat.
-     */
-    @Deprecated
-    public void setSupportProgress(int progress) {
-    }
-
-    /**
      * Support version of {@link #onCreateNavigateUpTaskStack(android.app.TaskStackBuilder)}.
      * This method will be called on all platform versions.
      * <p/>
@@ -834,28 +817,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     }
 
     /**
-     * {@inheritDoc}
-     * <p/>
-     * <p>Please note: AppCompat uses it's own feature id for the action bar:
-     * {@link AppCompatDelegate#FEATURE_SUPPORT_ACTION_BAR FEATURE_SUPPORT_ACTION_BAR}.</p>
-     */
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        return super.onMenuOpened(featureId, menu);
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p/>
-     * <p>Please note: AppCompat uses it's own feature id for the action bar:
-     * {@link AppCompatDelegate#FEATURE_SUPPORT_ACTION_BAR FEATURE_SUPPORT_ACTION_BAR}.</p>
-     */
-    @Override
-    public void onPanelClosed(int featureId, Menu menu) {
-        super.onPanelClosed(featureId, menu);
-    }
-
-    /**
      * @return The {@link AppCompatDelegate} being used by this Activity.
      */
     public AppCompatDelegate getDelegate() {
@@ -864,4 +825,56 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         }
         return mDelegate;
     }
+
+    public static class ExternalBrowserPageFragment extends MediaViewerFragment {
+        private WebView mWebView;
+
+        @Override
+        protected View onCreateMediaView(LayoutInflater inflater, ViewGroup parent,
+                                         Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.layout_media_viewer_browser_fragment, parent, false);
+        }
+
+        @SuppressLint("SetJavaScriptEnabled")
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            final WebSettings webSettings = mWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setLoadsImagesAutomatically(true);
+            mWebView.loadUrl(getArguments().getString(EXTRA_URL));
+        }
+
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            mWebView = (WebView) view.findViewById(R.id.webview);
+        }
+
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            mWebView.onResume();
+        }
+
+
+        @Override
+        public void onPause() {
+            mWebView.onPause();
+            super.onPause();
+        }
+
+        @Override
+        public void onDestroy() {
+            mWebView.destroy();
+            super.onDestroy();
+        }
+
+        @Override
+        protected void recycleMedia() {
+
+        }
+    }
+
 }

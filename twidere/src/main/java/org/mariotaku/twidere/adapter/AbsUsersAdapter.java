@@ -117,7 +117,9 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getUsersCount()) {
+        if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
+        } if (position == getUsersCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
         return ITEM_VIEW_TYPE_USER;

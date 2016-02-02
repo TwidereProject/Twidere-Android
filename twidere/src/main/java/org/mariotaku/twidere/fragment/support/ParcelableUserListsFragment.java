@@ -26,6 +26,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.List;
@@ -59,14 +60,15 @@ public abstract class ParcelableUserListsFragment extends AbsUserListsFragment<L
         super.onLoadFinished(loader, data);
         setRefreshEnabled(true);
         setRefreshing(false);
-        setLoadMoreIndicatorVisible(false);
+        setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
     }
 
     @Override
-    public void onLoadMoreContents(boolean fromStart) {
-        if (fromStart) return;
-        //noinspection ConstantConditions
-        super.onLoadMoreContents(fromStart);
+    public void onLoadMoreContents(@IndicatorPosition int position) {
+        // Only supports load from end, skip START flag
+        if ((position & IndicatorPosition.START) != 0) return;
+        super.onLoadMoreContents(position);
+        if (position == 0) return;
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         loaderArgs.putLong(EXTRA_NEXT_CURSOR, getNextCursor());

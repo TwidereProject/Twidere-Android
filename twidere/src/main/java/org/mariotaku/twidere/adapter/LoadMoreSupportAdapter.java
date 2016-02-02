@@ -31,21 +31,24 @@ public abstract class LoadMoreSupportAdapter<VH extends ViewHolder> extends Base
         implements ILoadMoreSupportAdapter {
 
     private boolean mLoadMoreSupported;
-    private boolean mLoadMoreIndicatorVisible;
+    private
+    @IndicatorPosition
+    int mLoadMoreIndicatorPosition;
 
     public LoadMoreSupportAdapter(Context context) {
         super(context);
     }
 
     @Override
-    public final boolean isLoadMoreIndicatorVisible() {
-        return mLoadMoreIndicatorVisible;
+    @IndicatorPosition
+    public final int getLoadMoreIndicatorPosition() {
+        return mLoadMoreIndicatorPosition;
     }
 
     @Override
-    public final void setLoadMoreIndicatorVisible(boolean enabled) {
-        if (mLoadMoreIndicatorVisible == enabled) return;
-        mLoadMoreIndicatorVisible = enabled && mLoadMoreSupported;
+    public final void setLoadMoreIndicatorPosition(@IndicatorPosition int position) {
+        if (mLoadMoreIndicatorPosition == position) return;
+        mLoadMoreIndicatorPosition = mLoadMoreSupported ? position : IndicatorPosition.NONE;
         notifyDataSetChanged();
     }
 
@@ -58,7 +61,7 @@ public abstract class LoadMoreSupportAdapter<VH extends ViewHolder> extends Base
     public final void setLoadMoreSupported(boolean supported) {
         mLoadMoreSupported = supported;
         if (!supported) {
-            mLoadMoreIndicatorVisible = false;
+            mLoadMoreIndicatorPosition = IndicatorPosition.NONE;
         }
         notifyDataSetChanged();
     }

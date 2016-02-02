@@ -222,7 +222,9 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getStatusesCount()) {
+        if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
+        } if (position == getStatusesCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP;
@@ -232,7 +234,15 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
 
     @Override
     public final int getItemCount() {
-        return getStatusesCount() + (isLoadMoreIndicatorVisible() ? 1 : 0);
+        final int position = getLoadMoreIndicatorPosition();
+        int count = getStatusesCount();
+        if ((position & IndicatorPosition.START) != 0) {
+            count++;
+        }
+        if ((position & IndicatorPosition.END) != 0) {
+            count++;
+        }
+        return count;
     }
 
 

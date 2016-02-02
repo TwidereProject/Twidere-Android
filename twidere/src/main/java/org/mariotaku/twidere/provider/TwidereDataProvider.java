@@ -1328,9 +1328,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         try {
             final int count = c.getCount();
             if (count == 0) return;
-            c.moveToFirst();
             builder.setSmallIcon(R.drawable.ic_stat_notification);
-            builder.setNumber(count);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
             applyNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
 
@@ -1345,7 +1343,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             int messageLines = 0;
 
             long timestamp = -1;
-            c.moveToFirst();
+            c.moveToPosition(-1);
             while (c.moveToNext()) {
                 if (messageLines == 5) {
                     style.addLine(resources.getString(R.string.and_N_more, count - c.getPosition()));
@@ -1384,6 +1382,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     displayCount, displayCount);
             builder.setContentTitle(title);
             style.setBigContentTitle(title);
+            builder.setNumber(displayCount);
             builder.setContentIntent(getContentIntent(context, CustomTabType.NOTIFICATIONS_TIMELINE,
                     NotificationType.INTERACTIONS, accountId));
             if (timestamp != -1) {

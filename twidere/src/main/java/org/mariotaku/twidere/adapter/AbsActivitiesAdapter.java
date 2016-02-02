@@ -240,7 +240,9 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     @Override
     public int getItemViewType(int position) {
         final ParcelableActivity activity = getActivity(position);
-        if (position == getActivityCount()) {
+        if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
+        } else if (position == getActivityCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP;
@@ -300,7 +302,15 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     @Override
     public final int getItemCount() {
-        return getActivityCount() + (isLoadMoreIndicatorVisible() ? 1 : 0);
+        final int position = getLoadMoreIndicatorPosition();
+        int count = getActivityCount();
+        if ((position & IndicatorPosition.START) != 0) {
+            count++;
+        }
+        if ((position & IndicatorPosition.END) != 0) {
+            count++;
+        }
+        return count;
     }
 
 

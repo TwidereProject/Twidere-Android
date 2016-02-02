@@ -27,6 +27,7 @@ import android.support.v4.app.LoaderManager;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
@@ -117,15 +118,16 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         showContent();
         setRefreshEnabled(true);
         setRefreshing(false);
-        setLoadMoreIndicatorVisible(false);
+        setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
     }
 
 
     @Override
-    public void onLoadMoreContents(boolean fromStart) {
-        if (fromStart) return;
-        //noinspection ConstantConditions
-        super.onLoadMoreContents(fromStart);
+    public void onLoadMoreContents(int position) {
+        // Only supports load from end, skip START flag
+        if ((position & IndicatorPosition.START) != 0) return;
+        super.onLoadMoreContents(position);
+        if (position == 0) return;
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final long[] maxIds = new long[]{adapter.getStatusId(adapter.getStatusesCount() - 1)};
         getStatuses(null, maxIds, null);

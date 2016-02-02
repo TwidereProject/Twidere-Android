@@ -22,9 +22,11 @@ package org.mariotaku.twidere.util;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.view.MotionEvent;
+import android.view.View;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 
 /**
  * Created by mariotaku on 15/3/15.
@@ -35,10 +37,13 @@ public class ContentListScrollListener extends OnScrollListener {
     private int mScrollSum;
     private int mTouchSlop;
 
-    private ContentListSupport mContentListSupport;
+    private final ContentListSupport mContentListSupport;
+    private final TouchListener mTouchListener;
+    private int mScrollDirection;
 
     public ContentListScrollListener(@NonNull ContentListSupport contentListSupport) {
         mContentListSupport = contentListSupport;
+        mTouchListener = new TouchListener(this);
     }
 
     @Override
@@ -74,21 +79,59 @@ public class ContentListScrollListener extends OnScrollListener {
         if (!(adapter instanceof ILoadMoreSupportAdapter)) return;
         final ILoadMoreSupportAdapter loadMoreAdapter = (ILoadMoreSupportAdapter) adapter;
         if (!mContentListSupport.isRefreshing() && loadMoreAdapter.isLoadMoreSupported()
-                && !loadMoreAdapter.isLoadMoreIndicatorVisible()) {
-            if (reachedEnd()) {
-                mContentListSupport.onLoadMoreContents(false);
-            } else if (reachedStart()) {
-                mContentListSupport.onLoadMoreContents(true);
+                && loadMoreAdapter.getLoadMoreIndicatorPosition() == IndicatorPosition.NONE) {
+            int position = 0;
+            if (mContentListSupport.isReachingEnd() && mScrollDirection >= 0) {
+                position |= IndicatorPosition.END;
             }
+            if (mContentListSupport.isReachingStart() && mScrollDirection <= 0) {
+                position |= IndicatorPosition.START;
+            }
+            mContentListSupport.onLoadMoreContents(position);
         }
     }
 
-    private boolean reachedStart() {
-        return ArrayUtils.contains(mContentListSupport.findFirstVisibleItemPositions(), 0);
+    public View.OnTouchListener getOnTouchListener() {
+        return mTouchListener;
     }
 
-    private boolean reachedEnd() {
-        return ArrayUtils.contains(mContentListSupport.findLastVisibleItemPositions(), mContentListSupport.getItemCount() - 1);
+    static class TouchListener implements View.OnTouchListener {
+
+        private final ContentListScrollListener listener;
+        private float mLastY;
+
+        TouchListener(ContentListScrollListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    listener.resetScrollDirection();
+                    mLastY = Float.NaN;
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE: {
+                    if (!Float.isNaN(mLastY)) {
+                        float delta = mLastY - event.getRawY();
+                        listener.setScrollDirection(delta < 0 ? -1 : 1);
+                    } else {
+                        mLastY = event.getRawY();
+                    }
+                    break;
+                }
+            }
+            return false;
+        }
+    }
+
+    private void setScrollDirection(int direction) {
+        mScrollDirection = direction;
+    }
+
+    private void resetScrollDirection() {
+        mScrollDirection = 0;
     }
 
     public interface ContentListSupport {
@@ -97,14 +140,13 @@ public class ContentListScrollListener extends OnScrollListener {
 
         boolean isRefreshing();
 
-        void onLoadMoreContents(boolean fromStart);
+        void onLoadMoreContents(@IndicatorPosition int position);
 
         void setControlVisible(boolean visible);
 
-        int[] findLastVisibleItemPositions();
+        boolean isReachingStart();
 
-        int[] findFirstVisibleItemPositions();
+        boolean isReachingEnd();
 
-        int getItemCount();
     }
 }

@@ -842,4 +842,5 @@
     <string name="mentions_only">Mentions only</string>
     <string name="error_no_dm_permission">No direct message permission, check your Twitter application permission setting.</string>
     <string name="select_accounts_for_compose">Select accounts for compose</string>
+    <string name="interactions">Interactions</string>
 </resources>

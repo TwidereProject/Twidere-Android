@@ -50,6 +50,7 @@ import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.DirectMessageEntry;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.MessageEntriesAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
@@ -93,7 +94,10 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     }
 
     @Override
-    public void onLoadMoreContents(boolean fromStart) {
+    public void onLoadMoreContents(@IndicatorPosition int position) {
+        // Only supports load from end, so remove START flag
+        position &= ~IndicatorPosition.START;
+        if (position == 0) return;
         loadMoreMessages();
     }
 
@@ -155,7 +159,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         mFirstVisibleItem = -1;
         final MessageEntriesAdapter adapter = getAdapter();
         adapter.setCursor(cursor);
-        adapter.setLoadMoreIndicatorVisible(false);
+        adapter.setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
         adapter.setLoadMoreSupported(!isEmpty);
         adapter.setLoadMoreSupported(hasMoreData(cursor));
         final long[] accountIds = getAccountIds();
@@ -199,7 +203,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     public void onGetMessagesTaskChanged(GetMessagesTaskEvent event) {
         if (event.uri.equals(Inbox.CONTENT_URI) && !event.running) {
             setRefreshing(false);
-            setLoadMoreIndicatorVisible(false);
+            setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
             setRefreshEnabled(true);
         }
     }
@@ -356,7 +360,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
     private void loadMoreMessages() {
         if (isRefreshing()) return;
-        setLoadMoreIndicatorVisible(true);
+        setLoadMoreIndicatorPosition(IndicatorPosition.END);
         setRefreshEnabled(false);
         AsyncTaskUtils.executeTask(new AsyncTask<Object, Object, long[][]>() {
 

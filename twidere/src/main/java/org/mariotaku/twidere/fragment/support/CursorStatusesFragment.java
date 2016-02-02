@@ -40,6 +40,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
@@ -119,7 +120,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
             if (!event.uri.equals(getContentUri())) return;
             setRefreshing(event.running);
             if (!event.running) {
-                setLoadMoreIndicatorVisible(false);
+                setLoadMoreIndicatorPosition(IndicatorPosition.END);
                 setRefreshEnabled(true);
             }
         }
@@ -215,10 +216,11 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     @Override
-    public void onLoadMoreContents(boolean fromStart) {
-        if (fromStart) return;
-        //noinspection ConstantConditions
-        super.onLoadMoreContents(fromStart);
+    public void onLoadMoreContents(@IndicatorPosition int position) {
+        // Only supports load from end, skip START flag
+        if ((position & IndicatorPosition.START) != 0) return;
+        super.onLoadMoreContents(position);
+        if (position == 0) return;
         AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorStatusesFragment>() {
             @Override
             public long[][] doLongOperation(Object o) throws InterruptedException {

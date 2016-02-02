@@ -54,7 +54,15 @@ public class ParcelableUsersAdapter extends AbsUsersAdapter<List<ParcelableUser>
 
     @Override
     public int getItemCount() {
-        return getUsersCount() + (isLoadMoreIndicatorVisible() ? 1 : 0);
+        final int position = getLoadMoreIndicatorPosition();
+        int count = getUsersCount();
+        if ((position & IndicatorPosition.START) != 0) {
+            count++;
+        }
+        if ((position & IndicatorPosition.END) != 0) {
+            count++;
+        }
+        return count;
     }
 
     @Override

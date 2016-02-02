@@ -257,8 +257,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         DependencyHolder holder = DependencyHolder.get(this);
         final RestHttpClient client = holder.getRestHttpClient();
         if (client instanceof OkHttpRestClient) {
-            HttpClientFactory.initDefaultHttpClient(this, getSharedPreferences(),
-                    ((OkHttpRestClient) client).getClient());
+            HttpClientFactory.initDefaultHttpClient(this, holder.getPreferences(),
+                    ((OkHttpRestClient) client).getClient(), holder.getDns());
         }
     }
 

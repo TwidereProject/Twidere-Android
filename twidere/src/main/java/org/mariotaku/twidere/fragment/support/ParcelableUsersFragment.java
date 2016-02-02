@@ -26,6 +26,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public abstract class ParcelableUsersFragment extends AbsUsersFragment<List<Parc
         super.onLoadFinished(loader, data);
         setRefreshEnabled(true);
         setRefreshing(false);
-        setLoadMoreIndicatorVisible(false);
+        setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
     }
 
     protected void removeUsers(long... ids) {

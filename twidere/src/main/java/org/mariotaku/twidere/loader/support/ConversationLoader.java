@@ -77,7 +77,7 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
             }
         }
         if ((sinceId <= 0 && maxId <= 0) || (sinceId > 0 && sinceId < status.id) || (maxId > 0 && maxId >= status.id)) {
-            statuses.add(StatusUtils.fromParcelableStatus(status));
+//            statuses.add(StatusUtils.fromParcelableStatus(status));
         }
         if (getReplies) {
             SearchQuery query = new SearchQuery();

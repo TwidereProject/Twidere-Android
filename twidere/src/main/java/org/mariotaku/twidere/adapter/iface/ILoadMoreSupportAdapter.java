@@ -19,17 +19,29 @@
 
 package org.mariotaku.twidere.adapter.iface;
 
+import android.support.annotation.IntDef;
+
 /**
  * Created by mariotaku on 15/4/16.
  */
 public interface ILoadMoreSupportAdapter {
     int ITEM_VIEW_TYPE_LOAD_INDICATOR = 0;
 
-    boolean isLoadMoreIndicatorVisible();
+    @IndicatorPosition
+    int getLoadMoreIndicatorPosition();
 
-    void setLoadMoreIndicatorVisible(boolean enabled);
+    void setLoadMoreIndicatorPosition(@IndicatorPosition int position);
 
     boolean isLoadMoreSupported();
 
     void setLoadMoreSupported(boolean supported);
+
+    @IntDef(flag = true, value = {IndicatorPosition.NONE, IndicatorPosition.START,
+            IndicatorPosition.END, IndicatorPosition.BOTH})
+    @interface IndicatorPosition {
+        int NONE = 0;
+        int START = 0b01;
+        int END = 0b10;
+        int BOTH = START | END;
+    }
 }

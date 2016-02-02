@@ -137,12 +137,13 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object> 
     }
 
     @Override
-    public boolean isLoadMoreIndicatorVisible() {
-        return false;
+    @IndicatorPosition
+    public int getLoadMoreIndicatorPosition() {
+        return IndicatorPosition.NONE;
     }
 
     @Override
-    public void setLoadMoreIndicatorVisible(boolean enabled) {
+    public void setLoadMoreIndicatorPosition(@IndicatorPosition int position) {
 
     }
 

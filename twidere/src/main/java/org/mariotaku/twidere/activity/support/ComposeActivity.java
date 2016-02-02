@@ -1199,7 +1199,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         if (provider != null) {
             mLocationText.setText(R.string.getting_location);
             mLocationListener = new ComposeLocationListener(this);
-            mLocationManager.requestLocationUpdates(provider, 0, 0, mLocationListener);
+//            mLocationManager.requestLocationUpdates(provider, 0, 0, mLocationListener);
             final Location location = Utils.getCachedLocation(this);
             if (location != null) {
                 mLocationListener.onLocationChanged(location);
