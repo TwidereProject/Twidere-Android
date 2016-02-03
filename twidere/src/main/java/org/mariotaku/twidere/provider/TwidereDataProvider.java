@@ -1328,7 +1328,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final long accountId = pref.getAccountId();
         final String where = Expression.and(
                 Expression.equals(Activities.ACCOUNT_ID, pref.getAccountId()),
-                Expression.greaterEquals(Activities.TIMESTAMP, position)
+                Expression.greaterThan(Activities.TIMESTAMP, position)
         ).getSQL();
         Cursor c = query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, null,
                 new OrderBy(Activities.TIMESTAMP, false).getSQL());
