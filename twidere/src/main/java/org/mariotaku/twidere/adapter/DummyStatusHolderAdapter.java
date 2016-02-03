@@ -148,12 +148,13 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object> 
     }
 
     @Override
-    public boolean isLoadMoreSupported() {
-        return false;
+    @IndicatorPosition
+    public int getLoadMoreSupportedPosition() {
+        return IndicatorPosition.NONE;
     }
 
     @Override
-    public void setLoadMoreSupported(boolean supported) {
+    public void setLoadMoreSupportedPosition(@IndicatorPosition int supported) {
 
     }
 

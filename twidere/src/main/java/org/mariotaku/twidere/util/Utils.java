@@ -60,7 +60,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.SystemClock;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -119,11 +118,7 @@ import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.sqliteqb.library.OrderBy;
-import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.sqliteqb.library.Selectable;
-import org.mariotaku.sqliteqb.library.Tables;
-import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -239,7 +234,6 @@ import edu.tsinghua.hotmobi.model.NotificationEvent;
 
 import static android.text.TextUtils.isEmpty;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
-import static org.mariotaku.twidere.provider.TwidereDataStore.CACHE_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
@@ -407,19 +401,6 @@ public final class Utils implements Constants {
         accessibilityManager.sendAccessibilityEvent(event);
     }
 
-    public static String buildActivatedStatsWhereClause(final Context context, final String selection) {
-        if (context == null) return null;
-        final long[] account_ids = DataStoreUtils.getActivatedAccountIds(context);
-        final Expression accountWhere = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(account_ids));
-        final Expression where;
-        if (selection != null) {
-            where = Expression.and(accountWhere, new Expression(selection));
-        } else {
-            where = accountWhere;
-        }
-        return where.getSQL();
-    }
-
     public static Uri buildDirectMessageConversationUri(final long account_id, final long conversation_id,
                                                         final String screen_name) {
         if (conversation_id <= 0 && screen_name == null) return TwidereDataStore.CONTENT_URI_NULL;
@@ -440,62 +421,6 @@ public final class Utils implements Constants {
     public static boolean checkActivityValidity(final Context context, final Intent intent) {
         final PackageManager pm = context.getPackageManager();
         return !pm.queryIntentActivities(intent, 0).isEmpty();
-    }
-
-    public static synchronized void cleanDatabasesByItemLimit(final Context context) {
-        if (context == null) return;
-        final ContentResolver resolver = context.getContentResolver();
-        final int itemLimit = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getInt(
-                KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT);
-
-        for (final long accountId : DataStoreUtils.getAccountIds(context)) {
-            // Clean statuses.
-            for (final Uri uri : STATUSES_URIS) {
-                if (CachedStatuses.CONTENT_URI.equals(uri)) {
-                    continue;
-                }
-                final String table = DataStoreUtils.getTableNameByUri(uri);
-                final Expression account_where = new Expression(Statuses.ACCOUNT_ID + " = " + accountId);
-                final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
-                qb.select(new Column(Statuses._ID)).from(new Tables(table));
-                qb.where(Expression.equals(Statuses.ACCOUNT_ID, accountId));
-                qb.orderBy(new OrderBy(Statuses.STATUS_ID, false));
-                qb.limit(itemLimit);
-                final Expression where = Expression.and(Expression.notIn(new Column(Statuses._ID), qb.build()), account_where);
-                resolver.delete(uri, where.getSQL(), null);
-            }
-            for (final Uri uri : DIRECT_MESSAGES_URIS) {
-                final String table = DataStoreUtils.getTableNameByUri(uri);
-                final Expression account_where = new Expression(DirectMessages.ACCOUNT_ID + " = " + accountId);
-                final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
-                qb.select(new Column(DirectMessages._ID)).from(new Tables(table));
-                qb.where(Expression.equals(DirectMessages.ACCOUNT_ID, accountId));
-                qb.orderBy(new OrderBy(DirectMessages.MESSAGE_ID, false));
-                qb.limit(itemLimit * 10);
-                final Expression where = Expression.and(Expression.notIn(new Column(DirectMessages._ID), qb.build()), account_where);
-                resolver.delete(uri, where.getSQL(), null);
-            }
-        }
-        // Clean cached values.
-        for (final Uri uri : CACHE_URIS) {
-            final String table = DataStoreUtils.getTableNameByUri(uri);
-            if (table == null) continue;
-            final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
-            qb.select(new Column(BaseColumns._ID));
-            qb.from(new Tables(table));
-            qb.orderBy(new OrderBy(BaseColumns._ID, false));
-            qb.limit(itemLimit * 20);
-            final Expression where = Expression.notIn(new Column(BaseColumns._ID), qb.build());
-            resolver.delete(uri, where.getSQL(), null);
-        }
-    }
-
-    public static void clearAccountColor() {
-        DataStoreUtils.sAccountColors.clear();
-    }
-
-    public static void clearAccountName() {
-        DataStoreUtils.sAccountScreenNames.clear();
     }
 
     public static void clearListViewChoices(final AbsListView view) {
@@ -2997,35 +2922,16 @@ public final class Utils implements Constants {
         final ListView listView = fragment.getListView();
         listView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         listView.setClipToPadding(false);
-//        if (listView instanceof RefreshNowListView) {
-//            final View indicatorView = ((RefreshNowListView) listView).getRefreshIndicatorView();
-//            final LayoutParams lp = indicatorView.getLayoutParams();
-//            if (lp instanceof MarginLayoutParams) {
-//                ((MarginLayoutParams) lp).topMargin = insets.top;
-//                indicatorView.setLayoutParams(lp);
-//            }
-//        }
     }
 
-    public static boolean isFilteringUser(Context context, long userId) {
-        final ContentResolver cr = context.getContentResolver();
-        final Expression where = Expression.equals(Users.USER_ID, userId);
-        final Cursor c = cr.query(Users.CONTENT_URI, new String[0], where.getSQL(), null, null);
-        //noinspection TryFinallyCanBeTryWithResources
-        try {
-            return c.getCount() > 0;
-        } finally {
-            c.close();
-        }
-    }
-
+    @Nullable
     public static ParcelableUser getUserForConversation(Context context, long accountId,
                                                         long conversationId) {
         final ContentResolver cr = context.getContentResolver();
         final Expression where = Expression.and(Expression.equals(ConversationEntries.ACCOUNT_ID, accountId),
                 Expression.equals(ConversationEntries.CONVERSATION_ID, conversationId));
         final Cursor c = cr.query(ConversationEntries.CONTENT_URI, null, where.getSQL(), null, null);
-        //noinspection TryFinallyCanBeTryWithResources
+        if (c == null) return null;
         try {
             if (c.moveToFirst()) return ParcelableUser.fromDirectMessageConversationEntry(c);
         } finally {

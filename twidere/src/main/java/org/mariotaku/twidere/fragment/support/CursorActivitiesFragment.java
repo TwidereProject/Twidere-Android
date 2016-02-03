@@ -226,7 +226,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     }
 
     protected long[] getNewestActivityIds(long[] accountIds) {
-        return DataStoreUtils.getActivityMaxPositionsFromDatabase(getActivity(), getContentUri(), accountIds);
+        return DataStoreUtils.getNewestActivityMaxPositions(getActivity(), getContentUri(), accountIds);
     }
 
     protected abstract int getNotificationType();

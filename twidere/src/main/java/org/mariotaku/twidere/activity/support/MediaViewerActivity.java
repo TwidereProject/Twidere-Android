@@ -173,7 +173,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                         ExternalBrowserPageFragment.class.getName(), args);
             }
         }
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(String.valueOf(media));
     }
 
     @Override

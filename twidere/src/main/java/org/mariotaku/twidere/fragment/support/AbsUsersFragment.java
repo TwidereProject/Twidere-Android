@@ -34,6 +34,7 @@ import android.view.View;
 
 import org.mariotaku.twidere.adapter.AbsUsersAdapter;
 import org.mariotaku.twidere.adapter.AbsUsersAdapter.UserAdapterListener;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -93,7 +94,7 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
         final AbsUsersAdapter<Data> adapter = getAdapter();
         adapter.setData(data);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
-            adapter.setLoadMoreSupported(hasMoreData(data));
+            adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
             setRefreshEnabled(true);
         }
         if (loader instanceof IExtendedLoader) {

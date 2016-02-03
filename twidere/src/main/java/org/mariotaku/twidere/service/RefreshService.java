@@ -39,7 +39,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.receiver.PowerStateReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -88,7 +87,7 @@ public class RefreshService extends Service implements Constants {
                 final AccountPreferences[] accountPrefs = AccountPreferences.getAccountPreferences(context, accountIds);
                 if (BROADCAST_REFRESH_HOME_TIMELINE.equals(action)) {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new HomeRefreshableFilter());
-                    final long[] sinceIds = DataStoreUtils.getNewestStatusIdsFromDatabase(context, Statuses.CONTENT_URI, refreshIds);
+                    final long[] sinceIds = DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI, refreshIds);
                     if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, String.format("Auto refreshing home for %s", Arrays.toString(refreshIds)));
                     }
@@ -105,7 +104,7 @@ public class RefreshService extends Service implements Constants {
                     }
                 } else if (BROADCAST_REFRESH_DIRECT_MESSAGES.equals(action)) {
                     final long[] refreshIds = getRefreshableIds(accountPrefs, new MessagesRefreshableFilter());
-                    final long[] sinceIds = DataStoreUtils.getNewestMessageIdsFromDatabase(context,
+                    final long[] sinceIds = DataStoreUtils.getNewestMessageIds(context,
                             DirectMessages.Inbox.CONTENT_URI,
                             refreshIds);
                     if (BuildConfig.DEBUG) {

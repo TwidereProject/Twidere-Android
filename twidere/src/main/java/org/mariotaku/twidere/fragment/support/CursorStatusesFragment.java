@@ -263,7 +263,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     protected long[] getNewestStatusIds(long[] accountIds) {
-        return DataStoreUtils.getNewestStatusIdsFromDatabase(getActivity(), getContentUri(), accountIds);
+        return DataStoreUtils.getNewestStatusIds(getActivity(), getContentUri(), accountIds);
     }
 
     protected abstract int getNotificationType();

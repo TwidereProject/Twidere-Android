@@ -32,9 +32,10 @@ public interface ILoadMoreSupportAdapter {
 
     void setLoadMoreIndicatorPosition(@IndicatorPosition int position);
 
-    boolean isLoadMoreSupported();
+    @IndicatorPosition
+    int getLoadMoreSupportedPosition();
 
-    void setLoadMoreSupported(boolean supported);
+    void setLoadMoreSupportedPosition(@IndicatorPosition int supported);
 
     @IntDef(flag = true, value = {IndicatorPosition.NONE, IndicatorPosition.START,
             IndicatorPosition.END, IndicatorPosition.BOTH})
@@ -43,5 +44,17 @@ public interface ILoadMoreSupportAdapter {
         int START = 0b01;
         int END = 0b10;
         int BOTH = START | END;
+    }
+
+    class IndicatorPositionUtils {
+        @IndicatorPosition
+        public static int apply(@IndicatorPosition int orig, @IndicatorPosition int supported) {
+            return orig & supported;
+        }
+
+        @IndicatorPosition
+        public static boolean has(@IndicatorPosition int flags, @IndicatorPosition int compare) {
+            return (flags & compare) != 0;
+        }
     }
 }

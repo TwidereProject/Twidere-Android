@@ -81,7 +81,7 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
         final Uri uri = getDatabaseUri();
         final Context context = twitterWrapper.getContext();
         final ContentResolver resolver = context.getContentResolver();
-        final boolean noItemsBefore = DataStoreUtils.getStatusCountInDatabase(context, uri, accountId) <= 0;
+        final boolean noItemsBefore = DataStoreUtils.getStatusCount(context, uri, accountId) <= 0;
         final ContentValues[] values = new ContentValues[statuses.size()];
         final long[] statusIds = new long[statuses.size()];
         long minId = -1;

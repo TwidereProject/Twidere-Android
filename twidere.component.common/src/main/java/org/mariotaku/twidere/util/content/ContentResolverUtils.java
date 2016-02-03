@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.CancellationSignal;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.util.Collection;
@@ -47,28 +48,28 @@ public class ContentResolverUtils {
                                      final T[] colValues, final String extraWhere, final boolean valuesIsString) {
         if (resolver == null || uri == null || isEmpty(inColumn) || colValues == null || colValues.length == 0)
             return 0;
-        final int col_values_length = colValues.length, blocks_count = col_values_length / MAX_BULK_COUNT + 1;
-        int rows_deleted = 0;
+        final int colValuesLength = colValues.length, blocks_count = colValuesLength / MAX_BULK_COUNT + 1;
+        int rowsDeleted = 0;
         for (int i = 0; i < blocks_count; i++) {
-            final int start = i * MAX_BULK_COUNT, end = Math.min(start + MAX_BULK_COUNT, col_values_length);
-            final String[] block = TwidereArrayUtils.toStringArray(TwidereArrayUtils.subArray(colValues, start, end));
+            final int start = i * MAX_BULK_COUNT, end = Math.min(start + MAX_BULK_COUNT, colValuesLength);
+            final String[] block = TwidereArrayUtils.toStringArray(ArrayUtils.subarray(colValues, start, end));
             if (valuesIsString) {
                 final StringBuilder where = new StringBuilder(inColumn + " IN(" + TwidereArrayUtils.toStringForSQL(block)
                         + ")");
                 if (!isEmpty(extraWhere)) {
                     where.append("AND ").append(extraWhere);
                 }
-                rows_deleted += resolver.delete(uri, where.toString(), block);
+                rowsDeleted += resolver.delete(uri, where.toString(), block);
             } else {
                 final StringBuilder where = new StringBuilder(inColumn + " IN("
                         + TwidereArrayUtils.toString(block, ',', true) + ")");
                 if (!isEmpty(extraWhere)) {
                     where.append("AND ").append(extraWhere);
                 }
-                rows_deleted += resolver.delete(uri, where.toString(), null);
+                rowsDeleted += resolver.delete(uri, where.toString(), null);
             }
         }
-        return rows_deleted;
+        return rowsDeleted;
     }
 
     public static int bulkInsert(final ContentResolver resolver, final Uri uri, final Collection<ContentValues> values) {

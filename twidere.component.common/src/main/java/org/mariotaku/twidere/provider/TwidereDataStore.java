@@ -43,6 +43,8 @@ public interface TwidereDataStore {
 
     String CONTENT_PATH_EMPTY = "empty_content";
 
+    String CONTENT_PATH_RAW_QUERY = "raw_query";
+
     String CONTENT_PATH_DATABASE_READY = "database_ready";
 
     Uri BASE_CONTENT_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
@@ -51,6 +53,8 @@ public interface TwidereDataStore {
     Uri CONTENT_URI_NULL = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_NULL);
 
     Uri CONTENT_URI_EMPTY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_EMPTY);
+
+    Uri CONTENT_URI_RAW_QUERY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_RAW_QUERY);
 
     Uri CONTENT_URI_DATABASE_READY = Uri.withAppendedPath(BASE_CONTENT_URI,
             CONTENT_PATH_DATABASE_READY);

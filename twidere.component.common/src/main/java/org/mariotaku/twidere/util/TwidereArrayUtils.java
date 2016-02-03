@@ -45,7 +45,6 @@ public final class TwidereArrayUtils {
     public static boolean contentMatch(final long[] array1, final long[] array2) {
         if (array1 == null || array2 == null) return array1 == array2;
         if (array1.length != array2.length) return false;
-        final int length = array1.length;
         for (long anArray1 : array1) {
             if (!ArrayUtils.contains(array2, anArray1)) return false;
         }
@@ -122,46 +121,6 @@ public final class TwidereArrayUtils {
         return array;
     }
 
-    public static void reverse(@NonNull Object[] array) {
-        for (int i = 0; i < array.length / 2; i++) {
-            Object temp = array[i];
-            array[i] = array[array.length - i - 1];
-            array[array.length - i - 1] = temp;
-        }
-    }
-
-    public static int[] subArray(final int[] array, final int start, final int end) {
-        final int length = end - start;
-        if (length < 0) throw new IllegalArgumentException();
-        final int[] result = new int[length];
-        System.arraycopy(array, start, result, 0, length);
-        return result;
-    }
-
-    public static long[] subArray(final long[] array, final int start, final int end) {
-        final int length = end - start;
-        if (length < 0) throw new IllegalArgumentException();
-        final long[] result = new long[length];
-        System.arraycopy(array, start, result, 0, length);
-        return result;
-    }
-
-    public static Object[] subArray(final Object[] array, final int start, final int end) {
-        final int length = end - start;
-        if (length < 0) throw new IllegalArgumentException();
-        final Object[] result = new Object[length];
-        System.arraycopy(array, start, result, 0, length);
-        return result;
-    }
-
-    public static String[] subArray(final String[] array, final int start, final int end) {
-        final int length = end - start;
-        if (length < 0) throw new IllegalArgumentException();
-        final String[] result = new String[length];
-        System.arraycopy(array, start, result, 0, length);
-        return result;
-    }
-
     public static String toString(final long[] array, final char token, final boolean include_space) {
         final StringBuilder builder = new StringBuilder();
         final int length = array.length;
@@ -193,23 +152,23 @@ public final class TwidereArrayUtils {
     public static String[] toStringArray(final Object[] array) {
         if (array == null) return null;
         final int length = array.length;
-        final String[] string_array = new String[length];
-        for (int i = 0; i < length; i++) {
-            string_array[i] = ParseUtils.parseString(array[i]);
-        }
-        return string_array;
-    }
-
-
-    public static String[] toStringArray(final List<?> list) {
-        if (list == null) return null;
-        final int length = list.size();
         final String[] stringArray = new String[length];
         for (int i = 0; i < length; i++) {
-            stringArray[i] = ParseUtils.parseString(list.get(i));
+            stringArray[i] = ParseUtils.parseString(array[i]);
         }
         return stringArray;
     }
+
+    public static String[] toStringArray(final long[] array) {
+        if (array == null) return null;
+        final int length = array.length;
+        final String[] stringArray = new String[length];
+        for (int i = 0; i < length; i++) {
+            stringArray[i] = ParseUtils.parseString(array[i]);
+        }
+        return stringArray;
+    }
+
 
     public static String toStringForSQL(final String[] array) {
         final int size = array != null ? array.length : 0;

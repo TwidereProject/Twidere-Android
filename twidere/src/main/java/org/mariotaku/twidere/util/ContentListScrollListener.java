@@ -78,7 +78,7 @@ public class ContentListScrollListener extends OnScrollListener {
         final Object adapter = mContentListSupport.getAdapter();
         if (!(adapter instanceof ILoadMoreSupportAdapter)) return;
         final ILoadMoreSupportAdapter loadMoreAdapter = (ILoadMoreSupportAdapter) adapter;
-        if (!mContentListSupport.isRefreshing() && loadMoreAdapter.isLoadMoreSupported()
+        if (!mContentListSupport.isRefreshing() && loadMoreAdapter.getLoadMoreSupportedPosition() != IndicatorPosition.NONE
                 && loadMoreAdapter.getLoadMoreIndicatorPosition() == IndicatorPosition.NONE) {
             int position = 0;
             if (mContentListSupport.isReachingEnd() && mScrollDirection >= 0) {
@@ -87,6 +87,7 @@ public class ContentListScrollListener extends OnScrollListener {
             if (mContentListSupport.isReachingStart() && mScrollDirection <= 0) {
                 position |= IndicatorPosition.START;
             }
+            resetScrollDirection();
             mContentListSupport.onLoadMoreContents(position);
         }
     }

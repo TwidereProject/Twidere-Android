@@ -37,6 +37,7 @@ import org.mariotaku.inetaddrjni.library.InetAddressUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.xbill.DNS.AAAARecord;
 import org.xbill.DNS.ARecord;
 import org.xbill.DNS.DClass;
@@ -217,7 +218,7 @@ public class TwidereDns implements Constants, Dns {
             } else {
                 continue;
             }
-            if (mConnnectTimeout == 0 || inetAddress.isReachable((int) mConnnectTimeout)) {
+            if (mConnnectTimeout == 0 || inetAddress.isReachable(TwidereMathUtils.clamp((int) mConnnectTimeout / 2, 1000, 3000))) {
                 resolvedAddresses.add(InetAddress.getByAddress(originalHost, inetAddress.getAddress()));
             }
         }

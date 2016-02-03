@@ -400,13 +400,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             @Override
             protected Object[] doInBackground(long[][] params) {
                 final Object[] result = new Object[8];
-                result[0] = DataStoreUtils.getNewestStatusIdsFromDatabase(mContext, Statuses.CONTENT_URI, accountIds);
+                result[0] = DataStoreUtils.getNewestStatusIds(mContext, Statuses.CONTENT_URI, accountIds);
                 if (Boolean.TRUE.equals(result[1] = mPreferences.getBoolean(KEY_HOME_REFRESH_MENTIONS))) {
-                    result[2] = DataStoreUtils.getActivityMaxPositionsFromDatabase(mContext,
+                    result[2] = DataStoreUtils.getNewestActivityMaxPositions(mContext,
                             Activities.AboutMe.CONTENT_URI, accountIds);
                 }
                 if (Boolean.TRUE.equals(result[3] = mPreferences.getBoolean(KEY_HOME_REFRESH_DIRECT_MESSAGES))) {
-                    result[4] = DataStoreUtils.getNewestMessageIdsFromDatabase(mContext, DirectMessages.Inbox.CONTENT_URI, accountIds);
+                    result[4] = DataStoreUtils.getNewestMessageIds(mContext, DirectMessages.Inbox.CONTENT_URI, accountIds);
                 }
                 if (Boolean.TRUE.equals(result[5] = mPreferences.getBoolean(KEY_HOME_REFRESH_TRENDS))) {
                     result[6] = Utils.getDefaultAccountId(mContext);
@@ -535,7 +535,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         mAsyncTaskManager.add(new GetActivitiesTask(this, TASK_TAG_GET_MENTIONS, accountIds, maxIds, sinceIds) {
 
             @Override
-            protected void getReadPosition(long accountId, Twitter twitter) {
+            protected void saveReadPosition(long accountId, Twitter twitter) {
                 try {
                     CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
                     final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME, accountIds);
@@ -568,7 +568,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         mAsyncTaskManager.add(new GetActivitiesTask(this, "get_activities_by_friends", accountIds, maxIds, sinceIds) {
 
             @Override
-            protected void getReadPosition(long accountId, Twitter twitter) {
+            protected void saveReadPosition(long accountId, Twitter twitter) {
 
             }
 
@@ -1078,7 +1078,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             values.put(CachedRelationships.FOLLOWED_BY, false);
             mResolver.update(CachedRelationships.CONTENT_URI, values,
                     Expression.inArgs(CachedRelationships.USER_ID, list.size()).getSQL(),
-                    TwidereArrayUtils.toStringArray(list));
+                    TwidereListUtils.toStringArray(list));
         }
 
         @Override

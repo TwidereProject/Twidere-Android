@@ -23,7 +23,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +30,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 
 import org.mariotaku.twidere.adapter.AbsUserListsAdapter;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
@@ -94,7 +94,7 @@ abstract class AbsUserListsFragment<Data> extends AbsContentListRecyclerViewFrag
         final AbsUserListsAdapter<Data> adapter = getAdapter();
         adapter.setData(data);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
-            adapter.setLoadMoreSupported(hasMoreData(data));
+            adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
             setRefreshEnabled(true);
         }
         if (loader instanceof IExtendedLoader) {

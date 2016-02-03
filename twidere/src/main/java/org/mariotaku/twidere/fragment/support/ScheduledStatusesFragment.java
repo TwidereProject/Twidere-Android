@@ -97,7 +97,7 @@ public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragmen
             super(context);
             mContext = context;
             mInflater = LayoutInflater.from(context);
-            setLoadMoreSupported(false);
+            setLoadMoreSupportedPosition(IndicatorPosition.NONE);
         }
 
         @Override

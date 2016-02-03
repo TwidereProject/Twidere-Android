@@ -1701,7 +1701,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         @Override
         public SingleResponse<UserRelationship> loadInBackground() {
-            final boolean isFiltering = Utils.isFilteringUser(context, userId);
+            final boolean isFiltering = DataStoreUtils.isFilteringUser(context, userId);
             if (accountId == userId)
                 return SingleResponse.getInstance();
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, false);

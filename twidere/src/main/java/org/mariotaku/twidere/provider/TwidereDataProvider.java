@@ -51,6 +51,7 @@ import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
+import android.support.v4.text.BidiFormatter;
 import android.support.v4.util.LongSparseArray;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -168,6 +169,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     Bus mBus;
     @Inject
     UserColorNameManager mUserColorNameManager;
+    @Inject
+    BidiFormatter mBidiFormatter;
 
     private Handler mHandler;
     private ContentResolver mContentResolver;
@@ -745,6 +748,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case VIRTUAL_TABLE_ID_EMPTY: {
                     return new MatrixCursor(projection);
                 }
+                case VIRTUAL_TABLE_ID_RAW_QUERY: {
+                    if (projection != null || selection != null || sortOrder != null) {
+                        throw new IllegalArgumentException();
+                    }
+                    return mDatabaseWrapper.rawQuery(uri.getLastPathSegment(), selectionArgs);
+                }
             }
             if (table == null) return null;
             final Cursor c = mDatabaseWrapper.query(table, projection, selection, selectionArgs, null, null, sortOrder);
@@ -1163,8 +1172,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (uri == null) return;
         switch (tableId) {
             case TABLE_ID_ACCOUNTS: {
-                Utils.clearAccountColor();
-                Utils.clearAccountName();
+                DataStoreUtils.clearAccountColor();
+                DataStoreUtils.clearAccountName();
                 break;
             }
         }

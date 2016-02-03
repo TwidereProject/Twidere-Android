@@ -249,6 +249,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mRecyclerView.setAdapter(mAdapter);
 
         mScrollListener = new ContentListScrollListener(this);
+        mRecyclerView.setOnTouchListener(mScrollListener.getOnTouchListener());
         mScrollListener.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());
     }
 

@@ -114,7 +114,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mariotaku.twidere.util.CompareUtils.classEquals;
-import static org.mariotaku.twidere.util.Utils.cleanDatabasesByItemLimit;
+import static org.mariotaku.twidere.util.DataStoreUtils.cleanDatabasesByItemLimit;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.getTabDisplayOptionInt;
 import static org.mariotaku.twidere.util.Utils.isDatabaseReady;

@@ -111,7 +111,7 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
         final StaggeredGridParcelableStatusesAdapter adapter = getAdapter();
         adapter.setData(data);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
-            adapter.setLoadMoreSupported(hasMoreData(data));
+            adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
         }
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);

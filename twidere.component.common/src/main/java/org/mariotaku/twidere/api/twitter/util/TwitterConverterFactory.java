@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.util;
 
+import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -66,15 +67,16 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         }
     }
 
-    private static <T> T parseOrThrow(HttpResponse resp, InputStream stream, Type type)
+    @NonNull
+    private static <T> T parseOrThrow(InputStream stream, Type type)
             throws IOException, TwitterException, RestConverter.ConvertException {
         try {
             final ParameterizedType<T> parameterizedType = ParameterizedTypeAccessor.create(type);
-            final T parse = LoganSquare.parse(stream, parameterizedType);
-            if (TwitterException.class == type && parse == null) {
-                throw new TwitterException();
+            final T parsed = LoganSquare.parse(stream, parameterizedType);
+            if (parsed == null) {
+                throw new TwitterException("Empty data");
             }
-            return parse;
+            return parsed;
         } catch (JsonParseException e) {
             throw new RestConverter.ConvertException("Malformed JSON Data");
         }
@@ -121,7 +123,7 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         public Object convert(HttpResponse httpResponse) throws IOException, ConvertException, TwitterException {
             final Body body = httpResponse.getBody();
             final InputStream stream = body.stream();
-            final Object object = parseOrThrow(httpResponse, stream, type);
+            final Object object = parseOrThrow(stream, type);
             checkResponse(type, object, httpResponse);
             if (object instanceof TwitterResponseObject) {
                 ((TwitterResponseObject) object).processResponseHeader(httpResponse);

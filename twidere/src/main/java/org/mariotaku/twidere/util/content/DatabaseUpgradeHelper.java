@@ -159,7 +159,7 @@ public final class DatabaseUpgradeHelper {
                 notNullCols[count++] = column.getName();
             }
         }
-        return TwidereArrayUtils.subArray(notNullCols, 0, count);
+        return ArrayUtils.subarray(notNullCols, 0, count);
     }
 
     private static Map<String, String> getTypeMapByCreateQuery(final String query) {

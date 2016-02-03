@@ -160,8 +160,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         final MessageEntriesAdapter adapter = getAdapter();
         adapter.setCursor(cursor);
         adapter.setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
-        adapter.setLoadMoreSupported(!isEmpty);
-        adapter.setLoadMoreSupported(hasMoreData(cursor));
+        adapter.setLoadMoreSupportedPosition(hasMoreData(cursor) ? IndicatorPosition.END : IndicatorPosition.NONE);
         final long[] accountIds = getAccountIds();
         adapter.setShowAccountsColor(accountIds.length > 1);
         setRefreshEnabled(true);
@@ -233,8 +232,9 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             @Override
             protected long[][] doInBackground(final Object... params) {
                 final long[][] result = new long[2][];
-                result[0] = DataStoreUtils.getActivatedAccountIds(getActivity());
-                result[1] = DataStoreUtils.getNewestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
+                result[0] = getAccountIds();
+                result[1] = DataStoreUtils.getNewestMessageIds(getActivity(),
+                        DirectMessages.Inbox.CONTENT_URI, result[0]);
                 return result;
             }
 
@@ -367,9 +367,11 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             @Override
             protected long[][] doInBackground(final Object... params) {
                 final long[][] result = new long[3][];
-                result[0] = DataStoreUtils.getActivatedAccountIds(getActivity());
-                result[1] = DataStoreUtils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Inbox.CONTENT_URI);
-                result[2] = DataStoreUtils.getOldestMessageIdsFromDatabase(getActivity(), DirectMessages.Outbox.CONTENT_URI);
+                result[0] = getAccountIds();
+                result[1] = DataStoreUtils.getOldestMessageIds(getActivity(),
+                        DirectMessages.Inbox.CONTENT_URI, result[0]);
+                result[2] = DataStoreUtils.getOldestMessageIds(getActivity(),
+                        DirectMessages.Outbox.CONTENT_URI, result[0]);
                 return result;
             }
 

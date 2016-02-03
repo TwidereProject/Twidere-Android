@@ -46,6 +46,7 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
@@ -282,7 +283,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         adapter.setData(data);
         setRefreshEnabled(true);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
-            adapter.setLoadMoreSupported(hasMoreData(data));
+            adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
             int pos = -1;
             for (int i = 0, j = adapter.getItemCount(); i < j; i++) {
                 if (lastReadId != -1 && lastReadId == adapter.getStatusId(i)) {

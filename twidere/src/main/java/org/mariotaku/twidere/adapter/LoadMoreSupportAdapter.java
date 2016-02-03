@@ -30,10 +30,10 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter;
 public abstract class LoadMoreSupportAdapter<VH extends ViewHolder> extends BaseRecyclerViewAdapter<VH>
         implements ILoadMoreSupportAdapter {
 
-    private boolean mLoadMoreSupported;
-    private
     @IndicatorPosition
-    int mLoadMoreIndicatorPosition;
+    private int mLoadMoreSupportedPosition;
+    @IndicatorPosition
+    private int mLoadMoreIndicatorPosition;
 
     public LoadMoreSupportAdapter(Context context) {
         super(context);
@@ -48,21 +48,20 @@ public abstract class LoadMoreSupportAdapter<VH extends ViewHolder> extends Base
     @Override
     public final void setLoadMoreIndicatorPosition(@IndicatorPosition int position) {
         if (mLoadMoreIndicatorPosition == position) return;
-        mLoadMoreIndicatorPosition = mLoadMoreSupported ? position : IndicatorPosition.NONE;
+        mLoadMoreIndicatorPosition = IndicatorPositionUtils.apply(position, mLoadMoreSupportedPosition);
         notifyDataSetChanged();
     }
 
     @Override
-    public final boolean isLoadMoreSupported() {
-        return mLoadMoreSupported;
+    @IndicatorPosition
+    public final int getLoadMoreSupportedPosition() {
+        return mLoadMoreSupportedPosition;
     }
 
     @Override
-    public final void setLoadMoreSupported(boolean supported) {
-        mLoadMoreSupported = supported;
-        if (!supported) {
-            mLoadMoreIndicatorPosition = IndicatorPosition.NONE;
-        }
+    public final void setLoadMoreSupportedPosition(@IndicatorPosition int supportedPosition) {
+        mLoadMoreSupportedPosition = supportedPosition;
+        mLoadMoreIndicatorPosition = IndicatorPositionUtils.apply(mLoadMoreIndicatorPosition, supportedPosition);
         notifyDataSetChanged();
     }
 

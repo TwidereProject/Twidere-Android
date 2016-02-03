@@ -647,7 +647,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mAccountsAdapter.setAccounts(accounts);
 
 
-        mMediaPreviewAdapter = new MediaPreviewAdapter(this, new PreviewGridOnStartDragListener(mItemTouchHelper));
+        mMediaPreviewAdapter = new MediaPreviewAdapter(this, new PreviewGridOnStartDragListener(this));
         mItemTouchHelper = new ItemTouchHelper(new AttachedMediaItemTouchHelperCallback(mMediaPreviewAdapter));
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -817,7 +817,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode,
+                                                int repeatCount, @NonNull KeyEvent event, int metaState) {
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
     }
 
@@ -1102,7 +1103,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     private void setMenu() {
         if (mMenuBar == null) return;
         final Menu menu = mMenuBar.getMenu();
-        final boolean hasMedia = hasMedia(), hasInReplyTo = mInReplyToStatus != null;
+        final boolean hasMedia = hasMedia();
 
         /*
          * No media & Not reply: [Take photo][Add image][Attach location][Drafts]
@@ -1199,7 +1200,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         if (provider != null) {
             mLocationText.setText(R.string.getting_location);
             mLocationListener = new ComposeLocationListener(this);
-//            mLocationManager.requestLocationUpdates(provider, 0, 0, mLocationListener);
+            mLocationManager.requestLocationUpdates(provider, 0, 0, mLocationListener);
             final Location location = Utils.getCachedLocation(this);
             if (location != null) {
                 mLocationListener.onLocationChanged(location);
@@ -1880,49 +1881,48 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     private static class PreviewGridItemDecoration extends ItemDecoration {
-        private final int mPreviewGridSpacing;
+        private final int previewGridSpacing;
 
         public PreviewGridItemDecoration(int previewGridSpacing) {
-            mPreviewGridSpacing = previewGridSpacing;
+            this.previewGridSpacing = previewGridSpacing;
         }
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
-            outRect.left = outRect.right = mPreviewGridSpacing;
+            outRect.left = outRect.right = previewGridSpacing;
         }
     }
 
     private static class PreviewGridOnStartDragListener implements SimpleItemTouchHelperCallback.OnStartDragListener {
-        private final WeakReference<ItemTouchHelper> helperRef;
+        @NonNull
+        private final ComposeActivity activity;
 
-        public PreviewGridOnStartDragListener(ItemTouchHelper helper) {
-            helperRef = new WeakReference<>(helper);
+        public PreviewGridOnStartDragListener(@NonNull ComposeActivity activity) {
+            this.activity = activity;
         }
 
         @Override
         public void onStartDrag(ViewHolder viewHolder) {
-            final ItemTouchHelper helper = helperRef.get();
+            final ItemTouchHelper helper = activity.mItemTouchHelper;
             if (helper == null) return;
             helper.startDrag(viewHolder);
         }
     }
 
     private static class ComposeEnterListener implements EnterListener {
-        private final WeakReference<ComposeActivity> activityRef;
+        private final ComposeActivity activity;
 
         public ComposeEnterListener(ComposeActivity activity) {
-            activityRef = new WeakReference<>(activity);
+            this.activity = activity;
         }
 
         @Override
         public boolean shouldCallListener() {
-            final ComposeActivity activity = activityRef.get();
             return activity != null && activity.mKeyMetaState == 0;
         }
 
         @Override
         public boolean onHitEnter() {
-            final ComposeActivity activity = activityRef.get();
             if (activity == null) return false;
             activity.confirmAndUpdateStatus();
             return true;

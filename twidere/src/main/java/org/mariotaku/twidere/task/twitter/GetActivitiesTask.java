@@ -49,10 +49,10 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
         final Context context = twitterWrapper.getContext();
         final ContentResolver cr = context.getContentResolver();
         final int loadItemLimit = twitterWrapper.getPreferences().getInt(KEY_LOAD_ITEM_LIMIT);
-        boolean getReadPosition = false;
+        boolean saveReadPosition = false;
         for (int i = 0; i < accountIds.length; i++) {
             final long accountId = accountIds[i];
-            final boolean noItemsBefore = DataStoreUtils.getActivityCountInDatabase(context,
+            final boolean noItemsBefore = DataStoreUtils.getActivitiesCount(context,
                     getContentUri(), accountId) <= 0;
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId,
                     true);
@@ -65,46 +65,16 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
                 paging.sinceId(sinceIds[i]);
                 if (maxIds == null || maxIds[i] <= 0) {
                     paging.setLatestResults(true);
-                    getReadPosition = true;
+                    saveReadPosition = true;
                 }
             }
             // We should delete old activities has intersection with new items
-            long[] deleteBound = new long[2];
-            Arrays.fill(deleteBound, -1);
             try {
-                List<ContentValues> valuesList = new ArrayList<>();
-                for (Activity activity : getActivities(accountId, twitter, paging)) {
-                    final ParcelableActivity parcelableActivity = new ParcelableActivity(activity, accountId, false);
-                    if (deleteBound[0] < 0) {
-                        deleteBound[0] = parcelableActivity.min_position;
-                    } else {
-                        deleteBound[0] = Math.min(deleteBound[0], parcelableActivity.min_position);
-                    }
-                    if (deleteBound[1] < 0) {
-                        deleteBound[1] = parcelableActivity.max_position;
-                    } else {
-                        deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_position);
-                    }
-                    final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity);
-                    values.put(Statuses.INSERTED_DATE, System.currentTimeMillis());
-                    valuesList.add(values);
-                }
-                if (deleteBound[0] > 0 && deleteBound[1] > 0) {
-                    Expression where = Expression.and(
-                            Expression.equals(Activities.ACCOUNT_ID, accountId),
-                            Expression.greaterEquals(Activities.MIN_POSITION, deleteBound[0]),
-                            Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
-                    );
-                    int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), null);
-                    boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
-                            && rowsDeleted <= 0;
-                    if (insertGap && !valuesList.isEmpty()) {
-                        valuesList.get(valuesList.size() - 1).put(Activities.IS_GAP, true);
-                    }
-                }
-                ContentResolverUtils.bulkInsert(cr, getContentUri(), valuesList);
-                if (getReadPosition) {
-                    getReadPosition(accountId, twitter);
+                final ResponseList<Activity> activities = getActivities(accountId, twitter, paging);
+                storeActivities(cr, loadItemLimit, accountId, noItemsBefore, activities);
+//                if (saveReadPosition && TwitterAPIFactory.isOfficialTwitterInstance(context, twitter)) {
+                if (saveReadPosition) {
+                    saveReadPosition(accountId, twitter);
                 }
             } catch (TwitterException e) {
 
@@ -113,7 +83,44 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
         return null;
     }
 
-    protected abstract void getReadPosition(long accountId, Twitter twitter);
+    private void storeActivities(ContentResolver cr, int loadItemLimit, long accountId,
+                                 boolean noItemsBefore, ResponseList<Activity> activities) {
+        long[] deleteBound = new long[2];
+        Arrays.fill(deleteBound, -1);
+        List<ContentValues> valuesList = new ArrayList<>();
+        for (Activity activity : activities) {
+            final ParcelableActivity parcelableActivity = new ParcelableActivity(activity, accountId, false);
+            if (deleteBound[0] < 0) {
+                deleteBound[0] = parcelableActivity.min_position;
+            } else {
+                deleteBound[0] = Math.min(deleteBound[0], parcelableActivity.min_position);
+            }
+            if (deleteBound[1] < 0) {
+                deleteBound[1] = parcelableActivity.max_position;
+            } else {
+                deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_position);
+            }
+            final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity);
+            values.put(Statuses.INSERTED_DATE, System.currentTimeMillis());
+            valuesList.add(values);
+        }
+        if (deleteBound[0] > 0 && deleteBound[1] > 0) {
+            Expression where = Expression.and(
+                    Expression.equals(Activities.ACCOUNT_ID, accountId),
+                    Expression.greaterEquals(Activities.MIN_POSITION, deleteBound[0]),
+                    Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
+            );
+            int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), null);
+            boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
+                    && rowsDeleted <= 0;
+            if (insertGap && !valuesList.isEmpty()) {
+                valuesList.get(valuesList.size() - 1).put(Activities.IS_GAP, true);
+            }
+        }
+        ContentResolverUtils.bulkInsert(cr, getContentUri(), valuesList);
+    }
+
+    protected abstract void saveReadPosition(long accountId, Twitter twitter);
 
     protected abstract ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException;
 

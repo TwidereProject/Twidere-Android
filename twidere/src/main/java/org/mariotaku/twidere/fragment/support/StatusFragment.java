@@ -87,7 +87,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
-import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
+import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
@@ -218,6 +218,23 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public void onLoadFinished(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
             mStatusAdapter.updateItemDecoration();
+            ConversationLoader conversationLoader = (ConversationLoader) loader;
+            int supportedPositions = 0;
+            if (data != null && !data.isEmpty()) {
+                if (conversationLoader.getSinceId() < data.get(data.size() - 1).id) {
+                    supportedPositions |= IndicatorPosition.END;
+                }
+                if (data.get(0).in_reply_to_status_id > 0) {
+                    supportedPositions |= IndicatorPosition.START;
+                }
+            } else {
+                supportedPositions |= IndicatorPosition.END;
+                final ParcelableStatus status = getStatus();
+                if (status != null && status.in_reply_to_status_id > 0) {
+                    supportedPositions |= IndicatorPosition.START;
+                }
+            }
+            mStatusAdapter.setLoadMoreSupportedPosition(supportedPositions);
             setConversation(data);
             final ParcelableCredentials account = mStatusAdapter.getStatusAccount();
             if (Utils.hasOfficialAPIAccess(loader.getContext(), mPreferences, account)) {
@@ -547,8 +564,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus status = data.getData();
             final Bundle dataExtra = data.getExtras();
             final ParcelableCredentials credentials = dataExtra.getParcelable(EXTRA_ACCOUNT);
-            mStatusAdapter.setLoadMoreSupported(true);
             if (mStatusAdapter.setStatus(status, credentials)) {
+                mStatusAdapter.setLoadMoreSupportedPosition(IndicatorPosition.BOTH);
                 mStatusAdapter.setData(null);
                 loadConversation(status, -1, -1);
                 loadActivity(status);
@@ -566,7 +583,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
             setState(STATE_LOADED);
         } else {
-            mStatusAdapter.setLoadMoreSupported(false);
+            mStatusAdapter.setLoadMoreSupportedPosition(IndicatorPosition.NONE);
             //TODO show errors
             setState(STATE_ERROR);
         }
@@ -1406,7 +1423,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
     }
 
-    private static class StatusAdapter extends BaseRecyclerViewAdapter<ViewHolder>
+    private static class StatusAdapter extends LoadMoreSupportAdapter<ViewHolder>
             implements IStatusesAdapter<List<ParcelableStatus>> {
 
         private static final int VIEW_TYPE_LIST_STATUS = 0;
@@ -1416,13 +1433,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private static final int VIEW_TYPE_REPLY_ERROR = 4;
         private static final int VIEW_TYPE_CONVERSATION_ERROR = 5;
         private static final int VIEW_TYPE_SPACE = 6;
-        private static final int ITEM_IDX_CONVERSATION_ERROR = 0;
-        private static final int ITEM_IDX_CONVERSATION_LOAD_MORE = 1;
+
+        private static final int ITEM_IDX_CONVERSATION_LOAD_MORE = 0;
+        private static final int ITEM_IDX_CONVERSATION_ERROR = 1;
         private static final int ITEM_IDX_CONVERSATION = 2;
         private static final int ITEM_IDX_STATUS = 3;
         private static final int ITEM_IDX_REPLY = 4;
-        private static final int ITEM_IDX_REPLY_LOAD_MORE = 5;
-        private static final int ITEM_IDX_REPLY_ERROR = 6;
+        private static final int ITEM_IDX_REPLY_ERROR = 5;
+        private static final int ITEM_IDX_REPLY_LOAD_MORE = 6;
         private static final int ITEM_IDX_SPACE = 7;
         private static final int ITEM_TYPES_SUM = 8;
 
@@ -1461,7 +1479,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         private List<ParcelableStatus> mData;
         private CharSequence mReplyError, mConversationError;
-        private boolean mRepliesLoading, mConversationsLoading;
         private int mReplyStart;
 
         public StatusAdapter(StatusFragment fragment, boolean compact) {
@@ -1546,7 +1563,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 case ITEM_IDX_REPLY: {
                     if (mData == null || mReplyStart < 0) return null;
                     return mData.get(position - getIndexStart(ITEM_IDX_CONVERSATION)
-                            - mItemCounts[ITEM_IDX_CONVERSATION] - mItemCounts[ITEM_IDX_STATUS]
+                            - getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS)
                             + mReplyStart);
                 }
                 case ITEM_IDX_STATUS: {
@@ -1585,7 +1602,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public int getStatusesCount() {
-            return mItemCounts[ITEM_IDX_CONVERSATION] + mItemCounts[ITEM_IDX_STATUS] + mItemCounts[ITEM_IDX_REPLY];
+            return getTypeCount(ITEM_IDX_CONVERSATION) + getTypeCount(ITEM_IDX_STATUS)
+                    + getTypeCount(ITEM_IDX_REPLY);
         }
 
         @Override
@@ -1619,8 +1637,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (status == null) return;
             mData = data;
             if (data == null || data.isEmpty()) {
-                setCount(ITEM_IDX_CONVERSATION, 0);
-                setCount(ITEM_IDX_REPLY, 0);
+                setTypeCount(ITEM_IDX_CONVERSATION, 0);
+                setTypeCount(ITEM_IDX_REPLY, 0);
                 mReplyStart = -1;
             } else {
                 int conversationCount = 0, replyCount = 0;
@@ -1637,8 +1655,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         replyCount++;
                     }
                 }
-                setCount(ITEM_IDX_CONVERSATION, conversationCount);
-                setCount(ITEM_IDX_REPLY, replyCount);
+                setTypeCount(ITEM_IDX_CONVERSATION, conversationCount);
+                setTypeCount(ITEM_IDX_REPLY, replyCount);
                 mReplyStart = replyStart;
             }
             notifyDataSetChanged();
@@ -1706,36 +1724,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return mEventListener;
         }
 
-
-        @Override
-        @IndicatorPosition
-        public int getLoadMoreIndicatorPosition() {
-            int position = 0;
-            if (mConversationsLoading) {
-                position |= IndicatorPosition.START;
-            }
-            if (mRepliesLoading) {
-                position |= IndicatorPosition.END;
-            }
-            return position;
-        }
-
-        @Override
-        public void setLoadMoreIndicatorPosition(@IndicatorPosition int position) {
-            setConversationsLoading((position & IndicatorPosition.START) != 0);
-            setRepliesLoading((position & IndicatorPosition.END) != 0);
-            updateItemDecoration();
-        }
-
-        @Override
-        public boolean isLoadMoreSupported() {
-            return true;
-        }
-
-        @Override
-        public void setLoadMoreSupported(boolean supported) {
-            // No-op
-        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -1819,12 +1807,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case VIEW_TYPE_CONVERSATION_LOAD_INDICATOR: {
                     LoadIndicatorViewHolder indicatorHolder = ((LoadIndicatorViewHolder) holder);
-                    indicatorHolder.setLoadProgressVisible(mConversationsLoading);
+                    indicatorHolder.setLoadProgressVisible(isConversationsLoading());
                     break;
                 }
                 case VIEW_TYPE_REPLIES_LOAD_INDICATOR: {
                     LoadIndicatorViewHolder indicatorHolder = ((LoadIndicatorViewHolder) holder);
-                    indicatorHolder.setLoadProgressVisible(mRepliesLoading);
+                    indicatorHolder.setLoadProgressVisible(isRepliesLoading());
                     break;
                 }
             }
@@ -1888,7 +1876,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private int getItemType(int position) {
             int typeStart = 0;
             for (int type = 0; type < ITEM_TYPES_SUM; type++) {
-                int typeCount = mItemCounts[type];
+                int typeCount = getTypeCount(type);
                 final int typeEnd = typeStart + typeCount;
                 if (position >= typeStart && position < typeEnd) return type;
                 typeStart = typeEnd;
@@ -1899,7 +1887,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private int getItemTypeStart(int position) {
             int typeStart = 0;
             for (int type = 0; type < ITEM_TYPES_SUM; type++) {
-                int typeCount = mItemCounts[type];
+                int typeCount = getTypeCount(type);
                 final int typeEnd = typeStart + typeCount;
                 if (position >= typeStart && position < typeEnd) return typeStart;
                 typeStart = typeEnd;
@@ -1932,9 +1920,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mRecyclerView = null;
         }
 
-        private void setCount(int idx, int size) {
+        private void setTypeCount(int idx, int size) {
             mItemCounts[idx] = size;
             notifyDataSetChanged();
+        }
+
+        public int getTypeCount(int idx) {
+            return mItemCounts[idx];
         }
 
         public void setEventListener(StatusAdapterListener listener) {
@@ -1943,13 +1935,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         public void setReplyError(CharSequence error) {
             mReplyError = error;
-            setCount(ITEM_IDX_REPLY_ERROR, error != null ? 1 : 0);
+            setTypeCount(ITEM_IDX_REPLY_ERROR, error != null ? 1 : 0);
             updateItemDecoration();
         }
 
         public void setConversationError(CharSequence error) {
             mConversationError = error;
-            setCount(ITEM_IDX_CONVERSATION_ERROR, error != null ? 1 : 0);
+            setTypeCount(ITEM_IDX_CONVERSATION_ERROR, error != null ? 1 : 0);
             updateItemDecoration();
         }
 
@@ -1967,7 +1959,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final DividerItemDecoration decoration = mFragment.getItemDecoration();
             decoration.setDecorationStart(0);
             // Is loading replies
-            if (mRepliesLoading) {
+            if (isRepliesLoading()) {
                 decoration.setDecorationEndOffset(2);
             } else {
                 decoration.setDecorationEndOffset(1);
@@ -1976,14 +1968,20 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         public void setRepliesLoading(boolean loading) {
-            mRepliesLoading = loading;
-            notifyItemChanged(getFirstPositionOfItem(ITEM_IDX_REPLY_LOAD_MORE));
+            if (loading) {
+                setLoadMoreIndicatorPosition(getLoadMoreIndicatorPosition() | IndicatorPosition.END);
+            } else {
+                setLoadMoreIndicatorPosition(getLoadMoreIndicatorPosition() & ~IndicatorPosition.END);
+            }
             updateItemDecoration();
         }
 
         public void setConversationsLoading(boolean loading) {
-            mConversationsLoading = loading;
-            notifyItemChanged(getFirstPositionOfItem(ITEM_IDX_CONVERSATION_LOAD_MORE));
+            if (loading) {
+                setLoadMoreIndicatorPosition(getLoadMoreIndicatorPosition() | IndicatorPosition.START);
+            } else {
+                setLoadMoreIndicatorPosition(getLoadMoreIndicatorPosition() & ~IndicatorPosition.START);
+            }
             updateItemDecoration();
         }
 
@@ -1991,7 +1989,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             int position = 0;
             for (int i = 0; i < ITEM_TYPES_SUM; i++) {
                 if (itemIdx == i) return position;
-                position += mItemCounts[i];
+                position += getTypeCount(i);
             }
             return RecyclerView.NO_POSITION;
         }
@@ -2008,6 +2006,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         public List<ParcelableStatus> getData() {
             return mData;
+        }
+
+        public boolean isConversationsLoading() {
+            return IndicatorPositionUtils.has(getLoadMoreIndicatorPosition(), IndicatorPosition.START);
+        }
+
+        public boolean isRepliesLoading() {
+            return IndicatorPositionUtils.has(getLoadMoreIndicatorPosition(), IndicatorPosition.END);
         }
 
         public static class StatusErrorItemViewHolder extends ViewHolder {
@@ -2029,6 +2035,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private static class StatusListLinearLayoutManager extends FixedLinearLayoutManager {
 
         private final RecyclerView recyclerView;
+        private int mSpaceHeight;
 
         public StatusListLinearLayoutManager(Context context, RecyclerView recyclerView) {
             super(context);
@@ -2054,7 +2061,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 if (heightBeforeSpace != 0) {
                     final int spaceHeight = recyclerView.getMeasuredHeight() - heightBeforeSpace;
-                    return Math.max(0, spaceHeight);
+                    return mSpaceHeight = Math.max(0, spaceHeight);
                 }
             }
             return super.getDecoratedMeasuredHeight(child);
@@ -2066,6 +2073,65 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 throw new IllegalArgumentException("Only VERTICAL orientation supported");
             super.setOrientation(orientation);
         }
+
+        @Override
+        public int computeVerticalScrollOffset(RecyclerView.State state) {
+            int offset = getScrollBarStartOffset();
+            final int firstVisiblePosition = findFirstVisibleItemPosition();
+            final View firstVisibleView = findViewByPosition(firstVisiblePosition);
+            final float decoratedTop = getDecoratedTop(firstVisibleView),
+                    decoratedBottom = getDecoratedBottom(firstVisibleView);
+            final float heightRatio = decoratedTop / (decoratedBottom - decoratedTop);
+            return Math.round((Math.max(0, firstVisiblePosition - offset) - heightRatio)
+                    * getAvgItemSize());
+        }
+
+        @Override
+        public int computeVerticalScrollExtent(RecyclerView.State state) {
+            return getAvgItemSize();
+        }
+
+        @Override
+        public int computeVerticalScrollRange(RecyclerView.State state) {
+            final int count = getScrollBarValidItemCount();
+            final int avgItemSize = getAvgItemSize();
+            return count * avgItemSize;
+        }
+
+        protected int getAvgItemSize() {
+            final int firstVisiblePosition = findFirstVisibleItemPosition();
+            final int lastVisiblePosition = findLastVisibleItemPosition();
+            final View firstVisibleView = findViewByPosition(firstVisiblePosition);
+            final View lastVisibleView = findViewByPosition(lastVisiblePosition);
+            return (lastVisibleView.getBottom() - firstVisibleView.getTop()) / (lastVisiblePosition - firstVisiblePosition);
+        }
+
+        protected int getScrollBarValidItemCount() {
+            final StatusAdapter adapter = (StatusAdapter) recyclerView.getAdapter();
+            int count = 0;
+            if (adapter.isConversationsLoading()) {
+                count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_CONVERSATION_LOAD_MORE);
+            }
+            count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_CONVERSATION_ERROR);
+            count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_CONVERSATION);
+            count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_STATUS);
+            count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_REPLY);
+            count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_REPLY_ERROR);
+            if (adapter.isRepliesLoading() && mSpaceHeight <= 0) {
+                count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_REPLY_LOAD_MORE);
+            }
+            return count;
+        }
+
+        protected int getScrollBarStartOffset() {
+            final StatusAdapter adapter = (StatusAdapter) recyclerView.getAdapter();
+            int offset = 0;
+            if (!adapter.isConversationsLoading()) {
+                offset = adapter.getTypeCount(StatusAdapter.ITEM_IDX_CONVERSATION_LOAD_MORE);
+            }
+            return offset;
+        }
+
 
     }
 
