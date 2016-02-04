@@ -11,15 +11,15 @@ import com.hannesdorfmann.parcelableplease.ParcelBagger;
 import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.Headers;
+import okhttp3.Response;
 
 /**
  * Created by mariotaku on 16/1/2.

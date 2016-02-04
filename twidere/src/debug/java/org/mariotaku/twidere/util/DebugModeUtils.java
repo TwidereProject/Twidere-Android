@@ -22,13 +22,10 @@ package org.mariotaku.twidere.util;
 import android.app.Application;
 
 import com.facebook.stetho.Stetho;
-import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
 
-import java.util.List;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by mariotaku on 15/5/27.
@@ -37,9 +34,7 @@ public class DebugModeUtils {
 
     private static RefWatcher sRefWatcher;
 
-    public static void initForHttpClient(final OkHttpClient client) {
-        final List<Interceptor> interceptors = client.networkInterceptors();
-        interceptors.add(new StethoInterceptor());
+    public static void initForHttpClient(final OkHttpClient.Builder client) {
     }
 
     public static void initForApplication(final Application application) {

@@ -35,8 +35,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
-import com.squareup.okhttp.Dns;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.okhttp.OkHttpRestClient;
@@ -57,6 +55,9 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
+
+import okhttp3.Dns;
+import okhttp3.OkHttpClient;
 
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
 import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
@@ -257,8 +258,10 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         DependencyHolder holder = DependencyHolder.get(this);
         final RestHttpClient client = holder.getRestHttpClient();
         if (client instanceof OkHttpRestClient) {
-            HttpClientFactory.initDefaultHttpClient(this, holder.getPreferences(),
-                    ((OkHttpRestClient) client).getClient(), holder.getDns());
+            final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            HttpClientFactory.initDefaultHttpClient(this, holder.getPreferences(), builder,
+                    holder.getDns());
+            ((OkHttpRestClient) client).setClient(builder.build());
         }
     }
 

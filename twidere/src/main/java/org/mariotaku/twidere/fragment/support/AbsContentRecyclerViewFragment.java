@@ -185,7 +185,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     @Override
     public void onLoadMoreContents(@IndicatorPosition int position) {
         setLoadMoreIndicatorPosition(position);
-        setRefreshEnabled(false);
+        setRefreshEnabled(position == IndicatorPosition.NONE);
     }
 
     public final RecyclerView getRecyclerView() {

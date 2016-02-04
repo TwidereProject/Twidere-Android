@@ -23,11 +23,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
@@ -40,6 +35,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import edu.tsinghua.hotmobi.model.UploadLogEvent;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Upload logs to target server

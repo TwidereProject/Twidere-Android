@@ -7,22 +7,25 @@ import android.net.SSLCertificateSocketFactory;
 import android.net.SSLSessionCache;
 import android.text.TextUtils;
 
-import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.Dns;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.inetaddrjni.library.InetAddressUtils;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.Authenticator;
+import okhttp3.Credentials;
+import okhttp3.Dns;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.Route;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -36,33 +39,31 @@ public class HttpClientFactory implements Constants {
     }
 
     public static RestHttpClient createHttpClient(final Context context, final SharedPreferences prefs, Dns dns) {
-        final OkHttpClient client = new OkHttpClient();
-        initDefaultHttpClient(context, prefs, client, dns);
-        return new OkHttpRestClient(client);
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        initDefaultHttpClient(context, prefs, builder, dns);
+        return new OkHttpRestClient(builder.build());
     }
 
-    public static void initDefaultHttpClient(Context context, SharedPreferences prefs, OkHttpClient client, Dns dns) {
-        updateHttpClientConfiguration(context, prefs, dns, client);
-        DebugModeUtils.initForHttpClient(client);
+    public static void initDefaultHttpClient(Context context, SharedPreferences prefs, OkHttpClient.Builder builder, Dns dns) {
+        updateHttpClientConfiguration(context, prefs, dns, builder);
+        DebugModeUtils.initForHttpClient(builder);
     }
 
     @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
     public static void updateHttpClientConfiguration(final Context context,
                                                      final SharedPreferences prefs,
-                                                     Dns dns, final OkHttpClient client) {
+                                                     Dns dns, final OkHttpClient.Builder builder) {
         final int connectionTimeoutSeconds = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
         final boolean ignoreSslError = prefs.getBoolean(KEY_IGNORE_SSL_ERROR, false);
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
 
-        client.setConnectTimeout(connectionTimeoutSeconds, TimeUnit.SECONDS);
+        builder.connectTimeout(connectionTimeoutSeconds, TimeUnit.SECONDS);
 
         if (ignoreSslError) {
             // We use insecure connections intentionally
-            client.setSslSocketFactory(SSLCertificateSocketFactory.getInsecure((int)
-                            TimeUnit.SECONDS.toMillis(connectionTimeoutSeconds),
+            final int sslConnectTimeout = ((int) TimeUnit.SECONDS.toMillis(connectionTimeoutSeconds));
+            builder.sslSocketFactory(SSLCertificateSocketFactory.getInsecure(sslConnectTimeout,
                     new SSLSessionCache(context)));
-        } else {
-            client.setSslSocketFactory(null);
         }
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
@@ -70,35 +71,33 @@ public class HttpClientFactory implements Constants {
             final int proxyPort = NumberUtils.toInt(prefs.getString(KEY_PROXY_PORT, null), -1);
             if (!isEmpty(proxyHost) && TwidereMathUtils.inRange(proxyPort, 0, 65535,
                     TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE)) {
-                client.setProxy(null);
-                client.setProxySelector(new TwidereProxySelector(context, getProxyType(proxyType),
-                        proxyHost, proxyPort));
+                final Proxy.Type type = getProxyType(proxyType);
+                if (InetAddressUtils.getInetAddressType(proxyHost) != 0) {
+//                    final InetAddress host = InetAddressUtils.getResolvedIPAddress(proxyHost, proxyHost);
+                    builder.proxy(new Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
+                } else {
+                    builder.proxySelector(new TwidereProxySelector(context, type, proxyHost, proxyPort));
+                }
             }
             final String username = prefs.getString(KEY_PROXY_USERNAME, null);
             final String password = prefs.getString(KEY_PROXY_PASSWORD, null);
-            client.setAuthenticator(new Authenticator() {
+            builder.authenticator(new Authenticator() {
                 @Override
-                public Request authenticate(Proxy proxy, Response response) throws IOException {
-                    return null;
-                }
-
-                @Override
-                public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
+                public Request authenticate(Route route, Response response) throws IOException {
                     final Request.Builder builder = response.request().newBuilder();
-                    if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-                        final String credential = Credentials.basic(username, password);
-                        builder.header("Proxy-Authorization", credential);
+                    if (response.code() == 407) {
+                        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+                            final String credential = Credentials.basic(username, password);
+                            builder.header("Proxy-Authorization", credential);
+                        }
                     }
                     return builder.build();
                 }
+
             });
-        } else {
-            client.setProxy(null);
-            client.setProxySelector(null);
-            client.setAuthenticator(null);
         }
         if (dns != null) {
-            client.setDns(dns);
+            builder.dns(dns);
         }
     }
 

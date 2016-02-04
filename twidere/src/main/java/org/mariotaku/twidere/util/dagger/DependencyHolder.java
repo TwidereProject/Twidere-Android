@@ -21,8 +21,6 @@ package org.mariotaku.twidere.util.dagger;
 
 import android.content.Context;
 
-import com.squareup.okhttp.Dns;
-
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.ExternalThemeManager;
@@ -33,6 +31,7 @@ import org.mariotaku.twidere.util.TwidereValidator;
 import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
+import okhttp3.Dns;
 
 /**
  * Created by mariotaku on 15/12/31.

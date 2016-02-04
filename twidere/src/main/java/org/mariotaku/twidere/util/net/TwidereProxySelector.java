@@ -23,8 +23,7 @@ import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 
-import com.squareup.okhttp.Dns;
-
+import org.mariotaku.inetaddrjni.library.InetAddressUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -39,6 +38,8 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import okhttp3.Dns;
 
 /**
  * Created by mariotaku on 15/12/31.
@@ -61,13 +62,19 @@ public class TwidereProxySelector extends ProxySelector {
     @Override
     public List<Proxy> select(URI uri) {
         if (proxy != null) return proxy;
-        final InetSocketAddress unresolved;
+        final InetSocketAddress address;
         if (Looper.myLooper() != Looper.getMainLooper()) {
-            unresolved = createResolved(host, port);
+            address = createResolved(host, port);
         } else {
-            unresolved = InetSocketAddress.createUnresolved(host, port);
+            // If proxy host is an IP address, create unresolved directly.
+            if (InetAddressUtils.getInetAddressType(host) != 0) {
+                address = new InetSocketAddress(InetAddressUtils.getResolvedIPAddress(host, host),
+                        port);
+            } else {
+                address = new InetSocketAddress(host, port);
+            }
         }
-        return proxy = Collections.singletonList(new Proxy(type, unresolved));
+        return proxy = Collections.singletonList(new Proxy(type, address));
     }
 
     private InetSocketAddress createResolved(String host, int port) {

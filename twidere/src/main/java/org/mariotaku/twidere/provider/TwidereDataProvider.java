@@ -60,7 +60,6 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.okhttp.Dns;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -148,6 +147,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import okhttp3.Dns;
+
 public final class TwidereDataProvider extends ContentProvider implements Constants, OnSharedPreferenceChangeListener,
         LazyLoadCallback {
 
@@ -164,7 +165,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     @Inject
     SharedPreferencesWrapper mPreferences;
     @Inject
-    Dns mNetwork;
+    Dns mDns;
     @Inject
     Bus mBus;
     @Inject
@@ -1092,7 +1093,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private Cursor getDNSCursor(final String host) {
         final MatrixCursor c = new MatrixCursor(DNS.MATRIX_COLUMNS);
         try {
-            final List<InetAddress> addresses = mNetwork.lookup(host);
+            final List<InetAddress> addresses = mDns.lookup(host);
             for (InetAddress address : addresses) {
                 c.addRow(new String[]{host, address.getHostAddress()});
             }

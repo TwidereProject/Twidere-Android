@@ -952,7 +952,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 return SingleResponse.getInstance(status);
             } catch (final TwitterException e) {
-                Log.w(LOGTAG, e);
+                if (BuildConfig.DEBUG) {
+                    Log.w(LOGTAG, e);
+                }
                 return SingleResponse.getInstance(e);
             }
         }
