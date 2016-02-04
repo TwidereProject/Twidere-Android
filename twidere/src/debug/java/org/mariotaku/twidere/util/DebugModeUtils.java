@@ -42,7 +42,6 @@ public class DebugModeUtils {
                 .enableDumpapp(Stetho.defaultDumperPluginsProvider(application))
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
                 .build());
-        // LeakCanary not working on Android Marshmallow, see https://github.com/square/leakcanary/issues/267
         sRefWatcher = LeakCanary.install(application);
     }
 
