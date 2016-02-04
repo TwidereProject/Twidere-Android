@@ -351,4 +351,8 @@ public class TwitterContentUtils {
         else
             return "ipad_retina";
     }
+
+    public static long getOriginalId(@NonNull ParcelableStatus status) {
+        return status.is_retweet ? status.retweet_id : status.id;
+    }
 }
