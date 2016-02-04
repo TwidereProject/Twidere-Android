@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -63,6 +64,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.sprylab.android.widget.TextureVideoView;
 
@@ -242,7 +244,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             }
             case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER: {
                 final Bundle args = new Bundle();
-                args.putString(EXTRA_URL, TextUtils.isEmpty(media.media_url) ? media.url : media.media_url);
+                args.putParcelable(EXTRA_MEDIA, media);
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         ExternalBrowserPageFragment.class.getName(), args);
             }
@@ -320,7 +322,11 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             }
             case R.id.open_in_browser: {
                 final ParcelableMedia media = getMedia()[currentItem];
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(media.media_url)));
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(media.url)));
+                } catch (ActivityNotFoundException e) {
+                    // TODO show error, or improve app url
+                }
                 return true;
             }
         }
@@ -1117,6 +1123,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
 
     public static class ExternalBrowserPageFragment extends MediaViewerFragment {
         private WebView mWebView;
+        private AspectLockedFrameLayout mWebViewContainer;
 
         @Override
         protected View onCreateMediaView(LayoutInflater inflater, ViewGroup parent,
@@ -1131,12 +1138,26 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             final WebSettings webSettings = mWebView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setLoadsImagesAutomatically(true);
-            mWebView.loadUrl(getArguments().getString(EXTRA_URL));
+            final ParcelableMedia media = getArguments().getParcelable(EXTRA_MEDIA);
+            if (media == null) throw new NullPointerException();
+            mWebView.loadUrl(TextUtils.isEmpty(media.media_url) ? media.url : media.media_url);
+            mWebViewContainer.setAspectRatioSource(new AspectLockedFrameLayout.AspectRatioSource() {
+                @Override
+                public int getWidth() {
+                    return media.width;
+                }
+
+                @Override
+                public int getHeight() {
+                    return media.height;
+                }
+            });
         }
 
         @Override
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+            mWebViewContainer = ((AspectLockedFrameLayout) view.findViewById(R.id.webview_container));
             mWebView = (WebView) view.findViewById(R.id.webview);
         }
 
