@@ -390,6 +390,14 @@ public class ParcelableMedia implements Parcelable {
         return false;
     }
 
+    public static ParcelableMedia findByUrl(@Nullable ParcelableMedia[] media, @Nullable String url) {
+        if (media == null || url == null) return null;
+        for (ParcelableMedia item : media) {
+            if (url.equals(item.url)) return item;
+        }
+        return null;
+    }
+
     @IntDef({Type.TYPE_UNKNOWN, Type.TYPE_IMAGE, Type.TYPE_VIDEO, Type.TYPE_ANIMATED_GIF,
             Type.TYPE_CARD_ANIMATED_GIF, Type.TYPE_EXTERNAL_PLAYER, Type.TYPE_VARIABLE_TYPE})
     @Retention(RetentionPolicy.SOURCE)

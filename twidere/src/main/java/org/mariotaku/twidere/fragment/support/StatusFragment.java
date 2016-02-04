@@ -1392,24 +1392,26 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             @Override
             public void onLinkClick(String link, String orig, long accountId, long extraId, int type, boolean sensitive, int start, int end) {
                 final ParcelableStatus status = adapter.getStatus();
-                if (status.media != null) {
-                    for (final ParcelableMedia media : status.media) {
-                        if (link.equals(media.url)) {
-                            expandOrOpenMedia();
-                            return;
-                        }
-                    }
+                ParcelableMedia current = null;
+                if ((current = ParcelableMedia.findByUrl(status.media, link)) != null) {
+                    expandOrOpenMedia(current);
+                    return;
+                }
+                if ((current = ParcelableMedia.findByUrl(status.quoted_media, link)) != null) {
+                    expandOrOpenMedia(current);
+                    return;
                 }
                 if (type == TwidereLinkify.LINK_TYPE_STATUS && status.id == NumberUtils.toLong(link)) {
-                    expandOrOpenMedia();
+                    expandOrOpenMedia(current);
                     return;
                 }
                 super.onLinkClick(link, orig, accountId, extraId, type, sensitive, start, end);
             }
 
-            private void expandOrOpenMedia() {
+            private void expandOrOpenMedia(ParcelableMedia current) {
                 if (adapter.isDetailMediaExpanded()) {
                     //TODO open first media
+                    Utils.openMedia(adapter.getContext(), adapter.getStatus(), current, null);
                     return;
                 }
                 adapter.setDetailMediaExpanded(true);
