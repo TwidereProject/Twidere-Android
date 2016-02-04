@@ -109,7 +109,7 @@ public class UserListsFragment extends ParcelableUserListsFragment {
     }
 
     @Subscribe
-    void onUserListDestroyed(UserListDestroyedEvent event) {
+    public void onUserListDestroyed(UserListDestroyedEvent event) {
         removeUserList(event.userList.id);
     }
 

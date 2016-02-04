@@ -196,7 +196,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
     }
 
     @Subscribe
-    void onUserListCreated(UserListCreatedEvent event) {
+    public void onUserListCreated(UserListCreatedEvent event) {
         getUserLists(mScreenName);
     }
 
