@@ -36,7 +36,7 @@ import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
-import org.mariotaku.twidere.fragment.BaseFiltersFragment;
+import org.mariotaku.twidere.fragment.support.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;

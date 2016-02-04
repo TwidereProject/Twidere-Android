@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,14 +33,13 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
-import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredKeywordsFragment;
-import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredLinksFragment;
-import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredSourcesFragment;
-import org.mariotaku.twidere.fragment.BaseFiltersFragment.FilteredUsersFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
-import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
+import org.mariotaku.twidere.fragment.support.BaseFiltersFragment.FilteredKeywordsFragment;
+import org.mariotaku.twidere.fragment.support.BaseFiltersFragment.FilteredLinksFragment;
+import org.mariotaku.twidere.fragment.support.BaseFiltersFragment.FilteredSourcesFragment;
+import org.mariotaku.twidere.fragment.support.BaseFiltersFragment.FilteredUsersFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
@@ -94,6 +94,14 @@ public class FiltersFragment extends BaseSupportFragment implements RefreshScrol
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
         mPagerOverlay = view.findViewById(R.id.pager_window_overlay);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        final Object o = mPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
+        if (o instanceof Fragment) {
+            ((Fragment) o).onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
