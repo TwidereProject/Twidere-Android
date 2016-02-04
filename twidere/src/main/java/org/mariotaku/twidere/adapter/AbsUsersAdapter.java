@@ -46,6 +46,7 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     private final int mProfileImageStyle;
     private final int mTextSize;
     private final boolean mDisplayProfileImage;
+    private final boolean mShowAbsoluteTime;
 
     public AbsUsersAdapter(final Context context, final boolean compact) {
         super(context);
@@ -53,7 +54,8 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
         mInflater = LayoutInflater.from(context);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-        mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE);
+        mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);
         mCompactCards = compact;
     }
 
@@ -76,6 +78,11 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     public boolean isUser(int position) {
         return position < getUsersCount();
+    }
+
+    @Override
+    public boolean isShowAbsoluteTime() {
+        return mShowAbsoluteTime;
     }
 
     @Override
@@ -119,7 +126,8 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     public int getItemViewType(int position) {
         if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
-        } if (position == getUsersCount()) {
+        }
+        if (position == getUsersCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
         return ITEM_VIEW_TYPE_USER;

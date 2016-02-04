@@ -50,9 +50,10 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
     private final int mTextSize;
     private final int mProfileImageStyle;
     private final int mMediaPreviewStyle;
-    private final OnSharedPreferenceChangeListener mReadStateChangeListener;
-
     private final boolean mDisplayProfileImage;
+    private final boolean mShowAbsoluteTime;
+
+    private final OnSharedPreferenceChangeListener mReadStateChangeListener;
     private boolean mShowAccountsColor;
     private Cursor mCursor;
     private MessageEntriesAdapterListener mListener;
@@ -65,6 +66,7 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
+        mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME, false);
         mReadStateChangeListener = new OnSharedPreferenceChangeListener() {
 
             @Override
@@ -82,6 +84,11 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
     @Override
     public float getTextSize() {
         return mTextSize;
+    }
+
+    @Override
+    public boolean isShowAbsoluteTime() {
+        return mShowAbsoluteTime;
     }
 
     @Override
@@ -145,7 +152,8 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
     public int getItemViewType(int position) {
         if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
-        } if (position == getMessagesCount()) {
+        }
+        if (position == getMessagesCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
         return ITEM_VIEW_TYPE_MESSAGE;

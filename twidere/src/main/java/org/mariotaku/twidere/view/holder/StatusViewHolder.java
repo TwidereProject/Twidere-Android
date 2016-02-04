@@ -397,6 +397,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(favoriteCountView,
                     R.drawable.ic_action_star, 0, 0, 0);
         }
+        timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime());
     }
 
     void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location, String placeFullName, boolean sensitive) {

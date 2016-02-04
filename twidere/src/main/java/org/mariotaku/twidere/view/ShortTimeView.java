@@ -20,8 +20,6 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.format.DateUtils;
@@ -36,12 +34,11 @@ import java.lang.ref.WeakReference;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.mariotaku.twidere.util.Utils.formatSameDayTime;
 
-public class ShortTimeView extends ThemedTextView implements Constants, OnSharedPreferenceChangeListener {
+public class ShortTimeView extends ThemedTextView implements Constants {
 
     private static final long TICKER_DURATION = 5000L;
 
     private final Runnable mTicker;
-    private final SharedPreferences mPreferences;
     private boolean mShowAbsoluteTime;
     private long mTime;
 
@@ -56,23 +53,11 @@ public class ShortTimeView extends ThemedTextView implements Constants, OnShared
     public ShortTimeView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         mTicker = new TickerRunnable(this);
-        if (!isInEditMode()) {
-            mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        } else {
-            mPreferences = null;
-        }
-        if (mPreferences != null) {
-            mPreferences.registerOnSharedPreferenceChangeListener(this);
-        }
-        updateTimeDisplayOption();
     }
 
-    @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        if (KEY_SHOW_ABSOLUTE_TIME.equals(key)) {
-            updateTimeDisplayOption();
-            invalidateTime();
-        }
+    public void setShowAbsoluteTime(boolean showAbsoluteTime) {
+        mShowAbsoluteTime = showAbsoluteTime;
+        invalidateTime();
     }
 
     public void setTime(final long time) {
@@ -104,11 +89,6 @@ public class ShortTimeView extends ThemedTextView implements Constants, OnShared
                 setText(R.string.just_now);
             }
         }
-    }
-
-    private void updateTimeDisplayOption() {
-        if (mPreferences == null) return;
-        mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME, false);
     }
 
     private static class TickerRunnable implements Runnable {

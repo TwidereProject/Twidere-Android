@@ -47,7 +47,7 @@ public class UploadLogsPreferences extends Preference {
     protected void onClick() {
         final Context context = getContext();
         final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
-        prefs.edit().remove(HotMobiLogger.LAST_UPLOAD_TIME).apply();
+        prefs.edit().remove(HotMobiConstants.KEY_LAST_UPLOAD_TIME).apply();
         AsyncTask.execute(new UploadLogsTask(context.getApplicationContext()));
     }
 }

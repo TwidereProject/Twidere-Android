@@ -119,9 +119,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private final ReadStateManager mReadStateManager;
     private final ErrorInfoStore mErrorInfoStore;
 
-    private int mGetReceivedDirectMessagesTaskId, mGetSentDirectMessagesTaskId;
-    private int mGetLocalTrendsTaskId;
-
     private LongSparseMap<Long> mCreatingFavoriteIds = new LongSparseMap<>();
     private LongSparseMap<Long> mDestroyingFavoriteIds = new LongSparseMap<>();
     private LongSparseMap<Long> mCreatingRetweetIds = new LongSparseMap<>();
@@ -292,15 +289,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int getLocalTrendsAsync(final long accountId, final int woeid) {
-        mAsyncTaskManager.cancel(mGetLocalTrendsTaskId);
         final GetLocalTrendsTask task = new GetLocalTrendsTask(accountId, woeid);
-        return mGetLocalTrendsTaskId = mAsyncTaskManager.add(task, true);
+        return mAsyncTaskManager.add(task, true);
     }
 
     public int getReceivedDirectMessagesAsync(final long[] accountIds, final long[] max_ids, final long[] since_ids) {
-        mAsyncTaskManager.cancel(mGetReceivedDirectMessagesTaskId);
         final GetReceivedDirectMessagesTask task = new GetReceivedDirectMessagesTask(accountIds, max_ids, since_ids);
-        return mGetReceivedDirectMessagesTaskId = mAsyncTaskManager.add(task, true);
+        return mAsyncTaskManager.add(task, true);
     }
 
     public int getSavedSearchesAsync(long[] accountIds) {
@@ -318,9 +313,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int getSentDirectMessagesAsync(final long[] accountIds, final long[] max_ids, final long[] since_ids) {
-        mAsyncTaskManager.cancel(mGetSentDirectMessagesTaskId);
         final GetSentDirectMessagesTask task = new GetSentDirectMessagesTask(accountIds, max_ids, since_ids);
-        return mGetSentDirectMessagesTaskId = mAsyncTaskManager.add(task, true);
+        return mAsyncTaskManager.add(task, true);
     }
 
     public AsyncTaskManager getTaskManager() {
@@ -2123,7 +2117,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected void onPostExecute(final List<MessageListResponse> responses) {
             super.onPostExecute(responses);
 //            mAsyncTaskManager.add(new StoreReceivedDirectMessagesTask(responses, !isMaxIdsValid()), true);
-            mGetReceivedDirectMessagesTaskId = -1;
         }
 
         @Override
@@ -2161,7 +2154,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected void onPostExecute(final List<MessageListResponse> responses) {
             super.onPostExecute(responses);
 //            mAsyncTaskManager.add(new StoreSentDirectMessagesTask(responses, !isMaxIdsValid()), true);
-            mGetSentDirectMessagesTaskId = -1;
         }
 
     }

@@ -25,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Created by mariotaku on 16/1/22.
  */
-public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object> {
+public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>, SharedPreferenceConstants {
 
     private final Context context;
     private final SharedPreferencesWrapper preferences;
@@ -51,6 +51,7 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object> 
     private boolean displayMediaPreview;
     private boolean shouldShowAccountsColor;
     private boolean useStarsForLikes;
+    private boolean showAbsoluteTime;
 
     public DummyStatusHolderAdapter(Context context) {
         this(context, new TwidereLinkify(null));
@@ -248,20 +249,30 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object> 
     }
 
     @Override
+    public boolean isShowAbsoluteTime() {
+        return showAbsoluteTime;
+    }
+
+    public void setShowAbsoluteTime(boolean showAbsoluteTime) {
+        this.showAbsoluteTime = showAbsoluteTime;
+    }
+
+    @Override
     public boolean isProfileImageEnabled() {
         return displayProfileImage;
     }
 
     public void updateOptions() {
-        profileImageStyle = Utils.getProfileImageStyle(preferences.getString(SharedPreferenceConstants.KEY_PROFILE_IMAGE_STYLE, null));
-        mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(SharedPreferenceConstants.KEY_MEDIA_PREVIEW_STYLE, null));
-        textSize = preferences.getInt(SharedPreferenceConstants.KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        nameFirst = preferences.getBoolean(SharedPreferenceConstants.KEY_NAME_FIRST, true);
-        displayProfileImage = preferences.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_PROFILE_IMAGE, true);
-        displayMediaPreview = preferences.getBoolean(SharedPreferenceConstants.KEY_MEDIA_PREVIEW, false);
-        sensitiveContentEnabled = preferences.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS, false);
-        hideCardActions = preferences.getBoolean(SharedPreferenceConstants.KEY_HIDE_CARD_ACTIONS, false);
-        linkHighlightStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(SharedPreferenceConstants.KEY_LINK_HIGHLIGHT_OPTION, null));
-        useStarsForLikes = preferences.getBoolean(SharedPreferenceConstants.KEY_I_WANT_MY_STARS_BACK);
+        profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+        mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        textSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
+        nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
+        displayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+        sensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
+        hideCardActions = preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
+        linkHighlightStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
+        useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
+        showAbsoluteTime = preferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);
     }
 }

@@ -53,6 +53,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     final boolean mSensitiveContentEnabled;
     final boolean mHideCardActions;
     final boolean mUseStarsForLikes;
+    final boolean mShowAbsoluteTime;
     final EventListener mEventListener;
     @Nullable
     StatusAdapterListener mStatusAdapterListener;
@@ -76,6 +77,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         mSensitiveContentEnabled = mPreferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
         mHideCardActions = mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
         mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
+        mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME, false);
         mLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this));
         setShowInReplyTo(true);
     }
@@ -221,10 +223,16 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     }
 
     @Override
+    public boolean isShowAbsoluteTime() {
+        return mShowAbsoluteTime;
+    }
+
+    @Override
     public int getItemViewType(int position) {
         if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
-        } if (position == getStatusesCount()) {
+        }
+        if (position == getStatusesCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP;

@@ -39,6 +39,7 @@ import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
+import org.mariotaku.twidere.view.ShortTimeView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 /**
@@ -52,6 +53,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     private final ActionIconView activityTypeView;
     private final TextView titleView;
     private final TextView summaryView;
+    private final ShortTimeView timeView;
     private final ViewGroup profileImagesContainer;
     private final BadgeView profileImageMoreNumber;
     private final ImageView[] profileImageViews;
@@ -64,19 +66,10 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
         this.adapter = adapter;
 
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
-
         activityTypeView = (ActionIconView) itemView.findViewById(R.id.activity_type);
         titleView = (TextView) itemView.findViewById(R.id.title);
-
-        if (isCompact) {
-            final Resources resources = adapter.getContext().getResources();
-            final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) titleView.getLayoutParams();
-            final int spacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
-            lp.leftMargin = spacing;
-            MarginLayoutParamsCompat.setMarginStart(lp, spacing);
-        }
-
         summaryView = (TextView) itemView.findViewById(R.id.summary);
+        timeView = (ShortTimeView) itemView.findViewById(R.id.time);
         profileImageSpace = itemView.findViewById(R.id.profile_image_space);
 
         profileImagesContainer = (ViewGroup) itemView.findViewById(R.id.profile_images_container);
@@ -87,6 +80,15 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
         profileImageViews[3] = (ImageView) itemView.findViewById(R.id.activity_profile_image_3);
         profileImageViews[4] = (ImageView) itemView.findViewById(R.id.activity_profile_image_4);
         profileImageMoreNumber = (BadgeView) itemView.findViewById(R.id.activity_profile_image_more_number);
+
+        if (isCompact) {
+            final Resources resources = adapter.getContext().getResources();
+            final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) titleView.getLayoutParams();
+            final int spacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
+            lp.leftMargin = spacing;
+            MarginLayoutParamsCompat.setMarginStart(lp, spacing);
+        }
+        timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime());
     }
 
     public void displayActivity(ParcelableActivity activity, boolean byFriends) {
@@ -104,6 +106,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
         titleView.setText(message.getTitle());
         summaryView.setText(message.getSummary());
         summaryView.setVisibility(summaryView.length() > 0 ? View.VISIBLE : View.GONE);
+        timeView.setTime(activity.timestamp);
         displayUserProfileImages(sources);
     }
 
@@ -114,6 +117,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     public void setTextSize(float textSize) {
         titleView.setTextSize(textSize);
         summaryView.setTextSize(textSize * 0.85f);
+        timeView.setTextSize(textSize * 0.80f);
     }
 
     private void displayUserProfileImages(final ParcelableUser[] statuses) {

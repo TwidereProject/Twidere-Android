@@ -60,8 +60,8 @@ public class UploadLogsTask implements Runnable {
 
         final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
 
-        if (prefs.contains(HotMobiLogger.LAST_UPLOAD_TIME)) {
-            final long lastUpload = prefs.getLong(HotMobiLogger.LAST_UPLOAD_TIME, System.currentTimeMillis());
+        if (prefs.contains(HotMobiConstants.KEY_LAST_UPLOAD_TIME)) {
+            final long lastUpload = prefs.getLong(HotMobiConstants.KEY_LAST_UPLOAD_TIME, System.currentTimeMillis());
             final double deltaDays = (System.currentTimeMillis() - lastUpload) /
                     (double) HotMobiLogger.UPLOAD_INTERVAL_MILLIS;
             if (deltaDays < 1) {
@@ -71,7 +71,7 @@ public class UploadLogsTask implements Runnable {
         }
 
         if (uploadLogs()) {
-            prefs.edit().putLong(HotMobiLogger.LAST_UPLOAD_TIME, System.currentTimeMillis()).apply();
+            prefs.edit().putLong(HotMobiConstants.KEY_LAST_UPLOAD_TIME, System.currentTimeMillis()).apply();
         }
     }
 

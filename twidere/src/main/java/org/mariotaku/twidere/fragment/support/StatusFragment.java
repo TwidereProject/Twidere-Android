@@ -1469,6 +1469,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final boolean mSensitiveContentEnabled;
         private final boolean mHideCardActions;
         private final boolean mUseStarsForLikes;
+        private final boolean mShowAbsoluteTime;
         private final AbsStatusesAdapter.EventListener mEventListener;
         private boolean mDetailMediaExpanded;
 
@@ -1507,6 +1508,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mSensitiveContentEnabled = mPreferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
             mHideCardActions = mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
             mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
+            mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);
             if (compact) {
                 mCardLayoutResource = R.layout.card_item_status_compact;
             } else {
@@ -1629,6 +1631,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public boolean isSensitiveContentEnabled() {
             return mSensitiveContentEnabled;
+        }
+
+        @Override
+        public boolean isShowAbsoluteTime() {
+            return mShowAbsoluteTime;
         }
 
         @Override
@@ -2101,8 +2108,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         protected int getAvgItemSize() {
             final int firstVisiblePosition = findFirstVisibleItemPosition();
             final int lastVisiblePosition = findLastVisibleItemPosition();
+            if (firstVisiblePosition == RecyclerView.NO_POSITION || lastVisiblePosition == RecyclerView.NO_POSITION) {
+                return 1;
+            }
             final View firstVisibleView = findViewByPosition(firstVisiblePosition);
             final View lastVisibleView = findViewByPosition(lastVisiblePosition);
+            if (firstVisiblePosition == lastVisiblePosition) {
+                return firstVisibleView.getHeight();
+            }
             return (lastVisibleView.getBottom() - firstVisibleView.getTop()) / (lastVisiblePosition - firstVisiblePosition);
         }
 

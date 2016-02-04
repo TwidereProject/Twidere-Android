@@ -157,6 +157,10 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         return mStatusAdapterDelegate.isProfileImageEnabled();
     }
 
+    @Override
+    public boolean isShowAbsoluteTime() {
+        return mStatusAdapterDelegate.isShowAbsoluteTime();
+    }
 
     @Override
     public boolean shouldUseStarsForLikes() {

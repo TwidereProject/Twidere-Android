@@ -46,6 +46,7 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
     private final int mProfileImageStyle;
     private final int mTextSize;
     private final boolean mDisplayProfileImage;
+    private final boolean mShowAbsoluteTime;
 
     private final boolean mNameFirst;
 
@@ -57,6 +58,7 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST, true);
+        mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME, false);
         mCompactCards = compact;
     }
 
@@ -85,6 +87,11 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
 
     public boolean isUserList(int position) {
         return position < getUserListsCount();
+    }
+
+    @Override
+    public boolean isShowAbsoluteTime() {
+        return mShowAbsoluteTime;
     }
 
     @Override

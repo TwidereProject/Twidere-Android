@@ -56,4 +56,6 @@ public interface IContentCardAdapter extends ILoadMoreSupportAdapter {
 
     @NonNull
     BidiFormatter getBidiFormatter();
+
+    boolean isShowAbsoluteTime();
 }
