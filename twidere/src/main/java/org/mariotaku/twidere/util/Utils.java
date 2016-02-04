@@ -197,7 +197,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
-import org.mariotaku.twidere.provider.TwidereDataStore.Filters.Users;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
@@ -3149,17 +3148,4 @@ public final class Utils implements Constants {
         return location;
     }
 
-    public static final String[] fileSizeUnits = {"bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
-
-    public static String calculateProperSize(double bytes) {
-        double value = bytes;
-        int index;
-        for (index = 0; index < fileSizeUnits.length; index++) {
-            if (value < 1024) {
-                break;
-            }
-            value = value / 1024;
-        }
-        return String.format("%.2f %s", value, fileSizeUnits[index]);
-    }
 }

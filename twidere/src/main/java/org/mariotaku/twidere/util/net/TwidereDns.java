@@ -195,14 +195,13 @@ public class TwidereDns implements Constants, Dns {
     private InetAddress[] fromResolver(String originalHost, String host, int depth) throws IOException {
         final Resolver dns = getResolver();
         final Lookup lookup = new Lookup(new Name(host), Type.A, DClass.IN);
-        final Record[] records;
         lookup.setResolver(dns);
         lookup.run();
         final int result = lookup.getResult();
         if (result != Lookup.SUCCESSFUL) {
             throw new UnknownHostException("Unable to resolve " + host + ", " + lookup.getErrorString());
         }
-        records = lookup.getAnswers();
+        final Record[] records = lookup.getAnswers();
         final ArrayList<InetAddress> resolvedAddresses = new ArrayList<>();
         // Test each IP address resolved.
         long ttl = -1;
