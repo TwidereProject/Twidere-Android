@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-
 import org.attoparser.AttoParseException;
 import org.attoparser.IAttoHandler;
 import org.attoparser.IAttoParser;
@@ -38,19 +37,18 @@ import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.MultiValueMap;
-import org.mariotaku.restfu.http.mime.SimpleBody;
 import org.mariotaku.restfu.http.mime.FormBody;
+import org.mariotaku.restfu.http.mime.SimpleBody;
 import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.model.RequestType;
-import org.mariotaku.twidere.util.net.JavaNetCookieJar;
+import org.mariotaku.twidere.util.net.SimpleCookieJar;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.CookieManager;
 import java.net.URI;
 import java.util.Map;
 
@@ -76,7 +74,7 @@ public class OAuthPasswordAuthenticator implements Constants {
         this.oauth = oauth;
         this.client = (OkHttpRestClient) restClient.getRestClient();
         final OkHttpClient.Builder builder = client.getClient().newBuilder();
-        builder.cookieJar(new JavaNetCookieJar(new CookieManager()));
+        builder.cookieJar(new SimpleCookieJar());
         builder.addNetworkInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

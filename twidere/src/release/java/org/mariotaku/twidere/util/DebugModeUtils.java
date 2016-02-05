@@ -29,7 +29,7 @@ import okhttp3.OkHttpClient;
  */
 public class DebugModeUtils {
 
-    public static void initForHttpClient(final OkHttpClient.Builder client) {
+    public static void initForHttpClient(final OkHttpClient.Builder builder) {
         // No-op
     }
 

@@ -24,6 +24,7 @@ import android.app.Application;
 import android.os.Bundle;
 
 import com.facebook.stetho.Stetho;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.DisplayLeakService;
 import com.squareup.leakcanary.ExcludedRefs;
@@ -42,7 +43,8 @@ public class DebugModeUtils {
 
     private static RefWatcher sRefWatcher;
 
-    public static void initForHttpClient(final OkHttpClient.Builder client) {
+    public static void initForHttpClient(final OkHttpClient.Builder builder) {
+        builder.addInterceptor(new StethoInterceptor());
     }
 
     public static void initForApplication(final Application application) {

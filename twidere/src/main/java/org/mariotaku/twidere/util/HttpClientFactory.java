@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.SSLCertificateSocketFactory;
-import android.net.SSLSessionCache;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -18,6 +17,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
 
 import okhttp3.Authenticator;
 import okhttp3.Credentials;
@@ -62,8 +64,13 @@ public class HttpClientFactory implements Constants {
         if (ignoreSslError) {
             // We use insecure connections intentionally
             final int sslConnectTimeout = ((int) TimeUnit.SECONDS.toMillis(connectionTimeoutSeconds));
-            builder.sslSocketFactory(SSLCertificateSocketFactory.getInsecure(sslConnectTimeout,
-                    new SSLSessionCache(context)));
+            builder.sslSocketFactory(SSLCertificateSocketFactory.getInsecure(sslConnectTimeout, null));
+            builder.hostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
         }
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
@@ -73,7 +80,6 @@ public class HttpClientFactory implements Constants {
                     TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE)) {
                 final Proxy.Type type = getProxyType(proxyType);
                 if (InetAddressUtils.getInetAddressType(proxyHost) != 0) {
-//                    final InetAddress host = InetAddressUtils.getResolvedIPAddress(proxyHost, proxyHost);
                     builder.proxy(new Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
                 } else {
                     builder.proxySelector(new TwidereProxySelector(context, type, proxyHost, proxyPort));

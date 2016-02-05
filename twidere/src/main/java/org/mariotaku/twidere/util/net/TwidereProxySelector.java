@@ -68,8 +68,7 @@ public class TwidereProxySelector extends ProxySelector {
         } else {
             // If proxy host is an IP address, create unresolved directly.
             if (InetAddressUtils.getInetAddressType(host) != 0) {
-                address = new InetSocketAddress(InetAddressUtils.getResolvedIPAddress(host, host),
-                        port);
+                address = InetSocketAddress.createUnresolved(host, port);
             } else {
                 address = new InetSocketAddress(host, port);
             }
