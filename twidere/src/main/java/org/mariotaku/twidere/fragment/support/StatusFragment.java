@@ -1392,7 +1392,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             @Override
             public void onLinkClick(String link, String orig, long accountId, long extraId, int type, boolean sensitive, int start, int end) {
                 final ParcelableStatus status = adapter.getStatus();
-                ParcelableMedia current = null;
+                ParcelableMedia current;
                 if ((current = ParcelableMedia.findByUrl(status.media, link)) != null) {
                     expandOrOpenMedia(current);
                     return;
@@ -1402,7 +1402,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     return;
                 }
                 if (type == TwidereLinkify.LINK_TYPE_STATUS && status.id == NumberUtils.toLong(link)) {
-                    expandOrOpenMedia(current);
+                    expandOrOpenMedia(null);
                     return;
                 }
                 super.onLinkClick(link, orig, accountId, extraId, type, sensitive, start, end);

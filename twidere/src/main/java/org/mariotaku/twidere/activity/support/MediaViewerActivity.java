@@ -99,7 +99,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-
 public final class MediaViewerActivity extends AbsMediaViewerActivity implements Constants,
         AppCompatCallback, TaskStackBuilder.SupportParentable, ActionBarDrawerToggle.DelegateProvider,
         IExtendedActivity {
@@ -585,6 +584,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     /**
      * @hide
      */
+    @Override
     public void invalidateOptionsMenu() {
         getDelegate().invalidateOptionsMenu();
     }
@@ -808,23 +808,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             }
         }
 
-        @Override
-        protected void displayMedia(CacheDownloadLoader.Result data) {
-            super.displayMedia(data);
-            getActivity().supportInvalidateOptionsMenu();
-        }
-
-        @Override
-        public void hideProgress() {
-            super.hideProgress();
-            getActivity().supportInvalidateOptionsMenu();
-        }
-
-        @Override
-        public void showProgress(boolean indeterminate, float progress) {
-            super.showProgress(indeterminate, progress);
-            getActivity().supportInvalidateOptionsMenu();
-        }
     }
 
     public static class VideoPageFragment extends CacheDownloadMediaViewerFragment
@@ -862,24 +845,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
 
         public boolean isLoopEnabled() {
             return getArguments().getBoolean(EXTRA_LOOP, false);
-        }
-
-        @Override
-        public void hideProgress() {
-            super.hideProgress();
-            getActivity().supportInvalidateOptionsMenu();
-        }
-
-        @Override
-        public void showProgress(boolean indeterminate, float progress) {
-            super.showProgress(indeterminate, progress);
-            getActivity().supportInvalidateOptionsMenu();
-        }
-
-        @Override
-        public void setMediaViewVisible(boolean visible) {
-            super.setMediaViewVisible(visible);
-            getActivity().supportInvalidateOptionsMenu();
         }
 
         @Override
