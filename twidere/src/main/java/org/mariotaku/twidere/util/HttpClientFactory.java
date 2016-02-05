@@ -79,10 +79,12 @@ public class HttpClientFactory implements Constants {
             if (!isEmpty(proxyHost) && TwidereMathUtils.inRange(proxyPort, 0, 65535,
                     TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE)) {
                 final Proxy.Type type = getProxyType(proxyType);
-                if (InetAddressUtils.getInetAddressType(proxyHost) != 0) {
-                    builder.proxy(new Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
-                } else {
-                    builder.proxySelector(new TwidereProxySelector(context, type, proxyHost, proxyPort));
+                if (type != Proxy.Type.DIRECT) {
+                    if (InetAddressUtils.getInetAddressType(proxyHost) != 0) {
+                        builder.proxy(new Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
+                    } else {
+                        builder.proxySelector(new TwidereProxySelector(context, type, proxyHost, proxyPort));
+                    }
                 }
             }
             final String username = prefs.getString(KEY_PROXY_USERNAME, null);
@@ -108,7 +110,15 @@ public class HttpClientFactory implements Constants {
     }
 
     private static Proxy.Type getProxyType(String proxyType) {
-        if ("socks".equalsIgnoreCase(proxyType)) return Proxy.Type.SOCKS;
-        return Proxy.Type.HTTP;
+        if (proxyType == null) return Proxy.Type.DIRECT;
+        switch (proxyType.toLowerCase()) {
+//            case "socks": {
+//                return Proxy.Type.SOCKS;
+//            }
+            case "http": {
+                return Proxy.Type.HTTP;
+            }
+        }
+        return Proxy.Type.DIRECT;
     }
 }
