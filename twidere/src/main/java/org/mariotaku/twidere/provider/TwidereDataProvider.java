@@ -1287,13 +1287,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 userCursor.moveToPosition(1);
                 final String othersName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
                         mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
-                notificationContent = resources.getQuantityString(R.plurals.from_name_and_N_others,
-                        usersCount - 1, othersName, usersCount - 1);
+                notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName);
             } else {
-                userCursor.moveToPosition(1);
-                final String othersName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
-                        mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
-                notificationContent = resources.getString(R.string.from_name_and_N_others, othersName, usersCount - 1);
+                notificationContent = resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1);
             }
 
             // Setup notification
