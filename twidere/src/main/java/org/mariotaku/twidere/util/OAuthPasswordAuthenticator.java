@@ -72,42 +72,15 @@ public class OAuthPasswordAuthenticator implements Constants {
                                       final String userAgent) {
         final RestClient restClient = RestAPIFactory.getRestClient(oauth);
         this.oauth = oauth;
-        this.client = (OkHttpRestClient) restClient.getRestClient();
-        final OkHttpClient.Builder builder = client.getClient().newBuilder();
-        builder.cookieJar(new SimpleCookieJar());
-        builder.addNetworkInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                final Response response = chain.proceed(chain.request());
-                if (!response.isRedirect()) {
-                    return response;
-                }
-                final String location = response.header("Location");
-                final Response.Builder builder = response.newBuilder();
-                if (!TextUtils.isEmpty(location) && !endpoint.checkEndpoint(location)) {
-                    final HttpUrl originalLocation = HttpUrl.get(URI.create("https://api.twitter.com/").resolve(location));
-                    final HttpUrl.Builder locationBuilder = HttpUrl.parse(endpoint.getUrl()).newBuilder();
-                    for (String pathSegments : originalLocation.pathSegments()) {
-                        locationBuilder.addPathSegment(pathSegments);
-                    }
-                    for (int i = 0, j = originalLocation.querySize(); i < j; i++) {
-                        final String name = originalLocation.queryParameterName(i);
-                        final String value = originalLocation.queryParameterValue(i);
-                        locationBuilder.addQueryParameter(name, value);
-                    }
-                    final String encodedFragment = originalLocation.encodedFragment();
-                    if (encodedFragment != null) {
-                        locationBuilder.encodedFragment(encodedFragment);
-                    }
-                    final HttpUrl newLocation = locationBuilder.build();
-                    builder.header("Location", newLocation.toString());
-                }
-                return builder.build();
-            }
-        });
         this.endpoint = restClient.getEndpoint();
         this.loginVerificationCallback = loginVerificationCallback;
         this.userAgent = userAgent;
+
+        final OkHttpClient oldClient = ((OkHttpRestClient) restClient.getRestClient()).getClient();
+        final OkHttpClient.Builder builder = oldClient.newBuilder();
+        builder.cookieJar(new SimpleCookieJar());
+        builder.addNetworkInterceptor(new EndpointInterceptor(endpoint));
+        this.client = new OkHttpRestClient(builder.build());
     }
 
     public OAuthToken getOAuthAccessToken(final String username, final String password) throws AuthenticationException {
@@ -537,5 +510,42 @@ public class OAuthPasswordAuthenticator implements Constants {
     public static class OAuthPinData {
 
         public String oauthPin;
+    }
+
+    private static class EndpointInterceptor implements Interceptor {
+        private final Endpoint endpoint;
+
+        public EndpointInterceptor(Endpoint endpoint) {
+            this.endpoint = endpoint;
+        }
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            final Response response = chain.proceed(chain.request());
+            if (!response.isRedirect()) {
+                return response;
+            }
+            final String location = response.header("Location");
+            final Response.Builder builder = response.newBuilder();
+            if (!TextUtils.isEmpty(location) && !endpoint.checkEndpoint(location)) {
+                final HttpUrl originalLocation = HttpUrl.get(URI.create("https://api.twitter.com/").resolve(location));
+                final HttpUrl.Builder locationBuilder = HttpUrl.parse(endpoint.getUrl()).newBuilder();
+                for (String pathSegments : originalLocation.pathSegments()) {
+                    locationBuilder.addPathSegment(pathSegments);
+                }
+                for (int i = 0, j = originalLocation.querySize(); i < j; i++) {
+                    final String name = originalLocation.queryParameterName(i);
+                    final String value = originalLocation.queryParameterValue(i);
+                    locationBuilder.addQueryParameter(name, value);
+                }
+                final String encodedFragment = originalLocation.encodedFragment();
+                if (encodedFragment != null) {
+                    locationBuilder.encodedFragment(encodedFragment);
+                }
+                final HttpUrl newLocation = locationBuilder.build();
+                builder.header("Location", newLocation.toString());
+            }
+            return builder.build();
+        }
     }
 }

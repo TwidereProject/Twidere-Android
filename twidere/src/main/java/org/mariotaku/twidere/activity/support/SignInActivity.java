@@ -66,6 +66,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -460,6 +461,9 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 startActivity(intent);
                 finish();
             } else {
+                if (BuildConfig.DEBUG) {
+                    Log.w(LOGTAG, result.exception);
+                }
                 if (result.exception instanceof AuthenticityTokenException) {
                     Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof WrongUserPassException) {
