@@ -621,7 +621,10 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getOptimalAccentColor(final Context context, boolean isActionBarContext, int themeResId) {
-        final int userAccentColor = getUserAccentColor(context);
+        return getOptimalAccentColor(context, getUserAccentColor(context), isActionBarContext, themeResId);
+    }
+
+    public static int getOptimalAccentColor(final Context context, final int accentColor, boolean isActionBarContext, int themeResId) {
         final int backgroundColorApprox;
         final boolean isDarkTheme = isDarkTheme(themeResId);
         if (!isActionBarContext) {
@@ -634,9 +637,10 @@ public class ThemeUtils implements Constants {
             // View context is derived from ActionBar and it's light theme, so we use contrast color
             backgroundColorApprox = Color.WHITE;
         }
-        if (Math.abs(TwidereColorUtils.getYIQContrast(backgroundColorApprox, userAccentColor)) > 64)
-            return userAccentColor;
-        return getColorFromAttribute(context, R.attr.colorAccent, context.getResources().getColor(R.color.branding_color));
+        if (Math.abs(TwidereColorUtils.getYIQContrast(backgroundColorApprox, accentColor)) > DARK_COLOR_THRESHOLD)
+            return accentColor;
+        return getColorFromAttribute(context, R.attr.colorAccent,
+                ContextCompat.getColor(context, R.color.branding_color));
     }
 
     public static int getUserHighlightColor(final Context context) {
@@ -1131,6 +1135,7 @@ public class ThemeUtils implements Constants {
             return R.style.Theme_Twidere_Light;
         }
     }
+
 
     public static final class ActionBarContextThemeWrapper extends android.support.v7.view.ContextThemeWrapper {
 

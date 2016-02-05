@@ -17,27 +17,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.themed;
+package org.mariotaku.twidere.view;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 /**
  * Created by mariotaku on 15/6/30.
  */
-public class ThemedTextView extends AppCompatTextView {
-    public ThemedTextView(Context context) {
+public class WizardHighlightTextView extends AppCompatTextView {
+    public WizardHighlightTextView(Context context) {
         super(context);
     }
 
-    public ThemedTextView(Context context, AttributeSet attrs) {
+    public WizardHighlightTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ThemedTextView(Context context, AttributeSet attrs, int defStyle) {
+    public WizardHighlightTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

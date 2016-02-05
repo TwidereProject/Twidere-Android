@@ -75,6 +75,8 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             editor.putInt(KEY_THEME_BACKGROUND_ALPHA, getSliderAlpha());
             editor.apply();
             persistValue(mValue);
+            notifyChanged();
+            callChangeListener(mValue);
         }
     }
 

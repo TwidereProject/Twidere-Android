@@ -17,13 +17,14 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/element_spacing_large">
 
-    <TextView
+    <org.mariotaku.twidere.view.WizardHighlightTextView
         android:id="@android:id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,9 +32,8 @@
         android:fontFamily="sans-serif-condensed"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="?android:colorActivatedHighlight"
         android:textSize="@dimen/text_size_wizard_nav_item"
         android:textStyle="bold"
-        tools:ignore="UnusedAttribute" />
+        tools:ignore="UnusedAttribute"/>
 
 </FrameLayout>

@@ -26,14 +26,13 @@
     android:orientation="vertical"
     android:showDividers="middle">
 
-    <TextView
+    <org.mariotaku.twidere.view.WizardHighlightTextView
         android:id="@android:id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/element_spacing_normal"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="?android:colorActivatedHighlight"
         android:textSize="@dimen/text_size_wizard_title"/>
 
     <TextView

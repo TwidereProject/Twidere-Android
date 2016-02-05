@@ -23,11 +23,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v4.view.TintableBackgroundView;
 import android.support.v4.view.ViewCompat;
@@ -53,6 +53,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.ShapedImageView;
+import org.mariotaku.twidere.view.WizardHighlightTextView;
 import org.mariotaku.twidere.view.iface.IThemeAccentView;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 import org.mariotaku.twidere.view.themed.ThemedTextView;
@@ -144,14 +145,14 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         final int noTintColor, accentColor, backgroundTintColor;
         final boolean isColorTint;
         // View context is not derived from ActionBar, apply color tint directly
-        final Resources resources = ((Activity) activity).getResources();
         final Context viewContext = view.getContext();
         final boolean isActionBarContext = isActionBarContext(viewContext, getActionBarContext((Activity) activity));
         final int themeResourceId = activity.getCurrentThemeResourceId();
         final boolean isDarkTheme = ThemeUtils.isDarkTheme(themeResourceId);
         final int backgroundColorApprox;
+        final int currentThemeColor = activity.getCurrentThemeColor();
         if (!isActionBarContext) {
-            accentColor = activity.getCurrentThemeColor();
+            accentColor = currentThemeColor;
             final int[] darkLightColors = new int[2];
             ThemeUtils.getDarkLightForegroundColors((Context) activity,
                     activity.getCurrentThemeResourceId(), darkLightColors);
@@ -164,13 +165,12 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
             // View context is derived from ActionBar but is currently dark theme, so we should show
             // light
             noTintColor = Color.WHITE;
-            accentColor = activity.getCurrentThemeColor();
+            accentColor = currentThemeColor;
             backgroundTintColor = noTintColor;
             backgroundColorApprox = Color.BLACK;
             isColorTint = true;
         } else {
             // View context is derived from ActionBar and it's light theme, so we use contrast color
-            final int actionBarColor = activity.getCurrentThemeColor();
             accentColor = ThemeUtils.getColorFromAttribute(viewContext, android.R.attr.colorForeground, 0);
             noTintColor = ThemeUtils.getColorFromAttribute(viewContext, android.R.attr.colorBackground, 0);
             backgroundTintColor = accentColor;
@@ -184,12 +184,16 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
                 textView.setLinkTextColor(accentColor);
             }
         }
+        if (view instanceof WizardHighlightTextView) {
+            ((WizardHighlightTextView) view).setTextColor(ThemeUtils.getOptimalAccentColor((Context) activity,
+                    currentThemeColor, isActionBarContext, themeResourceId));
+        }
         if (view instanceof IThemeAccentView) {
             if (isAccentOptimal || !isColorTint) {
                 ((IThemeAccentView) view).setAccentTintColor(ColorStateList.valueOf(accentColor));
             } else {
                 final int defaultAccentColor = ThemeUtils.getColorFromAttribute(viewContext,
-                        R.attr.colorAccent, resources.getColor(R.color.branding_color));
+                        R.attr.colorAccent, ContextCompat.getColor(viewContext, R.color.branding_color));
                 ((IThemeAccentView) view).setAccentTintColor(ColorStateList.valueOf(defaultAccentColor));
             }
         } else if (view instanceof IThemeBackgroundTintView) {

@@ -2382,12 +2382,12 @@ public final class Utils implements Constants {
 
     public static void restartActivity(final Activity activity) {
         if (activity == null) return;
-        final int enter_anim = android.R.anim.fade_in;
-        final int exit_anim = android.R.anim.fade_out;
+        final int enterAnim = android.R.anim.fade_in;
+        final int exitAnim = android.R.anim.fade_out;
         activity.finish();
-        activity.overridePendingTransition(enter_anim, exit_anim);
+        activity.overridePendingTransition(enterAnim, exitAnim);
         activity.startActivity(activity.getIntent());
-        activity.overridePendingTransition(enter_anim, exit_anim);
+        activity.overridePendingTransition(enterAnim, exitAnim);
     }
 
     public static void scrollListToPosition(final AbsListView list, final int position) {
