@@ -199,7 +199,7 @@ public class ParcelableAccount implements Parcelable {
 
     @Nullable
     public static ParcelableCredentials getCredentials(final Context context, final long accountId) {
-        if (context == null) return null;
+        if (context == null || accountId < 0) return null;
         Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
                 Accounts.COLUMNS, Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null,
                 null);

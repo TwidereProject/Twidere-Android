@@ -29,7 +29,6 @@ import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.twidere.activity.support.ThemedImagePickerActivity;
-import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.io.IOException;
@@ -48,7 +47,6 @@ public class RestFuNetworkStreamDownloader extends ThemedImagePickerActivity.Net
         final HttpRequest.Builder builder = new HttpRequest.Builder();
         builder.method(GET.METHOD);
         builder.url(uri.toString());
-        builder.tag(RequestType.MEDIA);
         final HttpResponse response = client.newCall(builder.build()).execute();
         if (response.isSuccessful()) {
             final Body body = response.getBody();

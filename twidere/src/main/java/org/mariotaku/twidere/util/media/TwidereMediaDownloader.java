@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
@@ -29,7 +28,6 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.model.RequestType;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserAgentUtils;
@@ -42,7 +40,6 @@ import java.io.IOException;
  */
 public class TwidereMediaDownloader implements MediaDownloader, Constants {
 
-    private final LongSparseArray<ParcelableCredentials> mCredentialsCache = new LongSparseArray<>();
     private final Context mContext;
     private final SharedPreferencesWrapper mPreferences;
     private final RestHttpClient mClient;
@@ -89,22 +86,22 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         final Uri uri = Uri.parse(url);
         final Authorization auth;
         final ParcelableCredentials account;
-        final MediaExtra mediaExtra = extra instanceof MediaExtra ? (MediaExtra) extra : null;
-        final boolean useThumbor = mediaExtra == null || mediaExtra.isUseThumbor();
-        if (isTwitterAuthRequired(uri) && mediaExtra != null) {
-            account = ParcelableAccount.getCredentials(mContext, mediaExtra.getAccountId());
+        final boolean useThumbor;
+        if (extra instanceof MediaExtra) {
+            useThumbor = ((MediaExtra) extra).isUseThumbor();
+            account = ParcelableAccount.getCredentials(mContext, ((MediaExtra) extra).getAccountId());
             auth = TwitterAPIFactory.getAuthorization(account);
         } else {
+            useThumbor = true;
             account = null;
             auth = null;
         }
         Uri modifiedUri = getReplacedUri(uri, account != null ? account.api_url_format : null);
-
         final MultiValueMap<String> additionalHeaders = new MultiValueMap<>();
         additionalHeaders.add("User-Agent", mUserAgent);
         final String method = GET.METHOD;
         final String requestUri;
-        if (auth != null && auth.hasAuthorization()) {
+        if (isAuthRequired(uri, account) && auth != null && auth.hasAuthorization()) {
             final Endpoint endpoint;
             if (auth instanceof OAuthAuthorization) {
                 endpoint = new OAuthEndpoint(getEndpoint(modifiedUri), getEndpoint(uri));
@@ -133,7 +130,6 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         builder.method(method);
         builder.url(requestUri);
         builder.headers(additionalHeaders);
-        builder.tag(RequestType.MEDIA);
         final HttpResponse resp = mClient.newCall(builder.build()).execute();
         if (!resp.isSuccessful()) throw new IOException("Unable to get media");
         final Body body = resp.getBody();
@@ -153,8 +149,13 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         return sb.toString();
     }
 
-    private boolean isTwitterAuthRequired(final Uri uri) {
-        return uri != null && "ton.twitter.com".equalsIgnoreCase(uri.getHost());
+    private boolean isAuthRequired(final Uri uri, @Nullable final ParcelableCredentials credentials) {
+        if (credentials == null) return false;
+        final String host = uri.getHost();
+        if (credentials.api_url_format != null && credentials.api_url_format.contains(host)) {
+            return true;
+        }
+        return "ton.twitter.com".equalsIgnoreCase(host);
     }
 
     private boolean isTwitterUri(final Uri uri) {
