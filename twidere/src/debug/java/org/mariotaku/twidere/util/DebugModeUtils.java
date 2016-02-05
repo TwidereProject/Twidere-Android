@@ -19,11 +19,19 @@
 
 package org.mariotaku.twidere.util;
 
+import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
 
 import com.facebook.stetho.Stetho;
+import com.squareup.leakcanary.AndroidExcludedRefs;
+import com.squareup.leakcanary.DisplayLeakService;
+import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.squareup.leakcanary.ServiceHeapDumpListener;
+
+import org.mariotaku.twidere.activity.support.ComposeActivity;
 
 import okhttp3.OkHttpClient;
 
@@ -42,7 +50,49 @@ public class DebugModeUtils {
                 .enableDumpapp(Stetho.defaultDumperPluginsProvider(application))
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
                 .build());
-        sRefWatcher = LeakCanary.install(application);
+        ExcludedRefs.Builder excludedRefsBuilder = AndroidExcludedRefs.createAppDefaults();
+        LeakCanary.enableDisplayLeakActivity(application);
+        ServiceHeapDumpListener heapDumpListener = new ServiceHeapDumpListener(application, DisplayLeakService.class);
+        final RefWatcher refWatcher = LeakCanary.androidWatcher(application, heapDumpListener, excludedRefsBuilder.build());
+        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                // Ignore memory leak caused by LocationManager
+                if (activity.getClass() == ComposeActivity.class) return;
+                refWatcher.watch(activity);
+            }
+        });
+        sRefWatcher = refWatcher;
     }
 
     public static void watchReferenceLeak(final Object object) {
