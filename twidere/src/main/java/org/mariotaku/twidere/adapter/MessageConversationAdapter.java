@@ -60,6 +60,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
 
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mMediaLoadingHandler;
+    private final int mTextSize;
 
     private Cursor mCursor;
     private ParcelableDirectMessageCursorIndices mIndices;
@@ -70,6 +71,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         super(context);
         mInflater = LayoutInflater.from(context);
         mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null));
+        mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
@@ -95,16 +97,18 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
                 final View view = mInflater.inflate(R.layout.card_item_message_conversation_incoming, parent, false);
                 final MessageViewHolder holder = new IncomingMessageViewHolder(this, view);
                 holder.setMessageColor(mIncomingMessageColor);
+                holder.setTextSize(getTextSize());
                 return holder;
             }
             case ITEM_VIEW_TYPE_MESSAGE_OUTGOING: {
                 final View view = mInflater.inflate(R.layout.card_item_message_conversation_outgoing, parent, false);
                 final MessageViewHolder holder = new MessageViewHolder(this, view);
                 holder.setMessageColor(mOutgoingMessageColor);
+                holder.setTextSize(getTextSize());
                 return holder;
             }
         }
-        return null;
+        throw new UnsupportedOperationException("Unknown viewType " + viewType);
     }
 
     @Override
@@ -185,6 +189,11 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
 
     public CardMediaContainer.OnMediaClickListener getOnMediaClickListener() {
         return mEventListener;
+    }
+
+    @Override
+    public float getTextSize() {
+        return mTextSize;
     }
 
     static class EventListener implements CardMediaContainer.OnMediaClickListener {
