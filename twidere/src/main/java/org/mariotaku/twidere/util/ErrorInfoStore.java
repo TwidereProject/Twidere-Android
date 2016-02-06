@@ -15,8 +15,10 @@ import org.mariotaku.twidere.R;
 public class ErrorInfoStore {
 
     public static final String KEY_DIRECT_MESSAGES = "direct_messages";
+    public static final String KEY_INTERACTIONS = "interactions";
 
     public static final int CODE_NO_DM_PERMISSION = 1;
+    public static final int CODE_NO_ACCESS_FOR_CREDENTIALS = 2;
 
     private final SharedPreferences mPreferences;
 
@@ -46,6 +48,10 @@ public class ErrorInfoStore {
             case CODE_NO_DM_PERMISSION: {
                 return new DisplayErrorInfo(code, R.drawable.ic_info_error_generic,
                         context.getString(R.string.error_no_dm_permission));
+            }
+            case CODE_NO_ACCESS_FOR_CREDENTIALS: {
+                return new DisplayErrorInfo(code, R.drawable.ic_info_error_generic,
+                        context.getString(R.string.error_no_access_for_credentials));
             }
         }
         return null;

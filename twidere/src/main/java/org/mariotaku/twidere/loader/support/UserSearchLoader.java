@@ -58,7 +58,4 @@ public class UserSearchLoader extends TwitterAPIUsersLoader {
         return twitter.searchUsers(mQuery, paging);
     }
 
-    protected long getUserPosition(final User user, final int index) {
-        return (mPage + 1) * 20 + index;
-    }
 }

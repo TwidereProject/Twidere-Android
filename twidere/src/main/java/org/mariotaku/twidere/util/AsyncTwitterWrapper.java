@@ -541,7 +541,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
             @Override
             protected ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException {
-                if (TwitterAPIFactory.isOfficialKeyAccount(getContext(), accountId)) {
+                if (Utils.shouldUsePrivateAPIs(getContext(), accountId)) {
                     return twitter.getActivitiesAboutMe(paging);
                 }
                 final ResponseList<Activity> activities = new ResponseList<>();
@@ -598,6 +598,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             }
         };
         AsyncManager.runBackgroundTask(task);
+    }
+
+    public ErrorInfoStore getErrorInfoStore() {
+        return mErrorInfoStore;
     }
 
     static class GetSavedSearchesTask extends ManagedAsyncTask<Long, Object, SingleResponse<Object>> {

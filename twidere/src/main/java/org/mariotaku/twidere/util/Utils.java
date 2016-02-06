@@ -3074,6 +3074,11 @@ public final class Utils implements Constants {
                 || plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS;
     }
 
+    public static boolean shouldUsePrivateAPIs(Context context, long accountId) {
+        if (shouldForceUsingPrivateAPIs(context)) return true;
+        return TwitterAPIFactory.isOfficialKeyAccount(context, accountId);
+    }
+
     static class UtilsL {
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)

@@ -22,18 +22,16 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.mariotaku.twidere.api.twitter.model.CursorSupport;
 import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
-import org.mariotaku.twidere.api.twitter.model.CursorSupport;
-
 public abstract class BaseCursorSupportUsersLoader extends TwitterAPIUsersLoader
         implements ICursorSupportLoader {
 
     private final long mCursor;
-    private final SharedPreferences mPreferences;
     private final int mLoadItemLimit;
 
     private long mNextCursor, mPrevCursor;
@@ -42,8 +40,8 @@ public abstract class BaseCursorSupportUsersLoader extends TwitterAPIUsersLoader
                                         final List<ParcelableUser> data, boolean fromUser) {
         super(context, accountId, data, fromUser);
         mCursor = cursor;
-        mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final int loadItemLimit = mPreferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
+        final SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         mLoadItemLimit = Math.min(100, loadItemLimit);
     }
 

@@ -51,6 +51,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.message.AccountChangedEvent;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
@@ -75,8 +76,13 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         if (adapter.getItemCount() > 0) {
             showContent();
         } else if (accountIds.length > 0) {
-            showContent();
-            showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
+            final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
+                    mErrorInfoStore.get(ErrorInfoStore.KEY_INTERACTIONS, accountIds[0]));
+            if (errorInfo != null) {
+                showError(errorInfo.getIcon(), errorInfo.getMessage());
+            } else {
+                showContent();
+            }
         } else {
             showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
         }

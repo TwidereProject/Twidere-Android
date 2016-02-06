@@ -4,8 +4,10 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
@@ -18,6 +20,7 @@ import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.message.GetActivitiesTaskEvent;
@@ -68,6 +71,7 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
                     saveReadPosition = true;
                 }
             }
+            final ErrorInfoStore errorInfoStore = twitterWrapper.getErrorInfoStore();
             // We should delete old activities has intersection with new items
             try {
                 final ResponseList<Activity> activities = getActivities(accountId, twitter, paging);
@@ -76,8 +80,15 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
                 if (saveReadPosition) {
                     saveReadPosition(accountId, twitter);
                 }
+                errorInfoStore.remove(ErrorInfoStore.KEY_INTERACTIONS, accountId);
             } catch (TwitterException e) {
-
+                if (BuildConfig.DEBUG) {
+                    Log.w(LOGTAG, e);
+                }
+                if (e.getErrorCode() == 220) {
+                    errorInfoStore.put(ErrorInfoStore.KEY_INTERACTIONS, accountId,
+                            ErrorInfoStore.CODE_NO_ACCESS_FOR_CREDENTIALS);
+                }
             }
         }
         return null;
