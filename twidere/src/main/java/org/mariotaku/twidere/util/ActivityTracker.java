@@ -107,4 +107,5 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
     public void onActivityDestroyed(Activity activity) {
 
     }
+
 }

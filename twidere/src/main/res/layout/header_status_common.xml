@@ -370,130 +370,31 @@
         android:textColor="?android:textColorSecondary"/>
 
     <LinearLayout
-        android:id="@+id/counts_container"
-        android:layout_width="wrap_content"
+        android:id="@+id/counts_users_height_holder"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/quote_original_link"
+        android:orientation="horizontal">
+
+        <include layout="@layout/adapter_item_status_count_label"/>
+
+        <include layout="@layout/adapter_item_status_interact_user"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/counts_users"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/counts_users_height_holder"
+        android:layout_alignTop="@+id/counts_users_height_holder"
         android:layout_marginLeft="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:splitMotionEvents="false">
-
-        <LinearLayout
-            android:id="@+id/replies_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:background="?selectableItemBackground"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:minWidth="@dimen/element_size_normal"
-            android:orientation="vertical"
-            android:padding="@dimen/element_spacing_normal">
-
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/replies_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
-                android:singleLine="true"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                tools:text="255"/>
-
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/replies_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/replies"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/retweets_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:background="?selectableItemBackground"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:minWidth="@dimen/element_size_normal"
-            android:orientation="vertical"
-            android:padding="@dimen/element_spacing_normal">
-
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/retweets_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
-                android:singleLine="true"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                tools:text="255"/>
-
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/retweets_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/retweets"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/favorites_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:background="?selectableItemBackground"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:minWidth="@dimen/element_size_normal"
-            android:orientation="vertical"
-            android:padding="@dimen/element_spacing_normal">
-
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/favorites_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/element_spacing_small"
-                android:layout_marginRight="@dimen/element_spacing_small"
-                android:singleLine="true"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                tools:text="255"/>
-
-            <org.mariotaku.twidere.view.themed.ThemedTextView
-                android:id="@+id/favorites_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/likes"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="?android:textColorSecondary"/>
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/interact_users"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/element_size_normal"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
+        android:splitMotionEvents="false"/>
 
     <android.support.v7.widget.ActionMenuView
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
-        android:layout_below="@+id/counts_container"/>
+        android:layout_below="@+id/counts_users_height_holder"/>
 
 </RelativeLayout>

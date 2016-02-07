@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util.dagger;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.util.ActivityTracker;
@@ -96,4 +97,5 @@ public class DependencyHolder {
     public SharedPreferencesWrapper getPreferences() {
         return mPreferences;
     }
+
 }

@@ -211,23 +211,26 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
         switch (key) {
-            case KEY_REFRESH_INTERVAL:
+            case KEY_REFRESH_INTERVAL: {
                 stopService(new Intent(this, RefreshService.class));
                 startRefreshServiceIfNeeded(this);
                 break;
+            }
             case KEY_ENABLE_PROXY:
             case KEY_CONNECTION_TIMEOUT:
             case KEY_PROXY_HOST:
             case KEY_PROXY_PORT:
             case KEY_PROXY_TYPE:
             case KEY_PROXY_USERNAME:
-            case KEY_PROXY_PASSWORD:
+            case KEY_PROXY_PASSWORD: {
                 reloadConnectivitySettings();
                 break;
+            }
             case KEY_DNS_SERVER:
-            case KEY_TCP_DNS_QUERY:
+            case KEY_TCP_DNS_QUERY: {
                 reloadDnsSettings();
                 break;
+            }
             case KEY_CONSUMER_KEY:
             case KEY_CONSUMER_SECRET:
             case KEY_API_URL_FORMAT:
@@ -235,14 +238,16 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             case KEY_SAME_OAUTH_SIGNING_URL:
             case KEY_THUMBOR_ENABLED:
             case KEY_THUMBOR_ADDRESS:
-            case KEY_THUMBOR_SECURITY_KEY:
+            case KEY_THUMBOR_SECURITY_KEY: {
                 final Editor editor = preferences.edit();
                 editor.putLong(KEY_API_LAST_CHANGE, System.currentTimeMillis());
                 editor.apply();
                 break;
-            case KEY_EMOJI_SUPPORT:
+            }
+            case KEY_EMOJI_SUPPORT: {
                 DependencyHolder.get(this).getExternalThemeManager().initEmojiSupport();
                 break;
+            }
         }
     }
 

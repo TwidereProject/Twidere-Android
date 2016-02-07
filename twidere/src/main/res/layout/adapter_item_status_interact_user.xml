@@ -20,14 +20,18 @@
 
 <org.mariotaku.twidere.view.SquareFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:padding="@dimen/element_spacing_msmall">
+    android:paddingLeft="@dimen/element_spacing_small"
+    android:paddingRight="@dimen/element_spacing_small">
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profile_image"
         style="?profileImageStyle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="@dimen/element_size_msmall"
+        android:layout_height="@dimen/element_size_msmall"
+        android:layout_gravity="center"
+        tools:src="@mipmap/ic_launcher_hondajojo"/>
 
 </org.mariotaku.twidere.view.SquareFrameLayout>

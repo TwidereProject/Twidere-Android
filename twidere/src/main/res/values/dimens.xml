@@ -3,6 +3,7 @@
 
     <dimen name="element_size_xsmall">16dp</dimen>
     <dimen name="element_size_small">24dp</dimen>
+    <dimen name="element_size_msmall">36dp</dimen>
     <dimen name="element_size_normal">48dp</dimen>
     <dimen name="element_size_mlarge">64dp</dimen>
 
