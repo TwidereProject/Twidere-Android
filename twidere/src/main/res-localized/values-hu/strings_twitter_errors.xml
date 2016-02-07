@@ -5,11 +5,11 @@
   <string name="error_twitter_34">Ez a tweet, felhasználó vagy oldal nem létezik.</string>
   <string name="error_twitter_88">A tweet ráta túllépve, kérlek próbáld később.</string>
   <string name="error_twitter_89">A bejelentkezési információ nem helyes, vagy lejárt. Kérlek jelentkezz be újra.</string>
-  <string name="error_twitter_64">A fiókod fel van függesztve és nincs engedélye igénybe venni ezt a funkciót.</string>
+  <string name="error_twitter_64">A fiókod fel van függesztve és nincs engedélyed igénybe venni ezt a funkciót.</string>
   <string name="error_twitter_130">A Twitter átmenetileg túl van terhelve.</string>
   <string name="error_twitter_131">A Twitter szervere lehet, hogy átmenetileg nem működik, próbáld meg később.</string>
   <string name="error_twitter_135">Ellenőrizd a rendszer órádat.</string>
-  <string name="error_twitter_136">Ezt a felhasználót már letiltottad.</string>
+  <string name="error_twitter_136">Ez a felhasználó letiltott.</string>
   <string name="error_twitter_139">Ezt a tweet-et már kedvencnek jelölted.</string>
   <string name="error_twitter_161">Már küldtél követési kérelmet ennek a felhasználónak.</string>
   <string name="error_twitter_162">Ez a felhasználó letiltott.</string>

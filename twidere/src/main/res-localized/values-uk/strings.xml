@@ -153,9 +153,9 @@
   <string name="filename_hint">Ім\'я файлу</string>
   <string name="please_wait">Зачекайте.</string>
   <string name="saved_to_gallery">Збережено до галереї.</string>
-  <string name="proxy">Проксі</string>
   <string name="http_proxy">HTTP проксі</string>
   <string name="http_proxy_summary">Використовувати HTTP проксі для всіх мережевих запитів.</string>
+  <string name="proxy">Проксі</string>
   <string name="proxy_host">Хост проксі</string>
   <string name="proxy_port">Порт проксі</string>
   <string name="block">Блокувати</string>
@@ -354,7 +354,6 @@
   <string name="none">Нічого</string>
   <string name="large">Великий</string>
   <string name="small">Малий</string>
-  <string name="and_N_more">і ще <xliff:g id="count">%d</xliff:g></string>
   <string name="clear_search_history">Очистити історію пошуку</string>
   <string name="permission_description_none">Дозволи не потрібні</string>
   <string name="permission_description_refresh">Оновити стрічку (включаючи особисті повідомленння)</string>
@@ -605,7 +604,6 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> медійних файлів</string>
   <string name="delete_drafts_confirm">Видалити обрані чернетки?</string>
   <string name="extra_configurations">Додаткові налаштування</string>
-  <string name="click_item_to_config">Оберіть елемент для налаштування</string>
   <string name="retweets_of_me">Ретвіти мене</string>
   <string name="from_gallery">З галереї</string>
   <string name="from_camera">Зробити світлину</string>

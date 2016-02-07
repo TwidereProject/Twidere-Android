@@ -137,9 +137,9 @@
   <string name="filename_hint">Filnavn</string>
   <string name="please_wait">Vent venligst.</string>
   <string name="saved_to_gallery">Gemte til galleri.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP proxy</string>
   <string name="http_proxy_summary">Brug HTTP Proxy for alle netværksanmodninger.</string>
+  <string name="proxy">Proxy</string>
   <string name="proxy_host">Proxyvært</string>
   <string name="proxy_port">Proxyport</string>
   <string name="block">Bloker</string>

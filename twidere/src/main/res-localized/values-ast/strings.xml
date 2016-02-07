@@ -158,11 +158,15 @@
   <string name="filename_hint">Nome de ficheru</string>
   <string name="please_wait">Espera, por favor.</string>
   <string name="saved_to_gallery">Guardóse a la galería.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">Proxy HTTP</string>
   <string name="http_proxy_summary">Usa\'l proxy HTTP pa toles solicitúes de rede.</string>
+  <string name="proxy">Proxy</string>
+  <string name="proxy_summary">Usa\'l proxy pa toles solicitúes de rede.</string>
+  <string name="proxy_type">Triba de proxy</string>
   <string name="proxy_host">Agospiu de proxy</string>
   <string name="proxy_port">Puertu de proxy</string>
+  <string name="proxy_username">Nome d\'usuariu de Proxy</string>
+  <string name="proxy_password">Contraseña de proxy</string>
   <string name="block">Bloquiar</string>
   <string name="unblock">Desbloquiar</string>
   <string name="report_for_spam">Informar de spam</string>
@@ -299,6 +303,7 @@
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> marcó como favoritu\'l tuit de <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> marcó como favoritu <xliff:g id="target">%2$s</xliff:g> y el tuit de <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> prestó-y el tuit de <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_like_multi">A <xliff:g id="user">%1$s</xliff:g> prestó-y el tuit de <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> ta siguiendo a <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> ta siguiendo a <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> retuitió\'l tuit de <xliff:g id="target">%2$s</xliff:g>.</string>
@@ -497,7 +502,7 @@
   <string name="wizard_page_welcome_import_settings">Importar axustes</string>
   <string name="wizard_page_theme_text">Escueyi un tema que te preste.</string>
   <string name="wizard_page_tabs_text">Amiesta delles llingüetes a Twidere.\nSigui a la xente o coses que t\'importen.</string>
-  <string name="wizard_page_tabs_unchanged_message">Pues amestar llingüetes n\'"Axustes" - "Llingüetes"</string>
+  <string name="wizard_page_tabs_unchanged_message">Pues amestar llingüetes n\'«Axustes» - «Llingüetes»</string>
   <string name="wizard_page_cards_text">Configuración d\'elementos de tarxetes.</string>
   <string name="wizard_page_hints_text">Equí hai dellos conseyos interesantes.</string>
   <string name="wizard_page_usage_statistics_text">Twidere participa en dellos proyeutos d\'investigación que necesiten dél usu de datos.</string>
@@ -626,7 +631,7 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> videos/semeyes</string>
   <string name="delete_drafts_confirm">¿Desaniciar los borradores esbillaos?</string>
   <string name="extra_configurations">Configuraciones estra</string>
-  <string name="click_item_to_config">Clic nun elementu pa configuralu</string>
+  <string name="click_item_to_configure">Primi nun elementu pa configuralu</string>
   <string name="retweets_of_me">Retuits de mio</string>
   <string name="from_gallery">Dende la galería</string>
   <string name="from_camera">Dende la cámara</string>
@@ -741,6 +746,8 @@
   <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favoritos</string>
   <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> prestóme</string>
   <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> prestóme</string>
+  <string name="N_votes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> votu</string>
+  <string name="N_votes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> votos</string>
   <string name="drafts_hint_messages">Equí guardaránse los tos tuits ensin unviar</string>
   <string name="keyboard_shortcuts">Atayos de tecláu</string>
   <string name="keyboard_shortcut_hint">Primi les tecles</string>
@@ -791,6 +798,7 @@
   <string name="report_usage_statistics_now">Reportar agora les estadístiques d\'usu</string>
   <string name="cache_size_limit">Llímite de tamañu de caché</string>
   <string name="bug_reports">Informes de fallos</string>
+  <string name="bug_reports_summary">Cola potencia de Fabric</string>
   <string name="invalid_consumer_key">Clave de consumidor non válida</string>
   <string name="invalid_consumer_secret">Secretu de consumidor non válidu</string>
   <string name="page_up">Páxina arriba</string>
@@ -815,6 +823,16 @@
   <string name="login_verification_push_hint">Aceuta la solicitú de verificación dende la to aplicación de Twitter, namái que l\'apruebes, primi Aceutar.</string>
   <string name="login_verification_failed">Fallu na verificación del aniciu de sesión.</string>
   <string name="saved_searches_already_saved_hint">Quiciabes yá guardesti esta gueta</string>
-  <string name="unsupported_activity_action_title">Aición <xliff:g id="action">%s</xliff:g></string>
   <string name="unsupported_activity_action_summary">Informa de l\'aición d\'enriba</string>
+  <string name="unknown_language">Llingua desconocida</string>
+  <string name="system_default">Predeterminao del sistema</string>
+  <string name="emoji_support">Sofitu de fustaxes</string>
+  <string name="open_poll_in_official_app">Abrir encuesta na app oficial</string>
+  <string name="action_vote">Votar</string>
+  <string name="label_poll">Encuesta</string>
+  <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+  <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+  <string name="mentions_only">Namái menciones</string>
+  <string name="error_no_dm_permission">Ensin el permisu de mensaxes direutos, comprueba l\'axuste del permisos d\'aplicaciones de Twitter.</string>
+  <string name="interactions">Interaiciones</string>
 </resources>

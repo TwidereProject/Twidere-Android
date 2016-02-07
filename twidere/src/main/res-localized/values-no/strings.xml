@@ -158,9 +158,9 @@
   <string name="filename_hint">Filnavn</string>
   <string name="please_wait">Vennligst vent.</string>
   <string name="saved_to_gallery">Lagret i galleriet.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
   <string name="http_proxy_summary">Bruk HTTP Proxy for alle nettverksforespørsler.</string>
+  <string name="proxy">Proxy</string>
   <string name="proxy_host">Proxy-tjener</string>
   <string name="proxy_port">Proxy-port</string>
   <string name="block">Blokker</string>
@@ -373,7 +373,6 @@
   <string name="none">Ingen</string>
   <string name="large">Stor</string>
   <string name="small">Liten</string>
-  <string name="and_N_more">og <xliff:g id="count">%d</xliff:g> flere</string>
   <string name="clear_search_history">Tøm søkehistorikken</string>
   <string name="permission_description_none">Ingen tillatelser trengs</string>
   <string name="permission_description_refresh">Oppdater tidslinje (inkludert direktemeldinger)</string>
@@ -628,7 +627,6 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
   <string name="delete_drafts_confirm">Slette valgte utkast?</string>
   <string name="extra_configurations">Ekstra innstillinger</string>
-  <string name="click_item_to_config">Trykk på et element for å sette opp</string>
   <string name="retweets_of_me">Retweets av meg</string>
   <string name="from_gallery">Fra galleri</string>
   <string name="from_camera">Fra kamera</string>

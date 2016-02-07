@@ -158,11 +158,15 @@
   <string name="filename_hint">Nome do arquivo</string>
   <string name="please_wait">Por favor, espere.</string>
   <string name="saved_to_gallery">Salvar na galeria.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
   <string name="http_proxy_summary">Usar HTTP Proxy para todas as solicitações de rede.</string>
+  <string name="proxy">Proxy</string>
+  <string name="proxy_summary">Usar proxy para todas as requisições de rede.</string>
+  <string name="proxy_type">Tipo de proxy</string>
   <string name="proxy_host">Proxy Host</string>
   <string name="proxy_port">Proxy Port</string>
+  <string name="proxy_username">Nome de usuário do proxy</string>
+  <string name="proxy_password">Senha do proxy</string>
   <string name="block">Bloquear</string>
   <string name="unblock">Desbloquear</string>
   <string name="report_for_spam">Denunciar como spam</string>
@@ -277,6 +281,10 @@
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> favoritaram o seu tweet.</string>
   <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favoritou o seu retweet.</string>
   <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> favoritaram o seu retweet.</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> curtiu seu tweet.</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> curtiram seu tweet.</string>
+  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> curtiu seu retweet.</string>
+  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> curtiram seu retweet.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> está seguindo você.</string>
   <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> estão agora te seguindo.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweetou seu tweet.</string>
@@ -294,6 +302,8 @@
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> adicionaram você à lista deles.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> favoritou o tweet de <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> curtiu um tweet de <xliff:g id="target">%2$s</xliff:g> e <xliff:g id="other">%3$s</xliff:g>.</string>
+  <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> curtiu o tweet de <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_like_multi"><xliff:g id="user">%1$s</xliff:g> curtiu o tweet de <xliff:g id="target">%2$s</xliff:g> e <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> agora segue <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> está a seguir <xliff:g id="target">%2$s</xliff:g> e <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> retweetou <xliff:g id="target">%2$s</xliff:g>.</string>
@@ -623,7 +633,7 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate">Mídias de <xliff:g id="items">%d</xliff:g></string>
   <string name="delete_drafts_confirm">Excluir rascunhos selecionados?</string>
   <string name="extra_configurations">Configurações extras</string>
-  <string name="click_item_to_config">Clique em um item para configurar</string>
+  <string name="click_item_to_configure">Clique num item para configurar</string>
   <string name="retweets_of_me">Retweets meus</string>
   <string name="from_gallery">Da galeria</string>
   <string name="from_camera">Da câmera</string>
@@ -738,6 +748,8 @@
   <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favoritou</string>
   <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> curtida</string>
   <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> curtidas</string>
+  <string name="N_votes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> voto</string>
+  <string name="N_votes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> votos</string>
   <string name="drafts_hint_messages">Os teus tweets não enviados vão ser guardados aqui</string>
   <string name="keyboard_shortcuts">Atalhos de teclado</string>
   <string name="keyboard_shortcut_hint">Pressionar teclas</string>
@@ -789,6 +801,7 @@
   <string name="report_usage_statistics_now">Reportar estatísticas de uso agora</string>
   <string name="cache_size_limit">Limite do tamanho do cache</string>
   <string name="bug_reports">Relatórios de bugs</string>
+  <string name="bug_reports_summary">Powered by Fabric</string>
   <string name="invalid_consumer_key">\"Consumer key\" inválida</string>
   <string name="invalid_consumer_secret">Senha inválida da \"consumer key\"</string>
   <string name="page_up">Subir</string>
@@ -804,4 +817,18 @@
   <string name="current_status">Tweet atual</string>
   <string name="twitter_optimized_searches">Buscas otimizadas do Twitter</string>
   <string name="twitter_optimized_searches_summary">Use termos de pesquisa especiais para melhorar o resultado da busca, como excluir retweets</string>
+  <string name="i_want_my_stars_back">Quero minhas estrelas de volta!</string>
+  <string name="i_want_my_stars_back_summary">Use favoritar (★) ao invés de curtir (♥︎)</string>
+  <string name="copy_link">Copiar link</string>
+  <string name="link_copied_to_clipboard">Link copiado para a área de transferência</string>
+  <string name="login_verification">Verificação de login</string>
+  <string name="login_verification_failed">A verificação do login falhou.</string>
+  <string name="saved_searches_already_saved_hint">Talvez você já tenha salvo esta busca</string>
+  <string name="unknown_language">Língua desconhecida</string>
+  <string name="system_default">Padrão do sistema</string>
+  <string name="emoji_support">Suporte de Emoji</string>
+  <string name="action_vote">Votar</string>
+  <string name="mentions_only">Apenas menções</string>
+  <string name="select_accounts_for_compose">Selecionar conta para composição</string>
+  <string name="interactions">Interações</string>
 </resources>

@@ -149,9 +149,9 @@
   <string name="filename_hint">Nazwa pliku</string>
   <string name="please_wait">Proszę czekać...</string>
   <string name="saved_to_gallery">Zapisano do galerii.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
   <string name="http_proxy_summary">Użyj proxy HTTP dla wszystkich żądań.</string>
+  <string name="proxy">Proxy</string>
   <string name="proxy_host">Host proxy</string>
   <string name="proxy_port">Port proxy</string>
   <string name="block">Zablokuj</string>
@@ -334,7 +334,6 @@
   <string name="none">Brak</string>
   <string name="large">Duży</string>
   <string name="small">Mały</string>
-  <string name="and_N_more">oraz <xliff:g id="count">%d</xliff:g> więcej</string>
   <string name="clear_search_history">Wyczyść historię wyszukiwania</string>
   <string name="permission_description_none">Nie są wymagane pozwolenia</string>
   <string name="permission_description_refresh">Odśwież strumień (razem z wiadomościami)</string>
@@ -574,7 +573,6 @@
   <string name="add">Dodaj</string>
   <string name="delete_drafts_confirm">Usunąć wybrane szkice?</string>
   <string name="extra_configurations">Konfiguracje dodatkowe</string>
-  <string name="click_item_to_config">Dotknij element aby skonfigurować</string>
   <string name="retweets_of_me">Moje posty podane dalej</string>
   <string name="from_gallery">Z galerii</string>
   <string name="from_camera">Z aparatu</string>

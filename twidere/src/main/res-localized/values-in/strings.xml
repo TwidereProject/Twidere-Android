@@ -154,9 +154,9 @@
   <string name="filename_hint">Nama berkas</string>
   <string name="please_wait">Tunggu sebentar.</string>
   <string name="saved_to_gallery">Simpan ke galeri.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">Proxy HTTP</string>
   <string name="http_proxy_summary">Gunakan Proxy HTTP untuk semua permintaan jaringan.</string>
+  <string name="proxy">Proxy</string>
   <string name="proxy_host">Host Proxy</string>
   <string name="proxy_port">Port Proxy</string>
   <string name="block">Blok</string>
@@ -361,7 +361,6 @@
   <string name="none">Tidak ada</string>
   <string name="large">Banyak</string>
   <string name="small">Sedikit</string>
-  <string name="and_N_more">dan <xliff:g id="count">%d</xliff:g> lebih lagi</string>
   <string name="clear_search_history">Bersihkan riwayat pencarian</string>
   <string name="permission_description_none">Tidak ada ijin yang diperlukan</string>
   <string name="permission_description_refresh">Memperbaharui timeline (termasuk direct messages)</string>
@@ -617,7 +616,6 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
   <string name="delete_drafts_confirm">Hapus draft?</string>
   <string name="extra_configurations">Pengaturan Ekstra</string>
-  <string name="click_item_to_config">Klik item untuk mengatur</string>
   <string name="retweets_of_me">Retweet oleh saya</string>
   <string name="from_gallery">Dari galeri</string>
   <string name="from_camera">Dari kamera</string>
@@ -794,4 +792,5 @@
   <string name="cant_load_all_replies_message">Tidak dapat memuat semua balasan. &lt;a href=\"#dialog\";&gt;Kenapa? &lt;/a&gt;</string>
   <string name="cant_load_all_replies_explanation">Karena keterbatasan Twitter untuk aplikasi twitter pihak ketiga, Twidere tidak memiliki akses ke balasan untuk twit, tidak ada jaminan bahwa Twidere dapat memuat semua balasan untuk twit.</string>
   <string name="current_status">Twit sekarang</string>
+  <string name="login_verification_failed">Gagal Menverifikasi Login.</string>
 </resources>

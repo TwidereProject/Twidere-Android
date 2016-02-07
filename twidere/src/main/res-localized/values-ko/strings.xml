@@ -153,9 +153,9 @@
   <string name="filename_hint">파일명</string>
   <string name="please_wait">기다려 주세요.</string>
   <string name="saved_to_gallery">갤러리에 저장됨.</string>
-  <string name="proxy">프록시</string>
   <string name="http_proxy">HTTP 프록시</string>
   <string name="http_proxy_summary">모든 네트워크 요청에 HTTP 프록시를 사용.</string>
+  <string name="proxy">프록시</string>
   <string name="proxy_host">프록시 호스트</string>
   <string name="proxy_port">프록시 포트</string>
   <string name="block">차단</string>
@@ -354,7 +354,6 @@
   <string name="none">없음</string>
   <string name="large">크게</string>
   <string name="small">작게</string>
-  <string name="and_N_more">등 <xliff:g id="count">%d</xliff:g>개 이상</string>
   <string name="clear_search_history">검색 기록 지우기</string>
   <string name="permission_description_none">아무런 권한을 필요로 하지 않습니다</string>
   <string name="permission_description_refresh">타임라인 새로고침 (쪽지 포함)</string>
@@ -611,7 +610,6 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> 미디어</string>
   <string name="delete_drafts_confirm">선택된 보관된 트윗을 지울까요?</string>
   <string name="extra_configurations">추가 설정</string>
-  <string name="click_item_to_config">설정할 항목을 클릭하세요.</string>
   <string name="retweets_of_me">리트윗된 내 트윗</string>
   <string name="from_gallery">갤러리로부터</string>
   <string name="from_camera">카메라로부터</string>

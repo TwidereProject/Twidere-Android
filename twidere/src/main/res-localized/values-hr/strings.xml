@@ -153,9 +153,9 @@
   <string name="filename_hint">Ime datoteke</string>
   <string name="please_wait">Molimo pričekajte.</string>
   <string name="saved_to_gallery">Spremljeno u galeriju.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
   <string name="http_proxy_summary">Koristite HTTP Proxy za sve mrežne upite.</string>
+  <string name="proxy">Proxy</string>
   <string name="proxy_host">Proxy Host</string>
   <string name="proxy_port">Proxy Port</string>
   <string name="block">Blokiraj</string>
@@ -354,7 +354,6 @@
   <string name="none">Ništa</string>
   <string name="large">Veliko</string>
   <string name="small">Malo</string>
-  <string name="and_N_more">i <xliff:g id="count">%d</xliff:g> više</string>
   <string name="clear_search_history">Očisti povijest pretraživanja</string>
   <string name="permission_description_none">Dopuštenja nisu potrebna</string>
   <string name="permission_description_refresh">Osvježi timeline (uključujući izravne poruke)</string>
@@ -605,7 +604,6 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> medijskih datoteka</string>
   <string name="delete_drafts_confirm">Obrisati odabrane skice?</string>
   <string name="extra_configurations">Dodatne postavke</string>
-  <string name="click_item_to_config">Dodirnite stavku za postavljanje</string>
   <string name="retweets_of_me">Moji rewteetovi</string>
   <string name="from_gallery">Iz galerije</string>
   <string name="from_camera">Iz kamere</string>

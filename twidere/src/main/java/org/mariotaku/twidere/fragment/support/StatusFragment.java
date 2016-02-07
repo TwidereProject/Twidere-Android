@@ -64,6 +64,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -1077,8 +1078,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             if (interactUsersAdapter.getItemCount() > 0) {
                 countsUsersView.setVisibility(View.VISIBLE);
+                countsUsersHeightHolder.setVisibility(View.VISIBLE);
             } else {
                 countsUsersView.setVisibility(View.GONE);
+                countsUsersHeightHolder.setVisibility(View.GONE);
             }
 
             final ParcelableMedia[] media = Utils.getPrimaryMedia(status);
@@ -2223,45 +2226,89 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             super.setOrientation(orientation);
         }
 
-        @Override
-        public int computeVerticalScrollOffset(RecyclerView.State state) {
-            int offset = getScrollBarStartOffset();
-            final int firstVisiblePosition = findFirstVisibleItemPosition();
-            final View firstVisibleView = findViewByPosition(firstVisiblePosition);
-            final float decoratedTop = getDecoratedTop(firstVisibleView),
-                    decoratedBottom = getDecoratedBottom(firstVisibleView);
-            final float heightRatio = decoratedTop / (decoratedBottom - decoratedTop);
-            return Math.round((Math.max(0, firstVisiblePosition - offset) - heightRatio)
-                    * getAvgItemSize());
-        }
 
         @Override
         public int computeVerticalScrollExtent(RecyclerView.State state) {
-            return getAvgItemSize();
+            final int firstPosition = findFirstVisibleItemPosition();
+            final int lastPosition = Math.min(getValidScrollItemCount() - 1, findLastVisibleItemPosition());
+            if (firstPosition < 0 || lastPosition < 0) return 0;
+            int childCount = lastPosition - firstPosition + 1;
+            if (childCount > 0) {
+                if (isSmoothScrollbarEnabled()) {
+                    int extent = childCount * 100;
+                    View view = findViewByPosition(firstPosition);
+                    final int top = view.getTop();
+                    int height = view.getHeight();
+                    if (height > 0) {
+                        extent += (top * 100) / height;
+                    }
+
+                    view = findViewByPosition(lastPosition);
+                    final int bottom = view.getBottom();
+                    height = view.getHeight();
+                    if (height > 0) {
+                        extent -= ((bottom - getHeight()) * 100) / height;
+                    }
+                    return extent;
+                } else {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        @Override
+        public int computeVerticalScrollOffset(RecyclerView.State state) {
+            final int firstPosition = findFirstVisibleItemPosition();
+            final int lastPosition = Math.min(getValidScrollItemCount() - 1, findLastVisibleItemPosition());
+            if (firstPosition < 0 || lastPosition < 0) return 0;
+            int childCount = lastPosition - firstPosition + 1;
+            final int skippedCount = getSkippedScrollItemCount();
+            if (firstPosition >= skippedCount && childCount > 0) {
+                if (isSmoothScrollbarEnabled()) {
+                    final View view = findViewByPosition(firstPosition);
+                    final int top = view.getTop();
+                    int height = view.getHeight();
+                    if (height > 0) {
+                        return Math.max((firstPosition - skippedCount) * 100 - (top * 100) / height, 0);
+                    }
+                } else {
+                    int index;
+                    final int count = getValidScrollItemCount();
+                    if (firstPosition == 0) {
+                        index = 0;
+                    } else if (firstPosition + childCount == count) {
+                        index = count;
+                    } else {
+                        index = firstPosition + childCount / 2;
+                    }
+                    return (int) (firstPosition + childCount * (index / (float) count));
+                }
+            }
+            return 0;
         }
 
         @Override
         public int computeVerticalScrollRange(RecyclerView.State state) {
-            final int count = getScrollBarValidItemCount();
-            final int avgItemSize = getAvgItemSize();
-            return count * avgItemSize;
+            int result;
+            if (isSmoothScrollbarEnabled()) {
+                result = Math.max(getValidScrollItemCount() * 100, 0);
+            } else {
+                result = getValidScrollItemCount();
+            }
+            return result;
         }
 
-        protected int getAvgItemSize() {
-            final int firstVisiblePosition = findFirstVisibleItemPosition();
-            final int lastVisiblePosition = findLastVisibleItemPosition();
-            if (firstVisiblePosition == RecyclerView.NO_POSITION || lastVisiblePosition == RecyclerView.NO_POSITION) {
-                return 1;
+        private int getSkippedScrollItemCount() {
+            final StatusAdapter adapter = (StatusAdapter) recyclerView.getAdapter();
+            int skipped = 0;
+            if (!adapter.isConversationsLoading()) {
+                skipped += adapter.getTypeCount(StatusAdapter.ITEM_IDX_CONVERSATION_LOAD_MORE);
             }
-            final View firstVisibleView = findViewByPosition(firstVisiblePosition);
-            final View lastVisibleView = findViewByPosition(lastVisiblePosition);
-            if (firstVisiblePosition == lastVisiblePosition) {
-                return firstVisibleView.getHeight();
-            }
-            return (lastVisibleView.getBottom() - firstVisibleView.getTop()) / (lastVisiblePosition - firstVisiblePosition);
+            return skipped;
         }
 
-        protected int getScrollBarValidItemCount() {
+        private int getValidScrollItemCount() {
             final StatusAdapter adapter = (StatusAdapter) recyclerView.getAdapter();
             int count = 0;
             if (adapter.isConversationsLoading()) {
@@ -2272,21 +2319,21 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_STATUS);
             count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_REPLY);
             count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_REPLY_ERROR);
-            if (adapter.isRepliesLoading() && mSpaceHeight <= 0) {
+            final int spaceHeight = getSpaceHeight();
+            if (adapter.isRepliesLoading()) {
                 count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_REPLY_LOAD_MORE);
+            }
+            if (spaceHeight > 0) {
+                count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_SPACE);
             }
             return count;
         }
 
-        protected int getScrollBarStartOffset() {
-            final StatusAdapter adapter = (StatusAdapter) recyclerView.getAdapter();
-            int offset = 0;
-            if (!adapter.isConversationsLoading()) {
-                offset = adapter.getTypeCount(StatusAdapter.ITEM_IDX_CONVERSATION_LOAD_MORE);
-            }
-            return offset;
+        private int getSpaceHeight() {
+            final View space = findViewByPosition(getItemCount() - 1);
+            if (space == null) return mSpaceHeight;
+            return getDecoratedMeasuredHeight(space);
         }
-
 
     }
 

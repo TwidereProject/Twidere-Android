@@ -169,7 +169,7 @@ public class CardPollFragment extends BaseSupportFragment implements
 
                             @Override
                             public void callback(CardPollFragment handler, ParcelableCardEntity result) {
-                                handler.displayPoll(result, status);
+                                handler.displayAndReloadPoll(result, status);
                             }
 
                             @Override
@@ -234,6 +234,11 @@ public class CardPollFragment extends BaseSupportFragment implements
         final CharSequence timeLeft = DateUtils.getRelativeTimeSpanString(getContext(),
                 endDatetimeUtc.getTime(), true);
         mPollSummary.setText(getString(R.string.poll_summary_format, nVotes, timeLeft));
+    }
+
+    private void displayAndReloadPoll(ParcelableCardEntity result, ParcelableStatus status) {
+        displayPoll(result, status);
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     private int getChoicesCount(ParcelableCardEntity card) {

@@ -104,9 +104,9 @@
   <string name="reported_user_for_spam">स्पैम के लिए इस उपयोगकर्ता का शिकायत किया |</string>
   <string name="filename_hint">फ़ाइलनाम</string>
   <string name="please_wait">कृपया प्रतीक्षा करें |</string>
-  <string name="proxy">प्रॉक्सी</string>
   <string name="http_proxy">HTTP प्रॉक्सी</string>
   <string name="http_proxy_summary">HTTP प्रोक्सी का प्रयोग सभी नेटवर्क रेकुएस्ट के लिए करे |</string>
+  <string name="proxy">प्रॉक्सी</string>
   <string name="proxy_host">प्रॉक्सी होस्ट</string>
   <string name="proxy_port">प्रॉक्सी पोर्ट</string>
   <string name="block">ब्लाक</string>

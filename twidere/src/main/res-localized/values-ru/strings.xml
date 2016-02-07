@@ -158,9 +158,9 @@
   <string name="filename_hint">Имя файла</string>
   <string name="please_wait">Пожалуйста, подождите.</string>
   <string name="saved_to_gallery">Сохранено в галерее</string>
-  <string name="proxy">Прокси</string>
   <string name="http_proxy">HTTP прокси</string>
   <string name="http_proxy_summary">Использовать прокси для всех сетевых запросов</string>
+  <string name="proxy">Прокси</string>
   <string name="proxy_host">Хост прокси</string>
   <string name="proxy_port">Порт прокси</string>
   <string name="block">Заблокировать</string>
@@ -277,6 +277,10 @@
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> и ещё <xliff:g id="other">%2$s</xliff:g> пользователей добавили в избранное.</string>
   <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> добавил(а) в избранное ваш ретвит.</string>
   <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> и ещё <xliff:g id="other">%2$s</xliff:g> пользователей добавили в избранное ваш ретвит.</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> понравился ваш твит.</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> и <xliff:g id="other">%2$s</xliff:g> понравился ваш твит.</string>
+  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> понравился ваш ретвит.</string>
+  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> и <xliff:g id="other">%2$s</xliff:g> понравился ваш ретвит.</string>
   <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> читает вас.</string>
   <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> и ещё <xliff:g id="other">%2$s</xliff:g> пользователей теперь читают вас.</string>
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> ретвитнул ваш твит.</string>
@@ -294,6 +298,8 @@
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> и ещё <xliff:g id="other">%2$s</xliff:g> пользователей добавили вас в списки.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> понравился твит <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> добавил(а) в избранное твиты <xliff:g id="target">%2$s</xliff:g> и ещё <xliff:g id="other">%3$s</xliff:g> других пользователей.</string>
+  <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> понравился твит <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_like_multi"><xliff:g id="user">%1$s</xliff:g> понравился твит <xliff:g id="target">%2$s</xliff:g> и <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> читает <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> начал читать <xliff:g id="target">%2$s</xliff:g> и ещё <xliff:g id="other">%3$s</xliff:g> пользователей.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> ретвитнул твит <xliff:g id="target">%2$s</xliff:g>.</string>
@@ -367,7 +373,6 @@
   <string name="none">Никак</string>
   <string name="large">Большой</string>
   <string name="small">Маленький</string>
-  <string name="and_N_more">и еще <xliff:g id="count">%d</xliff:g></string>
   <string name="clear_search_history">Очистить историю поиска</string>
   <string name="permission_description_none">Разрешения не требуются</string>
   <string name="permission_description_refresh">Обновить ленту (вкл. личн. сообщения)</string>
@@ -622,7 +627,6 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> медифайлов</string>
   <string name="delete_drafts_confirm">Удалить выбранный черновик?</string>
   <string name="extra_configurations">Дополнительные настройки</string>
-  <string name="click_item_to_config">Нажмите на пункт для управления</string>
   <string name="retweets_of_me">Ретвиты меня</string>
   <string name="from_gallery">Из галереи</string>
   <string name="from_camera">Из камеры</string>
@@ -811,4 +815,6 @@
   <string name="login_verification_pin_hint">Проверьте PIN-код на своем телефоне и введите его для авторизации.</string>
   <string name="login_verification_push_hint">Принятие подтверждение входа требует разрешения от Твиттер приложения, как только одобрили запрос, нажмите ОК.</string>
   <string name="login_verification_failed">Ошибка проверки входа.</string>
+  <string name="saved_searches_already_saved_hint">Возможно, вы уже сохранили этот поиск</string>
+  <string name="unsupported_activity_action_summary">Пожалуйста, сообщите действием ниже</string>
 </resources>

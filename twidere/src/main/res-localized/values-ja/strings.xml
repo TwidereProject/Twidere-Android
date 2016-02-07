@@ -158,11 +158,15 @@
   <string name="filename_hint">ファイル名</string>
   <string name="please_wait">しばらくお待ちください…</string>
   <string name="saved_to_gallery">ギャラリーに保存</string>
-  <string name="proxy">プロキシ</string>
   <string name="http_proxy">HTTP プロキシ</string>
   <string name="http_proxy_summary">ネットワークリクエストにHTTP プロキシを使用します。</string>
+  <string name="proxy">プロキシ</string>
+  <string name="proxy_summary">すべてのネットワーク要件においてプロキシを使用します。</string>
+  <string name="proxy_type">プロキシの種類</string>
   <string name="proxy_host">ホスト</string>
   <string name="proxy_port">ポート番号</string>
+  <string name="proxy_username">プロキシのユーザー名</string>
+  <string name="proxy_password">プロキシのパスワード</string>
   <string name="block">ブロック</string>
   <string name="unblock">ブロックを解除</string>
   <string name="report_for_spam">スパム報告</string>
@@ -373,7 +377,7 @@
   <string name="none">なし</string>
   <string name="large">大</string>
   <string name="small">小</string>
-  <string name="and_N_more">他<xliff:g id="count">%d</xliff:g></string>
+  <string name="and_N_more">あと<xliff:g id="count">%d</xliff:g></string>
   <string name="clear_search_history">検索履歴を消去</string>
   <string name="permission_description_none">権限は必要ありません</string>
   <string name="permission_description_refresh">タイムラインの更新 (DMを含める)</string>
@@ -628,7 +632,7 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g>個のメディア</string>
   <string name="delete_drafts_confirm">選択した下書きを削除しますか?</string>
   <string name="extra_configurations">追加設定</string>
-  <string name="click_item_to_config">アイテムをタップすると設定します</string>
+  <string name="click_item_to_configure">設定したい項目をタップしてください</string>
   <string name="retweets_of_me">リツイートされたツイート</string>
   <string name="from_gallery">ギャラリー</string>
   <string name="from_camera">カメラ</string>
@@ -743,6 +747,8 @@
   <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> お気に入り</string>
   <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> いいね</string>
   <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> いいね</string>
+  <string name="N_votes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>票</string>
+  <string name="N_votes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>票</string>
   <string name="drafts_hint_messages">未送信のツイートが保存されます</string>
   <string name="keyboard_shortcuts">キーボードショートカット</string>
   <string name="keyboard_shortcut_hint">キーを押してください</string>
@@ -794,6 +800,7 @@
   <string name="report_usage_statistics_now">現在の使用状況を報告する。</string>
   <string name="cache_size_limit">キャッシュサイズ制限</string>
   <string name="bug_reports">バグレポート</string>
+  <string name="bug_reports_summary">Powered by Fabric</string>
   <string name="invalid_consumer_key">無効なコンシューマーキーです</string>
   <string name="invalid_consumer_secret">無効なコンシューマーシークレットです</string>
   <string name="page_up">ページアップ</string>
@@ -809,12 +816,26 @@
   <string name="current_status">現在のツイート</string>
   <string name="twitter_optimized_searches">検索結果を最適化しました</string>
   <string name="twitter_optimized_searches_summary">リツイートを除外するなどの検索結果を改善するために、特別な検索用語を使用します</string>
-  <string name="i_want_my_stars_back">お気に入りに戻って欲しい！</string>
+  <string name="i_want_my_stars_back">お気に入りのスターを復活させる！</string>
   <string name="i_want_my_stars_back_summary">いいね (♥) の代わりにお気に入り (★) を使用する</string>
   <string name="copy_link">リンクをコピー</string>
   <string name="link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
   <string name="login_verification">ログイン認証</string>
   <string name="login_verification_pin_hint">あなたの携帯電話であることを確認するためにPINコードを入力して、ログインしてください。</string>
-  <string name="login_verification_push_hint">要求を承認したあと、Twitterアプリからのログインを受け入れてOKをタッチしてください。</string>
+  <string name="login_verification_push_hint">要求を承認したあと、Twitterアプリからのログインを受け入れてOKをタップしてください。</string>
   <string name="login_verification_failed">ログイン認証に失敗しました。</string>
+  <string name="saved_searches_already_saved_hint">おそらく、既にこの検索は保存されています</string>
+  <string name="unsupported_activity_action_summary">上記のアクションを報告してください</string>
+  <string name="unknown_language">不明な言語です</string>
+  <string name="system_default">システムデフォルト</string>
+  <string name="emoji_support">絵文字のサポート</string>
+  <string name="open_poll_in_official_app">公式アプリで投票を開く</string>
+  <string name="action_vote">投票</string>
+  <string name="label_poll">投票</string>
+  <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+  <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+  <string name="mentions_only">ユーザー宛のツイートのみ</string>
+  <string name="error_no_dm_permission">ダイレクトメッセージのアクセス許可がありません。Twitter アプリケーションのアクセス許可設定を確認してください。</string>
+  <string name="select_accounts_for_compose">ツイートするアカウントを選択</string>
+  <string name="interactions">みんなの反応</string>
 </resources>

@@ -158,11 +158,15 @@
   <string name="filename_hint">文件名</string>
   <string name="please_wait">请稍等</string>
   <string name="saved_to_gallery">已保存到相册</string>
-  <string name="proxy">代理服务器</string>
   <string name="http_proxy">HTTP代理</string>
   <string name="http_proxy_summary">为API请求使用HTTP代理</string>
+  <string name="proxy">代理服务器</string>
+  <string name="proxy_summary">为所有网络请求使用代理</string>
+  <string name="proxy_type">代理服务器类型</string>
   <string name="proxy_host">代理服务器主机名</string>
   <string name="proxy_port">代理服务器端口</string>
+  <string name="proxy_username">代理服务器用户名</string>
+  <string name="proxy_password">代理服务器密码</string>
   <string name="block">阻止</string>
   <string name="unblock">取消阻止</string>
   <string name="report_for_spam">报告垃圾信息</string>
@@ -373,7 +377,7 @@
   <string name="none">无</string>
   <string name="large">大尺寸</string>
   <string name="small">小尺寸</string>
-  <string name="and_N_more">和其他<xliff:g id="count">%d</xliff:g>个</string>
+  <string name="and_N_more">和其他 <xliff:g id="count">%d</xliff:g> 个</string>
   <string name="clear_search_history">清除搜索历史</string>
   <string name="permission_description_none">没有需要的权限</string>
   <string name="permission_description_refresh">刷新时间线（包括私信）</string>
@@ -628,7 +632,7 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g>媒体</string>
   <string name="delete_drafts_confirm">删除选择的草稿？</string>
   <string name="extra_configurations">额外设定</string>
-  <string name="click_item_to_config">点击一项以设定</string>
+  <string name="click_item_to_configure">点击一项以配置</string>
   <string name="retweets_of_me">转推我的内容</string>
   <string name="from_gallery">来自相册</string>
   <string name="from_camera">来自相机</string>
@@ -743,6 +747,8 @@
   <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>收藏</string>
   <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>喜欢</string>
   <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g>喜欢</string>
+  <string name="N_votes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> 投票</string>
+  <string name="N_votes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> 投票</string>
   <string name="drafts_hint_messages">你未发送的推文会被保存在这里</string>
   <string name="keyboard_shortcuts">快捷键</string>
   <string name="keyboard_shortcut_hint">按下按键</string>
@@ -794,8 +800,9 @@
   <string name="report_usage_statistics_now">立即汇报使用情况</string>
   <string name="cache_size_limit">缓存空间限制</string>
   <string name="bug_reports">错误报告</string>
-  <string name="invalid_consumer_key">无效的Consumer key</string>
-  <string name="invalid_consumer_secret">无效的Consumer secret</string>
+  <string name="bug_reports_summary">由 Fabric 提供技术支持</string>
+  <string name="invalid_consumer_key">无效的 Consumer key</string>
+  <string name="invalid_consumer_secret">无效的 Consumer secret</string>
   <string name="page_up">上翻页</string>
   <string name="page_down">下翻页</string>
   <string name="combined_notifications">合并通知</string>
@@ -819,4 +826,16 @@
   <string name="login_verification_failed">登录验证失败</string>
   <string name="saved_searches_already_saved_hint">你可能已经保存过这个搜索了</string>
   <string name="unsupported_activity_action_summary">请报告上面的内容</string>
+  <string name="unknown_language">未知语言</string>
+  <string name="system_default">系统默认</string>
+  <string name="emoji_support">Emoji支持</string>
+  <string name="open_poll_in_official_app">在官方应用中打开投票</string>
+  <string name="action_vote">投票</string>
+  <string name="label_poll">投票</string>
+  <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+  <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+  <string name="mentions_only">仅提及</string>
+  <string name="error_no_dm_permission">没有私信权限。请检查你注册的 Twitter 应用的权限设置。</string>
+  <string name="select_accounts_for_compose">选择用来撰写的帐号</string>
+  <string name="interactions">互动</string>
 </resources>

@@ -65,7 +65,7 @@
   <string name="view_user_profile">Felhasználói profil</string>
   <string name="browser">Böngésző</string>
   <string name="pick_from_gallery">Választás a Galériából</string>
-  <string name="statuses">Tweetek</string>
+  <string name="statuses">Tweet</string>
   <string name="followers">Követők</string>
   <string name="following">Követve</string>
   <string name="about">Általános infó</string>
@@ -118,7 +118,7 @@
   <string name="pick_color">Szín kiválasztása</string>
   <string name="follow">Követés</string>
   <string name="unfollow">Követés megszüntetése</string>
-  <string name="leftside_compose_button">Új tweet gomb bal oldalra</string>
+  <string name="leftside_compose_button">Új tweet gomb bal oldalt</string>
   <string name="leftside_compose_button_summary">Új tweet gomb bal oldalra helyezése.</string>
   <string name="load_item_limit">Betöltendő elemek maximális száma</string>
   <string name="load_item_limit_summary">Töltésenkénti elemszám korlát beállítása.</string>
@@ -158,11 +158,15 @@
   <string name="filename_hint">Fájlnév</string>
   <string name="please_wait">Kérem várjon.</string>
   <string name="saved_to_gallery">A galériába mentve.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
   <string name="http_proxy_summary">HTTP Proxy használata minden hálózati kéréshez.</string>
+  <string name="proxy">Proxy</string>
+  <string name="proxy_summary">Proxy használata minden hálózati eléréshez.</string>
+  <string name="proxy_type">Proxy típusa</string>
   <string name="proxy_host">Proxy Host</string>
   <string name="proxy_port">Proxy Port</string>
+  <string name="proxy_username">Proxy felhasználó név</string>
+  <string name="proxy_password">Proxy jelszó</string>
   <string name="block">Blokkol</string>
   <string name="unblock">Engedélyez</string>
   <string name="report_for_spam">Spam jelentése</string>
@@ -291,8 +295,8 @@
   <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> retweetelte a tweetet miben említenek.</string>
   <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> kedvence a tweet miben említenek.</string>
   <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> kedvence a tweet miben említenek.</string>
-  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> kedveli a tweet miben említenek.</string>
-  <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> kedveli a tweet miben említenek.</string>
+  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> kedveli a tweet-et miben említenek.</string>
+  <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> kedveli a tweet-et miben említenek.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> hozzáadott egy listájához.</string>
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> hozzáadott téged a következő listához: "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> hozzáadtak téged listáikhoz.</string>
@@ -310,7 +314,7 @@
   <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> listákat hozott létre: <xliff:g id="target">%2$s</xliff:g> és <xliff:g id="other">%1$s</xliff:g>.</string>
   <string name="status_not_updated">Tweet nincs elküldve.</string>
   <string name="status_not_updated_summary">Tweet nincs elküldve, de mentve van a piszkozatok közé.</string>
-  <string name="incoming_friendships">Függőben lévő követési kérelemek</string>
+  <string name="incoming_friendships">Követési kérelem függőben</string>
   <string name="send_follow_request">Követési kérelem küldése</string>
   <string name="follow_request_sent">Követési kérelem elküldve</string>
   <string name="status">Tweet</string>
@@ -373,13 +377,13 @@
   <string name="none">Semmi</string>
   <string name="large">Nagy</string>
   <string name="small">Kicsi</string>
-  <string name="and_N_more">és még <xliff:g id="count">%d</xliff:g> további elem</string>
+  <string name="and_N_more">és még <xliff:g id="count">%d</xliff:g> elem</string>
   <string name="clear_search_history">Keresési történet törlése</string>
   <string name="permission_description_none">Nincs szükség engedélyekre</string>
   <string name="permission_description_refresh">Kezdőlap (és privát üzenetek) frissítése</string>
   <string name="permission_description_read">Tweetek és néhány gyorsítótárazott tartalom olvasása</string>
   <string name="permission_description_write">Adatbázisba írás, állapot frissítés</string>
-  <string name="permission_description_direct_messages">Közvetlen üzenetek</string>
+  <string name="permission_description_direct_messages">Közvetlen üzenetek olvasása/írása/küldése</string>
   <string name="permission_description_accounts">Fiók információ olvasása</string>
   <string name="permission_description_preferences">Beállítások beolvasása</string>
   <string name="permissions_request">Engedély kérése</string>
@@ -399,6 +403,7 @@
   <string name="preview_images">Képek előnézete</string>
   <string name="preload_wifi_only">Előtöltés csak Wi-Fi használata esetén</string>
   <string name="sign_in_method_introduction_title">Hogy működik?</string>
+  <string name="sign_in_method_introduction">A legtöbb Twitter alkalmazás megnyit egy oldalt a böngészőben az engedélyezéshez, ami néha kényelmetlen lehet egyedi API használatakor, vagy lassú hálózaton. A Twidere egy normál böngészőt szimulál, hogy segítsen a Twitter bejelentkezéshez. Ne aggódj, a jelszavad soha nem kerül tárolásra, vagy megosztásra.</string>
   <string name="quote_protected_status_notice">Nem ajánlott védett tweeteket idézni.</string>
   <string name="edit_draft">Piszkozat szerkesztése</string>
   <string name="profile_image">Profilkép</string>
@@ -498,6 +503,7 @@
   <string name="wizard_page_welcome_import_settings">Beállítások importálása</string>
   <string name="wizard_page_theme_text">Válassz egy neked tetsző témát.</string>
   <string name="wizard_page_tabs_text">Adj hozzá néhány fület a Twidere-hez.\nKövesd a számodra érdekes embereket, vagy dolgokat.</string>
+  <string name="wizard_page_tabs_unchanged_message">Füleket itt tudsz hozzáadni: "Beállítások" - "Fülek"</string>
   <string name="wizard_page_cards_text">Kártya elemek beállítása.</string>
   <string name="wizard_page_hints_text">Itt van néhány hasznos link:</string>
   <string name="wizard_page_usage_statistics_text">A Twidere részt vett néhány kutatási projektben, amelyeknek szüksége van használati adatokra.</string>
@@ -551,6 +557,8 @@
   <string name="theme_background_transparent">Átlátszó</string>
   <string name="theme_dark_actionbar">Sötét ActionBar</string>
   <string name="wizard_hint_compose_select_account">Érintsd meg a profilképet a tweet írásakor a használandó fiók kiválasztásához.</string>
+  <string name="wizard_hint_quote_format">A kedvenc idézet formátumodat itt állíthatod be: "Beállítások" - "Új tweet"</string>
+  <string name="wizard_hint_filters">Elrejtheted a nem kívánt tweet-eket az idővonaladról a "Szűrők" használatával.</string>
   <string name="view_replies">Válaszok megtekintése</string>
   <string name="compact_cards">Kompakt kártyák</string>
   <string name="compact_cards_summary">Több kártya megjelenítése a képernyőn</string>
@@ -603,7 +611,7 @@
   <string name="load_more_from_top_summary">Hasznos, ha lentről felfelé szeretsz olvasni</string>
   <string name="compose_now">Új tweet most</string>
   <string name="compose_now_summary">Lecseréli a Google Now parancsikont a Fogalmazás most képernyőre</string>
-  <string name="compose_now_action">Létrehozás most művelet</string>
+  <string name="compose_now_action">Új tweet most művelet</string>
   <string name="open_with_account">Megnyitás másik fiókkal</string>
   <string name="card_highlight_option_highlight">Kiemelés</string>
   <string name="card_highlight_option_line">Vonal</string>
@@ -624,7 +632,7 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> média</string>
   <string name="delete_drafts_confirm">Töröljem a kiválasztott piszkozatokat?</string>
   <string name="extra_configurations">Egyéb beállítások</string>
-  <string name="click_item_to_config">Érints meg egy bejegyzést a beállításhoz</string>
+  <string name="click_item_to_configure">Érints meg egy elemet a beállításhoz</string>
   <string name="retweets_of_me">Retweetjeim</string>
   <string name="from_gallery">Galériából</string>
   <string name="from_camera">Kamerából</string>
@@ -699,6 +707,7 @@
   <string name="getting_location">Hely meghatározása</string>
   <string name="save_to_gallery">Mentés a galériába</string>
   <string name="usage_statistics">Használati statisztikák</string>
+  <string name="research_hot_mobile">Statisztikán alapuló mobil hálózat kutatás</string>
   <string name="unknown_location">Ismeretlen hely</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Beállítások Importálása/Exportálása</string>
@@ -738,6 +747,8 @@
   <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> kedvenc</string>
   <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> kedvelés</string>
   <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> kedvelés</string>
+  <string name="N_votes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> szavazat</string>
+  <string name="N_votes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> szavazat</string>
   <string name="drafts_hint_messages">Ide lesznek mentve az el nem küldött tweetjeid</string>
   <string name="keyboard_shortcuts">Billentyűparancsok</string>
   <string name="keyboard_shortcut_hint">Nyomj le billentyűket</string>
@@ -774,6 +785,8 @@
   <string name="dark_theme">Sötét téma</string>
   <string name="wizard_hint_title_location_requirement">Tartozkodási hely engedélyezése</string>
   <string name="wizard_hint_summary_location_requirement">A Twidere-nek tartózkodási hely engedélyre van szüksége helyszínt tartalmazó tweet küldéséhez.</string>
+  <string name="wizard_hint_title_storage_requirement">Tárhely engedély</string>
+  <string name="wizard_hint_summary_storage_requirement">A programnak tárhely engedélyre van szüksége, amikor a fájlokhoz akarsz hozzáférni.</string>
   <string name="scrapyard">Szemetes</string>
   <string name="crop_image">Kép vágása</string>
   <string name="usage_label_sent">Elküldött</string>
@@ -782,13 +795,47 @@
   <string name="media_preload">Média előtöltés</string>
   <string name="on_mobile_network">Mobil adat hálózaton</string>
   <string name="set_consumer_key_secret_message">Twidere lassan eléri a token korlátozást, létre kell majd hoznod egy alkalmazást a https://apps.twitter.com/ webhelyen és be kell illeszteni a lenti felhasználó kulcsot és jelszót.\nHa folytatod az alapértelmezett kulcs használatát, lehetséges, hogy nem tudsz majd bejelentkezni.</string>
+  <string name="send_at">Küldés ekkor:</string>
+  <string name="scheduled_statuses">Időzített tweet-ek</string>
+  <string name="report_usage_statistics_now">Használati statisztikák küldése most</string>
+  <string name="cache_size_limit">Gyorsítótár méret korlát</string>
+  <string name="bug_reports">Hibajelentések</string>
+  <string name="bug_reports_summary">Powered by Fabric</string>
+  <string name="invalid_consumer_key">Érvénytelen fogyasztó azonosító</string>
+  <string name="invalid_consumer_secret">Érvénytelen fogyasztó jelszó</string>
   <string name="page_up">Oladl eleje</string>
   <string name="page_down">Oldal vége</string>
+  <string name="combined_notifications">Egyesített értesítések</string>
+  <string name="combined_notifications_summary_on">Csoportosítva jelennek meg az értesítések</string>
+  <string name="combined_notifications_summary_off">Elkülönítve jelennek meg az értesítések</string>
+  <string name="save_media_no_storage_permission_message">Tároló engedély szükséges a média mentéséhez.</string>
+  <string name="select_file_no_storage_permission_message">Tároló engedély szükséges a fájl kiválasztásához.</string>
   <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g> megemlített téged</string>
+  <string name="cant_load_all_replies_message">Nem lehet betölteni az összes választ. &lt;a href=\"#dialog\";&gt;Miért?&lt;/a&gt;</string>
+  <string name="cant_load_all_replies_explanation">A Twitter harmadik féltől származó twitter alkalmazásokat érintő korlátozása miatt, nincs hozzáférésünk egy tweet-re adott válaszokhoz, nincs rá garancia, hogy a Twidere be tudja tölteni az összes választ egy tweetre.</string>
   <string name="current_status">Jelenlegi tweet</string>
   <string name="twitter_optimized_searches">Twitter optimalizálja a keresést</string>
+  <string name="twitter_optimized_searches_summary">Egyedi keresési kifejezések használva, mint pld. retweet-ek kizárva</string>
   <string name="i_want_my_stars_back">Szeretném a csillagokat visszakapni!</string>
   <string name="i_want_my_stars_back_summary">Kedvencet használj (★) a kedvelés helyett (♥︎)</string>
   <string name="copy_link">Link másolása</string>
   <string name="link_copied_to_clipboard">Link a vágólapra másolva</string>
+  <string name="login_verification">Bejelentkezés ellenőrzése</string>
+  <string name="login_verification_pin_hint">Ellenőrizd a telefonodra küldött PIN kódot és írd be a bejelentkezéshez.</string>
+  <string name="login_verification_push_hint">Fogadd el a bejelentkezési kérelmet a Twitter alkalmazástól, majd miután jóváhagytad a kérelmet, nyomj OK-t.</string>
+  <string name="login_verification_failed">Bejelentkezési ellenőrzés sikertelen.</string>
+  <string name="saved_searches_already_saved_hint">Talán egyszer már mentetted ezt a keresést</string>
+  <string name="unsupported_activity_action_summary">Kérlek jelentsd a fenti műveletet</string>
+  <string name="unknown_language">Ismeretlen nyelv</string>
+  <string name="system_default">Rendszer alapértelmezés</string>
+  <string name="emoji_support">Emoji támogatás</string>
+  <string name="open_poll_in_official_app">Szavazás megnyitása a hivatalos alkalmazásban</string>
+  <string name="action_vote">Szavaz</string>
+  <string name="label_poll">Szavazás</string>
+  <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+  <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+  <string name="mentions_only">Csak az említések</string>
+  <string name="error_no_dm_permission">Közvetlen üzenet nem engedélyezett, ellenőrizd a Twitter alkalmazásod beállításait!</string>
+  <string name="select_accounts_for_compose">Válassz fiókot a küldéshez</string>
+  <string name="interactions">Interakciók</string>
 </resources>

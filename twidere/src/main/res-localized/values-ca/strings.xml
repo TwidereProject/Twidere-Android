@@ -154,9 +154,9 @@
   <string name="filename_hint">Nom del fitxer</string>
   <string name="please_wait">Espereu, si us plau.</string>
   <string name="saved_to_gallery">Desat a la galeria.</string>
-  <string name="proxy">Servidor intermediari</string>
   <string name="http_proxy">Servidor HTTP intermediari</string>
   <string name="http_proxy_summary">Utilitza un servidor HTTP intermediari per a totes les peticions de la xarxa.</string>
+  <string name="proxy">Servidor intermediari</string>
   <string name="proxy_host">Adreça del servidor intermediari</string>
   <string name="proxy_port">Port del servidor intermediari</string>
   <string name="block">Bloqueja</string>
@@ -355,7 +355,6 @@
   <string name="none">Cap</string>
   <string name="large">Gran</string>
   <string name="small">Petit</string>
-  <string name="and_N_more">i <xliff:g id="count">%d</xliff:g> més</string>
   <string name="clear_search_history">Neteja l\'historial de cerques</string>
   <string name="permission_description_none">No calen permisos</string>
   <string name="permission_description_refresh">Actualitza la cronologia (inclou els missatges directes)</string>
@@ -607,7 +606,6 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> mèdies</string>
   <string name="delete_drafts_confirm">Voleu eliminar els esborranys seleccionats?</string>
   <string name="extra_configurations">Paràmetres addicionals</string>
-  <string name="click_item_to_config">Feu clic en un element per configurar-lo</string>
   <string name="retweets_of_me">Repiulades meves</string>
   <string name="from_gallery">Des de la galeria</string>
   <string name="from_camera">Des de la càmera</string>

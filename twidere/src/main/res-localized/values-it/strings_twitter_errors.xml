@@ -9,6 +9,8 @@
   <string name="error_twitter_130">Twitter è momentaneamente sovraccarico.</string>
   <string name="error_twitter_131">I server di Twitter potrebbero essere temporaneamente offline, prova più tardi.</string>
   <string name="error_twitter_135">Per favore, controlla le impostazioni dell\'ora.</string>
+  <string name="error_twitter_136">Sei stato bloccato da questo utente.</string>
+  <string name="error_twitter_139">Hai già aggiunto a preferiti questo tweet.</string>
   <string name="error_twitter_161">Stai già seguendo questo utente.</string>
   <string name="error_twitter_162">Questo utente ti ha bloccato.</string>
   <string name="error_twitter_172">Hai già salvato questa ricerca.</string>

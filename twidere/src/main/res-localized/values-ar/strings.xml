@@ -158,11 +158,11 @@
   <string name="filename_hint">إسم الملف</string>
   <string name="please_wait">يرجى الإنتظار.</string>
   <string name="saved_to_gallery">حفظت في المعرض.</string>
-  <string name="proxy">البروكسي</string>
   <string name="http_proxy">بروكسي HTTP</string>
   <string name="http_proxy_summary">إستخدام بروكسي HTTP لجميع طلبات الشبكة.</string>
+  <string name="proxy">البروكسي</string>
   <string name="proxy_host">مضيف البروكسي</string>
-  <string name="proxy_port">منفذ البروكسي</string>
+  <string name="proxy_port">منفذ الوسيط</string>
   <string name="block">حجب</string>
   <string name="unblock">رفع الحجب</string>
   <string name="report_for_spam">بلغ على أنه بريد مزعج ورسائل احتيال</string>
@@ -367,7 +367,6 @@
   <string name="none">لا شيء</string>
   <string name="large">كبير</string>
   <string name="small">صغير</string>
-  <string name="and_N_more">و <xliff:g id="count">%d</xliff:g> أخرون</string>
   <string name="clear_search_history">محو سجل البحث</string>
   <string name="permission_description_none">لا يوجد صلاحيات مُحتاجة.</string>
   <string name="permission_description_refresh">تحديث الخط الزمني (بما في ذلك الرسائل الخاصة)</string>
@@ -393,6 +392,7 @@
   <string name="preview_images">معاينة الصور</string>
   <string name="preload_wifi_only">التحميل المسبق عند إستعمال الواي فاي</string>
   <string name="sign_in_method_introduction_title">كيف تعمل؟</string>
+  <string name="sign_in_method_introduction">معظم تطبيقات تويتر تقوم بفتح صفحة ويب للمصادقة مع تويتر، وقد يكون هذا غير ملائم في حال استخدام API معدلة او عند ضعف الشبكة، Twidere يحاكي متصفح معتاد للمساعدة في تسجيل الدخول الى تويتر. لا تقلق لن يتم تخزين كلمة السر خاصتك او تسريبها.</string>
   <string name="quote_protected_status_notice">لا يُنصح بإقتباس تغريدةٍ محمية.</string>
   <string name="edit_draft">تعدبل المسودة</string>
   <string name="profile_image">صورة الملف الشخصي</string>
@@ -494,6 +494,7 @@
   <string name="wizard_page_tabs_text">أضف بعض للتبويبات إلى تويدر.\nتتبع الأشخاص أو الأشياء التي تهتم بشأنها.</string>
   <string name="wizard_page_cards_text">إعداد مكونات البطاقة.</string>
   <string name="wizard_page_hints_text">بعض الإشارات المفيدة.</string>
+  <string name="wizard_page_usage_statistics_text">Twidere يساهم في بعض مشاريع الابحاث والتي تحتاج بعض معلومات الاستخدام.</string>
   <string name="wizard_page_finished_title">إنتهى</string>
   <string name="wizard_page_finished_text">الآن تويدر جاهز.</string>
   <string name="invalid_tab">تبويبة معطلة</string>
@@ -508,9 +509,18 @@
   <string name="unfollow_user_confirm_message">هل أنت متأكد أنك تريد إلغاء متابعة <xliff:g id="name">%s</xliff:g> ؟ لن ترى تغريداته في خط الزمن.</string>
   <string name="delete_user_list">حذف القائمة <xliff:g id="name">%s</xliff:g></string>
   <string name="delete_user_list_confirm_message">حذف القائمة <xliff:g id="name">%s</xliff:g> ؟ لايمكن التراجع عن هذه العملية.</string>
+  <string name="unsubscribe_from_user_list">لإلغاء التسجيل من لائحة <xliff:g id="name">%s</xliff:g></string>
+  <string name="unsubscribe_from_user_list_confirm_message">إلغاء التسجيل في اللائحة <xliff:g id="name">%s</xliff:g>
+\"يمكنك إعادة التسجيل في هذه اللائحة في اي وقت\".</string>
   <string name="destroy_status">حذف تغريدة</string>
   <string name="destroy_status_confirm_message">هل تريد حذف هذه التغريدة؟</string>
+  <string name="destroy_saved_search">شطب عملية البحث المحفوظة. \"<xliff:g id="name">%s</xliff:g>\"</string>
+  <string name="destroy_saved_search_confirm_message">شطب عملية البحث المحفوظة \"<xliff:g id="name">%s</xliff:g>\"؟
+يمكنك اعادة حفظ البحث الحالي في أي وقت.</string>
+  <string name="signing_in_error_browser_sign_in_hint">خلل في عملية تسجيل الدخول، قد تحتاج الى تسجيل الدخول باستخدام المتصفح. (سيتم تجاهل اعدادات API الاخيرة خلال تسجيل الدخول)</string>
   <string name="report_user">تقرير <xliff:g id="name">%s</xliff:g></string>
+  <string name="report_user_confirm_message">الإبلاغ عن المستخدم <xliff:g id="name">%s</xliff:g> لإرساله سبام؟
+سوف تقوم بحظر هذا المستخدم أيضاً.</string>
   <string name="twidere_test">تجريب تويدر</string>
   <string name="unread_count">عدد غير المقروء</string>
   <string name="developed_by">طوّره</string>
@@ -535,6 +545,7 @@
   <string name="theme_background_default">افتراضي</string>
   <string name="theme_background_solid">أبيض وأسود خالصين</string>
   <string name="theme_background_transparent">شفاف</string>
+  <string name="wizard_hint_compose_select_account">اضغط على صورة البروفايل لاختيار الحساب عند كتابة تغريدة.</string>
   <string name="view_replies">عرض الردود</string>
   <string name="compact_cards">بطاقات مختصرة</string>
   <string name="compact_cards_summary">عرض بطاقات أكثر على الشاشة</string>

@@ -158,9 +158,9 @@
   <string name="filename_hint">نام پرونده</string>
   <string name="please_wait">لطفاً صبر کنید.</string>
   <string name="saved_to_gallery">در گالری ذخیره شد.</string>
-  <string name="proxy">پیشکار</string>
   <string name="http_proxy">پیشکار HTTP</string>
   <string name="http_proxy_summary">از پیشکار HTTP برای همه‌ی درخواست‌های شبکه استفاده کن.</string>
+  <string name="proxy">پیشکار</string>
   <string name="proxy_host">میزبان پیشکار</string>
   <string name="proxy_port">درگاه پیشکار</string>
   <string name="block">مسدود کردن</string>
@@ -373,7 +373,6 @@
   <string name="none">هیچ‌کدام</string>
   <string name="large">بزرگ</string>
   <string name="small">کوچک</string>
-  <string name="and_N_more">و <xliff:g id="count">%d</xliff:g> بیش‌تر</string>
   <string name="clear_search_history">پاک‌سازی تاریخچه‌ی جستجو</string>
   <string name="permission_description_none">هیچ دسترسی‌ای نیاز نیست</string>
   <string name="permission_description_refresh">تازه‌سازی خط‌زمان (شامل پیام‌های مستقیم)</string>
@@ -625,7 +624,6 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate">‫<xliff:g id="items">%d</xliff:g> رسانه</string>
   <string name="delete_drafts_confirm">حدف چرک‌نویس‌های گزیده؟</string>
   <string name="extra_configurations">پیکربندی‌های اضافی</string>
-  <string name="click_item_to_config">برای پیکربندی، روی یک مورد کلیک کنید</string>
   <string name="retweets_of_me">بارتوییت‌های من</string>
   <string name="from_gallery">از جُنگ</string>
   <string name="from_camera">از دوربین</string>
@@ -812,6 +810,5 @@
   <string name="login_verification_push_hint">قبول درخواست تأیید ورود از کارهٔ توییتر. پس از این که درخواست را تأیید کردید، روی قبول کلیک کنید.</string>
   <string name="login_verification_failed">تأیید هویت ورود شکست خورد.</string>
   <string name="saved_searches_already_saved_hint">احتمالاً از پیش این جست‌‌وجو را ذخیره کرده‌اید</string>
-  <string name="unsupported_activity_action_title">عمل <xliff:g id="action">%s</xliff:g></string>
   <string name="unsupported_activity_action_summary">لطفاً عمل بالا را گزارش دهید</string>
 </resources>

@@ -158,11 +158,15 @@
   <string name="filename_hint">Nombre de archivo</string>
   <string name="please_wait">Por favor espera.</string>
   <string name="saved_to_gallery">Guardado en la galería.</string>
-  <string name="proxy">Proxy</string>
   <string name="http_proxy">HTTP Proxy</string>
   <string name="http_proxy_summary">Usar HTTP Proxy para todas las peticiones de la red.</string>
+  <string name="proxy">Proxy</string>
+  <string name="proxy_summary">Usar proxy para todas las solicitudes de red.</string>
+  <string name="proxy_type">Tipo de proxy</string>
   <string name="proxy_host">Proxy Host</string>
-  <string name="proxy_port">Proxy Port</string>
+  <string name="proxy_port">Puerto Proxy</string>
+  <string name="proxy_username">Nombre de usuario</string>
+  <string name="proxy_password">Contraseña</string>
   <string name="block">Bloquear</string>
   <string name="unblock">Desbloquear</string>
   <string name="report_for_spam">Reportar por spam</string>
@@ -277,7 +281,7 @@
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> marcaron como favorito tu tweet.</string>
   <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> marcó como favorito tu retweet.</string>
   <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> marcaron como favorito tu retweet.</string>
-  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> le gustó tu tweet.</string>
+  <string name="activity_about_me_like">A <xliff:g id="user">%s</xliff:g> le gustó tu tweet.</string>
   <string name="activity_about_me_like_multi">A <xliff:g id="user">%1$s</xliff:g> y a <xliff:g id="other">%2$s</xliff:g> les gustó tu tweet.</string>
   <string name="activity_about_me_liked_retweet">A <xliff:g id="user">%s</xliff:g> le gustó tu retweet.</string>
   <string name="activity_about_me_liked_retweet_multi">A <xliff:g id="user">%1$s</xliff:g> y a <xliff:g id="other">%2$s</xliff:g> les gustó tu retweet.</string>
@@ -287,14 +291,14 @@
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te han retweedteado.</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> han retweedteado tu retweet.</string>
   <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te han retweedteado.</string>
-  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> ha retuiteado un tweet dónde eres mencionado.</string>
-  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> han retuiteado un tweet dónde eres mencionado.</string>
-  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> ha guardado como favorito un tweet dónde eres mencionado.</string>
-  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> han guardado como favorito un tweet dónde eres mencionado.</string>
-  <string name="activity_about_me_liked_mention">A <xliff:g id="user">%s</xliff:g> le gustó un tweet donde te mencionaban.</string>
-  <string name="activity_about_me_liked_mention_multi">A <xliff:g id="user">%s</xliff:g> y a <xliff:g id="other">%2$s</xliff:g> les gustó un tweet donde te mencionaban.</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> ha retwiteado un tweet donde fuiste mencionado.</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> han retwiteado un tweet donde fuiste mencionado.</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> ha marcado como favorito un tweet donde fuiste mencionado.</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> han marcado como favorito un tweet donde fuiste mencionado.</string>
+  <string name="activity_about_me_liked_mention">A <xliff:g id="user">%s</xliff:g> le gustó un tweet donde fuiste mencionado.</string>
+  <string name="activity_about_me_liked_mention_multi">A <xliff:g id="user">%s</xliff:g> y a <xliff:g id="other">%2$s</xliff:g> les gustó un tweet donde fuiste mencionado.</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="usuario">%s</xliff:g> te añadió a una lista.</string>
-  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> te agregaron a la lista  "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> te agregó a la lista "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="other">%2$s</xliff:g> te han agregado a sus listas.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> marcó como favorito el tweet de <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> marcó como favorito <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
@@ -303,7 +307,7 @@
   <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> ahora sigue a <xliff:g id="target">%2$s</xliff:g>.</string>
   <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> está siguiendo <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> ha retuiteado el tuit de <xliff:g id="target">%2$s</xliff:g>.</string>
-  <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ha retuiteado los tweets de <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%3$s</xliff:g>.</string>
+  <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g> ha retwiteado los tweets de <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%3$s</xliff:g>.</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> añadio a <xliff:g id="target">%2$s</xliff:g> a una lista.</string>
   <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> añadió a <xliff:g id="target">%2$s</xliff:g> y <xliff:g id="other">%1$s</xliff:g> a la lista.</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> ha creado la lista <xliff:g id="target">%2$s</xliff:g>.</string>
@@ -425,7 +429,7 @@
   <string name="search_deleted">Búsqueda borrada.</string>
   <string name="search_name_deleted">Búsqueda \"<xliff:g id="name">%s</xliff:g>\" borrada.</string>
   <string name="import_from">Importar desde...</string>
-  <string name="link_to_quoted_status">Enlace al tweet citado</string>
+  <string name="link_to_quoted_status">Enlace al tuit citado</string>
   <string name="quote_original_status">Citar tweet original</string>
   <string name="followed_user">Siguiendo a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="sent_follow_request_to_user">Enviar una petición de Seguir a <xliff:g id="user">%s</xliff:g>.</string>
@@ -628,7 +632,7 @@
   <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
   <string name="delete_drafts_confirm">¿Confirma que quiere eliminar los borradores?</string>
   <string name="extra_configurations">Configuraciones Extra</string>
-  <string name="click_item_to_config">Selecciona un ítem para configurar</string>
+  <string name="click_item_to_configure">Tap en un item para configurar</string>
   <string name="retweets_of_me">Retweets de mi</string>
   <string name="from_gallery">Desde la galería</string>
   <string name="from_camera">Desde la cámara</string>
@@ -743,6 +747,8 @@
   <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favoritos</string>
   <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> me gusta</string>
   <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> le gusta</string>
+  <string name="N_votes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> voto</string>
+  <string name="N_votes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> votos</string>
   <string name="drafts_hint_messages">Tus tweets sin enviar se guardarán aquí</string>
   <string name="keyboard_shortcuts">Atajos de teclado</string>
   <string name="keyboard_shortcut_hint">Presionar teclas</string>
@@ -781,7 +787,7 @@
   <string name="wizard_hint_summary_location_requirement">Twidere necesita acceso a su locación cuando ud envía un tweet que contiene locación.</string>
   <string name="wizard_hint_title_storage_requirement">Permiso de almacenamiento</string>
   <string name="wizard_hint_summary_storage_requirement">Twidere necesita permiso de almacenamiento cuando accedes a documentos.</string>
-  <string name="scrapyard">Chatarrería</string>
+  <string name="scrapyard">Caja de herramientas</string>
   <string name="crop_image">Cortar imagen</string>
   <string name="usage_label_sent">Enviado</string>
   <string name="usage_label_received">Recivido</string>
@@ -794,6 +800,7 @@
   <string name="report_usage_statistics_now">Enviar estadísticas de uso ahora</string>
   <string name="cache_size_limit">Límite de tamaño de caché</string>
   <string name="bug_reports">Reporte de fallos</string>
+  <string name="bug_reports_summary">Powered by Fabric</string>
   <string name="invalid_consumer_key">Clave consumidora inválida</string>
   <string name="invalid_consumer_secret">Secreto consumidor inválido</string>
   <string name="page_up">Página arriba</string>
@@ -817,4 +824,18 @@
   <string name="login_verification_pin_hint">Comprueba tu teléfono y busca un código PIN para introducirlo e iniciar sesión.</string>
   <string name="login_verification_push_hint">Acepta la verificación de inicio de sesión requerido por la app de Twitter, una vez apruebes la petición, pulsa Aceptar.</string>
   <string name="login_verification_failed">Verificación de inicio de sesión fallida.</string>
+  <string name="saved_searches_already_saved_hint">Quizá ya hayas guardado esta búsqueda</string>
+  <string name="unsupported_activity_action_summary">Informa sobre la acción de arriba</string>
+  <string name="unknown_language">Idioma desconocido</string>
+  <string name="system_default">Por defecto del sistema</string>
+  <string name="emoji_support">Soporte para emojis</string>
+  <string name="open_poll_in_official_app">Abrir encuesta en app oficial</string>
+  <string name="action_vote">Votar</string>
+  <string name="label_poll">Encuesta</string>
+  <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
+  <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
+  <string name="mentions_only">Sólo mensiones</string>
+  <string name="error_no_dm_permission">Sin permiso para mensajes directos, chequee la configuración de permisos en Twitter.</string>
+  <string name="select_accounts_for_compose">Seleccione la cuenta para redactar</string>
+  <string name="interactions">Interacciones</string>
 </resources>
