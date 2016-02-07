@@ -81,7 +81,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
             if (errorInfo != null) {
                 showError(errorInfo.getIcon(), errorInfo.getMessage());
             } else {
-                showContent();
+                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
             }
         } else {
             showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
