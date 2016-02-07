@@ -20,24 +20,21 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import org.attoparser.AttoParseException;
@@ -52,6 +49,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.webkit.DefaultWebViewClient;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -148,29 +146,23 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
         mRequestToken = token;
     }
 
-    static class AuthorizationWebViewClient extends WebViewClient {
-        private final BrowserSignInActivity mActivity;
+    static class AuthorizationWebViewClient extends DefaultWebViewClient {
 
         AuthorizationWebViewClient(final BrowserSignInActivity activity) {
-            mActivity = activity;
+            super(activity);
         }
 
         @Override
         public void onPageFinished(final WebView view, final String url) {
             super.onPageFinished(view, url);
             view.loadUrl(INJECT_CONTENT);
-            mActivity.setLoadProgressShown(false);
+            ((BrowserSignInActivity) getActivity()).setLoadProgressShown(false);
         }
 
         @Override
         public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            mActivity.setLoadProgressShown(true);
-        }
-
-        @Override
-        public void onLoadResource(WebView view, String url) {
-            super.onLoadResource(view, url);
+            ((BrowserSignInActivity) getActivity()).setLoadProgressShown(true);
         }
 
         @SuppressWarnings("deprecation")
@@ -178,17 +170,9 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
         public void onReceivedError(final WebView view, final int errorCode, final String description,
                                     final String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
-            Toast.makeText(mActivity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
-            mActivity.finish();
-        }
-
-        @Override
-        public void onReceivedSslError(final WebView view, @NonNull final SslErrorHandler handler, final SslError error) {
-            if (mActivity.mPreferences.getBoolean(KEY_IGNORE_SSL_ERROR, false)) {
-                handler.proceed();
-            } else {
-                handler.cancel();
-            }
+            final Activity activity = getActivity();
+            Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
+            activity.finish();
         }
 
         @Override
@@ -196,14 +180,15 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
             final Uri uri = Uri.parse(url);
             if (url.startsWith(OAUTH_CALLBACK_URL)) {
                 final String oauth_verifier = uri.getQueryParameter(EXTRA_OAUTH_VERIFIER);
-                final OAuthToken requestToken = mActivity.mRequestToken;
+                final BrowserSignInActivity activity = (BrowserSignInActivity) getActivity();
+                final OAuthToken requestToken = activity.mRequestToken;
                 if (oauth_verifier != null && requestToken != null) {
                     final Intent intent = new Intent();
                     intent.putExtra(EXTRA_OAUTH_VERIFIER, oauth_verifier);
                     intent.putExtra(EXTRA_REQUEST_TOKEN, requestToken.getOauthToken());
                     intent.putExtra(EXTRA_REQUEST_TOKEN_SECRET, requestToken.getOauthTokenSecret());
-                    mActivity.setResult(RESULT_OK, intent);
-                    mActivity.finish();
+                    activity.setResult(RESULT_OK, intent);
+                    activity.finish();
                 }
                 return true;
             }

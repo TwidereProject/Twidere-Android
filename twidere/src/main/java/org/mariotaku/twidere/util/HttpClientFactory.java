@@ -3,7 +3,6 @@ package org.mariotaku.twidere.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.SSLCertificateSocketFactory;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -17,9 +16,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 
 import okhttp3.Authenticator;
 import okhttp3.Credentials;
@@ -55,23 +51,10 @@ public class HttpClientFactory implements Constants {
     public static void updateHttpClientConfiguration(final Context context,
                                                      final SharedPreferences prefs,
                                                      Dns dns, final OkHttpClient.Builder builder) {
-        final int connectionTimeoutSeconds = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
-        final boolean ignoreSslError = prefs.getBoolean(KEY_IGNORE_SSL_ERROR, false);
+        final long connectionTimeoutMillis = TimeUnit.SECONDS.toMillis(prefs.getInt(KEY_CONNECTION_TIMEOUT, 10));
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
 
-        builder.connectTimeout(connectionTimeoutSeconds, TimeUnit.SECONDS);
-
-        if (ignoreSslError) {
-            // We use insecure connections intentionally
-            final int sslConnectTimeout = ((int) TimeUnit.SECONDS.toMillis(connectionTimeoutSeconds));
-            builder.sslSocketFactory(SSLCertificateSocketFactory.getInsecure(sslConnectTimeout, null));
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-        }
+        builder.connectTimeout(connectionTimeoutMillis, TimeUnit.MILLISECONDS);
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);

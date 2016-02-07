@@ -15,10 +15,14 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontobfuscate
 
 -dontwarn sun.net.spi.**
 -dontwarn java.nio.file.**
 -dontwarn org.codehaus.mojo.**
+-dontwarn com.makeramen.roundedimageview.**
+
+-keepattributes *Annotation*
 
 # https://github.com/bluelinelabs/LoganSquare
 -keep class com.bluelinelabs.logansquare.** { *; }
@@ -26,7 +30,6 @@
 -keep class **$$JsonObjectMapper { *; }
 
 # http://square.github.io/otto/
--keepattributes *Annotation*
 -keepclassmembers class ** {
     @com.squareup.otto.Subscribe public *;
     @com.squareup.otto.Produce public *;
@@ -38,4 +41,8 @@
 }
 -keepclassmembers class android.support.v7.internal.widget.ActionBarOverlayLayout {
     private android.graphics.drawable.Drawable mWindowContentOverlay;
+}
+
+-keepclassmembers class org.mariotaku.twidere.activity.support.BrowserSignInActivity.InjectorJavaScriptInterface {
+    public *;
 }

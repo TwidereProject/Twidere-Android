@@ -21,49 +21,19 @@ package org.mariotaku.twidere.util.webkit;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.net.http.SslError;
-import android.support.annotation.NonNull;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import org.mariotaku.twidere.fragment.BaseWebViewFragment;
 
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 
 public class DefaultWebViewClient extends WebViewClient {
 
     private final Activity mActivity;
-    private final SharedPreferences mPreferences;
 
     public DefaultWebViewClient(final Activity activity) {
         mActivity = activity;
-        mPreferences = activity.getSharedPreferences(BaseWebViewFragment.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-    }
-
-    @Override
-    public void onPageFinished(final WebView view, final String url) {
-        super.onPageFinished(view, url);
-    }
-
-    @Override
-    public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
-        super.onPageStarted(view, url, favicon);
-    }
-
-    @Override
-    public void onReceivedSslError(final WebView view, @NonNull final SslErrorHandler handler,
-                                   final SslError error) {
-        if (mPreferences.getBoolean(BaseWebViewFragment.KEY_IGNORE_SSL_ERROR, false)) {
-            handler.proceed();
-        } else {
-            handler.cancel();
-        }
     }
 
     @Override
@@ -74,5 +44,9 @@ public class DefaultWebViewClient extends WebViewClient {
             showErrorMessage(mActivity, null, e, false);
         }
         return true;
+    }
+
+    public Activity getActivity() {
+        return mActivity;
     }
 }
