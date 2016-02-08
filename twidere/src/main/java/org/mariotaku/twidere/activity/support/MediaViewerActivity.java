@@ -281,7 +281,9 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     public boolean onPrepareOptionsMenu(Menu menu) {
         final ViewPager viewPager = findViewPager();
         final PagerAdapter adapter = viewPager.getAdapter();
-        final Object object = adapter.instantiateItem(viewPager, viewPager.getCurrentItem());
+        final int currentItem = viewPager.getCurrentItem();
+        if (currentItem < 0 || currentItem >= adapter.getCount()) return false;
+        final Object object = adapter.instantiateItem(viewPager, currentItem);
         if (!(object instanceof MediaViewerFragment)) return false;
         if (object instanceof CacheDownloadMediaViewerFragment) {
             CacheDownloadMediaViewerFragment f = (CacheDownloadMediaViewerFragment) object;
@@ -303,6 +305,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         final ViewPager viewPager = findViewPager();
         final PagerAdapter adapter = viewPager.getAdapter();
         final int currentItem = viewPager.getCurrentItem();
+        if (currentItem < 0 || currentItem >= adapter.getCount()) return false;
         final Object object = adapter.instantiateItem(viewPager, currentItem);
         if (!(object instanceof MediaViewerFragment)) return false;
         switch (item.getItemId()) {
