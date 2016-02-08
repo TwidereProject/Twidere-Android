@@ -388,6 +388,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         if (mPopupMenu != null) {
             mPopupMenu.dismiss();
         }
+        if (getActivity() == null) return;
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final PopupMenu popupMenu = new PopupMenu(adapter.getContext(), menuView,
                 Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0);
