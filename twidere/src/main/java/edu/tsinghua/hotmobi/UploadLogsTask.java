@@ -117,7 +117,8 @@ public class UploadLogsTask implements Runnable {
                 }
             }
             if (succeeded) {
-                BugReporter.logIfFalse(dayLogsDir.delete(), "Unable to delete log dir");
+                //noinspection ResultOfMethodCallIgnored
+                dayLogsDir.delete();
             }
         }
         return hasErrors;

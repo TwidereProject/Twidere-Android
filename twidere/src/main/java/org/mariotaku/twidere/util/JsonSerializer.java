@@ -43,7 +43,6 @@ import java.util.List;
  * Created by mariotaku on 15/8/6.
  */
 public class JsonSerializer {
-    public static final String JSON_CACHE_DIR = "json_cache";
 
     @Nullable
     public static <T> String serialize(@Nullable final List<T> list, final Class<T> cls) {
@@ -146,13 +145,4 @@ public class JsonSerializer {
         return buf.toString();
     }
 
-    public static File getSerializationFile(final Context context, final Object... args) throws IOException {
-        if (context == null || args == null || args.length == 0) return null;
-        final File cacheDir = Utils.getBestCacheDir(context, JSON_CACHE_DIR);
-        if (!cacheDir.exists()) {
-            BugReporter.logIfFalse(cacheDir.mkdirs(), "Unable to create cache dir " + cacheDir);
-        }
-        final String filename = Utils.encodeQueryParams(TwidereArrayUtils.toString(args, '.', false));
-        return new File(cacheDir, filename + ".json");
-    }
 }

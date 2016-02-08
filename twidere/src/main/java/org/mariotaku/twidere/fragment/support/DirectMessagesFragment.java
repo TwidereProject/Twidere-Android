@@ -366,11 +366,13 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
             @Override
             protected long[][] doInBackground(final Object... params) {
+                final FragmentActivity activity = getActivity();
+                if (activity == null) return null;
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
-                result[1] = DataStoreUtils.getOldestMessageIds(getActivity(),
+                result[1] = DataStoreUtils.getOldestMessageIds(activity,
                         DirectMessages.Inbox.CONTENT_URI, result[0]);
-                result[2] = DataStoreUtils.getOldestMessageIds(getActivity(),
+                result[2] = DataStoreUtils.getOldestMessageIds(activity,
                         DirectMessages.Outbox.CONTENT_URI, result[0]);
                 return result;
             }
@@ -378,7 +380,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             @Override
             protected void onPostExecute(final long[][] result) {
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
-                if (twitter == null) return;
+                if (twitter == null || result == null) return;
                 twitter.getReceivedDirectMessagesAsync(result[0], result[1], null);
                 twitter.getSentDirectMessagesAsync(result[0], result[2], null);
             }
