@@ -148,7 +148,7 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
         super.onLoadMoreContents(position);
         if (position == 0) return;
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
-        final long maxId = adapter.getStatusId(adapter.getStatusesCount() - 1);
+        final long maxId = adapter.getStatusId(adapter.getStatusCount() - 1);
         getStatuses(maxId, -1);
     }
 

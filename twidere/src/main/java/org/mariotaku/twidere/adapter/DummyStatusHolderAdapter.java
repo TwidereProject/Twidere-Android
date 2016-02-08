@@ -165,7 +165,7 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     }
 
     @Override
-    public int getStatusesCount() {
+    public int getStatusCount() {
         return 0;
     }
 

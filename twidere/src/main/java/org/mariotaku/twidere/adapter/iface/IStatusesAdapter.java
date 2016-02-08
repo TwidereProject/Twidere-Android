@@ -30,7 +30,7 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupport
     @Nullable
     ParcelableStatus findStatusById(long accountId, long statusId);
 
-    int getStatusesCount();
+    int getStatusCount();
 
     TwidereLinkify getTwidereLinkify();
 

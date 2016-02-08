@@ -64,7 +64,6 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -649,7 +648,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             loadConversation(getStatus(), -1, status.id);
         } else if ((position & IndicatorPosition.END) != 0) {
             final int start = mStatusAdapter.getIndexStart(StatusAdapter.ITEM_IDX_CONVERSATION);
-            final ParcelableStatus status = mStatusAdapter.getStatus(start + mStatusAdapter.getStatusesCount() - 1);
+            final ParcelableStatus status = mStatusAdapter.getStatus(start + mStatusAdapter.getStatusCount() - 1);
             if (status == null) return;
             loadConversation(getStatus(), status.id, -1);
         }
@@ -1746,7 +1745,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public int getStatusesCount() {
+        public int getStatusCount() {
             return getTypeCount(ITEM_IDX_CONVERSATION) + getTypeCount(ITEM_IDX_STATUS)
                     + getTypeCount(ITEM_IDX_REPLY);
         }

@@ -177,7 +177,7 @@ public class DataStoreUtils implements Constants {
                 VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_EMPTY,
                 VIRTUAL_TABLE_ID_EMPTY);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_RAW_QUERY,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_RAW_QUERY + "/*",
                 VIRTUAL_TABLE_ID_RAW_QUERY);
     }
 
@@ -722,16 +722,20 @@ public class DataStoreUtils implements Constants {
             builder.orderBy(sortExpression);
         }
         final Cursor cur = ContentResolverUtils.query(resolver,
-                Uri.withAppendedPath(TwidereDataStore.CONTENT_URI_DATABASE_READY, builder.buildSQL()),
+                Uri.withAppendedPath(TwidereDataStore.CONTENT_URI_RAW_QUERY, builder.buildSQL()),
                 null, null, selectionArgs, null);
         if (cur == null) return messageIds;
-        while (cur.moveToNext()) {
-            final long accountId = cur.getLong(0);
-            int idx = ArrayUtils.indexOf(keys, accountId);
-            if (idx < 0) continue;
-            messageIds[idx] = cur.getLong(1);
+        try {
+            while (cur.moveToNext()) {
+                final long accountId = cur.getLong(0);
+                int idx = ArrayUtils.indexOf(keys, accountId);
+                if (idx < 0) continue;
+                messageIds[idx] = cur.getLong(1);
+            }
+            return messageIds;
+        } finally {
+            cur.close();
         }
-        return messageIds;
     }
 
     static int queryCount(@NonNull final Context context, @NonNull final Uri uri,

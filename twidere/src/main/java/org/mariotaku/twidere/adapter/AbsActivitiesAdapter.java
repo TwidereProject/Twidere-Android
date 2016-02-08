@@ -307,12 +307,13 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     @Override
     public final int getItemCount() {
         final int position = getLoadMoreIndicatorPosition();
-        int count = getActivityCount();
+        int count = 0;
         if ((position & IndicatorPosition.START) != 0) {
-            count++;
+            count += 1;
         }
+        count += getActivityCount();
         if ((position & IndicatorPosition.END) != 0) {
-            count++;
+            count += 1;
         }
         return count;
     }
@@ -346,6 +347,15 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     public boolean isActivity(int position) {
         return position < getActivityCount();
+    }
+
+    public int getActivityStartIndex() {
+        final int position = getLoadMoreIndicatorPosition();
+        int start = 0;
+        if ((position & IndicatorPosition.START) != 0) {
+            start += 1;
+        }
+        return start;
     }
 
 

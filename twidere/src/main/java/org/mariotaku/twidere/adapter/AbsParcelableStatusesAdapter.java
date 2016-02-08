@@ -42,24 +42,24 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
 
     @Override
     public boolean isGapItem(int position) {
-        return getStatus(position).is_gap && position != getStatusesCount() - 1;
+        return getStatus(position).is_gap && position != getStatusCount() - 1;
     }
 
     @Override
     public ParcelableStatus getStatus(int position) {
-        if (position == getStatusesCount()) return null;
+        if (position == getStatusCount()) return null;
         return mData.get(position);
     }
 
     @Override
-    public int getStatusesCount() {
+    public int getStatusCount() {
         if (mData == null) return 0;
         return mData.size();
     }
 
     @Override
     public long getItemId(int position) {
-        if (position == getStatusesCount()) return RecyclerView.NO_ID;
+        if (position == getStatusCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(position);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
@@ -70,7 +70,7 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
 
     @Override
     public long getStatusId(int position) {
-        if (position == getStatusesCount()) return RecyclerView.NO_ID;
+        if (position == getStatusCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(position);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
@@ -81,7 +81,7 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
 
     @Override
     public long getAccountId(int position) {
-        if (position == getStatusesCount()) return RecyclerView.NO_ID;
+        if (position == getStatusCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(position);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();

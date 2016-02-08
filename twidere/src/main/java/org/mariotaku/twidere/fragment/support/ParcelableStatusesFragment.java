@@ -129,7 +129,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         super.onLoadMoreContents(position);
         if (position == 0) return;
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
-        final long[] maxIds = new long[]{adapter.getStatusId(adapter.getStatusesCount() - 1)};
+        final long[] maxIds = new long[]{adapter.getStatusId(adapter.getStatusCount() - 1)};
         getStatuses(null, maxIds, null);
     }
 
@@ -149,7 +149,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         super.triggerRefresh();
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final long[] accountIds = getAccountIds();
-        if (adapter.getStatusesCount() > 0) {
+        if (adapter.getStatusCount() > 0) {
             final long[] sinceIds = new long[]{adapter.getStatus(0).id};
             getStatuses(accountIds, null, sinceIds);
         } else {

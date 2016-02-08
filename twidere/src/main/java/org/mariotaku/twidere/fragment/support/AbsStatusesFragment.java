@@ -269,9 +269,12 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         } else {
             lastVisiblePos = layoutManager.findFirstVisibleItemPosition();
         }
+        final int statusStartIndex = adapter.getStatusStartIndex();
+        final int statusEndIndex = statusStartIndex + adapter.getStatusCount();
         if (lastVisiblePos != RecyclerView.NO_POSITION && lastVisiblePos < adapter.getItemCount()) {
-            lastReadId = adapter.getStatusId(lastVisiblePos);
-            final View positionView = layoutManager.findViewByPosition(lastVisiblePos);
+            final int lastItemIndex = Math.min(statusEndIndex, lastVisiblePos);
+            lastReadId = adapter.getStatusId(lastItemIndex);
+            final View positionView = layoutManager.findViewByPosition(lastItemIndex);
             lastVisibleTop = positionView != null ? positionView.getTop() : 0;
         } else if (rememberPosition && tag != null) {
             lastReadId = mReadStateManager.getPosition(tag);
@@ -285,7 +288,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
             int pos = -1;
-            for (int i = 0, j = adapter.getItemCount(); i < j; i++) {
+            for (int i = statusStartIndex; i < statusEndIndex; i++) {
                 if (lastReadId != -1 && lastReadId == adapter.getStatusId(i)) {
                     pos = i;
                     break;

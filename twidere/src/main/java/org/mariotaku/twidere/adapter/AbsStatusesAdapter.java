@@ -180,7 +180,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     }
 
     public boolean isStatus(int position) {
-        return position < getStatusesCount();
+        return position < getStatusCount();
     }
 
     @Override
@@ -232,7 +232,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
-        if (position == getStatusesCount()) {
+        if (position == getStatusCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP;
@@ -243,12 +243,13 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     @Override
     public final int getItemCount() {
         final int position = getLoadMoreIndicatorPosition();
-        int count = getStatusesCount();
+        int count = 0;
         if ((position & IndicatorPosition.START) != 0) {
-            count++;
+            count += 1;
         }
+        count += getStatusCount();
         if ((position & IndicatorPosition.END) != 0) {
-            count++;
+            count += 1;
         }
         return count;
     }
@@ -268,7 +269,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     @Nullable
     @Override
     public ParcelableStatus findStatusById(long accountId, long statusId) {
-        for (int i = 0, j = getStatusesCount(); i < j; i++) {
+        for (int i = 0, j = getStatusCount(); i < j; i++) {
             if (accountId == getAccountId(i) && statusId == getStatusId(i)) return getStatus(i);
         }
         return null;
@@ -282,6 +283,15 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     @Override
     public GapClickListener getGapClickListener() {
         return mEventListener;
+    }
+
+    public int getStatusStartIndex() {
+        final int position = getLoadMoreIndicatorPosition();
+        int start = 0;
+        if ((position & IndicatorPosition.START) != 0) {
+            start += 1;
+        }
+        return start;
     }
 
     public static class EventListener implements GapClickListener, IStatusViewHolder.StatusClickListener {
