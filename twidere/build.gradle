@@ -23,8 +23,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 136
-        versionName "3.0.1-SNAPSHOT"
+        versionCode 137
+        versionName "3.0.1"
         multiDexEnabled true
 
         buildConfigField 'boolean', 'ENABLE_MEDIA_VIEWER', 'Boolean.parseBoolean("true")'
@@ -118,7 +118,7 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.7'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.7'
     googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
-//    googleCompile 'com.google.maps.android:android-maps-utils:0.4'
+    googleCompile 'com.google.maps.android:android-maps-utils:0.4'
     googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     fdroidCompile 'org.osmdroid:osmdroid-android:5.1'
