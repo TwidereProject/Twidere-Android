@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.restfu.Utils;
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.restfu.http.SimpleValueMap;
 
 public class StatusUpdate extends SimpleValueMap {
@@ -48,7 +48,7 @@ public class StatusUpdate extends SimpleValueMap {
     public void setMediaIds(final long... mediaIds) {
         remove("media_ids");
         if (mediaIds == null) return;
-        put("media_ids", Utils.toString(mediaIds, ','));
+        put("media_ids", RestFuUtils.toString(mediaIds, ','));
     }
 
     public void setPlaceId(final String placeId) {

@@ -8,11 +8,6 @@
         android:title="@string/connectivity">
 
         <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-            android:defaultValue="true"
-            android:key="fast_image_loading"
-            android:summary="@string/fast_image_loading_summary"
-            android:title="@string/fast_image_loading"/>
-        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
             android:defaultValue="false"
             android:key="tcp_dns_query"
             android:summary="@string/tcp_dns_query_summary"

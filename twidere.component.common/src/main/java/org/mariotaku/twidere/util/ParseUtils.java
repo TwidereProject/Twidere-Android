@@ -26,7 +26,7 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mariotaku.restfu.Utils;
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.constant.IntentConstants;
 
@@ -75,7 +75,7 @@ public final class ParseUtils {
             e.printStackTrace();
             return null;
         } finally {
-            Utils.closeSilently(json);
+            RestFuUtils.closeSilently(json);
         }
     }
 

@@ -15,6 +15,7 @@ import org.mariotaku.restfu.ExceptionFactory;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestClient;
 import org.mariotaku.restfu.RestConverter;
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.restfu.RestRequest;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
@@ -308,7 +309,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                 final String brand = Build.BRAND;
                 final String product = Build.PRODUCT;
                 final int debug = BuildConfig.DEBUG ? 1 : 0;
-                return String.format(Locale.ROOT, "TwitterAndroid/%s (%s) %s/%d (%s;%s;%s;%s;%d)",
+                return String.format(Locale.ROOT, "TwitterAndroid /%s (%s) %s/%d (%s;%s;%s;%s;%d)",
                         versionName, internalVersionName, model, sdkInt, manufacturer, device, brand,
                         product, debug);
             }
@@ -423,9 +424,9 @@ public class TwitterAPIFactory implements TwidereConstants {
             }
 
             if (authorization != null && authorization.hasAuthorization()) {
-                headers.add("Authorization", authorization.getHeader(endpoint, info));
+                headers.add("Authorization", RestFuUtils.sanitizeHeader(authorization.getHeader(endpoint, info)));
             }
-            headers.add("User-Agent", userAgent);
+            headers.add("User-Agent", RestFuUtils.sanitizeHeader(userAgent));
             return new HttpRequest(restMethod, url, headers, info.getBody(converterFactory), null);
         }
     }

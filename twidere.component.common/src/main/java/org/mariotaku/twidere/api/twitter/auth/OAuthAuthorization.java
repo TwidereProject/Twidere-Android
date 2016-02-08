@@ -24,8 +24,8 @@ import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import org.mariotaku.restfu.Pair;
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.restfu.RestRequest;
-import org.mariotaku.restfu.Utils;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.restfu.http.Endpoint;
@@ -209,17 +209,21 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
     }
 
     private static String encode(final String value) {
-        return Utils.encode(value, DEFAULT_ENCODING);
+        return RestFuUtils.encode(value, DEFAULT_ENCODING);
     }
 
+    private static final char[] VALID_NONCE_CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+            'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F',
+            'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+            'X', 'Y', 'Z'};
+
     private String generateOAuthNonce() {
-        final byte[] input = new byte[32];
-        secureRandom.nextBytes(input);
-        final String encodedString = Base64.encodeToString(input, Base64.URL_SAFE);
-        if (encodedString == null) {
-            throw new IllegalStateException("Bad nonce " + Utils.bytesToHex(input));
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 32; i++) {
+            sb.append(VALID_NONCE_CHARACTERS[secureRandom.nextInt(VALID_NONCE_CHARACTERS.length)]);
         }
-        return encodedString.replaceAll("[^\\w\\d]", "");
+        return sb.toString();
     }
 
 }
