@@ -1875,6 +1875,7 @@ public final class Utils implements Constants {
         builder.authority(AUTHORITY_INCOMING_FRIENDSHIPS);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
         context.startActivity(intent);
     }
 
@@ -1887,7 +1888,7 @@ public final class Utils implements Constants {
         builder.appendQueryParameter(QUERY_PARAM_LNG, String.valueOf(longitude));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);
-        context.startActivity(Intent.createChooser(intent, null));
+        context.startActivity(intent);
     }
 
     public static void openMutesUsers(final Activity activity, final long accountId) {
@@ -1897,6 +1898,7 @@ public final class Utils implements Constants {
         builder.authority(AUTHORITY_MUTES_USERS);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
         activity.startActivity(intent);
     }
 
@@ -1907,6 +1909,7 @@ public final class Utils implements Constants {
         builder.authority(AUTHORITY_SCHEDULED_STATUSES);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
         activity.startActivity(intent);
     }
 
@@ -1917,6 +1920,7 @@ public final class Utils implements Constants {
         builder.authority(AUTHORITY_SAVED_SEARCHES);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
         activity.startActivity(intent);
     }
 
