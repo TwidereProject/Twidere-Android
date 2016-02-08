@@ -36,15 +36,23 @@ addons:
     packages:
       - python2.7
       - libmagic1
+      - patch
 
-cache:
-  directories:
-  - $HOME/.local/opt
+#cache:
+#  directories:
+#  - $HOME/.local/opt
 
 before_install:
-  - ./travis/scripts/extract_private_build_config.sh
   - export PATH=$HOME/.local/bin:$PATH
+
+install:
   - pip install -r ./travis/configs/requirements.txt --user
+
+before_script:
+  # This extracts build configs into source tree
+  - ./travis/scripts/extract_private_build_config.sh
+  # Validate if patches work
+  - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
 
 script: ./gradlew build --no-daemon --stacktrace
 
