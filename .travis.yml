@@ -34,8 +34,8 @@ env:
 addons:
   apt:
     packages:
-      - python2.7
-      - libmagic1
+      - tar
+      - gzip
       - patch
 
 #cache:
@@ -53,3 +53,13 @@ before_script:
   - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
 
 script: ./gradlew build --no-daemon --stacktrace
+
+deploy:
+  provider: releases
+  api_key:
+    secure: WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M=
+  file_glob: true
+  file: '**/*-release.apk'
+  on:
+    repo: TwidereProject/Twidere-Android
+    tags: true
