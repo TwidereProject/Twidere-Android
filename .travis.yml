@@ -44,16 +44,12 @@ addons:
 
 before_install:
   - export PATH=$HOME/.local/bin:$PATH
-
-install:
-  - pip install -r ./travis/configs/requirements.txt --user
+  - openssl aes-256-cbc -K $encrypted_9b8203f9524d_key -iv $encrypted_9b8203f9524d_iv -in travis/configs/twidere_private_config.tar.gz.enc -out travis/configs/twidere_private_config.tar.gz -d
 
 before_script:
-  # This extracts build configs into source tree
-  - ./travis/scripts/extract_private_build_config.sh
+  # Extracts build configs into source tree
+  - tar zxf travis/configs/twidere_private_config.tar.gz
   # Validate if patches work
   - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
 
 script: ./gradlew build --no-daemon --stacktrace
-
-after_success: ./travis/scripts/travis_upload_release_to_github.py
