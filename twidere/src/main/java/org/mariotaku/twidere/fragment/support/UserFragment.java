@@ -326,22 +326,26 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         drawable.setAlpha(Math.round(alpha * 255));
     }
 
-    private void showRelationship(@Nullable ParcelableUser user, @Nullable UserRelationship userRelationship) {
+    private void showRelationship(@Nullable final ParcelableUser user,
+                                  @Nullable final UserRelationship userRelationship) {
         if (user == null) {
             mRelationship = null;
             return;
-        } else if (userRelationship != null && userRelationship.check(user)) {
-            mRelationship = userRelationship;
-        } else {
-            mRelationship = null;
         }
-        invalidateOptionsMenu();
-        if (mRelationship == null && user.account_id == user.id) {
+        if (user.account_id == user.id) {
             mFollowButton.setText(R.string.edit);
             mFollowButton.setVisibility(View.VISIBLE);
+            mRelationship = null;
             return;
         }
-        final Relationship relationship = mRelationship.relationship;
+        if (userRelationship == null || !userRelationship.check(user)) {
+            mRelationship = null;
+            return;
+        } else {
+            mRelationship = userRelationship;
+        }
+        invalidateOptionsMenu();
+        final Relationship relationship = userRelationship.relationship;
         mFollowButton.setEnabled(relationship.isSourceBlockingTarget() ||
                 !relationship.isSourceBlockedByTarget());
         if (relationship.isSourceBlockedByTarget()) {
