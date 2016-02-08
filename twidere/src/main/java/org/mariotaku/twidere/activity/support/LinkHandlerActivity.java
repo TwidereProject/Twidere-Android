@@ -329,19 +329,12 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         }
         final int transitionRes;
         switch (linkId) {
-            case LINK_ID_USER: {
-                transitionRes = R.transition.transition_user;
-                break;
-            }
-//            case LINK_ID_STATUS: {
-//                transitionRes = R.transition.transition_status;
-//                break;
-//            }
             default: {
                 transitionRes = 0;
                 break;
             }
         }
+        //noinspection ConstantConditions
         if (transitionRes != 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && !ThemeUtils.isTransparentBackground(getCurrentThemeBackgroundOption())) {
             Utils.setSharedElementTransition(this, window, transitionRes);
