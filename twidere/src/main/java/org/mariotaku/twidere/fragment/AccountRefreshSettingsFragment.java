@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
@@ -45,8 +46,10 @@ public class AccountRefreshSettingsFragment extends BaseAccountPreferenceFragmen
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        final Activity activity = getActivity();
+        if (activity == null) return;
         if (KEY_AUTO_REFRESH.equals(key)) {
-            Utils.startRefreshServiceIfNeeded(getActivity());
+            Utils.startRefreshServiceIfNeeded(activity);
         }
     }
 }

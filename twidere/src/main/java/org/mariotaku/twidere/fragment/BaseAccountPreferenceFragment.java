@@ -66,6 +66,14 @@ public abstract class BaseAccountPreferenceFragment extends BasePreferenceFragme
     }
 
     @Override
+    public void onDestroy() {
+        final PreferenceManager pm = getPreferenceManager();
+        final SharedPreferences prefs = pm.getSharedPreferences();
+        prefs.unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
+
+    @Override
     public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
         final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
         final SharedPreferences.Editor editor = prefs.edit();

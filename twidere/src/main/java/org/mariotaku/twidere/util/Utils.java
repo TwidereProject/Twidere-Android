@@ -2672,18 +2672,20 @@ public final class Utils implements Constants {
         showWarnMessage(context, context.getText(resId), long_message);
     }
 
-    public static void startRefreshServiceIfNeeded(final Context context) {
-        final Intent refreshServiceIntent = new Intent(context, RefreshService.class);
+    public static void startRefreshServiceIfNeeded(@NonNull final Context context) {
+        final Context appContext = context.getApplicationContext();
+        if (appContext == null) return;
+        final Intent refreshServiceIntent = new Intent(appContext, RefreshService.class);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                if (isNetworkAvailable(context) && hasAutoRefreshAccounts(context)) {
+                if (isNetworkAvailable(appContext) && hasAutoRefreshAccounts(appContext)) {
                     if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, "Start background refresh service");
                     }
-                    context.startService(refreshServiceIntent);
+                    appContext.startService(refreshServiceIntent);
                 } else {
-                    context.stopService(refreshServiceIntent);
+                    appContext.stopService(refreshServiceIntent);
                 }
             }
         });

@@ -60,7 +60,6 @@ import okhttp3.Dns;
 import okhttp3.OkHttpClient;
 
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
-import static org.mariotaku.twidere.util.Utils.startRefreshServiceIfNeeded;
 
 public class TwidereApplication extends MultiDexApplication implements Constants,
         OnSharedPreferenceChangeListener {
@@ -138,7 +137,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         }
 
         migrateUsageStatisticsPreferences();
-        startRefreshServiceIfNeeded(this);
+        Utils.startRefreshServiceIfNeeded(this);
 
         reloadConnectivitySettings();
 
@@ -213,7 +212,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         switch (key) {
             case KEY_REFRESH_INTERVAL: {
                 stopService(new Intent(this, RefreshService.class));
-                startRefreshServiceIfNeeded(this);
+                Utils.startRefreshServiceIfNeeded(this);
                 break;
             }
             case KEY_ENABLE_PROXY:

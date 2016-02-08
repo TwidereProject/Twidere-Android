@@ -24,7 +24,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 136
-        versionName "0.3.0"
+        versionName "3.0.1-SNAPSHOT"
         multiDexEnabled true
 
         buildConfigField 'boolean', 'ENABLE_MEDIA_VIEWER', 'Boolean.parseBoolean("true")'
@@ -49,8 +49,6 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd")
-            versionNameSuffix String.format(" (%s)", format.format(new Date()))
             resValue("bool", "debug", "false")
         }
     }
