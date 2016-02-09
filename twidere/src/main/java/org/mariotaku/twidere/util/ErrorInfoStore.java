@@ -16,9 +16,12 @@ public class ErrorInfoStore {
 
     public static final String KEY_DIRECT_MESSAGES = "direct_messages";
     public static final String KEY_INTERACTIONS = "interactions";
+    public static final String KEY_HOME_TIMELINE = "home_timeline";
+    public static final String KEY_ACTIVITIES_BY_FRIENDS = "activities_by_friends";
 
     public static final int CODE_NO_DM_PERMISSION = 1;
     public static final int CODE_NO_ACCESS_FOR_CREDENTIALS = 2;
+    public static final int CODE_NETWORK_ERROR = 3;
 
     private final SharedPreferences mPreferences;
 
@@ -52,6 +55,10 @@ public class ErrorInfoStore {
             case CODE_NO_ACCESS_FOR_CREDENTIALS: {
                 return new DisplayErrorInfo(code, R.drawable.ic_info_error_generic,
                         context.getString(R.string.error_no_access_for_credentials));
+            }
+            case CODE_NETWORK_ERROR: {
+                return new DisplayErrorInfo(code, R.drawable.ic_info_error_generic,
+                        context.getString(R.string.network_error));
             }
         }
         return null;

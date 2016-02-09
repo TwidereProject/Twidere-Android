@@ -69,13 +69,20 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
         Source ioSrc = null;
         BufferedSink sink = null;
         try {
-            final String name = fileInfoCallback.getFilename(source);
+            String name = fileInfoCallback.getFilename(source);
             if (isEmpty(name)) return null;
+            if (name.length() > 32) {
+                name = name.substring(0, 32);
+            }
             final String mimeType = fileInfoCallback.getMimeType(source);
             final String extension = fileInfoCallback.getExtension(mimeType);
-            final String nameToSave = getFileNameWithExtension(name, extension);
             if (!destinationDir.isDirectory() && !destinationDir.mkdirs()) return null;
-            final File saveFile = new File(destinationDir, nameToSave);
+            String nameToSave = getFileNameWithExtension(name, extension);
+            File saveFile = new File(destinationDir, nameToSave);
+            if (saveFile.exists()) {
+                nameToSave = getFileNameWithExtension(name + System.currentTimeMillis(), extension);
+                saveFile = new File(destinationDir, nameToSave);
+            }
             final InputStream in = cr.openInputStream(source);
             if (in == null) return null;
             ioSrc = Okio.source(in);
@@ -112,12 +119,16 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
     @Override
     protected final void onPostExecute(@Nullable final SaveFileResult result) {
         dismissProgress();
-        if (result != null) {
+        if (result != null && result.savedFile != null) {
             onFileSaved(result.savedFile, result.mimeType);
+        } else {
+            onFileSaveFailed();
         }
     }
 
-    protected abstract void onFileSaved(File savedFile, String mimeType);
+    protected abstract void onFileSaved(@NonNull File savedFile, @Nullable String mimeType);
+
+    protected abstract void onFileSaveFailed();
 
     protected abstract void showProgress();
 

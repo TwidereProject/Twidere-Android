@@ -13,6 +13,7 @@ import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.sqliteqb.library.SQLFunctions;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -25,6 +26,7 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
@@ -47,15 +49,15 @@ import edu.tsinghua.hotmobi.model.TimelineType;
 public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWrapper.TwitterListResponse<Status>, List<TwitterWrapper.StatusListResponse>> {
 
     private final long[] accountIds, maxIds, sinceIds;
-    private AsyncTwitterWrapper twitterWrapper;
+    private final AsyncTwitterWrapper twitterWrapper;
 
     public GetStatusesTask(AsyncTwitterWrapper twitterWrapper, final long[] accountIds,
                            final long[] maxIds, final long[] sinceIds, final String tag) {
         super(twitterWrapper.getContext(), tag);
+        this.twitterWrapper = twitterWrapper;
         this.accountIds = accountIds;
         this.maxIds = maxIds;
         this.sinceIds = sinceIds;
-        this.twitterWrapper = twitterWrapper;
     }
 
     @NonNull
@@ -167,6 +169,7 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
         int idx = 0;
         final SharedPreferencesWrapper preferences = twitterWrapper.getPreferences();
         final Context context = twitterWrapper.getContext();
+        final ErrorInfoStore errorInfoStore = twitterWrapper.getErrorInfoStore();
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         for (final long accountId : accountIds) {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, true);
@@ -194,13 +197,23 @@ public abstract class GetStatusesTask extends ManagedAsyncTask<Object, TwitterWr
                 TwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
                 storeStatus(accountId, statuses, sinceId, maxId, true, loadItemLimit);
                 publishProgress(new TwitterWrapper.StatusListResponse(accountId, statuses));
+                errorInfoStore.remove(getErrorInfoKey(), accountId);
             } catch (final TwitterException e) {
-                Log.w(LOGTAG, e);
+                if (BuildConfig.DEBUG) {
+                    Log.w(LOGTAG, e);
+                }
+                if (e.isCausedByNetworkIssue()) {
+                    errorInfoStore.put(getErrorInfoKey(), accountId,
+                            ErrorInfoStore.CODE_NETWORK_ERROR);
+                }
                 result.add(new TwitterWrapper.StatusListResponse(accountId, e));
             }
             idx++;
         }
         return result;
     }
+
+    @NonNull
+    protected abstract String getErrorInfoKey();
 
 }

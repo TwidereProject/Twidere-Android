@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util.net;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.mariotaku.inetaddrjni.library.InetAddressUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.BufferedReader;
@@ -54,7 +53,7 @@ public class SystemHosts {
                     final String host = scanner.next();
                     if (host.startsWith("#")) break;
                     if (TextUtils.equals(hostToResolve, host)) {
-                        final InetAddress resolved = InetAddressUtils.getResolvedIPAddress(host, address);
+                        final InetAddress resolved = TwidereDns.getResolvedIPAddress(host, address);
                         if (resolved != null) return new InetAddress[]{resolved};
                     }
                 }

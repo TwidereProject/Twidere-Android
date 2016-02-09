@@ -17,11 +17,6 @@
         app:max="30"
         app:min="5"
         app:progressTextSuffix="s"/>
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
-        android:defaultValue="false"
-        android:key="ignore_ssl_error"
-        android:summary="@string/ignore_ssl_error_summary"
-        android:title="@string/ignore_ssl_error"/>
 
     <org.mariotaku.twidere.preference.AutoFixEditTextPreference
         android:defaultValue="140"

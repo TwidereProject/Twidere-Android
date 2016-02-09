@@ -170,7 +170,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
                     mErrorInfoStore.get(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountIds[0]));
             if (isEmpty && errorInfo != null) {
-                showError(errorInfo.getIcon(), errorInfo.getMessage());
+                showEmpty(errorInfo.getIcon(), errorInfo.getMessage());
             } else {
                 showContent();
             }

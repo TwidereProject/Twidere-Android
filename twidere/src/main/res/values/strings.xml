@@ -844,4 +844,6 @@
     <string name="error_no_access_for_credentials">Your application can\'t access this resource, have you enabled \'Force using private APIs\'?</string>
     <string name="select_accounts_for_compose">Select accounts for compose</string>
     <string name="interactions">Interactions</string>
+    <string name="network_diagnostics">Network diagnostics</string>
+    <string name="action_start">Start</string>
 </resources>

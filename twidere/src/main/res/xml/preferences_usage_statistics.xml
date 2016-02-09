@@ -19,8 +19,6 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference android:layout="@layout/header_usage_statistics"/>
-
     <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
         android:defaultValue="false"
         android:key="usage_statistics"
@@ -34,8 +32,16 @@
         android:summary="@string/bug_reports_summary"
         android:title="@string/bug_reports"/>
 
-    <PreferenceCategory
+    <Preference
+        android:fragment="org.mariotaku.twidere.fragment.NetworkDiagnosticsFragment"
         android:order="13"
+        android:title="@string/network_diagnostics"/>
+
+    <Preference
+        android:layout="@layout/header_usage_statistics"
+        android:order="20"/>
+    <PreferenceCategory
+        android:order="21"
         android:title="@string/projects_we_took_part">
 
         <Preference android:title="@string/research_hot_mobile">

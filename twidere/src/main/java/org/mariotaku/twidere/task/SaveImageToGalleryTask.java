@@ -25,6 +25,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
@@ -47,16 +48,20 @@ public class SaveImageToGalleryTask extends ProgressSaveFileTask {
         return new SaveImageToGalleryTask(activity, source, saveDir);
     }
 
-    protected void onFileSaved(File savedFile, String mimeType) {
+    @Override
+    protected void onFileSaved(@NonNull File savedFile, @Nullable String mimeType) {
         final Context context = getContext();
         if (context == null) return;
-        if (savedFile != null && savedFile.exists()) {
-            MediaScannerConnection.scanFile(context, new String[]{savedFile.getPath()},
-                    new String[]{mimeType}, null);
-            Toast.makeText(context, R.string.saved_to_gallery, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, R.string.error_occurred, Toast.LENGTH_SHORT).show();
-        }
+        MediaScannerConnection.scanFile(context, new String[]{savedFile.getPath()},
+                new String[]{mimeType}, null);
+        Toast.makeText(context, R.string.saved_to_gallery, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onFileSaveFailed() {
+        final Context context = getContext();
+        if (context == null) return;
+        Toast.makeText(context, R.string.error_occurred, Toast.LENGTH_SHORT).show();
     }
 
 }

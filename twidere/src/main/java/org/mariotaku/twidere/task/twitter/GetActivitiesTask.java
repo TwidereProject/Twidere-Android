@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.mariotaku.sqliteqb.library.Expression;
@@ -80,19 +82,25 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
                 if (saveReadPosition) {
                     saveReadPosition(accountId, twitter);
                 }
-                errorInfoStore.remove(ErrorInfoStore.KEY_INTERACTIONS, accountId);
+                errorInfoStore.remove(getErrorInfoKey(), accountId);
             } catch (TwitterException e) {
                 if (BuildConfig.DEBUG) {
                     Log.w(LOGTAG, e);
                 }
                 if (e.getErrorCode() == 220) {
-                    errorInfoStore.put(ErrorInfoStore.KEY_INTERACTIONS, accountId,
+                    errorInfoStore.put(getErrorInfoKey(), accountId,
                             ErrorInfoStore.CODE_NO_ACCESS_FOR_CREDENTIALS);
+                } else if (e.isCausedByNetworkIssue()) {
+                    errorInfoStore.put(getErrorInfoKey(), accountId,
+                            ErrorInfoStore.CODE_NETWORK_ERROR);
                 }
             }
         }
         return null;
     }
+
+    @NonNull
+    protected abstract String getErrorInfoKey();
 
     private void storeActivities(ContentResolver cr, int loadItemLimit, long accountId,
                                  boolean noItemsBefore, ResponseList<Activity> activities) {

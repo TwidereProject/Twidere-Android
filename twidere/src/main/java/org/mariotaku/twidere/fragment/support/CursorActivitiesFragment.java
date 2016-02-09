@@ -77,9 +77,9 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
             showContent();
         } else if (accountIds.length > 0) {
             final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
-                    mErrorInfoStore.get(ErrorInfoStore.KEY_INTERACTIONS, accountIds[0]));
+                    mErrorInfoStore.get(getErrorInfoKey(), accountIds[0]));
             if (errorInfo != null) {
-                showError(errorInfo.getIcon(), errorInfo.getMessage());
+                showEmpty(errorInfo.getIcon(), errorInfo.getMessage());
             } else {
                 showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
             }
@@ -87,6 +87,9 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
             showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
         }
     }
+
+    @NonNull
+    protected abstract String getErrorInfoKey();
 
     private ContentObserver mContentObserver;
 
@@ -274,6 +277,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
             if (!event.running) {
                 setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
                 setRefreshEnabled(true);
+                onLoadingFinished();
             }
         }
 

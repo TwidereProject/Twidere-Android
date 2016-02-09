@@ -528,6 +528,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public void getActivitiesAboutMeAsync(long[] accountIds, long[] maxIds, long[] sinceIds) {
         mAsyncTaskManager.add(new GetActivitiesTask(this, TASK_TAG_GET_MENTIONS, accountIds, maxIds, sinceIds) {
 
+            @NonNull
+            @Override
+            protected String getErrorInfoKey() {
+                return ErrorInfoStore.KEY_INTERACTIONS;
+            }
+
             @Override
             protected void saveReadPosition(long accountId, Twitter twitter) {
                 try {
@@ -560,6 +566,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     public void getActivitiesByFriendsAsync(long[] accountIds, long[] maxIds, long[] sinceIds) {
         mAsyncTaskManager.add(new GetActivitiesTask(this, "get_activities_by_friends", accountIds, maxIds, sinceIds) {
+
+            @NonNull
+            @Override
+            protected String getErrorInfoKey() {
+                return ErrorInfoStore.KEY_ACTIVITIES_BY_FRIENDS;
+            }
 
             @Override
             protected void saveReadPosition(long accountId, Twitter twitter) {
@@ -1979,6 +1991,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     if (e.getErrorCode() == 93) {
                         mErrorInfoStore.put(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountId,
                                 ErrorInfoStore.CODE_NO_DM_PERMISSION);
+                    } else if (e.isCausedByNetworkIssue()) {
+                        mErrorInfoStore.put(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountId,
+                                ErrorInfoStore.CODE_NETWORK_ERROR);
                     }
                     if (BuildConfig.DEBUG) {
                         Log.w(LOGTAG, e);
@@ -2069,6 +2084,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final Intent intent = new Intent(BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING);
             twitterWrapper.getContext().sendBroadcast(intent);
             super.onPreExecute();
+        }
+
+        @NonNull
+        @Override
+        protected String getErrorInfoKey() {
+            return ErrorInfoStore.KEY_HOME_TIMELINE;
         }
 
     }

@@ -23,7 +23,6 @@ import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 
-import org.mariotaku.inetaddrjni.library.InetAddressUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -67,7 +66,7 @@ public class TwidereProxySelector extends ProxySelector {
             address = createResolved(host, port);
         } else {
             // If proxy host is an IP address, create unresolved directly.
-            if (InetAddressUtils.getInetAddressType(host) != 0) {
+            if (TwidereDns.isValidIpAddress(host)) {
                 address = InetSocketAddress.createUnresolved(host, port);
             } else {
                 address = new InetSocketAddress(host, port);

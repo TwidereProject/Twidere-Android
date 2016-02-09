@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentActivity;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
 
@@ -33,6 +34,12 @@ import edu.tsinghua.hotmobi.model.TimelineType;
  * Created by mariotaku on 14/12/3.
  */
 public class HomeTimelineFragment extends CursorStatusesFragment {
+
+    @NonNull
+    @Override
+    protected String getErrorInfoKey() {
+        return ErrorInfoStore.KEY_HOME_TIMELINE;
+    }
 
     @Override
     public Uri getContentUri() {

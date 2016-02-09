@@ -25,21 +25,16 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.view.holder.StatusViewHolder;
 
 public class CardPreviewPreference extends Preference implements Constants, OnSharedPreferenceChangeListener {
 
-    private final LayoutInflater mInflater;
-    private final SharedPreferences mPreferences;
-    private final TwidereLinkify mLinkify;
     private StatusViewHolder mHolder;
     private boolean mCompactModeChanged;
     private DummyStatusHolderAdapter mAdapter;
@@ -54,10 +49,10 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 
     public CardPreviewPreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        mInflater = LayoutInflater.from(context);
-        mLinkify = new TwidereLinkify(null);
-        mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mPreferences.registerOnSharedPreferenceChangeListener(this);
+        final SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
+        setLayoutResources(preferences);
+        preferences.registerOnSharedPreferenceChangeListener(this);
         mAdapter = new DummyStatusHolderAdapter(context);
     }
 
@@ -71,11 +66,20 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
     public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
         if (mHolder == null) return;
         if (KEY_COMPACT_CARDS.equals(key)) {
-            mCompactModeChanged = true;
+            setLayoutResources(preferences);
         }
         mAdapter.updateOptions();
         notifyChanged();
     }
+
+    protected void setLayoutResources(SharedPreferences preferences) {
+        if (preferences.getBoolean(KEY_COMPACT_CARDS, false)) {
+            setLayoutResource(R.layout.card_item_status_compact);
+        } else {
+            setLayoutResource(R.layout.card_item_status);
+        }
+    }
+
 
     @Override
     protected void onBindView(@NonNull final View view) {
@@ -88,12 +92,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 
     @Override
     protected View onCreateView(final ViewGroup parent) {
-        final View statusView;
-        if (mPreferences != null && mPreferences.getBoolean(KEY_COMPACT_CARDS, false)) {
-            statusView = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
-        } else {
-            statusView = mInflater.inflate(R.layout.card_item_status, parent, false);
-        }
+        final View statusView = super.onCreateView(parent);
         mHolder = new StatusViewHolder(mAdapter, statusView);
         return statusView;
     }

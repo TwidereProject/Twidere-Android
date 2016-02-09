@@ -36,16 +36,14 @@ import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
-import org.mariotaku.twidere.fragment.support.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
 import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
+import org.mariotaku.twidere.fragment.support.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
-import org.mariotaku.twidere.fragment.support.CacheDownloadFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
-import org.mariotaku.twidere.loader.support.CacheDownloadLoader;
 import org.mariotaku.twidere.loader.support.TwitterAPIStatusesLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
 import org.mariotaku.twidere.provider.CacheProvider;
@@ -132,11 +130,7 @@ public interface GeneralComponent {
 
     void inject(DependencyHolder object);
 
-    void inject(CacheDownloadLoader object);
-
     void inject(CacheProvider provider);
-
-    void inject(CacheDownloadFragment.MediaDownloader downloader);
 
     void inject(TwitterAPIStatusesLoader loader);
 

@@ -425,10 +425,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     }
 
     boolean hasVideo(ParcelableMedia[] media) {
-        for (ParcelableMedia mediaItem : media) {
-            switch (mediaItem.type) {
+        if (media == null) return false;
+        for (ParcelableMedia item : media) {
+            if (item == null) continue;
+            switch (item.type) {
                 case ParcelableMedia.Type.TYPE_VIDEO:
                 case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
+                case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER:
                     return true;
             }
         }

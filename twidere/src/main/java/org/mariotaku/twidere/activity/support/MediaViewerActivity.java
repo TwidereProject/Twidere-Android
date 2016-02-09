@@ -104,6 +104,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         IExtendedActivity {
 
     private static final int REQUEST_SHARE_MEDIA = 201;
+    private static final int REQUEST_PERMISSION_SAVE_MEDIA = 202;
 
     @Inject
     FileCache mFileCache;
@@ -342,7 +343,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_REQUEST_PERMISSIONS: {
+            case REQUEST_PERMISSION_SAVE_MEDIA: {
                 if (PermissionUtils.hasPermission(permissions, grantResults, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     saveToStorage();
                 } else {
@@ -398,7 +399,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                 });
             }
 
-            protected void onFileSaved(File savedFile, String mimeType) {
+            protected void onFileSaved(@NonNull File savedFile, @Nullable String mimeType) {
                 final MediaViewerActivity activity = (MediaViewerActivity) getContext();
                 if (activity == null) return;
 
@@ -415,6 +416,12 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                         REQUEST_SHARE_MEDIA);
             }
 
+            @Override
+            protected void onFileSaveFailed() {
+                final MediaViewerActivity activity = (MediaViewerActivity) getContext();
+                if (activity == null) return;
+                Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
+            }
         };
         task.execute();
     }
@@ -431,7 +438,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             } else {
                 permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
             }
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_REQUEST_PERMISSIONS);
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSION_SAVE_MEDIA);
         }
     }
 

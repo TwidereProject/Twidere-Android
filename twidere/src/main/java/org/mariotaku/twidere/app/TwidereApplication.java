@@ -111,10 +111,10 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             StrictModeUtils.detectAllVmPolicy();
         }
         super.onCreate();
+        initializeAsyncTask();
         initDebugMode();
         initBugReport();
         mHandler = new Handler();
-        initializeAsyncTask();
         initAccountColor(this);
 
         final PackageManager pm = getPackageManager();

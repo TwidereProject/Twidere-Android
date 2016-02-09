@@ -31,6 +31,7 @@ import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
 
@@ -47,6 +48,12 @@ public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
     @TimelineType
     protected String getTimelineType() {
         return TimelineType.INTERACTIONS;
+    }
+
+    @NonNull
+    @Override
+    protected String getErrorInfoKey() {
+        return ErrorInfoStore.KEY_INTERACTIONS;
     }
 
     @Override

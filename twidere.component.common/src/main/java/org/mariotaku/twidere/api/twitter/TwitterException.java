@@ -172,12 +172,13 @@ public class TwitterException extends Exception implements TwitterResponse, Http
      */
     @Override
     public String getMessage() {
-        if (errors != null && errors.length > 0)
+        if (errors != null && errors.length > 0) {
             return String.format(Locale.US, "Error %d: %s", errors[0].getCode(), errors[0].getMessage());
-        else if (statusCode != -1)
+        } else if (statusCode != -1) {
             return String.format(Locale.US, "Error %d", statusCode);
-        else
+        } else {
             return super.getMessage();
+        }
     }
 
     /**

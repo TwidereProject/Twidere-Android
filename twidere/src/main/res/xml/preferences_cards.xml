@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                  android:title="@string/cards">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/cards">
 
     <PreferenceCategory
         android:key="cat_card_preview"
         android:order="11"
         android:title="@string/preview">
-        <org.mariotaku.twidere.preference.CardPreviewPreference android:key="card_preview"/>
+        <org.mariotaku.twidere.preference.CardPreviewPreference
+            android:key="card_preview"/>
     </PreferenceCategory>
 
     <org.mariotaku.twidere.preference.SeekBarDialogPreference
@@ -72,5 +74,16 @@
             android:name="notify_change"
             android:value="true"/>
     </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+
+    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        android:defaultValue="false"
+        android:key="i_want_my_stars_back"
+        android:order="34"
+        android:summary="@string/i_want_my_stars_back_summary"
+        android:title="@string/i_want_my_stars_back">
+        <extra
+            android:name="notify_change"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
 
 </PreferenceScreen>

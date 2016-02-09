@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
 
@@ -41,6 +42,12 @@ public class ActivitiesByFriendsFragment extends CursorActivitiesFragment {
         return TimelineType.OTHER;
     }
 
+
+    @NonNull
+    @Override
+    protected String getErrorInfoKey() {
+        return ErrorInfoStore.KEY_ACTIVITIES_BY_FRIENDS;
+    }
 
     @Override
     public Uri getContentUri() {
