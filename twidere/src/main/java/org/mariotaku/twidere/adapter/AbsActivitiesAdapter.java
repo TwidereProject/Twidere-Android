@@ -252,6 +252,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             return ITEM_VIEW_TYPE_GAP;
         }
         final String action = getActivityAction(position);
+        if (action == null) throw new NullPointerException();
         switch (action) {
             case Activity.Action.MENTION: {
                 if (ArrayUtils.isEmpty(activity.target_object_statuses)) {
@@ -325,6 +326,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     protected abstract void bindTitleSummaryViewHolder(ActivityTitleSummaryViewHolder holder, int position);
 
+    @Nullable
     public abstract String getActivityAction(int position);
 
     public abstract long getTimestamp(int position);

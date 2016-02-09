@@ -20,6 +20,8 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.twidere.model.ParcelableActivity;
@@ -47,22 +49,27 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
     }
 
 
+    @Nullable
     @Override
-    public String getActivityAction(int position) {
+    public String getActivityAction(int adapterPosition) {
+        int dataPosition = adapterPosition - getActivityStartIndex();
+        if (dataPosition < 0 || dataPosition >= getActivityCount()) return null;
         if (mData instanceof ObjectCursor) {
             final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
-            return ((ObjectCursor) mData).getCursor(position).getString(indices.action);
+            return ((ObjectCursor) mData).getCursor(dataPosition).getString(indices.action);
         }
-        return mData.get(position).action;
+        return mData.get(dataPosition).action;
     }
 
     @Override
-    public long getTimestamp(int position) {
+    public long getTimestamp(int adapterPosition) {
+        int dataPosition = adapterPosition - getActivityStartIndex();
+        if (dataPosition < 0 || dataPosition >= getActivityCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
             final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
-            return ((ObjectCursor) mData).getCursor(position).getLong(indices.timestamp);
+            return ((ObjectCursor) mData).getCursor(dataPosition).getLong(indices.timestamp);
         }
-        return mData.get(position).timestamp;
+        return mData.get(dataPosition).timestamp;
     }
 
     @Override

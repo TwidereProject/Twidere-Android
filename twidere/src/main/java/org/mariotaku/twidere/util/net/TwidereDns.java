@@ -71,7 +71,7 @@ public class TwidereDns implements Constants, Dns {
 
     private Resolver mResolver;
     private TimingLogger mLogger;
-    private long mConnnectTimeout;
+    private long mConnectTimeout;
 
     public TwidereDns(final Context context) {
         mLogger = new TimingLogger(RESOLVER_LOGTAG, "resolve");
@@ -81,19 +81,24 @@ public class TwidereDns implements Constants, Dns {
         reloadDnsSettings();
     }
 
-    private static boolean hostMatches(final String host, final String rule) {
-        if (rule == null || host == null) return false;
-        if (rule.startsWith(".")) return StringUtils.endsWithIgnoreCase(host, rule);
-        return host.equalsIgnoreCase(rule);
-    }
-
-    private static boolean isValidIpAddress(final String address) {
-        return InetAddressUtils.getInetAddressType(address) != 0;
+    @Override
+    public synchronized List<InetAddress> lookup(String hostname) throws UnknownHostException {
+        try {
+            return Arrays.asList(resolveInternal(hostname, hostname, 0, true));
+        } catch (IOException e) {
+            if (e instanceof UnknownHostException) throw (UnknownHostException) e;
+            throw new UnknownHostException("Unable to resolve address " + e.getMessage());
+        }
     }
 
     @SuppressWarnings("unused")
     public synchronized void removeCachedHost(final String host) {
         mHostCache.remove(host);
+    }
+
+    public synchronized void reloadDnsSettings() {
+        mResolver = null;
+        mConnectTimeout = TimeUnit.SECONDS.toMillis(mPreferences.getInt(KEY_CONNECTION_TIMEOUT, 10));
     }
 
     @NonNull
@@ -218,7 +223,7 @@ public class TwidereDns implements Constants, Dns {
             } else {
                 continue;
             }
-            if (mConnnectTimeout == 0 || checkAddress(inetAddress)) {
+            if (mConnectTimeout == 0 || checkAddress(inetAddress)) {
                 resolvedAddresses.add(InetAddress.getByAddress(originalHost, inetAddress.getAddress()));
             }
         }
@@ -242,7 +247,7 @@ public class TwidereDns implements Constants, Dns {
 
     private boolean checkAddress(InetAddress inetAddress) throws IOException {
         if (!CHECK_ADDRESS) return true;
-        return inetAddress.isReachable(TwidereMathUtils.clamp((int) mConnnectTimeout / 2, 1000, 3000));
+        return inetAddress.isReachable(TwidereMathUtils.clamp((int) mConnectTimeout / 2, 1000, 3000));
     }
 
     private void putCache(String host, InetAddress[] addresses, long ttl, TimeUnit unit) {
@@ -296,19 +301,15 @@ public class TwidereDns implements Constants, Dns {
         return mResolver = resolver;
     }
 
-    public void reloadDnsSettings() {
-        mResolver = null;
-        mConnnectTimeout = TimeUnit.SECONDS.toMillis(mPreferences.getInt(KEY_CONNECTION_TIMEOUT, 10));
+
+    private static boolean hostMatches(final String host, final String rule) {
+        if (rule == null || host == null) return false;
+        if (rule.startsWith(".")) return StringUtils.endsWithIgnoreCase(host, rule);
+        return host.equalsIgnoreCase(rule);
     }
 
-    @Override
-    public List<InetAddress> lookup(String hostname) throws UnknownHostException {
-        try {
-            return Arrays.asList(resolveInternal(hostname, hostname, 0, true));
-        } catch (IOException e) {
-            if (e instanceof UnknownHostException) throw (UnknownHostException) e;
-            throw new UnknownHostException("Unable to resolve address " + e.getMessage());
-        }
+    private static boolean isValidIpAddress(final String address) {
+        return InetAddressUtils.getInetAddressType(address) != 0;
     }
 
     private static class HostCache extends LruCache<String, InetAddress[]> {

@@ -58,36 +58,39 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
     }
 
     @Override
-    public long getItemId(int position) {
-        if (position == getStatusCount()) return RecyclerView.NO_ID;
+    public long getItemId(int adapterPosition) {
+        int dataPosition = adapterPosition - getStatusStartIndex();
+        if (dataPosition < 0 || dataPosition >= getStatusCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
-            final Cursor cursor = ((ObjectCursor) mData).getCursor(position);
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
             return cursor.getLong(indices._id);
         }
-        return mData.get(position).hashCode();
+        return System.identityHashCode(mData.get(dataPosition));
     }
 
     @Override
-    public long getStatusId(int position) {
-        if (position == getStatusCount()) return RecyclerView.NO_ID;
+    public long getStatusId(int adapterPosition) {
+        int dataPosition = adapterPosition - getStatusStartIndex();
+        if (dataPosition < 0 || dataPosition >= getStatusCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
-            final Cursor cursor = ((ObjectCursor) mData).getCursor(position);
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
             return cursor.getLong(indices.id);
         }
-        return mData.get(position).id;
+        return mData.get(dataPosition).id;
     }
 
     @Override
-    public long getAccountId(int position) {
-        if (position == getStatusCount()) return RecyclerView.NO_ID;
+    public long getAccountId(int adapterPosition) {
+        int dataPosition = adapterPosition - getStatusStartIndex();
+        if (dataPosition < 0 || dataPosition >= getStatusCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
-            final Cursor cursor = ((ObjectCursor) mData).getCursor(position);
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
             return cursor.getLong(indices.account_id);
         }
-        return mData.get(position).account_id;
+        return mData.get(dataPosition).account_id;
     }
 
     @Override
