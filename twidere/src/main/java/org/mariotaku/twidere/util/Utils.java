@@ -1976,8 +1976,8 @@ public final class Utils implements Constants {
         }
     }
 
-    public static void openStatuses(final Activity activity, final List<ParcelableStatus> statuses) {
-        if (activity == null || statuses == null) return;
+    public static void openStatuses(final Context context, final List<ParcelableStatus> statuses) {
+        if (context == null || statuses == null) return;
         final Bundle extras = new Bundle();
         extras.putParcelableArrayList(EXTRA_STATUSES, new ArrayList<>(statuses));
         final Uri.Builder builder = new Uri.Builder();
@@ -1985,23 +1985,23 @@ public final class Utils implements Constants {
         builder.authority(AUTHORITY_STATUSES);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.putExtras(extras);
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
-    public static void openStatusFavoriters(final Activity activity, final long accountId, final long statusId) {
-        if (activity == null) return;
+    public static void openStatusFavoriters(final Context context, final long accountId, final long statusId) {
+        if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS_FAVORITERS);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
-    public static void openStatusReplies(final Activity activity, final long accountId, final long statusId,
+    public static void openStatusReplies(final Context context, final long accountId, final long statusId,
                                          final String screenName) {
-        if (activity == null) return;
+        if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS_REPLIES);
@@ -2009,7 +2009,7 @@ public final class Utils implements Constants {
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
         builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public static void openStatusRetweeters(final Context context, final long accountId, final long statusId) {

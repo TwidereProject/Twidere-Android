@@ -873,7 +873,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (result.hasData()) {
                 fragment.displayTranslation(result.getData());
             } else if (result.hasException()) {
-                //TODO show translation error
                 Utils.showErrorMessage(context, R.string.translate, result.getException(), false);
             }
         }
@@ -1068,7 +1067,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             final CountsUsersAdapter interactUsersAdapter = (CountsUsersAdapter) countsUsersView.getAdapter();
             if (statusActivity != null) {
-                interactUsersAdapter.setUsers(statusActivity.retweeters);
+                interactUsersAdapter.setUsers(statusActivity.getRetweeters());
                 interactUsersAdapter.setCounts(statusActivity);
             } else {
                 interactUsersAdapter.setUsers(null);
@@ -1124,7 +1123,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 twitterCard.setVisibility(View.GONE);
             }
 
-
             Utils.setMenuForStatus(context, fragment.mPreferences, menuBar.getMenu(), status,
                     adapter.getStatusAccount(), twitter);
 
@@ -1176,25 +1174,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                             activityOption);
                     break;
                 }
-//                case R.id.retweets_container: {
-//                    final FragmentActivity activity = fragment.getActivity();
-//                    if (status.is_retweet) {
-//                        Utils.openStatusRetweeters(activity, status.account_id, status.retweet_id);
-//                    } else {
-//                        Utils.openStatusRetweeters(activity, status.account_id, status.id);
-//                    }
-//                    break;
-//                }
-//                case R.id.favorites_container: {
-//                    final FragmentActivity activity = fragment.getActivity();
-//                    if (!Utils.isOfficialCredentials(activity, adapter.getStatusAccount())) return;
-//                    if (status.is_retweet) {
-//                        Utils.openStatusFavoriters(activity, status.account_id, status.retweet_id);
-//                    } else {
-//                        Utils.openStatusFavoriters(activity, status.account_id, status.id);
-//                    }
-//                    break;
-//                }
                 case R.id.retweeted_by: {
                     if (status.retweet_id > 0) {
                         Utils.openUserProfile(adapter.getContext(), status.account_id, status.retweeted_by_user_id,
@@ -1431,7 +1410,38 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
 
             private void notifyItemClick(int position) {
-                mFragment.onUserClick(getUser(position));
+                switch (getItemViewType(position)) {
+                    case ITEM_VIEW_TYPE_COUNT: {
+                        final LabeledCount count = getCount(position);
+                        final ParcelableStatus status = mStatusAdapter.getStatus();
+                        if (count == null || status == null) return;
+                        switch (count.type) {
+                            case KEY_RETWEET_COUNT: {
+                                if (status.is_retweet) {
+                                    Utils.openStatusRetweeters(getContext(), status.account_id, status.retweet_id);
+                                } else {
+                                    Utils.openStatusRetweeters(getContext(), status.account_id, status.id);
+                                }
+                                break;
+                            }
+                            case KEY_FAVORITE_COUNT: {
+                                final ParcelableCredentials account = mStatusAdapter.getStatusAccount();
+                                if (!Utils.isOfficialCredentials(getContext(), account)) return;
+                                if (status.is_retweet) {
+                                    Utils.openStatusFavoriters(getContext(), status.account_id, status.retweet_id);
+                                } else {
+                                    Utils.openStatusFavoriters(getContext(), status.account_id, status.id);
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case ITEM_VIEW_TYPE_USER: {
+                        mFragment.onUserClick(getUser(position));
+                        break;
+                    }
+                }
             }
 
             private ParcelableUser getUser(int position) {
@@ -1448,9 +1458,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
                 public ProfileImageViewHolder(CountsUsersAdapter adapter, View itemView) {
                     super(itemView);
-                    profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
                     itemView.setOnClickListener(this);
                     this.adapter = adapter;
+                    profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
                 }
 
                 public void displayUser(ParcelableUser item) {
@@ -1470,10 +1480,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
                 public CountViewHolder(CountsUsersAdapter adapter, View itemView) {
                     super(itemView);
-                    countView = (TextView) itemView.findViewById(R.id.count);
-                    labelView = (TextView) itemView.findViewById(R.id.label);
+                    itemView.setOnClickListener(this);
                     this.adapter = adapter;
                     final float textSize = adapter.getTextSize();
+                    countView = (TextView) itemView.findViewById(R.id.count);
+                    labelView = (TextView) itemView.findViewById(R.id.label);
                     countView.setTextSize(textSize * 1.25f);
                     labelView.setTextSize(textSize * 0.85f);
                 }
@@ -1547,7 +1558,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             private void expandOrOpenMedia(ParcelableMedia current) {
                 if (adapter.isDetailMediaExpanded()) {
-                    //TODO open first media
                     Utils.openMedia(adapter.getContext(), adapter.getStatus(), current, null);
                     return;
                 }
@@ -1951,7 +1961,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case VIEW_TYPE_CONVERSATION_ERROR: {
                     final StatusErrorItemViewHolder errorHolder = (StatusErrorItemViewHolder) holder;
-                    errorHolder.showError(mReplyError);
+                    errorHolder.showError(mConversationError);
                     break;
                 }
                 case VIEW_TYPE_CONVERSATION_LOAD_INDICATOR: {
@@ -2459,6 +2469,16 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             this.retweetCount = retweetCount;
         }
 
+        @Override
+        public String toString() {
+            return "StatusActivity{" +
+                    "retweeters=" + retweeters +
+                    ", statusId=" + statusId +
+                    ", favoriteCount=" + favoriteCount +
+                    ", replyCount=" + replyCount +
+                    ", retweetCount=" + retweetCount +
+                    '}';
+        }
     }
 
     static class ReadPosition {

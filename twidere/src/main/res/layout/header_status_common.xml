@@ -207,6 +207,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/element_spacing_normal"
+            android:textColor="?android:textColorPrimary"
             android:visibility="gone"
             tools:text="@string/sample_status_text"/>
     </LinearLayout>
