@@ -50,6 +50,7 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
@@ -366,7 +367,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     public void onActivityClick(ActivityTitleSummaryViewHolder holder, int position) {
         final ParcelableActivity activity = getAdapter().getActivity(position);
         if (activity == null) return;
-        Utils.openUsers(getActivity(), Arrays.asList(ParcelableActivityUtils.getAfterFilteredSources(activity)));
+        IntentUtils.openUsers(getActivity(), Arrays.asList(ParcelableActivityUtils.getAfterFilteredSources(activity)));
     }
 
     @Override

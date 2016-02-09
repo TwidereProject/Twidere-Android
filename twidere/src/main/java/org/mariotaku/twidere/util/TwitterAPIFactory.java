@@ -51,6 +51,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Dns;
+
 import static android.text.TextUtils.isEmpty;
 
 /**
@@ -142,7 +144,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         factory.setConstantPool(sConstantPoll);
         factory.setRestConverterFactory(new TwitterConverterFactory());
         factory.setHttpRequestFactory(new TwidereHttpRequestFactory(userAgent));
-        factory.setExceptionFactory(new TwidereExceptionFactory());
+        factory.setExceptionFactory(new TwidereExceptionFactory(holder.getDns()));
         return factory.build(cls);
     }
 
@@ -432,6 +434,13 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     public static class TwidereExceptionFactory implements ExceptionFactory<TwitterException> {
+
+        private final Dns dns;
+
+        TwidereExceptionFactory(Dns dns) {
+            this.dns = dns;
+        }
+
         @Override
         public TwitterException newException(Throwable cause, HttpRequest request, HttpResponse response) {
             final TwitterException te;

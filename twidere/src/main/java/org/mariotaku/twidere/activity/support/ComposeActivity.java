@@ -704,11 +704,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mSendView.setOnClickListener(this);
         mSendView.setOnLongClickListener(this);
         final Intent composeExtensionsIntent = new Intent(INTENT_ACTION_EXTENSION_COMPOSE);
-        Utils.addIntentToMenu(this, menu, composeExtensionsIntent, MENU_GROUP_COMPOSE_EXTENSION);
+        MenuUtils.addIntentToMenu(this, menu, composeExtensionsIntent, MENU_GROUP_COMPOSE_EXTENSION);
         final Intent imageExtensionsIntent = new Intent(INTENT_ACTION_EXTENSION_EDIT_IMAGE);
         final MenuItem mediaMenuItem = menu.findItem(R.id.media_menu);
         if (mediaMenuItem != null && mediaMenuItem.hasSubMenu()) {
-            Utils.addIntentToMenu(this, mediaMenuItem.getSubMenu(), imageExtensionsIntent, MENU_GROUP_IMAGE_EXTENSION);
+            MenuUtils.addIntentToMenu(this, mediaMenuItem.getSubMenu(), imageExtensionsIntent, MENU_GROUP_IMAGE_EXTENSION);
         }
         setMenu();
         updateLocationState();

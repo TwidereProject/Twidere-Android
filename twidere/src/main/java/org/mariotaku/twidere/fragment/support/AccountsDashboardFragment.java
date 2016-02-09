@@ -86,12 +86,12 @@ import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.menu.support.AccountToggleProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ListViewUtils;
@@ -244,8 +244,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 final FragmentActivity activity = getActivity();
                 final Bundle activityOption = Utils.makeSceneTransitionOption(activity,
                         new Pair<View, String>(mAccountProfileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
-                Utils.openUserProfile(activity, account.account_id, account.account_id,
-                        account.screen_name, activityOption);
+                IntentUtils.openUserProfile(activity, account.account_id, account.account_id,
+                        account.screen_name, activityOption, true);
                 break;
             }
         }

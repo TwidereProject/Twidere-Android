@@ -28,8 +28,9 @@ import android.view.View;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.MenuUtils;
 
-import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
+import static org.mariotaku.twidere.util.MenuUtils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.createStatusShareIntent;
 
 /**
@@ -71,7 +72,7 @@ public class SupportStatusShareProvider extends ActionProvider implements Consta
         if (status == null) return;
         final Intent shareIntent = createStatusShareIntent(mContext, status);
         subMenu.removeGroup(MENU_GROUP_STATUS_SHARE);
-        addIntentToMenu(mContext, subMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
+        MenuUtils.addIntentToMenu(mContext, subMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
     }
 
     public void setStatus(ParcelableStatus status) {

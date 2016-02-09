@@ -20,10 +20,7 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.Pair;
 import android.support.v4.widget.Space;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -38,16 +35,15 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.fragment.support.CursorActivitiesFragment;
-import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
@@ -440,16 +436,8 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             final ParcelableActivity activity = adapter.getActivity(position);
             final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
             assert status != null;
-            final View profileImageView = holder.getProfileImageView();
-            final View profileTypeView = holder.getProfileTypeView();
-            if (context instanceof FragmentActivity) {
-                final Bundle options = Utils.makeSceneTransitionOption((FragmentActivity) context,
-                        new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                        new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-                Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, options);
-            } else {
-                Utils.openUserProfile(context, status.account_id, status.user_id, status.user_screen_name, null);
-            }
+            IntentUtils.openUserProfile(context, status.account_id, status.user_id,
+                    status.user_screen_name, null, true);
         }
 
         @Override

@@ -29,7 +29,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -53,6 +52,7 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
@@ -407,12 +407,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     @Override
     public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
-        final View profileImageView = holder.getProfileImageView();
-        final View profileTypeView = holder.getProfileTypeView();
-        final Bundle options = Utils.makeSceneTransitionOption(activity,
-                new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-        Utils.openUserProfile(activity, status.account_id, status.user_id, status.user_screen_name, options);
+        IntentUtils.openUserProfile(activity, status.account_id, status.user_id,
+                status.user_screen_name, null, true);
     }
 
     @Override

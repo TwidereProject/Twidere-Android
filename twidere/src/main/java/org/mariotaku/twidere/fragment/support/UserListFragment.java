@@ -72,17 +72,14 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.text.validator.UserListNameValidator;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.LinkCreator;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
-
-import static org.mariotaku.twidere.util.MenuUtils.setMenuItemAvailability;
-import static org.mariotaku.twidere.util.Utils.addIntentToMenu;
-import static org.mariotaku.twidere.util.Utils.openUserListDetails;
-import static org.mariotaku.twidere.util.Utils.openUserProfile;
 
 public class UserListFragment extends BaseSupportFragment implements OnClickListener,
         LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowsInsetsCallback,
@@ -177,7 +174,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
                     final long accountId = data.getLongExtra(EXTRA_ID, -1);
-                    openUserListDetails(getActivity(), accountId, userList.id, userList.user_id,
+                    Utils.openUserListDetails(getActivity(), accountId, userList.id, userList.user_id,
                             userList.user_screen_name, userList.name);
                 }
                 break;
@@ -252,15 +249,15 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         final ParcelableUserList userList = mUserList;
-        setMenuItemAvailability(menu, R.id.info, userList != null);
+        MenuUtils.setMenuItemAvailability(menu, R.id.info, userList != null);
         menu.removeGroup(MENU_GROUP_USER_LIST_EXTENSION);
         if (userList != null) {
             final boolean isMyList = userList.user_id == userList.account_id;
             final boolean isFollowing = userList.is_following;
-            setMenuItemAvailability(menu, R.id.edit, isMyList);
-            setMenuItemAvailability(menu, R.id.follow, !isMyList);
-            setMenuItemAvailability(menu, R.id.add, isMyList);
-            setMenuItemAvailability(menu, R.id.delete, isMyList);
+            MenuUtils.setMenuItemAvailability(menu, R.id.edit, isMyList);
+            MenuUtils.setMenuItemAvailability(menu, R.id.follow, !isMyList);
+            MenuUtils.setMenuItemAvailability(menu, R.id.add, isMyList);
+            MenuUtils.setMenuItemAvailability(menu, R.id.delete, isMyList);
             final MenuItem followItem = menu.findItem(R.id.follow);
             if (isFollowing) {
                 followItem.setIcon(R.drawable.ic_action_cancel);
@@ -272,12 +269,12 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             final Intent extensionsIntent = new Intent(INTENT_ACTION_EXTENSION_OPEN_USER_LIST);
             extensionsIntent.setExtrasClassLoader(getActivity().getClassLoader());
             extensionsIntent.putExtra(EXTRA_USER_LIST, userList);
-            addIntentToMenu(getActivity(), menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION);
+            MenuUtils.addIntentToMenu(getActivity(), menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION);
         } else {
-            setMenuItemAvailability(menu, R.id.edit, false);
-            setMenuItemAvailability(menu, R.id.follow, false);
-            setMenuItemAvailability(menu, R.id.add, false);
-            setMenuItemAvailability(menu, R.id.delete, false);
+            MenuUtils.setMenuItemAvailability(menu, R.id.edit, false);
+            MenuUtils.setMenuItemAvailability(menu, R.id.follow, false);
+            MenuUtils.setMenuItemAvailability(menu, R.id.add, false);
+            MenuUtils.setMenuItemAvailability(menu, R.id.delete, false);
         }
     }
 
@@ -351,8 +348,8 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             }
             case R.id.profile_image: {
                 if (mUserList == null) return;
-                openUserProfile(getActivity(), mUserList.account_id,
-                        mUserList.user_id, mUserList.user_screen_name, null);
+                IntentUtils.openUserProfile(getActivity(), mUserList.account_id,
+                        mUserList.user_id, mUserList.user_screen_name, null, true);
                 break;
             }
         }

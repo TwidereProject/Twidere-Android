@@ -59,6 +59,7 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
@@ -195,7 +196,8 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
     @Override
     public void onUserClick(int position, DirectMessageEntry entry) {
-        Utils.openUserProfile(getActivity(), entry.account_id, entry.conversation_id, entry.screen_name, null);
+        IntentUtils.openUserProfile(getActivity(), entry.account_id, entry.conversation_id,
+                entry.screen_name, null, true);
     }
 
     @Subscribe

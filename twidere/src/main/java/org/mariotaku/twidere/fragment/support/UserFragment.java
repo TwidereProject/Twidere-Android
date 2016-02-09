@@ -122,6 +122,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
@@ -679,7 +680,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
                     final long accountId = data.getLongExtra(EXTRA_ID, -1);
-                    Utils.openUserProfile(getActivity(), accountId, user.id, user.screen_name, null);
+                    IntentUtils.openUserProfile(getActivity(), accountId, user.id, user.screen_name,
+                            null, true);
                 }
                 break;
             }
@@ -917,7 +919,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         extras.putParcelable(EXTRA_USER, user);
         intent.putExtras(extras);
         menu.removeGroup(MENU_GROUP_USER_EXTENSION);
-        Utils.addIntentToMenu(getActivity(), menu, intent, MENU_GROUP_USER_EXTENSION);
+        MenuUtils.addIntentToMenu(getActivity(), menu, intent, MENU_GROUP_USER_EXTENSION);
         final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
         if (drawer != null) {
             final int offset = drawer.getPaddingTop() - drawer.getHeaderTop();
@@ -1056,7 +1058,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 return true;
             }
             case R.id.user_mentions: {
-                Utils.openUserMentions(getActivity(), user.account_id, user.screen_name);
+                IntentUtils.openUserMentions(getActivity(), user.account_id, user.screen_name);
                 return true;
             }
             case R.id.saved_searches: {
@@ -1296,7 +1298,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (user == null) return;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                Utils.openUserProfile(getActivity(), user.account_id, -1, link, null);
+                IntentUtils.openUserProfile(getActivity(), user.account_id, -1, link, null, true);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
@@ -1421,7 +1423,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (mActionBarBackground != null) {
             mActionBarBackground.setColor(actionBarColor);
         }
-        ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(null, null, actionBarColor));
+        if (mUser != null) {
+            final String displayName = mUserColorNameManager.getDisplayName(mUser, mNameFirst, false);
+            ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(displayName, null,
+                    actionBarColor));
+        } else {
+            ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(null, null,
+                    actionBarColor));
+        }
         final int optimalAccentColor = ThemeUtils.getOptimalAccentColor(color,
                 mDescriptionView.getCurrentTextColor());
         mDescriptionView.setLinkTextColor(optimalAccentColor);

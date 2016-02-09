@@ -32,24 +32,19 @@ import org.mariotaku.twidere.util.ThemeUtils;
 public class MainActivity extends Activity implements Constants {
 
     @Override
-    public void finish() {
-        super.finish();
-        ThemeUtils.overrideActivityCloseAnimation(this);
-    }
-
-    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy();
             StrictModeUtils.detectAllThreadPolicy();
         }
-        ThemeUtils.overrideActivityOpenAnimation(this);
         super.onCreate(savedInstanceState);
-        setVisible(true);
         final Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
         finish();
     }
 
+    @Override
+    public void setTheme(int resid) {
+        super.setTheme(ThemeUtils.getNoActionBarThemeResource(this));
+    }
 }

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme" />
-
-    <style name="Theme.Launcher" parent="Theme.Twidere.Dark.NoDisplay">
-        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
-    </style>
+    <style name="Theme"/>
 
     <style name="Theme.Twidere.Dark.NoActionBar" parent="Theme.Compat.Base.NoActionBar">
 
@@ -343,7 +339,7 @@
         <!--<item name="android:windowNoDisplay">true</item>-->
     </style>
 
-    <style name="Theme.Test" parent="Theme.Compat.Base" />
+    <style name="Theme.Test" parent="Theme.Compat.Base"/>
 
     <style name="Theme.Nyan" parent="Theme.Compat.Base.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>

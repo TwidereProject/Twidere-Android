@@ -6,14 +6,12 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.mariotaku.inetaddrjni.library.InetAddressUtils;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
 
@@ -51,10 +49,9 @@ public class HttpClientFactory implements Constants {
     public static void updateHttpClientConfiguration(final Context context,
                                                      final SharedPreferences prefs,
                                                      Dns dns, final OkHttpClient.Builder builder) {
-        final long connectionTimeoutMillis = TimeUnit.SECONDS.toMillis(prefs.getInt(KEY_CONNECTION_TIMEOUT, 10));
+        final long connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
-
-        builder.connectTimeout(connectionTimeoutMillis, TimeUnit.MILLISECONDS);
+        builder.connectTimeout(connectionTimeout, TimeUnit.SECONDS);
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);
@@ -63,11 +60,7 @@ public class HttpClientFactory implements Constants {
                     TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE)) {
                 final Proxy.Type type = getProxyType(proxyType);
                 if (type != Proxy.Type.DIRECT) {
-                    if (InetAddressUtils.getInetAddressType(proxyHost) != 0) {
-                        builder.proxy(new Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
-                    } else {
-                        builder.proxySelector(new TwidereProxySelector(context, type, proxyHost, proxyPort));
-                    }
+                    builder.proxySelector(new TwidereProxySelector(context, type, proxyHost, proxyPort));
                 }
             }
             final String username = prefs.getString(KEY_PROXY_USERNAME, null);

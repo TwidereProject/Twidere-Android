@@ -36,11 +36,6 @@ import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.LinkEvent;
 
-import static org.mariotaku.twidere.util.Utils.openStatus;
-import static org.mariotaku.twidere.util.Utils.openTweetSearch;
-import static org.mariotaku.twidere.util.Utils.openUserListDetails;
-import static org.mariotaku.twidere.util.Utils.openUserProfile;
-
 public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
     @NonNull
@@ -67,11 +62,11 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                openUserProfile(context, accountId, -1, link, null);
+                IntentUtils.openUserProfile(context, accountId, -1, link, null, true);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
-                openTweetSearch(context, accountId, "#" + link);
+                Utils.openTweetSearch(context, accountId, "#" + link);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_LINK: {
@@ -87,19 +82,19 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 if (mentionList.length != 2) {
                     break;
                 }
-                openUserListDetails(context, accountId, -1, -1, mentionList[0], mentionList[1]);
+                Utils.openUserListDetails(context, accountId, -1, -1, mentionList[0], mentionList[1]);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_CASHTAG: {
-                openTweetSearch(context, accountId, link);
+                Utils.openTweetSearch(context, accountId, link);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
-                openUserProfile(context, accountId, NumberUtils.toLong(link, -1), null, null);
+                IntentUtils.openUserProfile(context, accountId, NumberUtils.toLong(link, -1), null, null, true);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {
-                openStatus(context, accountId, NumberUtils.toLong(link, -1));
+                Utils.openStatus(context, accountId, NumberUtils.toLong(link, -1));
                 break;
             }
         }

@@ -60,6 +60,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -171,12 +172,13 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         final SuggestionItem item = mUsersSearchAdapter.getSuggestionItem(position);
         switch (mUsersSearchAdapter.getItemViewType(position)) {
             case SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM: {
-                Utils.openUserProfile(this, getAccountId(), item.extra_id, item.summary, null);
+                IntentUtils.openUserProfile(this, getAccountId(), item.extra_id, item.summary, null,
+                        true);
                 finish();
                 break;
             }
             case SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME: {
-                Utils.openUserProfile(this, getAccountId(), -1, item.title, null);
+                IntentUtils.openUserProfile(this, getAccountId(), -1, item.title, null, true);
                 finish();
                 break;
             }

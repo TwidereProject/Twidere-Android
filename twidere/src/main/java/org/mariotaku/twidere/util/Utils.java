@@ -293,35 +293,6 @@ public final class Utils implements Constants {
         throw new AssertionError("You are trying to create an instance for this utility class!");
     }
 
-    public static void addIntentToMenu(final Context context, final Menu menu, final Intent queryIntent) {
-        addIntentToMenu(context, menu, queryIntent, Menu.NONE);
-    }
-
-    public static void addIntentToMenu(final Context context, final Menu menu, final Intent queryIntent,
-                                       final int groupId) {
-        if (context == null || menu == null || queryIntent == null) return;
-        final PackageManager pm = context.getPackageManager();
-        final Resources res = context.getResources();
-        final float density = res.getDisplayMetrics().density;
-        final int padding = Math.round(density * 4);
-        final List<ResolveInfo> activities = pm.queryIntentActivities(queryIntent, 0);
-        for (final ResolveInfo info : activities) {
-            final Intent intent = new Intent(queryIntent);
-            final Drawable icon = info.loadIcon(pm);
-            intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-            final MenuItem item = menu.add(groupId, Menu.NONE, Menu.NONE, info.loadLabel(pm));
-            item.setIntent(intent);
-            final int iw = icon.getIntrinsicWidth(), ih = icon.getIntrinsicHeight();
-            if (iw > 0 && ih > 0) {
-                final Drawable iconWithPadding = new PaddingDrawable(icon, padding);
-                iconWithPadding.setBounds(0, 0, iw, ih);
-                item.setIcon(iconWithPadding);
-            } else {
-                item.setIcon(icon);
-            }
-        }
-    }
-
     public static void addIntentToMenuForExtension(final Context context, final Menu menu, final int groupId,
                                                    final String action, final String parelableKey, final String parelableJSONKey,
                                                    final Parcelable parcelable) {
@@ -2261,31 +2232,6 @@ public final class Utils implements Constants {
         return false;
     }
 
-    public static void openUserMentions(final Activity activity, final long account_id, final String screen_name) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_MENTIONS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        if (screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-    }
-
-    public static void openUserProfile(final Context context, final long accountId, final long userId,
-                                       final String screenName, final Bundle activityOptions) {
-        if (context == null || accountId <= 0 || userId <= 0 && isEmpty(screenName)) return;
-        final Uri uri = LinkCreator.getTwidereUserLink(accountId, userId, screenName);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        if (context instanceof Activity) {
-            ActivityCompat.startActivity((Activity) context, intent, activityOptions);
-        } else {
-            context.startActivity(intent);
-        }
-    }
-
     public static int getInsetsTopWithoutActionBarHeight(Context context, int top) {
         final int actionBarHeight;
         if (context instanceof AppCompatActivity) {
@@ -2306,60 +2252,6 @@ public final class Utils implements Constants {
             return top;
         }
         return top - actionBarHeight;
-    }
-
-    public static void openUserProfile(final Context context, final ParcelableUser user,
-                                       final Bundle activityOptions) {
-        if (context == null || user == null) return;
-        final Bundle extras = new Bundle();
-        extras.putParcelable(EXTRA_USER, user);
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(user.account_id));
-        if (user.id > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user.id));
-        }
-        if (user.screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, user.screen_name);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setExtrasClassLoader(context.getClassLoader());
-        intent.putExtras(extras);
-        if (context instanceof Activity) {
-            ActivityCompat.startActivity((Activity) context, intent, activityOptions);
-        } else {
-            context.startActivity(intent);
-        }
-    }
-
-    public static void openUsers(final Activity activity, final List<ParcelableUser> users) {
-        if (activity == null || users == null) return;
-        final Bundle extras = new Bundle();
-        extras.putParcelableArrayList(EXTRA_USERS, new ArrayList<>(users));
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USERS);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.putExtras(extras);
-        activity.startActivity(intent);
-    }
-
-    public static void openUserTimeline(final Activity activity, final long account_id, final long user_id,
-                                        final String screen_name) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_TIMELINE);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        if (user_id > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
-        }
-        if (screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
     }
 
     public static void openUserMediaTimeline(final Activity activity, final long account_id, final long user_id,
@@ -2503,7 +2395,7 @@ public final class Utils implements Constants {
             final Menu shareSubMenu = shareItem.getSubMenu();
             final Intent shareIntent = createStatusShareIntent(context, status);
             shareSubMenu.removeGroup(MENU_GROUP_STATUS_SHARE);
-            addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
+            MenuUtils.addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE);
         } else {
             final Intent shareIntent = createStatusShareIntent(context, status);
             final Intent chooserIntent = Intent.createChooser(shareIntent, context.getString(R.string.share_status));

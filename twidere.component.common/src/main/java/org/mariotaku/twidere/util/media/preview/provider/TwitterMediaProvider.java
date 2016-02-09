@@ -12,26 +12,31 @@ import java.util.Locale;
 /**
  * Created by darkwhite on 1/16/16.
  */
-public class TwitterPicProvider implements Provider {
+public class TwitterMediaProvider implements Provider {
     @Override
     public boolean supports(@NonNull String link) {
         final String authority = PreviewMediaExtractor.getAuthority(link);
-        if (authority == null) return false;
-        return authority.endsWith(".twimg.com") && !link.contains("/tweet_video");
+        return authority != null && authority.endsWith(".twimg.com");
     }
 
     @Nullable
     @Override
     public ParcelableMedia from(@NonNull String link) {
+        final String path = PreviewMediaExtractor.getPath(link);
+        if (path == null) return null;
         final ParcelableMedia media = new ParcelableMedia();
-        media.type = ParcelableMedia.Type.TYPE_IMAGE;
         media.url = link;
-        if (link.contains("profile")) {
-            media.preview_url = link;
-            media.media_url = link;
-        } else {
+        if (path.startsWith("/tweet_video/")) {
+            // Video is not supported yet
+            return null;
+        } else if (path.startsWith("/media/")) {
+            media.type = ParcelableMedia.Type.TYPE_IMAGE;
             media.preview_url = String.format(Locale.ROOT, "%s:medium", link);
             media.media_url = String.format(Locale.ROOT, "%s:orig", link);
+        } else {
+            media.type = ParcelableMedia.Type.TYPE_IMAGE;
+            media.preview_url = link;
+            media.media_url = link;
         }
 
         return media;
@@ -42,4 +47,5 @@ public class TwitterPicProvider implements Provider {
     public ParcelableMedia from(@NonNull String link, @NonNull RestHttpClient client, @Nullable Object extra) {
         return from(link);
     }
+
 }

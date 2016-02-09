@@ -51,6 +51,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
@@ -147,8 +148,8 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final ParcelableAccount account = mAdapter.getAccount(position);
-        Utils.openUserProfile(getActivity(), account.account_id, account.account_id, account.screen_name,
-                null);
+        IntentUtils.openUserProfile(getActivity(), account.account_id, account.account_id, account.screen_name,
+                null, true);
     }
 
     @Override

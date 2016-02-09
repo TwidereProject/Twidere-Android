@@ -24,10 +24,11 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 138
-        versionName "3.0.2"
+        versionName "3.0.3-SNAPSHOT"
         multiDexEnabled true
 
         buildConfigField 'boolean', 'ENABLE_MEDIA_VIEWER', 'Boolean.parseBoolean("true")'
+        buildConfigField 'boolean', 'NEW_DOCUMENT_INTENT', 'Boolean.parseBoolean("false")'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

@@ -26,21 +26,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.view.View;
 
 import org.mariotaku.twidere.adapter.AbsUsersAdapter;
 import org.mariotaku.twidere.adapter.AbsUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
 
 abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment<AbsUsersAdapter<Data>>
@@ -114,12 +112,7 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
     public void onUserClick(UserViewHolder holder, int position) {
         final ParcelableUser user = getAdapter().getUser(position);
         final FragmentActivity activity = getActivity();
-        final View profileImageView = holder.getProfileImageView();
-        final View profileTypeView = holder.getProfileTypeView();
-        final Bundle options = Utils.makeSceneTransitionOption(activity,
-                new Pair<>(profileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE),
-                new Pair<>(profileTypeView, UserFragment.TRANSITION_NAME_PROFILE_TYPE));
-        Utils.openUserProfile(activity, user.account_id, user.id, user.screen_name, options);
+        IntentUtils.openUserProfile(activity, user.account_id, user.id, user.screen_name, null, true);
     }
 
 
