@@ -54,8 +54,9 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final long accountId, long extraId, final int type,
-                            final boolean sensitive, int start, int end) {
+    public void onLinkClick(final String link, final String orig, final long accountId,
+                            final long extraId, final int type, final boolean sensitive,
+                            final int start, final int end) {
         if (manager != null && manager.isActive()) return;
         if (!isPrivateData()) {
             // BEGIN HotMobi

@@ -24,7 +24,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 137
-        versionName "3.0.1"
+        versionName "3.0.2-SNAPSHOT"
         multiDexEnabled true
 
         buildConfigField 'boolean', 'ENABLE_MEDIA_VIEWER', 'Boolean.parseBoolean("true")'

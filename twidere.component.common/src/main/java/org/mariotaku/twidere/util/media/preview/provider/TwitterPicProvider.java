@@ -16,8 +16,8 @@ public class TwitterPicProvider implements Provider {
     @Override
     public boolean supports(@NonNull String link) {
         final String authority = PreviewMediaExtractor.getAuthority(link);
-        return (".twimg.com".equals(authority) || ".twimg.com".equals(authority))
-                && !link.contains("/tweet_video");
+        if (authority == null) return false;
+        return authority.endsWith(".twimg.com") && !link.contains("/tweet_video");
     }
 
     @Nullable
