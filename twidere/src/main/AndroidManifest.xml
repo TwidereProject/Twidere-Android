@@ -511,6 +511,7 @@
                 <action android:name="android.service.dreams.DreamService"/>
             </intent-filter>
         </service>
+        <service android:name="edu.tsinghua.hotmobi.UploadLogsService"/>
 
         <provider
             android:name=".provider.TwidereDataProvider"

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.net;
 
 import android.content.Context;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
@@ -47,11 +48,12 @@ public class TwidereProxySelector extends ProxySelector {
     @Inject
     Dns dns;
     private final Proxy.Type type;
+    @NonNull
     private final String host;
     private final int port;
     private List<Proxy> proxy;
 
-    public TwidereProxySelector(Context context, Proxy.Type type, String host, int port) {
+    public TwidereProxySelector(Context context, Proxy.Type type, @NonNull final String host, int port) {
         GeneralComponentHelper.build(context).inject(this);
         this.type = type;
         this.host = host;

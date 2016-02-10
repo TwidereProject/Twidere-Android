@@ -3,6 +3,7 @@ package org.mariotaku.twidere.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,9 +23,11 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
+import org.xbill.DNS.ResolverConfig;
 
 import java.lang.ref.WeakReference;
 import java.net.InetAddress;
@@ -99,7 +102,24 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             publishProgress(new LogText("Text below may have personal information, BE CAREFUL TO MAKE IT PUBLIC"));
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
             DependencyHolder holder = DependencyHolder.get(mContext);
-            Dns dns = holder.getDns();
+            final Dns dns = holder.getDns();
+            final SharedPreferencesWrapper prefs = holder.getPreferences();
+            publishProgress(new LogText("Network preferences"), LogText.LINEBREAK);
+            publishProgress(new LogText("using_resolver: " + prefs.getBoolean(KEY_BUILTIN_DNS_RESOLVER)), LogText.LINEBREAK);
+            publishProgress(new LogText("tcp_dns_query: " + prefs.getBoolean(KEY_TCP_DNS_QUERY)), LogText.LINEBREAK);
+            publishProgress(new LogText("dns_server: " + prefs.getString(KEY_DNS_SERVER, null)), LogText.LINEBREAK);
+            publishProgress(LogText.LINEBREAK);
+            publishProgress(new LogText("System DNS servers"), LogText.LINEBREAK);
+
+
+            final String[] servers = ResolverConfig.getCurrentConfig().servers();
+            if (servers != null) {
+                publishProgress(new LogText(Arrays.toString(servers)));
+            } else {
+                publishProgress(new LogText("null"));
+            }
+            publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
+
             for (long accountId : DataStoreUtils.getAccountIds(mContext)) {
                 final ParcelableCredentials credentials = ParcelableCredentials.getCredentials(mContext, accountId);
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, false);
@@ -113,7 +133,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
                 publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
 
                 publishProgress(new LogText("Testing DNS functionality"));
-                publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
+                publishProgress(LogText.LINEBREAK);
                 final Endpoint endpoint = TwitterAPIFactory.getEndpoint(credentials, Twitter.class);
                 final Uri uri = Uri.parse(endpoint.getUrl());
                 final String host = uri.getHost();

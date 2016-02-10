@@ -21,8 +21,8 @@ package edu.tsinghua.hotmobi;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.Preference;
 import android.util.AttributeSet;
 
@@ -48,6 +48,6 @@ public class UploadLogsPreferences extends Preference {
         final Context context = getContext();
         final SharedPreferences prefs = context.getSharedPreferences("spice_data_profiling", Context.MODE_PRIVATE);
         prefs.edit().remove(HotMobiConstants.KEY_LAST_UPLOAD_TIME).apply();
-        AsyncTask.execute(new UploadLogsTask(context.getApplicationContext()));
+        context.startService(new Intent(context, UploadLogsService.class));
     }
 }

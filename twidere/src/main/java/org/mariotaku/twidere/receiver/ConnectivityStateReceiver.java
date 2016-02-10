@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.support.v4.net.ConnectivityManagerCompat;
 import android.util.Log;
 
@@ -34,7 +33,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.Utils;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.UploadLogsTask;
+import edu.tsinghua.hotmobi.UploadLogsService;
 import edu.tsinghua.hotmobi.model.NetworkEvent;
 
 public class ConnectivityStateReceiver extends BroadcastReceiver implements Constants {
@@ -67,7 +66,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
             final long currentTime = System.currentTimeMillis();
             final long lastSuccessfulTime = HotMobiLogger.getLastUploadTime(appContext);
             if ((currentTime - lastSuccessfulTime) > HotMobiLogger.UPLOAD_INTERVAL_MILLIS) {
-                AsyncTask.execute(new UploadLogsTask(appContext));
+                appContext.startService(new Intent(appContext, UploadLogsService.class));
             }
         }
 

@@ -216,9 +216,12 @@ public interface SharedPreferenceConstants {
     @Preference(type = STRING, exportable = false)
     String KEY_COMPOSE_ACCOUNTS = "compose_accounts";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    String KEY_BUILTIN_DNS_RESOLVER = "builtin_dns_resolver";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_TCP_DNS_QUERY = "tcp_dns_query";
     @Preference(type = STRING, hasDefault = true, defaultString = "")
     String KEY_DNS_SERVER = "dns_server";
+    @Preference(type = INT, hasDefault = true, defaultInt = 10)
     String KEY_CONNECTION_TIMEOUT = "connection_timeout";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_NAME_FIRST = "name_first";

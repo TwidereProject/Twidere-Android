@@ -846,4 +846,5 @@
     <string name="interactions">Interactions</string>
     <string name="network_diagnostics">Network diagnostics</string>
     <string name="action_start">Start</string>
+    <string name="builtin_dns_resolver">Builtin DNS resolver</string>
 </resources>

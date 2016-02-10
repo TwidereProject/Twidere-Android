@@ -7,13 +7,20 @@
         android:key="category_connectivity"
         android:title="@string/connectivity">
 
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+            android:defaultValue="false"
+            android:key="builtin_dns_resolver"
+            android:title="@string/builtin_dns_resolver"/>
+
         <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
             android:defaultValue="false"
+            android:dependency="builtin_dns_resolver"
             android:key="tcp_dns_query"
             android:summary="@string/tcp_dns_query_summary"
             android:title="@string/tcp_dns_query"/>
 
         <org.mariotaku.twidere.preference.SummaryEditTextPreference
+            android:dependency="builtin_dns_resolver"
             android:dialogTitle="@string/dns_server"
             android:inputType="textVisiblePassword"
             android:key="dns_server"

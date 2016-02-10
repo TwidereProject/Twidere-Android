@@ -196,8 +196,8 @@ public class ApplicationModule implements Constants {
 
     @Provides
     @Singleton
-    public Dns dns() {
-        return new TwidereDns(application);
+    public Dns dns(SharedPreferencesWrapper preferences) {
+        return new TwidereDns(application, preferences);
     }
 
     @Provides

@@ -32,7 +32,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.xbill.DNS.AAAARecord;
 import org.xbill.DNS.ARecord;
 import org.xbill.DNS.Address;
@@ -49,7 +48,6 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
@@ -59,28 +57,27 @@ import okhttp3.Dns;
 public class TwidereDns implements Constants, Dns {
 
     private static final String RESOLVER_LOGTAG = "TwidereDns";
-    private static final boolean CHECK_ADDRESS = Boolean.parseBoolean("false");
 
-    private final SharedPreferences mHostMapping, mPreferences;
+    private final SharedPreferences mHostMapping;
+    private final SharedPreferencesWrapper mPreferences;
     private final SystemHosts mSystemHosts;
 
     private Resolver mResolver;
     private TimingLogger mLogger;
-    private long mConnectTimeout;
     private boolean mUseResolver;
 
-    public TwidereDns(final Context context) {
+    public TwidereDns(final Context context, SharedPreferencesWrapper preferences) {
         mLogger = new TimingLogger(RESOLVER_LOGTAG, "resolve");
         mHostMapping = SharedPreferencesWrapper.getInstance(context, HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mSystemHosts = new SystemHosts();
+        mPreferences = preferences;
         reloadDnsSettings();
     }
 
     @Override
     public synchronized List<InetAddress> lookup(String hostname) throws UnknownHostException {
         try {
-            return Arrays.asList(resolveInternal(hostname, hostname, 0, true, mUseResolver));
+            return Arrays.asList(resolveInternal(hostname, hostname, 0, mUseResolver));
         } catch (IOException e) {
             if (e instanceof UnknownHostException) throw (UnknownHostException) e;
             throw new UnknownHostException("Unable to resolve address " + e.getMessage());
@@ -89,7 +86,7 @@ public class TwidereDns implements Constants, Dns {
 
     public synchronized List<InetAddress> lookupResolver(String hostname) throws UnknownHostException {
         try {
-            return Arrays.asList(resolveInternal(hostname, hostname, 0, true, true));
+            return Arrays.asList(resolveInternal(hostname, hostname, 0, true));
         } catch (IOException e) {
             if (e instanceof UnknownHostException) throw (UnknownHostException) e;
             throw new UnknownHostException("Unable to resolve address " + e.getMessage());
@@ -98,13 +95,12 @@ public class TwidereDns implements Constants, Dns {
 
     public synchronized void reloadDnsSettings() {
         mResolver = null;
-        mUseResolver = !TextUtils.isEmpty(mPreferences.getString(KEY_DNS_SERVER, null));
-        mConnectTimeout = TimeUnit.SECONDS.toMillis(mPreferences.getInt(KEY_CONNECTION_TIMEOUT, 10));
+        mUseResolver = mPreferences.getBoolean(KEY_BUILTIN_DNS_RESOLVER);
     }
 
     @NonNull
     private InetAddress[] resolveInternal(final String originalHost, final String host, final int depth,
-                                          final boolean putCache, final boolean useResolver) throws IOException {
+                                          final boolean useResolver) throws IOException {
         resetLog(originalHost);
         // Return if host is an address
         final InetAddress[] fromAddressString = fromAddressString(originalHost, host);
@@ -125,18 +121,19 @@ public class TwidereDns implements Constants, Dns {
             }
             return fromMapping;
         }
-        // Load from /etc/hosts
-        addLogSplit(originalHost, host, "start /etc/hosts resolve", depth);
-        final InetAddress[] fromSystemHosts = fromSystemHosts(host);
-        addLogSplit(originalHost, host, "end /etc/hosts resolve", depth);
-        if (fromSystemHosts != null) {
-            if (BuildConfig.DEBUG) {
-                dumpLog(fromSystemHosts);
-            }
-            return fromSystemHosts;
-        }
-        // Use DNS resolver
         if (useResolver) {
+            // Load from /etc/hosts, since Dnsjava doesn't support hosts entry lookup
+            addLogSplit(originalHost, host, "start /etc/hosts resolve", depth);
+            final InetAddress[] fromSystemHosts = fromSystemHosts(host);
+            addLogSplit(originalHost, host, "end /etc/hosts resolve", depth);
+            if (fromSystemHosts != null) {
+                if (BuildConfig.DEBUG) {
+                    dumpLog(fromSystemHosts);
+                }
+                return fromSystemHosts;
+            }
+
+            // Use DNS resolver
             addLogSplit(originalHost, host, "start resolver resolve", depth);
             final InetAddress[] fromResolver = fromResolver(originalHost, host, depth);
             addLogSplit(originalHost, host, "end resolver resolve", depth);
@@ -202,11 +199,6 @@ public class TwidereDns implements Constants, Dns {
         return addrs;
     }
 
-    private boolean checkAddress(InetAddress inetAddress) throws IOException {
-        if (!CHECK_ADDRESS) return true;
-        return inetAddress.isReachable(TwidereMathUtils.clamp((int) mConnectTimeout / 2, 1000, 3000));
-    }
-
     @Nullable
     private InetAddress[] getFromMapping(final String host) throws UnknownHostException {
         return getFromMappingInternal(host, host, false);
@@ -238,7 +230,7 @@ public class TwidereDns implements Constants, Dns {
         final boolean tcp = mPreferences.getBoolean(KEY_TCP_DNS_QUERY, false);
         final String address = mPreferences.getString(KEY_DNS_SERVER, null);
         final SimpleResolver resolver;
-        if (isValidIpAddress(address)) {
+        if (!TextUtils.isEmpty(address) && isValidIpAddress(address)) {
             resolver = new SimpleResolver(address);
         } else {
             resolver = new SimpleResolver();
@@ -255,13 +247,16 @@ public class TwidereDns implements Constants, Dns {
     }
 
 
-    private InetAddress[] fromAddressString(String host, String address) throws UnknownHostException {
+    private InetAddress[] fromAddressString(String host, String address)
+            throws UnknownHostException {
         final InetAddress resolved = getResolvedIPAddress(host, address);
         if (resolved == null) return null;
         return new InetAddress[]{resolved};
     }
 
-    public static InetAddress getResolvedIPAddress(String host, String address) throws UnknownHostException {
+    public static InetAddress getResolvedIPAddress(@NonNull final String host,
+                                                   @NonNull final String address)
+            throws UnknownHostException {
         byte[] bytes;
         bytes = Address.toByteArray(address, Address.IPv4);
         if (bytes != null)
@@ -272,7 +267,7 @@ public class TwidereDns implements Constants, Dns {
         return null;
     }
 
-    private static int getInetAddressType(String address) {
+    private static int getInetAddressType(@NonNull final String address) {
         byte[] bytes;
         bytes = Address.toByteArray(address, Address.IPv4);
         if (bytes != null)
@@ -283,7 +278,7 @@ public class TwidereDns implements Constants, Dns {
         return 0;
     }
 
-    public static boolean isValidIpAddress(final String address) {
+    public static boolean isValidIpAddress(@NonNull final String address) {
         return getInetAddressType(address) != 0;
     }
 
