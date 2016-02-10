@@ -23,8 +23,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 139
-        versionName "3.0.3-SNAPSHOT"
+        versionCode 140
+        versionName "3.0.3"
         multiDexEnabled true
 
         buildConfigField 'boolean', 'ENABLE_MEDIA_VIEWER', 'Boolean.parseBoolean("true")'

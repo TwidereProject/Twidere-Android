@@ -3,7 +3,6 @@ package org.mariotaku.twidere.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
