@@ -271,31 +271,37 @@ public class TwitterAPIFactory implements TwidereConstants {
             return format.substring(0, lastIndex) + format.substring(lastIndex + suffixLength);
         }
         if (TextUtils.isEmpty(domain)) return matcher.replaceAll("");
-        return matcher.replaceAll(String.format("$1%s$2", domain));
+        return matcher.replaceAll("$1" + domain + "$2");
     }
 
-    private static String substituteLegacyApiBaseUrl(@NonNull String format, String domain) {
+    static String substituteLegacyApiBaseUrl(@NonNull String format, String domain) {
         final int startOfHost = format.indexOf("://") + 3, endOfHost = format.indexOf('/', startOfHost);
         final String host = endOfHost != -1 ? format.substring(startOfHost, endOfHost) : format.substring(startOfHost);
         if (!host.equalsIgnoreCase("api.twitter.com")) return format;
-        return format.substring(0, startOfHost) + domain + ".twitter.com" + format.substring(endOfHost);
-    }
-
-    public static String getApiUrl(final String pattern, final String domain, final String appendPath) {
-        final String urlBase = getApiBaseUrl(pattern, domain);
-        if (appendPath == null) return urlBase.endsWith("/") ? urlBase : urlBase + "/";
-        final StringBuilder sb = new StringBuilder(urlBase);
-        if (urlBase.endsWith("/")) {
-            sb.append(appendPath.startsWith("/") ? appendPath.substring(1) : appendPath);
-        } else {
-            if (appendPath.startsWith("/")) {
-                sb.append(appendPath);
-            } else {
-                sb.append('/');
-                sb.append(appendPath);
-            }
+        final StringBuilder sb = new StringBuilder();
+        sb.append(format.substring(0, startOfHost));
+        sb.append(domain);
+        sb.append(".twitter.com");
+        if (endOfHost != -1) {
+            sb.append(format.substring(endOfHost));
         }
         return sb.toString();
+    }
+
+    @NonNull
+    public static String getApiUrl(final String pattern, final String domain, String appendPath) {
+        String urlBase = getApiBaseUrl(pattern, domain);
+        if (urlBase.endsWith("/")) {
+            urlBase = urlBase.substring(0, urlBase.length() - 1);
+        }
+        if (appendPath == null) return urlBase + "/";
+        if (appendPath.startsWith("/")) {
+            appendPath = appendPath.substring(1);
+        }
+        if (appendPath.endsWith("/")) {
+            appendPath = appendPath.substring(0, appendPath.length() - 1);
+        }
+        return urlBase + "/" + appendPath + "/";
     }
 
     @WorkerThread

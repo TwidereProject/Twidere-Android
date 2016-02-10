@@ -177,6 +177,8 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             testDns(dns, "twitter.com");
             testNativeLookup("twitter.com");
 
+            publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
+            publishProgress(new LogText("Done. You can send this log to me, and I'll contact you to solve related issue."));
             return null;
         }
 

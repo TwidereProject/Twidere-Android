@@ -1688,7 +1688,6 @@ public final class Utils implements Constants {
     public static boolean isUserLoggedIn(final Context context, final long accountId) {
         if (context == null) return false;
         final long[] ids = DataStoreUtils.getAccountIds(context);
-        if (ids == null) return false;
         for (final long id : ids) {
             if (id == accountId) return true;
         }

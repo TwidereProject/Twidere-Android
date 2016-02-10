@@ -26,27 +26,29 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CancellationSignal;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.util.Collection;
 
-import static android.text.TextUtils.isEmpty;
-
 public class ContentResolverUtils {
 
     public static final int MAX_BULK_COUNT = 128;
 
-    public static <T> int bulkDelete(final ContentResolver resolver, final Uri uri, final String inColumn,
-                                     final Collection<T> colValues, final String extraWhere, final boolean valuesIsString) {
+    public static <T> int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
+                                     @NonNull final String inColumn, final Collection<T> colValues,
+                                     final String extraWhere, final boolean valuesIsString) {
         if (colValues == null) return 0;
         return bulkDelete(resolver, uri, inColumn, colValues.toArray(), extraWhere, valuesIsString);
     }
 
-    public static <T> int bulkDelete(final ContentResolver resolver, final Uri uri, final String inColumn,
-                                     final T[] colValues, final String extraWhere, final boolean valuesIsString) {
-        if (resolver == null || uri == null || isEmpty(inColumn) || colValues == null || colValues.length == 0)
+    public static <T> int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
+                                     @NonNull final String inColumn, final T[] colValues,
+                                     final String extraWhere, final boolean valuesIsString) {
+        if (colValues == null || colValues.length == 0)
             return 0;
         final int colValuesLength = colValues.length, blocks_count = colValuesLength / MAX_BULK_COUNT + 1;
         int rowsDeleted = 0;
@@ -56,14 +58,14 @@ public class ContentResolverUtils {
             if (valuesIsString) {
                 final StringBuilder where = new StringBuilder(inColumn + " IN(" + TwidereArrayUtils.toStringForSQL(block)
                         + ")");
-                if (!isEmpty(extraWhere)) {
+                if (!TextUtils.isEmpty(extraWhere)) {
                     where.append("AND ").append(extraWhere);
                 }
                 rowsDeleted += resolver.delete(uri, where.toString(), block);
             } else {
                 final StringBuilder where = new StringBuilder(inColumn + " IN("
                         + TwidereArrayUtils.toString(block, ',', true) + ")");
-                if (!isEmpty(extraWhere)) {
+                if (!TextUtils.isEmpty(extraWhere)) {
                     where.append("AND ").append(extraWhere);
                 }
                 rowsDeleted += resolver.delete(uri, where.toString(), null);
@@ -72,13 +74,14 @@ public class ContentResolverUtils {
         return rowsDeleted;
     }
 
-    public static int bulkInsert(final ContentResolver resolver, final Uri uri, final Collection<ContentValues> values) {
-        if (values == null) return 0;
+    public static int bulkInsert(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
+                                 @NonNull final Collection<ContentValues> values) {
         return bulkInsert(resolver, uri, values.toArray(new ContentValues[values.size()]));
     }
 
-    public static int bulkInsert(final ContentResolver resolver, final Uri uri, final ContentValues[] values) {
-        if (resolver == null || uri == null || values == null || values.length == 0) return 0;
+    public static int bulkInsert(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
+                                 @NonNull final ContentValues[] values) {
+        if (values.length == 0) return 0;
         final int colValuesLength = values.length, blocksCount = colValuesLength / MAX_BULK_COUNT + 1;
         int rowsInserted = 0;
         for (int i = 0; i < blocksCount; i++) {
@@ -90,14 +93,16 @@ public class ContentResolverUtils {
         return rowsInserted;
     }
 
-    public static Cursor query(final ContentResolver resolver, final Uri uri, final String[] projection,
-                               final String selection, final String[] selectionArgs, final String sortOrder) {
+    public static Cursor query(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
+                               final String[] projection, final String selection,
+                               final String[] selectionArgs, final String sortOrder) {
         return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static Cursor query(final ContentResolver resolver, final Uri uri, final String[] projection,
-                               final String selection, final String[] selectionArgs, final String sortOrder,
+    public static Cursor query(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
+                               final String[] projection, final String selection,
+                               final String[] selectionArgs, final String sortOrder,
                                final CancellationSignal cancellationSignal) {
         return resolver.query(uri, projection, selection, selectionArgs, sortOrder, cancellationSignal);
     }
