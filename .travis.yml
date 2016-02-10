@@ -23,6 +23,14 @@ android:
     # - sys-img-x86-android-17
 sudo: false
 
+jdk:
+  - oraclejdk8
+
+env:
+  global:
+    MALLOC_ARENA_MAX=2
+    GRADLE_OPTS=-Xmx2048m -Dorg.gradle.parallel=false
+
 addons:
   apt:
     packages:
