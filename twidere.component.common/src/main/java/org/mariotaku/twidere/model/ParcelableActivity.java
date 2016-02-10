@@ -171,6 +171,19 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     }
 
     @Override
+    public int hashCode() {
+        return calculateHashCode(account_id, timestamp, max_position, min_position);
+    }
+
+    public static int calculateHashCode(long account_id, long timestamp, long max_position, long min_position) {
+        int result = (int) (account_id ^ (account_id >>> 32));
+        result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
+        result = 31 * result + (int) (max_position ^ (max_position >>> 32));
+        result = 31 * result + (int) (min_position ^ (min_position >>> 32));
+        return result;
+    }
+
+    @Override
     public int compareTo(@NonNull final ParcelableActivity another) {
         final long delta = another.timestamp - timestamp;
         if (delta < Integer.MIN_VALUE) return Integer.MIN_VALUE;

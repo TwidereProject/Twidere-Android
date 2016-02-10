@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
@@ -48,6 +49,23 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
         return getActivity(position).is_gap && position != getActivityCount() - 1;
     }
 
+    @Override
+    public long getItemId(int adapterPosition) {
+        int dataPosition = adapterPosition - getActivityStartIndex();
+        if (dataPosition < 0 || dataPosition >= getActivityCount()) return RecyclerView.NO_ID;
+        if (mData instanceof ObjectCursor) {
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
+            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
+            final long account_id = cursor.getLong(indices.account_id);
+            final long timestamp = cursor.getLong(indices.timestamp);
+            final long max_position = cursor.getLong(indices.max_position);
+            final long min_position = cursor.getLong(indices.min_position);
+            final long id = cursor.getLong(indices.timestamp);
+            return ParcelableActivity.calculateHashCode(account_id, timestamp, max_position,
+                    min_position);
+        }
+        return System.identityHashCode(mData.get(dataPosition));
+    }
 
     @Nullable
     @Override
