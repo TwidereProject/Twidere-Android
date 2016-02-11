@@ -1209,9 +1209,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         return true;
     }
 
-    private void toggleLocation() {
-        final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-        mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, !attachLocation).apply();
+    private void toggleLocation() throws SecurityException {
+        final boolean attachLocation = !mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
+        mPreferences.edit().putBoolean(KEY_ATTACH_LOCATION, attachLocation).apply();
+        if (!attachLocation && mLocationListener != null) {
+            mLocationManager.removeUpdates(mLocationListener);
+            mLocationListener = null;
+        }
         requestOrUpdateLocation();
         updateLocationState();
         setMenu();
