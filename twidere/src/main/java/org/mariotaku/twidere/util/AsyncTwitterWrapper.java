@@ -40,12 +40,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
-import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.api.twitter.model.CursorTimestampResponse;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
@@ -65,6 +62,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.Response;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -79,9 +77,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
+import org.mariotaku.twidere.task.GetActivitiesAboutMeTask;
+import org.mariotaku.twidere.task.GetActivitiesByFriendsTask;
+import org.mariotaku.twidere.task.GetHomeTimelineTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
-import org.mariotaku.twidere.task.twitter.GetStatusesTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
@@ -282,9 +282,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mContext;
     }
 
-    public boolean getHomeTimelineAsync(final long[] accountIds, final long[] max_ids, final long[] since_ids) {
-        final GetHomeTimelineTask task = new GetHomeTimelineTask(this, accountIds, max_ids, since_ids);
-        mAsyncTaskManager.add(task, true);
+    public boolean getHomeTimelineAsync(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
+        final GetHomeTimelineTask task = new GetHomeTimelineTask(getContext());
+        task.setParams(new RefreshTaskParam(accountIds, maxIds, sinceIds));
+        task.notifyStart();
+        AsyncManager.runBackgroundTask(task);
         return true;
     }
 
@@ -525,69 +527,18 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }.setResultHandler(bus));
     }
 
-    public void getActivitiesAboutMeAsync(long[] accountIds, long[] maxIds, long[] sinceIds) {
-        mAsyncTaskManager.add(new GetActivitiesTask(this, TASK_TAG_GET_MENTIONS, accountIds, maxIds, sinceIds) {
-
-            @NonNull
-            @Override
-            protected String getErrorInfoKey() {
-                return ErrorInfoStore.KEY_INTERACTIONS;
-            }
-
-            @Override
-            protected void saveReadPosition(long accountId, Twitter twitter) {
-                try {
-                    CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
-                    final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME, accountIds);
-                    mReadStateManager.setPosition(tag, response.getCursor(), false);
-                } catch (TwitterException e) {
-                    // Ignore
-                }
-            }
-
-            @Override
-            protected ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException {
-                if (Utils.shouldUsePrivateAPIs(getContext(), accountId)) {
-                    return twitter.getActivitiesAboutMe(paging);
-                }
-                final ResponseList<Activity> activities = new ResponseList<>();
-                for (org.mariotaku.twidere.api.twitter.model.Status status : twitter.getMentionsTimeline(paging)) {
-                    activities.add(Activity.fromMention(accountId, status));
-                }
-                return activities;
-            }
-
-            @Override
-            protected Uri getContentUri() {
-                return Activities.AboutMe.CONTENT_URI;
-            }
-        }, true);
+    public void getActivitiesAboutMeAsync(final long[] accountIds, long[] maxIds, long[] sinceIds) {
+        final GetActivitiesTask task = new GetActivitiesAboutMeTask(getContext());
+        task.setParams(new RefreshTaskParam(accountIds, maxIds, sinceIds));
+        task.notifyStart();
+        AsyncManager.runBackgroundTask(task);
     }
 
     public void getActivitiesByFriendsAsync(long[] accountIds, long[] maxIds, long[] sinceIds) {
-        mAsyncTaskManager.add(new GetActivitiesTask(this, "get_activities_by_friends", accountIds, maxIds, sinceIds) {
-
-            @NonNull
-            @Override
-            protected String getErrorInfoKey() {
-                return ErrorInfoStore.KEY_ACTIVITIES_BY_FRIENDS;
-            }
-
-            @Override
-            protected void saveReadPosition(long accountId, Twitter twitter) {
-
-            }
-
-            @Override
-            protected ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException {
-                return twitter.getActivitiesByFriends(paging);
-            }
-
-            @Override
-            protected Uri getContentUri() {
-                return Activities.ByFriends.CONTENT_URI;
-            }
-        }, true);
+        final GetActivitiesTask task = new GetActivitiesByFriendsTask(getContext());
+        task.setParams(new RefreshTaskParam(accountIds, maxIds, sinceIds));
+        task.notifyStart();
+        AsyncManager.runBackgroundTask(task);
     }
 
     public void setActivitiesAboutMeUnreadAsync(final long[] accountIds, final long cursor) {
@@ -2045,55 +1996,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    static class GetHomeTimelineTask extends GetStatusesTask {
-
-        private AsyncTwitterWrapper twitterWrapper;
-
-        public GetHomeTimelineTask(AsyncTwitterWrapper asyncTwitterWrapper, final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
-            super(asyncTwitterWrapper, accountIds, maxIds, sinceIds, TASK_TAG_GET_HOME_TIMELINE);
-            this.twitterWrapper = asyncTwitterWrapper;
-        }
-
-        @NonNull
-        @Override
-        public ResponseList<org.mariotaku.twidere.api.twitter.model.Status> getStatuses(final Twitter twitter, final Paging paging)
-                throws TwitterException {
-            return twitter.getHomeTimeline(paging);
-        }
-
-        @NonNull
-        @Override
-        protected Uri getDatabaseUri() {
-            return Statuses.CONTENT_URI;
-        }
-
-        @TimelineType
-        @Override
-        protected String getTimelineType() {
-            return TimelineType.HOME;
-        }
-
-
-        @Override
-        protected void onPostExecute(final List<StatusListResponse> result) {
-            super.onPostExecute(result);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            final Intent intent = new Intent(BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING);
-            twitterWrapper.getContext().sendBroadcast(intent);
-            super.onPreExecute();
-        }
-
-        @NonNull
-        @Override
-        protected String getErrorInfoKey() {
-            return ErrorInfoStore.KEY_HOME_TIMELINE;
-        }
-
-    }
-
     class GetLocalTrendsTask extends GetTrendsTask {
 
         private final int woeid;
@@ -2511,4 +2413,5 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
     }
+
 }

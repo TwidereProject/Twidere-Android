@@ -139,8 +139,6 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         migrateUsageStatisticsPreferences();
         Utils.startRefreshServiceIfNeeded(this);
 
-        reloadConnectivitySettings();
-
         DependencyHolder holder = DependencyHolder.get(this);
         registerActivityLifecycleCallbacks(holder.getActivityTracker());
 
@@ -263,9 +261,12 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         final RestHttpClient client = holder.getRestHttpClient();
         if (client instanceof OkHttpRestClient) {
             final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            HttpClientFactory.initDefaultHttpClient(this, holder.getPreferences(), builder,
+            HttpClientFactory.initOkHttpClient(this, holder.getPreferences(), builder,
                     holder.getDns());
-            ((OkHttpRestClient) client).setClient(builder.build());
+            final OkHttpRestClient restClient = (OkHttpRestClient) client;
+            // Kill all connections
+            restClient.getClient().connectionPool().evictAll();
+            restClient.setClient(builder.build());
         }
     }
 

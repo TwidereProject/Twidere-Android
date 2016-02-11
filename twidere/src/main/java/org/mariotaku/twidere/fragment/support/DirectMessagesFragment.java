@@ -233,9 +233,11 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
             @Override
             protected long[][] doInBackground(final Object... params) {
+                final Context context = getContext();
+                if (context == null) return null;
                 final long[][] result = new long[2][];
                 result[0] = getAccountIds();
-                result[1] = DataStoreUtils.getNewestMessageIds(getActivity(),
+                result[1] = DataStoreUtils.getNewestMessageIds(context,
                         DirectMessages.Inbox.CONTENT_URI, result[0]);
                 return result;
             }
@@ -243,7 +245,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
             @Override
             protected void onPostExecute(final long[][] result) {
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
-                if (twitter == null) return;
+                if (twitter == null || result == null) return;
                 twitter.getReceivedDirectMessagesAsync(result[0], null, result[1]);
                 twitter.getSentDirectMessagesAsync(result[0], null, null);
             }
@@ -326,6 +328,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
     }
 
+    @NonNull
     protected long[] getAccountIds() {
         final Bundle args = getArguments();
         if (args != null && args.getLong(EXTRA_ACCOUNT_ID) > 0) {
@@ -368,13 +371,13 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
             @Override
             protected long[][] doInBackground(final Object... params) {
-                final FragmentActivity activity = getActivity();
-                if (activity == null) return null;
+                final Context context = getContext();
+                if (context == null) return null;
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
-                result[1] = DataStoreUtils.getOldestMessageIds(activity,
+                result[1] = DataStoreUtils.getOldestMessageIds(context,
                         DirectMessages.Inbox.CONTENT_URI, result[0]);
-                result[2] = DataStoreUtils.getOldestMessageIds(activity,
+                result[2] = DataStoreUtils.getOldestMessageIds(context,
                         DirectMessages.Outbox.CONTENT_URI, result[0]);
                 return result;
             }

@@ -44,7 +44,7 @@ public class DebugModeUtils {
 
     private static RefWatcher sRefWatcher;
 
-    public static void initForHttpClient(final OkHttpClient.Builder builder) {
+    public static void initForOkHttpClient(final OkHttpClient.Builder builder) {
         builder.addNetworkInterceptor(new StethoInterceptor());
     }
 

@@ -22,8 +22,8 @@ package org.mariotaku.twidere.task;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.os.AsyncTask;
 
+import com.desmond.asyncmanager.TaskRunnable;
 import com.twitter.Extractor;
 
 import org.mariotaku.twidere.Constants;
@@ -40,7 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<Status>, Object, Object> implements Constants {
+public class CacheUsersStatusesTask extends TaskRunnable<TwitterListResponse<Status>, Object, Object> implements Constants {
 
     private final Context context;
 
@@ -48,49 +48,44 @@ public class CacheUsersStatusesTask extends AsyncTask<TwitterListResponse<Status
         this.context = context;
     }
 
-    @SafeVarargs
     @Override
-    protected final Object doInBackground(final TwitterListResponse<org.mariotaku.twidere.api.twitter.model.Status>... args) {
-        if (args == null || args.length == 0) return null;
+    public final Object doLongOperation(final TwitterListResponse<Status> params) {
         final ContentResolver resolver = context.getContentResolver();
         final Extractor extractor = new Extractor();
 
-        for (final TwitterListResponse<org.mariotaku.twidere.api.twitter.model.Status> response : args) {
-            if (response == null || !response.hasData()) {
-                continue;
-            }
-            final List<org.mariotaku.twidere.api.twitter.model.Status> list = response.getData();
-            for (int bulkIdx = 0, totalSize = list.size(); bulkIdx < totalSize; bulkIdx += 100) {
-                for (int idx = bulkIdx, end = Math.min(totalSize, bulkIdx + ContentResolverUtils.MAX_BULK_COUNT); idx < end; idx++) {
-                    final org.mariotaku.twidere.api.twitter.model.Status status = list.get(idx);
+        if (params == null || !params.hasData()) {
+            return null;
+        }
+        final List<Status> list = params.getData();
+        for (int bulkIdx = 0, totalSize = list.size(); bulkIdx < totalSize; bulkIdx += 100) {
+            for (int idx = bulkIdx, end = Math.min(totalSize, bulkIdx + ContentResolverUtils.MAX_BULK_COUNT); idx < end; idx++) {
+                final Status status = list.get(idx);
 
-                    final Set<ContentValues> usersValues = new HashSet<>();
-                    final Set<ContentValues> statusesValues = new HashSet<>();
-                    final Set<ContentValues> hashTagValues = new HashSet<>();
+                final Set<ContentValues> usersValues = new HashSet<>();
+                final Set<ContentValues> statusesValues = new HashSet<>();
+                final Set<ContentValues> hashTagValues = new HashSet<>();
 
-                    statusesValues.add(ContentValuesCreator.createStatus(status, response.accountId));
-                    final String text = TwitterContentUtils.unescapeTwitterStatusText(status.getText());
-                    for (final String hashtag : extractor.extractHashtags(text)) {
-                        final ContentValues values = new ContentValues();
-                        values.put(CachedHashtags.NAME, hashtag);
-                        hashTagValues.add(values);
-                    }
-                    final ContentValues cachedUser = ContentValuesCreator.createCachedUser(status.getUser());
-                    cachedUser.put(CachedUsers.LAST_SEEN, System.currentTimeMillis());
-                    usersValues.add(cachedUser);
-                    if (status.isRetweet()) {
-                        final ContentValues cachedRetweetedUser = ContentValuesCreator.createCachedUser(status.getRetweetedStatus().getUser());
-                        cachedRetweetedUser.put(CachedUsers.LAST_SEEN, System.currentTimeMillis());
-                        usersValues.add(cachedRetweetedUser);
-                    }
-
-                    ContentResolverUtils.bulkInsert(resolver, CachedStatuses.CONTENT_URI, statusesValues);
-                    ContentResolverUtils.bulkInsert(resolver, CachedHashtags.CONTENT_URI, hashTagValues);
-                    ContentResolverUtils.bulkInsert(resolver, CachedUsers.CONTENT_URI, usersValues);
+                statusesValues.add(ContentValuesCreator.createStatus(status, params.accountId));
+                final String text = TwitterContentUtils.unescapeTwitterStatusText(status.getText());
+                for (final String hashtag : extractor.extractHashtags(text)) {
+                    final ContentValues values = new ContentValues();
+                    values.put(CachedHashtags.NAME, hashtag);
+                    hashTagValues.add(values);
                 }
+                final ContentValues cachedUser = ContentValuesCreator.createCachedUser(status.getUser());
+                cachedUser.put(CachedUsers.LAST_SEEN, System.currentTimeMillis());
+                usersValues.add(cachedUser);
+                if (status.isRetweet()) {
+                    final ContentValues cachedRetweetedUser = ContentValuesCreator.createCachedUser(status.getRetweetedStatus().getUser());
+                    cachedRetweetedUser.put(CachedUsers.LAST_SEEN, System.currentTimeMillis());
+                    usersValues.add(cachedRetweetedUser);
+                }
+
+                ContentResolverUtils.bulkInsert(resolver, CachedStatuses.CONTENT_URI, statusesValues);
+                ContentResolverUtils.bulkInsert(resolver, CachedHashtags.CONTENT_URI, hashTagValues);
+                ContentResolverUtils.bulkInsert(resolver, CachedUsers.CONTENT_URI, usersValues);
             }
         }
-
         return null;
     }
 

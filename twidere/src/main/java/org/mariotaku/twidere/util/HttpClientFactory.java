@@ -31,20 +31,15 @@ import static android.text.TextUtils.isEmpty;
  */
 public class HttpClientFactory implements Constants {
 
-    public static RestHttpClient getDefaultHttpClient(final Context context, SharedPreferences prefs, Dns dns) {
-        if (context == null) return null;
-        return createHttpClient(context, prefs, dns);
-    }
-
-    public static RestHttpClient createHttpClient(final Context context, final SharedPreferences prefs, Dns dns) {
+    public static RestHttpClient createRestHttpClient(final Context context, final SharedPreferences prefs, Dns dns) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        initDefaultHttpClient(context, prefs, builder, dns);
+        initOkHttpClient(context, prefs, builder, dns);
         return new OkHttpRestClient(builder.build());
     }
 
-    public static void initDefaultHttpClient(Context context, SharedPreferences prefs, OkHttpClient.Builder builder, Dns dns) {
+    public static void initOkHttpClient(Context context, SharedPreferences prefs, OkHttpClient.Builder builder, Dns dns) {
         updateHttpClientConfiguration(context, prefs, dns, builder);
-        DebugModeUtils.initForHttpClient(builder);
+        DebugModeUtils.initForOkHttpClient(builder);
     }
 
     @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
@@ -54,7 +49,7 @@ public class HttpClientFactory implements Constants {
         final long connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
         builder.connectTimeout(connectionTimeout, TimeUnit.SECONDS);
-        builder.connectionPool(new ConnectionPool(0, 1, TimeUnit.MINUTES));
+        builder.connectionPool(new ConnectionPool(5, 30, TimeUnit.SECONDS));
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);

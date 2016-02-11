@@ -115,7 +115,7 @@ public class HotMobiLogger implements HotMobiConstants {
         return prefs.getLong(KEY_LAST_UPLOAD_TIME, -1);
     }
 
-    public static boolean log(final String msg) {
+    public static boolean printLog(final String msg) {
         if (BuildConfig.DEBUG) {
             final StackTraceElement ste = new Throwable().fillInStackTrace().getStackTrace()[1];
             final String fullName = ste.getClassName();

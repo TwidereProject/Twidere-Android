@@ -135,7 +135,7 @@ public class ApplicationModule implements Constants {
     @Provides
     @Singleton
     public RestHttpClient restHttpClient(SharedPreferencesWrapper prefs, Dns dns) {
-        return HttpClientFactory.getDefaultHttpClient(application, prefs, dns);
+        return HttpClientFactory.createRestHttpClient(application, prefs, dns);
     }
 
     @Provides

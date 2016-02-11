@@ -12,14 +12,11 @@ import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.File;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import okhttp3.Headers;
-import okhttp3.Response;
 
 /**
  * Created by mariotaku on 16/1/2.
@@ -27,6 +24,7 @@ import okhttp3.Response;
 @ParcelablePlease
 @JsonObject
 public class UploadLogEvent extends BaseEvent implements Parcelable {
+    private static final String X_DNEXT_PREFIX = "X-Dnext";
     public static final Creator<UploadLogEvent> CREATOR = new Creator<UploadLogEvent>() {
         public UploadLogEvent createFromParcel(Parcel source) {
             UploadLogEvent target = new UploadLogEvent();
@@ -83,18 +81,22 @@ public class UploadLogEvent extends BaseEvent implements Parcelable {
         UploadLogEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public void finish(Response response) {
+    public void finish(HttpURLConnection response) {
         HashMap<String, String> extraHeaders = new HashMap<>();
-        final Headers headers = response.headers();
-        for (int i = 0, j = headers.size(); i < j; i++) {
-            final String name = headers.name(i);
-            if (StringUtils.startsWithIgnoreCase(name, "X-Dnext")) {
-                extraHeaders.put(name, headers.value(i));
+        final Map<String, List<String>> headers = response.getHeaderFields();
+        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+            final String name = entry.getKey();
+            if (name == null) continue;
+            if (name.regionMatches(true, 0, X_DNEXT_PREFIX, 0, X_DNEXT_PREFIX.length())) {
+                for (String value : entry.getValue()) {
+                    extraHeaders.put(name, value);
+                }
             }
         }
         setExtraHeaders(extraHeaders);
         markEnd();
     }
+
 
     public static UploadLogEvent create(Context context, File file) {
         UploadLogEvent event = new UploadLogEvent();

@@ -161,6 +161,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mDrawerLayout.closeDrawers();
     }
 
+    @NonNull
     public long[] getActivatedAccountIds() {
         final Fragment fragment = getLeftDrawerFragment();
         if (fragment instanceof AccountsDashboardFragment) {

@@ -153,6 +153,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     };
     private boolean mSwitchAccountAnimationPlaying;
 
+    @NonNull
     public long[] getActivatedAccountIds() {
         if (mAccountActionProvider != null) {
             return mAccountActionProvider.getActivatedAccountIds();

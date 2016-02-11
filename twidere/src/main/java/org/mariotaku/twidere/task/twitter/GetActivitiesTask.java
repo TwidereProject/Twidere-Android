@@ -5,62 +5,74 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.util.Log;
+
+import com.desmond.asyncmanager.TaskRunnable;
+import com.squareup.otto.Bus;
 
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.twidere.task.ManagedAsyncTask;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
+import org.mariotaku.twidere.util.ReadStateManager;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.message.GetActivitiesTaskEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by mariotaku on 16/1/4.
  */
-public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object, Object> {
+public abstract class GetActivitiesTask extends TaskRunnable<RefreshTaskParam, Object, Object> implements Constants {
 
-    protected final AsyncTwitterWrapper twitterWrapper;
-    protected final long[] accountIds;
-    protected final long[] maxIds;
-    protected final long[] sinceIds;
+    protected final Context context;
+    @Inject
+    protected SharedPreferencesWrapper preferences;
+    @Inject
+    protected Bus bus;
+    @Inject
+    protected ErrorInfoStore errorInfoStore;
+    @Inject
+    protected ReadStateManager readStateManager;
 
-    public GetActivitiesTask(AsyncTwitterWrapper twitterWrapper, String tag, long[] accountIds, long[] maxIds, long[] sinceIds) {
-        super(twitterWrapper.getContext(), tag);
-        this.twitterWrapper = twitterWrapper;
-        this.accountIds = accountIds;
-        this.maxIds = maxIds;
-        this.sinceIds = sinceIds;
+    public GetActivitiesTask(Context context) {
+        this.context = context;
+        GeneralComponentHelper.build(context).inject(this);
     }
 
     @Override
-    protected Object doInBackground(Object... params) {
-        final Context context = twitterWrapper.getContext();
+    public Object doLongOperation(RefreshTaskParam param) {
+        final long[] accountIds = param.getAccountIds(), maxIds = param.getMaxIds(), sinceIds = param.getSinceIds();
         final ContentResolver cr = context.getContentResolver();
-        final int loadItemLimit = twitterWrapper.getPreferences().getInt(KEY_LOAD_ITEM_LIMIT);
+        final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT);
         boolean saveReadPosition = false;
         for (int i = 0; i < accountIds.length; i++) {
             final long accountId = accountIds[i];
-            final boolean noItemsBefore = DataStoreUtils.getActivitiesCount(context,
-                    getContentUri(), accountId) <= 0;
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId,
-                    true);
+            final boolean noItemsBefore = DataStoreUtils.getActivitiesCount(context, getContentUri(),
+                    accountId) <= 0;
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, true);
+            if (twitter == null) continue;
             final Paging paging = new Paging();
             paging.count(loadItemLimit);
             if (maxIds != null && maxIds[i] > 0) {
@@ -73,10 +85,9 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
                     saveReadPosition = true;
                 }
             }
-            final ErrorInfoStore errorInfoStore = twitterWrapper.getErrorInfoStore();
             // We should delete old activities has intersection with new items
             try {
-                final ResponseList<Activity> activities = getActivities(accountId, twitter, paging);
+                final ResponseList<Activity> activities = getActivities(twitter, accountId, paging);
                 storeActivities(cr, loadItemLimit, accountId, noItemsBefore, activities);
 //                if (saveReadPosition && TwitterAPIFactory.isOfficialTwitterInstance(context, twitter)) {
                 if (saveReadPosition) {
@@ -141,19 +152,26 @@ public abstract class GetActivitiesTask extends ManagedAsyncTask<Object, Object,
 
     protected abstract void saveReadPosition(long accountId, Twitter twitter);
 
-    protected abstract ResponseList<Activity> getActivities(long accountId, Twitter twitter, Paging paging) throws TwitterException;
+    protected ResponseList<Activity> getActivities(@NonNull final Twitter twitter, final long accountId, final Paging paging) throws TwitterException {
+        if (Utils.shouldUsePrivateAPIs(context, accountId)) {
+            return twitter.getActivitiesAboutMe(paging);
+        }
+        final ResponseList<Activity> activities = new ResponseList<>();
+        for (Status status : twitter.getMentionsTimeline(paging)) {
+            activities.add(Activity.fromMention(accountId, status));
+        }
+        return activities;
+    }
 
     @Override
-    protected void onPostExecute(Object result) {
-        super.onPostExecute(result);
+    public void callback(Object result) {
         bus.post(new GetActivitiesTaskEvent(getContentUri(), false, null));
     }
 
     protected abstract Uri getContentUri();
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    @UiThread
+    public void notifyStart() {
         bus.post(new GetActivitiesTaskEvent(getContentUri(), true, null));
     }
 }

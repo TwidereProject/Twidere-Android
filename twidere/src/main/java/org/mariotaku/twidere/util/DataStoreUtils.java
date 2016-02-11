@@ -182,13 +182,15 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    public static long[] getNewestMessageIds(final Context context, final Uri uri, final long[] accountIds) {
+    public static long[] getNewestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
+                                             @NonNull final long[] accountIds) {
         return getLongFieldArray(context, uri, accountIds, DirectMessages.ACCOUNT_ID, DirectMessages.MESSAGE_ID,
                 new OrderBy(SQLFunctions.MAX(DirectMessages.MESSAGE_TIMESTAMP)));
     }
 
     @NonNull
-    public static long[] getNewestStatusIds(final Context context, final Uri uri, final long[] accountIds) {
+    public static long[] getNewestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
+                                            @NonNull final long[] accountIds) {
         return getLongFieldArray(context, uri, accountIds, Statuses.ACCOUNT_ID, Statuses.STATUS_ID,
                 new OrderBy(SQLFunctions.MAX(Statuses.STATUS_TIMESTAMP)));
     }
@@ -353,6 +355,7 @@ public class DataStoreUtils implements Constants {
         }
     }
 
+    @NonNull
     public static long[] getActivatedAccountIds(final Context context) {
         if (context == null) return new long[0];
         final Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,

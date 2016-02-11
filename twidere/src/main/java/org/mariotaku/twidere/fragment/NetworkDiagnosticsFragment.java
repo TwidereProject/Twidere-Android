@@ -2,13 +2,18 @@ package org.mariotaku.twidere.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +76,21 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_network_diagnostics, container, false);
     }
 
-    private void appendMessage(String message) {
-        mLogTextView.append(message);
+    private void appendMessage(LogText message) {
+        SpannableString coloredText = SpannableString.valueOf(message.message);
+        switch (message.state) {
+            case LogText.State.GOOD: {
+                coloredText.setSpan(new ForegroundColorSpan(Color.GREEN), 0, coloredText.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            }
+            case LogText.State.BAD: {
+                coloredText.setSpan(new ForegroundColorSpan(Color.RED), 0, coloredText.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            }
+        }
+        mLogTextView.append(coloredText);
     }
 
     static class DiagnosticsTask extends AsyncTask<Object, LogText, Object> {
@@ -146,7 +164,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
                     testDns(dns, host);
                     testNativeLookup(host);
                 } else {
-                    publishProgress(new LogText("API URL format is invalid"));
+                    publishProgress(new LogText("API URL format is invalid", LogText.State.BAD));
                     publishProgress(LogText.LINEBREAK);
                 }
 
@@ -197,9 +215,10 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
                 } else {
                     publishProgress(new LogText(String.valueOf(dns.lookup(host))));
                 }
-                publishProgress(new LogText(String.format(" OK (%d ms)", SystemClock.uptimeMillis() - start)));
+                publishProgress(new LogText(String.format(" OK (%d ms)", SystemClock.uptimeMillis()
+                        - start), LogText.State.GOOD));
             } catch (UnknownHostException e) {
-                publishProgress(new LogText("ERROR: " + e.getMessage()));
+                publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.BAD));
             }
             publishProgress(LogText.LINEBREAK);
         }
@@ -209,9 +228,10 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             try {
                 final long start = SystemClock.uptimeMillis();
                 publishProgress(new LogText(Arrays.toString(InetAddress.getAllByName(host))));
-                publishProgress(new LogText(String.format(" OK (%d ms)", SystemClock.uptimeMillis() - start)));
+                publishProgress(new LogText(String.format(" OK (%d ms)", SystemClock.uptimeMillis()
+                        - start), LogText.State.GOOD));
             } catch (UnknownHostException e) {
-                publishProgress(new LogText("ERROR: " + e.getMessage()));
+                publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.BAD));
             }
             publishProgress(LogText.LINEBREAK);
         }
@@ -221,9 +241,10 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             try {
                 final long start = SystemClock.uptimeMillis();
                 test.execute(twitter);
-                publishProgress(new LogText(String.format("OK (%d ms)", SystemClock.uptimeMillis() - start)));
+                publishProgress(new LogText(String.format("OK (%d ms)", SystemClock.uptimeMillis()
+                        - start), LogText.State.GOOD));
             } catch (TwitterException e) {
-                publishProgress(new LogText("ERROR: " + e.getMessage()));
+                publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.BAD));
             }
             publishProgress(LogText.LINEBREAK);
         }
@@ -238,7 +259,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             NetworkDiagnosticsFragment fragment = mFragmentRef.get();
             if (fragment == null) return;
             for (LogText value : values) {
-                fragment.appendMessage(value.message);
+                fragment.appendMessage(value);
             }
         }
 
@@ -282,15 +303,23 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
     static class LogText {
         static final LogText LINEBREAK = new LogText("\n");
         String message;
-        int state;
+        @State
+        int state = State.DEFAULT;
 
-        LogText(String message, int state) {
+        LogText(String message, @State int state) {
             this.message = message;
             this.state = state;
         }
 
         LogText(String message) {
             this.message = message;
+        }
+
+        @IntDef({State.DEFAULT, State.GOOD, State.BAD})
+        @interface State {
+            int DEFAULT = 0;
+            int GOOD = 1;
+            int BAD = 2;
         }
     }
 
