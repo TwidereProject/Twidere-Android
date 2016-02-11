@@ -181,7 +181,7 @@ public class ParcelableMedia implements Parcelable {
             final String mimetype = attachment.getMimetype();
             if (mimetype != null && mimetype.startsWith("image/")) {
                 ParcelableMedia media = new ParcelableMedia();
-                media.type = Type.TYPE_IMAGE;
+                media.type = Type.IMAGE;
                 media.width = attachment.getWidth();
                 media.height = attachment.getHeight();
                 media.url = TextUtils.isEmpty(externalUrl) ? attachment.getUrl() : externalUrl;
@@ -206,16 +206,16 @@ public class ParcelableMedia implements Parcelable {
             media.url = checkUrl(appUrlResolved) ? appUrlResolved.getValue() : card.getUrl();
             if ("animated_gif".equals(name)) {
                 media.media_url = ((StringValue) playerStreamUrl).getValue();
-                media.type = Type.TYPE_CARD_ANIMATED_GIF;
+                media.type = Type.CARD_ANIMATED_GIF;
             } else if (playerStreamUrl instanceof StringValue) {
                 media.media_url = ((StringValue) playerStreamUrl).getValue();
-                media.type = Type.TYPE_VIDEO;
+                media.type = Type.VIDEO;
             } else {
                 StringValue playerUrl = (StringValue) card.getBindingValue("player_url");
                 if (playerUrl != null) {
                     media.media_url = playerUrl.getValue();
                 }
-                media.type = Type.TYPE_EXTERNAL_PLAYER;
+                media.type = Type.EXTERNAL_PLAYER;
             }
             final BindingValue playerImage = card.getBindingValue("player_image");
             if (playerImage instanceof ImageValue) {
@@ -247,7 +247,7 @@ public class ParcelableMedia implements Parcelable {
             final ParcelableMedia media = new ParcelableMedia();
             media.url = card.getUrl();
             media.card = ParcelableCardEntity.fromCardEntity(card, -1);
-            media.type = Type.TYPE_IMAGE;
+            media.type = Type.IMAGE;
             media.media_url = ((ImageValue) photoImageFullSize).getUrl();
             media.width = ((ImageValue) photoImageFullSize).getWidth();
             media.height = ((ImageValue) photoImageFullSize).getHeight();
@@ -279,29 +279,22 @@ public class ParcelableMedia implements Parcelable {
     private static int getTypeInt(String type) {
         switch (type) {
             case MediaEntity.Type.PHOTO:
-                return Type.TYPE_IMAGE;
+                return Type.IMAGE;
             case MediaEntity.Type.VIDEO:
-                return Type.TYPE_VIDEO;
+                return Type.VIDEO;
             case MediaEntity.Type.ANIMATED_GIF:
-                return Type.TYPE_ANIMATED_GIF;
+                return Type.ANIMATED_GIF;
         }
-        return Type.TYPE_UNKNOWN;
+        return Type.UNKNOWN;
     }
 
 
     public static ParcelableMedia image(final String url) {
         ParcelableMedia media = new ParcelableMedia();
-        media.type = Type.TYPE_VARIABLE_TYPE;
+        media.type = Type.IMAGE;
         media.url = url;
         media.media_url = url;
         media.preview_url = url;
-        return media;
-    }
-
-    public static ParcelableMedia variableType(@NonNull String link) {
-        ParcelableMedia media = new ParcelableMedia();
-        media.type = Type.TYPE_VARIABLE_TYPE;
-        media.url = link;
         return media;
     }
 
@@ -381,10 +374,10 @@ public class ParcelableMedia implements Parcelable {
 
     public static boolean hasPlayIcon(@Type int type) {
         switch (type) {
-            case Type.TYPE_VIDEO:
-            case Type.TYPE_ANIMATED_GIF:
-            case Type.TYPE_CARD_ANIMATED_GIF:
-            case Type.TYPE_EXTERNAL_PLAYER:
+            case Type.VIDEO:
+            case Type.ANIMATED_GIF:
+            case Type.CARD_ANIMATED_GIF:
+            case Type.EXTERNAL_PLAYER:
                 return true;
         }
         return false;
@@ -398,25 +391,25 @@ public class ParcelableMedia implements Parcelable {
         return null;
     }
 
-    @IntDef({Type.TYPE_UNKNOWN, Type.TYPE_IMAGE, Type.TYPE_VIDEO, Type.TYPE_ANIMATED_GIF,
-            Type.TYPE_CARD_ANIMATED_GIF, Type.TYPE_EXTERNAL_PLAYER, Type.TYPE_VARIABLE_TYPE})
+    @IntDef({Type.UNKNOWN, Type.IMAGE, Type.VIDEO, Type.ANIMATED_GIF, Type.CARD_ANIMATED_GIF,
+            Type.EXTERNAL_PLAYER, Type.VARIABLE_TYPE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
 
         @Type
-        int TYPE_UNKNOWN = 0;
+        int UNKNOWN = 0;
         @Type
-        int TYPE_IMAGE = 1;
+        int IMAGE = 1;
         @Type
-        int TYPE_VIDEO = 2;
+        int VIDEO = 2;
         @Type
-        int TYPE_ANIMATED_GIF = 3;
+        int ANIMATED_GIF = 3;
         @Type
-        int TYPE_CARD_ANIMATED_GIF = 4;
+        int CARD_ANIMATED_GIF = 4;
         @Type
-        int TYPE_EXTERNAL_PLAYER = 5;
+        int EXTERNAL_PLAYER = 5;
         @Type
-        int TYPE_VARIABLE_TYPE = 6;
+        int VARIABLE_TYPE = 6;
     }
 
     @ParcelablePlease

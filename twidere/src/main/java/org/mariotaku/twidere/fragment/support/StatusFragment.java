@@ -256,7 +256,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         @Override
                         public void onClick(View widget) {
                             final FragmentActivity activity = getActivity();
-                            if (activity == null) return;
+                            if (activity == null || activity.isFinishing()) return;
                             SupportMessageDialogFragment.show(activity,
                                     getString(R.string.cant_load_all_replies_explanation),
                                     "cant_load_all_replies_explanation");

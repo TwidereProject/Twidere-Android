@@ -429,9 +429,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         for (ParcelableMedia item : media) {
             if (item == null) continue;
             switch (item.type) {
-                case ParcelableMedia.Type.TYPE_VIDEO:
-                case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
-                case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER:
+                case ParcelableMedia.Type.VIDEO:
+                case ParcelableMedia.Type.ANIMATED_GIF:
+                case ParcelableMedia.Type.EXTERNAL_PLAYER:
                     return true;
             }
         }

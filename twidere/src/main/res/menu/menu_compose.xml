@@ -41,12 +41,6 @@
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
     <item
-        android:id="@+id/link_to_quoted_status"
-        android:checkable="true"
-        android:icon="@drawable/ic_action_link"
-        android:title="@string/link_to_quoted_status"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/schedule"
         android:icon="@drawable/ic_action_time"
         android:title="@string/send_at"

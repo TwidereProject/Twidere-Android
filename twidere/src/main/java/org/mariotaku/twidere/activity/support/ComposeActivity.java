@@ -232,7 +232,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 if (resultCode == Activity.RESULT_OK) {
                     final Uri src = intent.getData();
                     mTask = AsyncTaskUtils.executeTask(new AddMediaTask(this, src,
-                            createTempImageUri(), ParcelableMedia.Type.TYPE_IMAGE, true));
+                            createTempImageUri(), ParcelableMedia.Type.IMAGE, true));
                 }
                 break;
             }
@@ -448,12 +448,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 mIsPossiblySensitive = !mIsPossiblySensitive;
                 setMenu();
                 updateTextCount();
-                break;
-            }
-            case R.id.link_to_quoted_status: {
-                final boolean newValue = !item.isChecked();
-                item.setChecked(newValue);
-                mPreferences.edit().putBoolean(KEY_LINK_TO_QUOTED_TWEET, newValue).apply();
                 break;
             }
             default: {
@@ -883,14 +877,14 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         final Uri extraStream = intent.getParcelableExtra(Intent.EXTRA_STREAM);
         //TODO handle share_screenshot extra (Bitmap)
         if (extraStream != null) {
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, extraStream, createTempImageUri(), ParcelableMedia.Type.TYPE_IMAGE, false));
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, extraStream, createTempImageUri(), ParcelableMedia.Type.IMAGE, false));
         } else if (data != null) {
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, data, createTempImageUri(), ParcelableMedia.Type.TYPE_IMAGE, false));
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, data, createTempImageUri(), ParcelableMedia.Type.IMAGE, false));
         } else if (intent.hasExtra(EXTRA_SHARE_SCREENSHOT) && Utils.useShareScreenshot()) {
             final Bitmap bitmap = intent.getParcelableExtra(EXTRA_SHARE_SCREENSHOT);
             if (bitmap != null) {
                 try {
-                    AsyncTaskUtils.executeTask(new AddBitmapTask(this, bitmap, createTempImageUri(), ParcelableMedia.Type.TYPE_IMAGE));
+                    AsyncTaskUtils.executeTask(new AddBitmapTask(this, bitmap, createTempImageUri(), ParcelableMedia.Type.IMAGE));
                 } catch (IOException e) {
                     // ignore
                     bitmap.recycle();
@@ -1113,13 +1107,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         MenuUtils.setMenuItemAvailability(menu, R.id.add_image, !hasMedia);
         MenuUtils.setMenuItemAvailability(menu, R.id.media_menu, hasMedia);
         MenuUtils.setMenuItemAvailability(menu, R.id.toggle_sensitive, hasMedia);
-        MenuUtils.setMenuItemAvailability(menu, R.id.link_to_quoted_status, isQuote());
         MenuUtils.setMenuItemAvailability(menu, R.id.schedule, isScheduleSupported());
 
         menu.setGroupEnabled(MENU_GROUP_IMAGE_EXTENSION, hasMedia);
         menu.setGroupVisible(MENU_GROUP_IMAGE_EXTENSION, hasMedia);
         MenuUtils.setMenuItemChecked(menu, R.id.toggle_sensitive, hasMedia && mIsPossiblySensitive);
-        MenuUtils.setMenuItemChecked(menu, R.id.link_to_quoted_status, mPreferences.getBoolean(KEY_LINK_TO_QUOTED_TWEET));
         ThemeUtils.resetCheatSheet(mMenuBar);
 //        mMenuBar.show();
     }
@@ -1267,10 +1259,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         }
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
         final long[] accountIds = mAccountsAdapter.getSelectedAccountIds();
-        final boolean isQuote = isQuote();
         final ParcelableLocation statusLocation = attachLocation ? mRecentLocation : null;
-        final boolean linkToQuotedTweet = mPreferences.getBoolean(KEY_LINK_TO_QUOTED_TWEET, true);
-        final long inReplyToStatusId = !isQuote || linkToQuotedTweet ? mInReplyToStatusId : -1;
+        final long inReplyToStatusId = mInReplyToStatusId;
         final boolean isPossiblySensitive = hasMedia && mIsPossiblySensitive;
         mTwitterWrapper.updateStatusAsync(accountIds, text, statusLocation, getMedia(), inReplyToStatusId,
                 isPossiblySensitive);

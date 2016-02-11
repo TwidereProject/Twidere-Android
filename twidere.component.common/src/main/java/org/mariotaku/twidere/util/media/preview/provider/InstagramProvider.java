@@ -31,7 +31,7 @@ public class InstagramProvider implements Provider {
         if (pathSegments.size() < 2 || !"p".equals(pathSegments.get(0))) return null;
         final String id = pathSegments.get(1);
         final ParcelableMedia media = new ParcelableMedia();
-        media.type = ParcelableMedia.Type.TYPE_IMAGE;
+        media.type = ParcelableMedia.Type.IMAGE;
         media.url = link;
         media.preview_url = String.format(Locale.ROOT, "https://instagram.com/p/%s/media/?size=m", id);
         media.media_url = String.format(Locale.ROOT, "https://instagram.com/p/%s/media/?size=l", id);

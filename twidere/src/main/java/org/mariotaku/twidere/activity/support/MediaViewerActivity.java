@@ -223,27 +223,27 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     protected MediaViewerFragment instantiateMediaFragment(int position) {
         final ParcelableMedia media = getMedia()[position];
         switch (media.type) {
-            case ParcelableMedia.Type.TYPE_IMAGE: {
+            case ParcelableMedia.Type.IMAGE: {
                 final Bundle args = new Bundle();
                 args.putParcelable(ImagePageFragment.EXTRA_MEDIA_URI, Uri.parse(media.media_url));
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         ImagePageFragment.class.getName(), args);
             }
-            case ParcelableMedia.Type.TYPE_ANIMATED_GIF:
-            case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF: {
+            case ParcelableMedia.Type.ANIMATED_GIF:
+            case ParcelableMedia.Type.CARD_ANIMATED_GIF: {
                 final Bundle args = new Bundle();
                 args.putBoolean(VideoPageFragment.EXTRA_LOOP, true);
                 args.putParcelable(EXTRA_MEDIA, media);
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         VideoPageFragment.class.getName(), args);
             }
-            case ParcelableMedia.Type.TYPE_VIDEO: {
+            case ParcelableMedia.Type.VIDEO: {
                 final Bundle args = new Bundle();
                 args.putParcelable(EXTRA_MEDIA, media);
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         VideoPageFragment.class.getName(), args);
             }
-            case ParcelableMedia.Type.TYPE_EXTERNAL_PLAYER: {
+            case ParcelableMedia.Type.EXTERNAL_PLAYER: {
                 final Bundle args = new Bundle();
                 args.putParcelable(EXTRA_MEDIA, media);
                 return (MediaViewerFragment) Fragment.instantiate(this,
@@ -999,8 +999,8 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         private Pair<String, String> getBestVideoUrlAndType(ParcelableMedia media) {
             if (media == null) return null;
             switch (media.type) {
-                case ParcelableMedia.Type.TYPE_VIDEO:
-                case ParcelableMedia.Type.TYPE_ANIMATED_GIF: {
+                case ParcelableMedia.Type.VIDEO:
+                case ParcelableMedia.Type.ANIMATED_GIF: {
                     if (media.video_info == null) {
                         return Pair.create(media.media_url, null);
                     }
@@ -1012,7 +1012,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                     }
                     return null;
                 }
-                case ParcelableMedia.Type.TYPE_CARD_ANIMATED_GIF: {
+                case ParcelableMedia.Type.CARD_ANIMATED_GIF: {
                     return Pair.create(media.media_url, "video/mp4");
                 }
                 default: {

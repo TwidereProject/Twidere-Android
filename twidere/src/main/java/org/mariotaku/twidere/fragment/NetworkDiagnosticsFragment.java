@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.mariotaku.restfu.http.Endpoint;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -90,6 +91,11 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
 
         @Override
         protected Object doInBackground(Object... params) {
+            publishProgress(new LogText("Build information: "));
+            publishProgress(new LogText("version_code: " + BuildConfig.VERSION_CODE), LogText.LINEBREAK);
+            publishProgress(new LogText("version_name: " + BuildConfig.VERSION_NAME), LogText.LINEBREAK);
+            publishProgress(new LogText("flavor: " + BuildConfig.FLAVOR), LogText.LINEBREAK);
+            publishProgress(LogText.LINEBREAK);
             publishProgress(new LogText("Basic system information: "));
             publishProgress(new LogText(String.valueOf(mContext.getResources().getConfiguration())));
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);

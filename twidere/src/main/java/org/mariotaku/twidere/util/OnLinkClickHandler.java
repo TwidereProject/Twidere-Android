@@ -23,7 +23,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -107,8 +106,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     protected void openMedia(long accountId, long extraId, boolean sensitive, String link, int start, int end) {
         final ParcelableMedia[] media = {ParcelableMedia.image(link)};
         //TODO open media animation
-        Bundle options = null;
-        Utils.openMedia(context, accountId, sensitive, null, media, options);
+        Utils.openMedia(context, accountId, sensitive, null, media, null);
     }
 
     protected void openLink(final String link) {

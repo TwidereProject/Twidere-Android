@@ -242,10 +242,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 final ParcelableAccount account = mAccountsAdapter.getSelectedAccount();
                 if (account == null) return;
                 final FragmentActivity activity = getActivity();
-                final Bundle activityOption = Utils.makeSceneTransitionOption(activity,
-                        new Pair<View, String>(mAccountProfileImageView, UserFragment.TRANSITION_NAME_PROFILE_IMAGE));
                 IntentUtils.openUserProfile(activity, account.account_id, account.account_id,
-                        account.screen_name, activityOption, true);
+                        account.screen_name, null, true);
                 break;
             }
         }

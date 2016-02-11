@@ -30,11 +30,11 @@ public class TwitterMediaProvider implements Provider {
             // Video is not supported yet
             return null;
         } else if (path.startsWith("/media/")) {
-            media.type = ParcelableMedia.Type.TYPE_IMAGE;
+            media.type = ParcelableMedia.Type.IMAGE;
             media.preview_url = String.format(Locale.ROOT, "%s:medium", link);
             media.media_url = String.format(Locale.ROOT, "%s:orig", link);
         } else {
-            media.type = ParcelableMedia.Type.TYPE_IMAGE;
+            media.type = ParcelableMedia.Type.IMAGE;
             media.preview_url = link;
             media.media_url = link;
         }
