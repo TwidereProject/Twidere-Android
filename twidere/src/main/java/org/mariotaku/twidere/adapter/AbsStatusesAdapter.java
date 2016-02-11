@@ -73,7 +73,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         mLinkHighlightingStyle = Utils.getLinkHighlightingStyleInt(mPreferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
         mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST, true);
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mDisplayMediaPreview = mPreferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+        mDisplayMediaPreview = Utils.isMediaPreviewEnabled(context, mPreferences);
         mSensitiveContentEnabled = mPreferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
         mHideCardActions = mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
         mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);

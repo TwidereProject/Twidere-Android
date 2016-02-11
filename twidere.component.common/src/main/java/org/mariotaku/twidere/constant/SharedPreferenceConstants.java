@@ -289,7 +289,8 @@ public interface SharedPreferenceConstants {
     @Preference(type = STRING, hasDefault = true)
     String KEY_PROFILE_IMAGE_STYLE = "profile_image_style";
 
-    String KEY_QUICK_MENU_EXPANDED = "quick_menu_expanded";
+    @Preference(type = STRING, hasDefault = true, defaultBoolean = true)
+    String KEY_BANDWIDTH_SAVING_MODE = "bandwidth_saving_mode";
 
     @Preference(type = STRING)
     String KEY_TRANSLATION_DESTINATION = "translation_destination";

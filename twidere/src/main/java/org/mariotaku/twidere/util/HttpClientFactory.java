@@ -16,6 +16,7 @@ import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
+import okhttp3.ConnectionPool;
 import okhttp3.Credentials;
 import okhttp3.Dns;
 import okhttp3.OkHttpClient;
@@ -29,6 +30,7 @@ import static android.text.TextUtils.isEmpty;
  * Created by mariotaku on 16/1/27.
  */
 public class HttpClientFactory implements Constants {
+
     public static RestHttpClient getDefaultHttpClient(final Context context, SharedPreferences prefs, Dns dns) {
         if (context == null) return null;
         return createHttpClient(context, prefs, dns);
@@ -52,6 +54,7 @@ public class HttpClientFactory implements Constants {
         final long connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
         builder.connectTimeout(connectionTimeout, TimeUnit.SECONDS);
+        builder.connectionPool(new ConnectionPool(0, 1, TimeUnit.MINUTES));
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);

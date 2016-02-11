@@ -10,6 +10,13 @@
         android:defaultValue="true"
         android:key="preload_wifi_only"
         android:title="@string/preload_wifi_only"/>
+
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        android:defaultValue="true"
+        android:key="bandwidth_saving_mode"
+        android:summary="@string/bandwidth_saving_mode_summary"
+        android:title="@string/bandwidth_saving_mode"/>
+
     <Preference
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
         android:title="@string/advanced">

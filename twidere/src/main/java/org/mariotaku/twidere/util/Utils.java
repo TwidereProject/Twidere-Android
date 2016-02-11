@@ -73,6 +73,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.GravityCompat;
@@ -2974,6 +2975,12 @@ public final class Utils implements Constants {
     public static boolean shouldUsePrivateAPIs(Context context, long accountId) {
         if (shouldForceUsingPrivateAPIs(context)) return true;
         return TwitterAPIFactory.isOfficialKeyAccount(context, accountId);
+    }
+
+    public static boolean isMediaPreviewEnabled(Context context, SharedPreferencesWrapper preferences) {
+        if (!preferences.getBoolean(KEY_MEDIA_PREVIEW)) return false;
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return !ConnectivityManagerCompat.isActiveNetworkMetered(cm) || !preferences.getBoolean(KEY_BANDWIDTH_SAVING_MODE);
     }
 
     static class UtilsL {
