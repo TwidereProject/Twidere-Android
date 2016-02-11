@@ -13,10 +13,8 @@ import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import java.io.IOException;
 import java.net.Proxy;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
-import okhttp3.ConnectionPool;
 import okhttp3.Credentials;
 import okhttp3.Dns;
 import okhttp3.OkHttpClient;
@@ -31,13 +29,15 @@ import static android.text.TextUtils.isEmpty;
  */
 public class HttpClientFactory implements Constants {
 
-    public static RestHttpClient createRestHttpClient(final Context context, final SharedPreferences prefs, Dns dns) {
+    public static RestHttpClient createRestHttpClient(final Context context,
+                                                      final SharedPreferences prefs, final Dns dns) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
         initOkHttpClient(context, prefs, builder, dns);
         return new OkHttpRestClient(builder.build());
     }
 
-    public static void initOkHttpClient(Context context, SharedPreferences prefs, OkHttpClient.Builder builder, Dns dns) {
+    public static void initOkHttpClient(final Context context, final SharedPreferences prefs,
+                                        final OkHttpClient.Builder builder, final Dns dns) {
         updateHttpClientConfiguration(context, prefs, dns, builder);
         DebugModeUtils.initForOkHttpClient(builder);
     }
@@ -45,11 +45,8 @@ public class HttpClientFactory implements Constants {
     @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
     public static void updateHttpClientConfiguration(final Context context,
                                                      final SharedPreferences prefs,
-                                                     Dns dns, final OkHttpClient.Builder builder) {
-        final long connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10);
+                                                     final Dns dns, final OkHttpClient.Builder builder) {
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
-        builder.connectTimeout(connectionTimeout, TimeUnit.SECONDS);
-        builder.connectionPool(new ConnectionPool(5, 30, TimeUnit.SECONDS));
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);
@@ -78,9 +75,7 @@ public class HttpClientFactory implements Constants {
 
             });
         }
-        if (dns != null) {
-            builder.dns(dns);
-        }
+        builder.dns(dns);
     }
 
     private static Proxy.Type getProxyType(String proxyType) {

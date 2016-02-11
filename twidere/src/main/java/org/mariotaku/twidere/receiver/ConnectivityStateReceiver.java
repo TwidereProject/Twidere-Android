@@ -47,7 +47,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
         }
         if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) return;
         final TwidereApplication application = TwidereApplication.getInstance(context);
-        application.reloadConnectivitySettings();
+//        application.reloadConnectivitySettings();
         Utils.startRefreshServiceIfNeeded(application);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
