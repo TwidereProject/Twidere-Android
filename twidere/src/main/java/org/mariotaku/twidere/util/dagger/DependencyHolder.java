@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util.dagger;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.util.ActivityTracker;
@@ -28,11 +27,11 @@ import org.mariotaku.twidere.util.ExternalThemeManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereValidator;
+import org.mariotaku.twidere.util.net.TwidereDns;
 
 import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
-import okhttp3.Dns;
 
 /**
  * Created by mariotaku on 15/12/31.
@@ -51,7 +50,7 @@ public class DependencyHolder {
     @Inject
     ActivityTracker mActivityTracker;
     @Inject
-    Dns mDns;
+    TwidereDns mDns;
     @Inject
     TwidereValidator mValidator;
     @Inject
@@ -86,7 +85,7 @@ public class DependencyHolder {
         return mActivityTracker;
     }
 
-    public Dns getDns() {
+    public TwidereDns getDns() {
         return mDns;
     }
 

@@ -39,14 +39,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import okhttp3.Dns;
-
 /**
  * Created by mariotaku on 15/12/31.
  */
 public class TwidereProxySelector extends ProxySelector {
     @Inject
-    Dns dns;
+    TwidereDns dns;
     private final Proxy.Type type;
     @NonNull
     private final String host;
