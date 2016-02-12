@@ -750,15 +750,15 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
             final Authorization auth = new BasicAuthorization(username, password);
             final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
-            User user = null;
+            User user;
             try {
                 user = twitter.verifyCredentials();
             } catch (TwitterException e) {
                 if (e.getStatusCode() == 401) {
                     throw new WrongBasicCredentialException();
                 }
+                throw e;
             }
-            if (user == null) throw new NullPointerException();
             final long userId = user.getId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             if (isUserLoggedIn(activity, userId)) return new SignInResponse(true, false, null);

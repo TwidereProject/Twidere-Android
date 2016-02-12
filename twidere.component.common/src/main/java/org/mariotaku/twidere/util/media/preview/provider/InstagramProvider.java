@@ -35,6 +35,7 @@ public class InstagramProvider implements Provider {
         media.url = link;
         media.preview_url = String.format(Locale.ROOT, "https://instagram.com/p/%s/media/?size=m", id);
         media.media_url = String.format(Locale.ROOT, "https://instagram.com/p/%s/media/?size=l", id);
+        media.open_browser = true;
         return media;
     }
 

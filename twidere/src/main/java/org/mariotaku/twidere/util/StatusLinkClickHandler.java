@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util;
 
 import android.content.Context;
-import android.os.Bundle;
 
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -36,9 +35,11 @@ public class StatusLinkClickHandler extends OnLinkClickHandler {
     protected void openMedia(long accountId, long extraId, boolean sensitive, String link, int start, int end) {
         final ParcelableStatus status = mStatus;
         final ParcelableMedia current = findByLink(status.media, link);
-        //TODO open media animation
-        Bundle options = null;
-        Utils.openMedia(context, status, current, options);
+        if (current.open_browser) {
+            openLink(link);
+        } else {
+            Utils.openMedia(context, status, current, null);
+        }
     }
 
     public static ParcelableMedia findByLink(ParcelableMedia[] media, String link) {

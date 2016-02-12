@@ -76,6 +76,9 @@ public class ParcelableMedia implements Parcelable {
     public ParcelableCardEntity card;
     @JsonField(name = "page_url")
     String page_url;
+    @ParcelableThisPlease
+    @JsonField(name = "open_browser")
+    public boolean open_browser;
     public static final Creator<ParcelableMedia> CREATOR = new Creator<ParcelableMedia>() {
         public ParcelableMedia createFromParcel(Parcel source) {
             ParcelableMedia target = new ParcelableMedia();

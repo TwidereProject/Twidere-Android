@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.util;
 
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
@@ -43,9 +42,11 @@ public class StatusAdapterLinkClickHandler<D> extends OnLinkClickHandler {
         if (extraId == RecyclerView.NO_POSITION) return;
         final ParcelableStatus status = adapter.getStatus((int) extraId);
         final ParcelableMedia current = StatusLinkClickHandler.findByLink(status.media, link);
-        //TODO open media animation
-        Bundle options = null;
-        Utils.openMedia(context, status, current, options);
+        if (current != null && current.open_browser) {
+            openLink(link);
+        } else {
+            Utils.openMedia(context, status, current, null);
+        }
     }
 
 }
