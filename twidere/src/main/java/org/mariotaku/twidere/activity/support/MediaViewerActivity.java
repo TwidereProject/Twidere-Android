@@ -320,7 +320,15 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                 return true;
             }
             case R.id.share: {
-                shareMedia();
+                if (object instanceof CacheDownloadMediaViewerFragment) {
+                    shareMedia();
+                } else {
+                    final ParcelableMedia media = getMedia()[currentItem];
+                    final Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_TEXT, media.url);
+                    startActivity(Intent.createChooser(intent, getString(R.string.share)));
+                }
                 return true;
             }
             case R.id.save: {
