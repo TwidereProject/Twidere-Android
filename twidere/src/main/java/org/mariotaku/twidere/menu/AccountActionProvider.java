@@ -11,6 +11,7 @@ import android.view.View;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.util.DataStoreUtils;
 
 public class AccountActionProvider extends ActionProvider implements TwidereConstants {
 
@@ -27,7 +28,7 @@ public class AccountActionProvider extends ActionProvider implements TwidereCons
     }
 
     public AccountActionProvider(final Context context) {
-        this(context, ParcelableAccount.getAccounts(context, false, false));
+        this(context, DataStoreUtils.getAccounts(context, false, false));
     }
 
 

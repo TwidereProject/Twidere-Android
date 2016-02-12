@@ -54,10 +54,10 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -219,7 +219,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quick_search_bar);
-        final List<ParcelableCredentials> accounts = ParcelableAccount.getCredentialsList(this, false);
+        final List<ParcelableCredentials> accounts = DataStoreUtils.getCredentialsList(this, false);
         final AccountsSpinnerAdapter accountsSpinnerAdapter = new AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon);
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_user);
         accountsSpinnerAdapter.addAll(accounts);

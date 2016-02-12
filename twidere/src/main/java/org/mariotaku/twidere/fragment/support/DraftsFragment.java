@@ -64,7 +64,7 @@ import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.model.DraftItem;
 import org.mariotaku.twidere.model.DraftItemCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
-import org.mariotaku.twidere.model.ParcelableStatusUpdate;
+import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -259,8 +259,9 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
         if (twitter == null) return false;
         for (final DraftItem item : list) {
             if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
-                twitter.updateStatusesAsync(new ParcelableStatusUpdate(getActivity(), item));
+                twitter.updateStatusesAsync(ParcelableStatusUpdateUtils.fromDraftItem(getActivity(), item));
             } else if (item.action_type == Drafts.ACTION_SEND_DIRECT_MESSAGE) {
+                if (item.action_extras == null) continue;
                 final long recipientId = item.action_extras.optLong(EXTRA_RECIPIENT_ID);
                 if (item.account_ids == null || item.account_ids.length <= 0 || recipientId <= 0) {
                     continue;

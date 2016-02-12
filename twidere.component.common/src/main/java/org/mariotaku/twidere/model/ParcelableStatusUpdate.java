@@ -19,29 +19,18 @@
 
 package org.mariotaku.twidere.model;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import java.util.Arrays;
 
+@ParcelablePlease
 @JsonObject
 public class ParcelableStatusUpdate implements Parcelable {
-
-    public static final Parcelable.Creator<ParcelableStatusUpdate> CREATOR = new Parcelable.Creator<ParcelableStatusUpdate>() {
-        @Override
-        public ParcelableStatusUpdate createFromParcel(final Parcel in) {
-            return new ParcelableStatusUpdate(in);
-        }
-
-        @Override
-        public ParcelableStatusUpdate[] newArray(final int size) {
-            return new ParcelableStatusUpdate[size];
-        }
-    };
 
     @JsonField(name = "accounts")
     public ParcelableAccount[] accounts;
@@ -60,10 +49,9 @@ public class ParcelableStatusUpdate implements Parcelable {
     }
 
     /**
-     * @deprecated It has too much arguments to call, use
+     * It has too much arguments to call, use
      * <b>ParcelableStatusUpdate.Builder</b> instead.
      */
-    @Deprecated
     public ParcelableStatusUpdate(final ParcelableAccount[] accounts, final String text, final ParcelableLocation location,
                                   final ParcelableMediaUpdate[] media, final long in_reply_to_status_id, final boolean is_possibly_sensitive) {
         this.accounts = accounts;
@@ -74,44 +62,16 @@ public class ParcelableStatusUpdate implements Parcelable {
         this.is_possibly_sensitive = is_possibly_sensitive;
     }
 
-    public ParcelableStatusUpdate(final Context context, final DraftItem draft) {
-        accounts = ParcelableAccount.getAccounts(context, draft.account_ids);
-        text = draft.text;
-        location = draft.location;
-        media = draft.media;
-        in_reply_to_status_id = draft.in_reply_to_status_id;
-        is_possibly_sensitive = draft.is_possibly_sensitive;
-    }
-
-    public ParcelableStatusUpdate(final Parcel in) {
-        accounts = in.createTypedArray(ParcelableAccount.CREATOR);
-        text = in.readString();
-        location = in.readParcelable(ParcelableLocation.class.getClassLoader());
-        media = in.createTypedArray(ParcelableMediaUpdate.CREATOR);
-        in_reply_to_status_id = in.readLong();
-        is_possibly_sensitive = in.readInt() == 1;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
     @Override
     public String toString() {
-        return "ParcelableStatusUpdate{accounts=" + Arrays.toString(accounts) + ", media=" + Arrays.toString(media)
-                + ", text=" + text + ", location=" + location + ", in_reply_to_status_id=" + in_reply_to_status_id
-                + ", is_possibly_sensitive=" + is_possibly_sensitive + "}";
-    }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeTypedArray(accounts, flags);
-        dest.writeString(text);
-        dest.writeParcelable(location, flags);
-        dest.writeTypedArray(media, flags);
-        dest.writeLong(in_reply_to_status_id);
-        dest.writeInt(is_possibly_sensitive ? 1 : 0);
+        return "ParcelableStatusUpdate{" +
+                "accounts=" + Arrays.toString(accounts) +
+                ", media=" + Arrays.toString(media) +
+                ", text='" + text + '\'' +
+                ", location=" + location +
+                ", in_reply_to_status_id=" + in_reply_to_status_id +
+                ", is_possibly_sensitive=" + is_possibly_sensitive +
+                '}';
     }
 
     public static final class Builder {
@@ -172,4 +132,25 @@ public class ParcelableStatusUpdate implements Parcelable {
         }
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ParcelableStatusUpdateParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<ParcelableStatusUpdate> CREATOR = new Creator<ParcelableStatusUpdate>() {
+        public ParcelableStatusUpdate createFromParcel(Parcel source) {
+            ParcelableStatusUpdate target = new ParcelableStatusUpdate();
+            ParcelableStatusUpdateParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ParcelableStatusUpdate[] newArray(int size) {
+            return new ParcelableStatusUpdate[size];
+        }
+    };
 }

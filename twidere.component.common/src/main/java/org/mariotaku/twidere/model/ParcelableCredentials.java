@@ -39,6 +39,18 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 @ParcelablePlease
 public class ParcelableCredentials extends ParcelableAccount implements Parcelable {
 
+    public static final Creator<ParcelableCredentials> CREATOR = new Creator<ParcelableCredentials>() {
+        public ParcelableCredentials createFromParcel(Parcel source) {
+            ParcelableCredentials target = new ParcelableCredentials();
+            ParcelableCredentialsParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ParcelableCredentials[] newArray(int size) {
+            return new ParcelableCredentials[size];
+        }
+    };
+
     public static final int AUTH_TYPE_OAUTH = 0;
     public static final int AUTH_TYPE_XAUTH = 1;
     public static final int AUTH_TYPE_BASIC = 2;
@@ -85,15 +97,24 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
     @CursorField(Accounts.NO_VERSION_SUFFIX)
     public boolean no_version_suffix;
 
+
     ParcelableCredentials() {
     }
 
     @Override
     public String toString() {
-        return "AccountWithCredentials{auth_type=" + auth_type + ", consumer_key=" + consumer_key
-                + ", consumer_secret=" + consumer_secret + ", basic_auth_password=" + basic_auth_password
-                + ", oauth_token=" + oauth_token + ", oauth_token_secret=" + oauth_token_secret
-                + ", api_url_format=" + api_url_format + ", same_oauth_signing_url=" + same_oauth_signing_url + "}";
+        return "ParcelableCredentials{" +
+                "auth_type=" + auth_type +
+                ", consumer_key='" + consumer_key + '\'' +
+                ", consumer_secret='" + consumer_secret + '\'' +
+                ", basic_auth_username='" + basic_auth_username + '\'' +
+                ", basic_auth_password='" + basic_auth_password + '\'' +
+                ", oauth_token='" + oauth_token + '\'' +
+                ", oauth_token_secret='" + oauth_token_secret + '\'' +
+                ", api_url_format='" + api_url_format + '\'' +
+                ", same_oauth_signing_url=" + same_oauth_signing_url +
+                ", no_version_suffix=" + no_version_suffix +
+                "} " + super.toString();
     }
 
     @Override
@@ -105,16 +126,4 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableCredentialsParcelablePlease.writeToParcel(this, dest, flags);
     }
-
-    public static final Creator<ParcelableCredentials> CREATOR = new Creator<ParcelableCredentials>() {
-        public ParcelableCredentials createFromParcel(Parcel source) {
-            ParcelableCredentials target = new ParcelableCredentials();
-            ParcelableCredentialsParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        public ParcelableCredentials[] newArray(int size) {
-            return new ParcelableCredentials[size];
-        }
-    };
 }

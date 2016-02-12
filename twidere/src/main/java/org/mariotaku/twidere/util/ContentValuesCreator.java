@@ -36,13 +36,13 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.Trend;
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.DraftItem;
+import org.mariotaku.twidere.model.DraftItemValuesCreator;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageValuesCreator;
-import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -271,10 +271,6 @@ public final class ContentValuesCreator implements TwidereConstants {
         return ParcelableStatusValuesCreator.create(new ParcelableStatus(orig, accountId, false));
     }
 
-    public static ContentValues createStatusDraft(final ParcelableStatusUpdate status) {
-        return createStatusDraft(status, ParcelableAccount.getAccountIds(status.accounts));
-    }
-
     @NonNull
     public static ContentValues createActivity(final ParcelableActivity activity) {
         final ContentValues values = new ContentValues();
@@ -304,22 +300,10 @@ public final class ContentValuesCreator implements TwidereConstants {
     }
 
 
-    public static ContentValues createStatusDraft(final ParcelableStatusUpdate status,
-                                                  final long[] accountIds) {
+    public static ContentValues createStatusDraft(final ParcelableStatusUpdate status) {
         final ContentValues values = new ContentValues();
-        values.put(Drafts.ACTION_TYPE, Drafts.ACTION_UPDATE_STATUS);
-        values.put(Drafts.TEXT, status.text);
-        values.put(Drafts.ACCOUNT_IDS, TwidereArrayUtils.toString(accountIds, ',', false));
-        values.put(Drafts.IN_REPLY_TO_STATUS_ID, status.in_reply_to_status_id);
-        values.put(Drafts.LOCATION, ParcelableLocation.toString(status.location));
-        values.put(Drafts.IS_POSSIBLY_SENSITIVE, status.is_possibly_sensitive);
-        values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
-        if (status.media != null) {
-            try {
-                values.put(Drafts.MEDIA, LoganSquare.serialize(Arrays.asList(status.media), ParcelableMediaUpdate.class));
-            } catch (IOException ignored) {
-            }
-        }
+        DraftItem item = new DraftItem(status);
+        DraftItemValuesCreator.writeTo(item, values);
         return values;
     }
 

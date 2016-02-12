@@ -44,7 +44,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
@@ -126,7 +125,7 @@ public class StreamingService extends Service implements Constants {
     }
 
     private boolean setTwitterInstances() {
-        final List<ParcelableCredentials> accountsList = ParcelableAccount.getCredentialsList(this, true);
+        final List<ParcelableCredentials> accountsList = DataStoreUtils.getCredentialsList(this, true);
         final long[] accountIds = new long[accountsList.size()];
         for (int i = 0, j = accountIds.length; i < j; i++) {
             accountIds[i] = accountsList.get(i).account_id;

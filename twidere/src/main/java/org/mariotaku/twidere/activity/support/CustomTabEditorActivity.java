@@ -55,6 +55,7 @@ import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -296,7 +297,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
             }
             final boolean officialKeyOnly = intent.getBooleanExtra(EXTRA_OFFICIAL_KEY_ONLY, false);
             final boolean forcePrivateAPIs = intent.getBooleanExtra(KEY_FORCE_USING_PRIVATE_APIS, false);
-            mAccountsAdapter.addAll(ParcelableAccount.getCredentialsList(this, false, !forcePrivateAPIs && officialKeyOnly));
+            mAccountsAdapter.addAll(DataStoreUtils.getCredentialsList(this, false, !forcePrivateAPIs && officialKeyOnly));
             mAccountsAdapter.setDummyItemText(R.string.activated_accounts);
             switch (conf.getSecondaryFieldType()) {
                 case CustomTabConfiguration.FIELD_TYPE_USER: {

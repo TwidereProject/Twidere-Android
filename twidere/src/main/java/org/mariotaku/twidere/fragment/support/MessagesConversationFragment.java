@@ -83,7 +83,6 @@ import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.loader.support.UserSearchLoader;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -96,6 +95,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversati
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ClipboardUtils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -240,7 +240,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         mAccountSpinner = (Spinner) actionBarView.findViewById(R.id.account_spinner);
         mEditUserQuery = (EditText) actionBarView.findViewById(R.id.user_query);
         mQueryButton = actionBarView.findViewById(R.id.query_button);
-        final List<ParcelableCredentials> accounts = ParcelableCredentials.getCredentialsList(activity, false);
+        final List<ParcelableCredentials> accounts = DataStoreUtils.getCredentialsList(activity, false);
         final AccountsSpinnerAdapter accountsSpinnerAdapter = new AccountsSpinnerAdapter(
                 actionBar.getThemedContext(), R.layout.spinner_item_account_icon);
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_user);
@@ -305,7 +305,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
                     final long userId = args.getLong(EXTRA_RECIPIENT_ID, -1);
                     final int accountPos = accountsSpinnerAdapter.findItemPosition(accountId);
-                    account = accountPos < 0 ? ParcelableAccount.getCredentials(activity, accountId)
+                    account = accountPos < 0 ? DataStoreUtils.getCredentials(activity, accountId)
                             : accountsSpinnerAdapter.getItem(accountPos);
                     recipient = Utils.getUserForConversation(activity, accountId, userId);
                 } else {

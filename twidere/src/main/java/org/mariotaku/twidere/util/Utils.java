@@ -2320,7 +2320,7 @@ public final class Utils implements Constants {
                                         final Menu menu, final ParcelableStatus status,
                                         final AsyncTwitterWrapper twitter) {
         if (status == null) return;
-        final ParcelableCredentials account = ParcelableAccount.getCredentials(context, status.account_id);
+        final ParcelableCredentials account = DataStoreUtils.getCredentials(context, status.account_id);
         setMenuForStatus(context, preferences, menu, status, account, twitter);
     }
 

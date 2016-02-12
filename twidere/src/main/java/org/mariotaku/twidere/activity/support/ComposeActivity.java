@@ -574,7 +574,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     public void saveToDrafts() {
         final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
         final ParcelableStatusUpdate.Builder builder = new ParcelableStatusUpdate.Builder();
-        builder.accounts(ParcelableAccount.getAccounts(this, mAccountsAdapter.getSelectedAccountIds()));
+        builder.accounts(DataStoreUtils.getAccounts(this, mAccountsAdapter.getSelectedAccountIds()));
         builder.text(text);
         builder.inReplyToStatusId(mInReplyToStatusId);
         builder.location(mRecentLocation);
@@ -615,7 +615,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         setContentView(R.layout.activity_compose);
         setFinishOnTouchOutside(false);
-        final ParcelableCredentials[] accounts = ParcelableCredentials.getCredentialsArray(this, false, false);
+        final ParcelableCredentials[] accounts = DataStoreUtils.getCredentialsArray(this, false, false);
         if (accounts.length <= 0) {
             final Intent intent = new Intent(INTENT_ACTION_TWITTER_LOGIN);
             intent.setClass(this, SignInActivity.class);
@@ -623,7 +623,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             finish();
             return;
         }
-        final long[] defaultAccountIds = ParcelableAccount.getAccountIds(accounts);
+        final long[] defaultAccountIds = DataStoreUtils.getAccountIds(accounts);
         mMenuBar.setOnMenuItemClickListener(this);
         setupEditText();
         mAccountSelectorContainer.setOnClickListener(this);

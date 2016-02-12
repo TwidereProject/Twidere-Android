@@ -44,6 +44,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.BitmapUtils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -178,7 +179,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
         @Override
         protected List<ParcelableAccount> doInBackground(final Object... params) {
-            return ParcelableAccount.getAccountsList(mPreference.getContext(), false);
+            return DataStoreUtils.getAccountsList(mPreference.getContext(), false);
         }
 
         @Override

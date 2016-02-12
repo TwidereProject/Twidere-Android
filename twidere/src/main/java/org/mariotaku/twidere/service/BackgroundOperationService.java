@@ -71,6 +71,7 @@ import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.StatusShortenResult;
 import org.mariotaku.twidere.model.UploaderMediaItem;
+import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -78,6 +79,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -244,7 +246,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         }
         cr.delete(Drafts.CONTENT_URI, where.getSQL(), null);
         if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
-            updateStatuses(new ParcelableStatusUpdate(this, item));
+            updateStatuses(ParcelableStatusUpdateUtils.fromDraftItem(this, item));
         } else if (item.action_type == Drafts.ACTION_SEND_DIRECT_MESSAGE) {
             final long recipientId = item.action_extras != null ? item.action_extras.optLong(EXTRA_RECIPIENT_ID) : -1;
             if (item.account_ids == null || item.account_ids.length <= 0 || recipientId <= 0) {
@@ -331,8 +333,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         for (final ParcelableStatusUpdate item : statuses) {
             mNotificationManager.notify(NOTIFICATION_ID_UPDATE_STATUS,
                     updateUpdateStatusNotification(this, builder, 0, item));
-            final ContentValues draftValues = ContentValuesCreator.createStatusDraft(item,
-                    ParcelableAccount.getAccountIds(item.accounts));
+            final ContentValues draftValues = ContentValuesCreator.createStatusDraft(item);
             final ContentResolver resolver = getContentResolver();
             final Uri draftUri = resolver.insert(Drafts.CONTENT_URI, draftValues);
             final long def = -1;
@@ -342,7 +343,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             boolean failed = false;
             Exception exception = null;
             final Expression where = Expression.equals(Drafts._ID, draftId);
-            final List<Long> failedAccountIds = TwidereListUtils.fromArray(ParcelableAccount.getAccountIds(item.accounts));
+            final List<Long> failedAccountIds = TwidereListUtils.fromArray(DataStoreUtils.getAccountIds(item.accounts));
 
             for (final SingleResponse<ParcelableStatus> response : result) {
                 final ParcelableStatus data = response.getData();

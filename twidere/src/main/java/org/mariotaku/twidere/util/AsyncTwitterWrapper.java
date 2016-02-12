@@ -55,7 +55,6 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.model.ListResponse;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -471,7 +470,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                                  final ParcelableMediaUpdate[] media, final long inReplyToStatusId,
                                  final boolean isPossiblySensitive) {
         final ParcelableStatusUpdate.Builder builder = new ParcelableStatusUpdate.Builder();
-        builder.accounts(ParcelableAccount.getAccounts(mContext, accountIds));
+        builder.accounts(DataStoreUtils.getAccounts(mContext, accountIds));
         builder.text(text);
         builder.location(location);
         builder.media(media);

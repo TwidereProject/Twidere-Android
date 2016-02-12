@@ -25,9 +25,9 @@ import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserAgentUtils;
@@ -89,7 +89,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         final boolean useThumbor;
         if (extra instanceof MediaExtra) {
             useThumbor = ((MediaExtra) extra).isUseThumbor();
-            account = ParcelableAccount.getCredentials(mContext, ((MediaExtra) extra).getAccountId());
+            account = DataStoreUtils.getCredentials(mContext, ((MediaExtra) extra).getAccountId());
             auth = TwitterAPIFactory.getAuthorization(account);
         } else {
             useThumbor = true;

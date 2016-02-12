@@ -49,7 +49,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.util.LongSparseArray;
-import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
@@ -264,7 +263,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         if (cursor == null) return;
         final Menu menu = mAccountsToggleMenu.getMenu();
         mAccountActionProvider = (AccountToggleProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account));
-        final ParcelableAccount[] accounts = ParcelableAccount.getAccounts(cursor);
+        final ParcelableAccount[] accounts = DataStoreUtils.getAccounts(cursor);
         if (accounts.length > 0) {
             mNoAccountContainer.setVisibility(View.GONE);
             mAccountProfileContainer.setVisibility(View.VISIBLE);

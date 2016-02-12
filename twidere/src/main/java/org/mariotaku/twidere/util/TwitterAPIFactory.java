@@ -111,7 +111,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                                            final boolean includeEntities,
                                            final boolean includeRetweets, Class<T> cls) {
         if (context == null) return null;
-        final ParcelableCredentials credentials = ParcelableCredentials.getCredentials(context, accountId);
+        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(context, accountId);
         final HashMap<String, String> extraParams = new HashMap<>();
         extraParams.put("include_entities", String.valueOf(includeEntities));
         extraParams.put("include_retweets", String.valueOf(includeRetweets));

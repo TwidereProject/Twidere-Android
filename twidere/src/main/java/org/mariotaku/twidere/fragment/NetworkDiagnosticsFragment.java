@@ -144,7 +144,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
 
             for (long accountId : DataStoreUtils.getAccountIds(mContext)) {
-                final ParcelableCredentials credentials = ParcelableCredentials.getCredentials(mContext, accountId);
+                final ParcelableCredentials credentials = DataStoreUtils.getCredentials(mContext, accountId);
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, false);
                 if (credentials == null || twitter == null) continue;
                 publishProgress(new LogText("Testing connection for account " + accountId));
