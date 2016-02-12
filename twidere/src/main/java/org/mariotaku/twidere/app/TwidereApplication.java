@@ -36,8 +36,6 @@ import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.AssistLauncherActivity;
@@ -55,9 +53,6 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
-
-import okhttp3.Dns;
-import okhttp3.OkHttpClient;
 
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
 
@@ -220,7 +215,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             case KEY_PROXY_TYPE:
             case KEY_PROXY_USERNAME:
             case KEY_PROXY_PASSWORD: {
-                reloadConnectivitySettings();
+                HttpClientFactory.reloadConnectivitySettings(this);
                 break;
             }
             case KEY_DNS_SERVER:
@@ -250,24 +245,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     private void reloadDnsSettings() {
         DependencyHolder holder = DependencyHolder.get(this);
-        final Dns dns = holder.getDns();
-        if (dns instanceof TwidereDns) {
-            ((TwidereDns) dns).reloadDnsSettings();
-        }
-    }
-
-    public void reloadConnectivitySettings() {
-        DependencyHolder holder = DependencyHolder.get(this);
-        final RestHttpClient client = holder.getRestHttpClient();
-        if (client instanceof OkHttpRestClient) {
-            final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            HttpClientFactory.initOkHttpClient(this, holder.getPreferences(), builder,
-                    holder.getDns());
-            final OkHttpRestClient restClient = (OkHttpRestClient) client;
-            // Kill all connections
-            restClient.getClient().connectionPool().evictAll();
-            restClient.setClient(builder.build());
-        }
+        final TwidereDns dns = holder.getDns();
+        dns.reloadDnsSettings();
     }
 
 

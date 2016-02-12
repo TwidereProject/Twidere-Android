@@ -43,6 +43,7 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
+import org.mariotaku.twidere.util.net.TwidereDns;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,8 +51,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import okhttp3.Dns;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -441,9 +440,9 @@ public class TwitterAPIFactory implements TwidereConstants {
 
     public static class TwidereExceptionFactory implements ExceptionFactory<TwitterException> {
 
-        private final Dns dns;
+        private final TwidereDns dns;
 
-        TwidereExceptionFactory(Dns dns) {
+        TwidereExceptionFactory(TwidereDns dns) {
             this.dns = dns;
         }
 

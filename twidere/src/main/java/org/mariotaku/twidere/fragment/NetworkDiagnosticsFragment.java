@@ -39,7 +39,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import okhttp3.Dns;
 
 /**
  * Created by mariotaku on 16/2/9.
@@ -125,7 +124,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             publishProgress(new LogText("Text below may have personal information, BE CAREFUL TO MAKE IT PUBLIC"));
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
             DependencyHolder holder = DependencyHolder.get(mContext);
-            final Dns dns = holder.getDns();
+            final TwidereDns dns = holder.getDns();
             final SharedPreferencesWrapper prefs = holder.getPreferences();
             publishProgress(new LogText("Network preferences"), LogText.LINEBREAK);
             publishProgress(new LogText("using_resolver: " + prefs.getBoolean(KEY_BUILTIN_DNS_RESOLVER)), LogText.LINEBREAK);
@@ -206,15 +205,11 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             return null;
         }
 
-        private void testDns(Dns dns, final String host) {
+        private void testDns(TwidereDns dns, final String host) {
             publishProgress(new LogText(String.format("Lookup %s...", host)));
             try {
                 final long start = SystemClock.uptimeMillis();
-                if (dns instanceof TwidereDns) {
-                    publishProgress(new LogText(String.valueOf(((TwidereDns) dns).lookupResolver(host))));
-                } else {
-                    publishProgress(new LogText(String.valueOf(dns.lookup(host))));
-                }
+                publishProgress(new LogText(String.valueOf(dns.lookupResolver(host))));
                 publishProgress(new LogText(String.format(" OK (%d ms)", SystemClock.uptimeMillis()
                         - start), LogText.State.GOOD));
             } catch (UnknownHostException e) {

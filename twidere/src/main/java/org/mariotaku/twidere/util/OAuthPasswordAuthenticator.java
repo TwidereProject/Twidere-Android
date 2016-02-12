@@ -37,6 +37,7 @@ import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.MultiValueMap;
+import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.FormBody;
 import org.mariotaku.restfu.http.mime.SimpleBody;
 import org.mariotaku.restfu.okhttp.OkHttpRestClient;
@@ -61,7 +62,7 @@ public class OAuthPasswordAuthenticator implements Constants {
     private static final IAttoParser PARSER = new MarkupAttoParser();
 
     private final TwitterOAuth oauth;
-    private final OkHttpRestClient client;
+    private final RestHttpClient client;
     private final Endpoint endpoint;
     private final LoginVerificationCallback loginVerificationCallback;
     private final String userAgent;

@@ -9,10 +9,12 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
 import okhttp3.Credentials;
@@ -47,6 +49,9 @@ public class HttpClientFactory implements Constants {
                                                      final SharedPreferences prefs,
                                                      final Dns dns, final OkHttpClient.Builder builder) {
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
+        builder.readTimeout(3, TimeUnit.SECONDS);
+        builder.writeTimeout(3, TimeUnit.SECONDS);
+        builder.connectTimeout(3, TimeUnit.SECONDS);
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);
@@ -89,5 +94,19 @@ public class HttpClientFactory implements Constants {
             }
         }
         return Proxy.Type.DIRECT;
+    }
+
+    public static void reloadConnectivitySettings(Context context) {
+        DependencyHolder holder = DependencyHolder.get(context);
+        final RestHttpClient client = holder.getRestHttpClient();
+        if (client instanceof OkHttpRestClient) {
+            final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            initOkHttpClient(context, holder.getPreferences(), builder,
+                    holder.getDns());
+            final OkHttpRestClient restClient = (OkHttpRestClient) client;
+            // Kill all connections
+            restClient.getClient().connectionPool().evictAll();
+            restClient.setClient(builder.build());
+        }
     }
 }
