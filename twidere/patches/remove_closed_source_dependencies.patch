@@ -44,7 +44,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      flatDir { dirs "$projectDir/lib" }
  }
  
-@@ -122,10 +122,10 @@
+@@ -123,10 +123,10 @@
      compile project(':twidere.component.common')
      compile project(':twidere.component.nyan')
  

@@ -7,9 +7,9 @@ import android.text.TextUtils;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
-import org.mariotaku.twidere.util.net.OkHttpRestClient;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class HttpClientFactory implements Constants {
                                                      final ConnectionPool connectionPool) {
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
         builder.connectTimeout(prefs.getInt(KEY_CONNECTION_TIMEOUT, 10), TimeUnit.SECONDS);
-        builder.retryOnConnectionFailure(false);
+        builder.retryOnConnectionFailure(true);
         builder.connectionPool(connectionPool);
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);

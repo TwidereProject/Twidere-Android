@@ -112,6 +112,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             publishProgress(new LogText("version_code: " + BuildConfig.VERSION_CODE), LogText.LINEBREAK);
             publishProgress(new LogText("version_name: " + BuildConfig.VERSION_NAME), LogText.LINEBREAK);
             publishProgress(new LogText("flavor: " + BuildConfig.FLAVOR), LogText.LINEBREAK);
+            publishProgress(new LogText("debug: " + BuildConfig.DEBUG), LogText.LINEBREAK);
             publishProgress(LogText.LINEBREAK);
             publishProgress(new LogText("Basic system information: "));
             publishProgress(new LogText(String.valueOf(mContext.getResources().getConfiguration())));
