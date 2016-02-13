@@ -34,14 +34,15 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.ConnectionPool;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.RealCallAccessor;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.internal.http.HttpEngine;
 import okio.BufferedSink;
 import okio.Okio;
 
@@ -303,13 +304,13 @@ public class OkHttpRestClient implements RestHttpClient {
             public Response getResponse() throws IOException {
                 if (exception != null) throw exception;
                 if (response == null) {
-                    if (!call.isCanceled()) {
-                        call.cancel();
-                    }
                     if (reachedTimeout()) {
-                        ConnectionPool pool = call.client.client.connectionPool();
-                        pool.evictAll();
-                        throw new SocketTimeoutException("Request timed out after " + timeout + " ms");
+                        final SocketTimeoutException exception = new SocketTimeoutException("Request timed out after " + timeout + " ms");
+                        final HttpEngine httpEngine = RealCallAccessor.getHttpEngine(call.call);
+                        if (httpEngine != null) {
+                            httpEngine.streamAllocation.connectionFailed(exception);
+                        }
+                        throw exception;
                     } else {
                         throw new IOException("Request cancelled");
                     }

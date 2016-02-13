@@ -33,7 +33,7 @@ import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
-import org.mariotaku.twidere.api.twitter.model.TwitterResponseObject;
+import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
 import org.mariotaku.twidere.api.twitter.model.User;
 
 import java.io.IOException;
@@ -125,8 +125,8 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
             final InputStream stream = body.stream();
             final Object object = parseOrThrow(stream, type);
             checkResponse(type, object, httpResponse);
-            if (object instanceof TwitterResponseObject) {
-                ((TwitterResponseObject) object).processResponseHeader(httpResponse);
+            if (object instanceof TwitterResponse) {
+                ((TwitterResponse) object).processResponseHeader(httpResponse);
             }
             return object;
         }
