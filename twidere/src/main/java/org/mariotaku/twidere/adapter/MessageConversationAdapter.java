@@ -21,7 +21,6 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +33,7 @@ import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -207,9 +207,8 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         @Override
         public void onMediaClick(View view, ParcelableMedia media, long accountId, long extraId) {
             final MessageConversationAdapter adapter = adapterRef.get();
-            final Bundle options = Utils.createMediaViewerActivityOption(view);
-            Utils.openMedia(adapter.getContext(), adapter.getDirectMessage((int) extraId), media,
-                    options);
+            IntentUtils.openMedia(adapter.getContext(), adapter.getDirectMessage((int) extraId), media,
+                    null, true);
         }
 
     }

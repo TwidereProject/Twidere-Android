@@ -45,7 +45,7 @@ public class StatusAdapterLinkClickHandler<D> extends OnLinkClickHandler {
         if (current != null && current.open_browser) {
             openLink(link);
         } else {
-            Utils.openMedia(context, status, current, null);
+            IntentUtils.openMedia(context, status, current, null, true);
         }
     }
 

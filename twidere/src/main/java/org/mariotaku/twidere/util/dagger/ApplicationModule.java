@@ -185,7 +185,7 @@ public class ApplicationModule implements Constants {
                                                    ReadStateManager readStateManager,
                                                    Bus bus, SharedPreferencesWrapper preferences,
                                                    AsyncTaskManager asyncTaskManager, ErrorInfoStore errorInfoStore) {
-        return new AsyncTwitterWrapper(application, userColorNameManager, readStateManager, bus,
+        return new AsyncTwitterWrapper(application, userColorNameManager, bus,
                 preferences, asyncTaskManager, errorInfoStore);
     }
 

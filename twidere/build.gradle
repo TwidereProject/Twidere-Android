@@ -27,8 +27,6 @@ android {
         versionName "3.0.5 (snapshot)"
         multiDexEnabled true
 
-        buildConfigField 'boolean', 'ENABLE_MEDIA_VIEWER', 'Boolean.parseBoolean("true")'
-        buildConfigField 'boolean', 'NEW_DOCUMENT_INTENT', 'Boolean.parseBoolean("false")'
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

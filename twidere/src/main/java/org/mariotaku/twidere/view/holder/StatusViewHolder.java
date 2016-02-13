@@ -24,6 +24,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
@@ -262,7 +263,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             itemContent.drawEnd();
         }
 
-        final ParcelableMedia[] media = Utils.getPrimaryMedia(status);
+        final ParcelableMedia[] media = IntentUtils.getPrimaryMedia(status);
 
         if (adapter.isMediaPreviewEnabled()) {
             mediaPreview.setStyle(adapter.getMediaPreviewStyle());

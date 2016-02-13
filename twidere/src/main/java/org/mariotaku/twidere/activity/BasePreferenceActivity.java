@@ -35,8 +35,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.FrameLayout;
 
-import com.meizu.flyme.reflect.StatusBarProxy;
-
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -295,7 +293,6 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
         final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ? getCurrentThemeBackgroundAlpha() : 0xFF;
         final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getCurrentThemeResourceId(), getThemeBackgroundOption());
         mMainContent.setColor(statusBarColor, alpha);
-        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
 
         mMainContent.setDrawShadow(false);
         mMainContent.setDrawColor(true);

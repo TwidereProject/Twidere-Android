@@ -41,6 +41,7 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterErrorCode;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
@@ -74,12 +75,12 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
-import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.GetActivitiesAboutMeTask;
 import org.mariotaku.twidere.task.GetActivitiesByFriendsTask;
 import org.mariotaku.twidere.task.GetHomeTimelineTask;
+import org.mariotaku.twidere.task.GetSavedSearchesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
@@ -116,7 +117,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private final SharedPreferencesWrapper mPreferences;
     private final Bus mBus;
     private final UserColorNameManager mUserColorNameManager;
-    private final ReadStateManager mReadStateManager;
     private final ErrorInfoStore mErrorInfoStore;
 
     private LongSparseMap<Long> mCreatingFavoriteIds = new LongSparseMap<>();
@@ -127,12 +127,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private CopyOnWriteArraySet<Long> mSendingDraftIds = new CopyOnWriteArraySet<>();
 
     public AsyncTwitterWrapper(Context context, UserColorNameManager userColorNameManager,
-                               ReadStateManager readStateManager, Bus bus,
-                               SharedPreferencesWrapper preferences, AsyncTaskManager asyncTaskManager, ErrorInfoStore errorInfoStore) {
+                               Bus bus, SharedPreferencesWrapper preferences,
+                               AsyncTaskManager asyncTaskManager, ErrorInfoStore errorInfoStore) {
         mContext = context;
         mResolver = context.getContentResolver();
         mUserColorNameManager = userColorNameManager;
-        mReadStateManager = readStateManager;
         mBus = bus;
         mPreferences = preferences;
         mAsyncTaskManager = asyncTaskManager;
@@ -301,12 +300,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int getSavedSearchesAsync(long[] accountIds) {
-        final GetSavedSearchesTask task = new GetSavedSearchesTask(this);
-        final Long[] ids = new Long[accountIds.length];
-        for (int i = 0, j = accountIds.length; i < j; i++) {
-            ids[i] = accountIds[i];
-        }
-        return mAsyncTaskManager.add(task, true, ids);
+        final GetSavedSearchesTask task = new GetSavedSearchesTask(mContext);
+        task.setParams(accountIds);
+        AsyncManager.runBackgroundTask(task);
+        return System.identityHashCode(task);
     }
 
     @NonNull
@@ -565,35 +562,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     public ErrorInfoStore getErrorInfoStore() {
         return mErrorInfoStore;
-    }
-
-    static class GetSavedSearchesTask extends ManagedAsyncTask<Long, Object, SingleResponse<Object>> {
-
-        private final Context mContext;
-
-        GetSavedSearchesTask(AsyncTwitterWrapper twitter) {
-            super(twitter.getContext());
-            this.mContext = twitter.getContext();
-        }
-
-        @Override
-        protected SingleResponse<Object> doInBackground(Long... params) {
-            final ContentResolver cr = mContext.getContentResolver();
-            for (long accountId : params) {
-                final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, true);
-                if (twitter == null) continue;
-                try {
-                    final ResponseList<SavedSearch> searches = twitter.getSavedSearches();
-                    final ContentValues[] values = ContentValuesCreator.createSavedSearches(searches, accountId);
-                    final Expression where = Expression.equals(SavedSearches.ACCOUNT_ID, accountId);
-                    cr.delete(SavedSearches.CONTENT_URI, where.getSQL(), null);
-                    ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values);
-                } catch (TwitterException e) {
-                    Log.w(LOGTAG, e);
-                }
-            }
-            return SingleResponse.getInstance();
-        }
     }
 
     public static class UpdateProfileBannerImageTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
@@ -1882,14 +1850,14 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     abstract class GetDirectMessagesTask extends ManagedAsyncTask<Object, Object, List<MessageListResponse>> {
 
-        private final long[] account_ids, max_ids, since_ids;
+        private final long[] accountIds, maxIds, sinceIds;
 
-        public GetDirectMessagesTask(final long[] account_ids, final long[] max_ids, final long[] since_ids,
+        public GetDirectMessagesTask(final long[] accountIds, final long[] maxIds, final long[] sinceIds,
                                      final String tag) {
             super(mContext, tag);
-            this.account_ids = account_ids;
-            this.max_ids = max_ids;
-            this.since_ids = since_ids;
+            this.accountIds = accountIds;
+            this.maxIds = maxIds;
+            this.sinceIds = sinceIds;
         }
 
         public abstract ResponseList<DirectMessage> getDirectMessages(Twitter twitter, Paging paging)
@@ -1900,11 +1868,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected abstract boolean isOutgoing();
 
         final boolean isMaxIdsValid() {
-            return max_ids != null && max_ids.length == account_ids.length;
+            return maxIds != null && maxIds.length == accountIds.length;
         }
 
         final boolean isSinceIdsValid() {
-            return since_ids != null && since_ids.length == account_ids.length;
+            return sinceIds != null && sinceIds.length == accountIds.length;
         }
 
         @Override
@@ -1912,23 +1880,23 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
             final List<MessageListResponse> result = new ArrayList<>();
 
-            if (account_ids == null) return result;
+            if (accountIds == null) return result;
 
             int idx = 0;
             final int loadItemLimit = mPreferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
-            for (final long accountId : account_ids) {
+            for (final long accountId : accountIds) {
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, true);
                 if (twitter == null) continue;
                 try {
                     final Paging paging = new Paging();
                     paging.setCount(loadItemLimit);
                     long max_id = -1, since_id = -1;
-                    if (isMaxIdsValid() && max_ids[idx] > 0) {
-                        max_id = max_ids[idx];
+                    if (isMaxIdsValid() && maxIds[idx] > 0) {
+                        max_id = maxIds[idx];
                         paging.setMaxId(max_id);
                     }
-                    if (isSinceIdsValid() && since_ids[idx] > 0) {
-                        since_id = since_ids[idx];
+                    if (isSinceIdsValid() && sinceIds[idx] > 0) {
+                        since_id = sinceIds[idx];
                         paging.setSinceId(since_id - 1);
                     }
                     final List<DirectMessage> messages = new ArrayList<>();
@@ -1939,7 +1907,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     storeMessages(accountId, messages, isOutgoing(), true);
                     mErrorInfoStore.remove(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountId);
                 } catch (final TwitterException e) {
-                    if (e.getErrorCode() == 93) {
+                    if (e.getErrorCode() == TwitterErrorCode.NO_DM_PERMISSION) {
                         mErrorInfoStore.put(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountId,
                                 ErrorInfoStore.CODE_NO_DM_PERMISSION);
                     } else if (e.isCausedByNetworkIssue()) {
@@ -2236,26 +2204,35 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     class RetweetStatusTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableStatus>> {
 
-        private final long account_id;
+        private final long accountId;
+        private final long statusId;
 
-        private final long status_id;
-
-        public RetweetStatusTask(final long account_id, final long status_id) {
+        public RetweetStatusTask(final long accountId, final long statusId) {
             super(mContext);
-            this.account_id = account_id;
-            this.status_id = status_id;
+            this.accountId = accountId;
+            this.statusId = statusId;
         }
 
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
-            if (account_id < 0) return SingleResponse.getInstance();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, account_id, true);
+            if (accountId < 0) return SingleResponse.getInstance();
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, true);
             if (twitter == null) {
                 return SingleResponse.getInstance();
             }
             try {
-                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.retweetStatus(status_id), account_id, false);
+                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.retweetStatus(statusId), accountId, false);
                 Utils.setLastSeen(mContext, status.mentions, System.currentTimeMillis());
+                final ContentValues values = new ContentValues();
+                values.put(Statuses.MY_RETWEET_ID, status.id);
+                values.put(Statuses.RETWEET_COUNT, status.retweet_count);
+                final Expression where = Expression.or(
+                        Expression.equals(Statuses.STATUS_ID, statusId),
+                        Expression.equals(Statuses.RETWEET_ID, statusId)
+                );
+                for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
+                    mResolver.update(uri, values, where.getSQL(), null);
+                }
                 return SingleResponse.getInstance(status);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
@@ -2265,7 +2242,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mCreatingRetweetIds.put(account_id, status_id);
+            mCreatingRetweetIds.put(accountId, statusId);
 
 
             bus.post(new StatusListChangedEvent());
@@ -2273,25 +2250,14 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mCreatingRetweetIds.remove(account_id, status_id);
+            mCreatingRetweetIds.remove(accountId, statusId);
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
-                final ContentValues values = new ContentValues();
-                values.put(Statuses.MY_RETWEET_ID, status.id);
-                values.put(Statuses.RETWEET_COUNT, status.retweet_count);
-                final Expression where = Expression.or(
-                        Expression.equals(Statuses.STATUS_ID, status_id),
-                        Expression.equals(Statuses.RETWEET_ID, status_id)
-                );
-                for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
-                    mResolver.update(uri, values, where.getSQL(), null);
-                }
-
                 // BEGIN HotMobi
 
                 final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.RETWEET);
-                HotMobiLogger.getInstance(getContext()).log(account_id, event);
+                HotMobiLogger.getInstance(getContext()).log(accountId, event);
 
                 // END HotMobi
 

@@ -1142,7 +1142,7 @@ public final class Utils implements Constants {
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final long accountId = prefs.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
         final long[] accountIds = DataStoreUtils.getAccountIds(context);
-        if (accountIds.length > 0 && !ArrayUtils.contains(accountIds, accountId) && accountIds.length > 0) {
+        if (accountIds.length > 0 && !ArrayUtils.contains(accountIds, accountId)) {
              /* TODO: this is just a quick fix */
             return accountIds[0];
         }
@@ -1742,47 +1742,6 @@ public final class Utils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openMedia(final Context context, final ParcelableDirectMessage message, final ParcelableMedia current, @Nullable Bundle options) {
-        openMedia(context, message.account_id, false, null, message, current, message.media, options);
-    }
-
-    public static void openMedia(final Context context, final ParcelableStatus status, final ParcelableMedia current, Bundle options) {
-        openMedia(context, status.account_id, status.is_possibly_sensitive, status, null, current, getPrimaryMedia(status), options);
-    }
-
-    public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
-                                 final ParcelableMedia current, final ParcelableMedia[] media, Bundle options) {
-        openMedia(context, accountId, isPossiblySensitive, null, null, current, media, options);
-    }
-
-    public static void openMedia(final Context context, final long accountId, final boolean isPossiblySensitive,
-                                 final ParcelableStatus status, final ParcelableDirectMessage message,
-                                 final ParcelableMedia current, final ParcelableMedia[] media, Bundle options) {
-        if (context == null || media == null) return;
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        if (context instanceof FragmentActivity && isPossiblySensitive
-                && !prefs.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)) {
-            final FragmentActivity activity = (FragmentActivity) context;
-            final FragmentManager fm = activity.getSupportFragmentManager();
-            final DialogFragment fragment = new SensitiveContentWarningDialogFragment();
-            final Bundle args = new Bundle();
-            args.putLong(EXTRA_ACCOUNT_ID, accountId);
-            args.putParcelable(EXTRA_CURRENT_MEDIA, current);
-            if (status != null) {
-                args.putParcelable(EXTRA_STATUS, status);
-            }
-            if (message != null) {
-                args.putParcelable(EXTRA_MESSAGE, message);
-            }
-            args.putParcelableArray(EXTRA_MEDIA, media);
-            args.putBundle(EXTRA_ACTIVITY_OPTIONS, options);
-            fragment.setArguments(args);
-            fragment.show(fm, "sensitive_content_warning");
-        } else {
-            openMediaDirectly(context, accountId, status, message, current, media, options);
-        }
-    }
-
 
     @SuppressWarnings("SuspiciousSystemArraycopy")
     public static <T extends Parcelable> T[] newParcelableArray(Parcelable[] array, Parcelable.Creator<T> creator) {
@@ -1790,54 +1749,6 @@ public final class Utils implements Constants {
         final T[] result = creator.newArray(array.length);
         System.arraycopy(array, 0, result, 0, array.length);
         return result;
-    }
-
-    public static void openMediaDirectly(final Context context, final long accountId,
-                                         final ParcelableStatus status, final ParcelableMedia current,
-                                         final Bundle options) {
-        openMediaDirectly(context, accountId, status, null, current, getPrimaryMedia(status), options);
-    }
-
-    public static ParcelableMedia[] getPrimaryMedia(ParcelableStatus status) {
-        if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
-            return status.quoted_media;
-        } else {
-            return status.media;
-        }
-    }
-
-    public static void openMediaDirectly(final Context context, final long accountId,
-                                         final ParcelableDirectMessage message, final ParcelableMedia current,
-                                         final ParcelableMedia[] media, Bundle options) {
-        openMediaDirectly(context, accountId, null, message, current, media, options);
-    }
-
-    public static void openMediaDirectly(final Context context, final long accountId,
-                                         final ParcelableStatus status, final ParcelableDirectMessage message,
-                                         final ParcelableMedia current, final ParcelableMedia[] media, Bundle options) {
-        if (context == null || media == null) return;
-        if (!BuildConfig.ENABLE_MEDIA_VIEWER) {
-            final Uri parse = Uri.parse(current.url);
-            context.startActivity(new Intent(Intent.ACTION_VIEW, parse));
-            return;
-        }
-        // TODO: enable media viewer after finish cache design
-        final Intent intent = new Intent(INTENT_ACTION_VIEW_MEDIA);
-        intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
-        intent.putExtra(EXTRA_CURRENT_MEDIA, current);
-        intent.putExtra(EXTRA_MEDIA, media);
-        if (status != null) {
-            intent.putExtra(EXTRA_STATUS, status);
-        }
-        if (message != null) {
-            intent.putExtra(EXTRA_MESSAGE, message);
-        }
-        intent.setClass(context, MediaViewerActivity.class);
-        if (context instanceof Activity) {
-            ActivityCompat.startActivity((Activity) context, intent, options);
-        } else {
-            context.startActivity(intent);
-        }
     }
 
     public static void openIncomingFriendships(final Context context, final long accountId) {

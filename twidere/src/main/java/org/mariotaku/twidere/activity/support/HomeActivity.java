@@ -62,7 +62,6 @@ import android.widget.Toast;
 
 import com.desmond.asyncmanager.AsyncManager;
 import com.desmond.asyncmanager.TaskRunnable;
-import com.meizu.flyme.reflect.StatusBarProxy;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -803,7 +802,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mHomeContent.setDrawColor(true);
         mHomeContent.setDrawShadow(false);
         mHomeContent.setColor(actionBarColor, actionBarAlpha);
-        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(actionBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
         mHomeContent.setFactor(1);
         mActionBarWithOverlay.setAlpha(actionBarAlpha / 255f);
         mActionsButton.setAlpha(actionBarAlpha / 255f);

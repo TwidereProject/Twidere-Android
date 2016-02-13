@@ -399,8 +399,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
         final ParcelableStatus status = mStatusAdapter.getStatus(statusPosition);
         if (status == null) return;
-        final Bundle options = Utils.createMediaViewerActivityOption(view);
-        Utils.openMedia(getActivity(), status, media, options);
+        IntentUtils.openMedia(getActivity(), status, media, null, true);
 
         MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.DETAILS,
                 mStatusAdapter.isMediaPreviewEnabled());
@@ -476,8 +475,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(View view, ParcelableMedia media, long accountId, long extraId) {
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
-        final Bundle options = Utils.createMediaViewerActivityOption(view);
-        Utils.openMediaDirectly(getActivity(), accountId, status, media, options);
+        IntentUtils.openMediaDirectly(getActivity(), accountId, status, media, null, true);
         // BEGIN HotMobi
         MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
                 mStatusAdapter.isMediaPreviewEnabled());
@@ -1079,7 +1077,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 countsUsersHeightHolder.setVisibility(View.GONE);
             }
 
-            final ParcelableMedia[] media = Utils.getPrimaryMedia(status);
+            final ParcelableMedia[] media = IntentUtils.getPrimaryMedia(status);
 
             if (ArrayUtils.isEmpty(media)) {
                 mediaPreviewContainer.setVisibility(View.GONE);
@@ -1552,7 +1550,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             private void expandOrOpenMedia(ParcelableMedia current) {
                 if (adapter.isDetailMediaExpanded()) {
-                    Utils.openMedia(adapter.getContext(), adapter.getStatus(), current, null);
+                    IntentUtils.openMedia(adapter.getContext(), adapter.getStatus(), current, null, true);
                     return;
                 }
                 adapter.setDetailMediaExpanded(true);

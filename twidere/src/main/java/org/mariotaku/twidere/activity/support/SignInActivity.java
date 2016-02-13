@@ -60,7 +60,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.meizu.flyme.reflect.StatusBarProxy;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.restfu.http.Authorization;
@@ -567,10 +566,11 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     private void setupTintStatusBar() {
         if (mMainContent == null) return;
 
-        final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ? getCurrentThemeBackgroundAlpha() : 0xFF;
-        final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getCurrentThemeResourceId(), getThemeBackgroundOption());
+        final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ?
+                getCurrentThemeBackgroundAlpha() : 0xFF;
+        final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(),
+                getCurrentThemeResourceId(), getThemeBackgroundOption());
         mMainContent.setColor(statusBarColor, alpha);
-        StatusBarProxy.setStatusBarDarkIcon(getWindow(), TwidereColorUtils.getYIQLuminance(statusBarColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD);
 
         mMainContent.setDrawShadow(false);
         mMainContent.setDrawColor(true);

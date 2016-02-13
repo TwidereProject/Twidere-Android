@@ -322,8 +322,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = ParcelableActivity.getActivityStatus(adapter.getActivity(position));
         if (status == null) return;
-        final Bundle options = Utils.createMediaViewerActivityOption(view);
-        Utils.openMedia(getActivity(), status, media, options);
+        IntentUtils.openMedia(getActivity(), status, media, null, true);
         // BEGIN HotMobi
         final MediaEvent event = MediaEvent.create(getActivity(), status, media,
                 getTimelineType(), adapter.isMediaPreviewEnabled());
