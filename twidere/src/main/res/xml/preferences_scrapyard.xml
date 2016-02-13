@@ -71,8 +71,4 @@
         android:key="leftside_compose_button"
         android:summary="@string/leftside_compose_button_summary"
         android:title="@string/leftside_compose_button"/>
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
-        android:defaultValue="false"
-        android:key="sort_timeline_by_id"
-        android:title="@string/sort_timeline_by_id"/>
 </PreferenceScreen>
