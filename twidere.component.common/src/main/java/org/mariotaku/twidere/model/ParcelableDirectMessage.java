@@ -30,33 +30,28 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
-
-import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 
 @ParcelablePlease(allFields = false)
 @JsonObject
 @CursorObject(valuesCreator = true)
 public class ParcelableDirectMessage implements Parcelable, Comparable<ParcelableDirectMessage> {
 
-    public static final Comparator<ParcelableDirectMessage> MESSAGE_ID_COMPARATOR = new Comparator<ParcelableDirectMessage>() {
+    public static final Creator<ParcelableDirectMessage> CREATOR = new Creator<ParcelableDirectMessage>() {
+        public ParcelableDirectMessage createFromParcel(Parcel source) {
+            ParcelableDirectMessage target = new ParcelableDirectMessage();
+            ParcelableDirectMessageParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
 
-        @Override
-        public int compare(final ParcelableDirectMessage object1, final ParcelableDirectMessage object2) {
-            final long diff = object2.id - object1.id;
-            if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-            if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
-            return (int) diff;
+        public ParcelableDirectMessage[] newArray(int size) {
+            return new ParcelableDirectMessage[size];
         }
     };
-
 
     @ParcelableThisPlease
     @JsonField(name = "account_id")
@@ -132,30 +127,6 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     public ParcelableDirectMessage() {
     }
 
-    public ParcelableDirectMessage(final DirectMessage message, final long account_id, final boolean is_outgoing) {
-        this.account_id = account_id;
-        this.is_outgoing = is_outgoing;
-        final User sender = message.getSender(), recipient = message.getRecipient();
-        assert sender != null && recipient != null;
-        final String sender_profile_image_url = TwitterContentUtils.getProfileImageUrl(sender);
-        final String recipient_profile_image_url = TwitterContentUtils.getProfileImageUrl(recipient);
-        id = message.getId();
-        timestamp = getTime(message.getCreatedAt());
-        sender_id = sender.getId();
-        recipient_id = recipient.getId();
-        text_html = TwitterContentUtils.formatDirectMessageText(message);
-        text_plain = message.getText();
-        sender_name = sender.getName();
-        recipient_name = recipient.getName();
-        sender_screen_name = sender.getScreenName();
-        recipient_screen_name = recipient.getScreenName();
-        this.sender_profile_image_url = sender_profile_image_url;
-        this.recipient_profile_image_url = recipient_profile_image_url;
-        text_unescaped = toPlainText(text_html);
-        media = ParcelableMedia.fromEntities(message);
-    }
-
-
     @Override
     public int compareTo(@NonNull final ParcelableDirectMessage another) {
         final long diff = another.id - id;
@@ -186,19 +157,25 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
 
     @Override
     public String toString() {
-        return "ParcelableDirectMessage{account_id=" + account_id + ", id=" + id + ", timestamp=" + timestamp
-                + ", sender_id=" + sender_id + ", recipient_id=" + recipient_id + ", is_outgoing=" + is_outgoing
-                + ", text_html=" + text_html + ", text_plain=" + text_plain + ", text_unescaped=" + text_unescaped
-                + ", sender_name=" + sender_name + ", recipient_name=" + recipient_name + ", sender_screen_name="
-                + sender_screen_name + ", recipient_screen_name=" + recipient_screen_name
-                + ", sender_profile_image_url=" + sender_profile_image_url + ", recipient_profile_image_url="
-                + recipient_profile_image_url + "}";
+        return "ParcelableDirectMessage{" +
+                "account_id=" + account_id +
+                ", id=" + id +
+                ", timestamp=" + timestamp +
+                ", sender_id=" + sender_id +
+                ", recipient_id=" + recipient_id +
+                ", is_outgoing=" + is_outgoing +
+                ", text_html='" + text_html + '\'' +
+                ", text_plain='" + text_plain + '\'' +
+                ", text_unescaped='" + text_unescaped + '\'' +
+                ", sender_name='" + sender_name + '\'' +
+                ", recipient_name='" + recipient_name + '\'' +
+                ", sender_screen_name='" + sender_screen_name + '\'' +
+                ", recipient_screen_name='" + recipient_screen_name + '\'' +
+                ", sender_profile_image_url='" + sender_profile_image_url + '\'' +
+                ", recipient_profile_image_url='" + recipient_profile_image_url + '\'' +
+                ", media=" + Arrays.toString(media) +
+                '}';
     }
-
-    private static long getTime(final Date date) {
-        return date != null ? date.getTime() : 0;
-    }
-
 
     @Override
     public int describeContents() {
@@ -209,16 +186,4 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableDirectMessageParcelablePlease.writeToParcel(this, dest, flags);
     }
-
-    public static final Creator<ParcelableDirectMessage> CREATOR = new Creator<ParcelableDirectMessage>() {
-        public ParcelableDirectMessage createFromParcel(Parcel source) {
-            ParcelableDirectMessage target = new ParcelableDirectMessage();
-            ParcelableDirectMessageParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        public ParcelableDirectMessage[] newArray(int size) {
-            return new ParcelableDirectMessage[size];
-        }
-    };
 }

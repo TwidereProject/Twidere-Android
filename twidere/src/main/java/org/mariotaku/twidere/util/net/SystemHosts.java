@@ -29,6 +29,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -39,7 +41,7 @@ public class SystemHosts {
     private static final String HOSTS_PATH = "/system/etc/hosts";
 
     @NonNull
-    public InetAddress[] resolve(String hostToResolve) throws IOException {
+    public List<InetAddress> resolve(String hostToResolve) throws IOException {
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(HOSTS_PATH));
@@ -54,7 +56,7 @@ public class SystemHosts {
                     if (host.startsWith("#")) break;
                     if (TextUtils.equals(hostToResolve, host)) {
                         final InetAddress resolved = TwidereDns.getResolvedIPAddress(host, address);
-                        if (resolved != null) return new InetAddress[]{resolved};
+                        if (resolved != null) return Collections.singletonList(resolved);
                     }
                 }
             }

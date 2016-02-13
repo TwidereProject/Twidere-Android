@@ -32,6 +32,7 @@ import org.mariotaku.twidere.util.net.TwidereDns;
 import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
+import okhttp3.ConnectionPool;
 
 /**
  * Created by mariotaku on 15/12/31.
@@ -55,6 +56,8 @@ public class DependencyHolder {
     TwidereValidator mValidator;
     @Inject
     SharedPreferencesWrapper mPreferences;
+    @Inject
+    ConnectionPool mConnectionPoll;
 
     DependencyHolder(Context context) {
         GeneralComponentHelper.build(context).inject(this);
@@ -97,4 +100,7 @@ public class DependencyHolder {
         return mPreferences;
     }
 
+    public ConnectionPool getConnectionPoll() {
+        return mConnectionPoll;
+    }
 }

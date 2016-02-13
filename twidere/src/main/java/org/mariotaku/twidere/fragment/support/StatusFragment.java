@@ -108,6 +108,7 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
@@ -1534,11 +1535,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             public void onLinkClick(String link, String orig, long accountId, long extraId, int type, boolean sensitive, int start, int end) {
                 final ParcelableStatus status = adapter.getStatus();
                 ParcelableMedia current;
-                if ((current = ParcelableMedia.findByUrl(status.media, link)) != null) {
+                if ((current = ParcelableMediaUtils.findByUrl(status.media, link)) != null) {
                     expandOrOpenMedia(current);
                     return;
                 }
-                if ((current = ParcelableMedia.findByUrl(status.quoted_media, link)) != null) {
+                if ((current = ParcelableMediaUtils.findByUrl(status.quoted_media, link)) != null) {
                     expandOrOpenMedia(current);
                     return;
                 }

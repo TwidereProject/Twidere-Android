@@ -99,7 +99,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
                                                                     final boolean fromUser) {
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
-        final String sortOrder = getSortOrder();
+        final String sortOrder = Statuses.DEFAULT_SORT_ORDER;
         final long[] accountIds = getAccountIds();
         final Expression accountWhere = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountIds));
         final Expression filterWhere = getFiltersWhere(table), where;
@@ -300,8 +300,4 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
 
     protected abstract void updateRefreshState();
 
-    private String getSortOrder() {
-        final boolean sortById = mPreferences.getBoolean(KEY_SORT_TIMELINE_BY_ID, false);
-        return sortById ? Statuses.SORT_ORDER_STATUS_ID_DESC : Statuses.SORT_ORDER_TIMESTAMP_DESC;
-    }
 }

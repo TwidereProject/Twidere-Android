@@ -61,7 +61,7 @@ public class CacheProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Nullable

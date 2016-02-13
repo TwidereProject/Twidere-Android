@@ -22,6 +22,7 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -119,7 +120,7 @@ public abstract class GetActivitiesTask extends TaskRunnable<RefreshTaskParam, O
         Arrays.fill(deleteBound, -1);
         List<ContentValues> valuesList = new ArrayList<>();
         for (Activity activity : activities) {
-            final ParcelableActivity parcelableActivity = new ParcelableActivity(activity, accountId, false);
+            final ParcelableActivity parcelableActivity = ParcelableActivityUtils.fromActivity(activity, accountId, false);
             if (deleteBound[0] < 0) {
                 deleteBound[0] = parcelableActivity.min_position;
             } else {

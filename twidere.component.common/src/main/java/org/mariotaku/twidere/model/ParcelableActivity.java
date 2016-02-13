@@ -43,6 +43,18 @@ import java.util.Arrays;
 @CursorObject(valuesCreator = true)
 public class ParcelableActivity implements Comparable<ParcelableActivity>, Parcelable {
 
+    public static final Creator<ParcelableActivity> CREATOR = new Creator<ParcelableActivity>() {
+        public ParcelableActivity createFromParcel(Parcel source) {
+            ParcelableActivity target = new ParcelableActivity();
+            ParcelableActivityParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ParcelableActivity[] newArray(int size) {
+            return new ParcelableActivity[size];
+        }
+    };
+
     @ParcelableThisPlease
     @CursorField(value = Activities._ID, excludeWrite = true)
     public long _id;
@@ -109,34 +121,11 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @JsonField(name = "status_user_following")
     @CursorField(value = Activities.STATUS_USER_FOLLOWING, excludeWrite = true)
     public boolean status_user_following;
-
-
     public transient long[] after_filtered_source_ids;
     public transient ParcelableUser[] after_filtered_sources;
 
-    public ParcelableActivity() {
-    }
 
-    public ParcelableActivity(final Activity activity, final long accountId, boolean isGap) {
-        this.account_id = accountId;
-        timestamp = activity.getCreatedAt().getTime();
-        action = activity.getAction();
-        max_position = activity.getMaxPosition();
-        min_position = activity.getMinPosition();
-        sources = ParcelableUser.fromUsers(activity.getSources(), accountId);
-        target_users = ParcelableUser.fromUsers(activity.getTargetUsers(), accountId);
-        target_user_lists = ParcelableUserList.fromUserLists(activity.getTargetUserLists(), accountId);
-        target_statuses = ParcelableStatus.fromStatuses(activity.getTargetStatuses(), accountId);
-        target_object_statuses = ParcelableStatus.fromStatuses(activity.getTargetObjectStatuses(), accountId);
-        target_object_user_lists = ParcelableUserList.fromUserLists(activity.getTargetObjectUserLists(), accountId);
-        target_object_users = ParcelableUser.fromUsers(activity.getTargetObjectUsers(), accountId);
-        if (sources != null) {
-            source_ids = new long[sources.length];
-            for (int i = 0; i < sources.length; i++) {
-                source_ids[i] = sources[i].id;
-            }
-        }
-        this.is_gap = isGap;
+    public ParcelableActivity() {
     }
 
     @Nullable
@@ -149,6 +138,14 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
             return activity.target_statuses[0];
         }
         return null;
+    }
+
+    public static int calculateHashCode(long account_id, long timestamp, long max_position, long min_position) {
+        int result = (int) (account_id ^ (account_id >>> 32));
+        result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
+        result = 31 * result + (int) (max_position ^ (max_position >>> 32));
+        result = 31 * result + (int) (min_position ^ (min_position >>> 32));
+        return result;
     }
 
     @Override
@@ -175,14 +172,6 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         return calculateHashCode(account_id, timestamp, max_position, min_position);
     }
 
-    public static int calculateHashCode(long account_id, long timestamp, long max_position, long min_position) {
-        int result = (int) (account_id ^ (account_id >>> 32));
-        result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
-        result = 31 * result + (int) (max_position ^ (max_position >>> 32));
-        result = 31 * result + (int) (min_position ^ (min_position >>> 32));
-        return result;
-    }
-
     @Override
     public int compareTo(@NonNull final ParcelableActivity another) {
         final long delta = another.timestamp - timestamp;
@@ -198,7 +187,6 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         return max_position == activity.max_position && min_position == activity.min_position;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -208,17 +196,5 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableActivityParcelablePlease.writeToParcel(this, dest, flags);
     }
-
-    public static final Creator<ParcelableActivity> CREATOR = new Creator<ParcelableActivity>() {
-        public ParcelableActivity createFromParcel(Parcel source) {
-            ParcelableActivity target = new ParcelableActivity();
-            ParcelableActivityParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        public ParcelableActivity[] newArray(int size) {
-            return new ParcelableActivity[size];
-        }
-    };
 
 }

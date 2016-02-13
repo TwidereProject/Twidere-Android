@@ -131,7 +131,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         builder.url(requestUri);
         builder.headers(additionalHeaders);
         final HttpResponse resp = mClient.newCall(builder.build()).execute();
-        if (!resp.isSuccessful()) throw new IOException("Unable to get media");
+        if (!resp.isSuccessful()) throw new IOException("Unable to get media, response code: " + resp.getStatus());
         final Body body = resp.getBody();
         return new CacheDownloadLoader.DownloadResult(body.length(), body.stream());
     }

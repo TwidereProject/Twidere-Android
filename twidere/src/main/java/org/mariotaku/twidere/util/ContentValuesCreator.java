@@ -51,6 +51,8 @@ import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -182,7 +184,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.RECIPIENT_SCREEN_NAME, recipient.getScreenName());
         values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, sender_profile_image_url);
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, recipient_profile_image_url);
-        final ParcelableMedia[] mediaArray = ParcelableMedia.fromEntities(message);
+        final ParcelableMedia[] mediaArray = ParcelableMediaUtils.fromEntities(message);
         try {
             values.put(DirectMessages.MEDIA_JSON, LoganSquare.serialize(Arrays.asList(mediaArray), ParcelableMedia.class));
         } catch (IOException ignored) {
@@ -268,7 +270,7 @@ public final class ContentValuesCreator implements TwidereConstants {
 
     @NonNull
     public static ContentValues createStatus(final Status orig, final long accountId) {
-        return ParcelableStatusValuesCreator.create(new ParcelableStatus(orig, accountId, false));
+        return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.fromStatus(orig, accountId, false));
     }
 
     @NonNull

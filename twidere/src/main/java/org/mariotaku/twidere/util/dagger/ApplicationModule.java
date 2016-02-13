@@ -72,6 +72,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import edu.tsinghua.hotmobi.HotMobiLogger;
+import okhttp3.ConnectionPool;
 
 import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 
@@ -133,8 +134,15 @@ public class ApplicationModule implements Constants {
 
     @Provides
     @Singleton
-    public RestHttpClient restHttpClient(SharedPreferencesWrapper prefs, TwidereDns dns) {
-        return HttpClientFactory.createRestHttpClient(application, prefs, dns);
+    public RestHttpClient restHttpClient(final SharedPreferencesWrapper prefs, final TwidereDns dns,
+                                         final ConnectionPool connectionPool) {
+        return HttpClientFactory.createRestHttpClient(application, prefs, dns, connectionPool);
+    }
+
+    @Provides
+    @Singleton
+    public ConnectionPool connectionPoll() {
+        return new ConnectionPool();
     }
 
     @Provides

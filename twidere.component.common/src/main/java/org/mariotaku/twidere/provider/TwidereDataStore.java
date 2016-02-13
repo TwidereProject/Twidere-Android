@@ -844,11 +844,7 @@ public interface TwidereDataStore {
 
         String CARD_NAME = "card_type";
 
-        String SORT_ORDER_TIMESTAMP_DESC = STATUS_TIMESTAMP + " DESC";
-
-        String SORT_ORDER_STATUS_ID_DESC = STATUS_ID + " DESC";
-
-        String DEFAULT_SORT_ORDER = SORT_ORDER_TIMESTAMP_DESC;
+        String DEFAULT_SORT_ORDER = STATUS_TIMESTAMP + " DESC, " + STATUS_ID + " DESC";
 
         String QUOTED_ID = "quoted_id";
         String QUOTED_TEXT_HTML = "quoted_text_html";

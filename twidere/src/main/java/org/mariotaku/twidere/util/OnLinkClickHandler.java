@@ -29,6 +29,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
@@ -104,7 +105,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     }
 
     protected void openMedia(long accountId, long extraId, boolean sensitive, String link, int start, int end) {
-        final ParcelableMedia[] media = {ParcelableMedia.image(link)};
+        final ParcelableMedia[] media = {ParcelableMediaUtils.image(link)};
         //TODO open media animation
         Utils.openMedia(context, accountId, sensitive, null, media, null);
     }

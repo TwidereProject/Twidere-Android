@@ -37,6 +37,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
@@ -152,7 +153,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 && statuses.size() >= loadItemLimit;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
-            data.add(new ParcelableStatus(status, mAccountId, insertGap && isGapEnabled() && minIdx == i));
+            data.add(ParcelableStatusUtils.fromStatus(status, mAccountId, insertGap && isGapEnabled() && minIdx == i));
         }
 
         final SQLiteDatabase db = TwidereApplication.getInstance(context).getSQLiteDatabase();

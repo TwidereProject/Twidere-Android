@@ -16,7 +16,15 @@ public class TwitterMediaProvider implements Provider {
     @Override
     public boolean supports(@NonNull String link) {
         final String authority = PreviewMediaExtractor.getAuthority(link);
-        return authority != null && authority.endsWith(".twimg.com");
+        if (authority == null || !authority.endsWith(".twimg.com")) {
+            return false;
+        }
+        final String path = PreviewMediaExtractor.getPath(link);
+        if (path == null) return false;
+        if (path.startsWith("/media/")) {
+            return true;
+        }
+        return false;
     }
 
     @Nullable
@@ -26,17 +34,16 @@ public class TwitterMediaProvider implements Provider {
         if (path == null) return null;
         final ParcelableMedia media = new ParcelableMedia();
         media.url = link;
-        if (path.startsWith("/tweet_video/")) {
-            // Video is not supported yet
-            return null;
-        } else if (path.startsWith("/media/")) {
+        if (path.startsWith("/media/")) {
             media.type = ParcelableMedia.Type.IMAGE;
             media.preview_url = String.format(Locale.ROOT, "%s:medium", link);
             media.media_url = String.format(Locale.ROOT, "%s:orig", link);
+        } else if (path.startsWith("/tweet_video/")) {
+            // Video is not supported yet
+            return null;
         } else {
-            media.type = ParcelableMedia.Type.IMAGE;
-            media.preview_url = link;
-            media.media_url = link;
+            // Don't display media that not supported yet
+            return null;
         }
 
         return media;

@@ -7,9 +7,9 @@ import android.text.TextUtils;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.okhttp.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
+import org.mariotaku.twidere.util.net.OkHttpRestClient;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import java.io.IOException;
@@ -17,6 +17,7 @@ import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
+import okhttp3.ConnectionPool;
 import okhttp3.Credentials;
 import okhttp3.Dns;
 import okhttp3.OkHttpClient;
@@ -32,26 +33,29 @@ import static android.text.TextUtils.isEmpty;
 public class HttpClientFactory implements Constants {
 
     public static RestHttpClient createRestHttpClient(final Context context,
-                                                      final SharedPreferences prefs, final Dns dns) {
+                                                      final SharedPreferences prefs, final Dns dns,
+                                                      final ConnectionPool connectionPool) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        initOkHttpClient(context, prefs, builder, dns);
+        initOkHttpClient(context, prefs, builder, dns, connectionPool);
         return new OkHttpRestClient(builder.build());
     }
 
     public static void initOkHttpClient(final Context context, final SharedPreferences prefs,
-                                        final OkHttpClient.Builder builder, final Dns dns) {
-        updateHttpClientConfiguration(context, prefs, dns, builder);
+                                        final OkHttpClient.Builder builder, final Dns dns,
+                                        final ConnectionPool connectionPool) {
+        updateHttpClientConfiguration(context, builder, prefs, dns, connectionPool);
         DebugModeUtils.initForOkHttpClient(builder);
     }
 
     @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
     public static void updateHttpClientConfiguration(final Context context,
-                                                     final SharedPreferences prefs,
-                                                     final Dns dns, final OkHttpClient.Builder builder) {
+                                                     final OkHttpClient.Builder builder,
+                                                     final SharedPreferences prefs, final Dns dns,
+                                                     final ConnectionPool connectionPool) {
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
-        builder.readTimeout(3, TimeUnit.SECONDS);
-        builder.writeTimeout(3, TimeUnit.SECONDS);
-        builder.connectTimeout(3, TimeUnit.SECONDS);
+        builder.connectTimeout(prefs.getInt(KEY_CONNECTION_TIMEOUT, 10), TimeUnit.SECONDS);
+        builder.retryOnConnectionFailure(false);
+        builder.connectionPool(connectionPool);
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
             final String proxyHost = prefs.getString(KEY_PROXY_HOST, null);
@@ -98,14 +102,13 @@ public class HttpClientFactory implements Constants {
 
     public static void reloadConnectivitySettings(Context context) {
         DependencyHolder holder = DependencyHolder.get(context);
+        holder.getConnectionPoll().evictAll();
         final RestHttpClient client = holder.getRestHttpClient();
         if (client instanceof OkHttpRestClient) {
             final OkHttpClient.Builder builder = new OkHttpClient.Builder();
             initOkHttpClient(context, holder.getPreferences(), builder,
-                    holder.getDns());
+                    holder.getDns(), holder.getConnectionPoll());
             final OkHttpRestClient restClient = (OkHttpRestClient) client;
-            // Kill all connections
-            restClient.getClient().connectionPool().evictAll();
             restClient.setClient(builder.build());
         }
     }

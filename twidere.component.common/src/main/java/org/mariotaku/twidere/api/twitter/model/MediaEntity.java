@@ -66,25 +66,6 @@ public class MediaEntity extends UrlEntity {
         return features;
     }
 
-    @Override
-    public String toString() {
-        return "MediaEntity{" +
-                "id=" + id +
-                ", indices=" + indices +
-                ", mediaUrl='" + mediaUrl + '\'' +
-                ", mediaUrlHttps='" + mediaUrlHttps + '\'' +
-                ", url='" + url + '\'' +
-                ", displayUrl='" + displayUrl + '\'' +
-                ", expandedUrl='" + expandedUrl + '\'' +
-                ", type=" + type +
-                ", sizes=" + sizes +
-                ", sourceStatusId=" + sourceStatusId +
-                ", sourceUserId=" + sourceUserId +
-                ", videoInfo=" + videoInfo +
-                ", features=" + features +
-                '}';
-    }
-
     public String getMediaUrl() {
         return mediaUrl;
     }
@@ -109,9 +90,8 @@ public class MediaEntity extends UrlEntity {
         return url;
     }
 
-    public
     @Type
-    String getType() {
+    public String getType() {
         return type;
     }
 
@@ -129,6 +109,25 @@ public class MediaEntity extends UrlEntity {
 
     public long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "MediaEntity{" +
+                "id=" + id +
+                ", indices=" + indices +
+                ", mediaUrl='" + mediaUrl + '\'' +
+                ", mediaUrlHttps='" + mediaUrlHttps + '\'' +
+                ", url='" + url + '\'' +
+                ", displayUrl='" + displayUrl + '\'' +
+                ", expandedUrl='" + expandedUrl + '\'' +
+                ", type=" + type +
+                ", sizes=" + sizes +
+                ", sourceStatusId=" + sourceStatusId +
+                ", sourceUserId=" + sourceUserId +
+                ", videoInfo=" + videoInfo +
+                ", features=" + features +
+                '}';
     }
 
     public @interface Type {
@@ -271,14 +270,6 @@ public class MediaEntity extends UrlEntity {
         @JsonField(name = "resize")
         String resize;
 
-        @Override
-        public String toString() {
-            return "Size{" +
-                    "width=" + width +
-                    ", height=" + height +
-                    ", resize='" + resize + '\'' +
-                    '}';
-        }
 
         public int getHeight() {
             return height;
@@ -290,6 +281,15 @@ public class MediaEntity extends UrlEntity {
 
         public int getWidth() {
             return width;
+        }
+
+        @Override
+        public String toString() {
+            return "Size{" +
+                    "width=" + width +
+                    ", height=" + height +
+                    ", resize='" + resize + '\'' +
+                    '}';
         }
     }
 }

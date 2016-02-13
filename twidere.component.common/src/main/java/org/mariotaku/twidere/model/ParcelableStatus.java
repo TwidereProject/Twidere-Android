@@ -37,11 +37,8 @@ import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.twidere.util.HtmlEscapeHelper;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -313,117 +310,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     };
 
 
-    ParcelableStatus() {
+    public ParcelableStatus() {
     }
 
-    public ParcelableStatus(final Status orig, final long account_id, final boolean is_gap) {
-        this.is_gap = is_gap;
-        this.account_id = account_id;
-        id = orig.getId();
-        timestamp = getTime(orig.getCreatedAt());
-
-        final Status retweetedStatus = orig.getRetweetedStatus();
-        final User retweetUser = retweetedStatus != null ? orig.getUser() : null;
-        is_retweet = orig.isRetweet();
-        retweeted = orig.wasRetweeted();
-        if (retweetedStatus != null) {
-            retweet_id = retweetedStatus.getId();
-            retweet_timestamp = getTime(retweetedStatus.getCreatedAt());
-            retweeted_by_user_id = retweetUser.getId();
-            retweeted_by_user_name = retweetUser.getName();
-            retweeted_by_user_screen_name = retweetUser.getScreenName();
-            retweeted_by_user_profile_image = TwitterContentUtils.getProfileImageUrl(retweetUser);
-        }
-
-        final Status quoted = orig.getQuotedStatus();
-        is_quote = orig.isQuote();
-        if (quoted != null) {
-            final User quoted_user = quoted.getUser();
-            quoted_id = quoted.getId();
-            quoted_text_html = TwitterContentUtils.formatStatusText(quoted);
-            quoted_text_plain = TwitterContentUtils.unescapeTwitterStatusText(quoted.getText());
-            quoted_text_unescaped = HtmlEscapeHelper.toPlainText(quoted_text_html);
-            quoted_timestamp = quoted.getCreatedAt().getTime();
-            quoted_source = quoted.getSource();
-            quoted_media = ParcelableMedia.fromStatus(quoted);
-            quoted_location = ParcelableLocation.fromGeoLocation(quoted.getGeoLocation());
-            quoted_place_full_name = getPlaceFullName(quoted.getPlace());
-
-            quoted_user_id = quoted_user.getId();
-            quoted_user_name = quoted_user.getName();
-            quoted_user_screen_name = quoted_user.getScreenName();
-            quoted_user_profile_image = TwitterContentUtils.getProfileImageUrl(quoted_user);
-            quoted_user_is_protected = quoted_user.isProtected();
-            quoted_user_is_verified = quoted_user.isVerified();
-        }
-
-        final Status status;
-        if (retweetedStatus != null) {
-            status = retweetedStatus;
-            reply_count = retweetedStatus.getReplyCount();
-            retweet_count = retweetedStatus.getRetweetCount();
-            favorite_count = retweetedStatus.getFavoriteCount();
-
-
-            in_reply_to_name = TwitterContentUtils.getInReplyToName(retweetedStatus);
-            in_reply_to_screen_name = retweetedStatus.getInReplyToScreenName();
-            in_reply_to_status_id = retweetedStatus.getInReplyToStatusId();
-            in_reply_to_user_id = retweetedStatus.getInReplyToUserId();
-        } else {
-            status = orig;
-            reply_count = orig.getReplyCount();
-            retweet_count = orig.getRetweetCount();
-            favorite_count = orig.getFavoriteCount();
-
-            in_reply_to_name = TwitterContentUtils.getInReplyToName(orig);
-            in_reply_to_screen_name = orig.getInReplyToScreenName();
-            in_reply_to_status_id = orig.getInReplyToStatusId();
-            in_reply_to_user_id = orig.getInReplyToUserId();
-        }
-
-        final User user = status.getUser();
-        user_id = user.getId();
-        user_name = user.getName();
-        user_screen_name = user.getScreenName();
-        user_profile_image_url = TwitterContentUtils.getProfileImageUrl(user);
-        user_is_protected = user.isProtected();
-        user_is_verified = user.isVerified();
-        user_is_following = user.isFollowing();
-        text_html = TwitterContentUtils.formatStatusText(status);
-        media = ParcelableMedia.fromStatus(status);
-        text_plain = TwitterContentUtils.unescapeTwitterStatusText(status.getText());
-        source = status.getSource();
-        location = ParcelableLocation.fromGeoLocation(status.getGeoLocation());
-        is_favorite = status.isFavorited();
-        text_unescaped = HtmlEscapeHelper.toPlainText(text_html);
-        my_retweet_id = retweeted_by_user_id == account_id ? id : status.getCurrentUserRetweet();
-        is_possibly_sensitive = status.isPossiblySensitive();
-        mentions = ParcelableUserMention.fromUserMentionEntities(status.getUserMentionEntities());
-        card = ParcelableCardEntity.fromCardEntity(status.getCard(), account_id);
-        place_full_name = getPlaceFullName(status.getPlace());
-        card_name = card != null ? card.name : null;
-        lang = status.getLang();
-    }
-
-    @Nullable
-    private static String getPlaceFullName(@Nullable Place place) {
-        if (place == null) return null;
-        return place.getFullName();
-    }
-
-    private static long getTime(final Date date) {
-        return date != null ? date.getTime() : 0;
-    }
-
-    public static ParcelableStatus[] fromStatuses(Status[] statuses, long accountId) {
-        if (statuses == null) return null;
-        int size = statuses.length;
-        final ParcelableStatus[] result = new ParcelableStatus[size];
-        for (int i = 0; i < size; i++) {
-            result[i] = new ParcelableStatus(statuses[i], accountId, false);
-        }
-        return result;
-    }
 
     @AfterCursorObjectCreated
     void finishCursorObjectCreation() {

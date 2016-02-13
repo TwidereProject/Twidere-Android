@@ -32,6 +32,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.DraftItemCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -74,7 +75,7 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
         final String actionName = getActionName(context, actionType);
         holder.media_preview_container.setStyle(mMediaPreviewStyle);
         if (actionType == Drafts.ACTION_UPDATE_STATUS) {
-            final ParcelableMedia[] media = ParcelableMedia.fromMediaUpdates(mediaUpdates);
+            final ParcelableMedia[] media = ParcelableMediaUtils.fromMediaUpdates(mediaUpdates);
             holder.media_preview_container.setVisibility(View.VISIBLE);
             holder.media_preview_container.displayMedia(media, mImageLoader, -1, -1, null,
                     mMediaLoadingHandler);
