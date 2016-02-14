@@ -50,6 +50,7 @@ import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.provider.TwidereDataProvider;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.service.RefreshService;
+import org.mariotaku.twidere.task.GetDirectMessagesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.task.twitter.GetStatusesTask;
@@ -141,4 +142,6 @@ public interface GeneralComponent {
     void inject(GetStatusesTask task);
 
     void inject(GetActivitiesTask task);
+
+    void inject(GetDirectMessagesTask task);
 }

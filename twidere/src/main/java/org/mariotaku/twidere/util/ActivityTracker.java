@@ -27,6 +27,7 @@ import android.os.Bundle;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
+import org.mariotaku.twidere.activity.support.HomeActivity;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.PreProcessing;
@@ -39,6 +40,7 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
 
     private final IntList mInternalStack = new ArrayIntList();
     private SessionEvent mSessionEvent;
+    private boolean mHomeActivityStarted;
 
     private boolean isSwitchingInSameTask(int hashCode) {
         return mInternalStack.lastIndexOf(hashCode) < mInternalStack.size() - 1;
@@ -60,6 +62,9 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityStarted(final Activity activity) {
         mInternalStack.add(System.identityHashCode(activity));
+        if (activity instanceof HomeActivity) {
+            mHomeActivityStarted = true;
+        }
         // BEGIN HotMobi
         if (mSessionEvent == null) {
             mSessionEvent = SessionEvent.create(activity);
@@ -80,7 +85,9 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityStopped(Activity activity) {
         final int hashCode = System.identityHashCode(activity);
-
+        if (activity instanceof HomeActivity) {
+            mHomeActivityStarted = false;
+        }
         // BEGIN HotMobi
         final SessionEvent event = mSessionEvent;
         if (event != null && !isSwitchingInSameTask(hashCode)) {
@@ -108,4 +115,7 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
 
     }
 
+    public boolean isHomeActivityStarted() {
+        return mHomeActivityStarted;
+    }
 }

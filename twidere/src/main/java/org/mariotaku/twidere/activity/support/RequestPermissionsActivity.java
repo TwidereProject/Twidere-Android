@@ -39,8 +39,6 @@ import static android.text.TextUtils.isEmpty;
 
 public class RequestPermissionsActivity extends BaseSupportDialogActivity implements OnClickListener {
 
-    private PermissionsManager mPermissionsManager;
-
     private ImageView mIconView;
     private TextView mNameView, mDescriptionView, mMessageView;
     private Button mAcceptButton, mDenyButton;
@@ -80,7 +78,6 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
     protected void onCreate(final Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        mPermissionsManager = new PermissionsManager(this);
         setContentView(R.layout.activity_request_permissions);
         mAcceptButton.setOnClickListener(this);
         mDenyButton.setOnClickListener(this);

@@ -424,7 +424,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     protected void onStart() {
         super.onStart();
         mMultiSelectHandler.dispatchOnStart();
-        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONSTART));
         final ContentResolver resolver = getContentResolver();
         resolver.registerContentObserver(Accounts.CONTENT_URI, true, mAccountChangeObserver);
         mBus.register(this);
@@ -462,7 +461,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mAccountChangeObserver);
         mPreferences.edit().putInt(KEY_SAVED_TAB_POSITION, mViewPager.getCurrentItem()).apply();
-        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONSTOP));
 
         super.onStop();
     }

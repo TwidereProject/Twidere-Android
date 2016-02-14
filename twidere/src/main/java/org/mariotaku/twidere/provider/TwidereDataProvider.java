@@ -21,13 +21,11 @@ package org.mariotaku.twidere.provider;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
@@ -110,6 +108,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.receiver.NotificationReceiver;
 import org.mariotaku.twidere.service.BackgroundOperationService;
+import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ImagePreloader;
@@ -171,29 +170,18 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     UserColorNameManager mUserColorNameManager;
     @Inject
     BidiFormatter mBidiFormatter;
+    @Inject
+    ActivityTracker mActivityTracker;
+    @Inject
+    PermissionsManager mPermissionsManager;
 
     private Handler mHandler;
     private ContentResolver mContentResolver;
     private SQLiteDatabaseWrapper mDatabaseWrapper;
-    private PermissionsManager mPermissionsManager;
     private ImagePreloader mImagePreloader;
     private Executor mBackgroundExecutor;
-    private boolean mHomeActivityInBackground;
     private boolean mNameFirst;
     private boolean mUseStarForLikes;
-
-    private final BroadcastReceiver mHomeActivityStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            final String action = intent.getAction();
-            if (BROADCAST_HOME_ACTIVITY_ONSTART.equals(action)) {
-                mHomeActivityInBackground = false;
-            } else if (BROADCAST_HOME_ACTIVITY_ONSTOP.equals(action)) {
-                mHomeActivityInBackground = true;
-            }
-        }
-
-    };
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, @NotificationType String type,
                                                          long accountId, long position, boolean extraUserFollowing) {
@@ -571,12 +559,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         mPreferences.registerOnSharedPreferenceChangeListener(this);
         mBackgroundExecutor = Executors.newSingleThreadExecutor();
         updatePreferences();
-        mPermissionsManager = new PermissionsManager(context);
         mImagePreloader = new ImagePreloader(context, mMediaLoader);
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(BROADCAST_HOME_ACTIVITY_ONSTART);
-        filter.addAction(BROADCAST_HOME_ACTIVITY_ONSTOP);
-        context.registerReceiver(mHomeActivityStateReceiver, filter);
         // final GetWritableDatabaseTask task = new
         // GetWritableDatabaseTask(context, helper, mDatabaseWrapper);
         // task.executeTask();
@@ -1144,7 +1127,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private boolean isNotificationAudible() {
-        return mHomeActivityInBackground && !Utils.isNotificationsSilent(getContext());
+        return !mActivityTracker.isHomeActivityStarted() && !Utils.isNotificationsSilent(getContext());
     }
 
     private void notifyContentObserver(final Uri uri) {

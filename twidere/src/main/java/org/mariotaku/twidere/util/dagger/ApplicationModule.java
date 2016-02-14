@@ -51,6 +51,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
+import org.mariotaku.twidere.util.PermissionsManager;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereMathUtils;
@@ -118,6 +119,12 @@ public class ApplicationModule implements Constants {
     public SharedPreferencesWrapper sharedPreferences() {
         return SharedPreferencesWrapper.getInstance(application, Constants.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants.class);
+    }
+
+    @Provides
+    @Singleton
+    public PermissionsManager permissionsManager() {
+        return new PermissionsManager(application);
     }
 
     @Provides

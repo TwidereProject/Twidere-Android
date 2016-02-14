@@ -41,6 +41,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.PermissionsManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -70,6 +71,9 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     protected SharedPreferencesWrapper mPreferences;
     @Inject
     protected Bus mBus;
+    @Inject
+    protected PermissionsManager mPermissionsManager;
+
 
     // Data fields
     private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;

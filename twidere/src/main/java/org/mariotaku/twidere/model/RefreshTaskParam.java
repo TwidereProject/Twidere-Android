@@ -1,27 +1,18 @@
 package org.mariotaku.twidere.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
- * Created by mariotaku on 16/2/11.
+ * Created by mariotaku on 16/2/14.
  */
-public class RefreshTaskParam {
+public interface RefreshTaskParam {
+    @NonNull
+    long[] getAccountIds();
 
-    private final long[] accountIds, maxIds, sinceIds;
+    @Nullable
+    long[] getMaxIds();
 
-    public long[] getAccountIds() {
-        return accountIds;
-    }
-
-    public long[] getMaxIds() {
-        return maxIds;
-    }
-
-    public long[] getSinceIds() {
-        return sinceIds;
-    }
-
-    public RefreshTaskParam(long[] accountIds, long[] maxIds, long[] sinceIds) {
-        this.accountIds = accountIds;
-        this.maxIds = maxIds;
-        this.sinceIds = sinceIds;
-    }
+    @Nullable
+    long[] getSinceIds();
 }
