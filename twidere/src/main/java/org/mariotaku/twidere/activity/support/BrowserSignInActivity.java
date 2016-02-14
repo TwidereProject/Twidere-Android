@@ -58,11 +58,9 @@ import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class BrowserSignInActivity extends BaseSupportDialogActivity {
+public class BrowserSignInActivity extends BaseAppCompatActivity {
 
     private static final String INJECT_CONTENT = "javascript:window.injector.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');";
-
-    private SharedPreferences mPreferences;
 
     private WebView mWebView;
     private View mProgressContainer;
@@ -102,7 +100,6 @@ public class BrowserSignInActivity extends BaseSupportDialogActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         setContentView(R.layout.activity_browser_sign_in);
         mWebView.setWebViewClient(new AuthorizationWebViewClient(this));
         mWebView.setVerticalScrollBarEnabled(false);

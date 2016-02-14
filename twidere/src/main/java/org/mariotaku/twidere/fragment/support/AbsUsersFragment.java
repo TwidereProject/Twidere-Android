@@ -122,15 +122,16 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
         return true;
     }
 
-    protected ParcelableUser getSelectedUser() {
-        //TODO return selected
-        return null;
-    }
-
     protected abstract boolean hasMoreData(Data data);
 
     protected abstract Loader<Data> onCreateUsersLoader(final Context context,
                                                         @NonNull final Bundle args,
                                                         final boolean fromUser);
+
+
+    @Override
+    protected void setupRecyclerView(Context context, boolean compact) {
+
+    }
 
 }

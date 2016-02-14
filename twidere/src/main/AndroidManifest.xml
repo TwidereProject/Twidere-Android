@@ -215,7 +215,7 @@
         <activity
             android:name=".activity.support.BrowserSignInActivity"
             android:label="@string/browser_sign_in"
-            android:theme="@style/Theme.Twidere.Dark.Dialog"
+            android:theme="@style/Theme.Twidere.Dark"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.TWITTER_BROWSER_LOGIN"/>

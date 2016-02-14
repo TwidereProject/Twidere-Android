@@ -74,9 +74,9 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 
     protected void setLayoutResources(SharedPreferences preferences) {
         if (preferences.getBoolean(KEY_COMPACT_CARDS, false)) {
-            setLayoutResource(R.layout.card_item_status_compact);
+            setLayoutResource(R.layout.layout_preferences_card_preview_compact);
         } else {
-            setLayoutResource(R.layout.card_item_status);
+            setLayoutResource(R.layout.layout_preferences_card_preview);
         }
     }
 

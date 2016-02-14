@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,13 +41,12 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     private final LayoutInflater mInflater;
 
     private final int mCardBackgroundColor;
-    private final boolean mCompactCards;
     private final int mProfileImageStyle;
     private final int mTextSize;
     private final boolean mDisplayProfileImage;
     private final boolean mShowAbsoluteTime;
 
-    public AbsUsersAdapter(final Context context, final boolean compact) {
+    public AbsUsersAdapter(final Context context) {
         super(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
@@ -56,7 +54,6 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE);
         mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);
-        mCompactCards = compact;
     }
 
     @Override
@@ -90,15 +87,9 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
         switch (viewType) {
             case ITEM_VIEW_TYPE_USER: {
                 final View view;
-                if (mCompactCards) {
-                    view = mInflater.inflate(R.layout.card_item_user_compact, parent, false);
-                    final View itemContent = view.findViewById(R.id.item_content);
-                    itemContent.setBackgroundColor(mCardBackgroundColor);
-                } else {
-                    view = mInflater.inflate(R.layout.card_item_user, parent, false);
-                    final CardView cardView = (CardView) view.findViewById(R.id.card);
-                    cardView.setCardBackgroundColor(mCardBackgroundColor);
-                }
+                view = mInflater.inflate(R.layout.card_item_user_compact, parent, false);
+                final View itemContent = view.findViewById(R.id.item_content);
+                itemContent.setBackgroundColor(mCardBackgroundColor);
                 final UserViewHolder holder = new UserViewHolder(this, view);
                 holder.setOnClickListeners();
                 holder.setupViewOptions();
