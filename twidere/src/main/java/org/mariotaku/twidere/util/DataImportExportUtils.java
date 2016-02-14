@@ -302,6 +302,8 @@ public class DataImportExportUtils implements Constants {
                 }
             } catch (JSONException e) {
                 return false;
+            } catch (ClassCastException e) {
+                return false;
             }
             return true;
         }

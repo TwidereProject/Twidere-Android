@@ -129,6 +129,8 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
 
     protected abstract boolean hasMoreData(Data data);
 
-    protected abstract Loader<Data> onCreateUsersLoader(Context context, Bundle args, boolean fromUser);
+    protected abstract Loader<Data> onCreateUsersLoader(final Context context,
+                                                        @NonNull final Bundle args,
+                                                        final boolean fromUser);
 
 }

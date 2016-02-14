@@ -92,7 +92,6 @@ import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
-import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -942,6 +941,9 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             if ("Push".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_verification_push_hint);
                 editVerification.setVisibility(View.GONE);
+            } else if ("RetypePhoneNumber".equalsIgnoreCase(challengeType)) {
+                verificationHint.setText(R.string.login_challenge_retype_phone_hint);
+                editVerification.setVisibility(View.VISIBLE);
             } else {
                 verificationHint.setText(R.string.login_verification_pin_hint);
                 editVerification.setVisibility(View.VISIBLE);

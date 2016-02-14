@@ -34,8 +34,13 @@ import com.squareup.leakcanary.ServiceHeapDumpListener;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.activity.support.ComposeActivity;
+import org.mariotaku.twidere.util.net.NoIntercept;
 
+import java.io.IOException;
+
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 /**
  * Created by mariotaku on 15/5/27.
@@ -45,7 +50,17 @@ public class DebugModeUtils {
     private static RefWatcher sRefWatcher;
 
     public static void initForOkHttpClient(final OkHttpClient.Builder builder) {
-        builder.addNetworkInterceptor(new StethoInterceptor());
+        final StethoInterceptor interceptor = new StethoInterceptor();
+
+        builder.addNetworkInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                if (chain.request().tag() == NoIntercept.INSTANCE) {
+                    return chain.proceed(chain.request());
+                }
+                return interceptor.intercept(chain);
+            }
+        });
     }
 
     public static void initForApplication(final Application application) {

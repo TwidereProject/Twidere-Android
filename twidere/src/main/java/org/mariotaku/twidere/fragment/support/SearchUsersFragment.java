@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
@@ -42,7 +43,7 @@ public class SearchUsersFragment extends ParcelableUsersFragment {
     }
 
     @Override
-    public Loader<List<ParcelableUser>> onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
+    public Loader<List<ParcelableUser>> onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
         if (args == null) return null;
         final long account_id = args.getLong(EXTRA_ACCOUNT_ID);
         final String query = args.getString(EXTRA_QUERY);

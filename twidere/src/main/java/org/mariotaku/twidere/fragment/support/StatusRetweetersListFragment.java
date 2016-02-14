@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.loader.support.IDsUsersLoader;
 import org.mariotaku.twidere.loader.support.StatusRetweetersLoader;
@@ -28,7 +29,7 @@ import org.mariotaku.twidere.loader.support.StatusRetweetersLoader;
 public class StatusRetweetersListFragment extends CursorSupportUsersListFragment {
 
 	@Override
-	public IDsUsersLoader onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
+	public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
 		if (args == null) return null;
 		final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
 		final long status_id = args.getLong(EXTRA_STATUS_ID, -1);

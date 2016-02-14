@@ -32,6 +32,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
+import org.mariotaku.twidere.util.net.NoIntercept;
 
 import java.io.IOException;
 
@@ -130,8 +131,11 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         builder.method(method);
         builder.url(requestUri);
         builder.headers(additionalHeaders);
+        builder.tag(NoIntercept.INSTANCE);
         final HttpResponse resp = mClient.newCall(builder.build()).execute();
-        if (!resp.isSuccessful()) throw new IOException("Unable to get media, response code: " + resp.getStatus());
+        if (!resp.isSuccessful()) {
+            throw new IOException("Unable to get media, response code: " + resp.getStatus());
+        }
         final Body body = resp.getBody();
         return new CacheDownloadLoader.DownloadResult(body.length(), body.stream());
     }

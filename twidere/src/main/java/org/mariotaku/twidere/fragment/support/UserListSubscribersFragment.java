@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserListSubscribersLoader;
@@ -28,7 +29,7 @@ import org.mariotaku.twidere.loader.support.UserListSubscribersLoader;
 public class UserListSubscribersFragment extends CursorSupportUsersListFragment {
 
 	@Override
-	public CursorSupportUsersLoader onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
+	public CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
 		if (args == null) return null;
 		final long listId = args.getLong(EXTRA_LIST_ID, -1);
 		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);

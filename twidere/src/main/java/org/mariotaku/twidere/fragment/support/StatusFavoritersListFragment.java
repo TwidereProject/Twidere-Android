@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.loader.support.IDsUsersLoader;
 import org.mariotaku.twidere.loader.support.StatusFavoritersLoader;
@@ -28,7 +29,7 @@ import org.mariotaku.twidere.loader.support.StatusFavoritersLoader;
 public class StatusFavoritersListFragment extends CursorSupportUsersListFragment {
 
 	@Override
-	public IDsUsersLoader onCreateUsersLoader(final Context context, final Bundle args, boolean fromUser) {
+	public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
 		if (args == null) return null;
 		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
 		final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
