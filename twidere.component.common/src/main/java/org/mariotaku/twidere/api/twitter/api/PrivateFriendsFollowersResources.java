@@ -19,21 +19,26 @@
 
 package org.mariotaku.twidere.api.twitter.api;
 
+import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 
-@SuppressWarnings("RedundantThrows")
 @Queries({@KeyValue(key = "include_entities", valueKey = "include_entities")})
 public interface PrivateFriendsFollowersResources extends PrivateResources {
 
-    User acceptFriendship(long userId) throws TwitterException;
+    @POST("/friendships/accept.json")
+    User acceptFriendship(@Param("user_id") long userId) throws TwitterException;
 
-    User acceptFriendship(String screenName) throws TwitterException;
+    @POST("/friendships/accept.json")
+    User acceptFriendship(@Param("screen_name") String screenName) throws TwitterException;
 
-    User denyFriendship(long userId) throws TwitterException;
+    @POST("/friendships/deny.json")
+    User denyFriendship(@Param("user_id") long userId) throws TwitterException;
 
-    User denyFriendship(String screenName) throws TwitterException;
+    @POST("/friendships/deny.json")
+    User denyFriendship(@Param("screen_name") String screenName) throws TwitterException;
 
 }

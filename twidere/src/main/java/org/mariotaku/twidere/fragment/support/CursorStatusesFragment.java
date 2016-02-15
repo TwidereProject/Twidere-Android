@@ -49,13 +49,13 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
-import org.mariotaku.twidere.util.message.AccountChangedEvent;
-import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
-import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
-import org.mariotaku.twidere.util.message.GetStatusesTaskEvent;
-import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
-import org.mariotaku.twidere.util.message.StatusListChangedEvent;
-import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
+import org.mariotaku.twidere.model.message.AccountChangedEvent;
+import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
+import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
+import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
+import org.mariotaku.twidere.model.message.StatusListChangedEvent;
+import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
 
 import java.util.List;
 

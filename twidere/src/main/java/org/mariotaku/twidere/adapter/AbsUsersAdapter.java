@@ -45,6 +45,8 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     private final int mTextSize;
     private final boolean mDisplayProfileImage;
     private final boolean mShowAbsoluteTime;
+    private UserAdapterListener mUserAdapterListener;
+    private RequestClickListener mRequestClickListener;
 
     public AbsUsersAdapter(final Context context) {
         super(context);
@@ -74,7 +76,7 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
     public abstract D getData();
 
     public boolean isUser(int position) {
-        return position < getUsersCount();
+        return position < getUserCount();
     }
 
     @Override
@@ -118,35 +120,28 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
         if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
-        if (position == getUsersCount()) {
+        if (position == getUserCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
         return ITEM_VIEW_TYPE_USER;
     }
 
     @Override
-    public void onItemActionClick(ViewHolder holder, int id, int position) {
-
+    public UserAdapterListener getUserAdapterListener() {
+        return mUserAdapterListener;
     }
 
-    @Override
-    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
-
-    }
-
-    @Override
-    public void onUserClick(UserViewHolder holder, int position) {
-        if (mUserAdapterListener == null) return;
-        mUserAdapterListener.onUserClick(holder, position);
-    }
-
-    @Override
-    public boolean onUserLongClick(UserViewHolder holder, int position) {
-        return mUserAdapterListener != null && mUserAdapterListener.onUserLongClick(holder, position);
-    }
-
-    public void setListener(UserAdapterListener userAdapterListener) {
+    public void setUserAdapterListener(UserAdapterListener userAdapterListener) {
         mUserAdapterListener = userAdapterListener;
+    }
+
+    @Override
+    public RequestClickListener getRequestClickListener() {
+        return mRequestClickListener;
+    }
+
+    public void setRequestClickListener(RequestClickListener requestClickListener) {
+        mRequestClickListener = requestClickListener;
     }
 
     @Override
@@ -156,14 +151,4 @@ public abstract class AbsUsersAdapter<D> extends LoadMoreSupportAdapter<ViewHold
 
     protected abstract void bindUser(UserViewHolder holder, int position);
 
-
-    private UserAdapterListener mUserAdapterListener;
-
-    public interface UserAdapterListener {
-
-        void onUserClick(UserViewHolder holder, int position);
-
-        boolean onUserLongClick(UserViewHolder holder, int position);
-
-    }
 }

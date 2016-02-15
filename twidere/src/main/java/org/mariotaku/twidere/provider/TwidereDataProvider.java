@@ -127,7 +127,7 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.message.UnreadCountUpdatedEvent;
+import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.util.net.TwidereDns;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;
 

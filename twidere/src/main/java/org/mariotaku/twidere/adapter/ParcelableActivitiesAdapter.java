@@ -91,13 +91,10 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
     }
 
     @Override
-    public ParcelableActivity getActivity(int position) {
-        int offset = 0;
-        if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0) {
-            offset = -1;
-        }
-        if (position == getActivityCount()) return null;
-        return mData.get(position + offset);
+    public ParcelableActivity getActivity(int adapterPosition) {
+        int dataPosition = adapterPosition - getActivityStartIndex();
+        if (dataPosition < 0 || dataPosition >= getActivityCount()) return null;
+        return mData.get(dataPosition);
     }
 
     @Override

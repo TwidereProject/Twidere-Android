@@ -23,20 +23,24 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.view.holder.UserViewHolder.UserClickListener;
+import org.mariotaku.twidere.view.holder.UserViewHolder;
 
 /**
  * Created by mariotaku on 15/4/16.
  */
-public interface IUsersAdapter<Data> extends IContentCardAdapter, UserClickListener {
+public interface IUsersAdapter<Data> extends IContentCardAdapter {
 
     ParcelableUser getUser(int position);
 
     long getUserId(int position);
 
-    int getUsersCount();
+    int getUserCount();
 
     void setData(Data data);
+
+    UserAdapterListener getUserAdapterListener();
+
+    RequestClickListener getRequestClickListener();
 
     boolean shouldShowAccountsColor();
 
@@ -44,4 +48,18 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter, UserClickListe
     @Override
     MediaLoaderWrapper getMediaLoader();
 
+    interface UserAdapterListener {
+
+        void onUserClick(UserViewHolder holder, int position);
+
+        boolean onUserLongClick(UserViewHolder holder, int position);
+
+    }
+
+    interface RequestClickListener {
+
+        void onAcceptClicked(UserViewHolder holder, int position);
+
+        void onDenyClicked(UserViewHolder holder, int position);
+    }
 }

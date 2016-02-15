@@ -54,7 +54,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.mariotaku.twidere.util.message.UserListCreatedEvent;
+import org.mariotaku.twidere.model.message.UserListCreatedEvent;
 
 import java.util.ArrayList;
 import java.util.List;

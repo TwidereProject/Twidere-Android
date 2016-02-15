@@ -35,7 +35,7 @@ import org.mariotaku.twidere.loader.support.UserListsLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.message.UserListDestroyedEvent;
+import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
 
 import java.util.List;
 

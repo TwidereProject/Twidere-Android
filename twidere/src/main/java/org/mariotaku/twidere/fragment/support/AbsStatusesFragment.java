@@ -60,7 +60,7 @@ import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.imageloader.PauseRecyclerViewOnScrollListener;
-import org.mariotaku.twidere.util.message.StatusListChangedEvent;
+import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 

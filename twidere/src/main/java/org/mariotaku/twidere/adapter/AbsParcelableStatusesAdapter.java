@@ -46,9 +46,10 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
     }
 
     @Override
-    public ParcelableStatus getStatus(int position) {
-        if (position == getStatusCount()) return null;
-        return mData.get(position);
+    public ParcelableStatus getStatus(int adapterPosition) {
+        int dataPosition = adapterPosition - getStatusStartIndex();
+        if (dataPosition < 0 || dataPosition >= getStatusCount()) return null;
+        return mData.get(dataPosition);
     }
 
     @Override

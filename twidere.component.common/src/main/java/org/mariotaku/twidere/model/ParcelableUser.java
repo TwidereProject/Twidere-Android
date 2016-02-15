@@ -170,6 +170,17 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @ParcelableThisPlease
     @JsonField(name = "is_basic")
     public boolean is_basic;
+    public static final Creator<ParcelableUser> CREATOR = new Creator<ParcelableUser>() {
+        public ParcelableUser createFromParcel(Parcel source) {
+            ParcelableUser target = new ParcelableUser();
+            ParcelableUserParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ParcelableUser[] newArray(int size) {
+            return new ParcelableUser[size];
+        }
+    };
 
     public ParcelableUser() {
     }
@@ -206,13 +217,6 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         text_color = 0;
         is_cache = true;
         is_basic = true;
-    }
-
-    @AfterCursorObjectCreated
-    void afterCursorObjectCreated() {
-        is_cache = true;
-        description_unescaped = HtmlEscapeHelper.toPlainText(description_html);
-        is_basic = description_plain == null || url == null || location == null;
     }
 
     public ParcelableUser(final User user, final long account_id) {
@@ -253,12 +257,12 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         is_basic = false;
     }
 
-    @Override
-    public int compareTo(@NonNull final ParcelableUser that) {
-        final long diff = position - that.position;
-        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
-        return (int) diff;
+    public static int calculateHashCode(long accountId, long userId) {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (accountId ^ accountId >>> 32);
+        result = prime * result + (int) (userId ^ userId >>> 32);
+        return result;
     }
 
     public static ParcelableUser[] fromUsersArray(@Nullable final User[] users, long account_id) {
@@ -268,40 +272,6 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
             result[i] = new ParcelableUser(users[i], account_id);
         }
         return result;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof ParcelableUser)) return false;
-        final ParcelableUser other = (ParcelableUser) obj;
-        if (account_id != other.account_id) return false;
-        if (id != other.id) return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (account_id ^ account_id >>> 32);
-        result = prime * result + (int) (id ^ id >>> 32);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "ParcelableUser{account_id=" + account_id + ", id=" + id + ", created_at=" + created_at + ", position="
-                + position + ", is_protected=" + is_protected + ", is_verified=" + is_verified
-                + ", is_follow_request_sent=" + is_follow_request_sent + ", is_following=" + is_following
-                + ", description_plain=" + description_plain + ", name=" + name + ", screen_name=" + screen_name
-                + ", location=" + location + ", profile_image_url=" + profile_image_url + ", profile_banner_url="
-                + profile_banner_url + ", url=" + url + ", url_expanded=" + url_expanded + ", description_html="
-                + description_html + ", description_unescaped=" + description_unescaped + ", description_expanded="
-                + description_expanded + ", followers_count=" + followers_count + ", friends_count=" + friends_count
-                + ", statuses_count=" + statuses_count + ", favorites_count=" + favorites_count + ", is_cache="
-                + is_cache + "}";
     }
 
     public static ParcelableUser fromDirectMessageConversationEntry(final Cursor cursor) {
@@ -323,6 +293,50 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         return result;
     }
 
+    @AfterCursorObjectCreated
+    void afterCursorObjectCreated() {
+        is_cache = true;
+        description_unescaped = HtmlEscapeHelper.toPlainText(description_html);
+        is_basic = description_plain == null || url == null || location == null;
+    }
+
+    @Override
+    public int compareTo(@NonNull final ParcelableUser that) {
+        final long diff = position - that.position;
+        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        return (int) diff;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof ParcelableUser)) return false;
+        final ParcelableUser other = (ParcelableUser) obj;
+        if (account_id != other.account_id) return false;
+        if (id != other.id) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return calculateHashCode(account_id, id);
+    }
+
+    @Override
+    public String toString() {
+        return "ParcelableUser{account_id=" + account_id + ", id=" + id + ", created_at=" + created_at + ", position="
+                + position + ", is_protected=" + is_protected + ", is_verified=" + is_verified
+                + ", is_follow_request_sent=" + is_follow_request_sent + ", is_following=" + is_following
+                + ", description_plain=" + description_plain + ", name=" + name + ", screen_name=" + screen_name
+                + ", location=" + location + ", profile_image_url=" + profile_image_url + ", profile_banner_url="
+                + profile_banner_url + ", url=" + url + ", url_expanded=" + url_expanded + ", description_html="
+                + description_html + ", description_unescaped=" + description_unescaped + ", description_expanded="
+                + description_expanded + ", followers_count=" + followers_count + ", friends_count=" + friends_count
+                + ", statuses_count=" + statuses_count + ", favorites_count=" + favorites_count + ", is_cache="
+                + is_cache + "}";
+    }
 
     @Override
     public int describeContents() {
@@ -333,16 +347,4 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableUserParcelablePlease.writeToParcel(this, dest, flags);
     }
-
-    public static final Creator<ParcelableUser> CREATOR = new Creator<ParcelableUser>() {
-        public ParcelableUser createFromParcel(Parcel source) {
-            ParcelableUser target = new ParcelableUser();
-            ParcelableUserParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        public ParcelableUser[] newArray(int size) {
-            return new ParcelableUser[size];
-        }
-    };
 }

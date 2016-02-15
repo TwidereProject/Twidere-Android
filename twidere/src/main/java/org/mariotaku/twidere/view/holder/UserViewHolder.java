@@ -28,9 +28,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter.RequestClickListener;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.NameView;
@@ -52,7 +54,12 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     private final TextView descriptionView, locationView, urlView,
             statusesCountView, followersCountView, friendsCountView;
 
-    private UserClickListener userClickListener;
+    private final View acceptRequestButton, denyRequestButton;
+    private final View followRequestContainer;
+    private final View processingRequestProgress;
+
+    private UserAdapterListener userClickListener;
+    private RequestClickListener requestClickListener;
 
     public UserViewHolder(final IUsersAdapter<?> adapter, final View itemView) {
         super(itemView);
@@ -67,12 +74,17 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         statusesCountView = (TextView) itemView.findViewById(R.id.statuses_count);
         followersCountView = (TextView) itemView.findViewById(R.id.followers_count);
         friendsCountView = (TextView) itemView.findViewById(R.id.friends_count);
+        followRequestContainer = itemView.findViewById(R.id.follow_request_container);
+        acceptRequestButton = itemView.findViewById(R.id.accept_request);
+        denyRequestButton = itemView.findViewById(R.id.deny_request);
+        processingRequestProgress = itemView.findViewById(R.id.processing_request);
     }
 
     public void displayUser(ParcelableUser user) {
 
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final UserColorNameManager manager = adapter.getUserColorNameManager();
+        final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
 
 
         itemContent.drawStart(manager.getUserColor(user.id, false));
@@ -103,6 +115,16 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
             profileImageView.setVisibility(View.GONE);
             loader.cancelDisplayTask(profileImageView);
         }
+
+        if (twitter.isProcessingFollowRequest(user.account_id, user.id)) {
+            processingRequestProgress.setVisibility(View.VISIBLE);
+            acceptRequestButton.setVisibility(View.GONE);
+            denyRequestButton.setVisibility(View.GONE);
+        } else {
+            processingRequestProgress.setVisibility(View.GONE);
+            acceptRequestButton.setVisibility(View.VISIBLE);
+            denyRequestButton.setVisibility(View.VISIBLE);
+        }
     }
 
     public ImageView getProfileImageView() {
@@ -115,10 +137,20 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
 
     @Override
     public void onClick(View v) {
-        if (userClickListener == null) return;
         switch (v.getId()) {
             case R.id.item_content: {
+                if (userClickListener == null) return;
                 userClickListener.onUserClick(this, getLayoutPosition());
+                break;
+            }
+            case R.id.accept_request: {
+                if (requestClickListener == null) return;
+                requestClickListener.onAcceptClicked(this, getLayoutPosition());
+                break;
+            }
+            case R.id.deny_request: {
+                if (requestClickListener == null) return;
+                requestClickListener.onDenyClicked(this, getLayoutPosition());
                 break;
             }
         }
@@ -136,7 +168,22 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     }
 
     public void setOnClickListeners() {
-        setUserClickListener(adapter);
+        setUserClickListener(adapter.getUserAdapterListener());
+        setRequestClickListener(adapter.getRequestClickListener());
+    }
+
+    private void setRequestClickListener(RequestClickListener listener) {
+        requestClickListener = listener;
+        if (listener != null) {
+            nameView.setTwoLine(true);
+            followRequestContainer.setVisibility(View.VISIBLE);
+        } else {
+            nameView.setTwoLine(false);
+            followRequestContainer.setVisibility(View.GONE);
+        }
+        nameView.updateText();
+        acceptRequestButton.setOnClickListener(this);
+        denyRequestButton.setOnClickListener(this);
     }
 
     public void setTextSize(final float textSize) {
@@ -150,7 +197,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         friendsCountView.setTextSize(textSize);
     }
 
-    public void setUserClickListener(UserClickListener listener) {
+    public void setUserClickListener(UserAdapterListener listener) {
         userClickListener = listener;
         ((View) itemContent).setOnClickListener(this);
         ((View) itemContent).setOnLongClickListener(this);
@@ -160,11 +207,4 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         setTextSize(adapter.getTextSize());
     }
 
-    public interface UserClickListener extends ContentCardClickListener {
-
-        void onUserClick(UserViewHolder holder, int position);
-
-        boolean onUserLongClick(UserViewHolder holder, int position);
-
-    }
 }

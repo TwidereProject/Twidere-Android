@@ -25,7 +25,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import org.mariotaku.twidere.adapter.AbsUsersAdapter;
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -42,8 +41,14 @@ public abstract class ParcelableUsersFragment extends AbsUsersFragment<List<Parc
 
     @NonNull
     @Override
-    protected AbsUsersAdapter<List<ParcelableUser>> onCreateAdapter(Context context, boolean compact) {
+    protected ParcelableUsersAdapter onCreateAdapter(Context context, boolean compact) {
         return new ParcelableUsersAdapter(context);
+    }
+
+    @NonNull
+    @Override
+    public ParcelableUsersAdapter getAdapter() {
+        return (ParcelableUsersAdapter) super.getAdapter();
     }
 
     protected long getAccountId() {

@@ -65,7 +65,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
-import org.mariotaku.twidere.util.message.GetMessagesTaskEvent;
+import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 
 import java.util.Collections;
 import java.util.HashSet;

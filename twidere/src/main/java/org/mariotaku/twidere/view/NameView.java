@@ -64,12 +64,7 @@ public class NameView extends ThemedTextView {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.NameView, defStyleAttr, 0);
         setPrimaryTextColor(a.getColor(R.styleable.NameView_nv_primaryTextColor, 0));
         setSecondaryTextColor(a.getColor(R.styleable.NameView_nv_secondaryTextColor, 0));
-        if (mTwoLine = a.getBoolean(R.styleable.NameView_nv_twoLine, false)) {
-            setSingleLine(false);
-            setMaxLines(2);
-        } else {
-            setSingleLine(true);
-        }
+        setTwoLine(a.getBoolean(R.styleable.NameView_nv_twoLine, false));
         mPrimaryTextStyle = new StyleSpan(a.getInt(R.styleable.NameView_nv_primaryTextStyle, 0));
         mSecondaryTextStyle = new StyleSpan(a.getInt(R.styleable.NameView_nv_secondaryTextStyle, 0));
         a.recycle();
@@ -156,4 +151,13 @@ public class NameView extends ThemedTextView {
         mSecondaryTextSize = new AbsoluteSizeSpan((int) calculateTextSize(TypedValue.COMPLEX_UNIT_SP, textSize));
     }
 
+    public void setTwoLine(boolean twoLine) {
+        mTwoLine = twoLine;
+        if (twoLine) {
+            setSingleLine(false);
+            setMaxLines(2);
+        } else {
+            setSingleLine(true);
+        }
+    }
 }

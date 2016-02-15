@@ -34,7 +34,7 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.message.GetActivitiesTaskEvent;
+import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;

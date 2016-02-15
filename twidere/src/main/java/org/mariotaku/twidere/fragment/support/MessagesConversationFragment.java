@@ -107,7 +107,7 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
+import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.ComposeEditText;
 
 import java.util.ArrayList;

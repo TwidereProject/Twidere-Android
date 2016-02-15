@@ -36,7 +36,9 @@ import com.desmond.asyncmanager.BackgroundTask;
 import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Bus;
 
+import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.ArrayLongList;
+import org.apache.commons.collections.primitives.IntList;
 import org.apache.commons.collections.primitives.LongList;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
@@ -66,6 +68,17 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.Response;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
+import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.model.message.FollowRequestTaskEvent;
+import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
+import org.mariotaku.twidere.model.message.FriendshipUserUpdatedEvent;
+import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
+import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
+import org.mariotaku.twidere.model.message.StatusListChangedEvent;
+import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
+import org.mariotaku.twidere.model.message.UserListCreatedEvent;
+import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -87,16 +100,6 @@ import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
-import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
-import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
-import org.mariotaku.twidere.util.message.FriendshipUpdatedEvent;
-import org.mariotaku.twidere.util.message.FriendshipUserUpdatedEvent;
-import org.mariotaku.twidere.util.message.ProfileUpdatedEvent;
-import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
-import org.mariotaku.twidere.util.message.StatusListChangedEvent;
-import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
-import org.mariotaku.twidere.util.message.UserListCreatedEvent;
-import org.mariotaku.twidere.util.message.UserListDestroyedEvent;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -123,6 +126,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private LongSparseMap<Long> mDestroyingFavoriteIds = new LongSparseMap<>();
     private LongSparseMap<Long> mCreatingRetweetIds = new LongSparseMap<>();
     private LongSparseMap<Long> mDestroyingStatusIds = new LongSparseMap<>();
+    private IntList mProcessingFriendshipRequestIds = new ArrayIntList();
 
     private final LongList mSendingDraftIds = new ArrayLongList();
 
@@ -139,7 +143,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int acceptFriendshipAsync(final long accountId, final long userId) {
-        final AcceptFriendshipTask task = new AcceptFriendshipTask(accountId, userId);
+        final AcceptFriendshipTask task = new AcceptFriendshipTask(mContext, accountId, userId);
         return mAsyncTaskManager.add(task, true);
     }
 
@@ -584,6 +588,18 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mErrorInfoStore;
     }
 
+    private void addProcessingFriendshipRequestId(long accountId, long userId) {
+        mProcessingFriendshipRequestIds.add(ParcelableUser.calculateHashCode(accountId, userId));
+    }
+
+    private void removeProcessingFriendshipRequestId(long accountId, long userId) {
+        mProcessingFriendshipRequestIds.removeElement(ParcelableUser.calculateHashCode(accountId, userId));
+    }
+
+    public boolean isProcessingFollowRequest(long accountId, long userId) {
+        return mProcessingFriendshipRequestIds.contains(ParcelableUser.calculateHashCode(accountId, userId));
+    }
+
     public static class UpdateProfileBannerImageTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
 
         private final long mAccountId;
@@ -684,15 +700,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class AcceptFriendshipTask extends ManagedAsyncTask<Object, Object, SingleResponse<User>> {
+    static class AcceptFriendshipTask extends ManagedAsyncTask<Object, Object, SingleResponse<User>> {
 
         private final long mAccountId;
         private final long mUserId;
 
-        public AcceptFriendshipTask(final long account_id, final long user_id) {
-            super(mContext);
-            mAccountId = account_id;
-            mUserId = user_id;
+        public AcceptFriendshipTask(final Context context, final long accountId, final long userId) {
+            super(context);
+            mAccountId = accountId;
+            mUserId = userId;
         }
 
         public long getAccountId() {
@@ -704,9 +720,20 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
+        protected void onPreExecute() {
+            final FollowRequestTaskEvent event = new FollowRequestTaskEvent(FollowRequestTaskEvent.Action.ACCEPT,
+                    mAccountId, mUserId);
+            event.setFinished(false);
+            bus.post(event);
+            mAsyncTwitterWrapper.addProcessingFriendshipRequestId(mAccountId, mUserId);
+            super.onPreExecute();
+        }
+
+
+        @Override
         protected SingleResponse<User> doInBackground(final Object... params) {
 
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final User user = twitter.acceptFriendship(mUserId);
@@ -718,19 +745,23 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected void onPostExecute(final SingleResponse<User> result) {
+            final FollowRequestTaskEvent event = new FollowRequestTaskEvent(FollowRequestTaskEvent.Action.ACCEPT,
+                    mAccountId, mUserId);
+            event.setFinished(true);
             if (result.hasData()) {
                 final User user = result.getData();
                 final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
-                final String message = mContext.getString(R.string.accepted_users_follow_request,
+                final String message = getContext().getString(R.string.accepted_users_follow_request,
                         mUserColorNameManager.getDisplayName(user, nameFirst, true));
-                Utils.showOkMessage(mContext, message, false);
+                Utils.showOkMessage(getContext(), message, false);
+                event.setSucceeded(true);
             } else {
-                Utils.showErrorMessage(mContext, R.string.action_accepting_follow_request,
+                Utils.showErrorMessage(getContext(), R.string.action_accepting_follow_request,
                         result.getException(), false);
+                event.setSucceeded(false);
             }
-            final Intent intent = new Intent(BROADCAST_FRIENDSHIP_ACCEPTED);
-            intent.putExtra(EXTRA_USER_ID, mUserId);
-            mContext.sendBroadcast(intent);
+            mAsyncTwitterWrapper.removeProcessingFriendshipRequestId(mAccountId, mUserId);
+            bus.post(event);
             super.onPostExecute(result);
         }
 
@@ -1311,10 +1342,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         private final long mAccountId;
         private final long mUserId;
 
-        public DenyFriendshipTask(final long account_id, final long user_id) {
+        public DenyFriendshipTask(final long accountId, final long userId) {
             super(mContext);
-            mAccountId = account_id;
-            mUserId = user_id;
+            mAccountId = accountId;
+            mUserId = userId;
         }
 
         public long getAccountId() {
@@ -1339,20 +1370,34 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
+        protected void onPreExecute() {
+            addProcessingFriendshipRequestId(mAccountId, mUserId);
+            final FollowRequestTaskEvent event = new FollowRequestTaskEvent(FollowRequestTaskEvent.Action.ACCEPT,
+                    mAccountId, mUserId);
+            event.setFinished(false);
+            bus.post(event);
+            super.onPreExecute();
+        }
+
+        @Override
         protected void onPostExecute(final SingleResponse<User> result) {
+            final FollowRequestTaskEvent event = new FollowRequestTaskEvent(FollowRequestTaskEvent.Action.ACCEPT,
+                    mAccountId, mUserId);
+            event.setFinished(true);
             if (result.hasData()) {
                 final User user = result.getData();
                 final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
                 final String message = mContext.getString(R.string.denied_users_follow_request,
                         mUserColorNameManager.getDisplayName(user, nameFirst, true));
                 Utils.showOkMessage(mContext, message, false);
+                event.setSucceeded(true);
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_denying_follow_request, result.getException(), false);
+                event.setSucceeded(false);
             }
-            final Intent intent = new Intent(BROADCAST_FRIENDSHIP_DENIED);
-            intent.putExtra(EXTRA_USER_ID, mUserId);
-            mContext.sendBroadcast(intent);
             super.onPostExecute(result);
+            removeProcessingFriendshipRequestId(mAccountId, mUserId);
+            bus.post(event);
         }
 
     }

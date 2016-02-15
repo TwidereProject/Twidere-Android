@@ -17,9 +17,10 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.ColorLabelFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<org.mariotaku.twidere.view.ColorLabelFrameLayout
     android:id="@+id/item_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
@@ -33,9 +34,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/element_spacing_normal"
-        android:paddingEnd="@dimen/item_menu_card_padding_compact"
+        android:paddingEnd="@dimen/element_spacing_normal"
         android:paddingLeft="@dimen/element_spacing_normal"
-        android:paddingRight="@dimen/item_menu_card_padding_compact"
+        android:paddingRight="@dimen/element_spacing_normal"
         android:paddingStart="@dimen/element_spacing_normal"
         android:paddingTop="@dimen/element_spacing_normal">
 
@@ -50,7 +51,7 @@
             android:layout_marginEnd="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:contentDescription="@string/profile_image"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"/>
 
 
         <LinearLayout
@@ -75,7 +76,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textStyle="bold"
-                tools:text="List" />
+                tools:text="List"/>
 
             <org.mariotaku.twidere.view.TimelineContentTextView
                 android:id="@+id/created_by"
@@ -84,7 +85,7 @@
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorSecondary"
-                tools:text="Created by user" />
+                tools:text="Created by user"/>
         </LinearLayout>
 
         <org.mariotaku.twidere.view.themed.ThemedTextView
@@ -96,7 +97,7 @@
             android:layout_below="@id/name_container"
             android:paddingTop="@dimen/element_spacing_small"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:textColor="?android:attr/textColorSecondary"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -116,7 +117,7 @@
                 android:drawablePadding="4dp"
                 android:drawableStart="@drawable/ic_indicator_following"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <org.mariotaku.twidere.view.themed.ThemedTextView
                 android:id="@+id/subscribers_count"
@@ -127,7 +128,7 @@
                 android:drawablePadding="4dp"
                 android:drawableStart="@drawable/ic_indicator_followers"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
     </RelativeLayout>
 

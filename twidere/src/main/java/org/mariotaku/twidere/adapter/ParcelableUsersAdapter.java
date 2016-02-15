@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
@@ -55,7 +56,7 @@ public class ParcelableUsersAdapter extends AbsUsersAdapter<List<ParcelableUser>
     @Override
     public int getItemCount() {
         final int position = getLoadMoreIndicatorPosition();
-        int count = getUsersCount();
+        int count = getUserCount();
         if ((position & IndicatorPosition.START) != 0) {
             count++;
         }
@@ -66,20 +67,49 @@ public class ParcelableUsersAdapter extends AbsUsersAdapter<List<ParcelableUser>
     }
 
     @Override
-    public ParcelableUser getUser(int position) {
-        if (position == getUsersCount()) return null;
-        return mData.get(position);
+    public ParcelableUser getUser(int adapterPosition) {
+        int dataPosition = adapterPosition - getUserStartIndex();
+        if (dataPosition < 0 || dataPosition >= getUserCount()) return null;
+        return mData.get(dataPosition);
+    }
+
+    public int getUserStartIndex() {
+        final int position = getLoadMoreIndicatorPosition();
+        int start = 0;
+        if ((position & IndicatorPosition.START) != 0) {
+            start += 1;
+        }
+        return start;
     }
 
     @Override
     public long getUserId(int position) {
-        if (position == getUsersCount()) return -1;
+        if (position == getUserCount()) return -1;
         return mData.get(position).id;
     }
 
     @Override
-    public int getUsersCount() {
+    public int getUserCount() {
         if (mData == null) return 0;
         return mData.size();
+    }
+
+    public boolean removeUserAt(int adapterPosition) {
+        int dataPosition = adapterPosition - getUserStartIndex();
+        if (dataPosition < 0 || dataPosition >= getUserCount()) return false;
+        mData.remove(dataPosition);
+        notifyItemRemoved(adapterPosition);
+        return true;
+    }
+
+    public int findPosition(long accountId, long userId) {
+        if (mData == null) return RecyclerView.NO_POSITION;
+        for (int i = getUserStartIndex(), j = i + getUserCount(); i < j; i++) {
+            final ParcelableUser user = mData.get(i);
+            if (user.account_id == accountId && user.id == userId) {
+                return i;
+            }
+        }
+        return RecyclerView.NO_POSITION;
     }
 }

@@ -30,11 +30,11 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.message.FavoriteCreatedEvent;
-import org.mariotaku.twidere.util.message.FavoriteDestroyedEvent;
-import org.mariotaku.twidere.util.message.StatusDestroyedEvent;
-import org.mariotaku.twidere.util.message.StatusListChangedEvent;
-import org.mariotaku.twidere.util.message.StatusRetweetedEvent;
+import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
+import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
+import org.mariotaku.twidere.model.message.StatusListChangedEvent;
+import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
 
 import java.util.HashSet;
 import java.util.List;

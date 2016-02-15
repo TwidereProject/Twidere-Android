@@ -17,24 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.message;
-
-import android.net.Uri;
-import android.support.annotation.NonNull;
+package org.mariotaku.twidere.model.message;
 
 /**
- * Created by mariotaku on 14/12/10.
+ * Created by mariotaku on 15/4/24.
  */
-public class GetStatusesTaskEvent {
+public class AccountChangedEvent {
+    public final long[] account_ids, activated_ids;
 
-    @NonNull
-    public final Uri uri;
-    public final boolean running;
-    public final Exception exception;
-
-    public GetStatusesTaskEvent(@NonNull Uri uri, boolean running, Exception exception) {
-        this.uri = uri;
-        this.running = running;
-        this.exception = exception;
+    public AccountChangedEvent(long[] account_ids, long[] activated_ids) {
+        this.account_ids = account_ids;
+        this.activated_ids = activated_ids;
     }
 }

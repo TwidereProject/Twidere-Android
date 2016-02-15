@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.message;
+package org.mariotaku.twidere.model.message;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
 

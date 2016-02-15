@@ -17,21 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.message;
-
-import android.support.annotation.NonNull;
-
-import org.mariotaku.twidere.model.ParcelableStatus;
+package org.mariotaku.twidere.model.message;
 
 /**
- * Created by mariotaku on 14/12/10.
+ * Created by mariotaku on 14/12/7.
  */
-public class FavoriteDestroyedEvent {
+public class UnreadCountUpdatedEvent {
 
-    @NonNull
-    public final ParcelableStatus status;
+    public final int position;
 
-    public FavoriteDestroyedEvent(@NonNull ParcelableStatus status) {
-        this.status = status;
+    public UnreadCountUpdatedEvent(int position) {
+        this.position = position;
     }
 }

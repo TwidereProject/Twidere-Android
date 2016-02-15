@@ -53,9 +53,6 @@
     <dimen name="line_indicator_line_width_wizard">24dp</dimen>
     <dimen name="line_indicator_stroke_width_wizard">3dp</dimen>
 
-    <!-- Size of the item menu -->
-    <dimen name="item_menu_card_padding_compact">28dp</dimen>
-
     <!-- Dimensions for color picker -->
     <dimen name="color_button_width">48dp</dimen>
     <dimen name="color_button_height">48dp</dimen>

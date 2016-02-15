@@ -1,7 +1,7 @@
 /*
  * Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,21 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.message;
+package org.mariotaku.twidere.model.message;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.model.ParcelableUser;
-
 /**
- * Created by mariotaku on 14/12/7.
+ * Created by mariotaku on 14/12/10.
  */
-public class FriendshipUserUpdatedEvent {
+public class GetStatusesTaskEvent {
 
     @NonNull
-    public final ParcelableUser user;
+    public final Uri uri;
+    public final boolean running;
+    public final Exception exception;
 
-    public FriendshipUserUpdatedEvent(@NonNull ParcelableUser user) {
-        this.user = user;
+    public GetStatusesTaskEvent(@NonNull Uri uri, boolean running, Exception exception) {
+        this.uri = uri;
+        this.running = running;
+        this.exception = exception;
     }
 }

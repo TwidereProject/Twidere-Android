@@ -36,7 +36,7 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.adapter.TrendsAdapter;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.message.TaskStateChangedEvent;
+import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 
 import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;

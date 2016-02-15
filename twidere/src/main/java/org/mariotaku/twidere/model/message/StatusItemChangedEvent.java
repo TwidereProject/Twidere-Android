@@ -1,5 +1,5 @@
 /*
- * Twidere - Twitter client for Android
+ *                 Twidere - Twitter client for Android
  *
  *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
@@ -17,16 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.message;
+package org.mariotaku.twidere.model.message;
+
+import org.mariotaku.twidere.model.ParcelableStatus;
 
 /**
- * Created by mariotaku on 15/4/24.
+ * Created by mariotaku on 14/12/12.
  */
-public class AccountChangedEvent {
-    public final long[] account_ids, activated_ids;
+public class StatusItemChangedEvent {
 
-    public AccountChangedEvent(long[] account_ids, long[] activated_ids) {
-        this.account_ids = account_ids;
-        this.activated_ids = activated_ids;
+    public final ParcelableStatus status;
+
+    public StatusItemChangedEvent(ParcelableStatus status) {
+        this.status = status;
     }
 }

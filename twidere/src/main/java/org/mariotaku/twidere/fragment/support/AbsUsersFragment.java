@@ -31,7 +31,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 
 import org.mariotaku.twidere.adapter.AbsUsersAdapter;
-import org.mariotaku.twidere.adapter.AbsUsersAdapter.UserAdapterListener;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -71,7 +71,7 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
         final AbsUsersAdapter<Data> adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
-        adapter.setListener(this);
+        adapter.setUserAdapterListener(this);
 
         mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this);
@@ -131,7 +131,7 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
 
     @Override
     protected void setupRecyclerView(Context context, boolean compact) {
-
+        super.setupRecyclerView(context, true);
     }
 
 }

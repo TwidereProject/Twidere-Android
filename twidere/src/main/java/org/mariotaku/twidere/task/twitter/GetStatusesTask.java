@@ -40,7 +40,7 @@ import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.message.GetStatusesTaskEvent;
+import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 
 import java.util.ArrayList;
 import java.util.List;

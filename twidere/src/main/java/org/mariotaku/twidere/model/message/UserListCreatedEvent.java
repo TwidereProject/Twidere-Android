@@ -17,21 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.message;
+package org.mariotaku.twidere.model.message;
 
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.ParcelableUserList;
 
 /**
- * Created by mariotaku on 14/12/7.
+ * Created by mariotaku on 14/12/10.
  */
-public class ProfileUpdatedEvent {
+public class UserListCreatedEvent {
 
     @NonNull
-    public final ParcelableUser user;
+    public final ParcelableUserList userList;
 
-    public ProfileUpdatedEvent(@NonNull ParcelableUser user) {
-        this.user = user;
+    public UserListCreatedEvent(@NonNull ParcelableUserList userList) {
+        this.userList = userList;
     }
 }

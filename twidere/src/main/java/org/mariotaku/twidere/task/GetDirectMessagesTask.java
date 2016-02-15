@@ -28,7 +28,7 @@ import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.message.GetMessagesTaskEvent;
+import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 
 import java.util.ArrayList;
 import java.util.List;
