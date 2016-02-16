@@ -40,7 +40,7 @@ import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.FormBody;
 import org.mariotaku.restfu.http.mime.SimpleBody;
-import org.mariotaku.restfu.okhttp.OkHttpRestClient;
+import org.mariotaku.restfu.okhttp3.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;

@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.http.RestHttpClient;
-import org.mariotaku.restfu.okhttp.OkHttpRestClient;
+import org.mariotaku.restfu.okhttp3.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereProxySelector;
@@ -101,8 +101,7 @@ public class HttpClientFactory implements Constants {
     }
 
     public static void reloadConnectivitySettings(Context context) {
-        DependencyHolder holder = DependencyHolder.get(context);
-        holder.getConnectionPoll().evictAll();
+        final DependencyHolder holder = DependencyHolder.get(context);
         final RestHttpClient client = holder.getRestHttpClient();
         if (client instanceof OkHttpRestClient) {
             final OkHttpClient.Builder builder = new OkHttpClient.Builder();

@@ -21,7 +21,10 @@ package org.mariotaku.twidere.api.twitter.util;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
+import android.util.Log;
+import android.util.TimingLogger;
 
+import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.ParameterizedType;
 import com.bluelinelabs.logansquare.ParameterizedTypeAccessor;
@@ -30,14 +33,16 @@ import com.fasterxml.jackson.core.JsonParseException;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.restfu.http.mime.SimpleBody;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.util.TwidereTypeUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.Type;
 
 /**
@@ -57,7 +62,9 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         try {
             final Body body = resp.getBody();
             if (body == null) return new TwitterException(resp);
-            final TwitterException parse = LoganSquare.parse(body.stream(), TwitterException.class);
+            final JsonMapper<TwitterException> mapper = LoganSquare.mapperFor(TwitterException.class);
+            final Reader reader = SimpleBody.reader(body);
+            final TwitterException parse = mapper.parse(LoganSquare.JSON_FACTORY.createParser(reader));
             if (parse != null) return parse;
             return new TwitterException(resp);
         } catch (JsonParseException e) {
@@ -68,23 +75,28 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
     }
 
     @NonNull
-    private static <T> T parseOrThrow(InputStream stream, Type type)
+    private static <T> T parseOrThrow(Body body, Type type)
             throws IOException, TwitterException, RestConverter.ConvertException {
         try {
+            if (BuildConfig.DEBUG) {
+                Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " <---");
+            }
             final ParameterizedType<T> parameterizedType = ParameterizedTypeAccessor.create(type);
-            final T parsed = LoganSquare.parse(stream, parameterizedType);
+            final JsonMapper<T> mapper = LoganSquare.mapperFor(parameterizedType);
+            if (BuildConfig.DEBUG) {
+                Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " ---> " + TwidereTypeUtils.toSimpleName(mapper.getClass()));
+            }
+            final Reader reader = SimpleBody.reader(body);
+            final T parsed = mapper.parse(LoganSquare.JSON_FACTORY.createParser(reader));
+            if (BuildConfig.DEBUG) {
+                Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " Finished");
+            }
             if (parsed == null) {
                 throw new TwitterException("Empty data");
             }
             return parsed;
         } catch (JsonParseException e) {
             throw new RestConverter.ConvertException("Malformed JSON Data");
-        }
-    }
-
-    private static void checkResponse(Type type, Object object, HttpResponse response) throws TwitterException {
-        if (User.class == type) {
-            if (object == null) throw new TwitterException("User is null");
         }
     }
 
@@ -121,12 +133,17 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
 
         @Override
         public Object convert(HttpResponse httpResponse) throws IOException, ConvertException, TwitterException {
+            final TimingLogger logger = new TimingLogger("TwitterConverter", TwidereTypeUtils.toSimpleName(type));
+            logger.addSplit("Status code: " + httpResponse.getStatus());
             final Body body = httpResponse.getBody();
-            final InputStream stream = body.stream();
-            final Object object = parseOrThrow(stream, type);
-            checkResponse(type, object, httpResponse);
+            logger.addSplit("Start parsing");
+            final Object object = parseOrThrow(body, type);
+            logger.addSplit("End parsing");
             if (object instanceof TwitterResponse) {
                 ((TwitterResponse) object).processResponseHeader(httpResponse);
+            }
+            if (BuildConfig.DEBUG) {
+                logger.dumpToLog();
             }
             return object;
         }
