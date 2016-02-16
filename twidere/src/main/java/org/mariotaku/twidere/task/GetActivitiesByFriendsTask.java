@@ -9,7 +9,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 
@@ -40,6 +40,6 @@ public class GetActivitiesByFriendsTask extends GetActivitiesTask {
 
     @Override
     protected Uri getContentUri() {
-        return TwidereDataStore.Activities.ByFriends.CONTENT_URI;
+        return Activities.ByFriends.CONTENT_URI;
     }
 }

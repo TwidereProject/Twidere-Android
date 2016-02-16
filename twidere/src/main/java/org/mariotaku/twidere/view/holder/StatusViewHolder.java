@@ -8,6 +8,7 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;

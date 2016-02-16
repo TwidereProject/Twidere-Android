@@ -12,7 +12,7 @@ import org.mariotaku.twidere.api.twitter.model.CursorTimestampResponse;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.Utils;
@@ -57,6 +57,6 @@ public class GetActivitiesAboutMeTask extends GetActivitiesTask {
 
     @Override
     protected Uri getContentUri() {
-        return TwidereDataStore.Activities.AboutMe.CONTENT_URI;
+        return Activities.AboutMe.CONTENT_URI;
     }
 }

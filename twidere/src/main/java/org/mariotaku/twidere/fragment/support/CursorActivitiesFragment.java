@@ -42,16 +42,10 @@ import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
-import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
-import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.model.message.AccountChangedEvent;
 import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
 import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
@@ -59,6 +53,11 @@ import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
+import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 
 import java.util.List;
 
@@ -174,12 +173,6 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     @Override
     protected boolean hasMoreData(final List<ParcelableActivity> cursor) {
         return cursor != null && cursor.size() != 0;
-    }
-
-    @NonNull
-    @Override
-    protected ParcelableActivitiesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ParcelableActivitiesAdapter(context, compact, false);
     }
 
     @Override

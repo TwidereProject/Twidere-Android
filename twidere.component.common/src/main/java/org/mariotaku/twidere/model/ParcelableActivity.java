@@ -129,7 +129,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     }
 
     @Nullable
-    public static ParcelableStatus getActivityStatus(ParcelableActivity activity) {
+    public static ParcelableStatus getActivityStatus(@NonNull ParcelableActivity activity) {
         if (Activity.Action.MENTION.equals(activity.action)) {
             return activity.target_object_statuses[0];
         } else if (Activity.Action.REPLY.equals(activity.action)) {

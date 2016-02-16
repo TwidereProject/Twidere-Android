@@ -100,10 +100,11 @@ public class CustomTabUtils implements Constants {
                 UserListTimelineFragment.class, R.string.list_timeline, R.drawable.ic_action_list,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER_LIST, 7));
 
-        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.ACTIVITIES_BY_FRIENDS, new CustomTabConfiguration(
-                ActivitiesByFriendsFragment.class, R.string.activities_by_friends,
-                R.drawable.ic_action_accounts, CustomTabConfiguration.ACCOUNT_REQUIRED,
-                CustomTabConfiguration.FIELD_TYPE_NONE, 9));
+//        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.ACTIVITIES_BY_FRIENDS, new CustomTabConfiguration(
+//                ActivitiesByFriendsFragment.class, R.string.activities_by_friends,
+//                R.drawable.ic_action_accounts, CustomTabConfiguration.ACCOUNT_OPTIONAL,
+//                CustomTabConfiguration.FIELD_TYPE_NONE, 9));
+
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.RETWEETS_OF_ME, new CustomTabConfiguration(
                 RetweetsOfMeFragment.class, R.string.retweets_of_me, R.drawable.ic_action_retweet,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_NONE, 10));

@@ -67,7 +67,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -126,7 +125,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.CopyLinkActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
-import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -152,7 +150,6 @@ import org.mariotaku.twidere.fragment.support.MutesUsersListFragment;
 import org.mariotaku.twidere.fragment.support.SavedSearchesListFragment;
 import org.mariotaku.twidere.fragment.support.ScheduledStatusesFragment;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
-import org.mariotaku.twidere.fragment.support.SensitiveContentWarningDialogFragment;
 import org.mariotaku.twidere.fragment.support.SetUserNicknameDialogFragment;
 import org.mariotaku.twidere.fragment.support.StatusFavoritersListFragment;
 import org.mariotaku.twidere.fragment.support.StatusFragment;
@@ -184,7 +181,6 @@ import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableLocation;
-import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -2573,9 +2569,11 @@ public final class Utils implements Constants {
         return pm.getDrawable(info.packageName, info.metaData.getInt(key), info.applicationInfo);
     }
 
-    public static boolean handleMenuItemClick(Context context, Fragment fragment, FragmentManager fm,
-                                              UserColorNameManager colorNameManager, AsyncTwitterWrapper twitter,
-                                              ParcelableStatus status, MenuItem item) {
+    public static boolean handleMenuItemClick(@NonNull Context context, @Nullable Fragment fragment,
+                                              @NonNull FragmentManager fm,
+                                              @NonNull UserColorNameManager colorNameManager,
+                                              @NonNull AsyncTwitterWrapper twitter,
+                                              @NonNull ParcelableStatus status, @NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.copy: {
                 if (ClipboardUtils.setText(context, status.text_plain)) {

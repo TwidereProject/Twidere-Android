@@ -110,27 +110,25 @@ public class RefreshService extends Service implements Constants {
                         });
                     }
                 } else if (BROADCAST_REFRESH_NOTIFICATIONS.equals(action)) {
-                    if (!isActivitiesAboutMeRefreshing()) {
-                        mTwitterWrapper.getActivitiesAboutMeAsync(new SimpleRefreshTaskParam() {
-                            private long[] accountIds;
+                    mTwitterWrapper.getActivitiesAboutMeAsync(new SimpleRefreshTaskParam() {
+                        private long[] accountIds;
 
-                            @NonNull
-                            @Override
-                            public long[] getAccountIds() {
-                                if (accountIds != null) return accountIds;
-                                final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
-                                        DataStoreUtils.getAccountIds(context));
-                                return accountIds = getRefreshableIds(prefs, MentionsRefreshableFilter.INSTANCE);
-                            }
+                        @NonNull
+                        @Override
+                        public long[] getAccountIds() {
+                            if (accountIds != null) return accountIds;
+                            final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
+                                    DataStoreUtils.getAccountIds(context));
+                            return accountIds = getRefreshableIds(prefs, MentionsRefreshableFilter.INSTANCE);
+                        }
 
-                            @Nullable
-                            @Override
-                            public long[] getSinceIds() {
-                                return DataStoreUtils.getNewestActivityMaxPositions(context,
-                                        Activities.AboutMe.CONTENT_URI, getAccountIds());
-                            }
-                        });
-                    }
+                        @Nullable
+                        @Override
+                        public long[] getSinceIds() {
+                            return DataStoreUtils.getNewestActivityMaxPositions(context,
+                                    Activities.AboutMe.CONTENT_URI, getAccountIds());
+                        }
+                    });
                 } else if (BROADCAST_REFRESH_DIRECT_MESSAGES.equals(action)) {
                     if (!isReceivedDirectMessagesRefreshing()) {
                         mTwitterWrapper.getReceivedDirectMessagesAsync(new SimpleRefreshTaskParam() {
@@ -308,10 +306,6 @@ public class RefreshService extends Service implements Constants {
 
     private boolean isLocalTrendsRefreshing() {
         return mTwitterWrapper.isLocalTrendsRefreshing();
-    }
-
-    private boolean isActivitiesAboutMeRefreshing() {
-        return mTwitterWrapper.isMentionsTimelineRefreshing();
     }
 
     private boolean isReceivedDirectMessagesRefreshing() {
