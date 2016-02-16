@@ -22,7 +22,6 @@ package org.mariotaku.twidere.api.twitter.util;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
-import android.util.TimingLogger;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -33,7 +32,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.mime.Body;
-import org.mariotaku.restfu.http.mime.SimpleBody;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
@@ -42,8 +40,9 @@ import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
 import org.mariotaku.twidere.util.TwidereTypeUtils;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by mariotaku on 15/5/5.
@@ -52,6 +51,8 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
 
     private static SimpleArrayMap<Type, RestConverter<HttpResponse, ?, TwitterException>> sResponseConverters = new SimpleArrayMap<>();
     private static SimpleArrayMap<Type, RestConverter<?, Body, TwitterException>> sBodyConverters = new SimpleArrayMap<>();
+
+    private static final Executor sWatchDogExecutor = Executors.newCachedThreadPool();
 
     static {
         sResponseConverters.put(ResponseCode.class, new ResponseCode.Converter());
@@ -62,9 +63,11 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         try {
             final Body body = resp.getBody();
             if (body == null) return new TwitterException(resp);
-            final JsonMapper<TwitterException> mapper = LoganSquare.mapperFor(TwitterException.class);
-            final Reader reader = SimpleBody.reader(body);
-            final TwitterException parse = mapper.parse(LoganSquare.JSON_FACTORY.createParser(reader));
+            final JsonMapper<TwitterException> mapper;
+            synchronized (TwitterConverterFactory.class) {
+                mapper = LoganSquare.mapperFor(TwitterException.class);
+            }
+            final TwitterException parse = mapper.parse(body.stream());
             if (parse != null) return parse;
             return new TwitterException(resp);
         } catch (JsonParseException e) {
@@ -79,15 +82,20 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
             throws IOException, TwitterException, RestConverter.ConvertException {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " <---");
+                Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " ---> ?");
             }
             final ParameterizedType<T> parameterizedType = ParameterizedTypeAccessor.create(type);
-            final JsonMapper<T> mapper = LoganSquare.mapperFor(parameterizedType);
+            final WatchdogRunnable runnable = new WatchdogRunnable(new Exception());
+            sWatchDogExecutor.execute(runnable);
+            final JsonMapper<T> mapper;
+            synchronized (TwitterConverterFactory.class) {
+                mapper = LoganSquare.mapperFor(parameterizedType);
+            }
+            runnable.finished();
             if (BuildConfig.DEBUG) {
                 Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " ---> " + TwidereTypeUtils.toSimpleName(mapper.getClass()));
             }
-            final Reader reader = SimpleBody.reader(body);
-            final T parsed = mapper.parse(LoganSquare.JSON_FACTORY.createParser(reader));
+            final T parsed = mapper.parse(body.stream());
             if (BuildConfig.DEBUG) {
                 Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " Finished");
             }
@@ -133,19 +141,38 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
 
         @Override
         public Object convert(HttpResponse httpResponse) throws IOException, ConvertException, TwitterException {
-            final TimingLogger logger = new TimingLogger("TwitterConverter", TwidereTypeUtils.toSimpleName(type));
-            logger.addSplit("Status code: " + httpResponse.getStatus());
             final Body body = httpResponse.getBody();
-            logger.addSplit("Start parsing");
             final Object object = parseOrThrow(body, type);
-            logger.addSplit("End parsing");
             if (object instanceof TwitterResponse) {
                 ((TwitterResponse) object).processResponseHeader(httpResponse);
             }
-            if (BuildConfig.DEBUG) {
-                logger.dumpToLog();
-            }
             return object;
+        }
+    }
+
+    private static class WatchdogRunnable implements Runnable {
+        private final Exception e;
+        private boolean finished;
+
+        public WatchdogRunnable(Exception e) {
+            this.e = e;
+        }
+
+        @Override
+        public void run() {
+            // Crash if take more than 100ms
+            try {
+                Thread.sleep(100L);
+            } catch (InterruptedException e) {
+                //
+            }
+            if (!finished) {
+                throw new RuntimeException("Too long waiting for deserialization", e);
+            }
+        }
+
+        public synchronized void finished() {
+            this.finished = true;
         }
     }
 }
