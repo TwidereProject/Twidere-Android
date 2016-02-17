@@ -45,15 +45,23 @@ public class HtmlSpanBuilder {
 
     private static final IAttoParser PARSER = new MarkupAttoParser();
 
-    public static Spanned fromHtml(String html) {
+    public static Spanned fromHtml(String html) throws ParseException {
         final HtmlParsingConfiguration conf = new HtmlParsingConfiguration();
         final HtmlSpanHandler handler = new HtmlSpanHandler(conf);
         try {
             PARSER.parse(html, handler);
         } catch (AttoParseException e) {
-            throw new RuntimeException(e);
+            throw new ParseException(e);
         }
         return handler.getText();
+    }
+
+    public static CharSequence fromHtml(String html, CharSequence fallback) {
+        try {
+            return fromHtml(html);
+        } catch (ParseException e) {
+            return fallback;
+        }
     }
 
     private static void applyTag(SpannableStringBuilder sb, int start, int end, TagInfo info) {
@@ -90,7 +98,25 @@ public class HtmlSpanBuilder {
         return -1;
     }
 
-    private static class TagInfo {
+    public static class ParseException extends RuntimeException {
+        public ParseException() {
+            super();
+        }
+
+        public ParseException(String detailMessage) {
+            super(detailMessage);
+        }
+
+        public ParseException(String detailMessage, Throwable throwable) {
+            super(detailMessage, throwable);
+        }
+
+        public ParseException(Throwable throwable) {
+            super(throwable);
+        }
+    }
+
+    static class TagInfo {
         final int start;
         final String name;
         final Map<String, String> attributes;
@@ -106,7 +132,7 @@ public class HtmlSpanBuilder {
         }
     }
 
-    private static class HtmlSpanHandler extends AbstractStandardNonValidatingHtmlAttoHandler {
+    static class HtmlSpanHandler extends AbstractStandardNonValidatingHtmlAttoHandler {
         private final SpannableStringBuilder sb;
         List<TagInfo> tagInfo;
 

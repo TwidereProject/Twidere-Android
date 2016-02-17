@@ -468,6 +468,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                     Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof SignInTask.WrongBasicCredentialException) {
                     Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show();
+                } else if (result.exception instanceof SignInTask.WrongAPIURLFormatException) {
+                    Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof LoginVerificationException) {
                     Toast.makeText(this, R.string.login_verification_failed, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof AuthenticationException) {
@@ -735,14 +737,10 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             } catch (final AuthenticationException e) {
                 Log.w(LOGTAG, e);
                 return new SignInResponse(false, false, e);
-            } catch (final WrongBasicCredentialException e) {
-                Log.w(LOGTAG, e);
-                return new SignInResponse(false, false, e);
             }
         }
 
-        private SignInResponse authBasic() throws TwitterException, WrongUserPassException,
-                WrongBasicCredentialException {
+        private SignInResponse authBasic() throws TwitterException, AuthenticationException {
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
             final String versionSuffix = noVersionSuffix ? null : "1.1";
@@ -755,6 +753,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             } catch (TwitterException e) {
                 if (e.getStatusCode() == 401) {
                     throw new WrongBasicCredentialException();
+                } else if (e.getStatusCode() == 404) {
+                    throw new WrongAPIURLFormatException();
                 }
                 throw e;
             }
@@ -766,7 +766,11 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                     color, apiUrlFormat, noVersionSuffix);
         }
 
-        static class WrongBasicCredentialException extends Exception {
+        static class WrongBasicCredentialException extends AuthenticationException {
+
+        }
+
+        static class WrongAPIURLFormatException extends AuthenticationException {
 
         }
 

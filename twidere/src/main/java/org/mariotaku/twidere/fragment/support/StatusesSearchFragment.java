@@ -56,6 +56,7 @@ public class StatusesSearchFragment extends ParcelableStatusesFragment {
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean makeGap = args.getBoolean(EXTRA_MAKE_GAP, true);
         final boolean twitterOptimizedSearches = mPreferences.getBoolean(KEY_TWITTER_OPTIMIZED_SEARCHES);
+        if (query == null) throw new NullPointerException();
         return new TweetSearchLoader(getActivity(), accountId, query, sinceId, maxId, getAdapterData(),
                 getSavedStatusesFileArgs(), tabPosition, fromUser, makeGap, twitterOptimizedSearches);
     }

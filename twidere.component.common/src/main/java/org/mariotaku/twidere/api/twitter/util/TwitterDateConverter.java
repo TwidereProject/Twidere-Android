@@ -25,7 +25,6 @@ import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.mariotaku.twidere.util.BugReporter;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -70,7 +69,6 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
         try {
             date = mDateFormat.parse(string);
         } catch (ParseException e) {
-            BugReporter.error("Unrecognized date: " + string, e);
             return null;
         }
         return date;
@@ -101,7 +99,6 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
         calendar.setTimeZone(SimpleTimeZone.getTimeZone(getTimezoneText(segs[4])));
         final Date date = calendar.getTime();
         if (!WEEK_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1].equals(segs[0])) {
-            BugReporter.error("Week mismatch " + string + " => " + date);
             return null;
         }
         return date;

@@ -21,7 +21,6 @@ package org.mariotaku.twidere.api.twitter.util;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
-import android.util.Log;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -32,17 +31,20 @@ import com.fasterxml.jackson.core.JsonParseException;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.mime.Body;
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
-import org.mariotaku.twidere.util.TwidereTypeUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.concurrent.Executor;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by mariotaku on 15/5/5.
@@ -52,53 +54,18 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
     private static SimpleArrayMap<Type, RestConverter<HttpResponse, ?, TwitterException>> sResponseConverters = new SimpleArrayMap<>();
     private static SimpleArrayMap<Type, RestConverter<?, Body, TwitterException>> sBodyConverters = new SimpleArrayMap<>();
 
-    private static final Executor sWatchDogExecutor = Executors.newCachedThreadPool();
+    private static final ExecutorService pool = Executors.newSingleThreadExecutor();
 
     static {
         sResponseConverters.put(ResponseCode.class, new ResponseCode.Converter());
         sResponseConverters.put(OAuthToken.class, new OAuthToken.Converter());
     }
 
-    public static TwitterException parseTwitterException(HttpResponse resp) {
-        try {
-            final Body body = resp.getBody();
-            if (body == null) return new TwitterException(resp);
-            final JsonMapper<TwitterException> mapper;
-            synchronized (TwitterConverterFactory.class) {
-                mapper = LoganSquare.mapperFor(TwitterException.class);
-            }
-            final TwitterException parse = mapper.parse(body.stream());
-            if (parse != null) return parse;
-            return new TwitterException(resp);
-        } catch (JsonParseException e) {
-            return new TwitterException("Malformed JSON Data", e, resp);
-        } catch (IOException e) {
-            return new TwitterException("IOException while throwing exception", e, resp);
-        }
-    }
-
     @NonNull
-    private static <T> T parseOrThrow(Body body, Type type)
+    private static Object parseOrThrow(Body body, JsonMapper<?> mapper)
             throws IOException, TwitterException, RestConverter.ConvertException {
         try {
-            if (BuildConfig.DEBUG) {
-                Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " ---> ?");
-            }
-            final ParameterizedType<T> parameterizedType = ParameterizedTypeAccessor.create(type);
-            final WatchdogRunnable runnable = new WatchdogRunnable(new Exception());
-            sWatchDogExecutor.execute(runnable);
-            final JsonMapper<T> mapper;
-            synchronized (TwitterConverterFactory.class) {
-                mapper = LoganSquare.mapperFor(parameterizedType);
-            }
-            runnable.finished();
-            if (BuildConfig.DEBUG) {
-                Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " ---> " + TwidereTypeUtils.toSimpleName(mapper.getClass()));
-            }
-            final T parsed = mapper.parse(body.stream());
-            if (BuildConfig.DEBUG) {
-                Log.d("TwitterConverter", TwidereTypeUtils.toSimpleName(type) + " Finished");
-            }
+            final Object parsed = mapper.parse(body.stream());
             if (parsed == null) {
                 throw new TwitterException("Empty data");
             }
@@ -109,16 +76,41 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
     }
 
     @Override
-    public RestConverter<HttpResponse, ?, TwitterException> forResponse(Type type) {
+    public RestConverter<HttpResponse, ?, TwitterException> forResponse(Type type) throws RestConverter.ConvertException {
         RestConverter<HttpResponse, ?, TwitterException> converter = sResponseConverters.get(type);
         if (converter != null) {
             return converter;
         }
-        return new TwitterConverter(type);
+        final ParameterizedType<?> parameterizedType = ParameterizedTypeAccessor.create(type);
+        final Future<JsonMapper<?>> future = pool.submit(new Callable<JsonMapper<?>>() {
+            @Override
+            public JsonMapper<?> call() {
+                return LoganSquare.mapperFor(parameterizedType);
+            }
+        });
+        final JsonMapper<?> mapper;
+        //noinspection TryWithIdenticalCatches
+        try {
+            mapper = future.get(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            final Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw ((RuntimeException) cause);
+            } else if (cause instanceof Error) {
+                throw ((Error) cause);
+            } else {
+                throw new RuntimeException(e);
+            }
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+        return new JsonConverter(mapper);
     }
 
     @Override
-    public RestConverter<?, Body, TwitterException> forRequest(Type type) {
+    public RestConverter<?, Body, TwitterException> forRequest(Type type) throws RestConverter.ConvertException {
         final RestConverter<?, Body, TwitterException> converter = sBodyConverters.get(type);
         if (converter != null) {
             return converter;
@@ -132,17 +124,17 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         }
     }
 
-    public static class TwitterConverter implements RestConverter<HttpResponse, Object, TwitterException> {
-        private final Type type;
+    public static class JsonConverter implements RestConverter<HttpResponse, Object, TwitterException> {
+        private final JsonMapper<?> mapper;
 
-        public TwitterConverter(Type type) {
-            this.type = type;
+        public JsonConverter(JsonMapper<?> mapper) {
+            this.mapper = mapper;
         }
 
         @Override
         public Object convert(HttpResponse httpResponse) throws IOException, ConvertException, TwitterException {
             final Body body = httpResponse.getBody();
-            final Object object = parseOrThrow(body, type);
+            final Object object = parseOrThrow(body, mapper);
             if (object instanceof TwitterResponse) {
                 ((TwitterResponse) object).processResponseHeader(httpResponse);
             }
@@ -150,29 +142,4 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         }
     }
 
-    private static class WatchdogRunnable implements Runnable {
-        private final Exception e;
-        private boolean finished;
-
-        public WatchdogRunnable(Exception e) {
-            this.e = e;
-        }
-
-        @Override
-        public void run() {
-            // Crash if take more than 100ms
-            try {
-                Thread.sleep(100L);
-            } catch (InterruptedException e) {
-                //
-            }
-            if (!finished) {
-                throw new RuntimeException("Too long waiting for deserialization", e);
-            }
-        }
-
-        public synchronized void finished() {
-            this.finished = true;
-        }
-    }
 }

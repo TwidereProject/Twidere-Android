@@ -20,12 +20,10 @@
 package org.mariotaku.twidere.util;
 
 import android.app.Application;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 
 import io.fabric.sdk.android.Fabric;
@@ -36,29 +34,12 @@ import io.fabric.sdk.android.Fabric;
 public class TwidereBugReporter extends BugReporter implements Constants {
 
     @Override
-    protected void logImpl(@Nullable String message, @Nullable Throwable throwable) {
-        Log.d(LOGTAG, message, throwable);
+    protected void logImpl(int priority, String tag, String msg) {
+        Crashlytics.log(priority, tag, msg);
     }
 
     @Override
-    protected void errorImpl(@Nullable String message, @Nullable Throwable throwable) {
-        if (throwable == null && message == null) {
-            throw new NullPointerException("Message and Throwable can't be both null");
-        }
-        if (message != null) {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, message, throwable);
-            }
-            handleSilentException(new Exception(message, throwable));
-            return;
-        }
-        if (BuildConfig.DEBUG) {
-            Log.w(LOGTAG, throwable);
-        }
-        handleSilentException(throwable);
-    }
-
-    private void handleSilentException(final Throwable throwable) {
+    protected void logExceptionImpl(@NonNull final Throwable throwable) {
         Crashlytics.logException(throwable);
     }
 

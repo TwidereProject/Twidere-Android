@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -85,22 +86,24 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
     }
 
     private void appendMessage(LogText message) {
+        final Activity activity = getActivity();
+        if (activity == null) return;
         SpannableString coloredText = SpannableString.valueOf(message.message);
         switch (message.state) {
             case LogText.State.OK: {
-                coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(),
+                coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,
                                 R.color.material_light_green)), 0, coloredText.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
             }
             case LogText.State.ERROR: {
-                coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(),
+                coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,
                                 R.color.material_red)), 0, coloredText.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
             }
             case LogText.State.WARNING: {
-                coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getActivity(),
+                coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,
                                 R.color.material_amber)), 0, coloredText.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;

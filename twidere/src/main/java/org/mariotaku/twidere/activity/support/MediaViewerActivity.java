@@ -225,6 +225,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         switch (media.type) {
             case ParcelableMedia.Type.IMAGE: {
                 final Bundle args = new Bundle();
+                args.putLong(EXTRA_ACCOUNT_ID, getIntent().getLongExtra(EXTRA_ACCOUNT_ID, -1));
                 args.putParcelable(ImagePageFragment.EXTRA_MEDIA_URI, Uri.parse(media.media_url));
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         ImagePageFragment.class.getName(), args);
@@ -808,7 +809,9 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     public static class ImagePageFragment extends SubsampleImageViewerFragment {
         @Override
         protected Object getDownloadExtra() {
-            return ((MediaViewerActivity) getActivity()).getDownloadExtra();
+            final MediaExtra mediaExtra = new MediaExtra();
+            mediaExtra.setAccountId(getArguments().getLong(EXTRA_ACCOUNT_ID, -1));
+            return mediaExtra;
         }
 
         @Override

@@ -113,6 +113,10 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.SupportTabSpec;
+import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
+import org.mariotaku.twidere.model.message.FriendshipUserUpdatedEvent;
+import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
+import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -135,10 +139,6 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
-import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
-import org.mariotaku.twidere.model.message.FriendshipUserUpdatedEvent;
-import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
-import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.util.support.ActivitySupport;
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.support.ViewSupport;
@@ -1484,10 +1484,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses),
                 R.drawable.ic_action_quote, TAB_TYPE_STATUSES, TAB_POSITION_STATUSES, null);
-        if (TwitterAPIFactory.isOfficialKeyAccount(context, accountId)) {
-            mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media),
-                    R.drawable.ic_action_gallery, TAB_TYPE_MEDIA, TAB_POSITION_MEDIA, null);
-        }
+        mPagerAdapter.addTab(UserMediaTimelineFragment.class, tabArgs, getString(R.string.media),
+                R.drawable.ic_action_gallery, TAB_TYPE_MEDIA, TAB_POSITION_MEDIA, null);
         if (mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
             mPagerAdapter.addTab(UserFavoritesFragment.class, tabArgs, getString(R.string.favorites),
                     R.drawable.ic_action_star, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null);

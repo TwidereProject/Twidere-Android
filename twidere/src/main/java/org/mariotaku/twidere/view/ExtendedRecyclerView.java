@@ -147,6 +147,9 @@ public class ExtendedRecyclerView extends RecyclerView {
 
     @Override
     public boolean showContextMenuForChild(View originalView) {
+        if (originalView.getParent() != this) {
+            return false;
+        }
         final int position = getChildLayoutPosition(originalView);
         if (position == RecyclerView.NO_POSITION) return false;
         mContextMenuInfo = new ContextMenuInfo(position);

@@ -87,6 +87,7 @@ import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.model.UnreadItem;
+import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -127,7 +128,6 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.util.net.TwidereDns;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;
 
@@ -1127,7 +1127,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private boolean isNotificationAudible() {
-        return !mActivityTracker.isHomeActivityStarted() && !Utils.isNotificationsSilent(getContext());
+        return !mActivityTracker.isHomeActivityStarted();
     }
 
     private void notifyContentObserver(final Uri uri) {

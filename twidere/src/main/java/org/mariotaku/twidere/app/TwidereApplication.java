@@ -33,6 +33,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -62,6 +63,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     private static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
     private static final String KEY_SPICE_DATA_PROFILING = "spice_data_profiling";
     private static final String KEY_KEYBOARD_SHORTCUT_INITIALIZED = "keyboard_shortcut_initialized";
+    private static TwidereApplication sInstance;
 
     private Handler mHandler;
     private SharedPreferences mPreferences;
@@ -102,6 +104,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
 
     @Override
     public void onCreate() {
+        sInstance = this;
         if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy();
         }
@@ -264,4 +267,8 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return mApplicationModule = new ApplicationModule(this);
     }
 
+    @Nullable
+    public static TwidereApplication getInstance() {
+        return sInstance;
+    }
 }

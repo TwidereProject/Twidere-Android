@@ -34,7 +34,9 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.view.MediaPreviewImageView;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 /**
@@ -66,7 +68,7 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
         private final SimpleAspectRatioSource aspectRatioSource = new SimpleAspectRatioSource();
 
         private final AspectLockedFrameLayout mediaImageContainer;
-        private final ImageView mediaImageView;
+        private final MediaPreviewImageView mediaImageView;
         private final ImageView mediaProfileImageView;
         private final TextView mediaTextView;
         private final IStatusesAdapter<?> adapter;
@@ -77,7 +79,7 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
             this.adapter = adapter;
             mediaImageContainer = (AspectLockedFrameLayout) itemView.findViewById(R.id.media_image_container);
             mediaImageContainer.setAspectRatioSource(aspectRatioSource);
-            mediaImageView = (ImageView) itemView.findViewById(R.id.media_image);
+            mediaImageView = (MediaPreviewImageView) itemView.findViewById(R.id.media_image);
             mediaProfileImageView = (ImageView) itemView.findViewById(R.id.media_profile_image);
             mediaTextView = (TextView) itemView.findViewById(R.id.media_text);
         }
@@ -97,6 +99,8 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
             aspectRatioSource.setSize(firstMedia.width, firstMedia.height);
             mediaImageContainer.setTag(firstMedia);
             mediaImageContainer.requestLayout();
+
+            mediaImageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(firstMedia.type));
             loader.displayProfileImage(mediaProfileImageView, status.user_profile_image_url);
             loader.displayPreviewImageWithCredentials(mediaImageView, firstMedia.preview_url,
                     status.account_id, adapter.getMediaLoadingHandler());

@@ -22,7 +22,12 @@ package org.mariotaku.twidere.activity.support;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -32,7 +37,6 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
-import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.PermissionsManager;
 
 import static android.text.TextUtils.isEmpty;
@@ -90,11 +94,15 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
         loadInfo(caller);
     }
 
-    private void appendPermission(final StringBuilder sb, final String name, final boolean danger) {
+    private void appendPermission(final SpannableStringBuilder sb, final String name, final boolean danger) {
         if (danger) {
-            sb.append(String.format("<br/><b><font color='#ff8000'>%s</font></b>", HtmlEscapeHelper.escape(name)));
+            final int start = sb.length();
+            sb.append(name);
+            final int end = sb.length();
+            sb.setSpan(new ForegroundColorSpan(0xffff8000), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else {
-            sb.append(String.format("<br/>%s", HtmlEscapeHelper.escape(name)));
+            sb.append(name);
         }
     }
 
@@ -117,8 +125,9 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
                     .getString(METADATA_KEY_EXTENSION_PERMISSIONS));
             mPermissions = permissions;
             mCallingPackage = pname;
-            final StringBuilder builder = new StringBuilder();
-            builder.append(HtmlEscapeHelper.escape(getString(R.string.permissions_request_message))).append("<br/>");
+            final SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(HtmlEscapeHelper.escape(getString(R.string.permissions_request_message)));
+            builder.append("\n");
             if (PermissionsManager.isPermissionValid(permissions)) {
                 if (PermissionsManager.hasPermissions(permissions, PERMISSION_PREFERENCES)) {
                     appendPermission(builder, getString(R.string.permission_description_preferences), true);
@@ -141,7 +150,7 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
             } else {
                 appendPermission(builder, getString(R.string.permission_description_none), false);
             }
-            mMessageView.setText(HtmlSpanBuilder.fromHtml(builder.toString()));
+            mMessageView.setText(builder);
         } catch (final NameNotFoundException e) {
             setResult(RESULT_CANCELED);
             finish();

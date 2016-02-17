@@ -304,6 +304,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     public void onGapClick(GapViewHolder holder, int position) {
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
+        if (status == null) return;
         final long[] accountIds = {status.account_id};
         final long[] maxIds = {status.id};
         getStatuses(accountIds, maxIds, null);

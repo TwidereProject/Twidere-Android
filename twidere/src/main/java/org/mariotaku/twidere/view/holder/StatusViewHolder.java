@@ -8,7 +8,6 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -127,8 +126,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         nameView.updateText(adapter.getBidiFormatter());
         if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             final TwidereLinkify linkify = adapter.getTwidereLinkify();
-            final Spanned text = HtmlSpanBuilder.fromHtml(TWIDERE_PREVIEW_TEXT_HTML);
-            textView.setText(linkify.applyAllLinks(text, -1, -1, false, adapter.getLinkHighlightingStyle()));
+            final CharSequence text = HtmlSpanBuilder.fromHtml(TWIDERE_PREVIEW_TEXT_HTML,
+                    TWIDERE_PREVIEW_TEXT_UNESCAPED);
+            if (text instanceof Spanned) {
+                textView.setText(linkify.applyAllLinks(text, -1, -1, false,
+                        adapter.getLinkHighlightingStyle()));
+            }
         } else {
             textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
         }
@@ -194,9 +197,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
             if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
                     && !TextUtils.isEmpty(status.quoted_text_html)) {
-                final Spanned text = HtmlSpanBuilder.fromHtml(status.quoted_text_html);
-                quotedTextView.setText(linkify.applyAllLinks(text, status.account_id, getLayoutPosition(),
-                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle()));
+                final CharSequence text = HtmlSpanBuilder.fromHtml(status.quoted_text_html,
+                        status.quoted_text_unescaped);
+                if (text instanceof Spanned) {
+                    quotedTextView.setText(linkify.applyAllLinks(text, status.account_id,
+                            getLayoutPosition(), status.is_possibly_sensitive,
+                            adapter.getLinkHighlightingStyle()));
+                }
             } else {
                 final String text = status.quoted_text_unescaped;
                 quotedTextView.setText(text);
@@ -282,9 +289,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         if (adapter.getLinkHighlightingStyle() == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
             textView.setText(status.text_unescaped);
         } else {
-            final Spanned text = HtmlSpanBuilder.fromHtml(status.text_html);
-            textView.setText(linkify.applyAllLinks(text, status.account_id, getLayoutPosition(),
-                    status.is_possibly_sensitive, adapter.getLinkHighlightingStyle()));
+            final CharSequence text = HtmlSpanBuilder.fromHtml(status.text_html, status.text_unescaped);
+            if (text instanceof Spanned) {
+                textView.setText(linkify.applyAllLinks(text, status.account_id, getLayoutPosition(),
+                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle()));
+            }
         }
 
         if (replyCount > 0) {

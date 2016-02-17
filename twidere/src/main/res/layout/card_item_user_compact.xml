@@ -46,11 +46,11 @@
             android:id="@+id/profile_image_container"
             android:layout_width="@dimen/icon_size_card_list_item"
             android:layout_height="@dimen/icon_size_card_list_item"
-            android:layout_alignBottom="@+id/name_request"
+            android:layout_alignBottom="@+id/actions_container"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignTop="@+id/name_request"
+            android:layout_alignTop="@+id/actions_container"
             android:layout_marginEnd="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:clipChildren="false">
@@ -81,65 +81,58 @@
         </RelativeLayout>
 
 
-        <LinearLayout
-            android:id="@+id/name_request"
+        <org.mariotaku.twidere.view.NameView
+            android:id="@+id/name"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/actions_container"
+            android:layout_alignTop="@+id/actions_container"
+            android:layout_toEndOf="@id/profile_image_container"
+            android:layout_toLeftOf="@+id/actions_container"
+            android:layout_toRightOf="@id/profile_image_container"
+            android:layout_toStartOf="@+id/actions_container"
+            android:gravity="center_vertical"
+            app:nv_primaryTextColor="?android:textColorPrimary"
+            app:nv_primaryTextStyle="bold"
+            app:nv_secondaryTextColor="?android:textColorSecondary"
+            app:nv_twoLine="true"/>
+
+        <LinearLayout
+            android:id="@+id/actions_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_toEndOf="@id/profile_image_container"
-            android:layout_toRightOf="@id/profile_image_container"
             android:clipChildren="false"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:minHeight="@dimen/element_size_normal"
+            android:minWidth="@dimen/element_size_normal"
+            android:orientation="horizontal"
+            tools:visibility="gone">
 
-            <org.mariotaku.twidere.view.NameView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:nv_primaryTextColor="?android:textColorPrimary"
-                app:nv_primaryTextStyle="bold"
-                app:nv_secondaryTextColor="?android:textColorSecondary"
-                app:nv_twoLine="true"/>
-
-            <LinearLayout
-                android:id="@+id/follow_request_container"
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/accept_request"
+                style="?buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:clipChildren="false"
-                android:gravity="center"
-                android:minHeight="@dimen/element_size_normal"
-                android:minWidth="@dimen/element_size_normal"
-                android:orientation="horizontal">
+                android:contentDescription="@string/accept"
+                android:src="@drawable/ic_action_confirm"
+                app:backgroundTint="@color/material_light_green"/>
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/accept_request"
-                    style="?buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/accept"
-                    android:src="@drawable/ic_action_confirm"
-                    app:backgroundTint="@color/material_light_green"/>
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/deny_request"
+                style="?buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/deny"
+                android:src="@drawable/ic_action_cancel"
+                app:backgroundTint="@color/material_red"/>
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/deny_request"
-                    style="?buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/deny"
-                    android:src="@drawable/ic_action_cancel"
-                    app:backgroundTint="@color/material_red"/>
-
-                <ProgressBar
-                    android:id="@+id/processing_request"
-                    style="?android:progressBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
+            <ProgressBar
+                android:id="@+id/processing_request"
+                style="?android:progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
@@ -147,9 +140,9 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/name_request"
-            android:layout_alignStart="@+id/name_request"
-            android:layout_below="@+id/name_request"
+            android:layout_alignLeft="@+id/name"
+            android:layout_alignStart="@+id/name"
+            android:layout_below="@+id/name"
             android:paddingTop="@dimen/element_spacing_small"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
@@ -159,8 +152,8 @@
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/name_request"
-            android:layout_alignStart="@+id/name_request"
+            android:layout_alignLeft="@+id/name"
+            android:layout_alignStart="@+id/name"
             android:layout_below="@+id/description"
             android:drawableLeft="@drawable/ic_indicator_location"
             android:drawablePadding="@dimen/element_spacing_small"
@@ -174,8 +167,8 @@
             android:id="@+id/url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/name_request"
-            android:layout_alignStart="@+id/name_request"
+            android:layout_alignLeft="@+id/name"
+            android:layout_alignStart="@+id/name"
             android:layout_below="@+id/location"
             android:drawableLeft="@drawable/ic_indicator_web"
             android:drawablePadding="@dimen/element_spacing_small"
@@ -188,8 +181,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/name_request"
-            android:layout_alignStart="@+id/name_request"
+            android:layout_alignLeft="@+id/name"
+            android:layout_alignStart="@+id/name"
             android:layout_below="@+id/url"
             android:orientation="horizontal"
             android:paddingTop="@dimen/element_spacing_small">

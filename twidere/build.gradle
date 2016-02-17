@@ -1,7 +1,5 @@
 import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
 
-import java.text.SimpleDateFormat
-
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
@@ -23,7 +21,7 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 146
+        versionCode 147
         versionName "3.0.5 (snapshot)"
         multiDexEnabled true
 
@@ -41,8 +39,6 @@ android {
     }
     buildTypes {
         debug {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd")
-            versionNameSuffix String.format(" (debug %s)", format.format(new Date()))
             resValue("bool", "debug", "true")
         }
         release {
@@ -72,6 +68,7 @@ repositories {
 dependencies {
 //    wearApp project(':twidere.wear')
     apt 'com.bluelinelabs:logansquare-compiler:1.3.4'
+    androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.4'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     apt "com.github.mariotaku.ObjectCursor:processor:0.9.3"
@@ -107,8 +104,7 @@ dependencies {
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
     compile 'com.github.mariotaku:PickNCrop:0.9.3'
-    compile 'com.github.mariotaku.RestFu:library:0.9.20'
-    compile 'com.github.mariotaku.RestFu:okhttp3:0.9.20'
+    compile 'com.github.mariotaku.RestFu:okhttp3:0.9.21'
     compile 'com.squareup.okhttp3:okhttp:3.1.2'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.0.2'

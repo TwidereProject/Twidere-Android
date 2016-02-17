@@ -11,6 +11,8 @@ import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import com.fasterxml.jackson.core.JsonParseException;
+
 import org.mariotaku.restfu.ExceptionFactory;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestClient;
@@ -140,9 +142,10 @@ public class TwitterAPIFactory implements TwidereConstants {
         factory.setAuthorization(auth);
         factory.setEndpoint(endpoint);
         factory.setConstantPool(sConstantPoll);
-        factory.setRestConverterFactory(new TwitterConverterFactory());
+        final TwitterConverterFactory converterFactory = new TwitterConverterFactory();
+        factory.setRestConverterFactory(converterFactory);
         factory.setHttpRequestFactory(new TwidereHttpRequestFactory(userAgent));
-        factory.setExceptionFactory(new TwidereExceptionFactory());
+        factory.setExceptionFactory(new TwidereExceptionFactory(converterFactory));
         return factory.build(cls);
     }
 
@@ -198,7 +201,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             versionSuffix = noVersionSuffix ? null : "/1.1/";
         } else if (TwitterOAuth.class.isAssignableFrom(cls)) {
             domain = "api";
-            versionSuffix = "oauth";
+            versionSuffix = "/oauth";
         } else if (TwitterUserStream.class.isAssignableFrom(cls)) {
             domain = "userstream";
             versionSuffix = noVersionSuffix ? null : "/1.1/";
@@ -272,8 +275,11 @@ public class TwitterAPIFactory implements TwidereConstants {
         return matcher.replaceAll("$1" + domain + "$2");
     }
 
+    @NonNull
     static String substituteLegacyApiBaseUrl(@NonNull String format, String domain) {
-        final int startOfHost = format.indexOf("://") + 3, endOfHost = format.indexOf('/', startOfHost);
+        final int startOfHost = format.indexOf("://") + 3;
+        if (startOfHost < 0) return getApiBaseUrl("https://[DOMAIN.]twitter.com/", domain);
+        final int endOfHost = format.indexOf('/', startOfHost);
         final String host = endOfHost != -1 ? format.substring(startOfHost, endOfHost) : format.substring(startOfHost);
         if (!host.equalsIgnoreCase("api.twitter.com")) return format;
         final StringBuilder sb = new StringBuilder();
@@ -296,10 +302,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         if (appendPath.startsWith("/")) {
             appendPath = appendPath.substring(1);
         }
-        if (appendPath.endsWith("/")) {
-            appendPath = appendPath.substring(0, appendPath.length() - 1);
-        }
-        return urlBase + "/" + appendPath + "/";
+        return urlBase + "/" + appendPath;
     }
 
     @WorkerThread
@@ -439,7 +442,10 @@ public class TwitterAPIFactory implements TwidereConstants {
 
     public static class TwidereExceptionFactory implements ExceptionFactory<TwitterException> {
 
-        TwidereExceptionFactory() {
+        private final TwitterConverterFactory converterFactory;
+
+        TwidereExceptionFactory(TwitterConverterFactory converterFactory) {
+            this.converterFactory = converterFactory;
         }
 
         @Override
@@ -448,10 +454,26 @@ public class TwitterAPIFactory implements TwidereConstants {
             if (cause != null) {
                 te = new TwitterException(cause);
             } else {
-                te = TwitterConverterFactory.parseTwitterException(response);
+                te = parseTwitterException(response);
             }
+            te.setHttpRequest(request);
             te.setHttpResponse(response);
             return te;
+        }
+
+
+        public TwitterException parseTwitterException(HttpResponse resp) {
+            try {
+                return (TwitterException) converterFactory.forResponse(TwitterException.class).convert(resp);
+            } catch (JsonParseException e) {
+                return new TwitterException("Malformed JSON Data", e);
+            } catch (IOException e) {
+                return new TwitterException("IOException while throwing exception", e);
+            } catch (RestConverter.ConvertException e) {
+                return new TwitterException(e);
+            } catch (TwitterException e) {
+                return e;
+            }
         }
     }
 

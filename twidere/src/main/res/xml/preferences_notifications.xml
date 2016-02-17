@@ -12,10 +12,6 @@
     <PreferenceCategory
         android:key="cat_general"
         android:title="@string/general">
-        <org.mariotaku.twidere.preference.SilentNotificationsPreference
-            android:key="silent_notifications"
-            android:summary="@string/silent_notifications_summary"
-            android:title="@string/silent_notifications" />
 
         <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
             android:defaultValue="false"

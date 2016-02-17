@@ -97,7 +97,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
             account = null;
             auth = null;
         }
-        Uri modifiedUri = getReplacedUri(uri, account != null ? account.api_url_format : null);
+        final Uri modifiedUri = getReplacedUri(uri, account != null ? account.api_url_format : null);
         final MultiValueMap<String> additionalHeaders = new MultiValueMap<>();
         additionalHeaders.add("User-Agent", mUserAgent);
         final String method = GET.METHOD;

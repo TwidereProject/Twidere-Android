@@ -13,10 +13,10 @@ public class TwitterAPIFactoryTest {
     public void testGetApiUrl() throws Exception {
         assertEquals("https://api.twitter.com/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com", "api", null));
         assertEquals("https://api.twitter.com/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com/", "api", null));
-        assertEquals("https://api.twitter.com/1.1/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com", "api", "1.1"));
-        assertEquals("https://api.twitter.com/1.1/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com/", "api", "1.1"));
-        assertEquals("https://api.twitter.com/1.1/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com", "api", "/1.1"));
-        assertEquals("https://api.twitter.com/1.1/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com/", "api", "/1.1"));
+        assertEquals("https://api.twitter.com/1.1/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com", "api", "/1.1/"));
+        assertEquals("https://api.twitter.com/1.1", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com/", "api", "1.1"));
+        assertEquals("https://api.twitter.com/1.1", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com", "api", "/1.1"));
+        assertEquals("https://api.twitter.com/1.1", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com/", "api", "/1.1"));
         assertEquals("https://api.twitter.com/1.1/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com", "api", "1.1/"));
         assertEquals("https://api.twitter.com/1.1/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com/", "api", "1.1/"));
         assertEquals("https://api.twitter.com/1.1/", TwitterAPIFactory.getApiUrl("https://[DOMAIN.]twitter.com", "api", "/1.1/"));

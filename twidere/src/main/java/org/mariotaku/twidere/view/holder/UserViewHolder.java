@@ -74,7 +74,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         statusesCountView = (TextView) itemView.findViewById(R.id.statuses_count);
         followersCountView = (TextView) itemView.findViewById(R.id.followers_count);
         friendsCountView = (TextView) itemView.findViewById(R.id.friends_count);
-        followRequestContainer = itemView.findViewById(R.id.follow_request_container);
+        followRequestContainer = itemView.findViewById(R.id.actions_container);
         acceptRequestButton = itemView.findViewById(R.id.accept_request);
         denyRequestButton = itemView.findViewById(R.id.deny_request);
         processingRequestProgress = itemView.findViewById(R.id.processing_request);

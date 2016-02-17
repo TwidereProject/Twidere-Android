@@ -1662,14 +1662,6 @@ public final class Utils implements Constants {
         return info != null && info.isConnected();
     }
 
-    public static boolean isNotificationsSilent(final Context context) {
-        if (context == null) return false;
-        final SharedPreferences prefs = context.getSharedPreferences(SILENT_NOTIFICATIONS_PREFERENCE_NAME,
-                Context.MODE_PRIVATE);
-        final Calendar now = Calendar.getInstance();
-        return prefs.getBoolean("silent_notifications_at_" + now.get(Calendar.HOUR_OF_DAY), false);
-    }
-
     public static boolean isRedirected(final int code) {
         return code == 301 || code == 302 || code == 307;
     }

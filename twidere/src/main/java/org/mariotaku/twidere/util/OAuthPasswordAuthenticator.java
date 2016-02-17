@@ -430,18 +430,18 @@ public class OAuthPasswordAuthenticator implements Constants {
 
     public static class AuthenticationException extends Exception {
 
-        AuthenticationException() {
+        public AuthenticationException() {
         }
 
-        AuthenticationException(final Exception cause) {
+        public AuthenticationException(final Exception cause) {
             super(cause);
         }
 
-        AuthenticationException(String detailMessage, Throwable throwable) {
+        public AuthenticationException(String detailMessage, Throwable throwable) {
             super(detailMessage, throwable);
         }
 
-        AuthenticationException(final String message) {
+        public AuthenticationException(final String message) {
             super(message);
         }
     }

@@ -20,38 +20,19 @@
 package org.mariotaku.twidere.util;
 
 import android.app.Application;
-import android.support.annotation.Nullable;
-import android.util.Log;
-
-import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
+import android.support.annotation.NonNull;
 
 /**
  * Created by mariotaku on 15/7/8.
  */
-public class TwidereBugReporter extends BugReporter implements Constants {
+public class TwidereBugReporter extends BugReporter {
 
     @Override
-    protected void logImpl(@Nullable String message, @Nullable Throwable throwable) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, message, throwable);
-        }
+    protected void logImpl(int priority, String tag, String msg) {
     }
 
     @Override
-    protected void errorImpl(@Nullable String message, @Nullable Throwable throwable) {
-        if (throwable == null && message == null) {
-            throw new NullPointerException("Message and Throwable can't be both null");
-        }
-        if (message != null) {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, message, throwable);
-            }
-            return;
-        }
-        if (BuildConfig.DEBUG) {
-            Log.w(LOGTAG, throwable);
-        }
+    protected void logExceptionImpl(@NonNull final Throwable throwable) {
     }
 
     @Override

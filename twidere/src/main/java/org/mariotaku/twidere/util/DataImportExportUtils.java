@@ -24,23 +24,23 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.annotation.Preference;
 import org.mariotaku.twidere.annotation.PreferenceType;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -64,34 +64,35 @@ public class DataImportExportUtils implements Constants {
     public static final int FLAG_ALL = FLAG_PREFERENCES | FLAG_NICKNAMES | FLAG_USER_COLORS
             | FLAG_HOST_MAPPING | FLAG_KEYBOARD_SHORTCUTS | FLAG_FILTERS;
 
-    public static void exportData(final Context context, final File dst, final int flags) throws IOException {
-        if (dst == null) throw new FileNotFoundException();
+    public static void exportData(final Context context, @NonNull final File dst, final int flags) throws IOException {
         dst.delete();
         final FileOutputStream fos = new FileOutputStream(dst);
-        final ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(fos));
-        if (hasFlag(flags, FLAG_PREFERENCES)) {
-            exportSharedPreferencesData(zos, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES, new AnnotationProcessStrategy(SharedPreferenceConstants.class));
+        final ZipOutputStream zos = new ZipOutputStream(fos);
+        try {
+            if (hasFlag(flags, FLAG_PREFERENCES)) {
+                exportSharedPreferencesData(zos, context, SHARED_PREFERENCES_NAME, ENTRY_PREFERENCES, new AnnotationProcessStrategy(SharedPreferenceConstants.class));
+            }
+            if (hasFlag(flags, FLAG_NICKNAMES)) {
+                exportSharedPreferencesData(zos, context, USER_NICKNAME_PREFERENCES_NAME, ENTRY_NICKNAMES, ConvertToStringProcessStrategy.SINGLETON);
+            }
+            if (hasFlag(flags, FLAG_USER_COLORS)) {
+                exportSharedPreferencesData(zos, context, USER_COLOR_PREFERENCES_NAME, ENTRY_USER_COLORS, ConvertToIntProcessStrategy.SINGLETON);
+            }
+            if (hasFlag(flags, FLAG_HOST_MAPPING)) {
+                exportSharedPreferencesData(zos, context, HOST_MAPPING_PREFERENCES_NAME, ENTRY_HOST_MAPPING, ConvertToStringProcessStrategy.SINGLETON);
+            }
+            if (hasFlag(flags, FLAG_KEYBOARD_SHORTCUTS)) {
+                exportSharedPreferencesData(zos, context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME, ENTRY_KEYBOARD_SHORTCUTS, ConvertToStringProcessStrategy.SINGLETON);
+            }
+            zos.finish();
+            zos.flush();
+        } finally {
+            Utils.closeSilently(zos);
+            Utils.closeSilently(fos);
         }
-        if (hasFlag(flags, FLAG_NICKNAMES)) {
-            exportSharedPreferencesData(zos, context, USER_NICKNAME_PREFERENCES_NAME, ENTRY_NICKNAMES, ConvertToStringProcessStrategy.SINGLETON);
-        }
-        if (hasFlag(flags, FLAG_USER_COLORS)) {
-            exportSharedPreferencesData(zos, context, USER_COLOR_PREFERENCES_NAME, ENTRY_USER_COLORS, ConvertToIntProcessStrategy.SINGLETON);
-        }
-        if (hasFlag(flags, FLAG_HOST_MAPPING)) {
-            exportSharedPreferencesData(zos, context, HOST_MAPPING_PREFERENCES_NAME, ENTRY_HOST_MAPPING, ConvertToStringProcessStrategy.SINGLETON);
-        }
-        if (hasFlag(flags, FLAG_KEYBOARD_SHORTCUTS)) {
-            exportSharedPreferencesData(zos, context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME, ENTRY_KEYBOARD_SHORTCUTS, ConvertToStringProcessStrategy.SINGLETON);
-        }
-        zos.finish();
-        zos.flush();
-        Utils.closeSilently(zos);
-        Utils.closeSilently(fos);
     }
 
-    public static int getImportedSettingsFlags(final File src) throws IOException {
-        if (src == null) return 0;
+    public static int getImportedSettingsFlags(@NonNull final File src) throws IOException {
         final ZipFile zipFile = new ZipFile(src);
         int flags = 0;
         if (zipFile.getEntry(ENTRY_PREFERENCES) != null) {
@@ -166,12 +167,19 @@ public class DataImportExportUtils implements Constants {
                                                     @NonNull final ProcessStrategy strategy) throws IOException {
         final ZipEntry entry = zipFile.getEntry(entryName);
         if (entry == null) return;
-        final JSONObject json = JsonSerializer.convertJSONObject(zipFile.getInputStream(entry));
-        final Iterator<String> keys = json.keys();
+        final JsonParser jsonParser = LoganSquare.JSON_FACTORY.createParser(zipFile.getInputStream(entry));
+        if (jsonParser.getCurrentToken() == null) {
+            jsonParser.nextToken();
+        }
+        if (jsonParser.getCurrentToken() != JsonToken.START_OBJECT) {
+            jsonParser.skipChildren();
+            return;
+        }
         final SharedPreferences preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = preferences.edit();
-        while (keys.hasNext()) {
-            strategy.importValue(json, keys.next(), editor);
+        while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+            String key = jsonParser.getCurrentName();
+            strategy.importValue(jsonParser, key, editor);
         }
         editor.apply();
     }
@@ -182,18 +190,20 @@ public class DataImportExportUtils implements Constants {
         final SharedPreferences preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         final Map<String, ?> map = preferences.getAll();
         zos.putNextEntry(new ZipEntry(entryName));
-        final JSONObject json = new JSONObject();
+        final JsonGenerator jsonGenerator = LoganSquare.JSON_FACTORY.createGenerator(zos);
+        jsonGenerator.writeStartObject();
         for (String key : map.keySet()) {
-            strategy.exportValue(json, key, preferences);
+            strategy.exportValue(jsonGenerator, key, preferences);
         }
-        zos.write(json.toString().getBytes(Charset.defaultCharset()));
+        jsonGenerator.writeEndObject();
+        jsonGenerator.flush();
         zos.closeEntry();
     }
 
     private interface ProcessStrategy {
-        boolean importValue(JSONObject json, String key, SharedPreferences.Editor editor);
+        boolean importValue(JsonParser jsonParser, String key, SharedPreferences.Editor editor) throws IOException;
 
-        boolean exportValue(JSONObject json, String key, SharedPreferences preferences);
+        boolean exportValue(JsonGenerator jsonGenerator, String key, SharedPreferences preferences) throws IOException;
     }
 
     private static final class ConvertToStringProcessStrategy implements ProcessStrategy {
@@ -201,17 +211,18 @@ public class DataImportExportUtils implements Constants {
         private static final ProcessStrategy SINGLETON = new ConvertToStringProcessStrategy();
 
         @Override
-        public boolean importValue(JSONObject json, String key, SharedPreferences.Editor editor) {
-            if (!json.has(key)) return false;
-            editor.putString(key, json.optString(key));
+        public boolean importValue(JsonParser jsonParser, String key, SharedPreferences.Editor editor) throws IOException {
+            final JsonToken token = jsonParser.nextToken();
+            if (token == null) return false;
+            editor.putString(key, jsonParser.getValueAsString());
             return true;
         }
 
         @Override
-        public boolean exportValue(JSONObject json, String key, SharedPreferences preferences) {
+        public boolean exportValue(JsonGenerator jsonGenerator, String key, SharedPreferences preferences) {
             if (!preferences.contains(key)) return false;
             try {
-                json.putOpt(key, preferences.getString(key, null));
+                jsonGenerator.writeStringField(key, preferences.getString(key, null));
             } catch (Exception ignore) {
                 return false;
             }
@@ -224,17 +235,18 @@ public class DataImportExportUtils implements Constants {
         private static final ProcessStrategy SINGLETON = new ConvertToIntProcessStrategy();
 
         @Override
-        public boolean importValue(JSONObject json, String key, SharedPreferences.Editor editor) {
-            if (!json.has(key)) return false;
-            editor.putInt(key, json.optInt(key));
+        public boolean importValue(JsonParser jsonParser, String key, SharedPreferences.Editor editor) throws IOException {
+            final JsonToken token = jsonParser.nextToken();
+            if (token == null) return false;
+            editor.putInt(key, jsonParser.getValueAsInt());
             return true;
         }
 
         @Override
-        public boolean exportValue(JSONObject json, String key, SharedPreferences preferences) {
+        public boolean exportValue(JsonGenerator jsonGenerator, String key, SharedPreferences preferences) {
             if (!preferences.contains(key)) return false;
             try {
-                json.put(key, preferences.getInt(key, 0));
+                jsonGenerator.writeNumberField(key, preferences.getInt(key, 0));
             } catch (Exception ignore) {
                 return false;
             }
@@ -251,57 +263,63 @@ public class DataImportExportUtils implements Constants {
         }
 
         @Override
-        public boolean importValue(JSONObject json, String key, SharedPreferences.Editor editor) {
+        public boolean importValue(JsonParser jsonParser, String key, SharedPreferences.Editor editor) throws IOException {
+            final JsonToken token = jsonParser.nextToken();
+            if (token == null) return false;
             final Preference preference = supportedMap.get(key);
             if (preference == null || !preference.exportable()) return false;
             switch (preference.type()) {
-                case PreferenceType.BOOLEAN:
-                    editor.putBoolean(key, json.optBoolean(key, preference.defaultBoolean()));
+                case PreferenceType.BOOLEAN: {
+                    editor.putBoolean(key, jsonParser.getValueAsBoolean());
                     break;
-                case PreferenceType.INT:
-                    editor.putInt(key, json.optInt(key, preference.defaultInt()));
+                }
+                case PreferenceType.INT: {
+                    editor.putInt(key, jsonParser.getValueAsInt());
                     break;
-                case PreferenceType.LONG:
-                    editor.putLong(key, json.optLong(key, preference.defaultLong()));
+                }
+                case PreferenceType.LONG: {
+                    editor.putLong(key, jsonParser.getValueAsLong());
                     break;
-                case PreferenceType.FLOAT:
-                    editor.putFloat(key, (float) json.optDouble(key, preference.defaultFloat()));
+                }
+                case PreferenceType.FLOAT: {
+                    editor.putFloat(key, (float) jsonParser.getValueAsDouble());
                     break;
-                case PreferenceType.STRING:
-                    editor.putString(key, json.optString(key, preference.defaultString()));
+                }
+                case PreferenceType.STRING: {
+                    editor.putString(key, jsonParser.getValueAsString());
                     break;
-                default:
+                }
+                default: {
                     break;
+                }
             }
             return true;
         }
 
         @Override
-        public boolean exportValue(JSONObject json, String key, SharedPreferences preferences) {
+        public boolean exportValue(JsonGenerator jsonGenerator, String key, SharedPreferences preferences) throws IOException {
             final Preference preference = supportedMap.get(key);
             if (preference == null || !preference.exportable()) return false;
             try {
                 switch (preference.type()) {
                     case PreferenceType.BOOLEAN:
-                        json.put(key, preferences.getBoolean(key, preference.defaultBoolean()));
+                        jsonGenerator.writeBooleanField(key, preferences.getBoolean(key, preference.defaultBoolean()));
                         break;
                     case PreferenceType.INT:
-                        json.put(key, preferences.getInt(key, preference.defaultInt()));
+                        jsonGenerator.writeNumberField(key, preferences.getInt(key, preference.defaultInt()));
                         break;
                     case PreferenceType.LONG:
-                        json.put(key, preferences.getLong(key, preference.defaultLong()));
+                        jsonGenerator.writeNumberField(key, preferences.getLong(key, preference.defaultLong()));
                         break;
                     case PreferenceType.FLOAT:
-                        json.put(key, preferences.getFloat(key, preference.defaultFloat()));
+                        jsonGenerator.writeNumberField(key, preferences.getFloat(key, preference.defaultFloat()));
                         break;
                     case PreferenceType.STRING:
-                        json.put(key, preferences.getString(key, preference.defaultString()));
+                        jsonGenerator.writeStringField(key, preferences.getString(key, preference.defaultString()));
                         break;
                     default:
                         break;
                 }
-            } catch (JSONException e) {
-                return false;
             } catch (ClassCastException e) {
                 return false;
             }
