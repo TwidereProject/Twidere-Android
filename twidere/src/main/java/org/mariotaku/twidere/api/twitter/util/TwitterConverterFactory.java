@@ -31,10 +31,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
+import org.mariotaku.twidere.util.BugReporter;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -104,7 +106,12 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
                 throw new RuntimeException(e);
             }
         } catch (TimeoutException e) {
-            throw new RuntimeException(e);
+            if (BuildConfig.DEBUG) {
+                throw new RuntimeException(e);
+            } else {
+                BugReporter.logException(e);
+                throw new RestConverter.ConvertException(e);
+            }
         }
         return new JsonConverter(mapper);
     }
