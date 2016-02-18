@@ -32,6 +32,7 @@ import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.graphic.LikeAnimationDrawable;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
@@ -91,11 +92,7 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
             final ParcelableMedia[] media = status.media;
             if (media == null || media.length < 1) return;
             final ParcelableMedia firstMedia = media[0];
-            if (status.text_plain.codePointCount(0, status.text_plain.length()) == firstMedia.end) {
-                mediaTextView.setText(status.text_unescaped.substring(0, firstMedia.start));
-            } else {
-                mediaTextView.setText(status.text_unescaped);
-            }
+            mediaTextView.setText(status.text_unescaped);
             aspectRatioSource.setSize(firstMedia.width, firstMedia.height);
             mediaImageContainer.setTag(firstMedia);
             mediaImageContainer.requestLayout();
@@ -150,6 +147,11 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
 
         @Override
         public void setTextSize(float textSize) {
+
+        }
+
+        @Override
+        public void playLikeAnimation(LikeAnimationDrawable.OnLikedListener listener) {
 
         }
 

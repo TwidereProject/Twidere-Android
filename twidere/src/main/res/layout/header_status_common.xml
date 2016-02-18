@@ -396,6 +396,7 @@
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
-        android:layout_below="@+id/counts_users_height_holder"/>
+        android:layout_below="@+id/counts_users_height_holder"
+        android:clipChildren="false"/>
 
 </RelativeLayout>

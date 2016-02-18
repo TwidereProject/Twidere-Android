@@ -945,8 +945,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected void onPreExecute() {
             super.onPreExecute();
             mCreatingFavoriteIds.put(account_id, status_id);
-
-
             bus.post(new StatusListChangedEvent());
         }
 
@@ -957,13 +955,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ParcelableStatus status = result.getData();
 
                 // BEGIN HotMobi
-
                 final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.FAVORITE);
                 HotMobiLogger.getInstance(getContext()).log(account_id, event);
-
                 // END HotMobi
-
 
                 bus.post(new FavoriteCreatedEvent(status));
                 Utils.showOkMessage(mContext, R.string.status_favorited, false);

@@ -67,6 +67,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
+import org.mariotaku.twidere.graphic.iface.DoNotWrapDrawable;
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.support.ViewSupport;
@@ -1005,15 +1006,23 @@ public class ThemeUtils implements Constants {
     }
 
     public static void wrapMenuIcon(ActionMenuView view, int... excludeGroups) {
-        final Resources resources = view.getResources();
-        final int colorDark = resources.getColor(R.color.action_icon_dark);
-        final int colorLight = resources.getColor(R.color.action_icon_light);
+        final Context context = view.getContext();
+        final int colorDark = ContextCompat.getColor(context, R.color.action_icon_dark);
+        final int colorLight = ContextCompat.getColor(context, R.color.action_icon_light);
         wrapMenuIcon(view, colorDark, colorLight, excludeGroups);
     }
 
+    public static int getActionIconColor(Context context) {
+        final int colorDark = ContextCompat.getColor(context, R.color.action_icon_dark);
+        final int colorLight = ContextCompat.getColor(context, R.color.action_icon_light);
+        final int itemBackgroundColor = ThemeUtils.getThemeBackgroundColor(context);
+        return TwidereColorUtils.getContrastYIQ(itemBackgroundColor, colorDark, colorLight);
+    }
+
     public static void wrapMenuIcon(ActionMenuView view, int colorDark, int colorLight, int... excludeGroups) {
-        final int itemBackgroundColor = ThemeUtils.getThemeBackgroundColor(view.getContext());
-        final int popupItemBackgroundColor = ThemeUtils.getThemeBackgroundColor(view.getContext(), view.getPopupTheme());
+        final Context context = view.getContext();
+        final int itemBackgroundColor = ThemeUtils.getThemeBackgroundColor(context);
+        final int popupItemBackgroundColor = ThemeUtils.getThemeBackgroundColor(context, view.getPopupTheme());
         final int itemColor = TwidereColorUtils.getContrastYIQ(itemBackgroundColor, colorDark, colorLight);
         final int popupItemColor = TwidereColorUtils.getContrastYIQ(popupItemBackgroundColor, colorDark, colorLight);
         final Menu menu = view.getMenu();
@@ -1034,7 +1043,7 @@ public class ThemeUtils implements Constants {
     public static void wrapMenuItemIcon(@NonNull MenuItem item, int itemColor, int... excludeGroups) {
         if (ArrayUtils.contains(excludeGroups, item.getGroupId())) return;
         final Drawable icon = item.getIcon();
-        if (icon == null) return;
+        if (icon == null || icon instanceof DoNotWrapDrawable) return;
         if (icon instanceof ActionIconDrawable) {
             ((ActionIconDrawable) icon).setDefaultColor(itemColor);
             item.setIcon(icon);

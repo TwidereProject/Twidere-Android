@@ -235,12 +235,12 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         } else if (tintable instanceof EditText) {
             tintable.setSupportBackgroundTintList(ColorStateList.valueOf(backgroundTintColor));
         } else if (isColorTint) {
-            final int[][] states = {{android.R.attr.state_selected}, {android.R.attr.state_focused},
-                    {android.R.attr.state_pressed}, {0}};
-            final int[] colors = {accentColor, accentColor, accentColor, noTintColor};
-            tintable.setSupportBackgroundTintList(new ColorStateList(states, colors));
+//            final int[][] states = {{android.R.attr.state_selected}, {android.R.attr.state_focused},
+//                    {android.R.attr.state_pressed}, {0}};
+//            final int[] colors = {accentColor, accentColor, accentColor, noTintColor};
+//            tintable.setSupportBackgroundTintList(new ColorStateList(states, colors));
         } else {
-            tintable.setSupportBackgroundTintList(ColorStateList.valueOf(accentColor));
+//            tintable.setSupportBackgroundTintList(ColorStateList.valueOf(accentColor));
         }
     }
 

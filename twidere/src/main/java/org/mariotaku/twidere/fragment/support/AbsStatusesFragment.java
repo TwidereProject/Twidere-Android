@@ -47,6 +47,7 @@ import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
+import org.mariotaku.twidere.graphic.LikeAnimationDrawable;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -184,7 +185,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                     if (status.is_favorite) {
                         twitter.destroyFavoriteAsync(status.account_id, status.id);
                     } else {
-                        twitter.createFavoriteAsync(status.account_id, status.id);
+                        final IStatusViewHolder holder = (IStatusViewHolder)
+                                recyclerView.findViewHolderForLayoutPosition(position);
+                        holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
                     }
                     return true;
                 }
@@ -351,7 +354,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_id, status.id);
                 } else {
-                    twitter.createFavoriteAsync(status.account_id, status.id);
+                    holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
                 }
                 break;
             }
@@ -545,6 +548,23 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     private String getReadPositionTagWithAccounts() {
         return Utils.getReadPositionTagWithAccounts(getReadPositionTag(), getAccountIds());
+    }
+
+    public static final class DefaultOnLikedListener implements LikeAnimationDrawable.OnLikedListener {
+        private final ParcelableStatus mStatus;
+        private final AsyncTwitterWrapper mTwitter;
+
+        public DefaultOnLikedListener(final AsyncTwitterWrapper twitter, final ParcelableStatus status) {
+            mStatus = status;
+            mTwitter = twitter;
+        }
+
+        @Override
+        public boolean onLiked() {
+            if (mStatus.is_favorite) return false;
+            mTwitter.createFavoriteAsync(mStatus.account_id, mStatus.id);
+            return true;
+        }
     }
 
     protected final class StatusesBusCallback {

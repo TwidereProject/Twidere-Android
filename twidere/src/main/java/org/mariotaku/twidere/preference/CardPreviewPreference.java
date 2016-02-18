@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,9 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.graphic.LikeAnimationDrawable;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 public class CardPreviewPreference extends Preference implements Constants, OnSharedPreferenceChangeListener {
 
@@ -87,6 +90,19 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
         mCompactModeChanged = false;
         mHolder.setupViewOptions();
         mHolder.displaySampleStatus();
+        mHolder.setStatusClickListener(new IStatusViewHolder.SimpleStatusClickListener() {
+            @Override
+            public void onItemActionClick(RecyclerView.ViewHolder holder, int id, int position) {
+                if (id == R.id.favorite_count) {
+                    ((StatusViewHolder) holder).playLikeAnimation(new LikeAnimationDrawable.OnLikedListener() {
+                        @Override
+                        public boolean onLiked() {
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
         super.onBindView(view);
     }
 

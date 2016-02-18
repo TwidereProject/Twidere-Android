@@ -28,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
+        android:clipChildren="false"
         android:focusable="true"
         android:paddingTop="@dimen/element_spacing_small"
         app:ignorePadding="true">
@@ -272,6 +273,7 @@
             android:layout_alignStart="@+id/profile_container"
             android:layout_below="@+id/status_content_space"
             android:layout_marginTop="@dimen/element_spacing_minus_mlarge"
+            android:clipChildren="false"
             android:gravity="center_vertical|start"
             android:orientation="horizontal">
 

@@ -21,10 +21,12 @@ package org.mariotaku.twidere.view.holder.iface;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
+import org.mariotaku.twidere.graphic.LikeAnimationDrawable;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.view.CardMediaContainer;
@@ -51,6 +53,8 @@ public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListen
 
     void setTextSize(float textSize);
 
+    void playLikeAnimation(LikeAnimationDrawable.OnLikedListener listener);
+
     interface StatusClickListener extends ContentCardClickListener {
 
         void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition);
@@ -60,5 +64,34 @@ public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListen
         boolean onStatusLongClick(IStatusViewHolder holder, int position);
 
         void onUserProfileClick(IStatusViewHolder holder, int position);
+    }
+
+    abstract class SimpleStatusClickListener implements StatusClickListener {
+
+        public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
+
+        }
+
+        public void onStatusClick(IStatusViewHolder holder, int position) {
+
+        }
+
+        public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
+            return false;
+        }
+
+        public void onUserProfileClick(IStatusViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public void onItemActionClick(RecyclerView.ViewHolder holder, int id, int position) {
+
+        }
+
+        @Override
+        public void onItemMenuClick(RecyclerView.ViewHolder holder, View menuView, int position) {
+
+        }
     }
 }

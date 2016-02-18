@@ -138,6 +138,7 @@ import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
+import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
 import org.mariotaku.twidere.fragment.support.DestroyStatusDialogFragment;
@@ -174,6 +175,7 @@ import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.menu.SupportStatusShareProvider;
+import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -215,7 +217,6 @@ import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -2251,27 +2252,37 @@ public final class Utils implements Constants {
         }
         final MenuItem favorite = menu.findItem(R.id.favorite);
         if (favorite != null) {
-            final boolean is_favorite;
+            final boolean isFavorite;
             if (twitter.isCreatingFavorite(status.account_id, status.id)) {
-                is_favorite = true;
+                isFavorite = true;
             } else if (twitter.isDestroyingFavorite(status.account_id, status.id)) {
-                is_favorite = false;
+                isFavorite = false;
             } else {
-                is_favorite = status.is_favorite;
+                isFavorite = status.is_favorite;
             }
-            if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
-                final Drawable oldIcon = favorite.getIcon();
-                if (oldIcon instanceof ActionIconDrawable) {
-                    final Drawable starIcon = ContextCompat.getDrawable(context, R.drawable.ic_action_star);
-                    favorite.setIcon(new ActionIconDrawable(starIcon, ((ActionIconDrawable) oldIcon).getDefaultColor()));
-                } else {
-                    favorite.setIcon(R.drawable.ic_action_star);
-                }
-                ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(is_favorite, favoriteHighlight));
-                favorite.setTitle(is_favorite ? R.string.unfavorite : R.string.favorite);
+            ActionProvider provider = MenuItemCompat.getActionProvider(favorite);
+            final boolean useStar = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
+            if (provider instanceof FavoriteItemProvider) {
+
+
             } else {
-                ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(is_favorite, likeHighlight));
-                favorite.setTitle(is_favorite ? R.string.undo_like : R.string.like);
+                if (useStar) {
+                    final Drawable oldIcon = favorite.getIcon();
+                    if (oldIcon instanceof ActionIconDrawable) {
+                        final Drawable starIcon = ContextCompat.getDrawable(context, R.drawable.ic_action_star);
+                        favorite.setIcon(new ActionIconDrawable(starIcon, ((ActionIconDrawable) oldIcon).getDefaultColor()));
+                    } else {
+                        favorite.setIcon(R.drawable.ic_action_star);
+                    }
+                    ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(isFavorite, favoriteHighlight));
+                } else {
+                    ActionIconDrawable.setMenuHighlight(favorite, new TwidereMenuInfo(isFavorite, likeHighlight));
+                }
+            }
+            if (useStar) {
+                favorite.setTitle(isFavorite ? R.string.unfavorite : R.string.favorite);
+            } else {
+                favorite.setTitle(isFavorite ? R.string.undo_like : R.string.like);
             }
         }
         final MenuItem translate = menu.findItem(R.id.translate);
@@ -2561,11 +2572,13 @@ public final class Utils implements Constants {
         return pm.getDrawable(info.packageName, info.metaData.getInt(key), info.applicationInfo);
     }
 
-    public static boolean handleMenuItemClick(@NonNull Context context, @Nullable Fragment fragment,
-                                              @NonNull FragmentManager fm,
-                                              @NonNull UserColorNameManager colorNameManager,
-                                              @NonNull AsyncTwitterWrapper twitter,
-                                              @NonNull ParcelableStatus status, @NonNull MenuItem item) {
+    public static boolean handleMenuItemClick(@NonNull final Context context,
+                                              @Nullable final Fragment fragment,
+                                              @NonNull final FragmentManager fm,
+                                              @NonNull final UserColorNameManager colorNameManager,
+                                              @NonNull final AsyncTwitterWrapper twitter,
+                                              @NonNull final ParcelableStatus status,
+                                              @NonNull final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.copy: {
                 if (ClipboardUtils.setText(context, status.text_plain)) {
@@ -2597,7 +2610,13 @@ public final class Utils implements Constants {
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_id, status.id);
                 } else {
-                    twitter.createFavoriteAsync(status.account_id, status.id);
+                    ActionProvider provider = MenuItemCompat.getActionProvider(item);
+                    if (provider instanceof FavoriteItemProvider) {
+                        ((FavoriteItemProvider) provider).invokeItem(item,
+                                new DefaultOnLikedListener(twitter, status));
+                    } else {
+                        twitter.createFavoriteAsync(status.account_id, status.id);
+                    }
                 }
                 break;
             }
