@@ -35,6 +35,19 @@
             android:name="notify_change"
             android:value="true"/>
     </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+
+    <org.mariotaku.twidere.preference.SummaryListPreference
+        android:defaultValue="@string/default_profile_image_style"
+        android:entries="@array/entries_profile_image_style"
+        android:entryValues="@array/values_profile_image_style"
+        android:key="profile_image_style"
+        android:order="24"
+        android:title="@string/profile_image_style">
+        <extra
+            android:name="notify_change"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.SummaryListPreference>
+
     <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="media_preview"

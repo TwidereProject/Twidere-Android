@@ -24,6 +24,7 @@ import android.app.FragmentManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -927,7 +928,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             if (getUserVisibleHint()) {
                 mMediaPlayer = mp;
                 mMediaPlayerError = 0;
-                mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mp.setScreenOnWhilePlaying(true);
                 updateVolume();
                 mp.setLooping(isLoopEnabled());

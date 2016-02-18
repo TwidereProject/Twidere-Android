@@ -129,27 +129,27 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @ParcelableThisPlease
     @JsonField(name = "followers_count")
     @CursorField(CachedUsers.FOLLOWERS_COUNT)
-    public long followers_count;
+    public long followers_count = -1;
     @ParcelableThisPlease
     @JsonField(name = "friends_count")
     @CursorField(CachedUsers.FRIENDS_COUNT)
-    public long friends_count;
+    public long friends_count = -1;
     @ParcelableThisPlease
     @JsonField(name = "statuses_count")
     @CursorField(CachedUsers.STATUSES_COUNT)
-    public long statuses_count;
+    public long statuses_count = -1;
     @ParcelableThisPlease
     @JsonField(name = "favorites_count")
     @CursorField(CachedUsers.FAVORITES_COUNT)
-    public long favorites_count;
+    public long favorites_count = -1;
     @ParcelableThisPlease
     @JsonField(name = "listed_count")
     @CursorField(CachedUsers.LISTED_COUNT)
-    public long listed_count;
+    public long listed_count = -1;
     @ParcelableThisPlease
     @JsonField(name = "media_count")
     @CursorField(CachedUsers.MEDIA_COUNT)
-    public long media_count;
+    public long media_count = -1;
 
     @ParcelableThisPlease
     @JsonField(name = "background_color")

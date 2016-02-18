@@ -441,8 +441,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case TAB_TYPE_MEDIA: {
-                actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_media,
-                        (int) user.media_count, user.media_count));
+                if (user.media_count < 0) {
+                    actionBar.setSubtitle(R.string.recent_media);
+                } else {
+                    actionBar.setSubtitle(getResources().getQuantityString(R.plurals.N_media,
+                            (int) user.media_count, user.media_count));
+                }
                 break;
             }
             case TAB_TYPE_FAVORITES: {

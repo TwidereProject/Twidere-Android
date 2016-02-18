@@ -78,9 +78,9 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
             }
             final SearchQuery query;
             if (mTwitterOptimizedSearches) {
-                query = new SearchQuery("from:" + screenName + " filter:media");
+                query = new SearchQuery("from:" + screenName + " filter:media exclude:retweets");
             } else {
-                query = new SearchQuery("@" + screenName + " pic.twitter.com");
+                query = new SearchQuery("@" + screenName + " pic.twitter.com -RT");
             }
             query.paging(paging);
             final ResponseList<Status> result = new ResponseList<>();

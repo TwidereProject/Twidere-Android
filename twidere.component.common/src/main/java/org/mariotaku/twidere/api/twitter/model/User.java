@@ -65,19 +65,19 @@ public class User extends TwitterResponseObject implements Comparable<User> {
     boolean isProtected;
 
     @JsonField(name = "followers_count")
-    long followersCount;
+    long followersCount = -1;
 
     @JsonField(name = "friends_count")
-    long friendsCount;
+    long friendsCount = -1;
 
     @JsonField(name = "listed_count")
-    long listedCount;
+    long listedCount = -1;
 
     @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
 
     @JsonField(name = "favourites_count")
-    long favouritesCount;
+    long favouritesCount = -1;
 
     @JsonField(name = "utc_offset")
     int utcOffset;
@@ -92,10 +92,10 @@ public class User extends TwitterResponseObject implements Comparable<User> {
     boolean isVerified;
 
     @JsonField(name = "statuses_count")
-    long statusesCount;
+    long statusesCount = -1;
 
     @JsonField(name = "media_count")
-    long mediaCount;
+    long mediaCount = -1;
 
     @JsonField(name = "lang")
     String lang;

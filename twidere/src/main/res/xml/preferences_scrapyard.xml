@@ -21,17 +21,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <org.mariotaku.twidere.preference.SummaryListPreference
-        android:defaultValue="@string/default_profile_image_style"
-        android:entries="@array/entries_profile_image_style"
-        android:entryValues="@array/values_profile_image_style"
-        android:key="profile_image_style"
-        android:title="@string/profile_image_style">
-        <extra
-            android:name="notify_change"
-            android:value="true"/>
-    </org.mariotaku.twidere.preference.SummaryListPreference>
-
-    <org.mariotaku.twidere.preference.SummaryListPreference
         android:defaultValue="crop"
         android:entries="@array/entries_media_preview_style"
         android:entryValues="@array/values_media_preview_style"

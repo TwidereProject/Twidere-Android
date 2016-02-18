@@ -850,4 +850,5 @@
     <string name="builtin_dns_resolver">Builtin DNS resolver</string>
     <string name="bandwidth_saving_mode">Bandwidth saving mode</string>
     <string name="bandwidth_saving_mode_summary">Disable media preview on metered network</string>
+    <string name="recent_media">Recent media</string>
 </resources>
