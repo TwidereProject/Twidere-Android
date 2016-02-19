@@ -83,6 +83,8 @@ import org.mariotaku.twidere.fragment.support.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
+import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
+import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
@@ -98,8 +100,6 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
-import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.util.support.ActivitySupport;
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat;
 import org.mariotaku.twidere.util.support.ViewSupport;
@@ -937,7 +937,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         @Override
         protected SparseIntArray doInBackground(final Object... params) {
             final SparseIntArray result = new SparseIntArray();
-            for (SupportTabSpec spec : mTabs) {
+            for (int i = 0, count = mTabs.size(); i < count; i++) {
+                SupportTabSpec spec = mTabs.get(i);
                 if (spec.type == null) continue;
                 switch (spec.type) {
                     case CustomTabType.HOME_TIMELINE: {
@@ -945,8 +946,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext,
                                 true, spec.tag, accountIds);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
-                        result.put(spec.position, DataStoreUtils.getStatusesCount(mContext,
-                                Statuses.CONTENT_URI, position, accountIds));
+                        result.put(i, DataStoreUtils.getStatusesCount(mContext, Statuses.CONTENT_URI,
+                                position, accountIds));
                         break;
                     }
                     case CustomTabType.NOTIFICATIONS_TIMELINE: {
@@ -965,7 +966,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                                         Activity.Action.REPLY, Activity.Action.QUOTE};
                             }
                         }
-                        result.put(spec.position, DataStoreUtils.getActivitiesCount(mContext,
+                        result.put(i, DataStoreUtils.getActivitiesCount(mContext,
                                 Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
                                 position, accountIds));
                         break;
