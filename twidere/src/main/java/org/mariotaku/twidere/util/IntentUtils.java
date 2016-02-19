@@ -15,10 +15,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.activity.support.MediaViewerActivity;
-import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.support.SensitiveContentWarningDialogFragment;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
@@ -34,7 +34,7 @@ import static android.text.TextUtils.isEmpty;
 /**
  * Created by mariotaku on 16/1/2.
  */
-public class IntentUtils {
+public class IntentUtils implements Constants {
     public static String getStatusShareText(@NonNull final Context context, @NonNull final ParcelableStatus status) {
         final Uri link = LinkCreator.getTwitterStatusLink(status);
         return context.getString(R.string.status_share_text_format_with_link,
@@ -51,7 +51,7 @@ public class IntentUtils {
                                        final Bundle activityOptions, final boolean newDocument) {
         if (context == null || user == null) return;
         final Bundle extras = new Bundle();
-        extras.putParcelable(IntentConstants.EXTRA_USER, user);
+        extras.putParcelable(EXTRA_USER, user);
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(TwidereConstants.SCHEME_TWIDERE);
         builder.authority(TwidereConstants.AUTHORITY_USER);
@@ -94,7 +94,7 @@ public class IntentUtils {
     public static void openUsers(final Context context, final List<ParcelableUser> users) {
         if (context == null || users == null) return;
         final Bundle extras = new Bundle();
-        extras.putParcelableArrayList(IntentConstants.EXTRA_USERS, new ArrayList<>(users));
+        extras.putParcelableArrayList(EXTRA_USERS, new ArrayList<>(users));
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(TwidereConstants.SCHEME_TWIDERE);
         builder.authority(TwidereConstants.AUTHORITY_USERS);
@@ -147,18 +147,18 @@ public class IntentUtils {
             final FragmentManager fm = activity.getSupportFragmentManager();
             final DialogFragment fragment = new SensitiveContentWarningDialogFragment();
             final Bundle args = new Bundle();
-            args.putLong(IntentConstants.EXTRA_ACCOUNT_ID, accountId);
-            args.putParcelable(IntentConstants.EXTRA_CURRENT_MEDIA, current);
+            args.putLong(EXTRA_ACCOUNT_ID, accountId);
+            args.putParcelable(EXTRA_CURRENT_MEDIA, current);
             if (status != null) {
-                args.putParcelable(IntentConstants.EXTRA_STATUS, status);
+                args.putParcelable(EXTRA_STATUS, status);
             }
             if (message != null) {
-                args.putParcelable(IntentConstants.EXTRA_MESSAGE, message);
+                args.putParcelable(EXTRA_MESSAGE, message);
             }
-            args.putParcelableArray(IntentConstants.EXTRA_MEDIA, media);
-            args.putBundle(IntentConstants.EXTRA_ACTIVITY_OPTIONS, options);
-            args.putBundle(IntentConstants.EXTRA_ACTIVITY_OPTIONS, options);
-            args.putBoolean(IntentConstants.EXTRA_NEW_DOCUMENT, newDocument);
+            args.putParcelableArray(EXTRA_MEDIA, media);
+            args.putBundle(EXTRA_ACTIVITY_OPTIONS, options);
+            args.putBundle(EXTRA_ACTIVITY_OPTIONS, options);
+            args.putBoolean(EXTRA_NEW_DOCUMENT, newDocument);
             fragment.setArguments(args);
             fragment.show(fm, "sensitive_content_warning");
         } else {
@@ -194,17 +194,18 @@ public class IntentUtils {
                                          final ParcelableMedia current, final ParcelableMedia[] media,
                                          final Bundle options, final boolean newDocument) {
         if (context == null || media == null) return;
-        final Intent intent = new Intent(IntentConstants.INTENT_ACTION_VIEW_MEDIA);
-        intent.putExtra(IntentConstants.EXTRA_ACCOUNT_ID, accountId);
-        intent.putExtra(IntentConstants.EXTRA_CURRENT_MEDIA, current);
-        intent.putExtra(IntentConstants.EXTRA_MEDIA, media);
+        final Intent intent = new Intent(context, MediaViewerActivity.class);
+        intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
+        intent.putExtra(EXTRA_CURRENT_MEDIA, current);
+        intent.putExtra(EXTRA_MEDIA, media);
         if (status != null) {
-            intent.putExtra(IntentConstants.EXTRA_STATUS, status);
+            intent.putExtra(EXTRA_STATUS, status);
+            intent.setData(getMediaViewerUri("status", status.id, accountId));
         }
         if (message != null) {
-            intent.putExtra(IntentConstants.EXTRA_MESSAGE, message);
+            intent.putExtra(EXTRA_MESSAGE, message);
+            intent.setData(getMediaViewerUri("message", message.id, accountId));
         }
-        intent.setClass(context, MediaViewerActivity.class);
         if (newDocument && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         }
@@ -213,5 +214,15 @@ public class IntentUtils {
         } else {
             context.startActivity(intent);
         }
+    }
+
+    public static Uri getMediaViewerUri(String type, long id, long accountId) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority("media");
+        builder.appendPath(type);
+        builder.appendPath(String.valueOf(id));
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        return builder.build();
     }
 }

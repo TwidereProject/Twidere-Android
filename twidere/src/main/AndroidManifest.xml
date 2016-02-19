@@ -280,10 +280,14 @@
         <activity
             android:name=".activity.support.MediaViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:hardwareAccelerated="true"
             android:label="@string/media"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.Twidere.Viewer">
+            android:theme="@style/Theme.Twidere.Viewer"
+            android:windowSoftInputMode="adjustPan">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.support.HomeActivity"/>
+
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.VIEW_MEDIA"/>
 
