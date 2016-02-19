@@ -21,13 +21,15 @@ package org.mariotaku.twidere.util;
 
 import android.support.annotation.Nullable;
 
-import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.JsonMapper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mariotaku on 15/8/6.
@@ -38,7 +40,27 @@ public class JsonSerializer {
     public static <T> String serialize(@Nullable final List<T> list, final Class<T> cls) {
         if (list == null) return null;
         try {
-            return LoganSquare.serialize(list, cls);
+            return LoganSquareMapperFinder.mapperFor(cls).serialize(list);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static <T> String serialize(@Nullable final Map<String, T> list, final Class<T> cls) {
+        if (list == null) return null;
+        try {
+            return LoganSquareMapperFinder.mapperFor(cls).serialize(list);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static <T> String serialize(@Nullable final T[] array, final Class<T> cls) {
+        if (array == null) return null;
+        try {
+            return LoganSquareMapperFinder.mapperFor(cls).serialize(Arrays.asList(array));
         } catch (IOException e) {
             return null;
         }
@@ -48,7 +70,20 @@ public class JsonSerializer {
     public static <T> String serialize(@Nullable final T object, final Class<T> cls) {
         if (object == null) return null;
         try {
-            return LoganSquare.mapperFor(cls).serialize(object);
+            return LoganSquareMapperFinder.mapperFor(cls).serialize(object);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static <T> String serialize(@Nullable final T object) {
+        if (object == null) return null;
+        try {
+            //noinspection unchecked
+            final JsonMapper<T> mapper = (JsonMapper<T>)
+                    LoganSquareMapperFinder.mapperFor(object.getClass());
+            return mapper.serialize(object);
         } catch (IOException e) {
             return null;
         }
@@ -58,7 +93,7 @@ public class JsonSerializer {
     public static <T> T[] parseArray(@Nullable final String string, final Class<T> cls) {
         if (string == null) return null;
         try {
-            final List<T> list = LoganSquare.mapperFor(cls).parseList(string);
+            final List<T> list = LoganSquareMapperFinder.mapperFor(cls).parseList(string);
             //noinspection unchecked
             return list.toArray((T[]) Array.newInstance(cls, list.size()));
         } catch (IOException e) {
@@ -70,26 +105,22 @@ public class JsonSerializer {
     public static <T> T parse(@Nullable final String string, final Class<T> cls) {
         if (string == null) return null;
         try {
-            return LoganSquare.mapperFor(cls).parse(string);
+            return LoganSquareMapperFinder.mapperFor(cls).parse(string);
         } catch (IOException e) {
             return null;
         }
     }
 
-    @Nullable
-    public static <T> String serialize(@Nullable final T obj) {
-        if (obj == null) return null;
-        //noinspection unchecked
-        return serialize(obj, (Class<T>) obj.getClass());
-    }
-
-    public static <E> List<E> parseList(File file, Class<E> jsonObjectClass) throws IOException {
-        final FileInputStream is = new FileInputStream(file);
+    public static <E> List<E> parseList(File file, Class<E> cls) {
+        FileInputStream is = null;
         //noinspection TryFinallyCanBeTryWithResources
         try {
-            return LoganSquare.parseList(is, jsonObjectClass);
+            is = new FileInputStream(file);
+            return LoganSquareMapperFinder.mapperFor(cls).parseList(is);
+        } catch (IOException e) {
+            return null;
         } finally {
-            is.close();
+            Utils.closeSilently(is);
         }
     }
 

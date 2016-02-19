@@ -26,10 +26,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
+import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -39,6 +40,7 @@ import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
+import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -52,7 +54,11 @@ import java.io.PipedOutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 
@@ -208,18 +214,15 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         if (key == null) return null;
         final File file = mFileCache.get(key);
         if (file == null) return null;
-        try {
-            return JsonSerializer.parseList(file, ParcelableStatus.class);
-        } catch (final IOException e) {
-            // Ignore
-        }
-        return null;
+        return JsonSerializer.parseList(file, ParcelableStatus.class);
     }
 
     private String getSerializationKey() {
         if (mSavedStatusesFileArgs == null) return null;
         return TwidereArrayUtils.toString(mSavedStatusesFileArgs, '_', false);
     }
+
+    private static final ExecutorService pool = Executors.newSingleThreadExecutor();
 
     private void saveCachedData(final List<ParcelableStatus> data) {
         final String key = getSerializationKey();
@@ -229,19 +232,27 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             final List<ParcelableStatus> statuses = data.subList(0, Math.min(databaseItemLimit, data.size()));
             final PipedOutputStream pos = new PipedOutputStream();
             final PipedInputStream pis = new PipedInputStream(pos);
-            new Thread(new Runnable() {
+            final Future<Object> future = pool.submit(new Callable<Object>() {
                 @Override
-                public void run() {
-                    try {
-                        LoganSquare.mapperFor(ParcelableStatus.class).serialize(statuses, pos);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                public Object call() throws Exception {
+                    LoganSquareMapperFinder.mapperFor(ParcelableStatus.class).serialize(statuses, pos);
+                    return null;
                 }
-            }).start();
-            mFileCache.save(key, pis, null);
-        } catch (final IOException e) {
+            });
+            final boolean saved = mFileCache.save(key, pis, new IoUtils.CopyListener() {
+                @Override
+                public boolean onBytesCopied(int current, int total) {
+                    return !future.isDone();
+                }
+            });
+            if (BuildConfig.DEBUG) {
+                Log.v(LOGTAG, key + " saved: " + saved);
+            }
+        } catch (final Exception e) {
             // Ignore
+            if (BuildConfig.DEBUG && !(e instanceof IOException)) {
+                Log.w(LOGTAG, e);
+            }
         }
     }
 

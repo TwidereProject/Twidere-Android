@@ -3,15 +3,10 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
-
-import java.io.IOException;
-import java.util.List;
 
 @JsonObject
 @ParcelablePlease
@@ -54,17 +49,6 @@ public class ParcelableMediaUpdate implements Parcelable {
         int result = uri.hashCode();
         result = 31 * result + type;
         return result;
-    }
-
-    @Deprecated
-    public static ParcelableMediaUpdate[] fromJSONString(final String json) {
-        if (TextUtils.isEmpty(json)) return null;
-        try {
-            final List<ParcelableMediaUpdate> list = LoganSquare.parseList(json, ParcelableMediaUpdate.class);
-            return list.toArray(new ParcelableMediaUpdate[list.size()]);
-        } catch (final IOException e) {
-            return null;
-        }
     }
 
     @Override

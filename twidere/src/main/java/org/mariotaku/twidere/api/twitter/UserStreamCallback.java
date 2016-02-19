@@ -35,6 +35,7 @@ import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.Warning;
 import org.mariotaku.twidere.api.twitter.util.CRLFLineReader;
 import org.mariotaku.twidere.api.twitter.util.JSONObjectType;
+import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -71,11 +72,11 @@ public abstract class UserStreamCallback implements RawCallback {
                         break;
                     }
                     case STATUS: {
-                        onStatus(LoganSquare.mapperFor(Status.class).parse(rootNode.traverse()));
+                        onStatus(LoganSquareMapperFinder.mapperFor(Status.class).parse(rootNode.traverse()));
                         break;
                     }
                     case DIRECT_MESSAGE: {
-                        onDirectMessage(LoganSquare.mapperFor(DirectMessage.class).parse(rootNode.traverse()));
+                        onDirectMessage(LoganSquareMapperFinder.mapperFor(DirectMessage.class).parse(rootNode.traverse()));
                         break;
                     }
                     case DELETE: {
@@ -146,7 +147,7 @@ public abstract class UserStreamCallback implements RawCallback {
 
 
     private static <T> T parse(final Class<T> cls, final TreeNode json) throws IOException {
-        return LoganSquare.mapperFor(cls).parse(json.traverse());
+        return LoganSquareMapperFinder.mapperFor(cls).parse(json.traverse());
     }
 
     @Override

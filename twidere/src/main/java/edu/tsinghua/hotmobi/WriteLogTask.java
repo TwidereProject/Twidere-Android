@@ -22,12 +22,12 @@ package edu.tsinghua.hotmobi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
-
-import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
 
 import java.io.IOException;
@@ -89,7 +89,9 @@ public class WriteLogTask<T extends LogModel> implements Runnable, Constants {
                         Log.v(HotMobiLogger.LOGTAG, "Log " + type + ": " + event);
                     }
                 }
-                final byte[] bytes = LoganSquare.serialize(event).getBytes("UTF-8");
+                final String serialize = JsonSerializer.serialize(event);
+                if (TextUtils.isEmpty(serialize)) continue;
+                final byte[] bytes = serialize.getBytes("UTF-8");
                 final long start = raf.length();
                 final ByteBuffer bb;
                 if (start == 0) {

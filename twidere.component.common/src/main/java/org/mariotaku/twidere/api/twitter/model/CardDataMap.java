@@ -20,10 +20,17 @@
 package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.fasterxml.jackson.core.JsonGenerator;
 
+import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.ValueMap;
+import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.restfu.http.mime.StringBody;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -43,15 +50,6 @@ public class CardDataMap implements ValueMap {
     }
 
     @Override
-    public String toString() {
-        try {
-            return LoganSquare.serialize(map);
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-    }
-
-    @Override
     public boolean has(String key) {
         return map.containsKey(key);
     }
@@ -65,5 +63,27 @@ public class CardDataMap implements ValueMap {
     public String[] keys() {
         final Set<String> keySet = map.keySet();
         return keySet.toArray(new String[keySet.size()]);
+    }
+
+    @Override
+    public String toString() {
+        return "CardDataMap{" +
+                "map=" + map +
+                '}';
+    }
+
+    public static class BodyConverter implements RestConverter<CardDataMap, Body, TwitterException> {
+        @Override
+        public Body convert(CardDataMap obj) throws ConvertException, IOException, TwitterException {
+            final StringWriter sw = new StringWriter();
+            final JsonGenerator generator = LoganSquare.JSON_FACTORY.createGenerator(sw);
+            generator.writeStartObject();
+            for (Map.Entry<String, String> entry : obj.map.entrySet()) {
+                generator.writeStringField(entry.getKey(), entry.getValue());
+            }
+            generator.writeEndObject();
+            generator.flush();
+            return new StringBody(sw.toString(), Charset.defaultCharset());
+        }
     }
 }

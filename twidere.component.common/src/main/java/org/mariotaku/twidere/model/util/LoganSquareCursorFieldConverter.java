@@ -23,9 +23,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.JsonMapper;
 
 import org.mariotaku.library.objectcursor.converter.CursorFieldConverter;
+import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -56,45 +57,68 @@ public class LoganSquareCursorFieldConverter implements CursorFieldConverter<Obj
         }
     }
 
-    private void writeObject(ContentValues values, Object object, String columnName, ParameterizedType fieldType) throws IOException {
+    private <T> void writeObject(ContentValues values, T object, String columnName, ParameterizedType fieldType) throws IOException {
         if (object == null) return;
-        final Type rawType = fieldType.getRawType();
-        if (!(rawType instanceof Class)) throw new UnsupportedOperationException();
-        final Class rawCls = (Class) rawType;
-        if (List.class.isAssignableFrom(rawCls)) {
-            values.put(columnName, LoganSquare.serialize((List) object,
-                    (Class) fieldType.getActualTypeArguments()[0]));
-        } else if (Map.class.isAssignableFrom(rawCls)) {
+        if (isArray(fieldType)) {
+            final Class<?> component = getArrayComponent(fieldType);
             //noinspection unchecked
-            values.put(columnName, LoganSquare.serialize((Map) object,
-                    (Class) fieldType.getActualTypeArguments()[1]));
-        } else if (rawCls.isArray()) {
-            final Class componentType = rawCls.getComponentType();
-            values.put(columnName, LoganSquare.serialize((List) Arrays.asList((Object[]) object),
-                    componentType));
+            JsonMapper<Object> mapper = (JsonMapper<Object>) LoganSquareMapperFinder.mapperFor(component);
+            values.put(columnName, mapper.serialize(Arrays.asList((Object[]) object)));
+        } else if (fieldType.getRawType() == List.class) {
+            JsonMapper<Object> mapper = LoganSquareMapperFinder.mapperFor(fieldType.getActualTypeArguments()[0]);
+            //noinspection unchecked
+            values.put(columnName, mapper.serialize((List) object));
+        } else if (fieldType.getRawType() == Map.class) {
+            JsonMapper<Object> mapper = LoganSquareMapperFinder.mapperFor(fieldType.getActualTypeArguments()[1]);
+            //noinspection unchecked
+            values.put(columnName, mapper.serialize((Map) object));
         } else {
-            values.put(columnName, LoganSquare.serialize(object));
+            JsonMapper<T> mapper = LoganSquareMapperFinder.mapperFor(fieldType);
+            values.put(columnName, mapper.serialize(object));
         }
     }
 
-    private Object getObject(Cursor cursor, int columnIndex, ParameterizedType fieldType) throws IOException {
-        final Type rawType = fieldType.getRawType();
-        if (!(rawType instanceof Class)) throw new UnsupportedOperationException();
-        final Class rawCls = (Class) rawType;
+    private <T> T getObject(Cursor cursor, int columnIndex, ParameterizedType fieldType) throws IOException {
         final String string = cursor.getString(columnIndex);
         if (TextUtils.isEmpty(string)) return null;
-        if (List.class.isAssignableFrom(rawCls)) {
-            // Parse list
-            return LoganSquare.parseList(string,
-                    (Class) fieldType.getActualTypeArguments()[0]);
-        } else if (Map.class.isAssignableFrom(rawCls)) {
-            return LoganSquare.parseMap(string,
-                    (Class) fieldType.getActualTypeArguments()[1]);
-        } else if (rawCls.isArray()) {
-            final Class componentType = rawCls.getComponentType();
-            List<?> list = LoganSquare.parseList(string, componentType);
-            return list.toArray((Object[]) Array.newInstance(componentType, list.size()));
+        if (isArray(fieldType)) {
+            final Class<?> component = getArrayComponent(fieldType);
+            //noinspection unchecked
+            JsonMapper<Object> mapper = (JsonMapper<Object>) LoganSquareMapperFinder.mapperFor(component);
+            final List<Object> list = mapper.parseList(string);
+            //noinspection unchecked
+            return (T) list.toArray((Object[]) Array.newInstance(component, list.size()));
+        } else if (fieldType.getRawType() == List.class) {
+            JsonMapper<Object> mapper = LoganSquareMapperFinder.mapperFor(fieldType.getActualTypeArguments()[0]);
+            //noinspection unchecked
+            return (T) mapper.parseList(string);
+        } else if (fieldType.getRawType() == Map.class) {
+            JsonMapper<Object> mapper = LoganSquareMapperFinder.mapperFor(fieldType.getActualTypeArguments()[1]);
+            //noinspection unchecked
+            return (T) mapper.parseMap(string);
+        } else {
+            JsonMapper<T> mapper = LoganSquareMapperFinder.mapperFor(fieldType);
+            return mapper.parse(string);
         }
-        return LoganSquare.parse(string, rawCls);
+    }
+
+    private boolean isArray(Type type) {
+        if (type instanceof Class) {
+            return ((Class) type).isArray();
+        } else if (type instanceof ParameterizedType) {
+            return isArray(((ParameterizedType) type).getRawType());
+        }
+        return false;
+    }
+
+    private Class getArrayComponent(Type type) {
+        if (type instanceof Class) {
+            if (((Class) type).isArray()) {
+                return ((Class) type).getComponentType();
+            }
+        } else if (type instanceof ParameterizedType) {
+            return getArrayComponent(((ParameterizedType) type).getRawType());
+        }
+        throw new UnsupportedOperationException();
     }
 }

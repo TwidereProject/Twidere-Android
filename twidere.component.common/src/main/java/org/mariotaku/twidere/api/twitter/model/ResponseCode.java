@@ -42,7 +42,7 @@ public class ResponseCode {
         return responseCode >= 200 && responseCode < 300;
     }
 
-    public static class Converter implements RestConverter<HttpResponse, ResponseCode, TwitterException> {
+    public static class ResponseConverter implements RestConverter<HttpResponse, ResponseCode, TwitterException> {
 
         @Override
         public ResponseCode convert(HttpResponse response) {

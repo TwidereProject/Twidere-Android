@@ -35,6 +35,7 @@ import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -69,7 +70,8 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
         final DraftViewHolder holder = (DraftViewHolder) view.getTag();
         final long[] accountIds = TwidereArrayUtils.parseLongArray(cursor.getString(mIndices.account_ids), ',');
         final String text = cursor.getString(mIndices.text);
-        final ParcelableMediaUpdate[] mediaUpdates = ParcelableMediaUpdate.fromJSONString(cursor.getString(mIndices.media));
+        final ParcelableMediaUpdate[] mediaUpdates = JsonSerializer.parseArray(cursor.getString(mIndices.media),
+                ParcelableMediaUpdate.class);
         final long timestamp = cursor.getLong(mIndices.timestamp);
         final int actionType = cursor.getInt(mIndices.action_type);
         final String actionName = getActionName(context, actionType);

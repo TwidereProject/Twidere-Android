@@ -22,8 +22,6 @@ package org.mariotaku.twidere.util;
 import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
-import com.bluelinelabs.logansquare.LoganSquare;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariotaku.twidere.TwidereConstants;
@@ -63,7 +61,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -185,10 +182,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, sender_profile_image_url);
         values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, recipient_profile_image_url);
         final ParcelableMedia[] mediaArray = ParcelableMediaUtils.fromEntities(message);
-        try {
-            values.put(DirectMessages.MEDIA_JSON, LoganSquare.serialize(Arrays.asList(mediaArray), ParcelableMedia.class));
-        } catch (IOException ignored) {
-        }
+        values.put(DirectMessages.MEDIA_JSON, JsonSerializer.serialize(Arrays.asList(mediaArray),
+                ParcelableMedia.class));
         return values;
     }
 
@@ -235,10 +230,8 @@ public final class ContentValuesCreator implements TwidereConstants {
         values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
         if (imageUri != null) {
             final ParcelableMediaUpdate[] mediaArray = {new ParcelableMediaUpdate(imageUri, 0)};
-            try {
-                values.put(Drafts.MEDIA, LoganSquare.serialize(Arrays.asList(mediaArray), ParcelableMediaUpdate.class));
-            } catch (IOException ignored) {
-            }
+            values.put(Drafts.MEDIA, JsonSerializer.serialize(Arrays.asList(mediaArray),
+                    ParcelableMediaUpdate.class));
         }
         final JSONObject extras = new JSONObject();
         try {

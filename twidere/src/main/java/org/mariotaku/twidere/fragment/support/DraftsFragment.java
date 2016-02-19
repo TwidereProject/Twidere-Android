@@ -68,6 +68,7 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.ThemeUtils;
 
 import java.io.File;
@@ -328,10 +329,12 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
             final Expression where = Expression.in(new Column(Drafts._ID), new RawItemArray(mIds));
             final String[] projection = {Drafts.MEDIA};
             final Cursor c = resolver.query(Drafts.CONTENT_URI, projection, where.getSQL(), null, null);
+            if (c == null) return 0;
             final int idxMedia = c.getColumnIndex(Drafts.MEDIA);
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                final ParcelableMediaUpdate[] mediaArray = ParcelableMediaUpdate.fromJSONString(c.getString(idxMedia));
+                final ParcelableMediaUpdate[] mediaArray = JsonSerializer.parseArray(c.getString(idxMedia),
+                        ParcelableMediaUpdate.class);
                 if (mediaArray != null) {
                     for (final ParcelableMediaUpdate media : mediaArray) {
                         final Uri uri = Uri.parse(media.uri);

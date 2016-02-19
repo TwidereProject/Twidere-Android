@@ -109,8 +109,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bluelinelabs.logansquare.LoganSquare;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
@@ -292,10 +290,11 @@ public final class Utils implements Constants {
         throw new AssertionError("You are trying to create an instance for this utility class!");
     }
 
-    public static void addIntentToMenuForExtension(final Context context, final Menu menu, final int groupId,
-                                                   final String action, final String parelableKey, final String parelableJSONKey,
+    public static void addIntentToMenuForExtension(final Context context, final Menu menu,
+                                                   final int groupId, final String action,
+                                                   final String parcelableKey, final String parcelableJSONKey,
                                                    final Parcelable parcelable) {
-        if (context == null || menu == null || action == null || parelableKey == null || parcelable == null)
+        if (context == null || menu == null || action == null || parcelableKey == null || parcelable == null)
             return;
         final PackageManager pm = context.getPackageManager();
         final Resources res = context.getResources();
@@ -304,18 +303,13 @@ public final class Utils implements Constants {
         final Intent queryIntent = new Intent(action);
         queryIntent.setExtrasClassLoader(context.getClassLoader());
         final List<ResolveInfo> activities = pm.queryIntentActivities(queryIntent, PackageManager.GET_META_DATA);
-        String parcelableJson = null;
-        try {
-            parcelableJson = LoganSquare.serialize(parcelable);
-        } catch (IOException ignored) {
-
-        }
+        final String parcelableJson = JsonSerializer.serialize(parcelable);
         for (final ResolveInfo info : activities) {
             final Intent intent = new Intent(queryIntent);
             if (isExtensionUseJSON(info) && parcelableJson != null) {
-                intent.putExtra(parelableJSONKey, parcelableJson);
+                intent.putExtra(parcelableJSONKey, parcelableJson);
             } else {
-                intent.putExtra(parelableKey, parcelable);
+                intent.putExtra(parcelableKey, parcelable);
             }
             intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
             final MenuItem item = menu.add(groupId, Menu.NONE, Menu.NONE, info.loadLabel(pm));

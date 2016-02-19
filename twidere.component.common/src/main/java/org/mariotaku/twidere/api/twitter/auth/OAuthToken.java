@@ -124,7 +124,7 @@ public class OAuthToken implements ValueMap {
         return new String[]{"oauth_token", "oauth_token_secret"};
     }
 
-    public static class Converter implements RestConverter<HttpResponse, OAuthToken, TwitterException> {
+    public static class ResponseConverter implements RestConverter<HttpResponse, OAuthToken, TwitterException> {
         @Override
         public OAuthToken convert(HttpResponse response) throws IOException, ConvertException {
             final Body body = response.getBody();

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -60,9 +61,12 @@ public class IDs extends TwitterResponseObject implements TwitterResponse, Curso
     }
 
     public static class Converter implements TypeConverter<IDs> {
+
+        private static final JsonMapper<IDs> IDS_JSON_MAPPER = LoganSquare.mapperFor(IDs.class);
+
         @Override
         public IDs parse(JsonParser jsonParser) throws IOException {
-            return LoganSquare.mapperFor(IDs.class).parse(jsonParser);
+            return IDS_JSON_MAPPER.parse(jsonParser);
         }
 
         @Override
@@ -70,7 +74,7 @@ public class IDs extends TwitterResponseObject implements TwitterResponse, Curso
             if (writeFieldNameForObject) {
                 jsonGenerator.writeFieldName(fieldName);
             }
-            LoganSquare.mapperFor(IDs.class).serialize(object, jsonGenerator, true);
+            IDS_JSON_MAPPER.serialize(object, jsonGenerator, true);
         }
     }
 }
