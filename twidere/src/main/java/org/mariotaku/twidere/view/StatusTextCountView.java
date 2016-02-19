@@ -49,11 +49,12 @@ public class StatusTextCountView extends AppCompatTextView {
 
     public StatusTextCountView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        mValidator = DependencyHolder.get(context).getValidator();
         if (isInEditMode()) {
+            mValidator = new TwidereValidator(null);
             mTextColor = 0;
             mLocale = Locale.getDefault();
         } else {
+            mValidator = DependencyHolder.get(context).getValidator();
             final int textAppearance = ThemeUtils.getTitleTextAppearance(context);
             final TypedArray a = context.obtainStyledAttributes(textAppearance, new int[]{android.R.attr.textColor});
             mTextColor = a.getColor(0, 0);

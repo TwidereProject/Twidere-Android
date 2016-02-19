@@ -192,6 +192,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     private View mLocationContainer;
     private ActionIconView mLocationIcon;
     private TextView mLocationText;
+    private TextView mReplyLabel;
+    private View mReplyLabelDivider;
 
     // Adapters
     private MediaPreviewAdapter mMediaPreviewAdapter;
@@ -212,6 +214,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     // Listeners
     private LocationListener mLocationListener;
+    private boolean mNameFirst;
 
     @Override
     public int getThemeColor() {
@@ -556,6 +559,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mLocationContainer = findViewById(R.id.location_container);
         mLocationIcon = (ActionIconView) findViewById(R.id.location_icon);
         mLocationText = (TextView) findViewById(R.id.location_text);
+        mReplyLabel = (TextView) findViewById(R.id.reply_label);
+        mReplyLabelDivider = findViewById(R.id.reply_label_divider);
     }
 
     @NonNull
@@ -613,6 +618,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         super.onCreate(savedInstanceState);
         GeneralComponentHelper.build(this).inject(this);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
         setContentView(R.layout.activity_compose);
         setFinishOnTouchOutside(false);
         final ParcelableCredentials[] accounts = DataStoreUtils.getCredentialsArray(this, false, false);
@@ -918,6 +924,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mMentionUser = intent.getParcelableExtra(EXTRA_USER);
         mInReplyToStatus = intent.getParcelableExtra(EXTRA_STATUS);
         mInReplyToStatusId = mInReplyToStatus != null ? mInReplyToStatus.id : -1;
+        mReplyLabel.setVisibility(View.GONE);
+        mReplyLabelDivider.setVisibility(View.GONE);
         switch (action) {
             case INTENT_ACTION_REPLY: {
                 return handleReplyIntent(mInReplyToStatus);
@@ -965,6 +973,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         mEditText.setText(Utils.getQuoteStatus(this, status.id, status.user_screen_name, status.text_plain));
         mEditText.setSelection(0);
         mAccountsAdapter.setSelectedAccountIds(status.account_id);
+        final String replyToName = mUserColorNameManager.getDisplayName(status, mNameFirst, false);
+        mReplyLabel.setText(getString(R.string.quote_name_text, replyToName, status.text_unescaped));
+        mReplyLabel.setVisibility(View.VISIBLE);
+        mReplyLabelDivider.setVisibility(View.VISIBLE);
         return true;
     }
 
@@ -998,6 +1010,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         final int selectionEnd = mEditText.length();
         mEditText.setSelection(selectionStart, selectionEnd);
         mAccountsAdapter.setSelectedAccountIds(status.account_id);
+        final String replyToName = mUserColorNameManager.getDisplayName(status, mNameFirst, false);
+        mReplyLabel.setText(getString(R.string.reply_to_name_text, replyToName, status.text_unescaped));
+        mReplyLabel.setVisibility(View.VISIBLE);
+        mReplyLabelDivider.setVisibility(View.VISIBLE);
         return true;
     }
 
@@ -1065,16 +1081,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     private boolean setComposeTitle(final Intent intent) {
         final String action = intent.getAction();
-        final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
         if (INTENT_ACTION_REPLY.equals(action)) {
             if (mInReplyToStatus == null) return false;
             final String displayName = mUserColorNameManager.getDisplayName(mInReplyToStatus.user_id, mInReplyToStatus.user_name,
-                    mInReplyToStatus.user_screen_name, nameFirst, false);
+                    mInReplyToStatus.user_screen_name, mNameFirst, false);
             setTitle(getString(R.string.reply_to, displayName));
         } else if (INTENT_ACTION_QUOTE.equals(action)) {
             if (mInReplyToStatus == null) return false;
             final String displayName = mUserColorNameManager.getDisplayName(mInReplyToStatus.user_id, mInReplyToStatus.user_name,
-                    mInReplyToStatus.user_screen_name, nameFirst, false);
+                    mInReplyToStatus.user_screen_name, mNameFirst, false);
             setTitle(getString(R.string.quote_user, displayName));
         } else if (INTENT_ACTION_EDIT_DRAFT.equals(action)) {
             if (mDraftItem == null) return false;
@@ -1082,7 +1097,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         } else if (INTENT_ACTION_MENTION.equals(action)) {
             if (mMentionUser == null) return false;
             final String displayName = mUserColorNameManager.getDisplayName(mMentionUser.id, mMentionUser.name,
-                    mMentionUser.screen_name, nameFirst, false);
+                    mMentionUser.screen_name, mNameFirst, false);
             setTitle(getString(R.string.mention_user, displayName));
         } else if (INTENT_ACTION_REPLY_MULTIPLE.equals(action)) {
             setTitle(R.string.reply);
