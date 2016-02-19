@@ -1318,7 +1318,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             if (count == 0) return;
             builder.setSmallIcon(R.drawable.ic_stat_notification);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
-            applyNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
+            applyNotificationPreferences(builder, pref, pref.getMentionsNotificationType());
 
             final Resources resources = context.getResources();
             final String accountName = DataStoreUtils.getAccountDisplayName(context, accountId, mNameFirst);
@@ -1434,7 +1434,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 notificationDefaults &= ~NotificationCompat.DEFAULT_VIBRATE;
             }
             if (AccountPreferences.isNotificationHasRingtone(defaultFlags)) {
-                notificationDefaults |= NotificationCompat.DEFAULT_SOUND;
                 builder.setSound(pref.getNotificationRingtone(), AudioManager.STREAM_NOTIFICATION);
             }
         } else {

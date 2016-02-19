@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
@@ -49,7 +50,11 @@ public class AccountPreferences implements Constants {
 
     public int getDefaultNotificationLightColor() {
         final ParcelableAccount a = DataStoreUtils.getAccount(mContext, mAccountId);
-        return a != null ? a.color : mContext.getResources().getColor(R.color.branding_color);
+        if (a != null) {
+            return a.color;
+        } else {
+            return ContextCompat.getColor(mContext, R.color.branding_color);
+        }
     }
 
     public int getDirectMessagesNotificationType() {
@@ -69,9 +74,12 @@ public class AccountPreferences implements Constants {
     }
 
     public Uri getNotificationRingtone() {
-        final Uri def = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        final String path = mPreferences.getString(KEY_NOTIFICATION_RINGTONE, null);
-        return TextUtils.isEmpty(path) ? def : Uri.parse(path);
+        final String ringtone = mPreferences.getString(KEY_NOTIFICATION_RINGTONE, null);
+        if (TextUtils.isEmpty(ringtone)) {
+            return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        } else {
+            return Uri.parse(ringtone);
+        }
     }
 
     public boolean isAutoRefreshDirectMessagesEnabled() {
