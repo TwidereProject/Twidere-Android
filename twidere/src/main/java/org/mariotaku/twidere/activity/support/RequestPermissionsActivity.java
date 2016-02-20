@@ -91,6 +91,11 @@ public class RequestPermissionsActivity extends BaseSupportDialogActivity implem
             finish();
             return;
         }
+        if (mPermissionsManager.isDenied(caller)) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        }
         loadInfo(caller);
     }
 

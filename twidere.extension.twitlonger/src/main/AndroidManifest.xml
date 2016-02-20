@@ -1,6 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="org.mariotaku.twidere.extension.twitlonger">
+<manifest
+    package="org.mariotaku.twidere.extension.twitlonger"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -14,15 +14,10 @@
             android:name="org.mariotaku.twidere.extension"
             android:value="true"/>
 
-        <activity
-            android:name=".TwitLongerPostActivity"
-            android:label="@string/extension_post_name">
-            <intent-filter>
-                <action android:name="org.mariotaku.twidere.EXTENSION_COMPOSE"/>
+        <meta-data
+            android:name="org.mariotaku.twidere.extension.permissions"
+            android:value="accounts"/>
 
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
         <activity
             android:name=".TwitLongerReaderActivity"
             android:label="@string/extension_reader_name">
@@ -63,6 +58,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".RequestPermissionActivity"
+            android:theme="@style/Theme.NoDisplay"/>
+        <activity
             android:name=".AboutActivity"
             android:label="@string/about">
             <intent-filter>
@@ -73,16 +71,7 @@
         </activity>
 
         <service
-            android:name=".TwitLongerService"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="org.mariotaku.twidere.EXTENSION_SHORTEN_TWEET"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </service>
-        <service
-            android:name=".TLStatusShortenerService"
+            android:name=".TwitLongerStatusShortenerService"
             android:permission="org.mariotaku.twidere.permission.SHORTEN_STATUS">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.EXTENSION_SHORTEN_STATUS"/>

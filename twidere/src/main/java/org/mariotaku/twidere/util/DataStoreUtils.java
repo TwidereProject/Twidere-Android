@@ -798,7 +798,7 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    public static ParcelableAccount[] getAccounts(@Nullable final Context context, @Nullable final long[] accountIds) {
+    public static ParcelableAccount[] getAccounts(@Nullable final Context context, @Nullable final long... accountIds) {
         if (context == null) return new ParcelableAccount[0];
         final String where = accountIds != null ? Expression.in(new Column(Accounts.ACCOUNT_ID),
                 new RawItemArray(accountIds)).getSQL() : null;

@@ -46,7 +46,8 @@ public class TwidereValidator implements Constants {
         return mMaxTweetLength;
     }
 
-    public int getTweetLength(final String text) {
+    public int getTweetLength(@Nullable final String text) {
+        if (text == null) return 0;
         return mValidator.getTweetLength(text);
     }
 

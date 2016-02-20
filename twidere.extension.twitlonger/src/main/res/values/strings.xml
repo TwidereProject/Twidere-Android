@@ -12,5 +12,8 @@
 	<string name="more_applications">More applications</string>
 	<string name="donate">Donate</string>
 	<string name="about">About</string>
+	<string name="permission_not_granted">Permission not granted</string>
+	<string name="permission_request">Permission request</string>
+	<string name="permission_is_required_to_shorten_status">Permission is required to shorten tweet</string>
 
 </resources>

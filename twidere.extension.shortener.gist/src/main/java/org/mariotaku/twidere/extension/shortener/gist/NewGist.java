@@ -19,8 +19,36 @@
 
 package org.mariotaku.twidere.extension.shortener.gist;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by mariotaku on 15/6/4.
  */
+@JsonObject
 public class NewGist {
+    @JsonField(name = "description")
+    String description;
+    @JsonField(name = "public")
+    boolean isPublic;
+    @JsonField(name = "files")
+    Map<String, GistFile> files;
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public void putFile(String key, GistFile file) {
+        if (files == null) {
+            files = new HashMap<>();
+        }
+        files.put(key, file);
+    }
 }

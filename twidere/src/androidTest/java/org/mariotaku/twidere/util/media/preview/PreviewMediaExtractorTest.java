@@ -24,5 +24,10 @@ public class PreviewMediaExtractorTest {
         assertEquals("", PreviewMediaExtractor.getPath("http://www.example.com"));
         assertEquals("/test/path", PreviewMediaExtractor.getPath("https://example.com/test/path"));
         assertEquals("/test/path", PreviewMediaExtractor.getPath("https://example.com/test/path?with=query"));
+        assertEquals("/test/path/", PreviewMediaExtractor.getPath("https://example.com/test/path/?with=query"));
+        assertEquals("/test/path", PreviewMediaExtractor.getPath("https://example.com/test/path?with=query#fragment"));
+        assertEquals("/test/path/", PreviewMediaExtractor.getPath("https://example.com/test/path/?with=query#fragment"));
+        assertEquals("/test/path", PreviewMediaExtractor.getPath("https://example.com/test/path#fragment"));
+        assertEquals("/test/path/", PreviewMediaExtractor.getPath("https://example.com/test/path/#fragment"));
     }
 }

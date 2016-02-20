@@ -21,10 +21,12 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import java.util.Arrays;
 
@@ -32,34 +34,28 @@ import java.util.Arrays;
 @JsonObject
 public class ParcelableStatusUpdate implements Parcelable {
 
+    @SuppressWarnings("NullableProblems")
     @JsonField(name = "accounts")
+    @NonNull
+    @ParcelableThisPlease
     public ParcelableAccount[] accounts;
     @JsonField(name = "media")
+    @ParcelableThisPlease
     public ParcelableMediaUpdate[] media;
     @JsonField(name = "text")
+    @ParcelableThisPlease
     public String text;
     @JsonField(name = "location")
+    @ParcelableThisPlease
     public ParcelableLocation location;
-    @JsonField(name = "in_reply_to_status_id")
-    public long in_reply_to_status_id;
+    @JsonField(name = "in_reply_to_status")
+    @ParcelableThisPlease
+    public ParcelableStatus in_reply_to_status;
     @JsonField(name = "boolean")
+    @ParcelableThisPlease
     public boolean is_possibly_sensitive;
 
     public ParcelableStatusUpdate() {
-    }
-
-    /**
-     * It has too much arguments to call, use
-     * <b>ParcelableStatusUpdate.Builder</b> instead.
-     */
-    public ParcelableStatusUpdate(final ParcelableAccount[] accounts, final String text, final ParcelableLocation location,
-                                  final ParcelableMediaUpdate[] media, final long in_reply_to_status_id, final boolean is_possibly_sensitive) {
-        this.accounts = accounts;
-        this.text = text;
-        this.location = location;
-        this.media = media;
-        this.in_reply_to_status_id = in_reply_to_status_id;
-        this.is_possibly_sensitive = is_possibly_sensitive;
     }
 
     @Override
@@ -69,67 +65,9 @@ public class ParcelableStatusUpdate implements Parcelable {
                 ", media=" + Arrays.toString(media) +
                 ", text='" + text + '\'' +
                 ", location=" + location +
-                ", in_reply_to_status_id=" + in_reply_to_status_id +
+                ", in_reply_to_status=" + in_reply_to_status +
                 ", is_possibly_sensitive=" + is_possibly_sensitive +
                 '}';
-    }
-
-    public static final class Builder {
-
-        private ParcelableAccount[] accounts;
-        private String text;
-        private ParcelableLocation location;
-        private ParcelableMediaUpdate[] media;
-        private long in_reply_to_status_id;
-        private boolean is_possibly_sensitive;
-
-        public Builder() {
-
-        }
-
-        public Builder(final ParcelableStatusUpdate base) {
-            accounts(base.accounts);
-            text(base.text);
-            media(base.media);
-            location(base.location);
-            inReplyToStatusId(base.in_reply_to_status_id);
-            isPossiblySensitive(base.is_possibly_sensitive);
-        }
-
-        public Builder accounts(final ParcelableAccount[] accounts) {
-            this.accounts = accounts;
-            return this;
-        }
-
-        public ParcelableStatusUpdate build() {
-            return new ParcelableStatusUpdate(accounts, text, location, media, in_reply_to_status_id,
-                    is_possibly_sensitive);
-        }
-
-        public Builder inReplyToStatusId(final long in_reply_to_status_id) {
-            this.in_reply_to_status_id = in_reply_to_status_id;
-            return this;
-        }
-
-        public Builder isPossiblySensitive(final boolean is_possibly_sensitive) {
-            this.is_possibly_sensitive = is_possibly_sensitive;
-            return this;
-        }
-
-        public Builder location(final ParcelableLocation location) {
-            this.location = location;
-            return this;
-        }
-
-        public Builder media(final ParcelableMediaUpdate... media) {
-            this.media = media;
-            return this;
-        }
-
-        public Builder text(final String text) {
-            this.text = text;
-            return this;
-        }
     }
 
     @Override

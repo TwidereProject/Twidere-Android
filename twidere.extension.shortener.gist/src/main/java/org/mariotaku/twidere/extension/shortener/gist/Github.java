@@ -19,17 +19,23 @@
 
 package org.mariotaku.twidere.extension.shortener.gist;
 
+import org.mariotaku.restfu.annotation.method.PATCH;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.File;
+import org.mariotaku.restfu.annotation.param.Headers;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Path;
+import org.mariotaku.restfu.annotation.param.Raw;
 
 /**
  * Created by mariotaku on 15/6/4.
  */
+@Headers(@KeyValue(key = "Accept", value = "application/vnd.github.v3+json"))
 public interface Github {
 
     @POST("/gists")
-    Gist createGist(@File NewGist newGist) throws GithubException;
+    Gist createGist(@Raw NewGist newGist) throws GithubException;
 
-
+    @PATCH("/gists/{id}")
+    Gist updateGist(@Path("id") String id, @Raw NewGist newGist) throws GithubException;
 
 }

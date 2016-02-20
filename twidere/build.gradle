@@ -50,8 +50,8 @@ android {
     }
     sourceSets {
         main {
-            res.srcDirs = [project.file("src/$name/res"), project.file("src/$name/res-localized"),
-                           project.file("src/$name/res-svg2png")]
+//            res.srcDirs += project.files("src/$name/res-localized")
+            res.srcDirs += project.files("src/$name/res-svg2png")
         }
     }
     testOptions {

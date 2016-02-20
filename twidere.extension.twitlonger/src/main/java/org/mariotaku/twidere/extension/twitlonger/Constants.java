@@ -1,7 +1,8 @@
 package org.mariotaku.twidere.extension.twitlonger;
 
-public interface Constants {
+import org.mariotaku.twidere.TwidereConstants;
 
-	public static final String TWITLONGER_APP_NAME = "twidere";
-	public static final String TWITLONGER_API_KEY = "h6c4LaVx5g7Entja";
+public interface Constants extends TwidereConstants{
+
+	String TWITLONGER_API_KEY = "h6c4LaVx5g7Entja";
 }

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.model;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -32,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.BundleConverter;
 import org.mariotaku.twidere.model.util.JSONObjectConverter;
 import org.mariotaku.twidere.model.util.JSONParcelBagger;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
@@ -49,9 +51,6 @@ public class DraftItem implements Parcelable {
     @CursorField(Drafts._ID)
     public long _id;
     @ParcelableThisPlease
-    @CursorField(Drafts.IN_REPLY_TO_STATUS_ID)
-    public long in_reply_to_status_id;
-    @ParcelableThisPlease
     @CursorField(Drafts.TIMESTAMP)
     public long timestamp;
     @ParcelableThisPlease
@@ -61,49 +60,19 @@ public class DraftItem implements Parcelable {
     @CursorField(value = Drafts.MEDIA, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableMediaUpdate[] media;
     @ParcelableThisPlease
-    @CursorField(Drafts.IS_POSSIBLY_SENSITIVE)
-    public boolean is_possibly_sensitive;
-    @ParcelableThisPlease
     @CursorField(value = Drafts.LOCATION, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableLocation location;
     @ParcelableThisPlease
     @CursorField(Drafts.ACTION_TYPE)
     public int action_type;
     @Nullable
-    @Bagger(JSONParcelBagger.class)
     @ParcelableThisPlease
-    @CursorField(value = Drafts.ACTION_EXTRAS, converter = JSONObjectConverter.class)
-    public JSONObject action_extras;
+    @CursorField(value = Drafts.ACTION_EXTRAS, converter = BundleConverter.class)
+    public Bundle action_extras;
 
 
     public DraftItem() {
 
-    }
-
-    public DraftItem(ParcelableStatusUpdate status) {
-        _id = 0;
-        account_ids = new long[status.accounts.length];
-        final ParcelableAccount[] accounts = status.accounts;
-        for (int i = 0, j = accounts.length; i < j; i++) {
-            account_ids[i] = accounts[i].account_id;
-        }
-        in_reply_to_status_id = status.in_reply_to_status_id;
-        text = status.text;
-        media = status.media;
-        is_possibly_sensitive = status.is_possibly_sensitive;
-        location = status.location;
-        timestamp = System.currentTimeMillis();
-        action_type = Drafts.ACTION_UPDATE_STATUS;
-        action_extras = createJSONObject(null);
-    }
-
-    private static JSONObject createJSONObject(String json) {
-        if (TextUtils.isEmpty(json)) return null;
-        try {
-            return new JSONObject(json);
-        } catch (JSONException e) {
-            return null;
-        }
     }
 
     @Override
@@ -115,6 +84,7 @@ public class DraftItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         DraftItemParcelablePlease.writeToParcel(this, dest, flags);
     }
+
 
     public static final Creator<DraftItem> CREATOR = new Creator<DraftItem>() {
         public DraftItem createFromParcel(Parcel source) {

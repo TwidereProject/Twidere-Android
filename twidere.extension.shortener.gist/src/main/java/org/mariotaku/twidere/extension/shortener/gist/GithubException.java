@@ -19,13 +19,45 @@
 
 package org.mariotaku.twidere.extension.shortener.gist;
 
+import org.mariotaku.restfu.http.HttpRequest;
+import org.mariotaku.restfu.http.HttpResponse;
+
 /**
  * Created by mariotaku on 15/6/4.
  */
 public class GithubException extends Exception {
-    private int errorCode;
+    private HttpRequest request;
+    private HttpResponse response;
 
-    public int getErrorCode() {
-        return errorCode;
+    public GithubException() {
+        super();
+    }
+
+    public GithubException(String detailMessage) {
+        super(detailMessage);
+    }
+
+    public GithubException(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
+    }
+
+    public GithubException(Throwable throwable) {
+        super(throwable);
+    }
+
+    public void setRequest(HttpRequest request) {
+        this.request = request;
+    }
+
+    public HttpRequest getRequest() {
+        return request;
+    }
+
+    public void setResponse(HttpResponse response) {
+        this.response = response;
+    }
+
+    public HttpResponse getResponse() {
+        return response;
     }
 }

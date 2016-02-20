@@ -208,7 +208,6 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -439,30 +438,6 @@ public final class Utils implements Constants {
         adapter.notifyDataSetChanged();
     }
 
-    public static void copyStream(final InputStream is, final OutputStream os) throws IOException {
-        final int buffer_size = 8192;
-        final byte[] bytes = new byte[buffer_size];
-        int count = is.read(bytes, 0, buffer_size);
-        while (count != -1) {
-            os.write(bytes, 0, count);
-            count = is.read(bytes, 0, buffer_size);
-        }
-    }
-
-    public static Bundle createMediaViewerActivityOption(@NonNull View view) {
-        view.buildDrawingCache();
-        try {
-            final Bitmap viewDrawingCache = view.getDrawingCache();
-            if (viewDrawingCache == null) return null;
-            final Bitmap drawingCache = Bitmap.createBitmap(viewDrawingCache);
-            return ActivityOptionsCompat.makeThumbnailScaleUpAnimation(view, drawingCache, 0, 0).toBundle();
-        } catch (NullPointerException e) {
-            return null;
-        } finally {
-            view.destroyDrawingCache();
-        }
-    }
-
     public static int[] getAccountColors(@Nullable final ParcelableAccount[] accounts) {
         if (accounts == null) return null;
         final int[] colors = new int[accounts.length];
@@ -471,7 +446,6 @@ public final class Utils implements Constants {
         }
         return colors;
     }
-
 
     public static Fragment createFragmentForIntent(final Context context, final Intent intent) {
         final Uri uri = intent.getData();
@@ -1230,9 +1204,10 @@ public final class Utils implements Constants {
         return null;
     }
 
-    public static String getImageUploadStatus(final Context context, final CharSequence[] links, final CharSequence text) {
-        if (context == null || links == null || links.length == 0)
-            return ParseUtils.parseString(text);
+    public static String getImageUploadStatus(@NonNull final Context context,
+                                              @Nullable final CharSequence[] links,
+                                              @Nullable final CharSequence text) {
+        if (ArrayUtils.isEmpty(links) || text == null) return ParseUtils.parseString(text);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String imageUploadFormat = getNonEmptyString(prefs, KEY_IMAGE_UPLOAD_FORMAT, DEFAULT_IMAGE_UPLOAD_FORMAT);
         return imageUploadFormat.replace(FORMAT_PATTERN_LINK, TwidereArrayUtils.toString(links, ' ', false)).replace(
@@ -2311,6 +2286,7 @@ public final class Utils implements Constants {
     }
 
     public static void addCopyLinkIntent(Context context, Intent chooserIntent, Uri uri) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
         final Intent copyLinkIntent = new Intent(context, CopyLinkActivity.class);
         copyLinkIntent.setData(uri);
         final Intent[] alternateIntents = {copyLinkIntent};

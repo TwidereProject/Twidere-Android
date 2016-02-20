@@ -18,23 +18,41 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest package="org.mariotaku.twidere.extension.shortener.gist"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="org.mariotaku.twidere.extension.shortener.gist"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault">
+        <meta-data
+            android:name="org.mariotaku.twidere.extension"
+            android:value="true"/>
+
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="org.mariotaku.twidere.EXTENSION_SETTINGS"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".GistStatusShortenerService"
+            android:permission="org.mariotaku.twidere.permission.SHORTEN_STATUS">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.EXTENSION_SHORTEN_STATUS"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

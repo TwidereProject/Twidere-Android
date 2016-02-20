@@ -263,7 +263,7 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
                 twitter.updateStatusesAsync(ParcelableStatusUpdateUtils.fromDraftItem(getActivity(), item));
             } else if (item.action_type == Drafts.ACTION_SEND_DIRECT_MESSAGE) {
                 if (item.action_extras == null) continue;
-                final long recipientId = item.action_extras.optLong(EXTRA_RECIPIENT_ID);
+                final long recipientId = item.action_extras.getLong(EXTRA_RECIPIENT_ID, -1);
                 if (item.account_ids == null || item.account_ids.length <= 0 || recipientId <= 0) {
                     continue;
                 }

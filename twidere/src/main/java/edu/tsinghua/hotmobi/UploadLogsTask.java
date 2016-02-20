@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.Utils;
 
@@ -104,7 +105,7 @@ public class UploadLogsTask implements Runnable {
                     conn.setDoOutput(true);
                     os = conn.getOutputStream();
                     is = new FileInputStream(logFile);
-                    Utils.copyStream(is, os);
+                    RestFuUtils.copyStream(is, os);
                     final int responseCode = conn.getResponseCode();
                     if (responseCode >= 200 && responseCode < 300) {
                         uploadLogEvent.finish(conn);

@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -45,6 +46,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
+import android.os.Process;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -121,6 +123,7 @@ import org.mariotaku.twidere.util.SQLiteDatabaseWrapper;
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
+import org.mariotaku.twidere.util.TwidereListUtils;
 import org.mariotaku.twidere.util.TwidereQueryBuilder.CachedUsersQueryBuilder;
 import org.mariotaku.twidere.util.TwidereQueryBuilder.ConversationQueryBuilder;
 import org.mariotaku.twidere.util.UriExtraUtils;
@@ -136,6 +139,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -627,10 +632,24 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return null;
                 }
                 case VIRTUAL_TABLE_ID_PERMISSIONS: {
+                    final Context context = getContext();
+                    if (context == null) return null;
                     final MatrixCursor c = new MatrixCursor(Permissions.MATRIX_COLUMNS);
-                    final Map<String, String> map = mPermissionsManager.getAll();
-                    for (final Map.Entry<String, String> item : map.entrySet()) {
-                        c.addRow(new Object[]{item.getKey(), item.getValue()});
+                    final PackageManager pm = context.getPackageManager();
+                    if (Binder.getCallingUid() == Process.myUid()) {
+                        final Map<String, String> map = mPermissionsManager.getAll();
+                        for (final Map.Entry<String, String> item : map.entrySet()) {
+                            c.addRow(new Object[]{item.getKey(), item.getValue()});
+                        }
+                    } else {
+                        final Map<String, String> map = mPermissionsManager.getAll();
+                        final String[] callingPackages = pm.getPackagesForUid(Binder.getCallingUid());
+                        for (final Map.Entry<String, String> item : map.entrySet()) {
+                            final String key = item.getKey();
+                            if (ArrayUtils.contains(callingPackages, key)) {
+                                c.addRow(new Object[]{key, item.getValue()});
+                            }
+                        }
                     }
                     return c;
                 }
@@ -921,7 +940,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void checkReadPermission(final int id, final String table, final String[] projection) {
+        if (Binder.getCallingPid() == Process.myPid()) return;
         switch (id) {
+            case VIRTUAL_TABLE_ID_PERMISSIONS: {
+                return;
+            }
             case VIRTUAL_TABLE_ID_PREFERENCES:
             case VIRTUAL_TABLE_ID_DNS: {
                 if (!checkPermission(PERMISSION_PREFERENCES))
@@ -929,22 +952,27 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
             case TABLE_ID_ACCOUNTS: {
-                // Reading some infomation like user_id, screen_name etc is
+                // Reading some information like user_id, screen_name etc is
                 // okay, but reading columns like password requires higher
                 // permission level.
-                final String[] credentialsCols = {Accounts.BASIC_AUTH_PASSWORD, Accounts.OAUTH_TOKEN,
-                        Accounts.OAUTH_TOKEN_SECRET, Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET};
-                if (projection == null || TwidereArrayUtils.contains(projection, credentialsCols)
-                        && !checkPermission(PERMISSION_ACCOUNTS)) {
-                    final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
-                    throw new SecurityException("Access column " + TwidereArrayUtils.toString(projection, ',', true)
-                            + " in database accounts requires level PERMISSION_LEVEL_ACCOUNTS, package: " + pkgName);
+                if (checkPermission(PERMISSION_ACCOUNTS)) {
+                    break;
                 }
-                if (!checkPermission(PERMISSION_READ)) {
+                // Only querying basic information
+                if (TwidereArrayUtils.contains(Accounts.COLUMNS_NO_CREDENTIALS, projection) && !checkPermission(PERMISSION_READ)) {
                     final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
                     throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_READ, package: " + pkgName);
                 }
-                break;
+                final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
+                final List<String> callingSensitiveCols = new ArrayList<>();
+                if (projection != null) {
+                    Collections.addAll(callingSensitiveCols, projection);
+                    callingSensitiveCols.removeAll(Arrays.asList(Accounts.COLUMNS_NO_CREDENTIALS));
+                } else {
+                    callingSensitiveCols.add("*");
+                }
+                throw new SecurityException("Access column " + TwidereListUtils.toString(callingSensitiveCols, ',', true)
+                        + " in database accounts requires level PERMISSION_LEVEL_ACCOUNTS, package: " + pkgName);
             }
             case TABLE_ID_DIRECT_MESSAGES:
             case TABLE_ID_DIRECT_MESSAGES_INBOX:
@@ -975,13 +1003,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
             default: {
                 if (!mPermissionsManager.checkSignature(Binder.getCallingUid())) {
-                    throw new SecurityException("Internal database is not allowed for third-party applications");
+                    throw new SecurityException("Internal database " + id + " is not allowed for third-party applications");
                 }
             }
         }
     }
 
     private void checkWritePermission(final int id, final String table) {
+        if (Binder.getCallingPid() == Process.myPid()) return;
         switch (id) {
             case TABLE_ID_ACCOUNTS: {
                 // Writing to accounts database is not allowed for third-party

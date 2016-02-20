@@ -23,6 +23,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -137,9 +138,19 @@ public class ExtensionsListFragment extends BaseListFragment implements Constant
     }
 
     private boolean openSettings(final ExtensionInfo info) {
-        if (info == null || info.settings == null) return false;
-        final Intent intent = new Intent(INTENT_ACTION_EXTENSIONS);
-        intent.setClassName(info.pname, info.settings);
+        final Intent intent = new Intent(INTENT_ACTION_EXTENSION_SETTINGS);
+        intent.setPackage(info.pname);
+        if (info.settings != null) {
+            intent.setClassName(info.pname, info.settings);
+        } else {
+            final PackageManager pm = getActivity().getPackageManager();
+            final List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
+            if (activities.isEmpty()) {
+                return false;
+            }
+            final ResolveInfo resolveInfo = activities.get(0);
+            intent.setClassName(info.pname, resolveInfo.activityInfo.name);
+        }
         try {
             startActivity(intent);
         } catch (final Exception e) {

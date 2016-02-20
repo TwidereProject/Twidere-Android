@@ -42,17 +42,18 @@ import android.widget.EditText;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.view.ComposeEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
-import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
@@ -221,17 +222,20 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             final MenuItem quoteOriginalStatus = menu.findItem(R.id.quote_original_status);
             final MenuItem linkToQuotedStatus = menu.findItem(R.id.link_to_quoted_status);
             final Uri statusLink;
-            final long inReplyToStatusId;
             if (!status.is_quote || !quoteOriginalStatus.isChecked()) {
-                inReplyToStatusId = status.id;
                 statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
             } else {
-                inReplyToStatusId = status.quoted_id;
                 statusLink = LinkCreator.getTwitterStatusLink(status.quoted_user_screen_name, status.quoted_id);
             }
             final String commentText = editComment.getText() + " " + statusLink;
-            twitter.updateStatusAsync(new long[]{status.account_id}, commentText, null, null,
-                    linkToQuotedStatus.isChecked() ? inReplyToStatusId : -1, status.is_possibly_sensitive);
+            ParcelableStatusUpdate update = new ParcelableStatusUpdate();
+            update.text = commentText;
+            update.accounts = DataStoreUtils.getAccounts(getContext(), status.account_id);
+            if (linkToQuotedStatus.isChecked()) {
+                update.in_reply_to_status = status;
+            }
+            update.is_possibly_sensitive = status.is_possibly_sensitive;
+            twitter.updateStatusesAsync(update);
         } else if (isMyRetweet(status)) {
             twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
         } else {

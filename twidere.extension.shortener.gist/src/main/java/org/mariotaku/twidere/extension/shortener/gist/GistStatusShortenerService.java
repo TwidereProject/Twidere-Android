@@ -19,74 +19,62 @@
 
 package org.mariotaku.twidere.extension.shortener.gist;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
-import org.mariotaku.restfu.RestAPIFactory;
-import org.mariotaku.twidere.IStatusShortener;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
-
-import java.lang.ref.WeakReference;
+import org.mariotaku.twidere.service.StatusShortenerService;
 
 /**
  * Created by mariotaku on 15/6/4.
  */
-public class GistStatusShortenerService extends Service {
-
-
-    private final StatusShortenerStub mBinder = new StatusShortenerStub(this);
+public class GistStatusShortenerService extends StatusShortenerService {
 
     @Override
-    public IBinder onBind(final Intent intent) {
-        return mBinder;
-    }
-
-    /**
-     * @return Shortened tweet.
-     */
-    public StatusShortenResult shorten(final ParcelableStatusUpdate status, final String overrideStatusText) {
-        final Github github = getGithubInstance();
+    protected StatusShortenResult shorten(ParcelableStatusUpdate status, ParcelableAccount currentAccount, String overrideStatusText) {
+        final Github github = GithubFactory.getInstance(getApiKey());
+        final NewGist newGist = new NewGist();
+        newGist.setDescription("long tweet");
+        newGist.setIsPublic(false);
+        final String content = overrideStatusText != null ? overrideStatusText : status.text;
+        newGist.putFile("long_tweet.txt", new GistFile(content));
         try {
-            final String text = overrideStatusText != null ? overrideStatusText : status.text;
-            final ParcelableAccount account = status.accounts[0];
-            final NewGist newGist = new NewGist();
-            final Gist response = github.createGist(newGist);
-            if (response != null) return StatusShortenResult.getInstance(response.getHtmlUrl());
-        } catch (final GithubException e) {
-            final int errorCode = e.getErrorCode() != 0 ? e.getErrorCode() : -1;
-            return StatusShortenResult.getInstance(errorCode, e.getMessage());
+            Gist gist = github.createGist(newGist);
+            final StatusShortenResult shortened = StatusShortenResult.shortened(getShortenedStatus(content, gist.getHtmlUrl()));
+            shortened.extra = gist.getId();
+            return shortened;
+        } catch (GithubException e) {
+            return StatusShortenResult.error(-1, e.getMessage());
         }
-        return StatusShortenResult.getInstance(-1, "Unknown error");
     }
 
-    private Github getGithubInstance() {
-        RestAPIFactory factory = new RestAPIFactory();
-        return factory.build(Github.class);
+    @Override
+    protected boolean callback(StatusShortenResult result, ParcelableStatus status) {
+        final String apiKey = getApiKey();
+        if (apiKey == null) return false;
+        final Github github = GithubFactory.getInstance(apiKey);
+        final NewGist newGist = new NewGist();
+        newGist.setDescription("https://twitter.com/" + status.user_screen_name + "/status/" + status.id);
+        try {
+            github.updateGist(result.extra, newGist);
+        } catch (GithubException e) {
+            return false;
+        }
+        return true;
     }
 
-    /*
-     * By making this a static class with a WeakReference to the Service, we
-     * ensure that the Service can be GCd even when the system process still has
-     * a remote reference to the stub.
-     */
-    private static final class StatusShortenerStub extends IStatusShortener.Stub {
+    private String getApiKey() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString("api_key", null);
+    }
 
-        final WeakReference<GistStatusShortenerService> mService;
-
-        public StatusShortenerStub(final GistStatusShortenerService service) {
-            mService = new WeakReference<>(service);
-        }
-
-        @Override
-        public StatusShortenResult shorten(final ParcelableStatusUpdate status, final String overrideStatusText)
-                throws RemoteException {
-            return mService.get().shorten(status, overrideStatusText);
-        }
-
+    private String getShortenedStatus(String content, String htmlUrl) {
+        final int codePointCount = content.codePointCount(0, content.length());
+        final int offset = content.offsetByCodePoints(0, Math.min(99, codePointCount));
+        return content.substring(0, offset) + " " + htmlUrl;
     }
 
 }

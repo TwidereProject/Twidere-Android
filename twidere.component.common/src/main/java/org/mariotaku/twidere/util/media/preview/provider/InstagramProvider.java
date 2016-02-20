@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.util.media.preview.provider;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -9,7 +8,6 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -19,17 +17,33 @@ public class InstagramProvider implements Provider {
     @Override
     public boolean supports(@NonNull String link) {
         final String authority = PreviewMediaExtractor.getAuthority(link);
-        return "instagr.am".equals(authority) || "instagram.com".equals(authority) ||
-                "www.instagram.com".equals(authority);
+        if (authority == null) return false;
+        switch (authority) {
+            case "instagr.am":
+            case "instagram.com":
+            case "www.instagram.com": {
+                final String path = PreviewMediaExtractor.getPath(link);
+                return path != null && path.startsWith("/p/");
+            }
+        }
+        return false;
     }
 
     @Override
     @Nullable
     public ParcelableMedia from(@NonNull String link) {
-        final Uri uri = Uri.parse(link);
-        final List<String> pathSegments = uri.getPathSegments();
-        if (pathSegments.size() < 2 || !"p".equals(pathSegments.get(0))) return null;
-        final String id = pathSegments.get(1);
+        final String path = PreviewMediaExtractor.getPath(link);
+        final String prefix = "/p/";
+        if (path == null || !path.startsWith(prefix)) {
+            return null;
+        }
+        String lastPath = path.substring(prefix.length());
+        if (lastPath.isEmpty()) return null;
+        int end = lastPath.indexOf('/');
+        if (end < 0) {
+            end = lastPath.length();
+        }
+        final String id = lastPath.substring(0, end);
         final ParcelableMedia media = new ParcelableMedia();
         media.type = ParcelableMedia.Type.IMAGE;
         media.url = link;

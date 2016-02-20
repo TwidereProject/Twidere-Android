@@ -26,6 +26,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class TwidereArrayUtils {
@@ -83,6 +84,16 @@ public final class TwidereArrayUtils {
         }
         list1.retainAll(list2);
         return fromList(list1);
+    }
+
+    public static <T> T[] intersection(@NonNull final T[] array1, @NonNull final T[] array2) {
+        final List<T> list1 = new ArrayList<>();
+        Collections.addAll(list1, array1);
+        final List<T> list2 = new ArrayList<>();
+        Collections.addAll(list2, array2);
+        list1.retainAll(list2);
+        //noinspection unchecked
+        return list1.toArray((T[]) Array.newInstance(array1.getClass().getComponentType(), list1.size()));
     }
 
     @SuppressWarnings("SuspiciousSystemArraycopy")

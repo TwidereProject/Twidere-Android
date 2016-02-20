@@ -29,15 +29,23 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.model.ComposingStatus;
+import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
+import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
+import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -126,28 +134,39 @@ public final class Twidere implements TwidereConstants {
         return intent.getParcelableExtra(EXTRA_USER_LIST);
     }
 
-    public static boolean isPermissionGranted(final Context context) {
-        final ContentResolver resolver = context.getContentResolver();
+    @Permission
+    public static int isPermissionGranted(final Context context) {
         final PackageManager pm = context.getPackageManager();
         final String pname = context.getPackageName();
         final ApplicationInfo info;
         try {
             info = pm.getPackageInfo(pname, PackageManager.GET_META_DATA).applicationInfo;
         } catch (final PackageManager.NameNotFoundException e) {
-            return false;
+            return Permission.NONE;
         }
-        if (info.metaData == null) return false;
+        if (info.metaData == null) return Permission.NONE;
         final String[] required = parsePermissions(info.metaData.getString(METADATA_KEY_EXTENSION_PERMISSIONS));
-        final Cursor c = resolver.query(TwidereDataStore.Permissions.CONTENT_URI, null, null, null, null);
-        if (c == null) return false;
+        final String[] permissions = getPermissions(context, pname);
+        if (ArrayUtils.contains(permissions, PERMISSION_DENIED)) {
+            return Permission.DENIED;
+        } else if (TwidereArrayUtils.contains(permissions, required)) {
+            return Permission.GRANTED;
+        }
+        return Permission.NONE;
+    }
+
+    @NonNull
+    public static String[] getPermissions(Context context, String pname) {
+        final ContentResolver resolver = context.getContentResolver();
+        final Cursor c = resolver.query(Permissions.CONTENT_URI, null, null, null, null);
+        if (c == null) return new String[0];
         try {
             c.moveToFirst();
-            final int idxPackageName = c.getColumnIndex(TwidereDataStore.Permissions.PACKAGE_NAME), idxPermissions = c
-                    .getColumnIndex(TwidereDataStore.Permissions.PERMISSION);
+            final int idxPackageName = c.getColumnIndex(Permissions.PACKAGE_NAME), idxPermissions = c
+                    .getColumnIndex(Permissions.PERMISSION);
             while (!c.isAfterLast()) {
                 if (pname.equals(c.getString(idxPackageName))) {
-                    final String[] permissions = parsePermissions(c.getString(idxPermissions));
-                    return TwidereArrayUtils.contains(permissions, required);
+                    return parsePermissions(c.getString(idxPermissions));
                 }
                 c.moveToNext();
             }
@@ -156,9 +175,10 @@ public final class Twidere implements TwidereConstants {
         } finally {
             c.close();
         }
-        return false;
+        return new String[0];
     }
 
+    @NonNull
     public static String[] parsePermissions(final String permissionsString) {
         if (isEmpty(permissionsString)) return new String[0];
         return permissionsString.split(SEPARATOR_PERMISSION_REGEX);
@@ -205,5 +225,32 @@ public final class Twidere implements TwidereConstants {
             cur.close();
         }
     }
+
+    @Nullable
+    public static ParcelableCredentials getCredentials(final Context context, final long accountId) throws SecurityException {
+        if (context == null || accountId < 0) return null;
+        final String selection = Accounts.ACCOUNT_ID + " = ?";
+        final String[] selectionArgs = {String.valueOf(accountId)};
+        Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
+                Accounts.COLUMNS, selection, selectionArgs, null);
+        if (cur == null) return null;
+        try {
+            if (cur.moveToFirst()) {
+                return ParcelableCredentialsCursorIndices.fromCursor(cur);
+            }
+        } finally {
+            cur.close();
+        }
+        return null;
+    }
+
+
+    @IntDef({Permission.DENIED, Permission.NONE, Permission.GRANTED})
+    public @interface Permission {
+        int NONE = 0;
+        int GRANTED = 1;
+        int DENIED = -1;
+    }
+
 
 }

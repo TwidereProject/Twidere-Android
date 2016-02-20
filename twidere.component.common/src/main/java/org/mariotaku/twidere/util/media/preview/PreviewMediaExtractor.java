@@ -92,7 +92,10 @@ public class PreviewMediaExtractor {
         }
         int end = link.indexOf('?', start);
         if (end < 0) {
-            end = link.length();
+            end = link.indexOf('#', start);
+            if (end < 0) {
+                end = link.length();
+            }
         }
         return link.substring(start, end);
     }
