@@ -58,7 +58,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.Toast;
 
 import com.desmond.asyncmanager.AsyncManager;
 import com.desmond.asyncmanager.TaskRunnable;
@@ -116,7 +115,6 @@ import static org.mariotaku.twidere.util.CompareUtils.classEquals;
 import static org.mariotaku.twidere.util.DataStoreUtils.cleanDatabasesByItemLimit;
 import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
 import static org.mariotaku.twidere.util.Utils.getTabDisplayOptionInt;
-import static org.mariotaku.twidere.util.Utils.isDatabaseReady;
 import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 import static org.mariotaku.twidere.util.Utils.openSearch;
 
@@ -341,11 +339,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         super.onCreate(savedInstanceState);
-        if (!isDatabaseReady(this)) {
-            Toast.makeText(this, R.string.preparing_database_toast, Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
         if (!DataStoreUtils.hasAccount(this)) {

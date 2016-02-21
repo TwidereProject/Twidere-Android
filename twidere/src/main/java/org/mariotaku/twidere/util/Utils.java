@@ -1208,10 +1208,7 @@ public final class Utils implements Constants {
                                               @Nullable final CharSequence[] links,
                                               @Nullable final CharSequence text) {
         if (ArrayUtils.isEmpty(links) || text == null) return ParseUtils.parseString(text);
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final String imageUploadFormat = getNonEmptyString(prefs, KEY_IMAGE_UPLOAD_FORMAT, DEFAULT_IMAGE_UPLOAD_FORMAT);
-        return imageUploadFormat.replace(FORMAT_PATTERN_LINK, TwidereArrayUtils.toString(links, ' ', false)).replace(
-                FORMAT_PATTERN_TEXT, text);
+        return text + " " + TwidereArrayUtils.toString(links, ' ', false);
     }
 
     public static File getInternalCacheDir(final Context context, final String cacheDirName) {
@@ -1485,11 +1482,6 @@ public final class Utils implements Constants {
         if (PATTERN_TWITTER_PROFILE_IMAGES.matcher(url).matches())
             return replaceLast(url, "_" + TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES, String.format("_%s", size));
         return url;
-    }
-
-    public static String getUnescapedStatusString(final String string) {
-        if (string == null) return null;
-        return string.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">");
     }
 
     @DrawableRes

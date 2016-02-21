@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_description">Your own Twitter app</string>
     <string name="compose">Compose</string>
     <string name="add_account">Add account</string>
     <string name="settings">Settings</string>
     <string name="send">Send</string>
-    <string name="add_location">Add location</string>
     <string name="add_image">Add image</string>
     <string name="take_photo">Take photo</string>
-    <string name="remove_location">Remove location</string>
-    <string name="remove_image">Remove image</string>
-    <string name="remove_photo">Remove photo</string>
     <string name="status_hint">What\'s happening?</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
-    <string name="rest_base_url">REST Base URL</string>
-    <string name="oauth_base_url">OAuth Base URL</string>
-    <string name="signing_oauth_base_url">Signing OAuth Base URL</string>
-    <string name="signing_rest_base_url">Signing REST Base URL</string>
     <string name="api_url_format">API URL Format</string>
     <string name="same_oauth_signing_url">Use same URL for OAuth signing</string>
     <string name="auth_type">Auth type</string>
@@ -48,24 +40,18 @@
     <string name="label_streaming_service">Streaming service</string>
     <string name="label_background_operation_service">Background operation service</string>
     <string name="open_in_browser">Open in browser</string>
-    <string name="tap_to_load_more">Tap to load more</string>
     <string name="delete">Delete</string>
     <string name="retweet">Retweet</string>
     <string name="retweets">Retweets</string>
     <string name="cancel_retweet">Cancel retweet</string>
     <string name="favorite">Favorite</string>
     <string name="unfavorite">Unfavorite</string>
-    <!-- v. e.g. An action label on a tweet to like this tweet. Formerly Twitter's favorite. -->
+    <!-- v. e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
     <string name="like">Like</string>
     <string name="undo_like">Undo like</string>
     <string name="reply">Reply</string>
     <string name="share">Share</string>
-    <string name="view_image">Image</string>
     <string name="view_map">Map</string>
-    <string name="view_status">View tweet</string>
-    <string name="view_user_profile">User profile</string>
-    <string name="browser">Browser</string>
-    <string name="pick_from_gallery">Pick from gallery</string>
     <string name="statuses">Tweets</string>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
@@ -76,10 +62,6 @@
     <string name="default_api_settings_summary">These settings only apply to newly logged-in accounts</string>
     <string name="consumer_key">Consumer key</string>
     <string name="consumer_secret">Consumer secret</string>
-    <string name="ignore_ssl_error">Ignore SSL Error</string>
-    <string name="ignore_ssl_error_summary">Ignore SSL Error, enable this if you are having problems with custom API server.</string>
-    <string name="gzip_compressing">GZip compressing</string>
-    <string name="gzip_compressing_summary">Compress all API requests, it can reduce data usage, but may not work on all API servers.</string>
     <string name="storage">Storage</string>
     <string name="database_item_limit">Database size limit</string>
     <string name="database_item_limit_summary">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
@@ -87,15 +69,10 @@
     <string name="clear_cache_summary">Clear stored profile image cache.</string>
     <string name="clear_databases">Clear databases</string>
     <string name="clear_databases_summary">Clear all tweets, profiles, messages. Your account credentials won\'t be lost.</string>
-    <string name="look_and_feel">Look and feel</string>
-    <string name="display_profile_image">Display profile image</string>
-    <string name="image_load_summary">Disabling this will increase list scroll speed and reduce data usage.</string>
     <string name="in_reply_to_name">In reply to <xliff:g id="user_name">%s</xliff:g></string>
     <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweeted</string>
     <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> and another retweeted</string>
     <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others retweeted</string>
-    <string name="N_retweeted_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> retweet</string>
-    <string name="N_retweeted_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="retweet_count">%d</xliff:g> retweets</string>
     <string name="retweeted_by_name">Retweeted by <xliff:g id="user_name">%s</xliff:g></string>
     <string name="retweeted_by_name_with_count">Retweeted by <xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others</string>
     <string name="retweeted_by_count">Retweeted by <xliff:g id="retweet_count">%d</xliff:g> users</string>
@@ -123,8 +100,6 @@
     <string name="leftside_compose_button_summary">Put the compose button on the left.</string>
     <string name="load_item_limit">Load item limit</string>
     <string name="load_item_limit_summary">Set items limit per load.</string>
-    <string name="load_more_automatically">Load more content automatically</string>
-    <string name="load_more_automatically_summary">Load more content (e.g. photos, maps, tweets) automatically</string>
     <string name="quote">Quote</string>
     <string name="add_rule">Add rule</string>
     <string name="text_size">Text size</string>
@@ -145,10 +120,7 @@
     <string name="quote_format_summary">\"[TEXT]\" = Tweet text\n\"[NAME]\" = Twitter username</string>
     <string name="direct_messages">Messages</string>
     <string name="blocked_users">Blocked users</string>
-    <string name="set_as_default">Set as default</string>
-    <string name="search_users">Search Users</string>
     <string name="search_statuses">Search Tweets</string>
-    <string name="created_at">Created at</string>
     <string name="search_hint">Search tweets or users</string>
     <string name="remember_position">Remember position</string>
     <string name="remember_position_summary">Remember list/tab position before closing Twidere</string>
@@ -157,7 +129,6 @@
     <string name="user_unblocked">Unblocked this user.</string>
     <string name="reported_user_for_spam">Reported this user for spam.</string>
     <string name="reported_users_for_spam">Reported these users for spam.</string>
-    <string name="filename_hint">Filename</string>
     <string name="please_wait">Please wait.</string>
     <string name="saved_to_gallery">Saved to gallery.</string>
     <string name="proxy">Proxy</string>
@@ -176,7 +147,6 @@
     <string name="message_users_muted">Added users to filter list. You will not see tweets from these users in your home timeline/mentions list.</string>
     <string name="message_user_unmuted">Removed this user from filter list.</string>
     <string name="inbox">Inbox</string>
-    <string name="load_images">Load images</string>
     <string name="other_settings">Other settings</string>
     <string name="auto_refresh">Auto refresh</string>
     <string name="refresh_interval">Refresh interval</string>
@@ -188,7 +158,6 @@
     <string name="vibration">Vibration</string>
     <string name="light">Light</string>
     <string name="notifications">Notifications</string>
-    <string name="screen_name">Username</string>
     <string name="refresh_on_start">Refresh on start</string>
     <string name="refresh_on_start_summary">Refresh timeline and mentions on start.</string>
     <string name="refresh_after_status_updated">Refresh after tweet sent</string>
@@ -198,18 +167,7 @@
     <string name="list_subscribers">List subscribers</string>
     <string name="type_to_compose">Type to compose</string>
     <string name="lists">Lists</string>
-    <string name="users_lists">User\'s lists</string>
     <string name="lists_following_user">Lists following this user</string>
-    <string name="lists_following_you">Lists following you</string>
-    <string name="item_3_minutes">3 minutes</string>
-    <string name="item_5_minutes">5 minutes</string>
-    <string name="item_10_minutes">10 minutes</string>
-    <string name="item_15_minutes">15 minutes</string>
-    <string name="item_30_minutes">30 minutes</string>
-    <string name="item_1_hour">1 hour</string>
-    <string name="item_2_hours">2 hours</string>
-    <string name="item_4_hours">4 hours</string>
-    <string name="display_image_preview">Display image preview</string>
     <string name="following_you">Following you</string>
     <string name="user_list">List</string>
     <string name="user_lists">Lists</string>
@@ -220,7 +178,6 @@
     <string name="account">Account</string>
     <string name="mention_this_user">Mention this user</string>
     <string name="mention_user_name">Mention <xliff:g id="name">%1$s</xliff:g></string>
-    <string name="signing_in_please_wait">Signing in, please wait or press BACK to quit.</string>
     <string name="connectivity">Connectivity</string>
     <string name="add_member">Add member</string>
     <string name="new_user_list">New list</string>
@@ -234,21 +191,17 @@
     <string name="edit_tab">Edit tab</string>
     <string name="icon">Icon</string>
     <string name="pick_file">Pick file</string>
-    <string name="user_timeline">User timeline</string>
     <string name="notification_ringtone">Ringtone</string>
     <string name="notification_light_color">Light Color</string>
     <string name="share_format">Share format</string>
     <string name="share_format_summary">\"[TITLE]\" = Content title\n\"[TEXT]\" = Content text</string>
     <string name="network">Network</string>
     <string name="content_and_storage">Content &amp; Storage</string>
-    <string name="image_uploader">Image uploader</string>
     <string name="media_uploader">Media uploader</string>
-    <string name="image_uploader_default">Default (Twitter)</string>
+    <string name="media_uploader_default">Default (Twitter)</string>
     <string name="home_refresh">Refresh in home timeline</string>
-    <string name="error_message_image_upload_failed">Image upload failed.</string>
-    <string name="error_message_image_uploader_not_found">Image uploader not found, maybe it was uninstalled.</string>
-    <string name="image_upload_format">Tweet format with image</string>
-    <string name="image_upload_format_summary">\"[LINK]\" = Image link\n\"[TEXT]\" = Tweet content\n(Extension only)</string>
+    <string name="error_message_media_upload_failed">Media upload failed.</string>
+    <string name="error_message_media_uploader_not_found">Media uploader not found, maybe it was uninstalled.</string>
     <string name="status_shortener">Tweet shortener</string>
     <string name="status_shortener_default">None (Abort sending)</string>
     <string name="error_message_status_too_long">Tweet too long.</string>
@@ -256,25 +209,21 @@
     <string name="error_message_no_content">No content</string>
     <string name="error_message_tweet_shorten_failed">Tweet shorten failed.</string>
     <string name="error_message_tweet_shortener_not_found">Tweet shortener not found, maybe it was uninstalled.</string>
-    <string name="multimedia_contents">Multimedia content</string>
     <string name="show_absolute_time">Show absolute time</string>
     <string name="show_absolute_time_summary">Show absolute time in tweets</string>
     <string name="user_mentions">User mentions</string>
-    <string name="dual_pane_layout">Dual Pane Layout</string>
     <string name="quick_send">Hit \"Enter\" to Send</string>
     <string name="quick_send_summary">Send tweet when hit \"Enter\".</string>
     <string name="discard">Discard</string>
-    <string name="Nitems_selected_quantity_one" tools:ignore="PluralsCandidate">1 item selected</string>
-    <string name="Nitems_selected_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> items selected</string>
     <string name="custom_host_mapping">Custom host mapping</string>
     <string name="custom_host_mapping_summary">Host mapping like /etc/hosts, but does not require any additional permissions.</string>
     <string name="host_mapping_host">Host</string>
     <string name="host_mapping_address">Address (Can be another host address)</string>
     <string name="add_host_mapping">Add host mapping</string>
     <string name="tcp_dns_query">TCP DNS Query</string>
-    <string name="tcp_dns_query_summary">Use TCP Protocol to make DNS requests, which can avoid DNS Cache Poisoning.</string>
+    <string name="tcp_dns_query_summary">Use TCP Protocol to make DNS requests to avoid DNS spoofing.</string>
     <string name="dns_server">DNS Server</string>
-    <string name="dns_server_summary">Set DNS Server for API requests.</string>
+    <string name="dns_server_summary">Set DNS Server for network requests.</string>
     <string name="activities_about_me">Activities about me</string>
     <string name="activities_by_friends">Activities by friends</string>
     <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favorited your tweet.</string>
@@ -360,10 +309,6 @@
     <string name="action_accepting_follow_request">accepting follow request</string>
     <string name="action_denying_follow_request">denying follow request</string>
     <string name="status_is_duplicate">Your tweet is a duplicate.</string>
-    <string name="silent_notifications">Silent notifications</string>
-    <string name="silent_notifications_summary">Disable ringtone/vibrate for notifications</string>
-    <string name="disable_background_service">Disable background service</string>
-    <string name="disable_background_service_summary">Twidere won\'t have background service if you disable auto refresh and data profiling, don\'t be silly!</string>
     <string name="text_copied">Text copied to clipboard.</string>
     <string name="hashtag">Hashtag</string>
     <string name="links">Links</string>
@@ -391,20 +336,16 @@
     <string name="accept_permission_request">Accept</string>
     <string name="no_thanks">No, thanks</string>
     <string name="revoke_permissions">Revoke permissions</string>
-    <string name="fast_scroll_thumb">Fast scroll thumb</string>
-    <string name="indicate_your_status">Indicate your tweet</string>
     <string name="default_ringtone">Default ringtone</string>
     <string name="phishing_link_warning">Phishing link warning</string>
     <string name="phishing_link_warning_summary">Warn you when are trying to open a possibly phishing link in a direct message.</string>
     <string name="phishing_link_warning_message_1">You are opening a link in a direct message, which might lead you to a phishing site.\n\nCheck the site address twice before providing any personal information.</string>
     <string name="phishing_link_warning_message_2">Are you sure to continue?</string>
-    <string name="image_preload_options">Image preload options</string>
     <string name="profile_images">Profile images</string>
     <string name="preview_images">Preview images</string>
     <string name="preload_wifi_only">Preload using Wi-Fi only</string>
     <string name="sign_in_method_introduction_title">How does it work?</string>
     <string name="sign_in_method_introduction">Most Twitter apps opens a webpage to authorize to Twitter, this could be inconvenient when using custom API, or on slow network. Twidere simulates a normal browser to help sign in to Twitter. Don\'t worry, your password will never be stored nor leaked.</string>
-    <string name="quote_protected_status_notice">It\'s not recommended to quote protected tweets.</string>
     <string name="edit_draft">Edit draft</string>
     <string name="profile_image">Profile image</string>
     <string name="your_profile_image">Your profile image</string>
@@ -444,15 +385,9 @@
     <string name="updated_list_details">Updated list \"<xliff:g id="list">%s</xliff:g>\"\'s details.</string>
     <string name="subscribed_to_list">Subscribed to list \"<xliff:g id="list">%s</xliff:g>\".</string>
     <string name="unsubscribed_from_list">Unsubscribed from list \"<xliff:g id="list">%s</xliff:g>\".</string>
-    <string name="added_N_users_to_list_quantity_one" tools:ignore="PluralsCandidate">Added <xliff:g id="items">%1$d</xliff:g> user to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
-    <string name="added_N_users_to_list_quantity_other" tools:ignore="PluralsCandidate">Added <xliff:g id="items">%1$d</xliff:g> users to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
     <string name="added_user_to_list">Added <xliff:g id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
     <string name="deleted_user_from_list">Deleted <xliff:g id="user">%1$s</xliff:g> from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
-    <string name="deleted_N_users_from_list_quantity_one" tools:ignore="PluralsCandidate">Deleted <xliff:g id="items">%1$d</xliff:g> user from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
-    <string name="deleted_N_users_from_list_quantity_other" tools:ignore="PluralsCandidate">Deleted <xliff:g id="items">%1$d</xliff:g> users from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
     <string name="delete_user_from_list_confirm">Delete <xliff:g id="user">%1$s</xliff:g> from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
-    <string name="delete_N_users_from_list_confirm_quantity_one" tools:ignore="PluralsCandidate">Delete <xliff:g id="items">%1$d</xliff:g> user from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
-    <string name="delete_N_users_from_list_confirm_quantity_other" tools:ignore="PluralsCandidate">Delete <xliff:g id="items">%1$d</xliff:g> users from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
     <string name="subscribe">Subscribe</string>
     <string name="unsubscribe">Unsubscribe</string>
     <string name="background_toast_notification">Background Toast notification</string>
@@ -463,8 +398,6 @@
     <string name="no_close_after_status_updated_summary">A little gift for chatterbox</string>
     <string name="status_saved_to_draft">Tweet saved to draft.</string>
     <string name="default_account">Default account</string>
-    <string name="created_at_with_N_tweets_per_day_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet per day)</string>
-    <string name="created_at_with_N_tweets_per_day_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweets per day)</string>
     <string name="empty_content">Empty content</string>
     <string name="fast_image_loading">Fast image loading</string>
     <string name="fast_image_loading_summary">Enable to make images load faster, disable this if some image can\'t be displayed.</string>
@@ -490,7 +423,6 @@
     <string name="underline">Underline</string>
     <string name="link_highlight_option">Link highlight option</string>
     <string name="users_statuses">User\'s tweets</string>
-    <string name="card_animation">Card animation</string>
     <string name="name_first">Display name first</string>
     <string name="next_step">Next</string>
     <!-- Previous item (tweet, user etc.) -->
@@ -559,23 +491,14 @@
     <string name="theme_background_transparent">Transparent</string>
     <string name="theme_dark_actionbar">Dark ActionBar</string>
     <string name="wizard_hint_compose_select_account">Click profile image to select account when writing a tweet.</string>
-    <string name="wizard_hint_quote_format">Set your favorite quote format in &quot;Settings&quot; - &quot;Compose&quot;</string>
     <string name="wizard_hint_filters">You can hide unwanted tweets from timeline and notification by using &quot;Filters&quot;.</string>
     <string name="view_replies">View Replies</string>
     <string name="compact_cards">Compact cards</string>
     <string name="compact_cards_summary">Display more cards on screen</string>
-    <string name="N_new_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new tweet</string>
-    <string name="N_new_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new tweets</string>
-    <string name="N_new_mentions_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new mention</string>
-    <string name="N_new_mentions_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new mentions</string>
-    <string name="N_new_messages_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new conversation</string>
-    <string name="N_new_messages_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> new conversations</string>
     <string name="status_share_subject_format_with_time">Tweet from <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), at <xliff:g id="time">%3$s</xliff:g></string>
     <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
     <string name="rate_limit">Rate limit</string>
     <string name="wizard_hint_rate_limit">If you encounter rate limit problems, please don\'t blame me, that\'s Twitter\'s policy.</string>
-    <string name="preparing_database">Preparing database</string>
-    <string name="preparing_database_toast">Preparing database, please wait for a while.</string>
     <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, saved at <xliff:g id="time">%2$s</xliff:g></string>
     <string name="update_status">Send tweet</string>
     <string name="sending_direct_message">Sending direct message</string>
@@ -601,8 +524,6 @@
     <string name="import_settings_type_dialog_title">Import settings…</string>
     <string name="nicknames">Nicknames</string>
     <string name="user_colors">User colors</string>
-    <string name="import_export">Import/Export</string>
-    <string name="theme_background_alpha">Theme background alpha</string>
     <string name="progress">Progress</string>
     <string name="hidden_settings">Hidden settings</string>
     <string name="hidden_settings_warning_title">WARNING: These settings may harm!</string>
@@ -615,23 +536,15 @@
     <string name="compose_now_summary">Replaces Google Now shortcut for Compose screen</string>
     <string name="compose_now_action">Compose Now action</string>
     <string name="open_with_account">Open with account</string>
-    <string name="card_highlight_option_highlight">Highlight</string>
-    <string name="card_highlight_option_line">Line</string>
     <string name="timeline_sync_service">Timeline sync service</string>
-    <string name="image_preview_scale_type">Image preview scale type</string>
-    <string name="image_preview_scale_type_crop">Crop</string>
-    <string name="image_preview_scale_type_fit_center">Fit center</string>
     <string name="quote_protected_status_warning_message">This tweet is protected.\n\nProtected users usually don\'t want their tweets to be shared publicly.</string>
     <string name="send_anyway">Send anyway</string>
     <string name="following_only">Your following only</string>
     <string name="following_only_summary">Display notifications from users you follow only.</string>
     <string name="new_direct_message">New direct message</string>
-    <string name="plain_list_style">Plain list style</string>
     <string name="want_old_icon_back">Want old icon back?</string>
     <string name="icon_restored_message">Icon restored!</string>
     <string name="add">Add</string>
-    <string name="N_media_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
-    <string name="N_media_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="items">%d</xliff:g> media</string>
     <string name="delete_drafts_confirm">Delete selected drafts?</string>
     <string name="extra_configurations">Extra configurations</string>
     <string name="click_item_to_configure">Click an item to configure</string>
@@ -655,7 +568,6 @@
     <string name="action_unmuting">unmuting</string>
     <string name="mute_user_confirm_message">Mute <xliff:g id="name">%s</xliff:g>? You will no longer see tweets from this user while keep following this user.</string>
     <string name="remove_from_filter">Remove from filter</string>
-    <string name="sort_timeline_by_id">Sort timeline by ID</string>
     <string name="style">Style</string>
     <string name="color">Color</string>
     <string name="font_family">Font family</string>
@@ -669,7 +581,6 @@
     <string name="load_more">Load more</string>
     <string name="photo">Photo</string>
     <string name="camera">Camera</string>
-    <string name="gallery">Gallery</string>
     <string name="source_camera">Camera</string>
     <string name="source_gallery">Gallery</string>
     <string name="source_clipboard">Clipboard</string>
@@ -689,8 +600,6 @@
     <string name="media_preview_style">Media preview style</string>
     <string name="draft_saved">Draft saved</string>
     <string name="open_twitter_links">Open Twitter links</string>
-    <string name="N_others_quantity_one" tools:ignore="PluralsCandidate">another</string>
-    <string name="N_others_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> others</string>
     <string name="type_name_to_search">Type name to search</string>
     <string name="no_user_found">No user found</string>
     <string name="members">Members</string>
@@ -744,14 +653,6 @@
     <string name="server_address">Server address</string>
     <string name="security_key">Security key</string>
     <string name="hide_card_actions">Hide card actions</string>
-    <string name="N_statuses_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweet</string>
-    <string name="N_statuses_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> tweets</string>
-    <string name="N_favorites_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favorite</string>
-    <string name="N_favorites_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> favorites</string>
-    <string name="N_likes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> like</string>
-    <string name="N_likes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> likes</string>
-    <string name="N_votes_quantity_one" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> vote</string>
-    <string name="N_votes_quantity_other" tools:ignore="PluralsCandidate"><xliff:g id="count">%d</xliff:g> votes</string>
     <string name="drafts_hint_messages">Your unsent tweets will save here</string>
     <string name="keyboard_shortcuts">Keyboard shortcuts</string>
     <string name="keyboard_shortcut_hint">Press keys</string>
@@ -778,7 +679,6 @@
     <string name="comment_hint">Comment…</string>
     <string name="comment">Comment</string>
     <string name="enable_retweets">Enable retweets</string>
-    <string name="disable_retweets">Disable retweets</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="jump_to_top">Jump to top</string>
@@ -792,11 +692,7 @@
     <string name="wizard_hint_summary_storage_requirement">Twidere needs storage permission when you access documents.</string>
     <string name="scrapyard">Scrapyard</string>
     <string name="crop_image">Crop image</string>
-    <string name="usage_label_sent">Sent</string>
-    <string name="usage_label_received">Received</string>
-    <string name="this_month">This month</string>
     <string name="media_preload">Media preload</string>
-    <string name="on_mobile_network">On mobile network</string>
     <string name="set_consumer_key_secret_message">Twidere is reaching token limit, you will have to create an app at https://apps.twitter.com/ and paste consumer key and secret below.\nIf you continue using default key, you may not be able to sign in.</string>
     <string name="send_at">Send at</string>
     <string name="scheduled_statuses">Scheduled tweets</string>
@@ -833,8 +729,6 @@
     <string name="unknown_language">Unknown language</string>
     <string name="system_default">System default</string>
     <string name="emoji_support">Emoji support</string>
-    <string name="open_poll_in_official_app">Open poll in official app</string>
-    <string name="action_vote">Vote</string>
     <string name="label_poll">Poll</string>
     <string name="poll_summary_format"><xliff:g id="poll_count">%1$s</xliff:g> · <xliff:g id="poll_time_left">%2$s</xliff:g></string>
     <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

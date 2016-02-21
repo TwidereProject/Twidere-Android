@@ -504,7 +504,9 @@ public class BackgroundOperationService extends IntentService implements Constan
             StatusShortenerInterface shortener = null;
             if (!ServicePickerPreference.isNoneValue(uploaderComponent)) {
                 uploader = MediaUploaderInterface.getInstance(app, uploaderComponent);
-                if (uploader == null) throw new UploaderNotFoundException(this);
+                if (uploader == null) {
+                    throw new UploaderNotFoundException(getString(R.string.error_message_media_uploader_not_found));
+                }
             }
             if (!ServicePickerPreference.isNoneValue(shortenerComponent)) {
                 shortener = StatusShortenerInterface.getInstance(app, shortenerComponent);
@@ -553,10 +555,12 @@ public class BackgroundOperationService extends IntentService implements Constan
                             uploadResult = uploader.upload(statusUpdate,
                                     UploaderMediaItem.getFromStatusUpdate(this, statusUpdate));
                         } catch (final Exception e) {
-                            throw new UploadException(this);
+                            throw new UploadException(getString(R.string.error_message_media_upload_failed));
                         }
                         // Shouldn't return null, but handle that case for shitty extensions.
-                        if (uploadResult == null) throw new UploadException(this);
+                        if (uploadResult == null) {
+                            throw new UploadException(getString(R.string.error_message_media_upload_failed));
+                        }
                         if (uploadResult.error_code != 0)
                             throw new UploadException(uploadResult.error_message);
 
@@ -825,7 +829,6 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     static class StatusTooLongException extends UpdateStatusException {
-        private static final long serialVersionUID = -6469920130856384219L;
 
         public StatusTooLongException(final Context context) {
             super(context.getString(R.string.error_message_status_too_long));
@@ -851,21 +854,39 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     static class UploaderNotFoundException extends UpdateStatusException {
-        private static final long serialVersionUID = 1041685850011544106L;
 
-        public UploaderNotFoundException(final Context context) {
-            super(context.getString(R.string.error_message_image_uploader_not_found));
+        public UploaderNotFoundException() {
+            super();
+        }
+
+        public UploaderNotFoundException(String detailMessage, Throwable throwable) {
+            super(detailMessage, throwable);
+        }
+
+        public UploaderNotFoundException(Throwable throwable) {
+            super(throwable);
+        }
+
+        public UploaderNotFoundException(String message) {
+            super(message);
         }
     }
 
     static class UploadException extends UpdateStatusException {
-        private static final long serialVersionUID = 8596614696393917525L;
 
-        public UploadException(final Context context) {
-            super(context.getString(R.string.error_message_image_upload_failed));
+        public UploadException() {
+            super();
         }
 
-        public UploadException(final String message) {
+        public UploadException(String detailMessage, Throwable throwable) {
+            super(detailMessage, throwable);
+        }
+
+        public UploadException(Throwable throwable) {
+            super(throwable);
+        }
+
+        public UploadException(String message) {
             super(message);
         }
     }

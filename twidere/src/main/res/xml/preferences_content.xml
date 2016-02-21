@@ -60,7 +60,7 @@
             android:defaultValue=""
             android:key="media_uploader"
             android:summary="%s"
-            android:title="@string/image_uploader" />
+            android:title="@string/media_uploader" />
 
         <org.mariotaku.twidere.preference.TimelineSyncPreference
             android:defaultValue=""

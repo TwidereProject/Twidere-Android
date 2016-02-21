@@ -21,6 +21,7 @@ package edu.tsinghua.hotmobi;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 
 import org.mariotaku.restfu.RestFuUtils;
@@ -67,6 +68,14 @@ public class UploadLogsTask implements Runnable {
             }
         }
 
+        try {
+            context.getContentResolver().call(Uri.parse("content://edu.tsinghua.research.steel"),
+                    "upload_logs", null, null);
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(HotMobiLogger.LOGTAG, e);
+            }
+        }
         if (uploadLogs()) {
             prefs.edit().putLong(HotMobiConstants.KEY_LAST_UPLOAD_TIME, System.currentTimeMillis()).apply();
         }

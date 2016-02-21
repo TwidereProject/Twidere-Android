@@ -45,13 +45,6 @@
         android:key="compose_now_action"
         android:title="@string/compose_now_action"/>
 
-    <EditTextPreference
-        android:defaultValue="[TEXT] [LINK]"
-        android:dialogTitle="@string/image_upload_format"
-        android:key="media_upload_format"
-        android:singleLine="true"
-        android:summary="@string/image_upload_format_summary"
-        android:title="@string/image_upload_format"/>
     <org.mariotaku.twidere.preference.StatusShortenerPreference
         android:defaultValue=""
         android:key="status_shortener"
