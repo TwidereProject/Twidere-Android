@@ -416,8 +416,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         final LikeAnimationDrawable drawable = new LikeAnimationDrawable(adapter.getContext(),
                 likeIcon, favoriteCountView.getColor(), favoriteCountView.getActivatedColor(),
                 likeStyle);
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(favoriteCountView,
-                drawable, null, null, null);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        TextViewCompat.setCompoundDrawablesRelative(favoriteCountView, drawable, null, null, null);
         drawable.setCallback(favoriteCountView);
         timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime());
     }

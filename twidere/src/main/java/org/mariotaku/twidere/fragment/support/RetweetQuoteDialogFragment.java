@@ -43,8 +43,10 @@ import android.widget.EditText;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
+import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
@@ -235,7 +237,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
                 update.in_reply_to_status = status;
             }
             update.is_possibly_sensitive = status.is_possibly_sensitive;
-            twitter.updateStatusesAsync(update);
+            BackgroundOperationService.updateStatusesAsync(getContext(), Draft.Action.QUOTE, update);
         } else if (isMyRetweet(status)) {
             twitter.cancelRetweetAsync(status.account_id, status.id, status.my_retweet_id);
         } else {

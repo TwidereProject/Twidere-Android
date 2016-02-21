@@ -69,6 +69,7 @@ import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.JsonSerializer;
@@ -280,7 +281,8 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
                 case Draft.Action.UPDATE_STATUS:
                 case Draft.Action.REPLY:
                 case Draft.Action.QUOTE: {
-                    twitter.updateStatusesAsync(ParcelableStatusUpdateUtils.fromDraftItem(getActivity(), item));
+                    BackgroundOperationService.updateStatusesAsync(getContext(), item.action_type,
+                            ParcelableStatusUpdateUtils.fromDraftItem(getActivity(), item));
                     break;
                 }
                 case Draft.Action.SEND_DIRECT_MESSAGE_COMPAT:

@@ -131,6 +131,7 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
+import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import org.mariotaku.twidere.util.net.TwidereDns;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;
 
@@ -529,28 +530,29 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         uriBuilder.scheme(SCHEME_TWIDERE);
         uriBuilder.authority(AUTHORITY_DRAFTS);
         intent.setData(uriBuilder.build());
-        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
-        notificationBuilder.setTicker(message);
-        notificationBuilder.setContentTitle(title);
-        notificationBuilder.setContentText(item.text);
-        notificationBuilder.setAutoCancel(true);
-        notificationBuilder.setWhen(System.currentTimeMillis());
-        notificationBuilder.setSmallIcon(R.drawable.ic_stat_draft);
+        final NotificationCompat.Builder nb = new NotificationCompat.Builder(context);
+        nb.setTicker(message);
+        nb.setContentTitle(title);
+        nb.setContentText(item.text);
+        nb.setAutoCancel(true);
+        nb.setWhen(System.currentTimeMillis());
+        nb.setSmallIcon(R.drawable.ic_stat_draft);
         final Intent discardIntent = new Intent(context, BackgroundOperationService.class);
         discardIntent.setAction(INTENT_ACTION_DISCARD_DRAFT);
-        discardIntent.setData(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)));
-        notificationBuilder.addAction(R.drawable.ic_action_delete, context.getString(R.string.discard),
-                PendingIntent.getService(context, 0, discardIntent, PendingIntent.FLAG_ONE_SHOT));
+        final Uri draftUri = Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId));
+        discardIntent.setData(draftUri);
+        nb.addAction(R.drawable.ic_action_delete, context.getString(R.string.discard), PendingIntent.getService(context, 0,
+                discardIntent, PendingIntent.FLAG_ONE_SHOT));
 
         final Intent sendIntent = new Intent(context, BackgroundOperationService.class);
         sendIntent.setAction(INTENT_ACTION_SEND_DRAFT);
-        sendIntent.setData(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)));
-        notificationBuilder.addAction(R.drawable.ic_action_send, context.getString(R.string.send),
+        sendIntent.setData(draftUri);
+        nb.addAction(R.drawable.ic_action_send, context.getString(R.string.send),
                 PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        notificationBuilder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
-        mNotificationManager.notify(Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId)).toString(),
-                NOTIFICATION_ID_DRAFTS, notificationBuilder.build());
+        nb.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+        mNotificationManager.notify(draftUri.toString(), NOTIFICATION_ID_DRAFTS,
+                nb.build());
         return draftId;
     }
 
@@ -1623,9 +1625,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
             if (mPreferences.getBoolean(KEY_PRELOAD_PREVIEW_IMAGES, false)) {
                 final String textHtml = v.getAsString(Statuses.TEXT_HTML);
-//                for (final String link : MediaPreviewUtils.getSupportedLinksInStatus(textHtml)) {
-//                    mImagePreloader.preloadImage(link);
-//                }
+                for (final String link : PreviewMediaExtractor.getSupportedLinksInStatus(textHtml)) {
+                    mImagePreloader.preloadImage(link);
+                }
             }
         }
     }

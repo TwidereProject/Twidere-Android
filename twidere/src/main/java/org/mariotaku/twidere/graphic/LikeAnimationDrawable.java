@@ -235,6 +235,16 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
     }
 
     @Override
+    public int getIntrinsicWidth() {
+        return getIconLayer().getIntrinsicWidth();
+    }
+
+    @Override
+    public int getIntrinsicHeight() {
+        return getIconLayer().getIntrinsicHeight();
+    }
+
+    @Override
     public void setColorFilter(ColorFilter colorFilter) {
         getIconLayer().setColorFilter(colorFilter);
     }
@@ -313,11 +323,12 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
                 public Drawable newDrawable() {
                     return new ShineLayer(intrinsicWidth, intrinsicHeight, palette);
                 }
+
+                @Override
+                public int getChangingConfigurations() {
+                    return ShineLayer.this.getChangingConfigurations();
+                }
             };
-        }
-
-        private void calculateLineStartEnd(float[] startEnd, float progress) {
-
         }
 
         @Override
@@ -401,7 +412,7 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
             super(intrinsicWidth, intrinsicHeight, palette);
 
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setStrokeCap(Paint.Cap.ROUND);
+            mPaint.setStyle(Paint.Style.FILL);
             setProgress(-1);
         }
 
@@ -413,6 +424,11 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
                 @Override
                 public Drawable newDrawable() {
                     return new ParticleLayer(intrinsicWidth, intrinsicHeight, palette);
+                }
+
+                @Override
+                public int getChangingConfigurations() {
+                    return ParticleLayer.this.getChangingConfigurations();
                 }
             };
         }
@@ -445,20 +461,17 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
                 final float mainParticleY = (float) (bounds.centerY() + currentRadius * Math.sin(mainParticleAngle));
 
                 mPaint.setColor(color);
-                mPaint.setStrokeWidth(mainStrokeWidth);
                 if (mainStrokeWidth > 0) {
-                    canvas.drawPoint(mainParticleX, mainParticleY, mPaint);
+                    canvas.drawCircle(mainParticleX, mainParticleY, mainStrokeWidth / 2, mPaint);
                 }
-
 
                 final double particleAngle = Math.toRadians(90.0 * -expandSpinProgress + degree + 15);
                 final float subParticleX = (float) (mainParticleX + distance * Math.cos(particleAngle));
                 final float subParticleY = (float) (mainParticleY + distance * Math.sin(particleAngle));
                 mPaint.setAlpha(Math.round(255f * (1 - progress / 2f)));
 
-                mPaint.setStrokeWidth(subStrokeWidth);
                 if (subStrokeWidth > 0) {
-                    canvas.drawPoint(subParticleX, subParticleY, mPaint);
+                    canvas.drawCircle(subParticleX, subParticleY, subStrokeWidth / 2, mPaint);
                 }
             }
 
@@ -492,6 +505,11 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
                 @Override
                 public Drawable newDrawable() {
                     return new CircleLayer(intrinsicWidth, intrinsicHeight, palette);
+                }
+
+                @Override
+                public int getChangingConfigurations() {
+                    return CircleLayer.this.getChangingConfigurations();
                 }
             };
         }
@@ -584,10 +602,6 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
 
         static abstract class AbsLayerState extends ConstantState {
 
-            @Override
-            public int getChangingConfigurations() {
-                return 0;
-            }
         }
     }
 

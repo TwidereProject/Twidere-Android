@@ -117,6 +117,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.text.MarkForDeleteSpan;
 import org.mariotaku.twidere.text.style.EmojiSpan;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
@@ -579,24 +580,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
         final Draft draft = new Draft();
 
-        String action = getIntent().getAction();
-        if (action == null) {
-            action = INTENT_ACTION_COMPOSE;
-        }
-        switch (action) {
-            case INTENT_ACTION_REPLY: {
-                draft.action_type = Draft.Action.REPLY;
-                break;
-            }
-            case INTENT_ACTION_QUOTE: {
-                draft.action_type = Draft.Action.QUOTE;
-                break;
-            }
-            default: {
-                draft.action_type = Draft.Action.UPDATE_STATUS;
-                break;
-            }
-        }
+        draft.action_type = getDraftAction(getIntent().getAction());
         draft.account_ids = mAccountsAdapter.getSelectedAccountIds();
         draft.text = text;
         final UpdateStatusActionExtra extra = new UpdateStatusActionExtra();
@@ -608,6 +592,21 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         final ContentValues values = DraftValuesCreator.create(draft);
         final Uri draftUri = getContentResolver().insert(Drafts.CONTENT_URI, values);
         displayNewDraftNotification(text, draftUri);
+    }
+
+    static String getDraftAction(String intentAction) {
+        if (intentAction == null) {
+            return Draft.Action.UPDATE_STATUS;
+        }
+        switch (intentAction) {
+            case INTENT_ACTION_REPLY: {
+                return Draft.Action.REPLY;
+            }
+            case INTENT_ACTION_QUOTE: {
+                return Draft.Action.QUOTE;
+            }
+        }
+        return Draft.Action.UPDATE_STATUS;
     }
 
     public void setSelectedAccounts(ParcelableAccount... accounts) {
@@ -1345,14 +1344,20 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         final long[] accountIds = mAccountsAdapter.getSelectedAccountIds();
         final ParcelableLocation statusLocation = attachLocation ? mRecentLocation : null;
         final boolean isPossiblySensitive = hasMedia && mIsPossiblySensitive;
-        ParcelableStatusUpdate update = new ParcelableStatusUpdate();
+        final ParcelableStatusUpdate update = new ParcelableStatusUpdate();
+        @Draft.Action String action;
+        if (mDraft != null) {
+            action = mDraft.action_type;
+        } else {
+            action = getDraftAction(getIntent().getAction());
+        }
         update.accounts = DataStoreUtils.getAccounts(this, accountIds);
         update.text = text;
         update.location = statusLocation;
         update.media = getMedia();
         update.in_reply_to_status = mInReplyToStatus;
         update.is_possibly_sensitive = isPossiblySensitive;
-        mTwitterWrapper.updateStatusesAsync(update);
+        BackgroundOperationService.updateStatusesAsync(this, action, update);
         if (mPreferences.getBoolean(KEY_NO_CLOSE_AFTER_TWEET_SENT, false) && mInReplyToStatus == null) {
             mIsPossiblySensitive = false;
             mShouldSaveAccounts = true;

@@ -312,8 +312,6 @@
                 style="?cardActionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/button_size_content_card"
-                android:drawableLeft="@drawable/ic_action_heart"
-                android:drawableStart="@drawable/ic_action_heart"
                 android:focusable="false"
                 android:gravity="center"
                 android:paddingLeft="@dimen/element_spacing_normal"

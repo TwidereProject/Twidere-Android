@@ -140,6 +140,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         super("background_operation");
     }
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -251,7 +252,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             case Draft.Action.UPDATE_STATUS:
             case Draft.Action.REPLY:
             case Draft.Action.QUOTE: {
-                updateStatuses(ParcelableStatusUpdateUtils.fromDraftItem(this, item));
+                updateStatuses(item.action_type, ParcelableStatusUpdateUtils.fromDraftItem(this, item));
                 break;
             }
             case Draft.Action.SEND_DIRECT_MESSAGE_COMPAT:
@@ -337,10 +338,12 @@ public class BackgroundOperationService extends IntentService implements Constan
             statuses[0] = status;
         } else
             return;
-        updateStatuses(statuses);
+        @Draft.Action
+        final String actionType = intent.getStringExtra(EXTRA_ACTION);
+        updateStatuses(actionType, statuses);
     }
 
-    private void updateStatuses(ParcelableStatusUpdate... statuses) {
+    private void updateStatuses(@Draft.Action final String actionType, final ParcelableStatusUpdate... statuses) {
         final Builder builder = new Builder(this);
         startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(this, builder, 0, null));
         for (final ParcelableStatusUpdate item : statuses) {
@@ -348,6 +351,11 @@ public class BackgroundOperationService extends IntentService implements Constan
                     updateUpdateStatusNotification(this, builder, 0, item));
             final Draft draft = new Draft();
             draft.account_ids = ParcelableAccountUtils.getAccountIds(item.accounts);
+            if (actionType != null) {
+                draft.action_type = actionType;
+            } else {
+                draft.action_type = Draft.Action.UPDATE_STATUS;
+            }
             draft.text = item.text;
             draft.location = item.location;
             draft.media = item.media;
@@ -703,7 +711,8 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     private static Notification updateSendDirectMessageNotification(final Context context,
-                                                                    final NotificationCompat.Builder builder, final int progress, final String message) {
+                                                                    final NotificationCompat.Builder builder,
+                                                                    final int progress, final String message) {
         builder.setContentTitle(context.getString(R.string.sending_direct_message));
         if (message != null) {
             builder.setContentText(message);
@@ -715,7 +724,9 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     private static Notification updateUpdateStatusNotification(final Context context,
-                                                               final NotificationCompat.Builder builder, final int progress, final ParcelableStatusUpdate status) {
+                                                               final NotificationCompat.Builder builder,
+                                                               final int progress,
+                                                               final ParcelableStatusUpdate status) {
         builder.setContentTitle(context.getString(R.string.updating_status_notification));
         if (status != null) {
             builder.setContentText(status.text);
@@ -724,6 +735,15 @@ public class BackgroundOperationService extends IntentService implements Constan
         builder.setProgress(100, progress, progress >= 100 || progress <= 0);
         builder.setOngoing(true);
         return builder.build();
+    }
+
+    public static void updateStatusesAsync(Context context, @Draft.Action final String action,
+                                           final ParcelableStatusUpdate... statuses) {
+        final Intent intent = new Intent(context, BackgroundOperationService.class);
+        intent.setAction(INTENT_ACTION_UPDATE_STATUS);
+        intent.putExtra(EXTRA_STATUSES, statuses);
+        intent.putExtra(EXTRA_ACTION, action);
+        context.startService(intent);
     }
 
     private static class ToastRunnable implements Runnable {

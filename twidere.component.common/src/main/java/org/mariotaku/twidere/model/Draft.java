@@ -57,6 +57,7 @@ public class Draft implements Parcelable {
     @ParcelableThisPlease
     @CursorField(value = Drafts.LOCATION, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableLocation location;
+    @Action
     @ParcelableThisPlease
     @CursorField(Drafts.ACTION_TYPE)
     public String action_type;

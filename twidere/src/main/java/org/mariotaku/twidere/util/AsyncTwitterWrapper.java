@@ -478,14 +478,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return 0;
     }
 
-    public int updateStatusesAsync(final ParcelableStatusUpdate... statuses) {
-        final Intent intent = new Intent(mContext, BackgroundOperationService.class);
-        intent.setAction(INTENT_ACTION_UPDATE_STATUS);
-        intent.putExtra(EXTRA_STATUSES, statuses);
-        mContext.startService(intent);
-        return 0;
-    }
-
     public int updateUserListDetails(final long accountId, final long listId, final UserListUpdate update) {
         final UpdateUserListDetailsTask task = new UpdateUserListDetailsTask(mContext, accountId, listId, update);
         return mAsyncTaskManager.add(task, true);

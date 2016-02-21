@@ -61,7 +61,7 @@ public class ActionIconThemedTextView extends AppCompatTextView {
         mIconWidth = a.getDimensionPixelSize(R.styleable.IconActionButton_iabIconWidth, 0);
         mIconHeight = a.getDimensionPixelSize(R.styleable.IconActionButton_iabIconHeight, 0);
         a.recycle();
-        updateCompoundDrawables();
+        updateCompoundDrawables(getCompoundDrawables());
     }
 
     @ColorInt
@@ -79,25 +79,13 @@ public class ActionIconThemedTextView extends AppCompatTextView {
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(Drawable left, Drawable top, Drawable right, Drawable bottom) {
         super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
-        updateCompoundDrawables();
-    }
-
-    @Override
-    public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom) {
-        super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
-        updateCompoundDrawables();
+        updateCompoundDrawables(left, top, right, bottom);
     }
 
     @Override
     public void setCompoundDrawablesRelativeWithIntrinsicBounds(Drawable start, Drawable top, Drawable end, Drawable bottom) {
         super.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom);
-        updateCompoundDrawables();
-    }
-
-    @Override
-    public void setCompoundDrawablesRelativeWithIntrinsicBounds(int start, int top, int end, int bottom) {
-        super.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom);
-        updateCompoundDrawables();
+        updateCompoundDrawables(start, top, end, bottom);
     }
 
     @ColorInt
@@ -132,15 +120,10 @@ public class ActionIconThemedTextView extends AppCompatTextView {
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-        updateCompoundDrawables();
-    }
-
-    private void updateCompoundDrawables() {
-        updateCompoundDrawables(getCompoundDrawables());
         updateCompoundDrawables(TextViewSupport.getCompoundDrawablesRelative(this));
     }
 
-    private void updateCompoundDrawables(Drawable[] drawables) {
+    private void updateCompoundDrawables(Drawable... drawables) {
         if (drawables == null) return;
         for (Drawable d : drawables) {
             if (d == null) continue;
