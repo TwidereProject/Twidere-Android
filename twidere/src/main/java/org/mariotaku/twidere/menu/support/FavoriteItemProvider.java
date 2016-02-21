@@ -8,8 +8,8 @@ import android.support.v7.widget.ActionMenuView;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.mariotaku.twidere.graphic.LikeAnimationDrawable;
-import org.mariotaku.twidere.graphic.LikeAnimationDrawable.Style;
+import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
+import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable.Style;
 
 import java.lang.ref.WeakReference;
 

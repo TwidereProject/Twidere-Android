@@ -110,8 +110,7 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
-import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -785,20 +784,21 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Subscribe
-    public void notifyFavoriteCreated(FavoriteCreatedEvent event) {
+    public void notifyFavoriteTask(FavoriteTaskEvent event) {
+        if (!event.isSucceeded()) return;
         final StatusAdapter adapter = getAdapter();
-        final ParcelableStatus status = adapter.findStatusById(event.status.account_id, event.status.id);
+        final ParcelableStatus status = adapter.findStatusById(event.getAccountId(), event.getStatusId());
         if (status != null) {
-            status.is_favorite = true;
-        }
-    }
-
-    @Subscribe
-    public void notifyFavoriteDestroyed(FavoriteDestroyedEvent event) {
-        final StatusAdapter adapter = getAdapter();
-        final ParcelableStatus status = adapter.findStatusById(event.status.account_id, event.status.id);
-        if (status != null) {
-            status.is_favorite = false;
+            switch (event.getAction()) {
+                case FavoriteTaskEvent.Action.CREATE: {
+                    status.is_favorite = true;
+                    break;
+                }
+                case FavoriteTaskEvent.Action.DESTROY: {
+                    status.is_favorite = false;
+                    break;
+                }
+            }
         }
     }
 

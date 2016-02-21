@@ -30,8 +30,7 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
-import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
@@ -197,14 +196,12 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     protected class ParcelableStatusesBusCallback {
 
         @Subscribe
-        public void notifyFavoriteCreated(FavoriteCreatedEvent event) {
-            updateFavoritedStatus(event.status);
+        public void notifyFavoriteTask(FavoriteTaskEvent event) {
+            if (event.isSucceeded()) {
+                updateFavoritedStatus(event.getStatus());
+            }
         }
 
-        @Subscribe
-        public void notifyFavoriteDestroyed(FavoriteDestroyedEvent event) {
-            updateFavoritedStatus(event.status);
-        }
 
         @Subscribe
         public void notifyStatusDestroyed(StatusDestroyedEvent event) {

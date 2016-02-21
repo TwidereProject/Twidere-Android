@@ -32,7 +32,7 @@ import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.graphic.LikeAnimationDrawable;
+import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;

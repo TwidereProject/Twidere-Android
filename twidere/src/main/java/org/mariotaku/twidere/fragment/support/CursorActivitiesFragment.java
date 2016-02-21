@@ -47,8 +47,7 @@ import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.message.AccountChangedEvent;
-import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
-import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
@@ -275,11 +274,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         }
 
         @Subscribe
-        public void notifyFavoriteCreated(FavoriteCreatedEvent event) {
-        }
-
-        @Subscribe
-        public void notifyFavoriteDestroyed(FavoriteDestroyedEvent event) {
+        public void notifyFavoriteTask(FavoriteTaskEvent event) {
         }
 
         @Subscribe

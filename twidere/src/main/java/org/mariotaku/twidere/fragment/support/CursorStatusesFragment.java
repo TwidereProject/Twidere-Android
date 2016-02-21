@@ -50,8 +50,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.model.message.AccountChangedEvent;
-import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
-import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
@@ -136,12 +135,9 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         }
 
         @Subscribe
-        public void notifyFavoriteCreated(FavoriteCreatedEvent event) {
+        public void notifyFavoriteTask(FavoriteTaskEvent event) {
         }
 
-        @Subscribe
-        public void notifyFavoriteDestroyed(FavoriteDestroyedEvent event) {
-        }
 
         @Subscribe
         public void notifyStatusDestroyed(StatusDestroyedEvent event) {

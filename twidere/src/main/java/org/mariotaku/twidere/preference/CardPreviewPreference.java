@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
-import org.mariotaku.twidere.graphic.LikeAnimationDrawable;
+import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 

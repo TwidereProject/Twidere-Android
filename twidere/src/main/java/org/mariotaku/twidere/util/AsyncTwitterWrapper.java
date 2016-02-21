@@ -60,14 +60,12 @@ import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.Response;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.model.message.FavoriteCreatedEvent;
-import org.mariotaku.twidere.model.message.FavoriteDestroyedEvent;
+import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.FollowRequestTaskEvent;
 import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.model.message.FriendshipUserUpdatedEvent;
@@ -884,28 +882,28 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     class CreateFavoriteTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableStatus>> {
 
-        private final long account_id, status_id;
+        private final long mAccountId, mStatusId;
 
-        public CreateFavoriteTask(final long account_id, final long status_id) {
+        public CreateFavoriteTask(final long account_id, final long mStatusId) {
             super(mContext);
-            this.account_id = account_id;
-            this.status_id = status_id;
+            this.mAccountId = account_id;
+            this.mStatusId = mStatusId;
         }
 
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
-            if (account_id < 0) return SingleResponse.getInstance();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, account_id, true);
+            if (mAccountId < 0) return SingleResponse.getInstance();
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, true);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.createFavorite(status_id), account_id, false);
+                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.createFavorite(mStatusId), mAccountId, false);
                 Utils.setLastSeen(mContext, status.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
                 values.put(Statuses.FAVORITE_COUNT, status.favorite_count);
-                final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
-                        Expression.or(Expression.equals(Statuses.STATUS_ID, status_id),
-                                Expression.equals(Statuses.RETWEET_ID, status_id)));
+                final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, mAccountId),
+                        Expression.or(Expression.equals(Statuses.STATUS_ID, mStatusId),
+                                Expression.equals(Statuses.RETWEET_ID, mStatusId)));
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), null);
                 }
@@ -921,27 +919,32 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mCreatingFavoriteIds.put(account_id, status_id);
+            mCreatingFavoriteIds.put(mAccountId, mStatusId);
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mCreatingFavoriteIds.remove(account_id, status_id);
+            mCreatingFavoriteIds.remove(mAccountId, mStatusId);
+            final FavoriteTaskEvent taskEvent = new FavoriteTaskEvent(FavoriteTaskEvent.Action.CREATE,
+                    mAccountId, mStatusId);
+            taskEvent.setFinished(true);
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
-
+                taskEvent.setStatus(status);
+                taskEvent.setSucceeded(true);
                 // BEGIN HotMobi
-                final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
-                event.setAction(TweetEvent.Action.FAVORITE);
-                HotMobiLogger.getInstance(getContext()).log(account_id, event);
+                final TweetEvent tweetEvent = TweetEvent.create(getContext(), status, TimelineType.OTHER);
+                tweetEvent.setAction(TweetEvent.Action.FAVORITE);
+                HotMobiLogger.getInstance(getContext()).log(mAccountId, tweetEvent);
                 // END HotMobi
-
-                bus.post(new FavoriteCreatedEvent(status));
-                Utils.showOkMessage(mContext, R.string.status_favorited, false);
+                Utils.showInfoMessage(mContext, R.string.status_favorited, false);
             } else {
+                taskEvent.setSucceeded(false);
                 Utils.showErrorMessage(mContext, R.string.action_favoriting, result.getException(), true);
             }
+            bus.post(taskEvent);
+            bus.post(new StatusListChangedEvent());
             super.onPostExecute(result);
         }
 
@@ -1530,29 +1533,29 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     class DestroyFavoriteTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableStatus>> {
 
-        private final long account_id;
+        private final long mAccountId;
 
-        private final long status_id;
+        private final long mStatusId;
 
         public DestroyFavoriteTask(final long account_id, final long status_id) {
             super(mContext);
-            this.account_id = account_id;
-            this.status_id = status_id;
+            this.mAccountId = account_id;
+            this.mStatusId = status_id;
         }
 
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
-            if (account_id < 0) return SingleResponse.getInstance();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, account_id, true);
+            if (mAccountId < 0) return SingleResponse.getInstance();
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, true);
             if (twitter != null) {
                 try {
-                    final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.destroyFavorite(status_id), account_id, false);
+                    final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.destroyFavorite(mStatusId), mAccountId, false);
                     final ContentValues values = new ContentValues();
                     values.put(Statuses.IS_FAVORITE, false);
                     values.put(Statuses.FAVORITE_COUNT, status.favorite_count - 1);
-                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, account_id),
-                            Expression.or(Expression.equals(Statuses.STATUS_ID, status_id),
-                                    Expression.equals(Statuses.RETWEET_ID, status_id)));
+                    final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, mAccountId),
+                            Expression.or(Expression.equals(Statuses.STATUS_ID, mStatusId),
+                                    Expression.equals(Statuses.RETWEET_ID, mStatusId)));
                     for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                         mResolver.update(uri, values, where.getSQL(), null);
                     }
@@ -1567,29 +1570,32 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mDestroyingFavoriteIds.put(account_id, status_id);
-
-
+            mDestroyingFavoriteIds.put(mAccountId, mStatusId);
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mDestroyingFavoriteIds.remove(account_id, status_id);
+            mDestroyingFavoriteIds.remove(mAccountId, mStatusId);
+            final FavoriteTaskEvent taskEvent = new FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY,
+                    mAccountId, mStatusId);
+            taskEvent.setFinished(true);
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
+                taskEvent.setStatus(status);
+                taskEvent.setSucceeded(true);
                 // BEGIN HotMobi
-
-                final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
-                event.setAction(TweetEvent.Action.UNFAVORITE);
-                HotMobiLogger.getInstance(getContext()).log(account_id, event);
-
+                final TweetEvent tweetEvent = TweetEvent.create(getContext(), status, TimelineType.OTHER);
+                tweetEvent.setAction(TweetEvent.Action.UNFAVORITE);
+                HotMobiLogger.getInstance(getContext()).log(mAccountId, tweetEvent);
                 // END HotMobi
-                bus.post(new FavoriteDestroyedEvent(status));
                 Utils.showInfoMessage(mContext, R.string.status_unfavorited, false);
             } else {
+                taskEvent.setSucceeded(false);
                 Utils.showErrorMessage(mContext, R.string.action_unfavoriting, result.getException(), true);
             }
+            bus.post(taskEvent);
+            bus.post(new StatusListChangedEvent());
             super.onPostExecute(result);
         }
 
@@ -2147,8 +2153,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected void onPreExecute() {
             super.onPreExecute();
             mCreatingRetweetIds.put(accountId, statusId);
-
-
             bus.post(new StatusListChangedEvent());
         }
 
