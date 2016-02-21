@@ -62,7 +62,6 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
             final long timestamp = cursor.getLong(indices.timestamp);
             final long max_position = cursor.getLong(indices.max_position);
             final long min_position = cursor.getLong(indices.min_position);
-            final long id = cursor.getLong(indices.timestamp);
             return ParcelableActivity.calculateHashCode(account_id, timestamp, max_position,
                     min_position);
         }
