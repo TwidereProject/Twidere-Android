@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.text.BidiFormatter;
+import android.support.v4.widget.Space;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spanned;
@@ -54,29 +55,30 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 public class StatusViewHolder extends ViewHolder implements Constants, IStatusViewHolder {
 
     @NonNull
-    final IStatusesAdapter<?> adapter;
+    private final IStatusesAdapter<?> adapter;
 
-    final ImageView statusInfoIcon;
-    final ImageView profileImageView;
-    final ImageView profileTypeView;
-    final ImageView extraTypeView;
-    final TextView textView;
-    final TextView quotedTextView;
-    final NameView nameView;
-    final NameView quotedNameView;
-    final TextView statusInfoLabel;
-    final ShortTimeView timeView;
-    final CardMediaContainer mediaPreview;
-    final ActionIconThemedTextView replyCountView, retweetCountView, favoriteCountView;
-    final IColorLabelView itemContent;
-    final ForegroundColorView quoteIndicator;
-    final View actionButtons;
-    final View itemMenu;
-    final View profileImageSpace;
-    final View statusInfoSpace;
-    final EventListener eventListener;
+    private final ImageView statusInfoIcon;
+    private final ImageView profileImageView;
+    private final ImageView profileTypeView;
+    private final ImageView extraTypeView;
+    private final TextView textView;
+    private final TextView quotedTextView;
+    private final NameView nameView;
+    private final NameView quotedNameView;
+    private final TextView statusInfoLabel;
+    private final ShortTimeView timeView;
+    private final CardMediaContainer mediaPreview;
+    private final ActionIconThemedTextView replyCountView, retweetCountView, favoriteCountView;
+    private final IColorLabelView itemContent;
+    private final ForegroundColorView quoteIndicator;
+    private final View actionButtons;
+    private final View itemMenu;
+    private final View profileImageSpace;
+    private final View statusInfoSpace;
+    private final EventListener eventListener;
+    private final Space statusContentSpace;
 
-    StatusClickListener statusClickListener;
+    private StatusClickListener statusClickListener;
 
     public StatusViewHolder(@NonNull final IStatusesAdapter<?> adapter, @NonNull final View itemView) {
         super(itemView);
@@ -106,6 +108,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         replyCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.reply_count);
         retweetCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.retweet_count);
         favoriteCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.favorite_count);
+        statusContentSpace = (Space) itemView.findViewById(R.id.status_content_space);
         //TODO
         // profileImageView.setSelectorColor(ThemeUtils.getUserHighlightColor(itemView.getContext()));
 
@@ -138,7 +141,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
         }
         timeView.setTime(System.currentTimeMillis());
-        mediaPreview.setVisibility(adapter.isMediaPreviewEnabled() ? View.VISIBLE : View.GONE);
+        if (adapter.isMediaPreviewEnabled()) {
+            mediaPreview.setVisibility(View.VISIBLE);
+            statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.GONE : View.VISIBLE);
+        } else {
+            mediaPreview.setVisibility(View.GONE);
+            statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.VISIBLE : View.GONE);
+        }
         mediaPreview.displayMedia(R.drawable.nyan_stars_background);
         extraTypeView.setImageResource(R.drawable.ic_action_gallery);
     }
@@ -190,6 +199,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
         if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
 
+            statusContentSpace.setVisibility(View.VISIBLE);
+
             quotedNameView.setVisibility(View.VISIBLE);
             quotedTextView.setVisibility(View.VISIBLE);
             quoteIndicator.setVisibility(View.VISIBLE);
@@ -215,6 +226,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             itemContent.drawStart(manager.getUserColor(status.quoted_user_id, false),
                     manager.getUserColor(status.user_id, false));
         } else {
+
+            statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.VISIBLE :View.GONE);
 
             quotedNameView.setVisibility(View.GONE);
             quotedTextView.setVisibility(View.GONE);
@@ -280,6 +293,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             final boolean hasMedia = !ArrayUtils.isEmpty(media);
             if (hasMedia && (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive)) {
                 mediaPreview.setVisibility(View.VISIBLE);
+                statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.GONE : View.VISIBLE);
+
                 mediaPreview.displayMedia(media, loader, status.account_id, -1, this,
                         adapter.getMediaLoadingHandler());
             } else {

@@ -28,12 +28,12 @@
             app:min="10"
             app:step="5" />
 
-        <CheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="true"
             android:key="remember_position"
             android:summary="@string/remember_position_summary"
             android:title="@string/remember_position" />
-        <CheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:key="read_from_bottom"
             android:summaryOff="@string/read_from_bottom_summary_off"
@@ -68,7 +68,7 @@
             android:summary="%s"
             android:title="@string/timeline_sync_service" />
 
-        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="true"
             android:key="twitter_optimized_searches"
             android:summary="@string/twitter_optimized_searches_summary"
@@ -78,12 +78,12 @@
     <PreferenceCategory
         android:key="category_safety"
         android:title="@string/safety">
-        <CheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="true"
             android:key="phishing_link_warning"
             android:summary="@string/phishing_link_warning_summary"
             android:title="@string/phishing_link_warning" />
-        <CheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:key="display_sensitive_contents"
             android:summary="@string/display_sensitive_contents_summary"

@@ -12,19 +12,19 @@
         android:dependency="auto_refresh"
         android:key="cat_refresh_content"
         android:title="@string/content_to_refresh">
-        <CheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:key="auto_refresh_home_timeline"
             android:title="@string/home"/>
-        <CheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="true"
             android:key="auto_refresh_mentions"
             android:title="@string/mentions"/>
-        <CheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="true"
             android:key="auto_refresh_direct_messages"
             android:title="@string/direct_messages"/>
-        <CheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:key="auto_refresh_trends"
             android:title="@string/trends"/>

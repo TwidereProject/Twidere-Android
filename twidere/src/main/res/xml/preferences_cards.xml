@@ -88,7 +88,7 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
         android:defaultValue="false"
         android:key="i_want_my_stars_back"
         android:order="34"
@@ -97,6 +97,6 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.AutoFixCheckBoxPreference>
+    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
 
 </PreferenceScreen>

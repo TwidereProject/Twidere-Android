@@ -15,7 +15,6 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.util.Property;
@@ -30,7 +29,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by mariotaku on 15/11/4.
  */
-public class LikeAnimationDrawable extends LayerDrawable implements Animatable, DoNotWrapDrawable {
+public class LikeAnimationDrawable extends Drawable implements Animatable, Drawable.Callback, DoNotWrapDrawable {
 
     private static final Property<IconLayer, Float> ICON_SCALE = new Property<IconLayer, Float>(Float.class, "icon_scale") {
         @Override
@@ -72,12 +71,43 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
     private AnimatorSet mCurrentAnimator;
     private WeakReference<OnLikedListener> mListenerRef;
 
+    // Layers
+    private final AbsLayer mCircleLayer;
+    private final AbsLayer mParticleLayer;
+    private final IconLayer mIconLayer;
+
     public LikeAnimationDrawable(final Context context, final int likeIcon, final int defaultColor,
                                  final int likeColor, @Style final int style) {
-        super(createLayers(context, likeIcon, defaultColor, style));
         mDefaultColor = defaultColor;
         mLikeColor = likeColor;
         mStyle = style;
+
+        mIconLayer = new IconLayer(ContextCompat.getDrawable(context, likeIcon));
+        mIconLayer.setColorFilter(defaultColor, PorterDuff.Mode.SRC_ATOP);
+        final Palette palette;
+        switch (style) {
+            case Style.FAVORITE: {
+                palette = new FavoritePalette();
+                mParticleLayer = new ShineLayer(mIconLayer.getIntrinsicWidth(),
+                        mIconLayer.getIntrinsicHeight(), palette);
+                break;
+            }
+            case Style.LIKE: {
+                palette = new LikePalette();
+                mParticleLayer = new ParticleLayer(mIconLayer.getIntrinsicWidth(),
+                        mIconLayer.getIntrinsicHeight(), palette);
+                break;
+            }
+            default: {
+                throw new IllegalArgumentException();
+            }
+        }
+        mParticleLayer.setProgress(-1);
+        mCircleLayer = new CircleLayer(mIconLayer.getIntrinsicWidth(), mIconLayer.getIntrinsicHeight(), palette);
+
+        mIconLayer.setCallback(this);
+        mParticleLayer.setCallback(this);
+        mCircleLayer.setCallback(this);
     }
 
     @Override
@@ -88,7 +118,7 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
 
         final AbsLayer particleLayer = getParticleShineLayer();
         final AbsLayer circleLayer = getCircleLayer();
-        final IconLayer iconLayer = getIconLayer();
+        final IconLayer iconLayer = mIconLayer;
 
         switch (mStyle) {
             case Style.LIKE: {
@@ -198,16 +228,12 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
         animatorSet.play(particleFade).after(iconExpand);
     }
 
-    private IconLayer getIconLayer() {
-        return (IconLayer) getDrawable(2);
-    }
-
     private AbsLayer getCircleLayer() {
-        return (AbsLayer) getDrawable(0);
+        return mCircleLayer;
     }
 
     private AbsLayer getParticleShineLayer() {
-        return (AbsLayer) getDrawable(1);
+        return mParticleLayer;
     }
 
     @Override
@@ -236,44 +262,57 @@ public class LikeAnimationDrawable extends LayerDrawable implements Animatable, 
 
     @Override
     public int getIntrinsicWidth() {
-        return getIconLayer().getIntrinsicWidth();
+        return mIconLayer.getIntrinsicWidth();
     }
 
     @Override
     public int getIntrinsicHeight() {
-        return getIconLayer().getIntrinsicHeight();
+        return mIconLayer.getIntrinsicHeight();
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        mCircleLayer.draw(canvas);
+        mParticleLayer.draw(canvas);
+        mIconLayer.draw(canvas);
+    }
+
+    @Override
+    public void setBounds(int left, int top, int right, int bottom) {
+        super.setBounds(left, top, right, bottom);
+        mCircleLayer.setBounds(left, top, right, bottom);
+        mParticleLayer.setBounds(left, top, right, bottom);
+        mIconLayer.setBounds(left, top, right, bottom);
+    }
+
+    @Override
+    public void setAlpha(int alpha) {
+        mIconLayer.setAlpha(alpha);
     }
 
     @Override
     public void setColorFilter(ColorFilter colorFilter) {
-        getIconLayer().setColorFilter(colorFilter);
+        mIconLayer.setColorFilter(colorFilter);
     }
 
-    private static Drawable[] createLayers(final Context context, final int likeIcon, int defaultColor, int style) {
-        final IconLayer iconDrawable = new IconLayer(ContextCompat.getDrawable(context, likeIcon));
-        iconDrawable.setColorFilter(defaultColor, PorterDuff.Mode.SRC_ATOP);
-        final AbsLayer particleLayer;
-        final Palette palette;
-        switch (style) {
-            case Style.FAVORITE: {
-                palette = new FavoritePalette();
-                particleLayer = new ShineLayer(iconDrawable.getIntrinsicWidth(),
-                        iconDrawable.getIntrinsicHeight(), palette);
-                break;
-            }
-            case Style.LIKE: {
-                palette = new LikePalette();
-                particleLayer = new ParticleLayer(iconDrawable.getIntrinsicWidth(),
-                        iconDrawable.getIntrinsicHeight(), palette);
-                break;
-            }
-            default: {
-                throw new IllegalArgumentException();
-            }
-        }
-        particleLayer.setProgress(-1);
-        final Drawable circleLayer = new CircleLayer(iconDrawable.getIntrinsicWidth(), iconDrawable.getIntrinsicHeight(), palette);
-        return new Drawable[]{circleLayer, particleLayer, iconDrawable};
+    @Override
+    public int getOpacity() {
+        return PixelFormat.TRANSLUCENT;
+    }
+
+    @Override
+    public void invalidateDrawable(Drawable who) {
+        invalidateSelf();
+    }
+
+    @Override
+    public void scheduleDrawable(Drawable who, Runnable what, long when) {
+        scheduleSelf(what, when);
+    }
+
+    @Override
+    public void unscheduleDrawable(Drawable who, Runnable what) {
+        unscheduleSelf(what);
     }
 
     private interface Layer {

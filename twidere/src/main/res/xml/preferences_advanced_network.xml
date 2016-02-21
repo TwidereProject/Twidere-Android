@@ -12,7 +12,7 @@
             android:key="builtin_dns_resolver"
             android:title="@string/builtin_dns_resolver"/>
 
-        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:dependency="builtin_dns_resolver"
             android:key="tcp_dns_query"
@@ -37,7 +37,7 @@
     <PreferenceCategory
         android:key="category_proxy"
         android:title="@string/proxy">
-        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:disableDependentsState="false"
             android:key="enable_proxy"
@@ -89,7 +89,7 @@
         android:key="category_tumbor"
         android:title="@string/thumbor_integration">
 
-        <org.mariotaku.twidere.preference.AutoFixCheckBoxPreference
+        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:key="thumbor_enabled"
             android:title="@string/thumbor_integration"/>
