@@ -3,10 +3,10 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1455348383000)
+--- twidere/build.gradle	(revision 1b4e664d214721df322a085b3bfdd13524d10c4d)
 +++ twidere/build.gradle	(revision )
-@@ -3,17 +3,17 @@
- import java.text.SimpleDateFormat
+@@ -1,17 +1,17 @@
+ import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
  
  apply plugin: 'com.android.application'
 -apply plugin: 'io.fabric'
@@ -26,7 +26,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      }
  }
  
-@@ -38,7 +38,7 @@
+@@ -34,7 +34,7 @@
          targetCompatibility JavaVersion.VERSION_1_7
      }
      productFlavors {
@@ -35,7 +35,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          fdroid {}
      }
      buildTypes {
-@@ -67,7 +67,7 @@
+@@ -61,7 +61,7 @@
  
  repositories {
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
@@ -44,7 +44,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      flatDir { dirs "$projectDir/lib" }
  }
  
-@@ -123,10 +123,10 @@
+@@ -117,10 +117,10 @@
      compile project(':twidere.component.common')
      compile project(':twidere.component.nyan')
  
