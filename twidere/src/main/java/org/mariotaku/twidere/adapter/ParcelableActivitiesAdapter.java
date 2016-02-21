@@ -45,8 +45,10 @@ public class ParcelableActivitiesAdapter extends AbsActivitiesAdapter<List<Parce
     }
 
     @Override
-    public boolean isGapItem(int position) {
-        return getActivity(position).is_gap && position != getActivityCount() - 1;
+    public boolean isGapItem(int adapterPosition) {
+        int dataPosition = adapterPosition - getActivityStartIndex();
+        if (dataPosition < 0 || dataPosition >= getActivityCount()) return false;
+        return getActivity(adapterPosition).is_gap;
     }
 
     @Override
