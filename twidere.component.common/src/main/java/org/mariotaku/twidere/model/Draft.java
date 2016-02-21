@@ -19,36 +19,31 @@
 
 package org.mariotaku.twidere.model;
 
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.support.annotation.StringDef;
 
-import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.model.util.BundleConverter;
-import org.mariotaku.twidere.model.util.JSONObjectConverter;
-import org.mariotaku.twidere.model.util.JSONParcelBagger;
+import org.mariotaku.twidere.model.draft.ActionExtra;
+import org.mariotaku.twidere.model.util.DraftExtrasConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LongArrayConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 
 @ParcelablePlease
 @CursorObject(valuesCreator = true)
-public class DraftItem implements Parcelable {
+public class Draft implements Parcelable {
 
     @ParcelableThisPlease
     @CursorField(value = Drafts.ACCOUNT_IDS, converter = LongArrayConverter.class)
     public long[] account_ids;
     @ParcelableThisPlease
-    @CursorField(Drafts._ID)
+    @CursorField(value = Drafts._ID, excludeWrite = true)
     public long _id;
     @ParcelableThisPlease
     @CursorField(Drafts.TIMESTAMP)
@@ -64,14 +59,14 @@ public class DraftItem implements Parcelable {
     public ParcelableLocation location;
     @ParcelableThisPlease
     @CursorField(Drafts.ACTION_TYPE)
-    public int action_type;
+    public String action_type;
     @Nullable
     @ParcelableThisPlease
-    @CursorField(value = Drafts.ACTION_EXTRAS, converter = BundleConverter.class)
-    public Bundle action_extras;
+    @CursorField(value = Drafts.ACTION_EXTRAS, converter = DraftExtrasConverter.class)
+    public ActionExtra action_extras;
 
 
-    public DraftItem() {
+    public Draft() {
 
     }
 
@@ -82,19 +77,31 @@ public class DraftItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        DraftItemParcelablePlease.writeToParcel(this, dest, flags);
+        DraftParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-
-    public static final Creator<DraftItem> CREATOR = new Creator<DraftItem>() {
-        public DraftItem createFromParcel(Parcel source) {
-            DraftItem target = new DraftItem();
-            DraftItemParcelablePlease.readFromParcel(target, source);
+    public static final Creator<Draft> CREATOR = new Creator<Draft>() {
+        public Draft createFromParcel(Parcel source) {
+            Draft target = new Draft();
+            DraftParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
-        public DraftItem[] newArray(int size) {
-            return new DraftItem[size];
+        public Draft[] newArray(int size) {
+            return new Draft[size];
         }
     };
+
+    @StringDef({Action.UPDATE_STATUS, Action.REPLY, Action.QUOTE, Action.SEND_DIRECT_MESSAGE})
+    public @interface Action {
+
+        String UPDATE_STATUS = "update_status";
+        String UPDATE_STATUS_COMPAT_1 = "0";
+        String UPDATE_STATUS_COMPAT_2 = "1";
+        String REPLY = "reply";
+        String QUOTE = "quote";
+        String SEND_DIRECT_MESSAGE = "send_direct_message";
+        String SEND_DIRECT_MESSAGE_COMPAT = "2";
+
+    }
 }

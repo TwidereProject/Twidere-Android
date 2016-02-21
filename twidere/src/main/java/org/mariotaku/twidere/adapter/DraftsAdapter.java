@@ -29,11 +29,11 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.DraftItemCursorIndices;
+import org.mariotaku.twidere.model.Draft;
+import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -56,7 +56,7 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
     private final int mMediaPreviewStyle;
 
     private float mTextSize;
-    private DraftItemCursorIndices mIndices;
+    private DraftCursorIndices mIndices;
 
     public DraftsAdapter(final Context context) {
         super(context, R.layout.list_item_draft, null, new String[0], new int[0], 0);
@@ -73,16 +73,28 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
         final ParcelableMediaUpdate[] mediaUpdates = JsonSerializer.parseArray(cursor.getString(mIndices.media),
                 ParcelableMediaUpdate.class);
         final long timestamp = cursor.getLong(mIndices.timestamp);
-        final int actionType = cursor.getInt(mIndices.action_type);
+        String actionType = cursor.getString(mIndices.action_type);
         final String actionName = getActionName(context, actionType);
         holder.media_preview_container.setStyle(mMediaPreviewStyle);
-        if (actionType == Drafts.ACTION_UPDATE_STATUS) {
-            final ParcelableMedia[] media = ParcelableMediaUtils.fromMediaUpdates(mediaUpdates);
-            holder.media_preview_container.setVisibility(View.VISIBLE);
-            holder.media_preview_container.displayMedia(media, mImageLoader, -1, -1, null,
-                    mMediaLoadingHandler);
-        } else {
-            holder.media_preview_container.setVisibility(View.GONE);
+        if (actionType == null) {
+            actionType = Draft.Action.UPDATE_STATUS;
+        }
+        switch (actionType) {
+            case Draft.Action.UPDATE_STATUS:
+            case Draft.Action.UPDATE_STATUS_COMPAT_1:
+            case Draft.Action.UPDATE_STATUS_COMPAT_2:
+            case Draft.Action.REPLY:
+            case Draft.Action.QUOTE: {
+                final ParcelableMedia[] media = ParcelableMediaUtils.fromMediaUpdates(mediaUpdates);
+                holder.media_preview_container.setVisibility(View.VISIBLE);
+                holder.media_preview_container.displayMedia(media, mImageLoader, -1, -1, null,
+                        mMediaLoadingHandler);
+                break;
+            }
+            default: {
+                holder.media_preview_container.setVisibility(View.GONE);
+                break;
+            }
         }
         holder.content.drawEnd(DataStoreUtils.getAccountColors(context, accountIds));
         holder.setTextSize(mTextSize);
@@ -120,17 +132,24 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
     public Cursor swapCursor(final Cursor c) {
         final Cursor old = super.swapCursor(c);
         if (c != null) {
-            mIndices = new DraftItemCursorIndices(c);
+            mIndices = new DraftCursorIndices(c);
         }
         return old;
     }
 
-    private static String getActionName(final Context context, final int actionType) {
-        if (actionType <= 0) return context.getString(R.string.update_status);
+    private static String getActionName(final Context context, final String actionType) {
+        if (TextUtils.isEmpty(actionType)) return context.getString(R.string.update_status);
         switch (actionType) {
-            case Drafts.ACTION_UPDATE_STATUS:
+            case Draft.Action.UPDATE_STATUS:
+            case Draft.Action.UPDATE_STATUS_COMPAT_1:
+            case Draft.Action.UPDATE_STATUS_COMPAT_2:
                 return context.getString(R.string.update_status);
-            case Drafts.ACTION_SEND_DIRECT_MESSAGE:
+            case Draft.Action.REPLY:
+                return context.getString(R.string.reply);
+            case Draft.Action.QUOTE:
+                return context.getString(R.string.quote);
+            case Draft.Action.SEND_DIRECT_MESSAGE:
+            case Draft.Action.SEND_DIRECT_MESSAGE_COMPAT:
                 return context.getString(R.string.send_direct_message);
         }
         return null;

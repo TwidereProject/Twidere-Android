@@ -529,10 +529,6 @@ public interface TwidereDataStore {
 
     interface Drafts extends BaseColumns {
 
-        int ACTION_UPDATE_STATUS = 1;
-        int ACTION_SEND_DIRECT_MESSAGE = 2;
-        int ACTION_CREATE_FRIENDSHIP = 3;
-
         String TABLE_NAME = "drafts";
         String CONTENT_PATH = TABLE_NAME;
         String CONTENT_PATH_UNSENT = TABLE_NAME + "/unsent";
@@ -572,7 +568,7 @@ public interface TwidereDataStore {
                 IN_REPLY_TO_STATUS_ID, IS_POSSIBLY_SENSITIVE, TIMESTAMP, ACTION_TYPE, ACTION_EXTRAS};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_INT, TYPE_INT, TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT};
+                TYPE_INT, TYPE_INT, TYPE_BOOLEAN, TYPE_INT, TYPE_TEXT, TYPE_TEXT};
 
     }
 

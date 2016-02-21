@@ -82,8 +82,8 @@ import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
-import org.mariotaku.twidere.model.DraftItem;
-import org.mariotaku.twidere.model.DraftItemCursorIndices;
+import org.mariotaku.twidere.model.Draft;
+import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -513,8 +513,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Expression where = Expression.equals(Drafts._ID, draftId);
         final Cursor c = getContentResolver().query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.getSQL(), null, null);
         if (c == null) return -1;
-        final DraftItemCursorIndices i = new DraftItemCursorIndices(c);
-        final DraftItem item;
+        final DraftCursorIndices i = new DraftCursorIndices(c);
+        final Draft item;
         try {
             if (!c.moveToFirst()) return -1;
             item = i.newObject(c);

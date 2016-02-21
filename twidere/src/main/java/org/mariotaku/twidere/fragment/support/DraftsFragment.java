@@ -40,6 +40,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -55,15 +56,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
-import org.mariotaku.twidere.model.DraftItem;
-import org.mariotaku.twidere.model.DraftItemCursorIndices;
+import org.mariotaku.twidere.model.Draft;
+import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
+import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
@@ -119,8 +122,8 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
                 final Cursor c = mAdapter.getCursor();
                 if (c == null || c.isClosed()) return false;
                 final SparseBooleanArray checked = mListView.getCheckedItemPositions();
-                final List<DraftItem> list = new ArrayList<>();
-                final DraftItemCursorIndices indices = new DraftItemCursorIndices(c);
+                final List<Draft> list = new ArrayList<>();
+                final DraftCursorIndices indices = new DraftCursorIndices(c);
                 for (int i = 0, j = checked.size(); i < j; i++) {
                     if (checked.valueAt(i) && c.moveToPosition(checked.keyAt(i))) {
                         list.add(indices.newObject(c));
@@ -175,9 +178,20 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
     public void onItemClick(final AdapterView<?> view, final View child, final int position, final long id) {
         final Cursor c = mAdapter.getCursor();
         if (c == null || c.isClosed() || !c.moveToPosition(position)) return;
-        final DraftItem item = DraftItemCursorIndices.fromCursor(c);
-        if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
+        final Draft item = DraftCursorIndices.fromCursor(c);
+        if (TextUtils.isEmpty(item.action_type)) {
             editDraft(item);
+            return;
+        }
+        switch (item.action_type) {
+            case "0":
+            case "1":
+            case Draft.Action.UPDATE_STATUS:
+            case Draft.Action.REPLY:
+            case Draft.Action.QUOTE: {
+                editDraft(item);
+                break;
+            }
         }
     }
 
@@ -246,30 +260,43 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
         mEmptyView.setVisibility(listShown && mAdapter.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
-    private void editDraft(final DraftItem draft) {
+    private void editDraft(final Draft draft) {
         final Intent intent = new Intent(INTENT_ACTION_EDIT_DRAFT);
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_DRAFT, draft);
-        intent.putExtras(bundle);
+        intent.putExtra(EXTRA_DRAFT, draft);
         mResolver.delete(Drafts.CONTENT_URI, Expression.equals(Drafts._ID, draft._id).getSQL(), null);
         startActivityForResult(intent, REQUEST_COMPOSE);
     }
 
-    private boolean sendDrafts(final List<DraftItem> list) {
+    private boolean sendDrafts(final List<Draft> list) {
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (twitter == null) return false;
-        for (final DraftItem item : list) {
-            if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
-                twitter.updateStatusesAsync(ParcelableStatusUpdateUtils.fromDraftItem(getActivity(), item));
-            } else if (item.action_type == Drafts.ACTION_SEND_DIRECT_MESSAGE) {
-                if (item.action_extras == null) continue;
-                final long recipientId = item.action_extras.getLong(EXTRA_RECIPIENT_ID, -1);
-                if (item.account_ids == null || item.account_ids.length <= 0 || recipientId <= 0) {
-                    continue;
+        for (final Draft item : list) {
+            if (TextUtils.isEmpty(item.action_type)) {
+                item.action_type = Draft.Action.UPDATE_STATUS;
+            }
+            switch (item.action_type) {
+                case Draft.Action.UPDATE_STATUS_COMPAT_1:
+                case Draft.Action.UPDATE_STATUS_COMPAT_2:
+                case Draft.Action.UPDATE_STATUS:
+                case Draft.Action.REPLY:
+                case Draft.Action.QUOTE: {
+                    twitter.updateStatusesAsync(ParcelableStatusUpdateUtils.fromDraftItem(getActivity(), item));
+                    break;
                 }
-                final long accountId = item.account_ids[0];
-                final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
-                twitter.sendDirectMessageAsync(accountId, recipientId, item.text, imageUri);
+                case Draft.Action.SEND_DIRECT_MESSAGE_COMPAT:
+                case Draft.Action.SEND_DIRECT_MESSAGE: {
+                    long recipientId = -1;
+                    if (item.action_extras instanceof SendDirectMessageActionExtra) {
+                        recipientId = ((SendDirectMessageActionExtra) item.action_extras).getRecipientId();
+                    }
+                    if (ArrayUtils.isEmpty(item.account_ids) || recipientId <= 0) {
+                        continue;
+                    }
+                    final long accountId = item.account_ids[0];
+                    final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
+                    twitter.sendDirectMessageAsync(accountId, recipientId, item.text, imageUri);
+                    break;
+                }
             }
         }
         return true;

@@ -30,7 +30,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
@@ -43,6 +42,7 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.mime.FileBody;
@@ -61,9 +61,9 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.DraftItem;
-import org.mariotaku.twidere.model.DraftItemCursorIndices;
-import org.mariotaku.twidere.model.DraftItemValuesCreator;
+import org.mariotaku.twidere.model.Draft;
+import org.mariotaku.twidere.model.DraftCursorIndices;
+import org.mariotaku.twidere.model.DraftValuesCreator;
 import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
@@ -74,6 +74,8 @@ import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.StatusShortenResult;
 import org.mariotaku.twidere.model.UploaderMediaItem;
+import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
+import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
@@ -231,8 +233,8 @@ public class BackgroundOperationService extends IntentService implements Constan
         final ContentResolver cr = getContentResolver();
         final Cursor c = cr.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.getSQL(), null, null);
         if (c == null) return;
-        final DraftItemCursorIndices i = new DraftItemCursorIndices(c);
-        final DraftItem item;
+        final DraftCursorIndices i = new DraftCursorIndices(c);
+        final Draft item;
         try {
             if (!c.moveToFirst()) return;
             item = i.newObject(c);
@@ -240,16 +242,32 @@ public class BackgroundOperationService extends IntentService implements Constan
             c.close();
         }
         cr.delete(Drafts.CONTENT_URI, where.getSQL(), null);
-        if (item.action_type == Drafts.ACTION_UPDATE_STATUS || item.action_type <= 0) {
-            updateStatuses(ParcelableStatusUpdateUtils.fromDraftItem(this, item));
-        } else if (item.action_type == Drafts.ACTION_SEND_DIRECT_MESSAGE) {
-            final long recipientId = item.action_extras != null ? item.action_extras.getLong(EXTRA_RECIPIENT_ID) : -1;
-            if (item.account_ids == null || item.account_ids.length <= 0 || recipientId <= 0) {
-                return;
+        if (TextUtils.isEmpty(item.action_type)) {
+            item.action_type = Draft.Action.UPDATE_STATUS;
+        }
+        switch (item.action_type) {
+            case Draft.Action.UPDATE_STATUS_COMPAT_1:
+            case Draft.Action.UPDATE_STATUS_COMPAT_2:
+            case Draft.Action.UPDATE_STATUS:
+            case Draft.Action.REPLY:
+            case Draft.Action.QUOTE: {
+                updateStatuses(ParcelableStatusUpdateUtils.fromDraftItem(this, item));
+                break;
             }
-            final long accountId = item.account_ids[0];
-            final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
-            sendMessage(accountId, recipientId, item.text, imageUri);
+            case Draft.Action.SEND_DIRECT_MESSAGE_COMPAT:
+            case Draft.Action.SEND_DIRECT_MESSAGE: {
+                long recipientId = -1;
+                if (item.action_extras instanceof SendDirectMessageActionExtra) {
+                    recipientId = ((SendDirectMessageActionExtra) item.action_extras).getRecipientId();
+                }
+                if (ArrayUtils.isEmpty(item.account_ids) || recipientId <= 0) {
+                    return;
+                }
+                final long accountId = item.account_ids[0];
+                final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
+                sendMessage(accountId, recipientId, item.text, imageUri);
+                break;
+            }
         }
     }
 
@@ -285,8 +303,8 @@ public class BackgroundOperationService extends IntentService implements Constan
         builder.setOngoing(true);
         final Notification notification = builder.build();
         startForeground(NOTIFICATION_ID_SEND_DIRECT_MESSAGE, notification);
-        final SingleResponse<ParcelableDirectMessage> result = sendDirectMessage(builder, accountId, recipientId, text,
-                imageUri);
+        final SingleResponse<ParcelableDirectMessage> result = sendDirectMessage(builder, accountId,
+                recipientId, text, imageUri);
 
         final ContentResolver resolver = getContentResolver();
         if (result.getData() != null && result.getData().id > 0) {
@@ -328,15 +346,17 @@ public class BackgroundOperationService extends IntentService implements Constan
         for (final ParcelableStatusUpdate item : statuses) {
             mNotificationManager.notify(NOTIFICATION_ID_UPDATE_STATUS,
                     updateUpdateStatusNotification(this, builder, 0, item));
-            final DraftItem draftItem = new DraftItem();
-            draftItem.account_ids = ParcelableAccountUtils.getAccountIds(item.accounts);
-            draftItem.text = item.text;
-            draftItem.location = item.location;
-            draftItem.media = item.media;
-            draftItem.action_extras = new Bundle();
-            draftItem.action_extras.putParcelable(EXTRA_IN_REPLY_TO_STATUS, item.in_reply_to_status);
+            final Draft draft = new Draft();
+            draft.account_ids = ParcelableAccountUtils.getAccountIds(item.accounts);
+            draft.text = item.text;
+            draft.location = item.location;
+            draft.media = item.media;
+            final UpdateStatusActionExtra extra = new UpdateStatusActionExtra();
+            extra.setInReplyToStatus(item.in_reply_to_status);
+            extra.setIsPossiblySensitive(item.is_possibly_sensitive);
+            draft.action_extras = extra;
             final ContentResolver resolver = getContentResolver();
-            final Uri draftUri = resolver.insert(Drafts.CONTENT_URI, DraftItemValuesCreator.create(draftItem));
+            final Uri draftUri = resolver.insert(Drafts.CONTENT_URI, DraftValuesCreator.create(draft));
             final long def = -1;
             final long draftId = draftUri != null ? NumberUtils.toLong(draftUri.getLastPathSegment(), def) : -1;
             mTwitter.addSendingDraftId(draftId);

@@ -22,8 +22,6 @@ package org.mariotaku.twidere.util;
 import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
@@ -34,8 +32,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.Trend;
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.DraftItem;
-import org.mariotaku.twidere.model.DraftItemValuesCreator;
+import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -44,11 +41,11 @@ import org.mariotaku.twidere.model.ParcelableDirectMessageValuesCreator;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
+import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -224,7 +221,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createMessageDraft(final long accountId, final long recipientId,
                                                    final String text, final String imageUri) {
         final ContentValues values = new ContentValues();
-        values.put(Drafts.ACTION_TYPE, Drafts.ACTION_SEND_DIRECT_MESSAGE);
+        values.put(Drafts.ACTION_TYPE, Draft.Action.SEND_DIRECT_MESSAGE);
         values.put(Drafts.TEXT, text);
         values.put(Drafts.ACCOUNT_IDS, TwidereArrayUtils.toString(new long[]{accountId}, ',', false));
         values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
@@ -233,13 +230,9 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Drafts.MEDIA, JsonSerializer.serialize(Arrays.asList(mediaArray),
                     ParcelableMediaUpdate.class));
         }
-        final JSONObject extras = new JSONObject();
-        try {
-            extras.put(EXTRA_RECIPIENT_ID, recipientId);
-        } catch (final JSONException e) {
-            e.printStackTrace();
-        }
-        values.put(Drafts.ACTION_EXTRAS, extras.toString());
+        final SendDirectMessageActionExtra extra = new SendDirectMessageActionExtra();
+        extra.setRecipientId(recipientId);
+        values.put(Drafts.ACTION_EXTRAS, JsonSerializer.serialize(extra));
         return values;
     }
 
