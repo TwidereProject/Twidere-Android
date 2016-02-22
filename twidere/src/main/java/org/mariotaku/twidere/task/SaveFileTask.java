@@ -54,10 +54,10 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
     private final FileInfoCallback getMimeType;
 
     public SaveFileTask(@NonNull final Context context, @NonNull final Uri source,
-                        @NonNull final File destination, @NonNull final FileInfoCallback getMimeType) {
+                        @NonNull final File destination, @NonNull final FileInfoCallback callback) {
         this.contextRef = new WeakReference<>(context);
         this.source = source;
-        this.getMimeType = getMimeType;
+        this.getMimeType = callback;
         this.destination = destination;
     }
 
@@ -175,31 +175,4 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
         }
     }
 
-    public static class StringFileInfoCallback implements FileInfoCallback {
-        private final String filename;
-        private final String mimeType;
-
-        public StringFileInfoCallback(String filename, String mimeType) {
-            this.filename = filename;
-            this.mimeType = mimeType;
-        }
-
-        @Nullable
-        @Override
-        public String getFilename(@NonNull Uri source) {
-            return filename;
-        }
-
-        @Override
-        @Nullable
-        public String getMimeType(@NonNull Uri source) {
-            return mimeType;
-        }
-
-        @Override
-        @Nullable
-        public String getExtension(@Nullable String mimeType) {
-            return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
-        }
-    }
 }

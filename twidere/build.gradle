@@ -109,9 +109,8 @@ dependencies {
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
-    compile 'com.j256.simplemagic:simplemagic:1.6'
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.9'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.9'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.10'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.10'
     compile 'com.github.mariotaku:SQLiteQB:0.9.4'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.4'
     compile project(':twidere.component.common')

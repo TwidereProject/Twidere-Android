@@ -38,14 +38,29 @@ import java.io.File;
  */
 public class SaveImageToGalleryTask extends ProgressSaveFileTask {
 
-    public SaveImageToGalleryTask(@NonNull Activity activity, @NonNull Uri source, @NonNull File destination) {
-        super(activity, source, destination, new CacheProvider.CacheFileTypeCallback(activity));
+    public SaveImageToGalleryTask(@NonNull Activity activity, @NonNull Uri source, @NonNull File destination, String type) {
+        super(activity, source, destination, new CacheProvider.CacheFileTypeCallback(activity, type));
     }
 
-    public static SaveFileTask create(final Activity activity, final Uri source) {
-        final File pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+    public static SaveFileTask create(final Activity activity, final Uri source,
+                                      @NonNull @CacheProvider.Type final String type) {
+        final File pubDir;
+        switch (type) {
+            case CacheProvider.Type.VIDEO: {
+                pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+                break;
+            }
+            case CacheProvider.Type.IMAGE: {
+                pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                break;
+            }
+            default: {
+                pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                break;
+            }
+        }
         final File saveDir = new File(pubDir, "Twidere");
-        return new SaveImageToGalleryTask(activity, source, saveDir);
+        return new SaveImageToGalleryTask(activity, source, saveDir, type);
     }
 
     @Override

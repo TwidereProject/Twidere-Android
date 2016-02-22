@@ -45,7 +45,7 @@ public class UILFileCache implements FileCache {
 
     @Override
     public Uri toUri(final String key) {
-        return CacheProvider.getCacheUri(key);
+        return CacheProvider.getCacheUri(key, null);
     }
 
     @Override

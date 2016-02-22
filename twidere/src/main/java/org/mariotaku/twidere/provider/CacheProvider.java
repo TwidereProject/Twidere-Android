@@ -9,16 +9,23 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.webkit.MimeTypeMap;
 
-import com.j256.simplemagic.ContentInfoUtil;
+import com.bluelinelabs.logansquare.JsonMapper;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 
+import org.mariotaku.mediaviewer.library.CacheDownloadLoader;
+import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.model.CacheMetadata;
 import org.mariotaku.twidere.task.SaveFileTask;
+import org.mariotaku.twidere.util.LoganSquareMapperFinder;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -29,16 +36,19 @@ import okio.ByteString;
 /**
  * Created by mariotaku on 16/1/1.
  */
-public class CacheProvider extends ContentProvider {
+public class CacheProvider extends ContentProvider implements TwidereConstants {
     @Inject
     DiskCache mSimpleDiskCache;
-    private ContentInfoUtil mContentInfoUtil;
 
-    public static Uri getCacheUri(String key) {
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-                .authority(TwidereConstants.AUTHORITY_TWIDERE_CACHE)
-                .appendPath(ByteString.encodeUtf8(key).base64Url())
-                .build();
+    public static Uri getCacheUri(String key, @Type String type) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(ContentResolver.SCHEME_CONTENT);
+        builder.authority(TwidereConstants.AUTHORITY_TWIDERE_CACHE);
+        builder.appendPath(ByteString.encodeUtf8(key).base64Url());
+        if (type != null) {
+            builder.appendQueryParameter(QUERY_PARAM_TYPE, type);
+        }
+        return builder.build();
     }
 
     public static String getCacheKey(Uri uri) {
@@ -49,11 +59,19 @@ public class CacheProvider extends ContentProvider {
         return ByteString.decodeBase64(uri.getLastPathSegment()).utf8();
     }
 
+
+    public static String getMetadataKey(Uri uri) {
+        if (!ContentResolver.SCHEME_CONTENT.equals(uri.getScheme()))
+            throw new IllegalArgumentException(uri.toString());
+        if (!TwidereConstants.AUTHORITY_TWIDERE_CACHE.equals(uri.getAuthority()))
+            throw new IllegalArgumentException(uri.toString());
+        return CacheDownloadLoader.getExtraKey(ByteString.decodeBase64(uri.getLastPathSegment()).utf8());
+    }
+
     @Override
     public boolean onCreate() {
         final Context context = getContext();
         assert context != null;
-        mContentInfoUtil = new ContentInfoUtil();
         GeneralComponentHelper.build(context).inject(this);
         return true;
     }
@@ -67,12 +85,41 @@ public class CacheProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        final File file = mSimpleDiskCache.get(getCacheKey(uri));
+        final CacheMetadata metadata = getMetadata(uri);
+        if (metadata != null) {
+            return metadata.getContentType();
+        }
+        final String type = uri.getQueryParameter(QUERY_PARAM_TYPE);
+        if (type != null) {
+            switch (type) {
+                case Type.IMAGE: {
+                    final File file = mSimpleDiskCache.get(getCacheKey(uri));
+                    if (file == null) return null;
+                    return Utils.getImageMimeType(file);
+                }
+                case Type.VIDEO: {
+                    return "video/mp4";
+                }
+                case Type.JSON: {
+                    return "application/json";
+                }
+            }
+        }
+        return null;
+    }
+
+    public CacheMetadata getMetadata(@NonNull Uri uri) {
+        final File file = mSimpleDiskCache.get(getMetadataKey(uri));
         if (file == null) return null;
+        FileInputStream is = null;
         try {
-            return mContentInfoUtil.findMatch(file).getMimeType();
+            final JsonMapper<CacheMetadata> mapper = LoganSquareMapperFinder.mapperFor(CacheMetadata.class);
+            is = new FileInputStream(file);
+            return mapper.parse(is);
         } catch (IOException e) {
             return null;
+        } finally {
+            RestFuUtils.closeSilently(is);
         }
     }
 
@@ -137,9 +184,11 @@ public class CacheProvider extends ContentProvider {
 
     public static final class CacheFileTypeCallback implements SaveFileTask.FileInfoCallback {
         private final Context context;
+        private final String type;
 
-        public CacheFileTypeCallback(Context context) {
+        public CacheFileTypeCallback(Context context, @Type String type) {
             this.context = context;
+            this.type = type;
         }
 
         @Nullable
@@ -151,13 +200,27 @@ public class CacheProvider extends ContentProvider {
         }
 
         @Override
+        @Nullable
         public String getMimeType(@NonNull Uri source) {
-            return context.getContentResolver().getType(source);
+            if (type == null || source.getQueryParameter(QUERY_PARAM_TYPE) != null) {
+                return context.getContentResolver().getType(source);
+            }
+            final Uri.Builder builder = source.buildUpon();
+            builder.appendQueryParameter(QUERY_PARAM_TYPE, type);
+            return context.getContentResolver().getType(builder.build());
         }
 
         @Override
-        public String getExtension(String mimeType) {
+        public String getExtension(@Nullable String mimeType) {
+            if (mimeType == null) return null;
             return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
         }
+    }
+
+    @StringDef({Type.IMAGE, Type.VIDEO, Type.JSON})
+    public @interface Type {
+        String IMAGE = "image";
+        String VIDEO = "video";
+        String JSON = "json";
     }
 }

@@ -25,9 +25,11 @@ import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
+import org.mariotaku.twidere.model.CacheMetadata;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserAgentUtils;
@@ -138,24 +140,9 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
             throw new IOException("Unable to get media, response code: " + resp.getStatus());
         }
         final Body body = resp.getBody();
-        final long length = body.length();
-        final InputStream stream = body.stream();
-        return new CacheDownloadLoader.DownloadResult() {
-            @Override
-            public void close() throws IOException {
-                body.close();
-            }
-
-            @Override
-            public long getLength() {
-                return length;
-            }
-
-            @Override
-            public InputStream getStream() {
-                return stream;
-            }
-        };
+        final CacheMetadata metadata = new CacheMetadata();
+        metadata.setContentType(body.contentType().getContentType());
+        return new TwidereDownloadResult(body, metadata);
     }
 
     private String getEndpoint(Uri uri) {
@@ -205,5 +192,38 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
             return Uri.parse(sb.toString());
         }
         return uri;
+    }
+
+    private static class TwidereDownloadResult implements CacheDownloadLoader.DownloadResult {
+        private final Body mBody;
+        private final CacheMetadata mMetadata;
+
+        public TwidereDownloadResult(Body body, CacheMetadata metadata) {
+            mBody = body;
+            mMetadata = metadata;
+        }
+
+        @Override
+        public void close() throws IOException {
+            mBody.close();
+        }
+
+        @Override
+        public long getLength() throws IOException {
+            return mBody.length();
+        }
+
+        @Override
+        public InputStream getStream() throws IOException {
+            return mBody.stream();
+        }
+
+        @Override
+        public byte[] getExtra() {
+            if (mMetadata == null) return null;
+            final String serialize = JsonSerializer.serialize(mMetadata, CacheMetadata.class);
+            if (serialize == null) return null;
+            return serialize.getBytes();
+        }
     }
 }

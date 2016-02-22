@@ -321,7 +321,11 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             }
             case R.id.share: {
                 if (object instanceof CacheDownloadMediaViewerFragment) {
-                    shareMedia();
+                    if (object instanceof VideoPageFragment) {
+                        shareMedia(CacheProvider.Type.VIDEO);
+                    } else if (object instanceof ImagePageFragment) {
+                        shareMedia(CacheProvider.Type.IMAGE);
+                    }
                 } else {
                     final ParcelableMedia media = getMedia()[currentItem];
                     final Intent intent = new Intent(Intent.ACTION_SEND);
@@ -364,7 +368,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     }
 
 
-    protected final void shareMedia() {
+    protected final void shareMedia(@CacheProvider.Type final String type) {
         final ViewPager viewPager = findViewPager();
         final PagerAdapter adapter = viewPager.getAdapter();
         final Object object = adapter.instantiateItem(viewPager, viewPager.getCurrentItem());
@@ -376,7 +380,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         }
         final File destination = new File(getCacheDir(), "shared_files");
         final SaveFileTask task = new SaveFileTask(this, result.cacheUri, destination,
-                new CacheProvider.CacheFileTypeCallback(this)) {
+                new CacheProvider.CacheFileTypeCallback(this, type)) {
             private static final String PROGRESS_FRAGMENT_TAG = "progress";
 
             protected void dismissProgress() {
@@ -462,9 +466,15 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         if (result == null) return;
         if (mSaveFileTask != null && mSaveFileTask.getStatus() == AsyncTask.Status.RUNNING) return;
         final Uri cacheUri = result.cacheUri;
-        final boolean hasImage = cacheUri != null;
-        if (!hasImage) return;
-        mSaveFileTask = SaveImageToGalleryTask.create(this, cacheUri);
+        final boolean hasMedia = cacheUri != null;
+        if (!hasMedia) return;
+        if (f instanceof ImagePageFragment) {
+            mSaveFileTask = SaveImageToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE);
+        } else if (f instanceof VideoPageFragment) {
+            mSaveFileTask = SaveImageToGalleryTask.create(this, cacheUri, CacheProvider.Type.VIDEO);
+        } else {
+            throw new UnsupportedOperationException();
+        }
         AsyncTaskUtils.executeTask(mSaveFileTask);
     }
 
