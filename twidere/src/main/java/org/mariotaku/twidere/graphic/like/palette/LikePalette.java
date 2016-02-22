@@ -3,10 +3,12 @@ package org.mariotaku.twidere.graphic.like.palette;
 import android.animation.ArgbEvaluator;
 import android.graphics.Color;
 
+import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
+
 /**
  * Created by mariotaku on 16/2/22.
  */
-public final class LikePalette implements Palette {
+public final class LikePalette implements LikeAnimationDrawable.Palette {
 
     private final ArgbEvaluator evaluator = new ArgbEvaluator();
     private final float[] hsv = new float[3];

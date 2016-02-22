@@ -3,34 +3,35 @@ package org.mariotaku.twidere.graphic.like.layer;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 
-import org.mariotaku.twidere.graphic.like.palette.Palette;
-import org.mariotaku.twidere.graphic.like.state.CircleState;
+import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 
 /**
  * Created by mariotaku on 16/2/22.
  */
-public class CircleLayerDrawable extends AnimationLayerDrawable<CircleState> {
+public class CircleLayerDrawable extends AnimationLayerDrawable {
 
     public CircleLayerDrawable(final int intrinsicWidth, final int intrinsicHeight,
-                               final Palette palette) {
+                               final LikeAnimationDrawable.Palette palette) {
         super(intrinsicWidth, intrinsicHeight, palette);
     }
 
     @Override
     protected CircleState createConstantState(final int intrinsicWidth,
                                               final int intrinsicHeight,
-                                              final Palette palette) {
+                                              final LikeAnimationDrawable.Palette palette) {
         return new CircleState(intrinsicWidth, intrinsicHeight, palette);
     }
 
     @Override
     public void draw(final Canvas canvas) {
+        final CircleState state = (CircleState) mState;
         final float progress = getProgress();
         final Rect bounds = getBounds();
         final float radius;
-        final Paint paint = mState.getPaint();
-        final int fullRadius = mState.getFullRadius();
+        final Paint paint = state.getPaint();
+        final int fullRadius = state.getFullRadius();
         if (progress < 0.5f) {
             paint.setStyle(Paint.Style.FILL);
             final float sizeProgress = Math.min(1, progress * 2);
@@ -43,14 +44,49 @@ public class CircleLayerDrawable extends AnimationLayerDrawable<CircleState> {
             radius = fullRadius - strokeWidth / 2;
             if (strokeWidth <= 0) return;
         }
-        paint.setColor(mState.getPalette().getCircleColor(progress));
+        paint.setColor(state.getPalette().getCircleColor(progress));
         canvas.drawCircle(bounds.centerX(), bounds.centerY(), radius, paint);
     }
 
     @Override
     protected void onBoundsChange(Rect bounds) {
         super.onBoundsChange(bounds);
-        mState.setFullRadius(Math.min(bounds.width(), bounds.height()) / 2);
+        final CircleState state = (CircleState) mState;
+        state.setFullRadius(Math.min(bounds.width(), bounds.height()) / 2);
     }
 
+    /**
+     * Created by mariotaku on 16/2/22.
+     */
+    static class CircleState extends AnimationLayerState {
+        private final Paint mPaint;
+        private int mFullRadius;
+
+        public CircleState(int intrinsicWidth, int intrinsicHeight, LikeAnimationDrawable.Palette palette) {
+            super(intrinsicWidth, intrinsicHeight, palette);
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        }
+
+        @Override
+        public Drawable newDrawable() {
+            return new CircleLayerDrawable(mIntrinsicWidth, mIntrinsicHeight, mPalette);
+        }
+
+        @Override
+        public int getChangingConfigurations() {
+            return 0;
+        }
+
+        public void setFullRadius(int fullRadius) {
+            mFullRadius = fullRadius;
+        }
+
+        public Paint getPaint() {
+            return mPaint;
+        }
+
+        public int getFullRadius() {
+            return mFullRadius;
+        }
+    }
 }

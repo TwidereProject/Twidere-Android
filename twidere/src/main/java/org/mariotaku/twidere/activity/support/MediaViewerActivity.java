@@ -24,8 +24,6 @@ import android.app.FragmentManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -808,6 +806,8 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
 
 
     public static class ImagePageFragment extends SubsampleImageViewerFragment {
+        private int mMediaLoadState;
+
         @Override
         protected Object getDownloadExtra() {
             final MediaExtra mediaExtra = new MediaExtra();
@@ -830,6 +830,18 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             }
         }
 
+        @Override
+        public boolean hasDownloadedData() {
+            return super.hasDownloadedData() && mMediaLoadState != State.ERROR;
+        }
+
+        @Override
+        protected void onMediaLoadStateChange(@State int state) {
+            mMediaLoadState = state;
+            if (getUserVisibleHint()) {
+                getActivity().supportInvalidateOptionsMenu();
+            }
+        }
     }
 
     public static class VideoPageFragment extends CacheDownloadMediaViewerFragment

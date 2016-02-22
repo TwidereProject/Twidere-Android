@@ -44,17 +44,17 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.model.message.AccountChangedEvent;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.ErrorInfoStore;
 
 import java.util.List;
 
@@ -136,6 +136,22 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
 
         @Subscribe
         public void notifyFavoriteTask(FavoriteTaskEvent event) {
+            if (event.isSucceeded()) {
+                final ParcelableStatus status = event.getStatus();
+                final List<ParcelableStatus> data = getAdapterData();
+                if (status == null || data == null || data.isEmpty()) return;
+                final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+                final int firstVisiblePosition = getLayoutManager().findFirstVisibleItemPosition();
+                final int lastVisiblePosition = getLayoutManager().findLastVisibleItemPosition();
+                final int startIndex = adapter.getStatusStartIndex();
+                for (int i = firstVisiblePosition, j = lastVisiblePosition + 1; i < j; i++) {
+                    if (adapter.getAccountId(i) == status.account_id &&
+                            adapter.getStatusId(i) == status.id) {
+                        data.set(i - startIndex, status);
+                        return;
+                    }
+                }
+            }
         }
 
 

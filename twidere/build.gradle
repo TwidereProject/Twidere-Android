@@ -21,8 +21,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 150
-        versionName "3.0.5.2"
+        versionCode 151
+        versionName "3.0.6"
         multiDexEnabled true
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
@@ -71,7 +71,7 @@ dependencies {
     androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.4'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
-    apt "com.github.mariotaku.ObjectCursor:processor:0.9.3"
+    apt "com.github.mariotaku.ObjectCursor:processor:0.9.4"
 
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:23.1.1'
@@ -110,10 +110,10 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
     compile 'com.j256.simplemagic:simplemagic:1.6'
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.7'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.7'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.9'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.9'
     compile 'com.github.mariotaku:SQLiteQB:0.9.4'
-    compile 'com.github.mariotaku.ObjectCursor:core:0.9.3'
+    compile 'com.github.mariotaku.ObjectCursor:core:0.9.4'
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
 

@@ -5,26 +5,33 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
-import android.preference.CheckBoxPreference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
-public class ComponentStatePreference extends CheckBoxPreference {
+import org.jraf.android.backport.switchwidget.SwitchPreference;
+
+public class ComponentStatePreference extends SwitchPreference {
 
     private final PackageManager mPackageManager;
     private final ComponentName mComponentName;
 
-    public ComponentStatePreference(final Context context) {
-        this(context, null);
+    public ComponentStatePreference(Context context) {
+        super(context);
+        mPackageManager = context.getPackageManager();
+        mComponentName = getComponentName(context, null);
+        setDefaultValue(isComponentEnabled());
     }
 
-    public ComponentStatePreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.checkBoxPreferenceStyle);
+    public ComponentStatePreference(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        mPackageManager = context.getPackageManager();
+        mComponentName = getComponentName(context, attrs);
+        setDefaultValue(isComponentEnabled());
     }
 
-    public ComponentStatePreference(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(context, attrs, defStyle);
+    public ComponentStatePreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
         mPackageManager = context.getPackageManager();
         mComponentName = getComponentName(context, attrs);
         setDefaultValue(isComponentEnabled());

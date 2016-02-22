@@ -275,6 +275,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
 
         @Subscribe
         public void notifyFavoriteTask(FavoriteTaskEvent event) {
+
         }
 
         @Subscribe

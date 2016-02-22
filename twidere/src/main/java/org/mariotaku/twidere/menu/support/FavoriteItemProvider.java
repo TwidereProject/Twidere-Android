@@ -2,6 +2,7 @@ package org.mariotaku.twidere.menu.support;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ActionMenuView;
@@ -62,8 +63,10 @@ public class FavoriteItemProvider extends ActionProvider {
 
     public void init(final ActionMenuView menuBar, MenuItem item) {
         if (MenuItemCompat.getActionProvider(item) != this) throw new IllegalArgumentException();
-        final LikeAnimationDrawable drawable = new LikeAnimationDrawable(getContext(), mIcon,
-                mDefaultColor, mActivatedColor, mUseStar ? Style.FAVORITE : Style.LIKE);
+        final Drawable icon = ContextCompat.getDrawable(getContext(), mIcon);
+        final LikeAnimationDrawable drawable = new LikeAnimationDrawable(icon, mDefaultColor,
+                mActivatedColor, mUseStar ? Style.FAVORITE : Style.LIKE);
+        drawable.mutate();
         drawable.setCallback(new ViewCallback(menuBar));
         item.setIcon(drawable);
     }

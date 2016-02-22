@@ -227,7 +227,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                     manager.getUserColor(status.user_id, false));
         } else {
 
-            statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.VISIBLE :View.GONE);
+            statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.VISIBLE : View.GONE);
 
             quotedNameView.setVisibility(View.GONE);
             quotedTextView.setVisibility(View.GONE);
@@ -428,10 +428,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             likeIcon = R.drawable.ic_action_heart;
             likeStyle = LikeAnimationDrawable.Style.LIKE;
         }
-        final LikeAnimationDrawable drawable = new LikeAnimationDrawable(adapter.getContext(),
-                likeIcon, favoriteCountView.getColor(), favoriteCountView.getActivatedColor(),
-                likeStyle);
+        final Drawable icon = ContextCompat.getDrawable(adapter.getContext(), likeIcon);
+        final LikeAnimationDrawable drawable = new LikeAnimationDrawable(icon,
+                favoriteCountView.getColor(), favoriteCountView.getActivatedColor(), likeStyle);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.mutate();
         TextViewCompat.setCompoundDrawablesRelative(favoriteCountView, drawable, null, null, null);
         drawable.setCallback(favoriteCountView);
         timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime());

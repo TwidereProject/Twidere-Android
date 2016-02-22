@@ -68,6 +68,7 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
+import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
@@ -131,8 +132,6 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     private ContentResolver mResolver;
     private AbstractSignInTask mTask;
     private TintedStatusLayout mMainContent;
-    private Runnable mResumeFragmentRunnable;
-    private boolean mFragmentsResumed;
 
     @Override
     public void afterTextChanged(final Editable s) {
@@ -482,36 +481,18 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         setSignInButton();
     }
 
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-        if (!mFragmentsResumed && mResumeFragmentRunnable != null) {
-            mResumeFragmentRunnable.run();
-        }
-        mFragmentsResumed = true;
-    }
-
-    @Override
-    protected void onPause() {
-        mFragmentsResumed = false;
-        super.onPause();
-    }
 
     void dismissDialogFragment(final String tag) {
-        mResumeFragmentRunnable = new Runnable() {
+        executeAfterFragmentResumed(new Action() {
             @Override
-            public void run() {
+            public void execute(IExtendedActivity activity) {
                 final FragmentManager fm = getSupportFragmentManager();
                 final Fragment f = fm.findFragmentByTag(tag);
                 if (f instanceof DialogFragment) {
                     ((DialogFragment) f).dismiss();
                 }
-                mResumeFragmentRunnable = null;
             }
-        };
-        if (mFragmentsResumed) {
-            mResumeFragmentRunnable.run();
-        }
+        });
     }
 
     void onSignInStart() {
@@ -519,25 +500,17 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     }
 
     void showSignInProgressDialog() {
-        postAfterFragmentResumed(new Runnable() {
+        executeAfterFragmentResumed(new Action() {
             @Override
-            public void run() {
+            public void execute(IExtendedActivity activity) {
                 if (isFinishing()) return;
                 final FragmentManager fm = getSupportFragmentManager();
                 final FragmentTransaction ft = fm.beginTransaction();
                 final SupportProgressDialogFragment fragment = new SupportProgressDialogFragment();
                 fragment.setCancelable(false);
                 fragment.show(ft, FRAGMENT_TAG_SIGN_IN_PROGRESS);
-                mResumeFragmentRunnable = null;
             }
         });
-    }
-
-    void postAfterFragmentResumed(Runnable runnable) {
-        mResumeFragmentRunnable = runnable;
-        if (mFragmentsResumed) {
-            mResumeFragmentRunnable.run();
-        }
     }
 
     protected boolean isActionBarOutlineEnabled() {
@@ -848,13 +821,16 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                     public void run() {
                         final SignInActivity activity = activityRef.get();
                         if (activity == null) return;
-                        activity.postAfterFragmentResumed(new Runnable() {
+                        activity.executeAfterFragmentResumed(new Action() {
                             @Override
-                            public void run() {
-                                InputLoginVerificationDialogFragment df = new InputLoginVerificationDialogFragment();
+                            public void execute(IExtendedActivity activity) {
+                                final SignInActivity sia = (SignInActivity) activity;
+                                final InputLoginVerificationDialogFragment df =
+                                        new InputLoginVerificationDialogFragment();
+                                df.setCancelable(false);
                                 df.setCallback(InputLoginVerificationCallback.this);
                                 df.setChallengeType(challengeType);
-                                df.show(activity.getSupportFragmentManager(), null);
+                                df.show(sia.getSupportFragmentManager(), null);
                             }
                         });
                     }
@@ -948,8 +924,12 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             } else if ("RetypePhoneNumber".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_challenge_retype_phone_hint);
                 editVerification.setVisibility(View.VISIBLE);
-            } else {
+            } else if ("Sms".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_verification_pin_hint);
+                editVerification.setVisibility(View.VISIBLE);
+            } else {
+                verificationHint.setText(getString(R.string.unsupported_login_verification_type_name,
+                        challengeType));
                 editVerification.setVisibility(View.VISIBLE);
             }
         }

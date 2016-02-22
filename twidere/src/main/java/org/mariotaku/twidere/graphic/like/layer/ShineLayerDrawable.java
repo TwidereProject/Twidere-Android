@@ -3,38 +3,32 @@ package org.mariotaku.twidere.graphic.like.layer;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 
-import org.mariotaku.twidere.graphic.like.palette.Palette;
-import org.mariotaku.twidere.graphic.like.state.ShineLayerState;
+import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 
 /**
  * Created by mariotaku on 16/2/22.
  */
-public class ShineLayerDrawable extends AnimationLayerDrawable<ShineLayerState> {
+public class ShineLayerDrawable extends AnimationLayerDrawable {
 
     private static final int PARTICLES_PIVOTS_COUNT = 5;
 
-    public ShineLayerDrawable(final int intrinsicWidth, final int intrinsicHeight, final Palette palette) {
+    public ShineLayerDrawable(final int intrinsicWidth, final int intrinsicHeight, final LikeAnimationDrawable.Palette palette) {
         super(intrinsicWidth, intrinsicHeight, palette);
     }
 
     @Override
-    protected ShineLayerState createConstantState(final int intrinsicWidth,
-                                                  final int intrinsicHeight,
-                                                  final Palette palette) {
-        return new ShineLayerState(intrinsicWidth, intrinsicHeight, palette);
-    }
-
-    @Override
     public void draw(Canvas canvas) {
+        final ShineLayerState state = (ShineLayerState) mState;
         final float progress = getProgress();
         if (progress < 0) return;
-        final Palette palette = mState.getPalette();
+        final LikeAnimationDrawable.Palette palette = state.getPalette();
         final int particleColor = palette.getParticleColor(0, 0, progress);
         final Rect bounds = getBounds();
-        final Paint paint = mState.getPaint();
+        final Paint paint = state.getPaint();
         paint.setColor(particleColor);
-        paint.setStrokeWidth(mState.getLineWidth());
+        paint.setStrokeWidth(state.getLineWidth());
         final float[] startEnd = new float[2];
         paint.setAlpha(0xFF);
         if (progress < 0.25f) {
@@ -63,6 +57,20 @@ public class ShineLayerDrawable extends AnimationLayerDrawable<ShineLayerState> 
         }
     }
 
+    @Override
+    protected ShineLayerState createConstantState(final int intrinsicWidth, final int intrinsicHeight,
+                                                  final LikeAnimationDrawable.Palette palette) {
+        return new ShineLayerState(intrinsicWidth, intrinsicHeight, palette);
+    }
+
+    @Override
+    protected void onBoundsChange(Rect bounds) {
+        super.onBoundsChange(bounds);
+        final int fullRadius = Math.min(bounds.width(), bounds.height()) / 2;
+        final ShineLayerState state = (ShineLayerState) mState;
+        state.setFullRadius(fullRadius);
+    }
+
     private void calcPhase4(float[] startEnd, float progress) {
         calcPhase3(startEnd, 0.75f);
     }
@@ -74,25 +82,64 @@ public class ShineLayerDrawable extends AnimationLayerDrawable<ShineLayerState> 
     }
 
     private void calcPhase2(float[] startEnd, float progress) {
+        final ShineLayerState state = (ShineLayerState) mState;
         calcPhase1(startEnd, 0.25f);
         final float length = startEnd[1] - startEnd[0];
         final float initialStart = startEnd[0];
-        startEnd[0] = initialStart + mState.getFullRadius() / 3 * (progress - 0.25f) * 4;
+        startEnd[0] = initialStart + state.getFullRadius() / 3 * (progress - 0.25f) * 4;
         startEnd[1] = startEnd[0] + length;
     }
 
     private void calcPhase1(float[] startEnd, float progress) {
+        final ShineLayerState state = (ShineLayerState) mState;
         // Start point: 1/4 of icon radius
-        final int fullRadius = mState.getFullRadius();
+        final int fullRadius = state.getFullRadius();
         startEnd[0] = fullRadius / 3;
         startEnd[1] = startEnd[0] + (fullRadius / 4 * progress * 4);
     }
 
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-        super.onBoundsChange(bounds);
-        final int fullRadius = Math.min(bounds.width(), bounds.height()) / 2;
-        mState.setFullRadius(fullRadius);
-    }
+    /**
+     * Created by mariotaku on 16/2/22.
+     */
+    static class ShineLayerState extends AnimationLayerState {
 
+        private final Paint mPaint;
+        private int mFullRadius;
+        private float mLineWidth;
+
+        public ShineLayerState(int intrinsicWidth, int intrinsicHeight, LikeAnimationDrawable.Palette palette) {
+            super(intrinsicWidth, intrinsicHeight, palette);
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint.setStrokeCap(Paint.Cap.ROUND);
+            setProgress(-1);
+        }
+
+        public Paint getPaint() {
+            return mPaint;
+        }
+
+        @Override
+        public Drawable newDrawable() {
+            return new ShineLayerDrawable(mIntrinsicWidth, mIntrinsicHeight, mPalette);
+        }
+
+        @Override
+        public int getChangingConfigurations() {
+            return 0;
+        }
+
+        public int getFullRadius() {
+            return mFullRadius;
+        }
+
+        public void setFullRadius(int fullRadius) {
+            mFullRadius = fullRadius;
+            mLineWidth = fullRadius / 10f;
+        }
+
+        public float getLineWidth() {
+            return mLineWidth;
+        }
+
+    }
 }
