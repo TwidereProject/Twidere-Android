@@ -1369,7 +1369,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     break;
                 }
                 final ParcelableActivity activity = ci.newObject(c);
-                if (pref.isNotificationMentionsOnly() && ArrayUtils.contains(Activity.Action.MENTION_ACTIONS,
+                if (pref.isNotificationMentionsOnly() && !ArrayUtils.contains(Activity.Action.MENTION_ACTIONS,
                         activity.action)) {
                     continue;
                 }
