@@ -138,13 +138,13 @@ import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
-import org.mariotaku.twidere.fragment.support.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
 import org.mariotaku.twidere.fragment.support.DestroyStatusDialogFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.DraftsFragment;
 import org.mariotaku.twidere.fragment.support.FiltersFragment;
 import org.mariotaku.twidere.fragment.support.IncomingFriendshipsFragment;
+import org.mariotaku.twidere.fragment.support.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.support.ListsFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.fragment.support.MutesUsersListFragment;
@@ -2256,8 +2256,7 @@ public final class Utils implements Constants {
             ActionProvider provider = MenuItemCompat.getActionProvider(favorite);
             final boolean useStar = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
             if (provider instanceof FavoriteItemProvider) {
-
-
+                ((FavoriteItemProvider) provider).setIsFavorite(favorite, isFavorite);
             } else {
                 if (useStar) {
                     final Drawable oldIcon = favorite.getIcon();
