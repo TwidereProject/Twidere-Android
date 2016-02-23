@@ -30,6 +30,7 @@ Twidere is a powerful twitter client for Android 4.0+, which gives you a full Ma
 * Free, open source, NO ads, forever!
 
 <a href="https://play.google.com/store/apps/details?id=org.mariotaku.twidere"><img src="http://www.android.com/images/brand/get_it_on_play_logo_large.png"/></a>
+<a href="https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere"><img src="https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png" alt="F-Droid"></a>
 
 ---
 
