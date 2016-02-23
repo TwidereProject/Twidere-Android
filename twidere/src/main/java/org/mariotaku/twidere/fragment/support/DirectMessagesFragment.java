@@ -35,6 +35,8 @@ import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -46,11 +48,13 @@ import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
+import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.DirectMessageEntry;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.MessageEntriesAdapterListener;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
+import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
@@ -65,13 +69,10 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
-import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.mariotaku.twidere.util.Utils.openMessageConversation;
 
 public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<MessageEntriesAdapter>
         implements LoaderCallbacks<Cursor>, MessageEntriesAdapterListener, KeyboardShortcutCallback {
@@ -254,10 +255,15 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         return true;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_direct_messages, menu);
+    }
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(getActivity() instanceof LinkHandlerActivity);
         final View view = getView();
         assert view != null;
         final Context viewContext = view.getContext();
@@ -304,11 +310,20 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.compose: {
-                openMessageConversation(getActivity(), -1, -1);
+                openNewMessageConversation();
                 break;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openNewMessageConversation() {
+        final long[] accountIds = getAccountIds();
+        if (accountIds.length == 1) {
+            Utils.openMessageConversation(getActivity(), accountIds[0], -1);
+        } else {
+            Utils.openMessageConversation(getActivity(), -1, -1);
+        }
     }
 
     @Override
@@ -321,11 +336,6 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
                 mNotificationManager.cancel(tag, NOTIFICATION_ID_DIRECT_MESSAGES);
             }
         }
-    }
-
-    protected long getAccountId() {
-        final Bundle args = getArguments();
-        return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
     }
 
     @NonNull

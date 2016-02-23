@@ -48,7 +48,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.util.LongSparseArray;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
@@ -77,6 +76,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
@@ -85,8 +85,10 @@ import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.menu.support.AccountToggleProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -151,6 +153,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         }
     };
     private boolean mSwitchAccountAnimationPlaying;
+    private boolean mUseStarsForLikes;
 
     @NonNull
     public long[] getActivatedAccountIds() {
@@ -278,16 +281,18 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 break;
             }
         }
+        mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
+
         mAccountsAdapter.setAccounts(accounts);
         mAccountsAdapter.setSelectedAccountId(mPreferences.getLong(KEY_DEFAULT_ACCOUNT_ID, defaultId));
+
         mAccountOptionsAdapter.setSelectedAccount(mAccountsAdapter.getSelectedAccount());
 
         if (mAccountActionProvider != null) {
             mAccountActionProvider.setExclusive(false);
             mAccountActionProvider.setAccounts(accounts);
         }
-
-        initAccountActionsAdapter(accounts);
+        updateAccountActions();
         updateAccountOptionsSeparatorLabel(null);
         updateDefaultAccountState();
     }
@@ -325,6 +330,14 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 }
                 case R.id.lists: {
                     Utils.openUserLists(getActivity(), account.account_id, account.account_id, account.screen_name);
+                    break;
+                }
+                case R.id.messages: {
+                    Utils.openDirectMessages(getActivity(), account.account_id);
+                    break;
+                }
+                case R.id.interactions: {
+                    Utils.openInteractions(getActivity(), account.account_id);
                     break;
                 }
                 case R.id.edit: {
@@ -386,10 +399,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         }
     }
 
-    public void setStatusBarHeight(int height) {
-        mAccountProfileContainer.setPadding(0, height, 0, 0);
-    }
-
     @Override
     protected void fitSystemWindows(Rect insets) {
         mSystemWindowsInsets.set(insets);
@@ -415,7 +424,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mListView.setItemsCanFocus(true);
         mAdapter = new MergeAdapter();
         final LayoutInflater inflater = getLayoutInflater(savedInstanceState);
-        mAccountsAdapter = new AccountSelectorAdapter(context, inflater, this);
+        mAccountsAdapter = new AccountSelectorAdapter(inflater, this);
         mAccountOptionsAdapter = new AccountOptionsAdapter(context);
         mAppMenuAdapter = new AppMenuAdapter(context);
         mAccountSelectorView = inflater.inflate(R.layout.header_drawer_account_selector, mListView, false);
@@ -506,11 +515,42 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         super.onStop();
     }
 
-    void initAccountActionsAdapter(ParcelableAccount[] accounts) {
+    void updateAccountActions() {
+        final HomeActivity activity = (HomeActivity) getActivity();
+        if (activity == null) return;
+        final List<SupportTabSpec> tabs = activity.getTabs();
+        final ParcelableAccount account = mAccountsAdapter.getSelectedAccount();
+        if (account == null) return;
+        boolean hasDmTab = false, hasInteractionsTab = false;
+        for (SupportTabSpec tab : tabs) {
+            if (tab.type == null) continue;
+            switch (tab.type) {
+                case CustomTabType.DIRECT_MESSAGES: {
+                    if (!hasDmTab) {
+                        hasDmTab = hasAccountInTab(tab, account.account_id, account.is_activated);
+                    }
+                    break;
+                }
+                case CustomTabType.NOTIFICATIONS_TIMELINE: {
+                    if (!hasInteractionsTab) {
+                        hasInteractionsTab = hasAccountInTab(tab, account.account_id, account.is_activated);
+                    }
+                    break;
+                }
+            }
+        }
         mAccountOptionsAdapter.clear();
-        mAccountOptionsAdapter.add(new OptionItem(android.R.string.search_go, R.drawable.ic_action_search,
-                R.id.search));
-        if (mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+        mAccountOptionsAdapter.add(new OptionItem(R.string.search,
+                R.drawable.ic_action_search, R.id.search));
+        if (!hasInteractionsTab) {
+            mAccountOptionsAdapter.add(new OptionItem(R.string.interactions,
+                    R.drawable.ic_action_notification, R.id.interactions));
+        }
+        if (!hasDmTab) {
+            mAccountOptionsAdapter.add(new OptionItem(R.string.direct_messages,
+                    R.drawable.ic_action_message, R.id.messages));
+        }
+        if (mUseStarsForLikes) {
             mAccountOptionsAdapter.add(new OptionItem(R.string.favorites, R.drawable.ic_action_star,
                     R.id.favorites));
         } else {
@@ -518,6 +558,21 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                     R.id.favorites));
         }
         mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, R.id.lists));
+    }
+
+    private boolean hasAccountInTab(SupportTabSpec tab, long accountId, boolean isActivated) {
+        if (tab.args == null) return false;
+        long[] accountIds = tab.args.getLongArray(EXTRA_ACCOUNT_IDS);
+        if (ArrayUtils.isEmpty(accountIds)) {
+            long tabAccountId = tab.args.getLong(EXTRA_ACCOUNT_ID);
+            // Single account tab, return true if is current account
+            if (tabAccountId == accountId) return true;
+            // Check activated account if empty
+            return isActivated;
+        } else if (ArrayUtils.contains(accountIds, accountId)) {
+            return true;
+        }
+        return false;
     }
 
     private void closeAccountsDrawer() {
@@ -592,6 +647,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 clickedDrawable = clickedImageView.getDrawable();
                 clickedColors = clickedImageView.getBorderColors();
                 final ParcelableAccount oldSelectedAccount = mAccountsAdapter.getSelectedAccount();
+                if (oldSelectedAccount == null) return;
                 mMediaLoader.displayDashboardProfileImage(clickedImageView,
                         oldSelectedAccount.profile_image_url, profileDrawable);
 //                mMediaLoader.displayDashboardProfileImage(profileImageView,
@@ -621,6 +677,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 editor.apply();
                 mAccountsAdapter.setSelectedAccountId(account.account_id);
                 mAccountOptionsAdapter.setSelectedAccount(account);
+                updateAccountActions();
                 updateAccountOptionsSeparatorLabel(clickedDrawable);
                 snapshotView.setVisibility(View.INVISIBLE);
                 snapshotView.setImageDrawable(null);
@@ -634,6 +691,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             }
         });
         set.start();
+
     }
 
     private void updateAccountOptionsSeparatorLabel(Drawable profileImageSnapshot) {
@@ -642,7 +700,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             return;
         }
         mAccountProfileNameView.setText(account.name);
-        mAccountProfileScreenNameView.setText("@" + account.screen_name);
+        mAccountProfileScreenNameView.setText(String.format("@%s", account.screen_name));
         mMediaLoader.displayDashboardProfileImage(mAccountProfileImageView,
                 account.profile_image_url, profileImageSnapshot);
         mAccountProfileImageView.setBorderColors(account.color);
@@ -722,10 +780,9 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         private final LayoutInflater mInflater;
         private final MediaLoaderWrapper mImageLoader;
         private final AccountsDashboardFragment mFragment;
-        private final LongSparseArray<Long> positionMap = new LongSparseArray<>();
         private ParcelableAccount[] mInternalAccounts;
 
-        AccountSelectorAdapter(Context context, LayoutInflater inflater, AccountsDashboardFragment fragment) {
+        AccountSelectorAdapter(LayoutInflater inflater, AccountsDashboardFragment fragment) {
             mInflater = inflater;
             mImageLoader = fragment.mMediaLoader;
             mFragment = fragment;
@@ -818,6 +875,10 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
         private void dispatchItemSelected(AccountProfileImageViewHolder holder) {
             mFragment.onAccountSelected(holder, getAdapterAccount(holder.getAdapterPosition()));
+        }
+
+        public ParcelableAccount[] getAccounts() {
+            return mInternalAccounts;
         }
 
         private void swap(long fromId, long toId) {

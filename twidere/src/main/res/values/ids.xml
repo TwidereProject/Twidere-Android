@@ -78,4 +78,6 @@
     <item name="edit_media" type="id"/>
     <item name="reset" type="id"/>
     <item name="info" type="id"/>
+    <item name="messages" type="id"/>
+    <item name="interactions" type="id"/>
 </resources>

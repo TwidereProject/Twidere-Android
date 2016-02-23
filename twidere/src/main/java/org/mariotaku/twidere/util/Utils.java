@@ -138,8 +138,10 @@ import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
+import org.mariotaku.twidere.fragment.support.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
 import org.mariotaku.twidere.fragment.support.DestroyStatusDialogFragment;
+import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.DraftsFragment;
 import org.mariotaku.twidere.fragment.support.FiltersFragment;
 import org.mariotaku.twidere.fragment.support.IncomingFriendshipsFragment;
@@ -255,6 +257,8 @@ public final class Utils implements Constants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_BLOCKS, null, LINK_ID_USER_BLOCKS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_DIRECT_MESSAGES_CONVERSATION, null,
                 LINK_ID_DIRECT_MESSAGES_CONVERSATION);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_DIRECT_MESSAGES, null, LINK_ID_DIRECT_MESSAGES);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_INTERACTIONS, null, LINK_ID_INTERACTIONS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_LIST, null, LINK_ID_USER_LIST);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_LIST_TIMELINE, null, LINK_ID_USER_LIST_TIMELINE);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_LIST_MEMBERS, null, LINK_ID_USER_LIST_MEMBERS);
@@ -613,6 +617,14 @@ public final class Utils implements Constants {
                 } else if (paramScreenName != null) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
+                break;
+            }
+            case LINK_ID_DIRECT_MESSAGES: {
+                fragment = new DirectMessagesFragment();
+                break;
+            }
+            case LINK_ID_INTERACTIONS: {
+                fragment = new InteractionsTimelineFragment();
                 break;
             }
             case LINK_ID_USER_LIST: {
@@ -2024,6 +2036,26 @@ public final class Utils implements Constants {
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         activity.startActivity(intent);
+    }
+
+    public static void openDirectMessages(final Context context, final long accountId) {
+        if (context == null) return;
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_DIRECT_MESSAGES);
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
+    public static void openInteractions(final Context context, final long accountId) {
+        if (context == null) return;
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_INTERACTIONS);
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
     }
 
     public static void openUserListSubscribers(final Activity activity, final long accountId, final long listId,

@@ -202,7 +202,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         intent.setAction(BROADCAST_NOTIFICATION_DELETED);
         final Uri.Builder linkBuilder = new Uri.Builder();
         linkBuilder.scheme(SCHEME_TWIDERE);
-        linkBuilder.authority(AUTHORITY_NOTIFICATIONS);
+        linkBuilder.authority(AUTHORITY_INTERACTIONS);
         linkBuilder.appendPath(type);
         linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, String.valueOf(position));
@@ -222,7 +222,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Intent intent = new Intent(context, NotificationReceiver.class);
         final Uri.Builder linkBuilder = new Uri.Builder();
         linkBuilder.scheme(SCHEME_TWIDERE);
-        linkBuilder.authority(AUTHORITY_NOTIFICATIONS);
+        linkBuilder.authority(AUTHORITY_INTERACTIONS);
         linkBuilder.appendPath(notificationType);
         linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITIONS, StringLongPair.toString(positions));

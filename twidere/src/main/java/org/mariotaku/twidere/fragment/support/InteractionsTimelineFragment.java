@@ -35,7 +35,7 @@ import org.mariotaku.twidere.util.ErrorInfoStore;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
 
-public class ActivitiesAboutMeFragment extends CursorActivitiesFragment {
+public class InteractionsTimelineFragment extends CursorActivitiesFragment {
 
     @Override
     public boolean getActivities(long[] accountIds, long[] maxIds, long[] sinceIds) {

@@ -557,6 +557,10 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
     }
 
+    public List<SupportTabSpec> getTabs() {
+        return mPagerAdapter.getTabs();
+    }
+
     @Override
     protected void onNewIntent(final Intent intent) {
         final int tabPosition = handleIntent(intent, false);

@@ -38,10 +38,9 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.twidere.fragment.support.ActivitiesAboutMeFragment;
-import org.mariotaku.twidere.fragment.support.ActivitiesByFriendsFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
+import org.mariotaku.twidere.fragment.support.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.support.InvalidTabFragment;
 import org.mariotaku.twidere.fragment.support.RetweetsOfMeFragment;
 import org.mariotaku.twidere.fragment.support.StatusesSearchFragment;
@@ -73,7 +72,7 @@ public class CustomTabUtils implements Constants {
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false));
 
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.NOTIFICATIONS_TIMELINE, new CustomTabConfiguration(
-                ActivitiesAboutMeFragment.class, R.string.notifications, R.drawable.ic_action_notification,
+                InteractionsTimelineFragment.class, R.string.interactions, R.drawable.ic_action_notification,
                 CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 1, false,
                 ExtraConfiguration.newBoolean(EXTRA_MY_FOLLOWING_ONLY, R.string.following_only, false),
                 ExtraConfiguration.newBoolean(EXTRA_MENTIONS_ONLY, R.string.mentions_only, false)));

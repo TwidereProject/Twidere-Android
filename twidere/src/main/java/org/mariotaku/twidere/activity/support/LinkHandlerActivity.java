@@ -519,6 +519,14 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 setTitle(getString(R.string.scheduled_statuses));
                 break;
             }
+            case LINK_ID_DIRECT_MESSAGES: {
+                setTitle(getString(R.string.direct_messages));
+                break;
+            }
+            case LINK_ID_INTERACTIONS: {
+                setTitle(getString(R.string.interactions));
+                break;
+            }
             default: {
                 setTitle(getString(R.string.app_name));
                 break;
