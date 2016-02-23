@@ -374,24 +374,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        final Window window = getWindow();
-        final Rect rect = new Rect();
-        window.getDecorView().getWindowVisibleDisplayFrame(rect);
-        final int actionBarHeight = ThemeUtils.getActionBarHeight(this);
-        final View contentView = window.findViewById(android.R.id.content);
-        final int[] location = new int[2];
-        contentView.getLocationOnScreen(location);
-        if (location[1] > actionBarHeight) {
-            contentView.setPadding(contentView.getPaddingLeft(), 0,
-                    contentView.getPaddingRight(), contentView.getPaddingBottom());
-            return true;
-        }
-        // Offset content view
-        final int statusBarHeight = rect.top;
-        contentView.getWindowVisibleDisplayFrame(rect);
-        final int paddingTop = statusBarHeight + actionBarHeight - rect.top;
-        contentView.setPadding(contentView.getPaddingLeft(), paddingTop,
-                contentView.getPaddingRight(), contentView.getPaddingBottom());
         return true;
     }
 
@@ -689,6 +671,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             mDraft = savedInstanceState.getParcelable(EXTRA_DRAFT);
             mShouldSaveAccounts = savedInstanceState.getBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS);
             mOriginalText = savedInstanceState.getString(EXTRA_ORIGINAL_TEXT);
+            setLabel(intent);
         } else {
             // The context was first created
             final int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1);
@@ -699,6 +682,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             if (!handleIntent(intent)) {
                 handleDefaultIntent(intent);
             }
+            setLabel(intent);
             final long[] selectedAccountIds = mAccountsAdapter.getSelectedAccountIds();
             if (selectedAccountIds.length == 0) {
                 final long[] idsInPrefs = TwidereArrayUtils.parseLongArray(
@@ -707,9 +691,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 mAccountsAdapter.setSelectedAccountIds(intersection.length > 0 ? intersection : defaultAccountIds);
             }
             mOriginalText = ParseUtils.parseString(mEditText.getText());
-        }
-        if (!setComposeTitle(intent)) {
-            setTitle(R.string.compose);
         }
 
         final Menu menu = mMenuBar.getMenu();
@@ -919,32 +900,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     private boolean handleEditDraftIntent(final Draft draft) {
-        if (draft == null)
-            return false;
-        if (draft.action_type == null) {
-            draft.action_type = Draft.Action.UPDATE_STATUS;
-        }
-        switch (draft.action_type) {
-            case Draft.Action.REPLY: {
-                if (draft.action_extras instanceof UpdateStatusActionExtra) {
-                    showReplyLabel(((UpdateStatusActionExtra) draft.action_extras).getInReplyToStatus());
-                } else {
-                    hideLabel();
-                }
-                break;
-            }
-            case Draft.Action.QUOTE: {
-                if (draft.action_extras instanceof UpdateStatusActionExtra) {
-                    showQuoteLabel(((UpdateStatusActionExtra) draft.action_extras).getInReplyToStatus());
-                } else {
-                    hideLabel();
-                }
-                break;
-            }
-            default: {
-                hideLabel();
-            }
-        }
+        if (draft == null) return false;
         mEditText.setText(draft.text);
         final int selectionEnd = mEditText.length();
         mEditText.setSelection(selectionEnd);
@@ -961,14 +917,67 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         return true;
     }
 
+    private boolean setLabel(final Intent intent) {
+        final String action = intent.getAction();
+        if (action == null) {
+            hideLabel();
+            return false;
+        }
+        switch (action) {
+            case INTENT_ACTION_REPLY: {
+                showReplyLabel(intent.<ParcelableStatus>getParcelableExtra(EXTRA_STATUS));
+                return true;
+            }
+            case INTENT_ACTION_QUOTE: {
+                showQuoteLabel(intent.<ParcelableStatus>getParcelableExtra(EXTRA_STATUS));
+                return true;
+            }
+            case INTENT_ACTION_EDIT_DRAFT: {
+                Draft draft = intent.getParcelableExtra(EXTRA_DRAFT);
+                if (draft == null) {
+                    hideLabel();
+                    return false;
+                }
+                if (draft.action_type == null) {
+                    draft.action_type = Draft.Action.UPDATE_STATUS;
+                }
+                switch (draft.action_type) {
+                    case Draft.Action.REPLY: {
+                        if (draft.action_extras instanceof UpdateStatusActionExtra) {
+                            showReplyLabel(((UpdateStatusActionExtra) draft.action_extras).getInReplyToStatus());
+                        } else {
+                            hideLabel();
+                            return false;
+                        }
+                        break;
+                    }
+                    case Draft.Action.QUOTE: {
+                        if (draft.action_extras instanceof UpdateStatusActionExtra) {
+                            showQuoteLabel(((UpdateStatusActionExtra) draft.action_extras).getInReplyToStatus());
+                        } else {
+                            hideLabel();
+                            return false;
+                        }
+                        break;
+                    }
+                    default: {
+                        hideLabel();
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        hideLabel();
+        return false;
+    }
+
     private boolean handleIntent(final Intent intent) {
         final String action = intent.getAction();
         if (action == null) return false;
         mShouldSaveAccounts = false;
         mMentionUser = intent.getParcelableExtra(EXTRA_USER);
         mInReplyToStatus = intent.getParcelableExtra(EXTRA_STATUS);
-        mReplyLabel.setVisibility(View.GONE);
-        mReplyLabelDivider.setVisibility(View.GONE);
         switch (action) {
             case INTENT_ACTION_REPLY: {
                 return handleReplyIntent(mInReplyToStatus);
@@ -1141,36 +1150,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     private void setAccountSelectorVisible(boolean visible) {
         mAccountSelectorContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    private boolean setComposeTitle(final Intent intent) {
-        final String action = intent.getAction();
-        if (INTENT_ACTION_REPLY.equals(action)) {
-            if (mInReplyToStatus == null) return false;
-            final String displayName = mUserColorNameManager.getDisplayName(mInReplyToStatus.user_id, mInReplyToStatus.user_name,
-                    mInReplyToStatus.user_screen_name, mNameFirst, false);
-            setTitle(getString(R.string.reply_to, displayName));
-        } else if (INTENT_ACTION_QUOTE.equals(action)) {
-            if (mInReplyToStatus == null) return false;
-            final String displayName = mUserColorNameManager.getDisplayName(mInReplyToStatus.user_id, mInReplyToStatus.user_name,
-                    mInReplyToStatus.user_screen_name, mNameFirst, false);
-            setTitle(getString(R.string.quote_user, displayName));
-        } else if (INTENT_ACTION_EDIT_DRAFT.equals(action)) {
-            if (mDraft == null) return false;
-            setTitle(R.string.edit_draft);
-        } else if (INTENT_ACTION_MENTION.equals(action)) {
-            if (mMentionUser == null) return false;
-            final String displayName = mUserColorNameManager.getDisplayName(mMentionUser.id, mMentionUser.name,
-                    mMentionUser.screen_name, mNameFirst, false);
-            setTitle(getString(R.string.mention_user, displayName));
-        } else if (INTENT_ACTION_REPLY_MULTIPLE.equals(action)) {
-            setTitle(R.string.reply);
-        } else if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            setTitle(R.string.share);
-        } else {
-            setTitle(R.string.compose);
-        }
-        return true;
     }
 
     private void setMenu() {
@@ -1369,8 +1348,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             clearMedia();
             final Intent intent = new Intent(INTENT_ACTION_COMPOSE);
             setIntent(intent);
-            setComposeTitle(intent);
             handleIntent(intent);
+            setLabel(intent);
             setMenu();
             updateTextCount();
         } else {
