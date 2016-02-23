@@ -938,7 +938,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 tweetEvent.setAction(TweetEvent.Action.FAVORITE);
                 HotMobiLogger.getInstance(getContext()).log(mAccountId, tweetEvent);
                 // END HotMobi
-                Utils.showInfoMessage(mContext, R.string.status_favorited, false);
             } else {
                 taskEvent.setSucceeded(false);
                 Utils.showErrorMessage(mContext, R.string.action_favoriting, result.getException(), true);
