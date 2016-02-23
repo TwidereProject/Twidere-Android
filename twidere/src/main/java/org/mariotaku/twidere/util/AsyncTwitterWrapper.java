@@ -2161,15 +2161,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
                 // BEGIN HotMobi
-
                 final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.RETWEET);
                 HotMobiLogger.getInstance(getContext()).log(accountId, event);
-
                 // END HotMobi
 
                 bus.post(new StatusRetweetedEvent(status));
-                Utils.showOkMessage(mContext, R.string.status_retweeted, false);
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_retweeting, result.getException(), true);
             }
