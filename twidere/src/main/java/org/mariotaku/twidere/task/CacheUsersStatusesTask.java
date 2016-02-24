@@ -23,7 +23,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 
-import com.desmond.asyncmanager.TaskRunnable;
 import com.twitter.Extractor;
 
 import org.mariotaku.twidere.Constants;
@@ -40,7 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CacheUsersStatusesTask extends TaskRunnable<TwitterListResponse<Status>, Object, Object> implements Constants {
+public class CacheUsersStatusesTask extends AbstractTask<TwitterListResponse<Status>, Object, Object> implements Constants {
 
     private final Context context;
 

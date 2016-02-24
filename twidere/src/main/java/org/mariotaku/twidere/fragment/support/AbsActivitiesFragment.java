@@ -38,8 +38,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.desmond.asyncmanager.AsyncManager;
-import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
@@ -54,6 +52,8 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
+import org.mariotaku.twidere.task.AbstractTask;
+import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -410,9 +410,9 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         final RecyclerView recyclerView = getRecyclerView();
         recyclerView.addOnScrollListener(mOnScrollListener);
         recyclerView.addOnScrollListener(mPauseOnScrollListener);
-        final TaskRunnable<Object, Boolean, RecyclerView> task = new TaskRunnable<Object, Boolean, RecyclerView>() {
+        final AbstractTask<Object, Boolean, RecyclerView> task = new AbstractTask<Object, Boolean, RecyclerView>() {
             @Override
-            public Boolean doLongOperation(Object params) throws InterruptedException {
+            public Boolean doLongOperation(Object params) {
                 final Context context = getContext();
                 final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                         Context.MODE_PRIVATE);
@@ -422,14 +422,14 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             }
 
             @Override
-            public void callback(RecyclerView recyclerView, Boolean result) {
+            public void afterExecute(RecyclerView recyclerView, Boolean result) {
                 if (result) {
                     recyclerView.addOnScrollListener(mActiveHotMobiScrollTracker = mHotMobiScrollTracker);
                 }
             }
         };
         task.setResultHandler(recyclerView);
-        AsyncManager.runBackgroundTask(task);
+        TaskStarter.execute(task);
         mBus.register(mStatusesBusCallback);
     }
 
@@ -568,6 +568,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (getUserVisibleHint()) return;
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
@@ -586,6 +587,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        if (getUserVisibleHint()) return false;
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) item.getMenuInfo();

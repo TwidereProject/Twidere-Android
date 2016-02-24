@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.util.Log;
 
-import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.sqliteqb.library.Expression;
@@ -25,6 +24,7 @@ import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
@@ -43,7 +43,7 @@ import javax.inject.Inject;
 /**
  * Created by mariotaku on 16/1/4.
  */
-public abstract class GetActivitiesTask extends TaskRunnable<RefreshTaskParam, Object, Object> implements Constants {
+public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, Object, Object> implements Constants {
 
     protected final Context context;
     @Inject
@@ -155,14 +155,15 @@ public abstract class GetActivitiesTask extends TaskRunnable<RefreshTaskParam, O
                                                             final long accountId, final Paging paging) throws TwitterException;
 
     @Override
-    public void callback(Object result) {
+    public void afterExecute(Object result) {
         bus.post(new GetActivitiesTaskEvent(getContentUri(), false, null));
     }
 
     protected abstract Uri getContentUri();
 
     @UiThread
-    public void notifyStart() {
+    @Override
+    public void beforeExecute() {
         bus.post(new GetActivitiesTaskEvent(getContentUri(), true, null));
     }
 }

@@ -10,13 +10,12 @@ import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.ValueMap;
-import org.mariotaku.restfu.okhttp3.OkHttpRestClient;
+import org.mariotaku.restfu.urlconnection.URLConnectionRestClient;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 
-import okhttp3.OkHttpClient;
 
 /**
  * Created by mariotaku on 16/2/20.
@@ -26,7 +25,7 @@ public class TwitLongerFactory {
     public static TwitLonger getInstance(final String apiKey, @Nullable final ParcelableCredentials credentials) {
         final RestAPIFactory<TwitLongerException> factory = new RestAPIFactory<>();
         factory.setEndpoint(new Endpoint("http://api.twitlonger.com/"));
-        factory.setHttpClient(new OkHttpRestClient(new OkHttpClient()));
+        factory.setHttpClient(new URLConnectionRestClient());
         factory.setConstantPool(new TwitLongerConstantPool(apiKey, credentials));
         factory.setExceptionFactory(new TwitLongerExceptionFactory());
         factory.setRestConverterFactory(new LoganSquareConverterFactory());

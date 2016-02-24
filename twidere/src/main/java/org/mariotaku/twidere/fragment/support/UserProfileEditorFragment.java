@@ -56,6 +56,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -107,8 +108,6 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private ParcelableUser mUser;
     private boolean mUserInfoLoaderInitialized;
     private boolean mGetUserInfoCalled;
-    private boolean mFragmentsResumed;
-    private Runnable mResumeFragmentRunnable;
 
     @Override
     public void beforeTextChanged(final CharSequence s, final int length, final int start, final int end) {
@@ -368,33 +367,19 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         if (mTask != null && mTask.getStatus() == Status.PENDING) {
             AsyncTaskUtils.executeTask(mTask);
         }
-        if (!mFragmentsResumed && mResumeFragmentRunnable != null) {
-            mResumeFragmentRunnable.run();
-        }
-        mFragmentsResumed = true;
-    }
-
-    @Override
-    public void onPause() {
-        mFragmentsResumed = false;
-        super.onPause();
     }
 
     private void dismissDialogFragment(final String tag) {
-        mResumeFragmentRunnable = new Runnable() {
+        executeAfterFragmentResumed(new Action() {
             @Override
-            public void run() {
+            public void execute(IBaseFragment fragment) {
                 final FragmentManager fm = getChildFragmentManager();
                 final Fragment f = fm.findFragmentByTag(tag);
                 if (f instanceof DialogFragment) {
                     ((DialogFragment) f).dismiss();
                 }
-                mResumeFragmentRunnable = null;
             }
-        };
-        if (mFragmentsResumed) {
-            mResumeFragmentRunnable.run();
-        }
+        });
     }
 
     private void setUpdateState(final boolean start) {
@@ -402,19 +387,15 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             dismissDialogFragment(UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
             return;
         }
-        mResumeFragmentRunnable = new Runnable() {
+        executeAfterFragmentResumed(new Action() {
             @Override
-            public void run() {
+            public void execute(IBaseFragment fragment) {
                 final FragmentManager fm = getChildFragmentManager();
                 SupportProgressDialogFragment df = new SupportProgressDialogFragment();
                 df.show(fm, UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
                 df.setCancelable(false);
-                mResumeFragmentRunnable = null;
             }
-        };
-        if (mFragmentsResumed) {
-            mResumeFragmentRunnable.run();
-        }
+        });
     }
 
     private static boolean stringEquals(final CharSequence str1, final CharSequence str2) {

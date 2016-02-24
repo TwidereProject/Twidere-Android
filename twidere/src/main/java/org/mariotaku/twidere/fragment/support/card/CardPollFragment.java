@@ -44,9 +44,6 @@ import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.desmond.asyncmanager.AsyncManager;
-import com.desmond.asyncmanager.TaskRunnable;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.TwitterCaps;
@@ -57,6 +54,8 @@ import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;
+import org.mariotaku.twidere.task.AbstractTask;
+import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.support.ViewSupport;
 
@@ -165,16 +164,16 @@ public class CardPollFragment extends BaseSupportFragment implements
                         cardData.putString("cards_platform", TwitterAPIFactory.CARDS_PLATFORM_ANDROID_12);
                         cardData.putString("response_card_name", card.name);
                         cardData.putString("selected_choice", String.valueOf(i + 1));
-                        TaskRunnable<CardDataMap, ParcelableCardEntity, CardPollFragment> task
-                                = new TaskRunnable<CardDataMap, ParcelableCardEntity, CardPollFragment>() {
+                        AbstractTask<CardDataMap, ParcelableCardEntity, CardPollFragment> task
+                                = new AbstractTask<CardDataMap, ParcelableCardEntity, CardPollFragment>() {
 
                             @Override
-                            public void callback(CardPollFragment handler, ParcelableCardEntity result) {
+                            public void afterExecute(CardPollFragment handler, ParcelableCardEntity result) {
                                 handler.displayAndReloadPoll(result, status);
                             }
 
                             @Override
-                            public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) throws InterruptedException {
+                            public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) {
                                 final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(),
                                         card.account_id, true, true, TwitterCaps.class);
                                 if (caps == null) return null;
@@ -188,7 +187,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                             }
                         };
                         task.setParams(cardData);
-                        AsyncManager.runBackgroundTask(task);
+                        TaskStarter.execute(task);
                     }
                 }
             }

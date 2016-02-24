@@ -754,6 +754,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (getUserVisibleHint()) return;
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
@@ -764,6 +765,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        if (getUserVisibleHint()) return false;
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) item.getMenuInfo();
         final ParcelableStatus status = mStatusAdapter.getStatus(contextMenuInfo.getPosition());

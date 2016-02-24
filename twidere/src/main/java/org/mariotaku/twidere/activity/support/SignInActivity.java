@@ -924,6 +924,9 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             } else if ("RetypePhoneNumber".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_challenge_retype_phone_hint);
                 editVerification.setVisibility(View.VISIBLE);
+            } else if ("RetypeEmail".equalsIgnoreCase(challengeType)) {
+                verificationHint.setText(R.string.login_challenge_retype_email_hint);
+                editVerification.setVisibility(View.VISIBLE);
             } else if ("Sms".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_verification_pin_hint);
                 editVerification.setVisibility(View.VISIBLE);

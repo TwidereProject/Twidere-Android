@@ -59,8 +59,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
-import com.desmond.asyncmanager.AsyncManager;
-import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -88,6 +86,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.StreamingService;
+import org.mariotaku.twidere.task.AbstractTask;
+import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -577,9 +577,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         // Delete unused items in databases.
 
         final Context context = getApplicationContext();
-        AsyncManager.runBackgroundTask(new TaskRunnable() {
+        TaskStarter.execute(new AbstractTask() {
             @Override
-            public Object doLongOperation(Object o) throws InterruptedException {
+            public Object doLongOperation(Object o) {
                 cleanDatabasesByItemLimit(context);
                 return null;
             }

@@ -274,10 +274,10 @@ public class RefreshService extends Service implements Constants {
         return isNetworkAvailable(this) && (isBatteryOkay(this) || !shouldStopAutoRefreshOnBatteryLow(this));
     }
 
-    private int getLocalTrends(final long[] accountIds) {
+    private void getLocalTrends(final long[] accountIds) {
         final long account_id = getDefaultAccountId(this);
         final int woeid = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
-        return mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
+        mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
     }
 
     private long[] getRefreshableIds(final AccountPreferences[] prefs, final RefreshableAccountFilter filter) {

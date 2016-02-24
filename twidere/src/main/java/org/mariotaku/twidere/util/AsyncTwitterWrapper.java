@@ -31,9 +31,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
-import com.desmond.asyncmanager.AsyncManager;
-import com.desmond.asyncmanager.BackgroundTask;
-import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
@@ -53,7 +50,6 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
-import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
@@ -79,9 +75,7 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
@@ -92,9 +86,12 @@ import org.mariotaku.twidere.task.GetActivitiesAboutMeTask;
 import org.mariotaku.twidere.task.GetActivitiesByFriendsTask;
 import org.mariotaku.twidere.task.GetDirectMessagesTask;
 import org.mariotaku.twidere.task.GetHomeTimelineTask;
+import org.mariotaku.twidere.task.GetLocalTrendsTask;
 import org.mariotaku.twidere.task.GetSavedSearchesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
+import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
+import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
@@ -291,14 +288,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public boolean getHomeTimelineAsync(RefreshTaskParam param) {
         final GetHomeTimelineTask task = new GetHomeTimelineTask(getContext());
         task.setParams(param);
-        task.notifyStart();
-        AsyncManager.runBackgroundTask(task);
+        TaskStarter.execute(task);
         return true;
     }
 
-    public int getLocalTrendsAsync(final long accountId, final int woeid) {
-        final GetLocalTrendsTask task = new GetLocalTrendsTask(accountId, woeid);
-        return mAsyncTaskManager.add(task, true);
+    public void getLocalTrendsAsync(final long accountId, final int woeid) {
+        final GetLocalTrendsTask task = new GetLocalTrendsTask(mContext, accountId, woeid);
+        TaskStarter.execute(task);
     }
 
     public void getReceivedDirectMessagesAsync(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
@@ -308,21 +304,19 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public void getReceivedDirectMessagesAsync(RefreshTaskParam param) {
         final GetReceivedDirectMessagesTask task = new GetReceivedDirectMessagesTask(mContext);
         task.setParams(param);
-        task.notifyStart();
-        AsyncManager.runBackgroundTask(task);
+        TaskStarter.execute(task);
     }
 
     public void getSentDirectMessagesAsync(final long[] accountIds, final long[] maxIds, final long[] sinceIds) {
         final GetSentDirectMessagesTask task = new GetSentDirectMessagesTask(mContext);
         task.setParams(new BaseRefreshTaskParam(accountIds, maxIds, sinceIds));
-        task.notifyStart();
-        AsyncManager.runBackgroundTask(task);
+        TaskStarter.execute(task);
     }
 
     public int getSavedSearchesAsync(long[] accountIds) {
         final GetSavedSearchesTask task = new GetSavedSearchesTask(mContext);
         task.setParams(accountIds);
-        AsyncManager.runBackgroundTask(task);
+        TaskStarter.execute(task);
         return System.identityHashCode(task);
     }
 
@@ -489,12 +483,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return null;
     }
 
-    public BackgroundTask updateFriendship(final long accountId, final long userId, final FriendshipUpdate update) {
+    public void updateFriendship(final long accountId, final long userId, final FriendshipUpdate update) {
         final Bus bus = mBus;
-        if (bus == null) return null;
-        return AsyncManager.runBackgroundTask(new TaskRunnable<Object, SingleResponse<Relationship>, Bus>() {
+        if (bus == null) return;
+        TaskStarter.execute(new AbstractTask<Object, SingleResponse<Relationship>, Bus>() {
             @Override
-            public SingleResponse<Relationship> doLongOperation(Object param) throws InterruptedException {
+            public SingleResponse<Relationship> doLongOperation(Object param) {
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, true);
                 try {
                     return SingleResponse.getInstance(twitter.updateFriendship(userId, update));
@@ -504,7 +498,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             }
 
             @Override
-            public void callback(Bus handler, SingleResponse<Relationship> result) {
+            public void afterExecute(Bus handler, SingleResponse<Relationship> result) {
                 if (result.hasData()) {
                     handler.post(new FriendshipUpdatedEvent(accountId, userId, result.getData()));
                 } else if (result.hasException()) {
@@ -523,22 +517,20 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public void getActivitiesAboutMeAsync(final RefreshTaskParam param) {
         final GetActivitiesTask task = new GetActivitiesAboutMeTask(getContext());
         task.setParams(param);
-        task.notifyStart();
-        AsyncManager.runBackgroundTask(task);
+        TaskStarter.execute(task);
     }
 
     public void getActivitiesByFriendsAsync(long[] accountIds, long[] maxIds, long[] sinceIds) {
         final GetActivitiesTask task = new GetActivitiesByFriendsTask(getContext());
         task.setParams(new BaseRefreshTaskParam(accountIds, maxIds, sinceIds));
-        task.notifyStart();
-        AsyncManager.runBackgroundTask(task);
+        TaskStarter.execute(task);
     }
 
     public void setActivitiesAboutMeUnreadAsync(final long[] accountIds, final long cursor) {
-        TaskRunnable<Object, Object, AsyncTwitterWrapper> task = new TaskRunnable<Object, Object, AsyncTwitterWrapper>() {
+        AbstractTask<Object, Object, AsyncTwitterWrapper> task = new AbstractTask<Object, Object, AsyncTwitterWrapper>() {
 
             @Override
-            public Object doLongOperation(Object o) throws InterruptedException {
+            public Object doLongOperation(Object o) {
                 for (long accountId : accountIds) {
                     Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, false);
                     if (TwitterAPIFactory.isOfficialTwitterInstance(mContext, twitter)) continue;
@@ -553,7 +545,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return null;
             }
         };
-        AsyncManager.runBackgroundTask(task);
+        TaskStarter.execute(task);
     }
 
     public ErrorInfoStore getErrorInfoStore() {
@@ -646,7 +638,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, true);
                 TwitterWrapper.updateProfileImage(mContext, twitter, mImageUri, mDeleteImage);
                 // Wait for 5 seconds, see
-                // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
+                // https://dev.twitter.com/rest/reference/post/account/update_profile_image
                 try {
                     Thread.sleep(5000L);
                 } catch (InterruptedException e) {
@@ -1887,29 +1879,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class GetLocalTrendsTask extends GetTrendsTask {
-
-        private final int woeid;
-
-        public GetLocalTrendsTask(final long account_id, final int woeid) {
-            super(account_id);
-            this.woeid = woeid;
-        }
-
-        @Override
-        public List<Trends> getTrends(@NonNull final Twitter twitter) throws TwitterException {
-            return twitter.getLocationTrends(woeid);
-        }
-
-        @Override
-        protected void onPostExecute(final ListResponse<Trends> result) {
-            mAsyncTaskManager.add(new StoreLocalTrendsTask(result), true);
-            super.onPostExecute(result);
-
-        }
-
-    }
-
     static class GetReceivedDirectMessagesTask extends GetDirectMessagesTask {
 
         public GetReceivedDirectMessagesTask(Context context) {
@@ -1934,10 +1903,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        public void notifyStart() {
+        public void beforeExecute() {
             final Intent intent = new Intent(BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING);
             context.sendBroadcast(intent);
-            super.notifyStart();
+            super.beforeExecute();
         }
     }
 
@@ -1967,34 +1936,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     public SharedPreferencesWrapper getPreferences() {
         return mPreferences;
-    }
-
-    abstract class GetTrendsTask extends ManagedAsyncTask<Object, Object, ListResponse<Trends>> {
-
-        private final long account_id;
-
-        public GetTrendsTask(final long account_id) {
-            super(mContext, TASK_TAG_GET_TRENDS);
-            this.account_id = account_id;
-        }
-
-        public abstract List<Trends> getTrends(@NonNull Twitter twitter) throws TwitterException;
-
-        @Override
-        protected ListResponse<Trends> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, account_id, false);
-            final Bundle extras = new Bundle();
-            extras.putLong(EXTRA_ACCOUNT_ID, account_id);
-            if (twitter != null) {
-                try {
-                    return new ListResponse<>(getTrends(twitter), null, extras);
-                } catch (final TwitterException e) {
-                    return new ListResponse<>(null, e, extras);
-                }
-            }
-            return new ListResponse<>(null, null, extras);
-        }
-
     }
 
     final class RemoveUnreadCountsTask extends AsyncTask<Object, Object, Integer> {
@@ -2176,68 +2117,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-
-    class StoreLocalTrendsTask extends StoreTrendsTask {
-
-        public StoreLocalTrendsTask(final ListResponse<Trends> result) {
-            super(mContext, result, CachedTrends.Local.CONTENT_URI);
-        }
-
-    }
-
-    static class StoreTrendsTask extends ManagedAsyncTask<Object, Object, SingleResponse<Boolean>> {
-
-        private final ListResponse<Trends> response;
-        private final Uri uri;
-        private Context context;
-
-        public StoreTrendsTask(Context context, final ListResponse<Trends> response, final Uri uri) {
-            super(context, TASK_TAG_STORE_TRENDS);
-            this.response = response;
-            this.uri = uri;
-            this.context = context;
-        }
-
-        @Override
-        protected SingleResponse<Boolean> doInBackground(final Object... args) {
-            if (response == null) return SingleResponse.getInstance(false);
-            ContentResolver cr = context.getContentResolver();
-            final List<Trends> messages = response.getData();
-            final ArrayList<String> hashtags = new ArrayList<>();
-            final ArrayList<ContentValues> hashtagValues = new ArrayList<>();
-            if (messages != null && messages.size() > 0) {
-                final ContentValues[] valuesArray = ContentValuesCreator.createTrends(messages);
-                for (final ContentValues values : valuesArray) {
-                    final String hashtag = values.getAsString(CachedTrends.NAME).replaceFirst("#", "");
-                    if (hashtags.contains(hashtag)) {
-                        continue;
-                    }
-                    hashtags.add(hashtag);
-                    final ContentValues hashtagValue = new ContentValues();
-                    hashtagValue.put(CachedHashtags.NAME, hashtag);
-                    hashtagValues.add(hashtagValue);
-                }
-                cr.delete(uri, null, null);
-                ContentResolverUtils.bulkInsert(cr, uri, valuesArray);
-                ContentResolverUtils.bulkDelete(cr, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, hashtags, null, true);
-                ContentResolverUtils.bulkInsert(cr, CachedHashtags.CONTENT_URI,
-                        hashtagValues.toArray(new ContentValues[hashtagValues.size()]));
-            }
-            return SingleResponse.getInstance(true);
-        }
-
-        @Override
-        protected void onPostExecute(final SingleResponse<Boolean> response) {
-            // if (response != null && response.data != null &&
-            // response.data.getBoolean(EXTRA_SUCCEED)) {
-            // final Intent intent = new Intent(BROADCAST_TRENDS_UPDATED);
-            // intent.putExtra(EXTRA_SUCCEED, true);
-            // mContext.sendBroadcast(intent);
-            // }
-            super.onPostExecute(response);
-        }
-
-    }
 
     static class UpdateUserListDetailsTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 

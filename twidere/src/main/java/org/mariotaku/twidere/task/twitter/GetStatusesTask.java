@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.util.Log;
 
-import com.desmond.asyncmanager.AsyncManager;
-import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -26,8 +24,11 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.CacheUsersStatusesTask;
+import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -40,7 +41,6 @@ import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ import edu.tsinghua.hotmobi.model.TimelineType;
 /**
  * Created by mariotaku on 16/1/2.
  */
-public abstract class GetStatusesTask extends TaskRunnable<RefreshTaskParam,
+public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         List<TwitterWrapper.StatusListResponse>, Object> implements Constants {
 
     protected final Context context;
@@ -146,7 +146,7 @@ public abstract class GetStatusesTask extends TaskRunnable<RefreshTaskParam,
 
 
     @Override
-    public void callback(List<TwitterWrapper.StatusListResponse> result) {
+    public void afterExecute(List<TwitterWrapper.StatusListResponse> result) {
         bus.post(new GetStatusesTaskEvent(getContentUri(), false, AsyncTwitterWrapper.getException(result)));
     }
 
@@ -190,7 +190,7 @@ public abstract class GetStatusesTask extends TaskRunnable<RefreshTaskParam,
                 // TODO cache related data and preload
                 final CacheUsersStatusesTask cacheTask = new CacheUsersStatusesTask(context);
                 cacheTask.setParams(new TwitterWrapper.StatusListResponse(accountId, statuses));
-                AsyncManager.runBackgroundTask(cacheTask);
+                TaskStarter.execute(cacheTask);
                 errorInfoStore.remove(getErrorInfoKey(), accountId);
             } catch (final TwitterException e) {
                 if (BuildConfig.DEBUG) {

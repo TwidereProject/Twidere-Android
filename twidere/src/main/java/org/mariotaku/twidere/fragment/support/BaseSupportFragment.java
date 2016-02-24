@@ -86,6 +86,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     @Inject
     TwidereValidator mValidator;
 
+    private final ActionHelper mActionHelper = new ActionHelper(this);
+
     public BaseSupportFragment() {
 
     }
@@ -166,6 +168,17 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     @Override
     public void onBaseViewCreated(View view, Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public void executeAfterFragmentResumed(Action action) {
+        mActionHelper.executeAfterFragmentResumed(action);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mActionHelper.dispatchOnResumeFragments();
     }
 
     @Override

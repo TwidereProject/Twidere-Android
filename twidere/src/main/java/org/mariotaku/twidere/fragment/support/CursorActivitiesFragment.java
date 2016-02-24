@@ -31,8 +31,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 
-import com.desmond.asyncmanager.AsyncManager;
-import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.library.objectcursor.ObjectCursor;
@@ -55,6 +53,8 @@ import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
+import org.mariotaku.twidere.task.AbstractTask;
+import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 
@@ -185,9 +185,9 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         if ((position & IndicatorPosition.START) != 0) return;
         super.onLoadMoreContents(position);
         if (position == 0) return;
-        AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorActivitiesFragment>() {
+        TaskStarter.execute(new AbstractTask<Object, long[][], CursorActivitiesFragment>() {
             @Override
-            public long[][] doLongOperation(Object o) throws InterruptedException {
+            public long[][] doLongOperation(Object o) {
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
                 result[1] = getOldestActivityIds(result[0]);
@@ -195,7 +195,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
             }
 
             @Override
-            public void callback(CursorActivitiesFragment fragment, long[][] result) {
+            public void afterExecute(CursorActivitiesFragment fragment, long[][] result) {
                 fragment.getActivities(result[0], result[1], result[2]);
             }
         }.setResultHandler(this));
@@ -204,9 +204,9 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     @Override
     public boolean triggerRefresh() {
         super.triggerRefresh();
-        AsyncManager.runBackgroundTask(new TaskRunnable<Object, long[][], CursorActivitiesFragment>() {
+        TaskStarter.execute(new AbstractTask<Object, long[][], CursorActivitiesFragment>() {
             @Override
-            public long[][] doLongOperation(Object o) throws InterruptedException {
+            public long[][] doLongOperation(Object o) {
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
                 result[2] = getNewestActivityIds(result[0]);
@@ -214,7 +214,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
             }
 
             @Override
-            public void callback(CursorActivitiesFragment fragment, long[][] result) {
+            public void afterExecute(CursorActivitiesFragment fragment, long[][] result) {
                 fragment.getActivities(result[0], result[1], result[2]);
             }
         }.setResultHandler(this));

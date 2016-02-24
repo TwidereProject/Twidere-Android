@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import com.desmond.asyncmanager.TaskRunnable;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.BuildConfig;
@@ -18,6 +17,7 @@ import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ErrorInfoStore;
@@ -28,7 +28,6 @@ import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ import javax.inject.Inject;
 /**
  * Created by mariotaku on 16/2/14.
  */
-public abstract class GetDirectMessagesTask extends TaskRunnable<RefreshTaskParam,
+public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskParam,
         List<TwitterWrapper.MessageListResponse>, Object> implements Constants {
 
     protected final Context context;
@@ -133,12 +132,12 @@ public abstract class GetDirectMessagesTask extends TaskRunnable<RefreshTaskPara
     }
 
 
-    public void notifyStart() {
+    public void beforeExecute() {
         bus.post(new GetMessagesTaskEvent(getDatabaseUri(), true, null));
     }
 
     @Override
-    public void callback(List<TwitterWrapper.MessageListResponse> result) {
+    protected void afterExecute(List<TwitterWrapper.MessageListResponse> result) {
         bus.post(new GetMessagesTaskEvent(getDatabaseUri(), false, AsyncTwitterWrapper.getException(result)));
     }
 }

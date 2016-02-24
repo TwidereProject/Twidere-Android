@@ -5,8 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
-import com.desmond.asyncmanager.TaskRunnable;
-
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
@@ -23,7 +21,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils;
 /**
  * Created by mariotaku on 16/2/13.
  */
-public class GetSavedSearchesTask extends TaskRunnable<long[], SingleResponse<Object>, Object>
+public class GetSavedSearchesTask extends AbstractTask<long[], SingleResponse<Object>, Object>
         implements Constants {
 
     private final Context mContext;
