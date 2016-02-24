@@ -93,6 +93,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.IntentUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ListViewUtils;
@@ -100,7 +101,6 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
@@ -708,7 +708,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         final Resources res = getResources();
         final int defWidth = res.getDisplayMetrics().widthPixels;
         final int width = bannerWidth > 0 ? bannerWidth : defWidth;
-        final String bannerUrl = TwitterContentUtils.getBestBannerUrl(account.profile_banner_url, width);
+        final String bannerUrl = InternalTwitterContentUtils.getBestBannerUrl(account.profile_banner_url, width);
         final ImageView bannerView = mAccountProfileBannerView;
         if (bannerView.getDrawable() == null || !CompareUtils.objectEquals(bannerUrl, bannerView.getTag())) {
             mMediaLoader.displayProfileBanner(mAccountProfileBannerView, bannerUrl, this);

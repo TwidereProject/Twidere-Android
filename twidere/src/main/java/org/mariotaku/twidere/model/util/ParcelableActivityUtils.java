@@ -62,13 +62,13 @@ public class ParcelableActivityUtils {
         result.action = activity.getAction();
         result.max_position = activity.getMaxPosition();
         result.min_position = activity.getMinPosition();
-        result.sources = ParcelableUser.fromUsers(activity.getSources(), accountId);
-        result.target_users = ParcelableUser.fromUsers(activity.getTargetUsers(), accountId);
+        result.sources = ParcelableUserUtils.fromUsers(activity.getSources(), accountId);
+        result.target_users = ParcelableUserUtils.fromUsers(activity.getTargetUsers(), accountId);
         result.target_user_lists = ParcelableUserList.fromUserLists(activity.getTargetUserLists(), accountId);
         result.target_statuses = ParcelableStatusUtils.fromStatuses(activity.getTargetStatuses(), accountId);
         result.target_object_statuses = ParcelableStatusUtils.fromStatuses(activity.getTargetObjectStatuses(), accountId);
         result.target_object_user_lists = ParcelableUserList.fromUserLists(activity.getTargetObjectUserLists(), accountId);
-        result.target_object_users = ParcelableUser.fromUsers(activity.getTargetObjectUsers(), accountId);
+        result.target_object_users = ParcelableUserUtils.fromUsers(activity.getTargetObjectUsers(), accountId);
         if (result.sources != null) {
             result.source_ids = new long[result.sources.length];
             for (int i = 0; i < result.sources.length; i++) {

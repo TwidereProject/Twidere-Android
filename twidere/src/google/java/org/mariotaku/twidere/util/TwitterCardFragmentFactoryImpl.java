@@ -28,6 +28,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import org.mariotaku.twidere.model.ParcelableCardEntity;
+import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -49,8 +50,8 @@ public final class TwitterCardFragmentFactoryImpl extends TwitterCardFragmentFac
     @Override
     public Fragment createPlayerFragment(ParcelableCardEntity card) {
         if (Boolean.parseBoolean("true")) return null;
-        final String appUrlResolved = card.getString("app_url_resolved");
-        final String domain = card.getString("domain");
+        final String appUrlResolved = ParcelableCardEntityUtils.getString(card, "app_url_resolved");
+        final String domain = ParcelableCardEntityUtils.getString(card, "domain");
         if (domain != null && appUrlResolved != null) {
             final Uri uri = Uri.parse(appUrlResolved);
             final String paramV = uri.getQueryParameter("v");

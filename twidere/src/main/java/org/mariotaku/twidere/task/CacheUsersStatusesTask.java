@@ -32,7 +32,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.TwitterContentUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterWrapper.TwitterListResponse;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
@@ -66,7 +66,7 @@ public class CacheUsersStatusesTask extends TaskRunnable<TwitterListResponse<Sta
                 final Set<ContentValues> hashTagValues = new HashSet<>();
 
                 statusesValues.add(ContentValuesCreator.createStatus(status, params.accountId));
-                final String text = TwitterContentUtils.unescapeTwitterStatusText(status.getText());
+                final String text = InternalTwitterContentUtils.unescapeTwitterStatusText(status.getText());
                 for (final String hashtag : extractor.extractHashtags(text)) {
                     final ContentValues values = new ContentValues();
                     values.put(CachedHashtags.NAME, hashtag);

@@ -76,6 +76,7 @@ import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
 import org.mariotaku.twidere.model.message.UserListCreatedEvent;
 import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
@@ -614,7 +615,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     Log.w(LOGTAG, e);
                 }
                 final User user = TwitterWrapper.tryShowUser(twitter, mAccountId, null);
-                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId));
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId));
             } catch (TwitterException | FileNotFoundException e) {
                 return SingleResponse.getInstance(e);
             }
@@ -652,7 +653,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     Log.w(LOGTAG, e);
                 }
                 final User user = TwitterWrapper.tryShowUser(twitter, mAccountId, null);
-                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId));
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId));
             } catch (TwitterException | FileNotFoundException e) {
                 return SingleResponse.getInstance(e);
             }
@@ -856,7 +857,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 values.put(CachedRelationships.USER_ID, user_id);
                 values.put(CachedRelationships.BLOCKING, true);
                 mResolver.insert(CachedRelationships.CONTENT_URI, values);
-                return SingleResponse.getInstance(new ParcelableUser(user, account_id), null);
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, account_id), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
@@ -976,7 +977,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             try {
                 final User user = twitter.createFriendship(user_id);
                 Utils.setLastSeen(mContext, user.getId(), System.currentTimeMillis());
-                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
@@ -1092,7 +1093,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         Expression.equals(Statuses.USER_ID, mUserId));
                 mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), null);
 
-                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
@@ -1390,7 +1391,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             try {
                 final User user = twitter.destroyBlock(mUserId);
                 Utils.setLastSeen(mContext, user.getId(), -1);
-                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
@@ -1632,7 +1633,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                             Expression.or(Expression.equals(Statuses.USER_ID, user_id),
                                     Expression.equals(Statuses.RETWEETED_BY_USER_ID, user_id)));
                     mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), null);
-                    return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
+                    return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId), null);
                 } catch (final TwitterException e) {
                     return SingleResponse.getInstance(null, e);
                 }
@@ -1674,7 +1675,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             try {
                 final User user = twitter.destroyMute(mUserId);
                 Utils.setLastSeen(mContext, user.getId(), -1);
-                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId), null);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(null, e);
             }
@@ -2083,7 +2084,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter != null) {
                 try {
                     final User user = twitter.reportSpam(user_id);
-                    return SingleResponse.getInstance(new ParcelableUser(user, mAccountId), null);
+                    return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId), null);
                 } catch (final TwitterException e) {
                     return SingleResponse.getInstance(null, e);
                 }

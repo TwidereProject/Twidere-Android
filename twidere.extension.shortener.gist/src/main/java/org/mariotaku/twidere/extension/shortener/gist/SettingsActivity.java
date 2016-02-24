@@ -21,9 +21,6 @@ package org.mariotaku.twidere.extension.shortener.gist;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 
 public class SettingsActivity extends PreferenceActivity {

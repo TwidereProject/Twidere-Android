@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by mariotaku on 16/1/29.
@@ -22,6 +23,9 @@ public class TwitterDateConverterTest {
         testDate("Thu Jan 28 11:08:47 +0000 2016");
         testDate("Sat Oct 03 16:05:32 +0000 2015");
         testDate("Tue Jan 26 18:30:19 +0100 2016");
+        assertNull(converter.getFromString("Tue Jan 26 18:30:19 +0100"));
+        assertNull(converter.getFromString("Tue"));
+        assertNull(converter.getFromString("++++"));
     }
 
     private void testDate(String s) throws ParseException {

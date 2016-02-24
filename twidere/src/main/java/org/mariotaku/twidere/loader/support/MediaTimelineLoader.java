@@ -32,8 +32,8 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.Utils;
 
@@ -98,7 +98,7 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
         final long retweetUserId = status.is_retweet ? status.user_id : -1;
-        return !isMyTimeline() && TwitterContentUtils.isFiltered(database, retweetUserId, status.text_plain,
+        return !isMyTimeline() && InternalTwitterContentUtils.isFiltered(database, retweetUserId, status.text_plain,
                 status.text_html, status.source, -1, status.quoted_user_id);
     }
 

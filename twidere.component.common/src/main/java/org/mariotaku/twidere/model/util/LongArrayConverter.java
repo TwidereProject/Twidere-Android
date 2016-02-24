@@ -21,9 +21,9 @@ package org.mariotaku.twidere.model.util;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import org.mariotaku.library.objectcursor.converter.CursorFieldConverter;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -33,11 +33,52 @@ import java.lang.reflect.ParameterizedType;
 public class LongArrayConverter implements CursorFieldConverter<long[]> {
     @Override
     public long[] parseField(Cursor cursor, int columnIndex, ParameterizedType fieldType) {
-        return TwidereArrayUtils.parseLongArray(cursor.getString(columnIndex), ',');
+        final String string = cursor.getString(columnIndex);
+        if (TextUtils.isEmpty(string)) return null;
+
+        long[] temp = new long[0];
+        int len = 0;
+        int offset = 0;
+        try {
+            while (true) {
+                int index = string.indexOf(',', offset);
+                if (index == -1) {
+                    temp = putElement(temp, Long.parseLong(string.substring(offset)), len++);
+                    long[] out = new long[len];
+                    System.arraycopy(temp, 0, out, 0, len);
+                    return out;
+                } else {
+                    temp = putElement(temp, Long.parseLong(string.substring(offset, index)), len++);
+                    offset = (index + 1);
+                }
+            }
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     @Override
     public void writeField(ContentValues values, long[] object, String columnName, ParameterizedType fieldType) {
-        values.put(columnName, TwidereArrayUtils.toString(object, ',', false));
+        if (object == null) return;
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0, j = object.length; i < j; i++) {
+            if (i > 0) {
+                sb.append(',');
+            }
+            sb.append(object[i]);
+        }
+        values.put(columnName, sb.toString());
+    }
+
+    private static long[] putElement(long[] array, long element, int index) {
+        long[] out;
+        if (index < array.length) {
+            out = array;
+        } else {
+            out = new long[Math.max(1, array.length) * 2];
+            System.arraycopy(array, 0, out, 0, array.length);
+        }
+        out[index] = element;
+        return out;
     }
 }

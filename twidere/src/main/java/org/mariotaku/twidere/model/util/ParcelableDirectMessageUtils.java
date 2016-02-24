@@ -3,6 +3,7 @@ package org.mariotaku.twidere.model.util;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.util.Date;
@@ -25,7 +26,7 @@ public class ParcelableDirectMessageUtils {
         result.timestamp = getTime(message.getCreatedAt());
         result.sender_id = sender.getId();
         result.recipient_id = recipient.getId();
-        result.text_html = TwitterContentUtils.formatDirectMessageText(message);
+        result.text_html = InternalTwitterContentUtils.formatDirectMessageText(message);
         result.text_plain = message.getText();
         result.sender_name = sender.getName();
         result.recipient_name = recipient.getName();

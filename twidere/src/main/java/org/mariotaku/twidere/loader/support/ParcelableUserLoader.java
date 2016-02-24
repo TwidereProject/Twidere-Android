@@ -35,6 +35,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -111,7 +112,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final ContentValues cachedUserValues = createCachedUser(twitterUser);
             final long userId = twitterUser.getId();
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
-            final ParcelableUser user = new ParcelableUser(twitterUser, mAccountId);
+            final ParcelableUser user = ParcelableUserUtils.fromUser(twitterUser, mAccountId);
             if (isMyAccount(context, userId)) {
                 final ContentValues accountValues = new ContentValues();
                 accountValues.put(Accounts.NAME, user.name);

@@ -39,12 +39,12 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.io.File;
@@ -126,7 +126,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             }
             statuses = getStatuses(twitter, paging);
             if (!TwitterAPIFactory.isOfficialTwitterInstance(context, twitter)) {
-                TwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
+                InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
             }
         } catch (final TwitterException e) {
             // mHandler.post(new ShowErrorRunnable(e));

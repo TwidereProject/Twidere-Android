@@ -23,15 +23,14 @@ import android.util.Log;
 
 import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
@@ -75,38 +74,33 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
     }
 
     private Date parseTwitterDate(String string) {
-        final String[] segs = StringUtils.split(string, ' ');
-        if (segs.length != 6) {
+        final List<String> segs = split(string, " ");
+        if (segs.size() != 6) {
             return null;
         }
-        final String[] timeSegs = StringUtils.split(segs[3], ':');
-        if (timeSegs.length != 3) {
+        final List<String> timeSegs = split(segs.get(3), ":");
+        if (timeSegs.size() != 3) {
             return null;
         }
 
         final GregorianCalendar calendar = new GregorianCalendar(TIME_ZONE, LOCALE);
         calendar.clear();
-        final int monthIdx = ArrayUtils.indexOf(MONTH_NAMES, segs[1]);
+        final int monthIdx = indexOf(MONTH_NAMES, segs.get(1));
         if (monthIdx < 0) {
             return null;
         }
-        calendar.set(Calendar.YEAR, Integer.parseInt(segs[5]));
+        calendar.set(Calendar.YEAR, Integer.parseInt(segs.get(5)));
         calendar.set(Calendar.MONTH, monthIdx);
-        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(segs[2]));
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSegs[0]));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(timeSegs[1]));
-        calendar.set(Calendar.SECOND, Integer.parseInt(timeSegs[2]));
-        calendar.setTimeZone(SimpleTimeZone.getTimeZone(getTimezoneText(segs[4])));
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(segs.get(2)));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSegs.get(0)));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(timeSegs.get(1)));
+        calendar.set(Calendar.SECOND, Integer.parseInt(timeSegs.get(2)));
+        calendar.setTimeZone(SimpleTimeZone.getTimeZone(getTimezoneText(segs.get(4))));
         final Date date = calendar.getTime();
-        if (!WEEK_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1].equals(segs[0])) {
+        if (!WEEK_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1].equals(segs.get(0))) {
             return null;
         }
         return date;
-    }
-
-    private String getTimezoneText(String seg) {
-        if (seg.startsWith("GMT") || seg.startsWith("UTC")) return seg;
-        return "GMT" + seg;
     }
 
     @Override
@@ -132,6 +126,36 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
         sb.append(' ');
         sb.append(calendar.get(Calendar.YEAR));
         return sb.toString();
+    }
+
+    private String getTimezoneText(String seg) {
+        if (seg.startsWith("GMT") || seg.startsWith("UTC")) return seg;
+        return "GMT" + seg;
+    }
+
+    private static List<String> split(String input, String delim) {
+        List<String> l = new ArrayList<>();
+        int offset = 0;
+
+        while (true) {
+            int index = input.indexOf(delim, offset);
+            if (index == -1) {
+                l.add(input.substring(offset));
+                return l;
+            } else {
+                l.add(input.substring(offset, index));
+                offset = (index + delim.length());
+            }
+        }
+    }
+
+    private static int indexOf(String[] input, String find) {
+        for (int i = 0, inputLength = input.length; i < inputLength; i++) {
+            if (find == null) {
+                if (input[i] == null) return i;
+            } else if (find.equals(input[i])) return i;
+        }
+        return -1;
     }
 
 }

@@ -19,17 +19,12 @@
 
 package org.mariotaku.twidere.util.content;
 
-import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.os.CancellationSignal;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.util.Collection;
@@ -54,7 +49,7 @@ public class ContentResolverUtils {
         int rowsDeleted = 0;
         for (int i = 0; i < blocks_count; i++) {
             final int start = i * MAX_BULK_COUNT, end = Math.min(start + MAX_BULK_COUNT, colValuesLength);
-            final String[] block = TwidereArrayUtils.toStringArray(ArrayUtils.subarray(colValues, start, end));
+            final String[] block = TwidereArrayUtils.toStringArray(colValues, start, end);
             if (valuesIsString) {
                 final StringBuilder where = new StringBuilder(inColumn + " IN(" + TwidereArrayUtils.toStringForSQL(block)
                         + ")");
@@ -91,20 +86,6 @@ public class ContentResolverUtils {
             rowsInserted += resolver.bulkInsert(uri, block);
         }
         return rowsInserted;
-    }
-
-    public static Cursor query(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-                               final String[] projection, final String selection,
-                               final String[] selectionArgs, final String sortOrder) {
-        return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static Cursor query(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-                               final String[] projection, final String selection,
-                               final String[] selectionArgs, final String sortOrder,
-                               final CancellationSignal cancellationSignal) {
-        return resolver.query(uri, projection, selection, selectionArgs, sortOrder, cancellationSignal);
     }
 
 }

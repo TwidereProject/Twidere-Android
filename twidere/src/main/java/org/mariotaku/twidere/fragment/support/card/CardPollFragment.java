@@ -56,6 +56,7 @@ import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.support.ViewSupport;
 
@@ -133,15 +134,15 @@ public class CardPollFragment extends BaseSupportFragment implements
         mCard = card;
         final int choicesCount = getChoicesCount(card);
         int votesSum = 0;
-        final boolean countsAreFinal = card.getAsBoolean("counts_are_final", false);
-        final int selectedChoice = card.getAsInteger("selected_choice", -1);
-        final Date endDatetimeUtc = card.getAsDate("end_datetime_utc", new Date());
+        final boolean countsAreFinal = ParcelableCardEntityUtils.getAsBoolean(card, "counts_are_final", false);
+        final int selectedChoice = ParcelableCardEntityUtils.getAsInteger(card, "selected_choice", -1);
+        final Date endDatetimeUtc = ParcelableCardEntityUtils.getAsDate(card, "end_datetime_utc", new Date());
         final boolean hasChoice = selectedChoice != -1;
         final boolean isMyPoll = status.account_id == status.user_id;
         final boolean showResult = countsAreFinal || isMyPoll || hasChoice;
         for (int i = 0; i < choicesCount; i++) {
             final int choiceIndex = i + 1;
-            votesSum += card.getAsInteger("choice" + choiceIndex + "_count", 0);
+            votesSum += ParcelableCardEntityUtils.getAsInteger(card, "choice" + choiceIndex + "_count", 0);
         }
 
         final View.OnClickListener clickListener = new View.OnClickListener() {
@@ -179,7 +180,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                                 if (caps == null) return null;
                                 try {
                                     final CardEntity cardEntity = caps.sendPassThrough(cardDataMap).getCard();
-                                    return ParcelableCardEntity.fromCardEntity(cardEntity, card.account_id);
+                                    return ParcelableCardEntityUtils.fromCardEntity(cardEntity, card.account_id);
                                 } catch (TwitterException e) {
                                     Log.w(LOGTAG, e);
                                 }
@@ -203,8 +204,8 @@ public class CardPollFragment extends BaseSupportFragment implements
             final RadioButton choiceRadioButton = (RadioButton) pollItem.findViewById(R.id.choice_button);
 
             final int choiceIndex = i + 1;
-            final String label = card.getAsString("choice" + choiceIndex + "_label", null);
-            final int value = card.getAsInteger("choice" + choiceIndex + "_count", 0);
+            final String label = ParcelableCardEntityUtils.getAsString(card, "choice" + choiceIndex + "_label", null);
+            final int value = ParcelableCardEntityUtils.getAsInteger(card, "choice" + choiceIndex + "_count", 0);
             if (label == null) throw new NullPointerException();
             final float choicePercent = votesSum == 0 ? 0 : value / (float) votesSum;
             choiceLabelView.setText(label);
@@ -350,7 +351,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                 if (card == null || card.getName() == null) {
                     return null;
                 }
-                final ParcelableCardEntity parcelableCard = ParcelableCardEntity.fromCardEntity(card, mAccountId);
+                final ParcelableCardEntity parcelableCard = ParcelableCardEntityUtils.fromCardEntity(card, mAccountId);
 
                 return parcelableCard;
             } catch (TwitterException e) {

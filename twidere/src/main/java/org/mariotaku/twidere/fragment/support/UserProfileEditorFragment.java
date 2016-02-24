@@ -59,6 +59,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTask;
@@ -483,7 +484,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
                     // User profile unchanged
                     return SingleResponse.getInstance();
                 }
-                return SingleResponse.getInstance(new ParcelableUser(user, mAccountId));
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId));
             } catch (TwitterException e) {
                 return SingleResponse.getInstance(e);
             }

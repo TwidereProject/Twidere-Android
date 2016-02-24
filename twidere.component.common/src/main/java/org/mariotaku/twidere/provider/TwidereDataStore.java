@@ -242,6 +242,8 @@ public interface TwidereDataStore {
 
         String DESCRIPTION_HTML = "description_html";
 
+        String DESCRIPTION_UNESCAPED = "description_unescaped";
+
         String DESCRIPTION_EXPANDED = "description_expanded";
 
         String LOCATION = "location";

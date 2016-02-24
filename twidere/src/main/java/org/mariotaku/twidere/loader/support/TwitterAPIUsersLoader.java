@@ -27,6 +27,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.util.Collections;
@@ -58,7 +59,7 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
             if (hasId(user.getId())) {
                 continue;
             }
-            data.add(new ParcelableUser(user, mAccountId, pos));
+            data.add(ParcelableUserUtils.fromUser(user, mAccountId, pos));
             pos++;
         }
         Collections.sort(data);

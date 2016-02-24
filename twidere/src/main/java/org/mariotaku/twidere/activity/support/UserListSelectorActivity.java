@@ -51,10 +51,11 @@ import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.message.UserListCreatedEvent;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.mariotaku.twidere.model.message.UserListCreatedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -357,7 +358,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
                 final ResponseList<User> lists = twitter.searchUsers(mName, paging);
                 final List<ParcelableUser> data = new ArrayList<>();
                 for (final User item : lists) {
-                    data.add(new ParcelableUser(item, mAccountId));
+                    data.add(ParcelableUserUtils.fromUser(item, mAccountId));
                 }
                 return SingleResponse.getInstance(data);
             } catch (final TwitterException e) {

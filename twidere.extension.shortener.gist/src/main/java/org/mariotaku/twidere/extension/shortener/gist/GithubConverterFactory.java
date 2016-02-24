@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.extension.shortener.gist;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.SimpleArrayMap;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -34,14 +33,16 @@ import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mariotaku on 15/5/5.
  */
 public class GithubConverterFactory extends RestConverter.SimpleFactory<GithubException> {
 
-    private static SimpleArrayMap<Type, RestConverter<HttpResponse, ?, GithubException>> sResponseConverters = new SimpleArrayMap<>();
-    private static SimpleArrayMap<Type, RestConverter<?, Body, GithubException>> sBodyConverters = new SimpleArrayMap<>();
+    private static Map<Type, RestConverter<HttpResponse, ?, GithubException>> sResponseConverters = new HashMap<>();
+    private static Map<Type, RestConverter<?, Body, GithubException>> sBodyConverters = new HashMap<>();
 
 
     static {
@@ -102,8 +103,7 @@ public class GithubConverterFactory extends RestConverter.SimpleFactory<GithubEx
         @Override
         public Object convert(HttpResponse httpResponse) throws IOException, ConvertException, GithubException {
             final Body body = httpResponse.getBody();
-            final Object object = parseOrThrow(body, mapper);
-            return object;
+            return parseOrThrow(body, mapper);
         }
     }
 

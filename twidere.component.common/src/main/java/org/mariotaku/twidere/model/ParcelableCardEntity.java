@@ -22,8 +22,8 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.ArrayMap;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -32,13 +32,10 @@ import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 
-import java.text.ParseException;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -81,74 +78,21 @@ public final class ParcelableCardEntity implements Parcelable {
 
     }
 
-    public ParcelableCardEntity(CardEntity card, long accountId) {
-        name = card.getName();
-        url = card.getUrl();
-        users = ParcelableUser.fromUsersArray(card.getUsers(), accountId);
-        account_id = accountId;
-        values = ParcelableBindingValue.from(card.getBindingValues());
-    }
-
-    public static ParcelableCardEntity fromCardEntity(CardEntity card, long accountId) {
-        if (card == null) return null;
-        return new ParcelableCardEntity(card, accountId);
-    }
-
     @Nullable
-    public ParcelableBindingValue getValue(@Nullable String key) {
-        if (key == null || values == null) return null;
+    public ParcelableBindingValue getValue(@NonNull String key) {
+        if (values == null) return null;
         return values.get(key);
-    }
-
-    public boolean getAsBoolean(@Nullable String key, boolean def) {
-        final ParcelableBindingValue value = getValue(key);
-        if (value == null) return def;
-        return Boolean.parseBoolean(value.value);
-    }
-
-    public String getAsString(@Nullable String key, String def) {
-        final ParcelableBindingValue value = getValue(key);
-        if (value == null) return def;
-        return value.value;
-    }
-
-    public String getString(@Nullable String key) {
-        final ParcelableBindingValue value = getValue(key);
-        if (value == null || !CardEntity.BindingValue.TYPE_STRING.equals(value.type)) return null;
-        return value.value;
-    }
-
-    public int getAsInteger(@Nullable String key, int def) {
-        final ParcelableBindingValue value = getValue(key);
-        if (value == null) return def;
-        return NumberUtils.toInt(value.value, def);
-    }
-
-    public long getAsLong(@Nullable String key, long def) {
-        final ParcelableBindingValue value = getValue(key);
-        if (value == null) return def;
-        return NumberUtils.toLong(value.value, def);
-    }
-
-    public Date getAsDate(String key, Date def) {
-        final ParcelableBindingValue value = getValue(key);
-        if (value == null) return def;
-        try {
-            return DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.parse(value.value);
-        } catch (ParseException e) {
-            return def;
-        }
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("account_id", account_id)
-                .append("name", name)
-                .append("url", url)
-                .append("users", users)
-                .append("values", values)
-                .toString();
+        return "ParcelableCardEntity{" +
+                "account_id=" + account_id +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", users=" + Arrays.toString(users) +
+                ", values=" + values +
+                '}';
     }
 
     @Override
@@ -181,7 +125,7 @@ public final class ParcelableCardEntity implements Parcelable {
         public Map<String, ParcelableBindingValue> read(Parcel in) {
             final int size = in.readInt();
             if (size == -1) return null;
-            final Map<String, ParcelableBindingValue> map = new ArrayMap<>(size);
+            final Map<String, ParcelableBindingValue> map = new HashMap<>(size);
             for (int i = 0; i < size; i++) {
                 final String key = in.readString();
                 final ParcelableBindingValue value = in.readParcelable(ParcelableBindingValue.class.getClassLoader());
@@ -234,15 +178,6 @@ public final class ParcelableCardEntity implements Parcelable {
                 this.type = CardEntity.BindingValue.TYPE_USER;
                 this.value = String.valueOf(((CardEntity.UserValue) value).getUserId());
             }
-        }
-
-        public static Map<String, ParcelableBindingValue> from(Map<String, CardEntity.BindingValue> bindingValues) {
-            if (bindingValues == null) return null;
-            final ArrayMap<String, ParcelableBindingValue> map = new ArrayMap<>();
-            for (Map.Entry<String, CardEntity.BindingValue> entry : bindingValues.entrySet()) {
-                map.put(entry.getKey(), new ParcelableBindingValue(entry.getValue()));
-            }
-            return map;
         }
 
         @Override

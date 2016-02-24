@@ -27,6 +27,7 @@ import org.mariotaku.twidere.fragment.support.card.CardBrowserFragment;
 import org.mariotaku.twidere.fragment.support.card.CardPollFragment;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -46,7 +47,7 @@ public abstract class TwitterCardFragmentFactory {
     @Nullable
     public static Fragment createGenericPlayerFragment(@Nullable ParcelableCardEntity card, Bundle args) {
         if (card == null) return null;
-        final String playerUrl = card.getString("player_url");
+        final String playerUrl = ParcelableCardEntityUtils.getString(card, "player_url");
         if (playerUrl == null) return null;
         return CardBrowserFragment.show(playerUrl, args);
     }

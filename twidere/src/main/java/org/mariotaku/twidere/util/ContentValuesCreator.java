@@ -48,6 +48,7 @@ import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -145,7 +146,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createCachedUser(final User user) {
         if (user == null) return null;
         final ContentValues values = new ContentValues();
-        ParcelableUserValuesCreator.writeTo(new ParcelableUser(user, -1), values);
+        ParcelableUserValuesCreator.writeTo(ParcelableUserUtils.fromUser(user, -1), values);
         return values;
     }
 
@@ -167,7 +168,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         } else {
             values.put(DirectMessages.CONVERSATION_ID, sender.getId());
         }
-        final String text_html = TwitterContentUtils.formatDirectMessageText(message);
+        final String text_html = InternalTwitterContentUtils.formatDirectMessageText(message);
         values.put(DirectMessages.TEXT_HTML, text_html);
         values.put(DirectMessages.TEXT_PLAIN, message.getText());
         values.put(DirectMessages.TEXT_UNESCAPED, toPlainText(text_html));

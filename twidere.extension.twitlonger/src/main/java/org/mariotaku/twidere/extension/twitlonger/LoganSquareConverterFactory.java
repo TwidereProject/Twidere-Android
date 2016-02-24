@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.extension.twitlonger;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.SimpleArrayMap;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -32,14 +31,16 @@ import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mariotaku on 15/5/5.
  */
 public class LoganSquareConverterFactory extends RestConverter.SimpleFactory<TwitLongerException> {
 
-    private static SimpleArrayMap<Type, RestConverter<HttpResponse, ?, TwitLongerException>> sResponseConverters = new SimpleArrayMap<>();
-    private static SimpleArrayMap<Type, RestConverter<?, Body, TwitLongerException>> sBodyConverters = new SimpleArrayMap<>();
+    private static Map<Type, RestConverter<HttpResponse, ?, TwitLongerException>> sResponseConverters = new HashMap<>();
+    private static Map<Type, RestConverter<?, Body, TwitLongerException>> sBodyConverters = new HashMap<>();
 
 
     static {

@@ -33,7 +33,6 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.model.ComposingStatus;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
@@ -44,8 +43,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
 import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
-import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -147,12 +144,18 @@ public final class Twidere implements TwidereConstants {
         if (info.metaData == null) return Permission.NONE;
         final String[] required = parsePermissions(info.metaData.getString(METADATA_KEY_EXTENSION_PERMISSIONS));
         final String[] permissions = getPermissions(context, pname);
-        if (ArrayUtils.contains(permissions, PERMISSION_DENIED)) {
+        return checkPermissionRequirement(required, permissions);
+    }
+
+    public static int checkPermissionRequirement(@NonNull String[] required, @NonNull String[] permissions) {
+        if (indexOf(permissions, PERMISSION_DENIED) != -1) {
             return Permission.DENIED;
-        } else if (TwidereArrayUtils.contains(permissions, required)) {
+        } else {
+            for (String s : required) {
+                if (indexOf(permissions, s) == -1) return Permission.NONE;
+            }
             return Permission.GRANTED;
         }
-        return Permission.NONE;
     }
 
     @NonNull
@@ -231,8 +234,7 @@ public final class Twidere implements TwidereConstants {
         if (context == null || accountId < 0) return null;
         final String selection = Accounts.ACCOUNT_ID + " = ?";
         final String[] selectionArgs = {String.valueOf(accountId)};
-        Cursor cur = ContentResolverUtils.query(context.getContentResolver(), Accounts.CONTENT_URI,
-                Accounts.COLUMNS, selection, selectionArgs, null);
+        Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS, selection, selectionArgs, null);
         if (cur == null) return null;
         try {
             if (cur.moveToFirst()) {
@@ -244,6 +246,14 @@ public final class Twidere implements TwidereConstants {
         return null;
     }
 
+    private static int indexOf(String[] input, String find) {
+        for (int i = 0, inputLength = input.length; i < inputLength; i++) {
+            if (find == null) {
+                if (input[i] == null) return i;
+            } else if (find.equals(input[i])) return i;
+        }
+        return -1;
+    }
 
     @IntDef({Permission.DENIED, Permission.NONE, Permission.GRANTED})
     public @interface Permission {

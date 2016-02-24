@@ -13,11 +13,10 @@ import org.mariotaku.twidere.api.twitter.model.ExtendedEntitySupport;
 import org.mariotaku.twidere.api.twitter.model.MediaEntity;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
-import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class ParcelableMediaUtils {
         }
         if (mediaEntities != null) {
             for (final MediaEntity media : mediaEntities) {
-                final String mediaURL = TwitterContentUtils.getMediaUrl(media);
+                final String mediaURL = InternalTwitterContentUtils.getMediaUrl(media);
                 if (mediaURL != null) {
                     list.add(ParcelableMediaUtils.fromMediaEntity(media));
                 }
@@ -64,9 +63,9 @@ public class ParcelableMediaUtils {
 
     private static ParcelableMedia fromMediaEntity(MediaEntity entity) {
         final ParcelableMedia media = new ParcelableMedia();
-        media.url = TwitterContentUtils.getMediaUrl(entity);
-        media.media_url = TwitterContentUtils.getMediaUrl(entity);
-        media.preview_url = TwitterContentUtils.getMediaUrl(entity);
+        media.url = InternalTwitterContentUtils.getMediaUrl(entity);
+        media.media_url = InternalTwitterContentUtils.getMediaUrl(entity);
+        media.preview_url = InternalTwitterContentUtils.getMediaUrl(entity);
         media.start = entity.getStart();
         media.end = entity.getEnd();
         media.type = ParcelableMediaUtils.getTypeInt(entity.getType());
@@ -135,7 +134,7 @@ public class ParcelableMediaUtils {
         if ("animated_gif".equals(name) || "player".equals(name)) {
             final ParcelableMedia media = new ParcelableMedia();
             final CardEntity.BindingValue playerStreamUrl = card.getBindingValue("player_stream_url");
-            media.card = ParcelableCardEntity.fromCardEntity(card, -1);
+            media.card = ParcelableCardEntityUtils.fromCardEntity(card, -1);
             CardEntity.StringValue appUrlResolved = (CardEntity.StringValue) card.getBindingValue("app_url_resolved");
             media.url = checkUrl(appUrlResolved) ? appUrlResolved.getValue() : card.getUrl();
             if ("animated_gif".equals(name)) {
@@ -180,7 +179,7 @@ public class ParcelableMediaUtils {
 
             final ParcelableMedia media = new ParcelableMedia();
             media.url = card.getUrl();
-            media.card = ParcelableCardEntity.fromCardEntity(card, -1);
+            media.card = ParcelableCardEntityUtils.fromCardEntity(card, -1);
             media.type = ParcelableMedia.Type.IMAGE;
             media.media_url = ((CardEntity.ImageValue) photoImageFullSize).getUrl();
             media.width = ((CardEntity.ImageValue) photoImageFullSize).getWidth();

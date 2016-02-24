@@ -19,12 +19,11 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import android.support.v4.util.ArrayMap;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -66,7 +65,7 @@ public class CardEntity {
     @OnJsonParseComplete
     void onParseComplete() {
         if (rawBindingValues != null) {
-            bindingValues = new ArrayMap<>();
+            bindingValues = new HashMap<>();
             for (Map.Entry<String, RawBindingValue> entry : rawBindingValues.entrySet()) {
                 bindingValues.put(entry.getKey(), entry.getValue().getBindingValue());
             }

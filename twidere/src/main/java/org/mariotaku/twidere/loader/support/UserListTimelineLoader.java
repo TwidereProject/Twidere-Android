@@ -32,7 +32,7 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.util.TwitterContentUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 
 public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
 
@@ -67,7 +67,7 @@ public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
 
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        return TwitterContentUtils.isFiltered(database, status, true);
+        return InternalTwitterContentUtils.isFiltered(database, status, true);
     }
 
 }

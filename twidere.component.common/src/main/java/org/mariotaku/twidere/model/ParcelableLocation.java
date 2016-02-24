@@ -29,7 +29,6 @@ import android.support.annotation.Nullable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.library.objectcursor.converter.CursorFieldConverter;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -79,20 +78,32 @@ public class ParcelableLocation implements Parcelable {
         longitude = in.readDouble();
     }
 
-    public ParcelableLocation(final String locationString) {
-        if (locationString == null) {
-            latitude = Double.NaN;
-            longitude = Double.NaN;
-            return;
-        }
+    @Nullable
+    public static ParcelableLocation fromString(@Nullable final String locationString) {
+        if (locationString == null) return null;
         final String[] longlat = locationString.split(",");
         if (longlat.length != 2) {
-            latitude = Double.NaN;
-            longitude = Double.NaN;
-        } else {
-            latitude = NumberUtils.toDouble(longlat[0], Double.NaN);
-            longitude = NumberUtils.toDouble(longlat[1], Double.NaN);
+            return null;
         }
+
+        ParcelableLocation obj = new ParcelableLocation();
+        try {
+            obj.latitude = Double.parseDouble(longlat[0]);
+            obj.longitude = Double.parseDouble(longlat[1]);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        if (isValidLocation(obj)) return obj;
+        return null;
+    }
+
+    public static String toString(final ParcelableLocation location) {
+        if (!isValidLocation(location)) return null;
+        return toString(location.latitude, location.longitude);
+    }
+
+    public static String toString(double latitude, double longitude) {
+        return latitude + "," + longitude;
     }
 
     @Override
@@ -166,27 +177,12 @@ public class ParcelableLocation implements Parcelable {
         out.writeDouble(longitude);
     }
 
-    public static ParcelableLocation fromString(final String string) {
-        final ParcelableLocation location = new ParcelableLocation(string);
-        if (ParcelableLocation.isValidLocation(location)) return location;
-        return null;
-    }
-
     public static boolean isValidLocation(final ParcelableLocation location) {
         return location != null && location.isValid();
     }
 
     public static GeoLocation toGeoLocation(final ParcelableLocation location) {
         return isValidLocation(location) ? location.toGeoLocation() : null;
-    }
-
-    public static String toString(final ParcelableLocation location) {
-        if (!isValidLocation(location)) return null;
-        return toString(location.latitude, location.longitude);
-    }
-
-    public static String toString(double latitude, double longitude) {
-        return latitude + "," + longitude;
     }
 
     public static class Converter implements CursorFieldConverter<ParcelableLocation> {

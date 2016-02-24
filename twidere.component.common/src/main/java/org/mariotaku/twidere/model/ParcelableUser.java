@@ -19,11 +19,9 @@
 
 package org.mariotaku.twidere.model;
 
-import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -33,13 +31,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.api.twitter.model.UrlEntity;
-import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
-import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
-import org.mariotaku.twidere.util.HtmlEscapeHelper;
-import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 
 
 @ParcelablePlease(allFields = false)
@@ -120,6 +112,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public String description_html;
     @ParcelableThisPlease
     @JsonField(name = "description_unescaped")
+    @CursorField(CachedUsers.DESCRIPTION_UNESCAPED)
     public String description_unescaped;
     @ParcelableThisPlease
     @JsonField(name = "description_expanded")
@@ -219,43 +212,6 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         is_basic = true;
     }
 
-    public ParcelableUser(final User user, final long account_id) {
-        this(user, account_id, 0);
-    }
-
-    public ParcelableUser(final User user, final long account_id, final long position) {
-        this.position = position;
-        this.account_id = account_id;
-        final UrlEntity[] urls_url_entities = user.getUrlEntities();
-        id = user.getId();
-        created_at = user.getCreatedAt().getTime();
-        is_protected = user.isProtected();
-        is_verified = user.isVerified();
-        name = user.getName();
-        screen_name = user.getScreenName();
-        description_plain = user.getDescription();
-        description_html = TwitterContentUtils.formatUserDescription(user);
-        description_expanded = TwitterContentUtils.formatExpandedUserDescription(user);
-        description_unescaped = HtmlEscapeHelper.toPlainText(description_html);
-        location = user.getLocation();
-        profile_image_url = TwitterContentUtils.getProfileImageUrl(user);
-        profile_banner_url = user.getProfileBannerImageUrl();
-        url = user.getUrl();
-        url_expanded = url != null && urls_url_entities != null && urls_url_entities.length > 0 ? urls_url_entities[0].getExpandedUrl() : null;
-        is_follow_request_sent = user.isFollowRequestSent();
-        followers_count = user.getFollowersCount();
-        friends_count = user.getFriendsCount();
-        statuses_count = user.getStatusesCount();
-        favorites_count = user.getFavouritesCount();
-        listed_count = user.getListedCount();
-        media_count = user.getMediaCount();
-        is_following = user.isFollowing();
-        background_color = ParseUtils.parseColor("#" + user.getProfileBackgroundColor(), 0);
-        link_color = ParseUtils.parseColor("#" + user.getProfileLinkColor(), 0);
-        text_color = ParseUtils.parseColor("#" + user.getProfileTextColor(), 0);
-        is_cache = false;
-        is_basic = false;
-    }
 
     public static int calculateHashCode(long accountId, long userId) {
         final int prime = 31;
@@ -265,38 +221,12 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         return result;
     }
 
-    public static ParcelableUser[] fromUsersArray(@Nullable final User[] users, long account_id) {
-        if (users == null) return null;
-        final ParcelableUser[] result = new ParcelableUser[users.length];
-        for (int i = 0, j = users.length; i < j; i++) {
-            result[i] = new ParcelableUser(users[i], account_id);
-        }
-        return result;
-    }
-
-    public static ParcelableUser fromDirectMessageConversationEntry(final Cursor cursor) {
-        final long account_id = cursor.getLong(ConversationEntries.IDX_ACCOUNT_ID);
-        final long id = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);
-        final String name = cursor.getString(ConversationEntries.IDX_NAME);
-        final String screen_name = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
-        final String profile_image_url = cursor.getString(ConversationEntries.IDX_PROFILE_IMAGE_URL);
-        return new ParcelableUser(account_id, id, name, screen_name, profile_image_url);
-    }
-
-    public static ParcelableUser[] fromUsers(final User[] users, long accountId) {
-        if (users == null) return null;
-        int size = users.length;
-        final ParcelableUser[] result = new ParcelableUser[size];
-        for (int i = 0; i < size; i++) {
-            result[i] = new ParcelableUser(users[i], accountId);
-        }
-        return result;
-    }
-
     @AfterCursorObjectCreated
     void afterCursorObjectCreated() {
         is_cache = true;
-        description_unescaped = HtmlEscapeHelper.toPlainText(description_html);
+        if (description_unescaped == null) {
+            description_unescaped = description_plain;
+        }
         is_basic = description_plain == null || url == null || location == null;
     }
 
@@ -326,16 +256,39 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
 
     @Override
     public String toString() {
-        return "ParcelableUser{account_id=" + account_id + ", id=" + id + ", created_at=" + created_at + ", position="
-                + position + ", is_protected=" + is_protected + ", is_verified=" + is_verified
-                + ", is_follow_request_sent=" + is_follow_request_sent + ", is_following=" + is_following
-                + ", description_plain=" + description_plain + ", name=" + name + ", screen_name=" + screen_name
-                + ", location=" + location + ", profile_image_url=" + profile_image_url + ", profile_banner_url="
-                + profile_banner_url + ", url=" + url + ", url_expanded=" + url_expanded + ", description_html="
-                + description_html + ", description_unescaped=" + description_unescaped + ", description_expanded="
-                + description_expanded + ", followers_count=" + followers_count + ", friends_count=" + friends_count
-                + ", statuses_count=" + statuses_count + ", favorites_count=" + favorites_count + ", is_cache="
-                + is_cache + "}";
+        return "ParcelableUser{" +
+                "account_id=" + account_id +
+                ", account_color=" + account_color +
+                ", id=" + id +
+                ", created_at=" + created_at +
+                ", position=" + position +
+                ", is_protected=" + is_protected +
+                ", is_verified=" + is_verified +
+                ", is_follow_request_sent=" + is_follow_request_sent +
+                ", is_following=" + is_following +
+                ", description_plain='" + description_plain + '\'' +
+                ", name='" + name + '\'' +
+                ", screen_name='" + screen_name + '\'' +
+                ", location='" + location + '\'' +
+                ", profile_image_url='" + profile_image_url + '\'' +
+                ", profile_banner_url='" + profile_banner_url + '\'' +
+                ", url='" + url + '\'' +
+                ", url_expanded='" + url_expanded + '\'' +
+                ", description_html='" + description_html + '\'' +
+                ", description_unescaped='" + description_unescaped + '\'' +
+                ", description_expanded='" + description_expanded + '\'' +
+                ", followers_count=" + followers_count +
+                ", friends_count=" + friends_count +
+                ", statuses_count=" + statuses_count +
+                ", favorites_count=" + favorites_count +
+                ", listed_count=" + listed_count +
+                ", media_count=" + media_count +
+                ", background_color=" + background_color +
+                ", link_color=" + link_color +
+                ", text_color=" + text_color +
+                ", is_cache=" + is_cache +
+                ", is_basic=" + is_basic +
+                '}';
     }
 
     @Override

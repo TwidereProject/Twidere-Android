@@ -113,6 +113,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
@@ -123,6 +124,7 @@ import org.mariotaku.twidere.util.ContentListScrollListener;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.IntentUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
@@ -141,7 +143,6 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterCardUtils;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.CardMediaContainer;
@@ -2022,7 +2023,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         public void setTranslationResult(@Nullable TranslationResult translation) {
-            if (mStatus == null || translation == null || TwitterContentUtils.getOriginalId(mStatus)
+            if (mStatus == null || translation == null || InternalTwitterContentUtils.getOriginalId(mStatus)
                     != translation.getId()) {
                 mTranslationResult = null;
             } else {
@@ -2389,7 +2390,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final List<ParcelableUser> retweeters = new ArrayList<>();
             try {
                 for (Status status : twitter.getRetweets(mStatusId, paging)) {
-                    retweeters.add(new ParcelableUser(status.getUser(), mAccountId));
+                    retweeters.add(ParcelableUserUtils.fromUser(status.getUser(), mAccountId));
                 }
                 activitySummary.setRetweeters(retweeters);
                 final ContentValues statusValues = new ContentValues();
