@@ -98,6 +98,7 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.constant.IntentConstants;
+import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.loader.support.ConversationLoader;
 import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
 import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
@@ -422,7 +423,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_id, status.id);
                 } else {
-                    twitter.createFavoriteAsync(status.account_id, status.id);
+                    holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
                 }
                 break;
             }
@@ -1227,7 +1228,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 RetweetQuoteDialogFragment.show(fm, status);
                 return true;
             }
-            return Utils.handleMenuItemClick(activity, fragment, fm, manager, twitter, status, item);
+            return Utils.handleMenuItemClick(activity, fragment, fm, manager, twitter,
+                    status, item);
         }
 
         private void initViews() {
