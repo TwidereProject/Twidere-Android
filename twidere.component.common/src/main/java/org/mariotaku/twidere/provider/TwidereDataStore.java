@@ -64,6 +64,7 @@ public interface TwidereDataStore {
             CachedHashtags.CONTENT_URI, CachedTrends.Local.CONTENT_URI};
     Uri[] DIRECT_MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI,
             DirectMessages.Outbox.CONTENT_URI};
+    Uri[] ACTIVITIES_URIS = new Uri[]{Activities.AboutMe.CONTENT_URI};
 
     interface InsertedDateColumns {
         String INSERTED_DATE = "inserted_date";

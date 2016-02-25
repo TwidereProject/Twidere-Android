@@ -29,6 +29,9 @@ import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
+import android.text.TextUtils;
+
+import com.bluelinelabs.logansquare.JsonMapper;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.ArgsArray;
@@ -48,6 +51,7 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
+import org.mariotaku.twidere.model.UserFollowState;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -72,12 +76,14 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static android.text.TextUtils.isEmpty;
+import static org.mariotaku.twidere.provider.TwidereDataStore.ACTIVITIES_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.CACHE_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
@@ -395,7 +401,7 @@ public class DataStoreUtils implements Constants {
 
     public static int getActivitiesCount(final Context context, final Uri uri,
                                          final Expression extraWhere, final String[] extraWhereArgs,
-                                         final long sinceTimestamp, final long... accountIds) {
+                                         final long sinceTimestamp, boolean followingOnly, final long... accountIds) {
         if (context == null) return 0;
         final RawItemArray idsIn;
         if (accountIds == null || accountIds.length == 0 || (accountIds.length == 1 && accountIds[0] < 0)) {
@@ -414,6 +420,45 @@ public class DataStoreUtils implements Constants {
         expressions[1] = Expression.greaterThan(Activities.TIMESTAMP, sinceTimestamp);
         expressions[2] = buildActivityFilterWhereClause(getTableNameByUri(uri), null);
         final Expression selection = Expression.and(expressions);
+        // If followingOnly option is on, we have to iterate over items
+        if (followingOnly) {
+            final ContentResolver resolver = context.getContentResolver();
+            final String[] projection = new String[]{Activities.SOURCES};
+            final Cursor cur = resolver.query(uri, projection, selection.getSQL(), extraWhereArgs, null);
+            if (cur == null) return -1;
+            try {
+                final JsonMapper<UserFollowState> mapper;
+                try {
+                    mapper = LoganSquareMapperFinder.mapperFor(UserFollowState.class);
+                } catch (LoganSquareMapperFinder.ClassLoaderDeadLockException e) {
+                    return -1;
+                }
+                int total = 0;
+                cur.moveToFirst();
+                while (cur.isAfterLast()) {
+                    final String string = cur.getString(0);
+                    if (TextUtils.isEmpty(string)) continue;
+                    boolean hasFollowing = false;
+                    try {
+                        for (UserFollowState state : mapper.parseList(string)) {
+                            if (state.is_following) {
+                                hasFollowing = true;
+                                break;
+                            }
+                        }
+                    } catch (IOException e) {
+                        continue;
+                    }
+                    if (hasFollowing) {
+                        total++;
+                    }
+                    cur.moveToNext();
+                }
+                return total;
+            } finally {
+                cur.close();
+            }
+        }
         return queryCount(context, uri, selection.getSQL(), extraWhereArgs);
     }
 
@@ -648,24 +693,41 @@ public class DataStoreUtils implements Constants {
                     continue;
                 }
                 final String table = getTableNameByUri(uri);
-                final Expression account_where = new Expression(Statuses.ACCOUNT_ID + " = " + accountId);
+                final Expression accountWhere = new Expression(Statuses.ACCOUNT_ID + " = " + accountId);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
-                qb.select(new Column(Statuses._ID)).from(new Tables(table));
-                qb.where(Expression.equals(Statuses.ACCOUNT_ID, accountId));
-                qb.orderBy(new OrderBy(Statuses.STATUS_ID, false));
-                qb.limit(itemLimit);
-                final Expression where = Expression.and(Expression.notIn(new Column(Statuses._ID), qb.build()), account_where);
+                qb.select(new Column(Statuses._ID))
+                        .from(new Tables(table))
+                        .where(Expression.equals(Statuses.ACCOUNT_ID, accountId))
+                        .orderBy(new OrderBy(Statuses.STATUS_ID, false))
+                        .limit(itemLimit);
+                final Expression where = Expression.and(Expression.lesserThan(new Column(Statuses._ID),
+                        SQLQueryBuilder.select(SQLFunctions.MIN(new Column(Statuses._ID))).from(qb.build()).build()), accountWhere);
+                resolver.delete(uri, where.getSQL(), null);
+            }
+            for (final Uri uri : ACTIVITIES_URIS) {
+                final String table = getTableNameByUri(uri);
+                final Expression accountWhere = new Expression(Activities.ACCOUNT_ID + " = " + accountId);
+                final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
+                qb.select(new Column(Activities._ID))
+                        .from(new Tables(table))
+                        .where(Expression.equals(Activities.ACCOUNT_ID, accountId))
+                        .orderBy(new OrderBy(Activities.TIMESTAMP, false))
+                        .limit(itemLimit);
+                final Expression where = Expression.and(Expression.lesserThan(new Column(Activities._ID),
+                        SQLQueryBuilder.select(SQLFunctions.MIN(new Column(Activities._ID))).from(qb.build()).build()), accountWhere);
                 resolver.delete(uri, where.getSQL(), null);
             }
             for (final Uri uri : DIRECT_MESSAGES_URIS) {
                 final String table = getTableNameByUri(uri);
-                final Expression account_where = new Expression(DirectMessages.ACCOUNT_ID + " = " + accountId);
+                final Expression accountWhere = new Expression(DirectMessages.ACCOUNT_ID + " = " + accountId);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
-                qb.select(new Column(DirectMessages._ID)).from(new Tables(table));
-                qb.where(Expression.equals(DirectMessages.ACCOUNT_ID, accountId));
-                qb.orderBy(new OrderBy(DirectMessages.MESSAGE_ID, false));
-                qb.limit(itemLimit * 10);
-                final Expression where = Expression.and(Expression.notIn(new Column(DirectMessages._ID), qb.build()), account_where);
+                qb.select(new Column(DirectMessages._ID))
+                        .from(new Tables(table))
+                        .where(Expression.equals(DirectMessages.ACCOUNT_ID, accountId))
+                        .orderBy(new OrderBy(DirectMessages.MESSAGE_ID, false))
+                        .limit(itemLimit * 10);
+                final Expression where = Expression.and(Expression.lesserThan(new Column(DirectMessages._ID),
+                        SQLQueryBuilder.select(SQLFunctions.MIN(new Column(DirectMessages._ID))).from(qb.build()).build()), accountWhere);
                 resolver.delete(uri, where.getSQL(), null);
             }
         }
@@ -674,11 +736,12 @@ public class DataStoreUtils implements Constants {
             final String table = getTableNameByUri(uri);
             if (table == null) continue;
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
-            qb.select(new Column(BaseColumns._ID));
-            qb.from(new Tables(table));
-            qb.orderBy(new OrderBy(BaseColumns._ID, false));
-            qb.limit(itemLimit * 20);
-            final Expression where = Expression.notIn(new Column(BaseColumns._ID), qb.build());
+            qb.select(new Column(BaseColumns._ID))
+                    .from(new Tables(table))
+                    .orderBy(new OrderBy(BaseColumns._ID, false))
+                    .limit(itemLimit * 20);
+            final Expression where = Expression.lesserThan(new Column(BaseColumns._ID),
+                    SQLQueryBuilder.select(SQLFunctions.MIN(new Column(BaseColumns._ID))).from(qb.build()).build());
             resolver.delete(uri, where.getSQL(), null);
         }
     }
