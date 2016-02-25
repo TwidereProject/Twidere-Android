@@ -754,18 +754,19 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (getUserVisibleHint()) return;
+        if (!getUserVisibleHint()) return;
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
         final ParcelableStatus status = mStatusAdapter.getStatus(contextMenuInfo.getPosition());
         inflater.inflate(R.menu.action_status, menu);
-        Utils.setMenuForStatus(getContext(), mPreferences, menu, status, mTwitterWrapper);
+        MenuUtils.setupForStatus(getContext(), mPreferences, menu, status, mUserColorNameManager,
+                mTwitterWrapper);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (getUserVisibleHint()) return false;
+        if (!getUserVisibleHint()) return false;
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) item.getMenuInfo();
         final ParcelableStatus status = mStatusAdapter.getStatus(contextMenuInfo.getPosition());
@@ -777,7 +778,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             startActivity(chooser);
             return true;
         }
-        return Utils.handleMenuItemClick(getActivity(), this, getFragmentManager(),
+        return MenuUtils.handleStatusClick(getActivity(), this, getFragmentManager(),
                 mUserColorNameManager, mTwitterWrapper, status, item);
     }
 
@@ -1138,8 +1139,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 twitterCard.setVisibility(View.GONE);
             }
 
-            Utils.setMenuForStatus(context, fragment.mPreferences, menuBar.getMenu(), status,
-                    adapter.getStatusAccount(), twitter);
+            MenuUtils.setupForStatus(context, fragment.mPreferences, menuBar.getMenu(), status,
+                    adapter.getStatusAccount(), manager, twitter);
 
 
             final String lang = status.lang;
@@ -1230,7 +1231,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 RetweetQuoteDialogFragment.show(fm, status);
                 return true;
             }
-            return Utils.handleMenuItemClick(activity, fragment, fm, manager, twitter,
+            return MenuUtils.handleStatusClick(activity, fragment, fm, manager, twitter,
                     status, item);
         }
 

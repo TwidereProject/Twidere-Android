@@ -39,7 +39,7 @@ android {
 
 dependencies {
     apt 'com.bluelinelabs:logansquare-compiler:1.3.4'
-    compile 'com.github.mariotaku.RestFu:urlconnection:0.9.22'
+    compile 'com.github.mariotaku.RestFu:urlconnection:0.9.23'
     compile project(':twidere.library.extension')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

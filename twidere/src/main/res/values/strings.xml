@@ -747,4 +747,5 @@
     <string name="reply_to_name_text">Reply to <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
     <string name="quote_name_text">Quote <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
     <string name="unsupported_login_verification_type_name">Unsupported login verification type <xliff:g id="name">%1$s</xliff:g>, please report to support account.</string>
+    <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
 </resources>

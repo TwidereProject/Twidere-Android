@@ -57,6 +57,7 @@ import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
+import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.util.RecyclerViewUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -399,6 +400,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
             @Override
             public Boolean doLongOperation(Object params) {
                 final Context context = getContext();
+                if (context == null) return false;
                 final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                         Context.MODE_PRIVATE);
                 if (!prefs.getBoolean(KEY_USAGE_STATISTICS, false)) return false;
@@ -514,19 +516,20 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (getUserVisibleHint()) return;
+        if (!getUserVisibleHint()) return;
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
         final ParcelableStatus status = adapter.getStatus(contextMenuInfo.getPosition());
         inflater.inflate(R.menu.action_status, menu);
-        Utils.setMenuForStatus(getContext(), mPreferences, menu, status, mTwitterWrapper);
+        MenuUtils.setupForStatus(getContext(), mPreferences, menu, status, mUserColorNameManager,
+                mTwitterWrapper);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (getUserVisibleHint()) return false;
+        if (!getUserVisibleHint()) return false;
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) item.getMenuInfo();
         final ParcelableStatus status = getAdapter().getStatus(contextMenuInfo.getPosition());
@@ -538,7 +541,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
             startActivity(chooser);
             return true;
         }
-        return Utils.handleMenuItemClick(getActivity(), AbsStatusesFragment.this,
+        return MenuUtils.handleStatusClick(getActivity(), AbsStatusesFragment.this,
                 getFragmentManager(), mUserColorNameManager, mTwitterWrapper, status, item);
     }
 
