@@ -542,17 +542,12 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
             @Override
             protected boolean isDividerEnabled(int childPos) {
+                // Don't draw for last item
                 if (childPos == RecyclerView.NO_POSITION || childPos == adapter.getItemCount() - 1) {
                     return false;
                 }
                 final int itemViewType = adapter.getItemViewType(childPos);
-                if (itemViewType == AbsActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY) {
-                    //
-                    if (childPos != 0 && shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
-                        return true;
-                    }
-                    return false;
-                }
+                // Draw only if current item and next item is TITLE_SUMMARY
                 if (shouldUseDividerFor(itemViewType)) {
                     if (shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
                         return true;
@@ -562,8 +557,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             }
 
             private boolean shouldUseDividerFor(int itemViewType) {
-                return itemViewType != AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS
-                        && itemViewType != AbsActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY;
+                return itemViewType == AbsActivitiesAdapter.ITEM_VIEW_TYPE_TITLE_SUMMARY;
             }
         });
     }
