@@ -61,7 +61,7 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
     @Override
     public long getItemId(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
-        if (dataPosition < 0 || dataPosition >= getStatusCount()) return RecyclerView.NO_ID;
+        if (dataPosition < 0 || dataPosition >= getStatusCount()) return adapterPosition;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();

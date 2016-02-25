@@ -273,7 +273,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         final int statusStartIndex = adapter.getStatusStartIndex();
         // The last status is statusEndExclusiveIndex - 1
         final int statusEndExclusiveIndex = statusStartIndex + adapter.getStatusCount();
-        if (statusEndExclusiveIndex >= 0) {
+        if (statusEndExclusiveIndex >= 0 && rememberPosition && tag != null) {
             final long lastItemId = adapter.getStatusId(statusEndExclusiveIndex - 1);
             // Status corresponds to last read id was deleted, use last item id instead
             if (lastItemId > 0 && lastReadId < lastItemId) {
