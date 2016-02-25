@@ -66,6 +66,7 @@ import org.mariotaku.twidere.model.message.FollowRequestTaskEvent;
 import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.model.message.FriendshipUserUpdatedEvent;
 import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
+import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
@@ -82,6 +83,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
+import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.GetActivitiesAboutMeTask;
 import org.mariotaku.twidere.task.GetActivitiesByFriendsTask;
 import org.mariotaku.twidere.task.GetDirectMessagesTask;
@@ -89,7 +91,6 @@ import org.mariotaku.twidere.task.GetHomeTimelineTask;
 import org.mariotaku.twidere.task.GetLocalTrendsTask;
 import org.mariotaku.twidere.task.GetSavedSearchesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
-import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
@@ -1719,6 +1720,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (result.hasData()) {
                 final String message = mContext.getString(R.string.search_name_deleted, result.getData().getQuery());
                 Utils.showOkMessage(mContext, message, false);
+                bus.post(new SavedSearchDestroyedEvent(mAccountId, mSearchId));
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_deleting_search, result.getException(), false);
             }

@@ -28,14 +28,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.squareup.otto.Subscribe;
+
 import org.mariotaku.twidere.adapter.SavedSearchesAdapter;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.loader.support.SavedSearchesLoader;
+import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent;
 
 import java.util.Collections;
 import java.util.Comparator;
-
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 
 import static org.mariotaku.twidere.util.Utils.openTweetSearch;
 
@@ -62,6 +64,18 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
         mAccountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
         getLoaderManager().initLoader(0, null, this);
         showProgress();
+    }
+
+    @Override
+    public void onStop() {
+        mBus.unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBus.register(this);
     }
 
     @NonNull
@@ -116,4 +130,9 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
         return getLoaderManager().hasRunningLoaders();
     }
 
+    @Subscribe
+    public void onSavedSearchDestroyed(SavedSearchDestroyedEvent event) {
+        SavedSearchesAdapter adapter = getAdapter();
+        adapter.removeItem(event.getAccountId(), event.getSearchId());
+    }
 }

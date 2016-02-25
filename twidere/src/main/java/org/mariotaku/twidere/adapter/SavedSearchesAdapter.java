@@ -30,8 +30,8 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 
 /**
-* Created by mariotaku on 15/4/29.
-*/
+ * Created by mariotaku on 15/4/29.
+ */
 public class SavedSearchesAdapter extends BaseAdapter {
 
     private ResponseList<SavedSearch> mData;
@@ -77,4 +77,16 @@ public class SavedSearchesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public boolean removeItem(long accountId, long searchId) {
+        if (mData == null) return false;
+        for (int i = 0, mDataSize = mData.size(); i < mDataSize; i++) {
+            SavedSearch search = mData.get(i);
+            if (search.getId() == searchId) {
+                mData.remove(i);
+                notifyDataSetChanged();
+                return true;
+            }
+        }
+        return false;
+    }
 }

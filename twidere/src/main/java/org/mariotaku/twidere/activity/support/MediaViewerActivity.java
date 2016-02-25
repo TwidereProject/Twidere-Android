@@ -36,6 +36,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.FileProvider;
@@ -848,8 +849,9 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         @Override
         protected void onMediaLoadStateChange(@State int state) {
             mMediaLoadState = state;
-            if (getUserVisibleHint()) {
-                getActivity().supportInvalidateOptionsMenu();
+            final FragmentActivity activity = getActivity();
+            if (getUserVisibleHint() && activity != null) {
+                activity.supportInvalidateOptionsMenu();
             }
         }
     }

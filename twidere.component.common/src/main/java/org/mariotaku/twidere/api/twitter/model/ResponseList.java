@@ -55,6 +55,16 @@ public class ResponseList<T> extends AbstractList<T> implements TwitterResponse 
     }
 
     @Override
+    public T remove(int location) {
+        return list.remove(location);
+    }
+
+    @Override
+    public void clear() {
+        list.clear();
+    }
+
+    @Override
     public int size() {
         return list.size();
     }
