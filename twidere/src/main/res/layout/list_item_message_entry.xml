@@ -17,10 +17,11 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.ColorLabelRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.ColorLabelRelativeLayout
+    android:id="@+id/content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
@@ -44,15 +45,15 @@
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginRight="@dimen/element_spacing_normal"
         android:layout_marginTop="@dimen/element_spacing_small"
-        android:contentDescription="@string/profile_image" />
+        android:contentDescription="@string/profile_image"/>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_toEndOf="@id/profile_image"
-        android:layout_toRightOf="@id/profile_image"
+        android:layout_toEndOf="@+id/profile_image"
+        android:layout_toRightOf="@+id/profile_image"
         android:divider="?android:dividerVertical"
         android:gravity="center_vertical"
         android:orientation="vertical"
@@ -63,35 +64,19 @@
         android:paddingStart="0dp"
         android:paddingTop="@dimen/element_spacing_normal">
 
-        <LinearLayout
-            android:id="@+id/name_container"
+        <org.mariotaku.twidere.view.NameView
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@id/time"
-            android:layout_toStartOf="@id/time"
-            android:orientation="horizontal">
-
-            <org.mariotaku.twidere.view.TimelineContentTextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textColor="?android:attr/textColorPrimary"
-                tools:text="Mariotaku Lee" />
-
-            <org.mariotaku.twidere.view.TimelineContentTextView
-                android:id="@+id/screen_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/element_spacing_small"
-                android:layout_marginStart="@dimen/element_spacing_small"
-                android:singleLine="true"
-                android:textColor="?android:attr/textColorPrimary"
-                tools:text="\@mariotaku" />
-
-        </LinearLayout>
+            android:layout_toLeftOf="@+id/time"
+            android:layout_toStartOf="@+id/time"
+            android:gravity="center_vertical"
+            app:nv_primaryTextColor="?android:textColorPrimary"
+            app:nv_primaryTextStyle="bold"
+            app:nv_secondaryTextColor="?android:textColorSecondary"
+            app:nv_twoLine="false"/>
 
         <org.mariotaku.twidere.view.ShortTimeView
             android:id="@+id/time"
@@ -103,19 +88,19 @@
             android:gravity="center"
             android:singleLine="true"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="12:00" />
+            tools:text="12:00"/>
 
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/name_container"
-            android:layout_alignStart="@id/name_container"
-            android:layout_below="@id/name_container"
+            android:layout_alignLeft="@+id/name"
+            android:layout_alignStart="@+id/name"
+            android:layout_below="@+id/name"
             android:layout_marginTop="@dimen/element_spacing_xsmall"
             android:singleLine="true"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="@string/sample_status_text" />
+            tools:text="@string/sample_status_text"/>
     </RelativeLayout>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

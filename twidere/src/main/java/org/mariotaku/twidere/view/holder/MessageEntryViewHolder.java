@@ -34,6 +34,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversati
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
+import org.mariotaku.twidere.view.NameView;
 import org.mariotaku.twidere.view.ShortTimeView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
@@ -42,7 +43,8 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 public class MessageEntryViewHolder extends ViewHolder implements OnClickListener {
 
     public final ImageView profileImageView;
-    public final TextView nameView, screenNameView, textView;
+    public final NameView nameView;
+    public final TextView textView;
     public final ShortTimeView timeView;
     private final MessageEntriesAdapter adapter;
     private final IColorLabelView content;
@@ -52,8 +54,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         this.adapter = adapter;
         content = (IColorLabelView) itemView.findViewById(R.id.content);
         profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
-        nameView = (TextView) itemView.findViewById(R.id.name);
-        screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
+        nameView = (NameView) itemView.findViewById(R.id.name);
         textView = (TextView) itemView.findViewById(R.id.text);
         timeView = (ShortTimeView) itemView.findViewById(R.id.time);
 
@@ -75,8 +76,9 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         final String name = cursor.getString(ConversationEntries.IDX_NAME);
         final String screenName = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
 
-        nameView.setText(manager.getUserNickname(conversationId, name, false));
-        screenNameView.setText("@" + screenName);
+        nameView.setName(manager.getUserNickname(conversationId, name, false));
+        nameView.setScreenName("@" + screenName);
+        nameView.updateText(adapter.getBidiFormatter());
         textView.setText(toPlainText(cursor.getString(ConversationEntries.IDX_TEXT)));
         timeView.setTime(timestamp);
         if (isOutgoing) {
@@ -85,7 +87,6 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
             timeView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
         nameView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
-        screenNameView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
         textView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
         if (adapter.shouldShowAccountsColor()) {
             content.drawEnd(DataStoreUtils.getAccountColor(context, accountId));
@@ -115,8 +116,8 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
     }
 
     public void setTextSize(final float textSize) {
-        nameView.setTextSize(textSize * 1.1f);
-        screenNameView.setTextSize(textSize);
+        nameView.setPrimaryTextSize(textSize * 1.1f);
+        nameView.setSecondaryTextSize(textSize);
         textView.setTextSize(textSize);
         timeView.setTextSize(textSize * 0.85f);
     }
