@@ -246,7 +246,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final boolean rememberPosition = mPreferences.getBoolean(KEY_REMEMBER_POSITION, false);
         final boolean readFromBottom = mPreferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
-        final long lastReadId;
+        long lastReadId;
         final int lastVisiblePos, lastVisibleTop;
         final String tag = getCurrentReadPositionTag();
         final LinearLayoutManager layoutManager = getLayoutManager();
@@ -270,14 +270,24 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
             lastVisibleTop = 0;
         }
         adapter.setData(data);
-        setRefreshEnabled(true);
         final int statusStartIndex = adapter.getStatusStartIndex();
-        final int statusEndIndex = statusStartIndex + adapter.getStatusCount();
+        // The last status is statusEndExclusiveIndex - 1
+        final int statusEndExclusiveIndex = statusStartIndex + adapter.getStatusCount();
+        if (statusEndExclusiveIndex >= 0) {
+            final long lastItemId = adapter.getStatusId(statusEndExclusiveIndex - 1);
+            // Status corresponds to last read id was deleted, use last item id instead
+            if (lastItemId > 0 && lastReadId < lastItemId) {
+                lastReadId = lastItemId;
+            }
+        }
+        setRefreshEnabled(true);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
             int pos = -1;
-            for (int i = statusStartIndex; i < statusEndIndex; i++) {
-                if (lastReadId != -1 && lastReadId == adapter.getStatusId(i)) {
+            for (int i = statusStartIndex; i < statusEndExclusiveIndex; i++) {
+                // Assume statuses are descend sorted by id, so break at first status with id
+                // lesser equals than read position
+                if (lastReadId != -1 && adapter.getStatusId(i) <= lastReadId) {
                     pos = i;
                     break;
                 }

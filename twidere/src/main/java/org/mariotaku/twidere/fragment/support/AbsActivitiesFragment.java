@@ -259,7 +259,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
         final boolean rememberPosition = mPreferences.getBoolean(KEY_REMEMBER_POSITION, false);
         final boolean readFromBottom = mPreferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
-        final long lastReadId;
+        long lastReadId;
         final int lastVisiblePos, lastVisibleTop;
         final String tag = getCurrentReadPositionTag();
         final LinearLayoutManager layoutManager = getLayoutManager();
@@ -283,14 +283,25 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             lastVisibleTop = 0;
         }
         adapter.setData(data);
-        setRefreshEnabled(true);
         final int activityStartIndex = adapter.getActivityStartIndex();
-        final int activityEndIndex = activityStartIndex + adapter.getActivityCount();
+        // The last activity is activityEndExclusiveIndex - 1
+        final int activityEndExclusiveIndex = activityStartIndex + adapter.getActivityCount();
+
+        if (activityEndExclusiveIndex >= 0) {
+            final long lastItemId = adapter.getTimestamp(activityEndExclusiveIndex);
+            // Activity corresponds to last read timestamp was deleted, use last item timestamp
+            // instead
+            if (lastItemId > 0 && lastReadId < lastItemId) {
+                lastReadId = lastItemId;
+            }
+        }
+
+        setRefreshEnabled(true);
         if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
             adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
             int pos = -1;
-            for (int i = activityStartIndex; i < activityEndIndex; i++) {
-                if (lastReadId != -1 && lastReadId == adapter.getTimestamp(i)) {
+            for (int i = activityStartIndex; i < activityEndExclusiveIndex; i++) {
+                if (lastReadId != -1 && adapter.getTimestamp(i) <= lastReadId) {
                     pos = i;
                     break;
                 }

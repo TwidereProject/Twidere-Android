@@ -364,7 +364,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         mRecyclerView.setAdapter(mStatusAdapter);
         registerForContextMenu(mRecyclerView);
 
-        mScrollListener = new ContentListScrollListener(this);
+        mScrollListener = new ContentListScrollListener(this, new ContentListScrollListener.RecyclerViewCallback(mRecyclerView));
         mScrollListener.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());
 
         mNavigationHelper = new RecyclerViewNavigationHelper(mRecyclerView, mLayoutManager,

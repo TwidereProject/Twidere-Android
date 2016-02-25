@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.MotionEvent;
@@ -33,23 +34,26 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
  */
 public class ContentListScrollListener extends OnScrollListener {
 
+    private final ContentListSupport mContentListSupport;
+    private final ViewCallback mViewCallback;
+    private final TouchListener mTouchListener;
+
     private int mScrollState;
     private int mScrollSum;
     private int mTouchSlop;
 
-    private final ContentListSupport mContentListSupport;
-    private final TouchListener mTouchListener;
     private int mScrollDirection;
 
-    public ContentListScrollListener(@NonNull ContentListSupport contentListSupport) {
+    public ContentListScrollListener(@NonNull ContentListSupport contentListSupport, @Nullable ViewCallback viewCallback) {
         mContentListSupport = contentListSupport;
+        mViewCallback = viewCallback;
         mTouchListener = new TouchListener(this);
     }
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         if (mScrollState != RecyclerView.SCROLL_STATE_IDLE) {
-            notifyScrollStateChanged();
+            postNotifyScrollStateChanged();
         }
         mScrollState = newState;
     }
@@ -66,12 +70,29 @@ public class ContentListScrollListener extends OnScrollListener {
             mScrollSum = 0;
         }
         if (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
-            notifyScrollStateChanged();
+            postNotifyScrollStateChanged();
         }
     }
 
     public void setTouchSlop(int touchSlop) {
         mTouchSlop = touchSlop;
+    }
+
+    private void postNotifyScrollStateChanged() {
+        if (mViewCallback != null) {
+            mViewCallback.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mViewCallback.isComputingLayout()) {
+                        mViewCallback.post(this);
+                    } else {
+                        notifyScrollStateChanged();
+                    }
+                }
+            });
+        } else {
+            notifyScrollStateChanged();
+        }
     }
 
     private void notifyScrollStateChanged() {
@@ -135,6 +156,12 @@ public class ContentListScrollListener extends OnScrollListener {
         mScrollDirection = 0;
     }
 
+    public interface ViewCallback {
+        boolean isComputingLayout();
+
+        void post(Runnable runnable);
+    }
+
     public interface ContentListSupport {
 
         Object getAdapter();
@@ -149,5 +176,23 @@ public class ContentListScrollListener extends OnScrollListener {
 
         boolean isReachingEnd();
 
+    }
+
+    public static class RecyclerViewCallback implements ViewCallback {
+        private final RecyclerView recyclerView;
+
+        public RecyclerViewCallback(RecyclerView recyclerView) {
+            this.recyclerView = recyclerView;
+        }
+
+        @Override
+        public boolean isComputingLayout() {
+            return recyclerView.isComputingLayout();
+        }
+
+        @Override
+        public void post(Runnable action) {
+            recyclerView.post(action);
+        }
     }
 }
