@@ -124,3 +124,7 @@ Buy me a ~~bread~~ [game](http://steamcommunity.com/id/mariotaku/wishlist) or an
 ---
 
 ## Notes ##
+
+### Closed Source Licensing ###
+
+If you wish to use Twidere's code base but don't want to release your modified source code, please contact `mariotaku.lee@gmail.com`.
