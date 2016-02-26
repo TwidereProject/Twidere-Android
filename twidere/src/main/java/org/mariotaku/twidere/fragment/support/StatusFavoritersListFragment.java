@@ -30,7 +30,6 @@ public class StatusFavoritersListFragment extends CursorSupportUsersListFragment
 
 	@Override
 	public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
-		if (args == null) return null;
 		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
 		final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
 		return new StatusFavoritersLoader(context, accountId, statusId, getNextCursor(), getData(), false);

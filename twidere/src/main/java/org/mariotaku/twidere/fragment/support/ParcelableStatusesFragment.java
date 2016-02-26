@@ -164,6 +164,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
 
     @Override
     public boolean isRefreshing() {
+        if (getContext() == null || isDetached()) return false;
         final LoaderManager lm = getLoaderManager();
         return lm.hasRunningLoaders();
     }

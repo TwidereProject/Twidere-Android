@@ -44,11 +44,10 @@ public class SearchUsersFragment extends ParcelableUsersFragment {
 
     @Override
     public Loader<List<ParcelableUser>> onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
-        if (args == null) return null;
-        final long account_id = args.getLong(EXTRA_ACCOUNT_ID);
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID);
         final String query = args.getString(EXTRA_QUERY);
         final int page = args.getInt(EXTRA_PAGE, 1);
-        return new UserSearchLoader(context, account_id, query, page, getData(), fromUser);
+        return new UserSearchLoader(context, accountId, query, page, getData(), fromUser);
     }
 
     @Override

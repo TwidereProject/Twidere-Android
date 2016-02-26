@@ -47,6 +47,7 @@ public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragmen
 
     @Override
     public boolean isRefreshing() {
+        if (getContext() == null || isDetached()) return false;
         return getLoaderManager().hasRunningLoaders();
     }
 

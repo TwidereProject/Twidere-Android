@@ -35,6 +35,7 @@ public abstract class ParcelableUsersFragment extends AbsUsersFragment<List<Parc
 
     @Override
     public boolean isRefreshing() {
+        if (getContext() == null || isDetached()) return false;
         final LoaderManager lm = getLoaderManager();
         return lm.hasRunningLoaders();
     }
