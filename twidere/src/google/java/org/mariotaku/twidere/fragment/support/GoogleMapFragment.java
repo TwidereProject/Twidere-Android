@@ -43,6 +43,7 @@ import org.mariotaku.twidere.fragment.iface.IMapFragment;
 public class GoogleMapFragment extends SupportMapFragment implements Constants, IMapFragment, IBaseFragment {
 
     private GoogleMap mMapView;
+    private ActionHelper mActionHelper = new ActionHelper(this);
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -57,6 +58,18 @@ public class GoogleMapFragment extends SupportMapFragment implements Constants, 
         marker.position(new LatLng(lat, lng));
         mMapView.addMarker(marker);
         center(false);
+    }
+
+    @Override
+    public void onPause() {
+        mActionHelper.dispatchOnPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mActionHelper.dispatchOnResumeFragments();
     }
 
     @Override
@@ -133,6 +146,11 @@ public class GoogleMapFragment extends SupportMapFragment implements Constants, 
     @Override
     public void onBaseViewCreated(View view, Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public void executeAfterFragmentResumed(Action action) {
+        mActionHelper.executeAfterFragmentResumed(action);
     }
 
     protected void fitSystemWindows(Rect insets) {

@@ -28,6 +28,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -99,10 +100,11 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     @Override
     public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-        final Long[] ids = new Long[reverseSortedPositions.length];
+        final long[] ids = new long[reverseSortedPositions.length];
         for (int i = 0, j = reverseSortedPositions.length; i < j; i++) {
             final int position = reverseSortedPositions[i];
             final SuggestionItem item = mUsersSearchAdapter.getSuggestionItem(position);
+            if (item == null) return;
             ids[i] = item._id;
         }
         mUsersSearchAdapter.addRemovedPositions(reverseSortedPositions);
@@ -334,6 +336,8 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         private final UserColorNameManager mUserColorNameManager;
         private final QuickSearchBarActivity mActivity;
         private final SortableIntList mRemovedPositions;
+
+        @Nullable
         private Indices mIndices;
 
         SuggestionsAdapter(QuickSearchBarActivity activity) {
@@ -368,11 +372,13 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
         public SuggestionItem getSuggestionItem(int position) {
             final Cursor cursor = (Cursor) getItem(position);
+            if (cursor == null || mIndices == null) return null;
             return new SuggestionItem(cursor, mIndices);
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
+            if (mIndices == null) throw new NullPointerException();
             switch (getActualItemViewType(cursor.getPosition())) {
                 case VIEW_TYPE_SEARCH_HISTORY: {
                     final SearchViewHolder holder = (SearchViewHolder) view.getTag();
@@ -419,6 +425,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
         public int getActualItemViewType(int position) {
             final Cursor cursor = (Cursor) super.getItem(position);
+            if (cursor == null || mIndices == null) throw new NullPointerException();
             switch (cursor.getString(mIndices.type)) {
                 case Suggestions.Search.TYPE_SAVED_SEARCH: {
                     return VIEW_TYPE_SAVED_SEARCH;
@@ -542,7 +549,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             private final int icon;
             private final int extra_id;
 
-            public Indices(Cursor cursor) {
+            public Indices(@NonNull Cursor cursor) {
                 _id = cursor.getColumnIndex(Suggestions._ID);
                 type = cursor.getColumnIndex(Suggestions.TYPE);
                 title = cursor.getColumnIndex(Suggestions.TITLE);

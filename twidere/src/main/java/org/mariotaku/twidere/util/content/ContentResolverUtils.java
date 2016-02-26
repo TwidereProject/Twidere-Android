@@ -27,6 +27,7 @@ import android.text.TextUtils;
 
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 
 public class ContentResolverUtils {
@@ -40,14 +41,13 @@ public class ContentResolverUtils {
         return bulkDelete(resolver, uri, inColumn, colValues.toArray(), extraWhere, valuesIsString);
     }
 
-    public static <T> int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-                                     @NonNull final String inColumn, final T[] colValues,
+    public static int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
+                                     @NonNull final String inColumn, final Object colValues,
                                      final String extraWhere, final boolean valuesIsString) {
-        if (colValues == null || colValues.length == 0)
-            return 0;
-        final int colValuesLength = colValues.length, blocks_count = colValuesLength / MAX_BULK_COUNT + 1;
+        if (colValues == null) return 0;
+        final int colValuesLength = Array.getLength(colValues), blocksCount = colValuesLength / MAX_BULK_COUNT + 1;
         int rowsDeleted = 0;
-        for (int i = 0; i < blocks_count; i++) {
+        for (int i = 0; i < blocksCount; i++) {
             final int start = i * MAX_BULK_COUNT, end = Math.min(start + MAX_BULK_COUNT, colValuesLength);
             final String[] block = TwidereArrayUtils.toStringArray(colValues, start, end);
             if (valuesIsString) {

@@ -160,23 +160,17 @@ public final class TwidereArrayUtils {
         return builder.toString();
     }
 
-    public static String[] toStringArray(final Object[] array, int start, int end) {
+    public static String[] toStringArray(final Object array, int start, int end) {
         if (array == null) return null;
         final String[] stringArray = new String[end - start];
         for (int i = start; i < end; i++) {
-            stringArray[i - start] = ParseUtils.parseString(array[i]);
+            stringArray[i - start] = ParseUtils.parseString(Array.get(array, i));
         }
         return stringArray;
     }
 
-    public static String[] toStringArray(final long[] array) {
-        if (array == null) return null;
-        final int length = array.length;
-        final String[] stringArray = new String[length];
-        for (int i = 0; i < length; i++) {
-            stringArray[i] = ParseUtils.parseString(array[i]);
-        }
-        return stringArray;
+    public static String[] toStringArray(final Object array) {
+        return toStringArray(array, 0, Array.getLength(array));
     }
 
 
