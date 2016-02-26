@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.MotionEvent;
@@ -52,6 +53,9 @@ public class ContentListScrollListener extends OnScrollListener {
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        if (mContentListSupport instanceof Fragment) {
+            if (((Fragment) mContentListSupport).getContext() == null) return;
+        }
         if (mScrollState != RecyclerView.SCROLL_STATE_IDLE) {
             postNotifyScrollStateChanged();
         }
@@ -60,6 +64,9 @@ public class ContentListScrollListener extends OnScrollListener {
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        if (mContentListSupport instanceof Fragment) {
+            if (((Fragment) mContentListSupport).getContext() == null) return;
+        }
         //Reset mScrollSum when scrolling in reverse direction
         if (dy * mScrollSum < 0) {
             mScrollSum = 0;
@@ -79,6 +86,9 @@ public class ContentListScrollListener extends OnScrollListener {
     }
 
     private void postNotifyScrollStateChanged() {
+        if (mContentListSupport instanceof Fragment) {
+            if (((Fragment) mContentListSupport).getContext() == null) return;
+        }
         if (mViewCallback != null) {
             mViewCallback.post(new Runnable() {
                 @Override
@@ -96,6 +106,9 @@ public class ContentListScrollListener extends OnScrollListener {
     }
 
     private void notifyScrollStateChanged() {
+        if (mContentListSupport instanceof Fragment) {
+            if (((Fragment) mContentListSupport).getContext() == null) return;
+        }
         final Object adapter = mContentListSupport.getAdapter();
         if (!(adapter instanceof ILoadMoreSupportAdapter)) return;
         final ILoadMoreSupportAdapter loadMoreAdapter = (ILoadMoreSupportAdapter) adapter;

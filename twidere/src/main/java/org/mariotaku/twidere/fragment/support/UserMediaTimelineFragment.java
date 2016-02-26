@@ -72,13 +72,14 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
 
 
     public int getStatuses(final long maxId, final long sinceId) {
+        if (getContext() == null) return -1;
         final Bundle args = new Bundle(getArguments());
         args.putBoolean(EXTRA_MAKE_GAP, false);
         args.putLong(EXTRA_MAX_ID, maxId);
         args.putLong(EXTRA_SINCE_ID, sinceId);
         args.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().restartLoader(0, args, this);
-        return -1;
+        return 0;
     }
 
 
