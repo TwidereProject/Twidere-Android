@@ -212,17 +212,19 @@ public class TwidereApplication extends MultiDexApplication implements Constants
                 break;
             }
             case KEY_ENABLE_PROXY:
-            case KEY_CONNECTION_TIMEOUT:
             case KEY_PROXY_HOST:
             case KEY_PROXY_PORT:
             case KEY_PROXY_TYPE:
             case KEY_PROXY_USERNAME:
-            case KEY_PROXY_PASSWORD: {
+            case KEY_PROXY_PASSWORD:
+            case KEY_CONNECTION_TIMEOUT:
+            case KEY_RETRY_ON_NETWORK_ISSUE: {
                 HttpClientFactory.reloadConnectivitySettings(this);
                 break;
             }
             case KEY_DNS_SERVER:
-            case KEY_TCP_DNS_QUERY: {
+            case KEY_TCP_DNS_QUERY:
+            case KEY_BUILTIN_DNS_RESOLVER: {
                 reloadDnsSettings();
                 break;
             }

@@ -2,15 +2,17 @@ package org.mariotaku.twidere.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 
 import org.mariotaku.twidere.IStatusShortener;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
+import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 /**
@@ -24,7 +26,7 @@ public abstract class StatusShortenerService extends Service {
     }
 
     protected abstract StatusShortenResult shorten(ParcelableStatusUpdate status,
-                                                   ParcelableAccount currentAccount,
+                                                   long currentAccountId,
                                                    String overrideStatusText);
 
     protected abstract boolean callback(StatusShortenResult result, ParcelableStatus status);
@@ -43,16 +45,38 @@ public abstract class StatusShortenerService extends Service {
         }
 
         @Override
-        public StatusShortenResult shorten(final ParcelableStatusUpdate status,
-                                           final ParcelableAccount currentAccount,
-                                           final String overrideStatusText)
+        public String shorten(final String statusJson, final long currentAccountId,
+                              final String overrideStatusText)
                 throws RemoteException {
-            return mService.get().shorten(status, currentAccount, overrideStatusText);
+            try {
+                final ParcelableStatusUpdate statusUpdate = LoganSquareMapperFinder.mapperFor(ParcelableStatusUpdate.class)
+                        .parse(statusJson);
+                final StatusShortenResult shorten = mService.get().shorten(statusUpdate, currentAccountId, overrideStatusText);
+                return LoganSquareMapperFinder.mapperFor(StatusShortenResult.class).serialize(shorten);
+            } catch (IOException e) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    throw new RemoteException(e.getMessage());
+                } else {
+                    throw new RemoteException();
+                }
+            }
         }
 
         @Override
-        public boolean callback(StatusShortenResult result, ParcelableStatus status) throws RemoteException {
-            return mService.get().callback(result, status);
+        public boolean callback(String resultJson, String statusJson) throws RemoteException {
+            try {
+                final StatusShortenResult result = LoganSquareMapperFinder.mapperFor(StatusShortenResult.class)
+                        .parse(resultJson);
+                final ParcelableStatus status = LoganSquareMapperFinder.mapperFor(ParcelableStatus.class)
+                        .parse(statusJson);
+                return mService.get().callback(result, status);
+            } catch (IOException e) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    throw new RemoteException(e.getMessage());
+                } else {
+                    throw new RemoteException();
+                }
+            }
         }
 
     }

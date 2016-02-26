@@ -742,6 +742,8 @@
     <string name="action_start">Start</string>
     <string name="builtin_dns_resolver">Builtin DNS resolver</string>
     <string name="bandwidth_saving_mode">Bandwidth saving mode</string>
+    <string name="retry_on_network_issue">Retry on network issue</string>
+    <string name="retry_on_network_issue_summary">Try recover from network issue automatically</string>
     <string name="bandwidth_saving_mode_summary">Disable media preview on metered network</string>
     <string name="recent_media">Recent media</string>
     <string name="reply_to_name_text">Reply to <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
@@ -750,4 +752,5 @@
     <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
     <string name="translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
     <string name="translation">Translation</string>
+    <string name="shortener_version_incompatible">Incompatible shortener</string>
 </resources>

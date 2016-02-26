@@ -23,19 +23,23 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 
 import org.mariotaku.twidere.IStatusShortener;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
 
-public final class StatusShortenerInterface extends AbsServiceInterface<IStatusShortener> implements IStatusShortener {
+import java.util.List;
 
-    protected StatusShortenerInterface(Context context, String shortenerName) {
-        super(context, shortenerName);
+public final class StatusShortenerInterface extends AbsServiceInterface<IStatusShortener> {
+
+    protected StatusShortenerInterface(Context context, String shortenerName, Bundle metaData) {
+        super(context, shortenerName, metaData);
     }
 
     @Override
@@ -43,37 +47,41 @@ public final class StatusShortenerInterface extends AbsServiceInterface<IStatusS
         return IStatusShortener.Stub.asInterface(obj);
     }
 
-    @Override
     public StatusShortenResult shorten(final ParcelableStatusUpdate status,
-                                       final ParcelableAccount currentAccount,
+                                       final long currentAccountId,
                                        final String overrideStatusText) {
         final IStatusShortener iface = getInterface();
         if (iface == null) return null;
         try {
-            return iface.shorten(status, currentAccount, overrideStatusText);
+            final String statusJson = JsonSerializer.serialize(status, ParcelableStatusUpdate.class);
+            final String resultJson = iface.shorten(statusJson, currentAccountId, overrideStatusText);
+            return JsonSerializer.parse(resultJson, StatusShortenResult.class);
         } catch (final RemoteException e) {
             return null;
         }
     }
 
-    @Override
     public boolean callback(StatusShortenResult result, ParcelableStatus status) {
         final IStatusShortener iface = getInterface();
         if (iface == null) return false;
         try {
-            return iface.callback(result, status);
+            final String resultJson = JsonSerializer.serialize(result, StatusShortenResult.class);
+            final String statusJson = JsonSerializer.serialize(status, ParcelableStatus.class);
+            return iface.callback(resultJson, statusJson);
         } catch (final RemoteException e) {
             return false;
         }
     }
 
-    public static StatusShortenerInterface getInstance(final Application application, final String shortener_name) {
-        if (shortener_name == null) return null;
+    public static StatusShortenerInterface getInstance(final Application application, final String shortenerName) {
+        if (shortenerName == null) return null;
         final Intent intent = new Intent(INTENT_ACTION_EXTENSION_SHORTEN_STATUS);
-        final ComponentName component = ComponentName.unflattenFromString(shortener_name);
+        final ComponentName component = ComponentName.unflattenFromString(shortenerName);
         intent.setComponent(component);
-        if (application.getPackageManager().queryIntentServices(intent, 0).size() != 1) return null;
-        return new StatusShortenerInterface(application, shortener_name);
+        final PackageManager pm = application.getPackageManager();
+        final List<ResolveInfo> services = pm.queryIntentServices(intent, PackageManager.GET_META_DATA);
+        if (services.size() != 1) return null;
+        return new StatusShortenerInterface(application, shortenerName, services.get(0).serviceInfo.metaData);
     }
 
 }

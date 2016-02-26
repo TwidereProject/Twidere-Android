@@ -73,6 +73,11 @@
         <service
             android:name=".TwitLongerStatusShortenerService"
             android:permission="org.mariotaku.twidere.permission.SHORTEN_STATUS">
+
+            <meta-data
+                android:name="org.mariotaku.twidere.extension.version.status_shortener"
+                android:value="@string/status_shortener_service_interface_version"/>
+
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.EXTENSION_SHORTEN_STATUS"/>
 

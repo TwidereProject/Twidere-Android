@@ -23,8 +23,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.mariotaku.twidere.Constants;
@@ -37,6 +39,8 @@ public abstract class AbsServiceInterface<I extends IInterface> implements Const
 
     private final Context mContext;
     private final String mShortenerName;
+    @Nullable
+    private final Bundle mMetaData;
     private I mIInterface;
 
     private ServiceToken mToken;
@@ -56,9 +60,10 @@ public abstract class AbsServiceInterface<I extends IInterface> implements Const
 
     protected abstract I onServiceConnected(ComponentName service, IBinder obj);
 
-    protected AbsServiceInterface(final Context context, final String shortenerName) {
+    protected AbsServiceInterface(final Context context, final String componentName, @Nullable final Bundle metaData) {
         mContext = context;
-        mShortenerName = shortenerName;
+        mShortenerName = componentName;
+        mMetaData = metaData;
     }
 
     public final I getInterface() {
@@ -89,4 +94,15 @@ public abstract class AbsServiceInterface<I extends IInterface> implements Const
         }
     }
 
+    public final void checkService(CheckServiceAction action) throws CheckServiceException {
+        action.check(mMetaData);
+    }
+
+    public interface CheckServiceAction {
+        void check(@Nullable Bundle metaData) throws CheckServiceException;
+    }
+
+    public static class CheckServiceException extends Exception {
+
+    }
 }

@@ -34,7 +34,7 @@ import org.mariotaku.twidere.service.StatusShortenerService;
 public class GistStatusShortenerService extends StatusShortenerService {
 
     @Override
-    protected StatusShortenResult shorten(ParcelableStatusUpdate status, ParcelableAccount currentAccount, String overrideStatusText) {
+    protected StatusShortenResult shorten(ParcelableStatusUpdate status, long currentAccountId, String overrideStatusText) {
         final Github github = GithubFactory.getInstance(getApiKey());
         final NewGist newGist = new NewGist();
         newGist.setDescription("long tweet");
