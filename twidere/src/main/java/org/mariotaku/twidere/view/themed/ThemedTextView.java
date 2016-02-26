@@ -20,8 +20,6 @@
 package org.mariotaku.twidere.view.themed;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 

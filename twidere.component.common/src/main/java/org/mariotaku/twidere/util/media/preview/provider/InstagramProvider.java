@@ -19,6 +19,7 @@ public class InstagramProvider implements Provider {
         final String authority = PreviewMediaExtractor.getAuthority(link);
         if (authority == null) return false;
         switch (authority) {
+            //noinspection SpellCheckingInspection
             case "instagr.am":
             case "instagram.com":
             case "www.instagram.com": {

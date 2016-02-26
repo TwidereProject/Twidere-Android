@@ -45,6 +45,7 @@ public class QueryResult extends AbstractList<Status> implements TwitterResponse
     @JsonField(name = "statuses")
     ArrayList<Status> statuses;
 
+    @AccessLevel
     private int accessLevel;
     private RateLimitStatus rateLimitStatus;
 
@@ -54,6 +55,7 @@ public class QueryResult extends AbstractList<Status> implements TwitterResponse
         accessLevel = InternalParseUtil.toAccessLevel(resp);
     }
 
+    @AccessLevel
     @Override
     public final int getAccessLevel() {
         return accessLevel;

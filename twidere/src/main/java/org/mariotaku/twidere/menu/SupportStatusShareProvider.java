@@ -30,7 +30,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.MenuUtils;
 
-import static org.mariotaku.twidere.util.MenuUtils.addIntentToMenu;
 import static org.mariotaku.twidere.util.Utils.createStatusShareIntent;
 
 /**

@@ -23,7 +23,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -69,17 +68,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v4.util.Pair;
-import android.support.v4.view.ActionProvider;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.system.ErrnoException;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -121,8 +116,6 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.CopyLinkActivity;
-import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
-import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -136,10 +129,7 @@ import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
-import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
-import org.mariotaku.twidere.fragment.support.AddStatusFilterDialogFragment;
-import org.mariotaku.twidere.fragment.support.DestroyStatusDialogFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.DraftsFragment;
 import org.mariotaku.twidere.fragment.support.FiltersFragment;
@@ -151,7 +141,6 @@ import org.mariotaku.twidere.fragment.support.MutesUsersListFragment;
 import org.mariotaku.twidere.fragment.support.SavedSearchesListFragment;
 import org.mariotaku.twidere.fragment.support.ScheduledStatusesFragment;
 import org.mariotaku.twidere.fragment.support.SearchFragment;
-import org.mariotaku.twidere.fragment.support.SetUserNicknameDialogFragment;
 import org.mariotaku.twidere.fragment.support.StatusFavoritersListFragment;
 import org.mariotaku.twidere.fragment.support.StatusFragment;
 import org.mariotaku.twidere.fragment.support.StatusRepliesListFragment;
@@ -172,10 +161,7 @@ import org.mariotaku.twidere.fragment.support.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.support.UserProfileEditorFragment;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
-import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
-import org.mariotaku.twidere.menu.SupportStatusShareProvider;
-import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -201,7 +187,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Conversati
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
-import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
@@ -466,6 +451,7 @@ public final class Utils implements Constants {
         if (extras != null) {
             args.putAll(extras);
         }
+        boolean isAccountIdRequired = true;
         switch (linkId) {
             case LINK_ID_ACCOUNTS: {
                 fragment = new AccountsManagerFragment();
@@ -609,6 +595,7 @@ public final class Utils implements Constants {
             }
             case LINK_ID_DIRECT_MESSAGES_CONVERSATION: {
                 fragment = new MessagesConversationFragment();
+                isAccountIdRequired = false;
                 final String paramRecipientId = uri.getQueryParameter(QUERY_PARAM_RECIPIENT_ID);
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final long conversationId = NumberUtils.toLong(paramRecipientId, -1);
@@ -775,7 +762,7 @@ public final class Utils implements Constants {
             final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
             if (paramAccountName != null) {
                 args.putLong(EXTRA_ACCOUNT_ID, DataStoreUtils.getAccountId(context, paramAccountName));
-            } else {
+            } else if (isAccountIdRequired) {
                 final long accountId = getDefaultAccountId(context);
                 if (isMyAccount(context, accountId)) {
                     args.putLong(EXTRA_ACCOUNT_ID, accountId);
@@ -1695,9 +1682,11 @@ public final class Utils implements Constants {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
-        if (accountId > 0 && recipientId > 0) {
+        if (accountId > 0) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-            builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, String.valueOf(recipientId));
+            if (recipientId > 0) {
+                builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, String.valueOf(recipientId));
+            }
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);

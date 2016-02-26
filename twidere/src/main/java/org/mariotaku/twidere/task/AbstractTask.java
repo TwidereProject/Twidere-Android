@@ -4,6 +4,7 @@ import android.support.annotation.MainThread;
 import android.support.annotation.WorkerThread;
 
 /**
+ * Abstract Task class can be used with different implementations
  * Created by mariotaku on 16/2/24.
  */
 public abstract class AbstractTask<Params, Result, Callback> {

@@ -20,9 +20,6 @@
 package org.mariotaku.twidere.api.twitter.model;
 
 import org.mariotaku.restfu.http.HttpResponse;
-
-import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
-import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
 /**
@@ -30,6 +27,7 @@ import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
  */
 public class TwitterResponseObject implements TwitterResponse {
 
+    @AccessLevel
     private int accessLevel;
     private RateLimitStatus rateLimitStatus;
 
@@ -39,6 +37,7 @@ public class TwitterResponseObject implements TwitterResponse {
         accessLevel = InternalParseUtil.toAccessLevel(resp);
     }
 
+    @AccessLevel
     @Override
     public final int getAccessLevel() {
         return accessLevel;

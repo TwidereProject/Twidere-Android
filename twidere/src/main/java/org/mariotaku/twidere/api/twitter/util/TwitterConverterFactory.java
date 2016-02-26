@@ -30,7 +30,6 @@ import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
-import org.mariotaku.twidere.api.twitter.model.CardDataMap;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
 import org.mariotaku.twidere.util.LoganSquareMapperFinder;

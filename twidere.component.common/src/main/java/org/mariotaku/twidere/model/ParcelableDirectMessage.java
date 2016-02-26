@@ -34,7 +34,6 @@ import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 @ParcelablePlease(allFields = false)
 @JsonObject

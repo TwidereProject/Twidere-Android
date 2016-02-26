@@ -66,7 +66,8 @@
             android:contentDescription="@string/profile_image"
             android:scaleType="centerCrop"
             app:sivBorder="true"
-            app:sivBorderWidth="1dp"/>
+            app:sivBorderWidth="1dp"
+            tools:src="@mipmap/ic_launcher"/>
 
         <ImageView
             android:id="@+id/profile_type"
@@ -131,7 +132,7 @@
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:text="Jan 1 2015 0:00, via Twidere"/>
+                tools:text="Jan 1 2015 0:00 · Twidere"/>
 
         </LinearLayout>
 
@@ -376,7 +377,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/quote_original_link"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:visibility="visible">
 
         <include layout="@layout/adapter_item_status_count_label"/>
 
@@ -391,7 +393,8 @@
         android:layout_alignTop="@+id/counts_users_height_holder"
         android:layout_marginLeft="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
-        android:splitMotionEvents="false"/>
+        android:splitMotionEvents="false"
+        tools:visibility="invisible"/>
 
     <android.support.v7.widget.ActionMenuView
         android:id="@+id/menu_bar"

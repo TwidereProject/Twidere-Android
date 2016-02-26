@@ -42,6 +42,7 @@ public class PageableResponseList<T> extends ArrayList<T> implements TwitterResp
     }
 
     @Override
+    @AccessLevel
     public final int getAccessLevel() {
         return accessLevel;
     }

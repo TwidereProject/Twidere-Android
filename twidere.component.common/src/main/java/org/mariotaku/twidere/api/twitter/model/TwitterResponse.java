@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.support.annotation.IntDef;
+
 import org.mariotaku.restfu.http.HttpResponse;
 
 /**
@@ -32,16 +34,19 @@ import org.mariotaku.restfu.http.HttpResponse;
  */
 public interface TwitterResponse {
     int NONE = 0;
-
     int READ = 1;
-
     int READ_WRITE = 2;
     int READ_WRITE_DIRECTMESSAGES = 3;
 
     void processResponseHeader(HttpResponse resp);
 
+    @AccessLevel
     int getAccessLevel();
 
     RateLimitStatus getRateLimitStatus();
 
+    @IntDef({NONE, READ, READ_WRITE, READ_WRITE_DIRECTMESSAGES})
+    @interface AccessLevel {
+
+    }
 }

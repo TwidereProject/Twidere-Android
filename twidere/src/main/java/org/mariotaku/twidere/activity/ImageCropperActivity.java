@@ -91,7 +91,7 @@ public class ImageCropperActivity extends CropImageActivity implements IThemedAc
 
 
     @Override
-    public void setTheme(final int resid) {
+    public void setTheme(final int resId) {
         super.setTheme(mCurrentThemeResource = getThemeResourceId());
         ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
                 mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);

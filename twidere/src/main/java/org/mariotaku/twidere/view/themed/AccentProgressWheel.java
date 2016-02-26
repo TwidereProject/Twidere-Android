@@ -29,6 +29,8 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 import org.mariotaku.twidere.view.iface.IThemeAccentView;
 
 /**
+ * ProgressWheel view that supports theme color settings
+ *
  * Created by mariotaku on 15/4/25.
  */
 public class AccentProgressWheel extends ProgressWheel implements IThemeAccentView {

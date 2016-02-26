@@ -99,7 +99,6 @@ dependencies {
     compile 'commons-primitives:commons-primitives:1.0'
     compile 'com.bluelinelabs:logansquare:1.3.4'
     compile 'org.jraf:android-switch-backport:2.0.1'
-    compile 'com.github.mariotaku:jackson-jr-trees:7fe682ee09'
     compile 'com.makeramen:roundedimageview:2.1.1'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
@@ -111,7 +110,7 @@ dependencies {
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.10'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.10'
-    compile 'com.github.mariotaku.SQLiteQB:library:0.9.5-SNAPSHOT'
+    compile 'com.github.mariotaku.SQLiteQB:library:0.9.5'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.4'
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')

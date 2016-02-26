@@ -79,6 +79,7 @@ public class ResponseList<T> extends AbstractList<T> implements TwitterResponse 
         accessLevel = InternalParseUtil.toAccessLevel(resp);
     }
 
+    @AccessLevel
     @Override
     public final int getAccessLevel() {
         return accessLevel;

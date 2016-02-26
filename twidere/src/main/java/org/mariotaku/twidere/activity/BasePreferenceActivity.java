@@ -43,7 +43,6 @@ import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.support.ViewSupport;
@@ -249,7 +248,7 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     }
 
     @Override
-    public void setTheme(int resid) {
+    public void setTheme(int resId) {
         super.setTheme(mCurrentThemeResource = getThemeResourceId());
         if (shouldApplyWindowBackground()) {
             ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
@@ -258,13 +257,13 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     }
 
     @Override
-    protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resid, boolean first) {
+    protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resId, boolean first) {
         mCurrentThemeColor = getThemeColor();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mProfileImageStyle = Utils.getProfileImageStyle(this);
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mCurrentThemeFontFamily = getThemeFontFamily();
-        super.onApplyThemeResource(theme, resid, first);
+        super.onApplyThemeResource(theme, resId, first);
     }
 
     @Override

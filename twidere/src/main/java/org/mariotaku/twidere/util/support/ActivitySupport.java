@@ -10,6 +10,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
+ * Backward compatibility utilities for {@link Activity}
  * Created by mariotaku on 14/11/4.
  */
 public class ActivitySupport {

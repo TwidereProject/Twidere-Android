@@ -1,11 +1,14 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.mariotaku.twidere.donate.nyanwp">
+<manifest
+    package="org.mariotaku.twidere.donate.nyanwp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        tools:ignore="GoogleAppIndexingWarning">
         <service
             android:name="org.mariotaku.twidere.nyan.NyanWallpaperService"
             android:exported="true"
@@ -24,7 +27,8 @@
             android:name="org.mariotaku.twidere.nyan.NyanDaydreamService"
             android:exported="true"
             android:label="@string/daydream_name"
-            android:process=":daydream">
+            android:process=":daydream"
+            tools:ignore="ExportedService">
             <intent-filter android:priority="1">
                 <action android:name="android.service.dreams.DreamService"/>
             </intent-filter>

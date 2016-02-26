@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -43,6 +42,8 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -432,8 +433,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     public static class EditUserListDialogFragment extends BaseSupportDialogFragment implements
             DialogInterface.OnClickListener {
 
-        private MaterialEditText mEditName, mEditDescription;
-        private CheckBox mPublicCheckBox;
         private String mName, mDescription;
         private long mAccountId;
         private long mListId;
@@ -444,14 +443,18 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             if (mAccountId <= 0) return;
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    mName = ParseUtils.parseString(mEditName.getText());
-                    mDescription = ParseUtils.parseString(mEditDescription.getText());
-                    mIsPublic = mPublicCheckBox.isChecked();
-                    if (mName == null || mName.length() <= 0) return;
+                    final AlertDialog alertDialog = (AlertDialog) dialog;
+                    final MaterialEditText editName = (MaterialEditText) alertDialog.findViewById(R.id.name);
+                    final MaterialEditText editDescription = (MaterialEditText) alertDialog.findViewById(R.id.description);
+                    final CheckBox editIsPublic = (CheckBox) alertDialog.findViewById(R.id.is_public);
+                    final String name = ParseUtils.parseString(editName.getText());
+                    final String description = ParseUtils.parseString(editDescription.getText());
+                    final boolean isPublic = editIsPublic.isChecked();
+                    if (TextUtils.isEmpty(name)) return;
                     final UserListUpdate update = new UserListUpdate();
-                    update.setMode(mIsPublic ? UserList.Mode.PUBLIC : UserList.Mode.PRIVATE);
-                    update.setName(mName);
-                    update.setDescription(mDescription);
+                    update.setMode(isPublic ? UserList.Mode.PUBLIC : UserList.Mode.PRIVATE);
+                    update.setName(name);
+                    update.setDescription(description);
                     mTwitterWrapper.updateUserListDetails(mAccountId, mListId, update);
                     break;
                 }
@@ -470,23 +473,31 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             mIsPublic = bundle == null || bundle.getBoolean(EXTRA_IS_PUBLIC, true);
             final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
             final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-            final View view = LayoutInflater.from(wrapped).inflate(R.layout.dialog_user_list_detail_editor, null);
-            builder.setView(view);
-            mEditName = (MaterialEditText) view.findViewById(R.id.name);
-            mEditName.addValidator(new UserListNameValidator(getString(R.string.invalid_list_name)));
-            mEditDescription = (MaterialEditText) view.findViewById(R.id.description);
-            mPublicCheckBox = (CheckBox) view.findViewById(R.id.is_public);
-            if (mName != null) {
-                mEditName.setText(mName);
-            }
-            if (mDescription != null) {
-                mEditDescription.setText(mDescription);
-            }
-            mPublicCheckBox.setChecked(mIsPublic);
+            builder.setView(R.layout.dialog_user_list_detail_editor);
             builder.setTitle(R.string.user_list);
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
-            return builder.create();
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+
+                    AlertDialog alertDialog = (AlertDialog) dialog;
+                    MaterialEditText mEditName = (MaterialEditText) alertDialog.findViewById(R.id.name);
+                    MaterialEditText mEditDescription = (MaterialEditText) alertDialog.findViewById(R.id.description);
+                    CheckBox mPublicCheckBox = (CheckBox) alertDialog.findViewById(R.id.is_public);
+
+                    mEditName.addValidator(new UserListNameValidator(getString(R.string.invalid_list_name)));
+                    if (mName != null) {
+                        mEditName.setText(mName);
+                    }
+                    if (mDescription != null) {
+                        mEditDescription.setText(mDescription);
+                    }
+                    mPublicCheckBox.setChecked(mIsPublic);
+                }
+            });
+            return dialog;
         }
 
         @Override

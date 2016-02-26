@@ -61,7 +61,7 @@ public class FavoriteTaskEvent {
         return status;
     }
 
-    public void setStatus(ParcelableStatus status) {
+    public void setStatus(@Nullable ParcelableStatus status) {
         this.status = status;
     }
 

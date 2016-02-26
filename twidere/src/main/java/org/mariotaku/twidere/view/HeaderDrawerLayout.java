@@ -361,7 +361,7 @@ public class HeaderDrawerLayout extends ViewGroup {
         }
 
         @Override
-        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+        public void onViewReleased(View releasedChild, float xVel, float yVel) {
             mDrawer.mDragHelper.flingCapturedView(mDrawer.getPaddingLeft(),
                     mDrawer.getHeaderTopMinimum(), mDrawer.getPaddingLeft(),
                     mDrawer.getHeaderTopMaximum());

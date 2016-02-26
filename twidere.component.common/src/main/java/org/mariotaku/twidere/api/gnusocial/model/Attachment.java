@@ -4,6 +4,8 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
+ * GNUSocial attachment model
+ *
  * Created by mariotaku on 16/1/26.
  */
 @JsonObject

@@ -28,9 +28,9 @@ import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterUserStream;
 import org.mariotaku.twidere.api.twitter.UserStreamCallback;
+import org.mariotaku.twidere.api.twitter.model.DeletionEvent;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.StatusDeletionNotice;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.Warning;
@@ -221,16 +221,16 @@ public class StreamingService extends Service implements Constants {
         }
 
         @Override
-        public void onDeletionNotice(final long directMessageId, final long userId) {
-            final String where = DirectMessages.MESSAGE_ID + " = " + directMessageId;
+        public void onDirectMessageDeleted(final DeletionEvent event) {
+            final String where = Expression.equals(DirectMessages.MESSAGE_ID, event.getId()).getSQL();
             for (final Uri uri : MESSAGES_URIS) {
                 resolver.delete(uri, where, null);
             }
         }
 
         @Override
-        public void onDeletionNotice(final StatusDeletionNotice statusDeletionNotice) {
-            final long statusId = statusDeletionNotice.getStatusId();
+        public void onStatusDeleted(final DeletionEvent event) {
+            final long statusId = event.getId();
             resolver.delete(Statuses.CONTENT_URI, Expression.equals(Statuses.STATUS_ID, statusId).getSQL(), null);
             resolver.delete(Activities.AboutMe.CONTENT_URI, Expression.equals(Activities.AboutMe.STATUS_ID, statusId).getSQL(), null);
         }
@@ -298,9 +298,9 @@ public class StreamingService extends Service implements Constants {
         }
 
         @Override
-        public void onFavorite(final User source, final User target, final Status favoritedStatus) {
+        public void onFavorite(final User source, final User target, final Status targetStatus) {
             final String message = String.format("%s favorited %s's tweet: %s", source.getScreenName(),
-                    target.getScreenName(), favoritedStatus.getText());
+                    target.getScreenName(), targetStatus.getText());
             Log.d(LOGTAG, message);
         }
 
@@ -362,9 +362,9 @@ public class StreamingService extends Service implements Constants {
         }
 
         @Override
-        public void onUnfavorite(final User source, final User target, final Status unfavoritedStatus) {
+        public void onUnfavorite(final User source, final User target, final Status targetStatus) {
             final String message = String.format("%s unfavorited %s's tweet: %s", source.getScreenName(),
-                    target.getScreenName(), unfavoritedStatus.getText());
+                    target.getScreenName(), targetStatus.getText());
             Log.d(LOGTAG, message);
         }
 

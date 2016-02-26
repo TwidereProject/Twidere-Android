@@ -110,12 +110,13 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
     }
 
     @Override
-    public void onSupportActionModeStarted(android.support.v7.view.ActionMode mode) {
+    public void onSupportActionModeStarted(@NonNull android.support.v7.view.ActionMode mode) {
         super.onSupportActionModeStarted(mode);
         ThemeUtils.applySupportActionModeColor(mode, this, getCurrentThemeResourceId(),
                 getCurrentThemeColor(), getThemeBackgroundOption(), true);
     }
 
+    @NonNull
     @Override
     public ThemedAppCompatDelegateFactory.ThemedAppCompatDelegate getDelegate() {
         if (mDelegate != null) return mDelegate;

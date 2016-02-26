@@ -34,8 +34,9 @@ public final class InternalParseUtil {
         throw new AssertionError("This class should never be instantiated");
     }
 
+    @TwitterResponse.AccessLevel
     public static int toAccessLevel(final HttpResponse res) {
-        if (null == res) return -1;
+        if (res == null) return TwitterResponse.NONE;
         final String xAccessLevel = res.getHeader("X-Access-Level");
         int accessLevel;
         if (null == xAccessLevel) {

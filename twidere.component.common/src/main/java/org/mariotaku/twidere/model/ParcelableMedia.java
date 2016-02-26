@@ -14,8 +14,6 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.api.twitter.model.MediaEntity;
-import org.mariotaku.twidere.api.twitter.model.MediaEntity.Size;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

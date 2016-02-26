@@ -87,6 +87,7 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
+import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -107,7 +108,6 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.view.ComposeEditText;
 
 import java.util.ArrayList;
@@ -305,8 +305,11 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
                     final long userId = args.getLong(EXTRA_RECIPIENT_ID, -1);
                     final int accountPos = accountsSpinnerAdapter.findItemPosition(accountId);
-                    account = accountPos < 0 ? DataStoreUtils.getCredentials(activity, accountId)
-                            : accountsSpinnerAdapter.getItem(accountPos);
+                    if (accountPos >= 0) {
+                        mAccountSpinner.setSelection(accountPos);
+                    }
+                    account = accountPos >= 0 ? accountsSpinnerAdapter.getItem(accountPos) :
+                            DataStoreUtils.getCredentials(activity, accountId);
                     recipient = Utils.getUserForConversation(activity, accountId, userId);
                 } else {
                     account = null;
