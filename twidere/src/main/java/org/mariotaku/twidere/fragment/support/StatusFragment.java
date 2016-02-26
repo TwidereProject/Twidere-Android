@@ -1148,12 +1148,15 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 translateLabelView.setText(R.string.unknown_language);
                 translateContainer.setVisibility(View.GONE);
             } else {
-                translateLabelView.setText(new Locale(lang).getDisplayLanguage());
+                final Locale locale = new Locale(lang);
                 translateContainer.setVisibility(View.VISIBLE);
                 if (translation != null) {
+                    translateLabelView.setText(context.getString(R.string.translation));
                     translateResultView.setVisibility(View.VISIBLE);
                     translateResultView.setText(translation.getText());
                 } else {
+                    translateLabelView.setText(context.getString(R.string.translate_from_language,
+                            locale.getDisplayLanguage()));
                     translateResultView.setVisibility(View.GONE);
                 }
             }

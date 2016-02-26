@@ -71,7 +71,7 @@ dependencies {
     androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.4'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
-    apt "com.github.mariotaku.ObjectCursor:processor:0.9.4"
+    apt "com.github.mariotaku.ObjectCursor:processor:0.9.5"
 
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:23.2.0'
@@ -111,7 +111,7 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.10'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.10'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.5'
-    compile 'com.github.mariotaku.ObjectCursor:core:0.9.4'
+    compile 'com.github.mariotaku.ObjectCursor:core:0.9.5'
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
 

@@ -38,11 +38,11 @@ android {
 dependencies {
     apt 'com.bluelinelabs:logansquare-compiler:1.3.4'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
-    apt 'com.github.mariotaku.ObjectCursor:processor:0.9.4'
+    apt 'com.github.mariotaku.ObjectCursor:processor:0.9.5'
     compile 'com.android.support:support-annotations:23.2.0'
     compile 'com.bluelinelabs:logansquare:1.3.4'
     compile 'com.github.mariotaku.RestFu:library:0.9.21'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
-    compile 'com.github.mariotaku.ObjectCursor:core:0.9.4'
+    compile 'com.github.mariotaku.ObjectCursor:core:0.9.5'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

@@ -44,6 +44,7 @@ public interface HelpResources {
      * help/configuration | Twitter Developers</a>
      * @since Twitter4J 2.2.3
      */
+    @GET("/help/configuration.json")
     TwitterAPIConfiguration getAPIConfiguration() throws TwitterException;
 
     /**

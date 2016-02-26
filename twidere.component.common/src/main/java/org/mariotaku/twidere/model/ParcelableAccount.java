@@ -21,6 +21,7 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -70,6 +71,14 @@ public class ParcelableAccount implements Parcelable {
     @JsonField(name = "is_activated")
     @CursorField(Accounts.IS_ACTIVATED)
     public boolean is_activated;
+
+    @Nullable
+    @ParcelableThisPlease
+    @JsonField(name = "account_type")
+    @CursorField(Accounts.ACCOUNT_TYPE)
+    public String account_type;
+
+
     public static final Creator<ParcelableAccount> CREATOR = new Creator<ParcelableAccount>() {
         public ParcelableAccount createFromParcel(Parcel source) {
             ParcelableAccount target = new ParcelableAccount();
@@ -84,12 +93,6 @@ public class ParcelableAccount implements Parcelable {
     public boolean is_dummy;
 
     ParcelableAccount() {
-    }
-
-    public static ParcelableAccount dummyAccount() {
-        final ParcelableAccount account = new ParcelableAccount();
-        account.is_dummy = true;
-        return account;
     }
 
     public static ParcelableCredentials dummyCredentials() {
@@ -108,6 +111,7 @@ public class ParcelableAccount implements Parcelable {
                 ", account_id=" + account_id +
                 ", color=" + color +
                 ", is_activated=" + is_activated +
+                ", account_type='" + account_type + '\'' +
                 ", is_dummy=" + is_dummy +
                 '}';
     }
