@@ -64,7 +64,7 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
     @Override
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
-        if (args == null) return null;
+        assert args != null;
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
@@ -72,6 +72,33 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         final String listName = args.getString(EXTRA_LIST_NAME);
         return new String[]{AUTHORITY_USER_LIST_TIMELINE, "account" + accountId, "list_id" + listId,
                 "list_name" + listName, "user_id" + userId, "screen_name" + screenName};
+    }
+
+    @Override
+    protected String getReadPositionTagWithArguments() {
+        final Bundle args = getArguments();
+        assert args != null;
+        final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
+        StringBuilder sb = new StringBuilder("user_list_");
+        if (tabPosition < 0) return null;
+        final long listId = args.getLong(EXTRA_LIST_ID, -1);
+        final String listName = args.getString(EXTRA_LIST_NAME);
+        if (listId > 0) {
+            sb.append(listId);
+        } else if (listName != null) {
+            final long userId = args.getLong(EXTRA_USER_ID, -1);
+            final String screenName = args.getString(EXTRA_SCREEN_NAME);
+            if (userId > 0) {
+                sb.append(userId);
+            } else if (screenName != null) {
+                sb.append(screenName);
+            } else {
+                return null;
+            }
+            sb.append('_');
+            sb.append(listName);
+        }
+        return sb.toString();
     }
 
 }
