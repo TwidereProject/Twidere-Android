@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter;
 
+import org.mariotaku.twidere.api.statusnet.api.StatusNetResources;
 import org.mariotaku.twidere.api.twitter.api.DirectMessagesResources;
 import org.mariotaku.twidere.api.twitter.api.FavoritesResources;
 import org.mariotaku.twidere.api.twitter.api.FriendsFollowersResources;
@@ -39,13 +40,10 @@ import org.mariotaku.twidere.api.twitter.api.TrendsResources;
 import org.mariotaku.twidere.api.twitter.api.TweetResources;
 import org.mariotaku.twidere.api.twitter.api.UsersResources;
 
-/**
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @since Twitter4J 2.2.0
- */
 public interface Twitter extends SearchResource, TimelineResources,
         TweetResources, UsersResources, ListsResources, DirectMessagesResources, FriendsFollowersResources,
         FavoritesResources, SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
-        HelpResources, PrivateActivityResources, PrivateTweetResources, PrivateTimelinesResources,
-        PrivateFriendsFollowersResources, PrivateDirectMessagesResources, PrivateScheduleResources {
+        HelpResources, StatusNetResources, PrivateActivityResources, PrivateTweetResources,
+        PrivateTimelinesResources, PrivateFriendsFollowersResources, PrivateDirectMessagesResources,
+        PrivateScheduleResources {
 }

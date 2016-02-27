@@ -568,7 +568,13 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             }
 
             private boolean shouldUseDividerFor(int itemViewType) {
-                return itemViewType == AbsActivitiesAdapter.ITEM_VIEW_TYPE_TITLE_SUMMARY;
+                switch (itemViewType) {
+                    case AbsActivitiesAdapter.ITEM_VIEW_TYPE_TITLE_SUMMARY:
+                    case AbsActivitiesAdapter.ITEM_VIEW_TYPE_GAP:
+                        return true;
+                    default:
+                        return false;
+                }
             }
         });
     }

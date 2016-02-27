@@ -47,9 +47,6 @@ public interface PrivateActivityResources extends PrivateResources {
     @GET("/activity/about_me.json")
     ResponseList<Activity> getActivitiesAboutMe(@Query Paging paging) throws TwitterException;
 
-    @GET("/activity/by_friends.json")
-    ResponseList<Activity> getActivitiesByFriends(@Query Paging paging) throws TwitterException;
-
     @Queries({})
     @GET("/activity/about_me/unread.json")
     CursorTimestampResponse getActivitiesAboutMeUnread(@Query("cursor") boolean cursor) throws TwitterException;

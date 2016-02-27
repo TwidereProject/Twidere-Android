@@ -205,7 +205,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     protected void reloadStatuses() {
-        if (getActivity() == null || isDetached()) return;
+        if (getContext() == null || isDetached()) return;
         final Bundle args = new Bundle(), fragmentArgs = getArguments();
         if (fragmentArgs != null) {
             args.putAll(fragmentArgs);
@@ -246,6 +246,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         TaskStarter.execute(new AbstractTask<Object, long[][], CursorStatusesFragment>() {
             @Override
             public long[][] doLongOperation(Object o) {
+                if (getContext() == null) return null;
                 final long[][] result = new long[3][];
                 result[0] = getAccountIds();
                 result[1] = getOldestStatusIds(result[0]);
@@ -254,6 +255,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
 
             @Override
             public void afterExecute(CursorStatusesFragment fragment, long[][] result) {
+                if (result == null) return;
                 fragment.getStatuses(result[0], result[1], result[2]);
             }
         }.setResultHandler(this));
@@ -285,7 +287,9 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     protected long[] getNewestStatusIds(long[] accountIds) {
-        return DataStoreUtils.getNewestStatusIds(getActivity(), getContentUri(), accountIds);
+        final Context context = getContext();
+        if (context == null) return null;
+        return DataStoreUtils.getNewestStatusIds(context, getContentUri(), accountIds);
     }
 
     protected abstract int getNotificationType();
@@ -301,7 +305,9 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     protected long[] getOldestStatusIds(long[] accountIds) {
-        return DataStoreUtils.getOldestStatusIds(getActivity(), getContentUri(), accountIds);
+        final Context context = getContext();
+        if (context == null) return null;
+        return DataStoreUtils.getOldestStatusIds(context, getContentUri(), accountIds);
     }
 
     protected abstract boolean isFilterEnabled();

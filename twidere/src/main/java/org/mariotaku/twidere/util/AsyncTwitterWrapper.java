@@ -85,7 +85,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.GetActivitiesAboutMeTask;
-import org.mariotaku.twidere.task.GetActivitiesByFriendsTask;
 import org.mariotaku.twidere.task.GetDirectMessagesTask;
 import org.mariotaku.twidere.task.GetHomeTimelineTask;
 import org.mariotaku.twidere.task.GetLocalTrendsTask;
@@ -518,12 +517,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     public void getActivitiesAboutMeAsync(final RefreshTaskParam param) {
         final GetActivitiesTask task = new GetActivitiesAboutMeTask(getContext());
         task.setParams(param);
-        TaskStarter.execute(task);
-    }
-
-    public void getActivitiesByFriendsAsync(long[] accountIds, long[] maxIds, long[] sinceIds) {
-        final GetActivitiesTask task = new GetActivitiesByFriendsTask(getContext());
-        task.setParams(new BaseRefreshTaskParam(accountIds, maxIds, sinceIds));
         TaskStarter.execute(task);
     }
 
