@@ -18,11 +18,9 @@
  */
 package org.mariotaku.twidere;
 
-import org.mariotaku.twidere.model.Account;
-
 interface ITimelineSyncHelper {
 	
-	boolean put(in Account account, String key, long value);
+	boolean put(long accountId, String key, long value);
 
-	long get(in Account account, String key);
+	long get(long accountId, String key);
 }

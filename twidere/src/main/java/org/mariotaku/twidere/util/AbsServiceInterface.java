@@ -30,6 +30,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.MediaUploadResult;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.ServiceUtils.ServiceToken;
 
 import static org.mariotaku.twidere.util.ServiceUtils.bindToService;

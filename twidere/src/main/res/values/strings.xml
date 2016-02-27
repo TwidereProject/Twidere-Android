@@ -752,5 +752,6 @@
     <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
     <string name="translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
     <string name="translation">Translation</string>
-    <string name="shortener_version_incompatible">Incompatible shortener</string>
+    <string name="shortener_version_incompatible">Incompatible tweet shortener</string>
+    <string name="uploader_version_incompatible">Incompatible media uploader</string>
 </resources>

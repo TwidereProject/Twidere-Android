@@ -28,14 +28,13 @@ public class TwitLongerReaderActivity extends Activity implements Constants, OnC
     private ParcelableStatus mStatus;
     private TwitLongerReaderTask mTwitLongerPostTask;
     private static final Pattern PATTERN_TWITLONGER = Pattern.compile(
-            "((tl\\.gd|www.twitlonger.com\\/show)\\/([\\w\\d]+))", Pattern.CASE_INSENSITIVE);
+            "((tl\\.gd|www.twitlonger.com/show)/([\\w\\d]+))", Pattern.CASE_INSENSITIVE);
     private static final int GROUP_TWITLONGER_ID = 3;
 
     @Override
     public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.action: {
-
                 if (mResult == null) {
                     if (mStatus == null) return;
                     if (mTwitLongerPostTask != null) {
@@ -43,11 +42,11 @@ public class TwitLongerReaderActivity extends Activity implements Constants, OnC
                     }
                     final Matcher m = PATTERN_TWITLONGER.matcher(mStatus.text_html);
                     if (m.find()) {
-                        mTwitLongerPostTask = new TwitLongerReaderTask(m.group(GROUP_TWITLONGER_ID));
-                        mTwitLongerPostTask.execute();
+                        mTwitLongerPostTask = new TwitLongerReaderTask(this);
+                        mTwitLongerPostTask.execute(m.group(GROUP_TWITLONGER_ID));
                     }
                 } else {
-                    if (mUser == null || mResult == null) return;
+                    if (mUser == null) return;
                     final Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_TEXT, "@" + mUser + ": " + mResult);
@@ -89,8 +88,8 @@ public class TwitLongerReaderActivity extends Activity implements Constants, OnC
                     if (mTwitLongerPostTask != null) {
                         mTwitLongerPostTask.cancel(true);
                     }
-                    mTwitLongerPostTask = new TwitLongerReaderTask(m.group(GROUP_TWITLONGER_ID));
-                    mTwitLongerPostTask.execute();
+                    mTwitLongerPostTask = new TwitLongerReaderTask(this);
+                    mTwitLongerPostTask.execute(m.group(GROUP_TWITLONGER_ID));
                 } else {
                     finish();
                     return;
@@ -109,12 +108,12 @@ public class TwitLongerReaderActivity extends Activity implements Constants, OnC
         super.onSaveInstanceState(outState);
     }
 
-    public final class TwitLongerReaderTask extends AsyncTask<String, Object, TaskResponse<Post, TwitLongerException>> {
+    public static class TwitLongerReaderTask extends AsyncTask<String, Object, TaskResponse<Post, TwitLongerException>> {
 
-        private final String id;
+        private final TwitLongerReaderActivity activity;
 
-        public TwitLongerReaderTask(final String id) {
-            this.id = id;
+        public TwitLongerReaderTask(TwitLongerReaderActivity activity) {
+            this.activity = activity;
         }
 
         @Override
@@ -129,23 +128,37 @@ public class TwitLongerReaderActivity extends Activity implements Constants, OnC
 
         @Override
         protected void onPostExecute(final TaskResponse<Post, TwitLongerException> result) {
-            mProgress.setVisibility(View.GONE);
-            mActionButton.setVisibility(View.VISIBLE);
             if (result.hasError()) {
-                mActionButton.setImageResource(R.drawable.ic_menu_send);
+                activity.showError(result.getThrowable());
             } else {
-                mActionButton.setImageResource(R.drawable.ic_menu_share);
+                activity.showResult(result.getObject());
             }
-
             super.onPostExecute(result);
         }
 
         @Override
         protected void onPreExecute() {
-            mProgress.setVisibility(View.VISIBLE);
-            mActionButton.setVisibility(View.GONE);
-            super.onPreExecute();
+            activity.showProgress();
         }
+
+    }
+
+    private void showProgress() {
+        mProgress.setVisibility(View.VISIBLE);
+        mActionButton.setVisibility(View.GONE);
+    }
+
+    private void showResult(Post post) {
+        mProgress.setVisibility(View.GONE);
+        mActionButton.setVisibility(View.VISIBLE);
+        mActionButton.setImageResource(R.drawable.ic_menu_share);
+        mPreview.setText(post.content);
+    }
+
+    private void showError(TwitLongerException e) {
+        mProgress.setVisibility(View.GONE);
+        mActionButton.setVisibility(View.VISIBLE);
+        mActionButton.setImageResource(R.drawable.ic_menu_send);
 
     }
 }

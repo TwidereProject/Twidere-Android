@@ -6,55 +6,57 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import org.mariotaku.twidere.IStatusShortener;
+import org.mariotaku.twidere.IMediaUploader;
+import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
-import org.mariotaku.twidere.model.StatusShortenResult;
+import org.mariotaku.twidere.model.UploaderMediaItem;
 import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
- * Abstract status shortener service
+ * Abstract media uploader service
  * <p/>
- * Created by mariotaku on 16/2/20.
+ * Created by mariotaku on 16/2/27.
  */
-public abstract class StatusShortenerService extends Service {
-    private final StatusShortenerStub mBinder = new StatusShortenerStub(this);
+public abstract class MediaUploaderService extends Service {
+
+    private final MediaUploaderStub mBinder = new MediaUploaderStub(this);
 
     public final IBinder onBind(final Intent intent) {
         return mBinder;
     }
 
-    protected abstract StatusShortenResult shorten(ParcelableStatusUpdate status,
-                                                   long currentAccountId,
-                                                   String overrideStatusText);
+    protected abstract MediaUploadResult upload(ParcelableStatusUpdate status,
+                                                UploaderMediaItem[] media);
 
-    protected abstract boolean callback(StatusShortenResult result, ParcelableStatus status);
+    protected abstract boolean callback(MediaUploadResult result, ParcelableStatus status);
 
     /*
      * By making this a static class with a WeakReference to the Service, we
      * ensure that the Service can be GCd even when the system process still has
      * a remote reference to the stub.
      */
-    private static final class StatusShortenerStub extends IStatusShortener.Stub {
+    private static final class MediaUploaderStub extends IMediaUploader.Stub {
 
-        final WeakReference<StatusShortenerService> mService;
+        final WeakReference<MediaUploaderService> mService;
 
-        public StatusShortenerStub(final StatusShortenerService service) {
+        public MediaUploaderStub(final MediaUploaderService service) {
             mService = new WeakReference<>(service);
         }
 
         @Override
-        public String shorten(final String statusJson, final long currentAccountId,
-                              final String overrideStatusText)
-                throws RemoteException {
+        public String upload(String statusJson, String mediaJson) throws RemoteException {
             try {
                 final ParcelableStatusUpdate statusUpdate = LoganSquareMapperFinder.mapperFor(ParcelableStatusUpdate.class)
                         .parse(statusJson);
-                final StatusShortenResult shorten = mService.get().shorten(statusUpdate, currentAccountId, overrideStatusText);
-                return LoganSquareMapperFinder.mapperFor(StatusShortenResult.class).serialize(shorten);
+                final List<UploaderMediaItem> media = LoganSquareMapperFinder.mapperFor(UploaderMediaItem.class)
+                        .parseList(mediaJson);
+                final MediaUploadResult shorten = mService.get().upload(statusUpdate, media.toArray(new UploaderMediaItem[media.size()]));
+                return LoganSquareMapperFinder.mapperFor(MediaUploadResult.class).serialize(shorten);
             } catch (IOException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     throw new RemoteException(e.getMessage());
@@ -67,7 +69,7 @@ public abstract class StatusShortenerService extends Service {
         @Override
         public boolean callback(String resultJson, String statusJson) throws RemoteException {
             try {
-                final StatusShortenResult result = LoganSquareMapperFinder.mapperFor(StatusShortenResult.class)
+                final MediaUploadResult result = LoganSquareMapperFinder.mapperFor(MediaUploadResult.class)
                         .parse(resultJson);
                 final ParcelableStatus status = LoganSquareMapperFinder.mapperFor(ParcelableStatus.class)
                         .parse(statusJson);

@@ -518,6 +518,23 @@ public class BackgroundOperationService extends IntentService implements Constan
                 if (uploader == null) {
                     throw new UploaderNotFoundException(getString(R.string.error_message_media_uploader_not_found));
                 }
+                try {
+                    uploader.checkService(new AbsServiceInterface.CheckServiceAction() {
+                        @Override
+                        public void check(@Nullable Bundle metaData) throws AbsServiceInterface.CheckServiceException {
+                            if (metaData == null) throw new ExtensionVersionMismatchException();
+                            final String extensionVersion = metaData.getString(METADATA_KEY_EXTENSION_VERSION_MEDIA_UPLOADER);
+                            if (!TextUtils.equals(extensionVersion, getString(R.string.media_uploader_service_interface_version))) {
+                                throw new ExtensionVersionMismatchException();
+                            }
+                        }
+                    });
+                } catch (AbsServiceInterface.CheckServiceException e) {
+                    if (e instanceof ExtensionVersionMismatchException) {
+                        throw new UploadException(getString(R.string.uploader_version_incompatible));
+                    }
+                    throw new UploadException(e);
+                }
             }
             if (!ServicePickerPreference.isNoneValue(shortenerComponent)) {
                 shortener = StatusShortenerInterface.getInstance(app, shortenerComponent);
@@ -577,8 +594,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                     String statusText = statusUpdate.text;
 
                     // Use custom uploader to upload media
+                    MediaUploadResult uploadResult = null;
                     if (uploader != null && hasMedia) {
-                        final MediaUploadResult uploadResult;
                         try {
                             uploadResult = uploader.upload(statusUpdate,
                                     UploaderMediaItem.getFromStatusUpdate(this, statusUpdate));
@@ -684,6 +701,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                         final ParcelableStatus result = ParcelableStatusUtils.fromStatus(resultStatus, account.account_id, false);
                         if (shouldShorten && shortener != null && shortenedResult != null) {
                             shortener.callback(shortenedResult, result);
+                        }
+                        if (uploader != null && uploadResult != null) {
+                            uploader.callback(uploadResult, result);
                         }
                         results.add(SingleResponse.getInstance(result));
                     } catch (final TwitterException e) {
@@ -866,13 +886,6 @@ public class BackgroundOperationService extends IntentService implements Constan
                         updateUpdateStatusNotification(context, builder, percent, statusUpdate));
             }
             this.percent = percent;
-        }
-    }
-
-    static class StatusTooLongException extends UpdateStatusException {
-
-        public StatusTooLongException(final Context context) {
-            super(context.getString(R.string.error_message_status_too_long));
         }
     }
 
