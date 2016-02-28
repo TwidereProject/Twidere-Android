@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(revision 1b4e664d214721df322a085b3bfdd13524d10c4d)
+--- twidere/build.gradle	(date 1456662374000)
 +++ twidere/build.gradle	(revision )
 @@ -1,17 +1,17 @@
  import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
@@ -41,10 +41,10 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
 -    maven { url 'https://maven.fabric.io/public' }
 +//    maven { url 'https://maven.fabric.io/public' }
+     maven { url 'https://github.com/suckgamony/RapidDecoder/raw/master/repository' }
      flatDir { dirs "$projectDir/lib" }
  }
- 
-@@ -117,10 +117,10 @@
+@@ -120,10 +120,10 @@
      compile project(':twidere.component.common')
      compile project(':twidere.component.nyan')
  
