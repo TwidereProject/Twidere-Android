@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter.support;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -144,8 +145,9 @@ public class SupportTabsAdapter extends SupportFixedFragmentStatePagerAdapter im
         return getTabIconDrawable(mContext, mTabs.get(position).icon);
     }
 
+    @NonNull
     public SupportTabSpec getTab(final int position) {
-        return position >= 0 && position < mTabs.size() ? mTabs.get(position) : null;
+        return mTabs.get(position);
     }
 
     public List<SupportTabSpec> getTabs() {

@@ -568,7 +568,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             // Single account tab, return true if is current account
             if (tabAccountId == accountId) return true;
             // Check activated account if empty
-            return isActivated;
+            return tabAccountId <= 0 && isActivated;
         } else if (ArrayUtils.contains(accountIds, accountId)) {
             return true;
         }

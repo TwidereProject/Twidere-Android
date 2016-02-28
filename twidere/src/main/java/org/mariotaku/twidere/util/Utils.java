@@ -1657,10 +1657,12 @@ public final class Utils implements Constants {
     }
 
 
+    @CustomTabType
     public static String matchTabType(@Nullable final Uri uri) {
         return getTabType(matchTabCode(uri));
     }
 
+    @CustomTabType
     public static String getTabType(final int code) {
         switch (code) {
             case TAB_CODE_HOME_TIMELINE: {

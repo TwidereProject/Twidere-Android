@@ -61,16 +61,13 @@ import android.widget.FrameLayout.LayoutParams;
 
 import com.squareup.otto.Subscribe;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
 import org.mariotaku.twidere.activity.UsageStatisticsActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
@@ -83,7 +80,6 @@ import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.StreamingService;
 import org.mariotaku.twidere.task.AbstractTask;
@@ -308,7 +304,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 if (isDrawerOpen()) {
                     drawer.closeDrawers();
                 } else {
-                    drawer.openDrawer(Gravity.LEFT);
+                    drawer.openDrawer(GravityCompat.START);
                 }
                 return true;
             }
@@ -392,8 +388,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         setupBars();
         showDataProfilingRequest();
         initUnreadCount();
+        setupHomeTabs();
         updateActionsButton();
-        updateSlidingMenuTouchMode();
 
         if (savedInstanceState == null) {
             if (refreshOnStart) {
@@ -403,9 +399,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 openAccountsDrawer();
             }
         }
-        setupHomeTabs();
 
-        final int initialTabPosition = handleIntent(intent, savedInstanceState == null);
+        final int initialTabPosition = handleIntent(intent, savedInstanceState == null,
+                savedInstanceState != null);
         setTabPosition(initialTabPosition);
 
         if (Utils.isStreamingEnabled()) {
@@ -437,7 +433,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         invalidateOptionsMenu();
         updateActionsButtonStyle();
         updateActionsButton();
-        updateSlidingMenuTouchMode();
     }
 
     @Override
@@ -456,10 +451,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mPreferences.edit().putInt(KEY_SAVED_TAB_POSITION, mViewPager.getCurrentItem()).apply();
 
         super.onStop();
-    }
-
-    public ViewPager getViewPager() {
-        return mViewPager;
     }
 
     public void notifyAccountsChanged() {
@@ -518,7 +509,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
         }
-        updateSlidingMenuTouchMode();
         updateActionsButton();
     }
 
@@ -563,7 +553,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     @Override
     protected void onNewIntent(final Intent intent) {
-        final int tabPosition = handleIntent(intent, false);
+        final int tabPosition = handleIntent(intent, false, false);
         if (tabPosition >= 0) {
             mViewPager.setCurrentItem(TwidereMathUtils.clamp(tabPosition, mPagerAdapter.getCount(), 0));
         }
@@ -678,7 +668,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         return false;
     }
 
-    private int handleIntent(final Intent intent, final boolean firstCreate) {
+    private int handleIntent(final Intent intent, final boolean handleExtraIntent,
+                             final boolean restoreInstanceState) {
         // use packge's class loader to prevent BadParcelException
         intent.setExtrasClassLoader(getClassLoader());
         // reset intent
@@ -700,41 +691,45 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final long[] refreshedIds = intent.getLongArrayExtra(EXTRA_REFRESH_IDS);
         if (refreshedIds != null) {
             mTwitterWrapper.refreshAll(refreshedIds);
-        } else if (firstCreate && refreshOnStart) {
+        } else if (handleExtraIntent && refreshOnStart) {
             mTwitterWrapper.refreshAll();
         }
 
         final Uri uri = intent.getData();
+        @CustomTabType
         final String tabType = uri != null ? Utils.matchTabType(uri) : null;
         int initialTab = -1;
         if (tabType != null) {
             final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
-            for (int i = mPagerAdapter.getCount() - 1; i > -1; i--) {
+            for (int i = 0, j = mPagerAdapter.getCount(); i < j; i++) {
                 final SupportTabSpec tab = mPagerAdapter.getTab(i);
                 if (tabType.equals(CustomTabUtils.getTabTypeAlias(tab.type))) {
-                    initialTab = i;
-                    if (hasAccountId(tab.args, accountId)) {
+                    if (tab.args != null && CustomTabUtils.hasAccountId(tab.args,
+                            getActivatedAccountIds(), accountId)) {
+                        initialTab = i;
+                        break;
+                    }
+                }
+            }
+            if (initialTab == -1 && !restoreInstanceState) {
+                switch (tabType) {
+                    case CustomTabType.NOTIFICATIONS_TIMELINE: {
+                        Utils.openInteractions(this, NumberUtils.toLong(uri.getQueryParameter(EXTRA_ACCOUNT_ID), -1));
+                        break;
+                    }
+                    case CustomTabType.DIRECT_MESSAGES: {
+                        Utils.openDirectMessages(this, NumberUtils.toLong(uri.getQueryParameter(EXTRA_ACCOUNT_ID), -1));
                         break;
                     }
                 }
             }
         }
         final Intent extraIntent = intent.getParcelableExtra(EXTRA_EXTRA_INTENT);
-        if (extraIntent != null && firstCreate) {
+        if (extraIntent != null && handleExtraIntent) {
             extraIntent.setExtrasClassLoader(getClassLoader());
             startActivity(extraIntent);
         }
         return initialTab;
-    }
-
-    private boolean hasAccountId(Bundle args, long accountId) {
-        if (args == null) return false;
-        if (args.containsKey(EXTRA_ACCOUNT_ID)) {
-            return args.getLong(EXTRA_ACCOUNT_ID) == accountId;
-        } else if (args.containsKey(EXTRA_ACCOUNT_IDS)) {
-            return ArrayUtils.contains(args.getLongArray(EXTRA_ACCOUNT_IDS), accountId);
-        }
-        return false;
     }
 
     private void initUnreadCount() {
@@ -839,17 +834,14 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     private void triggerActionsClick() {
         if (mViewPager == null || mPagerAdapter == null) return;
         final int position = mViewPager.getCurrentItem();
+        if (mPagerAdapter.getCount() == 0) return;
         final SupportTabSpec tab = mPagerAdapter.getTab(position);
-        if (tab == null) {
-            startActivity(new Intent(INTENT_ACTION_COMPOSE));
+        if (classEquals(DirectMessagesFragment.class, tab.cls)) {
+            openMessageConversation(this, -1, -1);
+        } else if (classEquals(TrendsSuggestionsFragment.class, tab.cls)) {
+            openSearchView(null);
         } else {
-            if (classEquals(DirectMessagesFragment.class, tab.cls)) {
-                openMessageConversation(this, -1, -1);
-            } else if (classEquals(TrendsSuggestionsFragment.class, tab.cls)) {
-                openSearchView(null);
-            } else {
-                startActivity(new Intent(INTENT_ACTION_COMPOSE));
-            }
+            startActivity(new Intent(INTENT_ACTION_COMPOSE));
         }
     }
 
@@ -857,21 +849,17 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         if (mViewPager == null || mPagerAdapter == null) return;
         final int icon, title;
         final int position = mViewPager.getCurrentItem();
+        if (mPagerAdapter.getCount() == 0) return;
         final SupportTabSpec tab = mPagerAdapter.getTab(position);
-        if (tab == null) {
-            title = R.string.compose;
-            icon = R.drawable.ic_action_status_compose;
+        if (classEquals(DirectMessagesFragment.class, tab.cls)) {
+            icon = R.drawable.ic_action_add;
+            title = R.string.new_direct_message;
+        } else if (classEquals(TrendsSuggestionsFragment.class, tab.cls)) {
+            icon = R.drawable.ic_action_search;
+            title = android.R.string.search_go;
         } else {
-            if (classEquals(DirectMessagesFragment.class, tab.cls)) {
-                icon = R.drawable.ic_action_add;
-                title = R.string.new_direct_message;
-            } else if (classEquals(TrendsSuggestionsFragment.class, tab.cls)) {
-                icon = R.drawable.ic_action_search;
-                title = android.R.string.search_go;
-            } else {
-                icon = R.drawable.ic_action_status_compose;
-                title = R.string.compose;
-            }
+            icon = R.drawable.ic_action_status_compose;
+            title = R.string.compose;
         }
         if (mActionsButton instanceof IHomeActionButton) {
             final IHomeActionButton hab = (IHomeActionButton) mActionsButton;
@@ -885,16 +873,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final FrameLayout.LayoutParams lp = (LayoutParams) mActionsButton.getLayoutParams();
         lp.gravity = Gravity.BOTTOM | (leftsideComposeButton ? Gravity.LEFT : Gravity.RIGHT);
         mActionsButton.setLayoutParams(lp);
-    }
-
-    private void updateSlidingMenuTouchMode() {
-//        if (mViewPager == null || mSlidingMenu == null) return;
-//        final int position = mViewPager.getCurrentItem();
-//        final boolean pagingEnabled = mViewPager.isEnabled();
-//        final boolean atFirstOrLast = position == 0 || position == mPagerAdapter.getCount() - 1;
-//        final int mode = !pagingEnabled || atFirstOrLast ? SlidingMenu.TOUCHMODE_FULLSCREEN
-//                : SlidingMenu.TOUCHMODE_MARGIN;
-//        mSlidingMenu.setTouchModeAbove(mode);
     }
 
     private static final class AccountChangeObserver extends ContentObserver {
@@ -955,29 +933,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                     }
                     case CustomTabType.NOTIFICATIONS_TIMELINE: {
                         final long[] accountIds = Utils.getAccountIds(spec.args);
-                        final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext,
-                                true, spec.tag, accountIds);
-                        final long position = mReadStateManager.getPosition(tagWithAccounts);
-
-                        Expression extraWhere = null;
-                        String[] extraWhereArgs = null;
-                        boolean followingOnly = false;
-                        if (spec.args != null) {
-                            Bundle extras = spec.args.getBundle(EXTRA_EXTRAS);
-                            if (extras != null) {
-                                if (extras.getBoolean(EXTRA_MENTIONS_ONLY)) {
-                                    extraWhere = Expression.inArgs(Activities.ACTION, 3);
-                                    extraWhereArgs = new String[]{Activity.Action.MENTION,
-                                            Activity.Action.REPLY, Activity.Action.QUOTE};
-                                }
-                                if (extras.getBoolean(EXTRA_MY_FOLLOWING_ONLY)) {
-                                    followingOnly = true;
-                                }
-                            }
-                        }
-                        final int count = DataStoreUtils.getActivitiesCount(mContext,
-                                Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
-                                position, followingOnly, accountIds);
+                        final int count = DataStoreUtils.getInteractionsCount(mContext, mReadStateManager,
+                                spec.tag, spec.args, accountIds);
                         publishProgress(new TabBadge(i, count));
                         result.put(i, count);
                         break;

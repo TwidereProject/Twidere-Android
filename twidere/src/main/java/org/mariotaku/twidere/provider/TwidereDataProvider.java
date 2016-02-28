@@ -1426,8 +1426,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, String.valueOf(true));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
-        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);
+        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, notificationType);
         homeIntent.setData(homeLinkBuilder.build());
+        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(context, 0, homeIntent, 0);
     }
 
@@ -1448,7 +1449,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         UriExtraUtils.addExtra(homeLinkBuilder, "item_user_following", userFollowing);
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, String.valueOf(true));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
-        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);
+        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, notificationType);
         homeIntent.setData(homeLinkBuilder.build());
         return PendingIntent.getActivity(context, 0, homeIntent, 0);
     }
