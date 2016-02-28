@@ -62,6 +62,7 @@ android {
 repositories {
     maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://github.com/suckgamony/RapidDecoder/raw/master/repository' }
     flatDir { dirs "$projectDir/lib" }
 }
 
@@ -108,10 +109,14 @@ dependencies {
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.10'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.10'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.11'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.11'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.5'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.5'
+    compile 'rapid.decoder:library:0.3.0'
+    compile 'rapid.decoder:jpeg-decoder:0.3.0'
+    compile 'rapid.decoder:png-decoder:0.3.0'
+
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
 

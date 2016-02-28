@@ -65,6 +65,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.sprylab.android.widget.TextureVideoView;
 
@@ -92,6 +93,8 @@ import org.mariotaku.twidere.util.PermissionUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
+import org.mariotaku.twidere.util.imageviewer.RapidImageDecoder;
+import org.mariotaku.twidere.util.imageviewer.RapidImageRegionDecoder;
 import org.mariotaku.twidere.util.media.MediaExtra;
 
 import java.io.File;
@@ -853,6 +856,12 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             if (getUserVisibleHint() && activity != null) {
                 activity.supportInvalidateOptionsMenu();
             }
+        }
+
+        @Override
+        protected void setupImageView(SubsamplingScaleImageView imageView) {
+            imageView.setRegionDecoderClass(RapidImageRegionDecoder.class);
+            imageView.setBitmapDecoderClass(RapidImageDecoder.class);
         }
     }
 
