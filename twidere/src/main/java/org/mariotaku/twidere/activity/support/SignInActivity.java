@@ -46,6 +46,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -923,12 +924,15 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 editVerification.setVisibility(View.GONE);
             } else if ("RetypePhoneNumber".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_challenge_retype_phone_hint);
+                editVerification.setInputType(InputType.TYPE_CLASS_PHONE);
                 editVerification.setVisibility(View.VISIBLE);
             } else if ("RetypeEmail".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_challenge_retype_email_hint);
+                editVerification.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 editVerification.setVisibility(View.VISIBLE);
             } else if ("Sms".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_verification_pin_hint);
+                editVerification.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 editVerification.setVisibility(View.VISIBLE);
             } else {
                 verificationHint.setText(getString(R.string.unsupported_login_verification_type_name,

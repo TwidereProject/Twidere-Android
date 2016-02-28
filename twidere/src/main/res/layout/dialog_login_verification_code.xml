@@ -18,27 +18,26 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/element_spacing_normal">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="@dimen/element_spacing_normal">
 
     <TextView
-        android:layout_width="match_parent"
         android:id="@+id/verification_hint"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"
-        android:text="@string/login_verification_pin_hint" />
+        android:text="@string/login_verification_pin_hint"/>
 
     <EditText
         android:id="@+id/edit_verification_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"
-        android:inputType="textVisiblePassword|number"
         android:textAppearance="?android:textAppearanceMedium"
         android:typeface="monospace">
 
-        <requestFocus />
+        <requestFocus/>
     </EditText>
 </LinearLayout>
