@@ -871,6 +871,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
 
         private static final String EXTRA_LOOP = "loop";
         private static final String[] SUPPORTED_VIDEO_TYPES;
+        private static final String[] FALLBACK_VIDEO_TYPES;
 
         static {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -878,6 +879,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             } else {
                 SUPPORTED_VIDEO_TYPES = new String[]{"video/webm", "video/mp4"};
             }
+            FALLBACK_VIDEO_TYPES = new String[]{"video/mp4"};
         }
 
         private TextureVideoView mVideoView;
@@ -895,6 +897,10 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         protected Object getDownloadExtra() {
             final MediaExtra extra = new MediaExtra();
             extra.setUseThumbor(false);
+            final Pair<String, String> fallbackUrlAndType = getBestVideoUrlAndType(getMedia(), FALLBACK_VIDEO_TYPES);
+            if (fallbackUrlAndType != null) {
+                extra.setFallbackUrl(fallbackUrlAndType.first);
+            }
             return extra;
         }
 
@@ -910,7 +916,8 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         @Nullable
         @Override
         protected Uri getDownloadUri() {
-            final Pair<String, String> bestVideoUrlAndType = getBestVideoUrlAndType(getMedia());
+            final Pair<String, String> bestVideoUrlAndType = getBestVideoUrlAndType(getMedia(),
+                    SUPPORTED_VIDEO_TYPES);
             if (bestVideoUrlAndType == null || bestVideoUrlAndType.first == null) return null;
             return Uri.parse(bestVideoUrlAndType.first);
         }
@@ -1040,7 +1047,9 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             updateVolume();
         }
 
-        private Pair<String, String> getBestVideoUrlAndType(ParcelableMedia media) {
+        @Nullable
+        private Pair<String, String> getBestVideoUrlAndType(final ParcelableMedia media,
+                                                            @NonNull final String[] supportedTypes) {
             if (media == null) return null;
             switch (media.type) {
                 case ParcelableMedia.Type.VIDEO:
@@ -1048,7 +1057,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                     if (media.video_info == null) {
                         return Pair.create(media.media_url, null);
                     }
-                    for (String supportedType : SUPPORTED_VIDEO_TYPES) {
+                    for (String supportedType : supportedTypes) {
                         for (ParcelableMedia.VideoInfo.Variant variant : media.video_info.variants) {
                             if (supportedType.equalsIgnoreCase(variant.content_type))
                                 return Pair.create(variant.url, variant.content_type);

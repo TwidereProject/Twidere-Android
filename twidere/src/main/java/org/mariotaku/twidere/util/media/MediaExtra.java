@@ -6,6 +6,7 @@ package org.mariotaku.twidere.util.media;
 public class MediaExtra {
     long accountId;
     boolean useThumbor = true;
+    String fallbackUrl;
 
     public long getAccountId() {
         return accountId;
@@ -21,5 +22,13 @@ public class MediaExtra {
 
     public void setUseThumbor(boolean useThumbor) {
         this.useThumbor = useThumbor;
+    }
+
+    public String getFallbackUrl() {
+        return fallbackUrl;
+    }
+
+    public void setFallbackUrl(String fallbackUrl) {
+        this.fallbackUrl = fallbackUrl;
     }
 }

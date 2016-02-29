@@ -81,8 +81,28 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
     @NonNull
     @Override
     public CacheDownloadLoader.DownloadResult get(@NonNull String url, Object extra) throws IOException {
-        final ParcelableMedia media = PreviewMediaExtractor.fromLink(url, mClient, extra);
-        return getInternal(media != null && media.media_url != null ? media.media_url : url, extra);
+        try {
+            final ParcelableMedia media = PreviewMediaExtractor.fromLink(url, mClient, extra);
+            if (media != null && media.media_url != null) {
+                return getInternal(media.media_url, extra);
+            } else {
+                return getInternal(url, extra);
+            }
+        } catch (IOException e) {
+            if (extra instanceof MediaExtra) {
+                final String fallbackUrl = ((MediaExtra) extra).getFallbackUrl();
+                if (fallbackUrl != null) {
+                    final ParcelableMedia media = PreviewMediaExtractor.fromLink(fallbackUrl,
+                            mClient, extra);
+                    if (media != null && media.media_url != null) {
+                        return getInternal(media.media_url, extra);
+                    } else {
+                        return getInternal(fallbackUrl, extra);
+                    }
+                }
+            }
+            throw e;
+        }
     }
 
     protected CacheDownloadLoader.DownloadResult getInternal(@NonNull String url,
