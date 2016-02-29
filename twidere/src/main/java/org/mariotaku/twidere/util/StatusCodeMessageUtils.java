@@ -42,6 +42,7 @@ public class StatusCodeMessageUtils {
         TWITTER_ERROR_CODE_MESSAGES.put(135, R.string.error_twitter_135);
         TWITTER_ERROR_CODE_MESSAGES.put(136, R.string.error_twitter_136);
         TWITTER_ERROR_CODE_MESSAGES.put(139, R.string.error_twitter_139);
+        TWITTER_ERROR_CODE_MESSAGES.put(144, R.string.error_twitter_144);
         TWITTER_ERROR_CODE_MESSAGES.put(161, R.string.error_twitter_161);
         TWITTER_ERROR_CODE_MESSAGES.put(162, R.string.error_twitter_162);
         TWITTER_ERROR_CODE_MESSAGES.put(172, R.string.error_twitter_172);

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -48,6 +49,7 @@ public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
         return twitter.getRetweetsOfMe(paging);
     }
 
+    @WorkerThread
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
         return InternalTwitterContentUtils.isFiltered(database, -1, status.text_plain, status.text_html, status.source,

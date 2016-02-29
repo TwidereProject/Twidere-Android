@@ -22,6 +22,7 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -61,6 +62,7 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
             throw new TwitterException("Invalid user");
     }
 
+    @WorkerThread
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
         final long retweetUserId = status.is_retweet ? status.user_id : -1;

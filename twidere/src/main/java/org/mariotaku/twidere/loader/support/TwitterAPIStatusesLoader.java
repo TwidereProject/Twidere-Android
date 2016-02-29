@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
@@ -203,6 +204,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         return TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true, true);
     }
 
+    @WorkerThread
     protected abstract boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status);
 
     protected boolean isGapEnabled() {

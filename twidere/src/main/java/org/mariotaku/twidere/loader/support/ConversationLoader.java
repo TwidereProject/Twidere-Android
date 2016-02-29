@@ -22,6 +22,7 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -30,6 +31,7 @@ import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.Nullables;
 import org.mariotaku.twidere.util.ParcelUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -97,9 +99,10 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
         return statuses;
     }
 
+    @WorkerThread
     @Override
     protected boolean shouldFilterStatus(SQLiteDatabase database, ParcelableStatus status) {
-        return false;
+        return InternalTwitterContentUtils.isFiltered(database, status, false);
     }
 
 }

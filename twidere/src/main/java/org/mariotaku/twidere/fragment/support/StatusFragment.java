@@ -32,6 +32,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
@@ -51,6 +52,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.FixedLinearLayoutManager;
@@ -97,6 +99,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.TranslationResult;
+import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.loader.support.ConversationLoader;
@@ -244,7 +247,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (Utils.hasOfficialAPIAccess(loader.getContext(), mPreferences, account)) {
                 mStatusAdapter.setReplyError(null);
             } else {
-                final SpannableStringBuilder error = SpannableStringBuilder.valueOf(HtmlSpanBuilder.fromHtml(getString(R.string.cant_load_all_replies_message)));
+                final SpannableStringBuilder error = SpannableStringBuilder.valueOf(
+                        HtmlSpanBuilder.fromHtml(getString(R.string.cant_load_all_replies_message)));
                 ClickableSpan dialogSpan = null;
                 for (URLSpan span : error.getSpans(0, error.length(), URLSpan.class)) {
                     if ("#dialog".equals(span.getURL())) {
@@ -566,6 +570,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mStatusAdapter.setLoadMoreSupportedPosition(IndicatorPosition.NONE);
             //TODO show errors
             setState(STATE_ERROR);
+            final ImageView errorIconView = (ImageView) mErrorContainer.findViewById(R.id.error_icon);
+            final TextView errorTextView = (TextView) mErrorContainer.findViewById(R.id.error_text);
+            errorTextView.setText(Utils.getErrorMessage(getContext(), data.getException()));
         }
         invalidateOptionsMenu();
     }
@@ -1300,6 +1307,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             final CountsUsersAdapter countsUsersAdapter = new CountsUsersAdapter(fragment, adapter);
             countsUsersView.setAdapter(countsUsersAdapter);
+            final Resources resources = activity.getResources();
+            countsUsersView.addItemDecoration(new SpacingItemDecoration(resources.getDimensionPixelOffset(R.dimen.element_spacing_normal)));
 
         }
 
@@ -1594,6 +1603,23 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     return;
                 }
                 adapter.setDetailMediaExpanded(true);
+            }
+        }
+
+        private static class SpacingItemDecoration extends RecyclerView.ItemDecoration {
+            private final int spacing;
+
+            public SpacingItemDecoration(int spacing) {
+                this.spacing = spacing;
+            }
+
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                if (ViewCompat.getLayoutDirection(parent) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+                    outRect.set(spacing, 0, 0, 0);
+                } else {
+                    outRect.set(0, 0, spacing, 0);
+                }
             }
         }
     }
@@ -2398,7 +2424,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final List<ParcelableUser> retweeters = new ArrayList<>();
             try {
                 for (Status status : twitter.getRetweets(mStatusId, paging)) {
-                    retweeters.add(ParcelableUserUtils.fromUser(status.getUser(), mAccountId));
+                    final User user = status.getUser();
+                    if (!DataStoreUtils.isFilteringUser(context, user.getId())) {
+                        retweeters.add(ParcelableUserUtils.fromUser(user, mAccountId));
+                    }
                 }
                 activitySummary.setRetweeters(retweeters);
                 final ContentValues statusValues = new ContentValues();

@@ -639,7 +639,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         linearLayoutManager.setStackFromEnd(true);
         mAccountSelector.setLayoutManager(linearLayoutManager);
-        mAccountSelector.addItemDecoration(new SpacingItemDecoration(this));
         mAccountSelector.setItemAnimator(new DefaultItemAnimator());
         mAccountsAdapter = new AccountIconsAdapter(this);
         mAccountSelector.setAdapter(mAccountsAdapter);

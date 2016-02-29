@@ -760,13 +760,17 @@ public class DataStoreUtils implements Constants {
     public static boolean isFilteringUser(Context context, long userId) {
         final ContentResolver cr = context.getContentResolver();
         final Expression where = Expression.equals(Filters.Users.USER_ID, userId);
-        final Cursor c = cr.query(Filters.Users.CONTENT_URI, new String[0], where.getSQL(), null, null);
+        final Cursor c = cr.query(Filters.Users.CONTENT_URI, new String[]{SQLFunctions.COUNT()},
+                where.getSQL(), null, null);
         if (c == null) return false;
         try {
-            return c.getCount() > 0;
+            if (c.moveToFirst()) {
+                return c.getLong(0) > 0;
+            }
         } finally {
             c.close();
         }
+        return false;
     }
 
     @NonNull
