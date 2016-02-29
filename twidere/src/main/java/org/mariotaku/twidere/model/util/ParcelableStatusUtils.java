@@ -37,6 +37,8 @@ public class ParcelableStatusUtils {
         result.account_id = accountId;
         result.id = orig.getId();
         result.timestamp = getTime(orig.getCreatedAt());
+        result.extras = new ParcelableStatus.Extras();
+        result.extras.external_url = orig.getExternalUrl();
 
         final Status retweetedStatus = orig.getRetweetedStatus();
         final User retweetUser = retweetedStatus != null ? orig.getUser() : null;

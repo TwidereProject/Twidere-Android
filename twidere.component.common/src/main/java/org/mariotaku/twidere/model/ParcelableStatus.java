@@ -291,6 +291,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "card")
     @CursorField(value = Statuses.CARD, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableCardEntity card;
+    @ParcelableThisPlease
+    @JsonField(name = "extras")
+    @CursorField(value = Statuses.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
+    public Extras extras;
 
     @CursorField(value = Statuses._ID, excludeWrite = true)
     long _id;
@@ -425,4 +429,35 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         ParcelableStatusParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+
+    @ParcelablePlease
+    @JsonObject
+    public static class Extras implements Parcelable {
+
+        @JsonField(name = "external_url")
+        @ParcelableThisPlease
+        public String external_url;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            ParcelableStatus$ExtrasParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<Extras> CREATOR = new Creator<Extras>() {
+            public Extras createFromParcel(Parcel source) {
+                Extras target = new Extras();
+                ParcelableStatus$ExtrasParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            public Extras[] newArray(int size) {
+                return new Extras[size];
+            }
+        };
+    }
 }
