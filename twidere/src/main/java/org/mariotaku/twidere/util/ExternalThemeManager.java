@@ -62,14 +62,18 @@ public class ExternalThemeManager implements Constants {
             final ComponentName componentName = ComponentName.unflattenFromString(emojiComponentName);
             if (componentName != null) {
                 emojiPackageName = componentName.getPackageName();
+            } else {
+                emojiPackageName = null;
             }
+        } else {
+            emojiPackageName = null;
         }
         initEmojiSupport();
     }
 
     public void initEmojiSupport() {
         if (emojiPackageName == null) {
-            emojiPackageName = null;
+            emoji = null;
             return;
         }
         emoji = new Emoji(application, emojiPackageName);
