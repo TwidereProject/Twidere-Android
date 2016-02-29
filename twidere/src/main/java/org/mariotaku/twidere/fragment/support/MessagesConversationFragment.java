@@ -373,7 +373,12 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (account != null && recipient != null) {
             final String key = getDraftsTextKey(account.account_id, recipient.id);
             final SharedPreferences.Editor editor = mMessageDrafts.edit();
-            editor.putString(key, ParseUtils.parseString(mEditText.getText()));
+            final String text = ParseUtils.parseString(mEditText.getText());
+            if (TextUtils.isEmpty(text)) {
+                editor.remove(key);
+            } else {
+                editor.putString(key, text);
+            }
             editor.apply();
         }
         super.onStop();

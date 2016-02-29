@@ -40,7 +40,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayoutAccessor;
@@ -68,6 +67,7 @@ import org.mariotaku.twidere.activity.SettingsWizardActivity;
 import org.mariotaku.twidere.activity.UsageStatisticsActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
+import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
@@ -711,16 +711,27 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                     }
                 }
             }
-            if (initialTab == -1 && !restoreInstanceState) {
-                switch (tabType) {
-                    case CustomTabType.NOTIFICATIONS_TIMELINE: {
-                        Utils.openInteractions(this, NumberUtils.toLong(uri.getQueryParameter(EXTRA_ACCOUNT_ID), -1));
-                        break;
+
+            final long readPosition = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_READ_POSITION), -1);
+            switch (tabType) {
+                case CustomTabType.HOME_TIMELINE: {
+                    final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.HOME_TIMELINE, accountId);
+                    mReadStateManager.setPosition(tag, readPosition, false);
+                    break;
+                }
+                case CustomTabType.NOTIFICATIONS_TIMELINE: {
+                    if (initialTab == -1 && !restoreInstanceState) {
+                        Utils.openInteractions(this, accountId);
                     }
-                    case CustomTabType.DIRECT_MESSAGES: {
-                        Utils.openDirectMessages(this, NumberUtils.toLong(uri.getQueryParameter(EXTRA_ACCOUNT_ID), -1));
-                        break;
+                    final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME, accountId);
+                    mReadStateManager.setPosition(tag, accountId, readPosition, false);
+                    break;
+                }
+                case CustomTabType.DIRECT_MESSAGES: {
+                    if (initialTab == -1 && !restoreInstanceState) {
+                        Utils.openDirectMessages(this, accountId);
                     }
+                    break;
                 }
             }
         }
