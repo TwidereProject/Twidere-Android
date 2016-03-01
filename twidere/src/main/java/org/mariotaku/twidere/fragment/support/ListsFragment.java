@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,23 +30,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
 public class ListsFragment extends BaseSupportFragment implements RefreshScrollTopInterface,
-        SupportFragmentCallback, SystemWindowsInsetsCallback {
+        SupportFragmentCallback, SystemWindowsInsetsCallback,
+        IControlBarActivity.ControlBarOffsetListener, LinkHandlerActivity.HideUiOnScroll, ViewPager.OnPageChangeListener {
 
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
     private View mPagerOverlay;
 
     private SupportTabsAdapter mPagerAdapter;
+    private int mControlBarHeight;
+    private int mControlBarOffsetPixels;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -55,6 +62,7 @@ public class ListsFragment extends BaseSupportFragment implements RefreshScrollT
         mPagerAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
+        mViewPager.addOnPageChangeListener(this);
         mPagerIndicator.setViewPager(mViewPager);
         mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
 
@@ -72,8 +80,31 @@ public class ListsFragment extends BaseSupportFragment implements RefreshScrollT
             final int actionBarAlpha = isTransparent ? ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(activity)) : 0xFF;
             mPagerIndicator.setAlpha(actionBarAlpha / 255f);
         }
+        updateTabOffset();
     }
 
+    @Override
+    public void onDestroy() {
+        mViewPager.removeOnPageChangeListener(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof IControlBarActivity) {
+            ((IControlBarActivity) context).registerControlBarOffsetListener(this);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof IControlBarActivity) {
+            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
+        }
+        super.onDetach();
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -117,7 +148,58 @@ public class ListsFragment extends BaseSupportFragment implements RefreshScrollT
     }
 
     @Override
+    protected void fitSystemWindows(Rect insets) {
+        final View view = getView();
+        if (view != null) {
+            final int top = Utils.getInsetsTopWithoutActionBarHeight(getActivity(), insets.top);
+            view.setPadding(insets.left, top, insets.right, insets.bottom);
+        }
+        updateTabOffset();
+    }
+
+    @Override
     public boolean getSystemWindowsInsets(Rect insets) {
+        if (mPagerIndicator == null) return false;
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof LinkHandlerActivity) {
+            ((LinkHandlerActivity) activity).getSystemWindowsInsets(insets);
+            insets.top = mPagerIndicator.getHeight() + getControlBarHeight();
+            return true;
+        }
         return false;
+    }
+
+    @Override
+    public void onControlBarOffsetChanged(IControlBarActivity activity, float offset) {
+        mControlBarHeight = activity.getControlBarHeight();
+        mControlBarOffsetPixels = Math.round(mControlBarHeight * (1 - offset));
+        updateTabOffset();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof LinkHandlerActivity) {
+            ((LinkHandlerActivity) activity).setControlBarVisibleAnimate(true);
+        }
+    }
+
+    private int getControlBarHeight() {
+        return ThemeUtils.getControlBarHeight(getActivity(), mControlBarHeight);
+    }
+
+    private void updateTabOffset() {
+        ThemeUtils.updateControlBarUi(getActivity(), getControlBarHeight(), mControlBarOffsetPixels,
+                mPagerIndicator, mPagerOverlay);
     }
 }

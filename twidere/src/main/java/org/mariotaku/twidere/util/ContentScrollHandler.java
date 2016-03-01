@@ -22,8 +22,6 @@ package org.mariotaku.twidere.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -33,7 +31,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 /**
  * Created by mariotaku on 15/3/15.
  */
-public class ContentListScrollListener extends OnScrollListener {
+public class ContentScrollHandler {
 
     private final ContentListSupport mContentListSupport;
     private final ViewCallback mViewCallback;
@@ -45,44 +43,22 @@ public class ContentListScrollListener extends OnScrollListener {
 
     private int mScrollDirection;
 
-    public ContentListScrollListener(@NonNull ContentListSupport contentListSupport, @Nullable ViewCallback viewCallback) {
+    protected ContentScrollHandler(@NonNull ContentListSupport contentListSupport, @Nullable ViewCallback viewCallback) {
         mContentListSupport = contentListSupport;
         mViewCallback = viewCallback;
         mTouchListener = new TouchListener(this);
     }
 
-    @Override
-    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        if (mContentListSupport instanceof Fragment) {
-            if (((Fragment) mContentListSupport).getContext() == null) return;
-        }
-        if (mScrollState != RecyclerView.SCROLL_STATE_IDLE) {
-            postNotifyScrollStateChanged();
-        }
-        mScrollState = newState;
-    }
-
-    @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        if (mContentListSupport instanceof Fragment) {
-            if (((Fragment) mContentListSupport).getContext() == null) return;
-        }
-        //Reset mScrollSum when scrolling in reverse direction
-        if (dy * mScrollSum < 0) {
-            mScrollSum = 0;
-        }
-        mScrollSum += dy;
-        if (Math.abs(mScrollSum) > mTouchSlop) {
-            mContentListSupport.setControlVisible(dy < 0);
-            mScrollSum = 0;
-        }
-        if (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
-            postNotifyScrollStateChanged();
-        }
-    }
-
     public void setTouchSlop(int touchSlop) {
         mTouchSlop = touchSlop;
+    }
+
+    public View.OnTouchListener getOnTouchListener() {
+        return mTouchListener;
+    }
+
+    protected int getScrollState() {
+        return mScrollState;
     }
 
     private void postNotifyScrollStateChanged() {
@@ -126,16 +102,48 @@ public class ContentListScrollListener extends OnScrollListener {
         }
     }
 
-    public View.OnTouchListener getOnTouchListener() {
-        return mTouchListener;
+    protected void handleScrollStateChanged(int scrollState, int idleState) {
+        if (mContentListSupport instanceof Fragment) {
+            if (((Fragment) mContentListSupport).getContext() == null) return;
+        }
+        if (mScrollState != idleState) {
+            postNotifyScrollStateChanged();
+        }
+        mScrollState = scrollState;
+    }
+
+    protected void handleScroll(int dy, int scrollState, int idleState) {
+        if (mContentListSupport instanceof Fragment) {
+            if (((Fragment) mContentListSupport).getContext() == null) return;
+        }
+        //Reset mScrollSum when scrolling in reverse direction
+        if (dy * mScrollSum < 0) {
+            mScrollSum = 0;
+        }
+        mScrollSum += dy;
+        if (Math.abs(mScrollSum) > mTouchSlop) {
+            mContentListSupport.setControlVisible(dy < 0);
+            mScrollSum = 0;
+        }
+        if (scrollState == idleState) {
+            postNotifyScrollStateChanged();
+        }
+    }
+
+    private void setScrollDirection(int direction) {
+        mScrollDirection = direction;
+    }
+
+    private void resetScrollDirection() {
+        mScrollDirection = 0;
     }
 
     static class TouchListener implements View.OnTouchListener {
 
-        private final ContentListScrollListener listener;
+        private final ContentScrollHandler listener;
         private float mLastY;
 
-        TouchListener(ContentListScrollListener listener) {
+        TouchListener(ContentScrollHandler listener) {
             this.listener = listener;
         }
 
@@ -161,14 +169,6 @@ public class ContentListScrollListener extends OnScrollListener {
         }
     }
 
-    private void setScrollDirection(int direction) {
-        mScrollDirection = direction;
-    }
-
-    private void resetScrollDirection() {
-        mScrollDirection = 0;
-    }
-
     public interface ViewCallback {
         boolean isComputingLayout();
 
@@ -191,21 +191,4 @@ public class ContentListScrollListener extends OnScrollListener {
 
     }
 
-    public static class RecyclerViewCallback implements ViewCallback {
-        private final RecyclerView recyclerView;
-
-        public RecyclerViewCallback(RecyclerView recyclerView) {
-            this.recyclerView = recyclerView;
-        }
-
-        @Override
-        public boolean isComputingLayout() {
-            return recyclerView.isComputingLayout();
-        }
-
-        @Override
-        public void post(Runnable action) {
-            recyclerView.post(action);
-        }
-    }
 }

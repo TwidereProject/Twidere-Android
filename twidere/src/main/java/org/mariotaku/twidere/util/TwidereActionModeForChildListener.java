@@ -199,6 +199,12 @@ public class TwidereActionModeForChildListener implements TintedStatusNativeActi
         return false;
     }
 
+    public void setModeTranslationY(int translationY) {
+        if (mActionModeView != null) {
+            mActionModeView.setTranslationY(translationY);
+        }
+    }
+
 
     /**
      * Clears out internal reference when the action mode is destroyed.

@@ -30,7 +30,9 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -41,7 +43,8 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
-import org.mariotaku.twidere.util.ContentListScrollListener.ContentListSupport;
+import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport;
+import org.mariotaku.twidere.util.ListViewScrollHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -51,7 +54,7 @@ import org.mariotaku.twidere.util.Utils;
  */
 public abstract class AbsContentListViewFragment<A extends ListAdapter> extends BaseSupportFragment
         implements OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener,
-        ContentListSupport {
+        ContentListSupport, AbsListView.OnScrollListener {
 
     private View mProgressContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -59,6 +62,7 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
     private View mErrorContainer;
     private ImageView mErrorIconView;
     private TextView mErrorTextView;
+    private ListViewScrollHandler mScrollHandler;
 
     private A mAdapter;
 
@@ -84,7 +88,6 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
     @Override
     public boolean scrollToStart() {
         mListView.setSelectionFromTop(0, 0);
-//        mListView.stopScroll();
         setControlVisible(true);
         return true;
     }
@@ -132,6 +135,15 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
     }
 
     @Override
+    public void onDetach() {
+        final FragmentActivity activity = getActivity();
+        if (activity instanceof IControlBarActivity) {
+            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
+        }
+        super.onDetach();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_content_listview, container, false);
     }
@@ -160,7 +172,23 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
             }
         });
         mListView.setAdapter(mAdapter);
+        mListView.setClipToPadding(false);
+        mScrollHandler = new ListViewScrollHandler(this, new ListViewScrollHandler.ListViewCallback(mListView));
+        mScrollHandler.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());
+        mScrollHandler.setOnScrollListener(this);
+    }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getListView().setOnScrollListener(mScrollHandler);
+    }
+
+    @Override
+    public void onStop() {
+        getListView().setOnScrollListener(mScrollHandler);
+        super.onStop();
     }
 
     @Override
@@ -172,15 +200,6 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
         mErrorContainer = view.findViewById(R.id.error_container);
         mErrorIconView = (ImageView) view.findViewById(R.id.error_icon);
         mErrorTextView = (TextView) view.findViewById(R.id.error_text);
-    }
-
-    @Override
-    public void onDetach() {
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof IControlBarActivity) {
-            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
-        }
-        super.onDetach();
     }
 
     @Override
@@ -258,4 +277,13 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
         return mListView.getLastVisiblePosition() >= mListView.getCount() - 1;
     }
 
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
 }

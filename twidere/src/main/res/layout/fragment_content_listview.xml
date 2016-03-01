@@ -20,7 +20,9 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <include layout="@layout/layout_content_fragment_common"/>
 
@@ -28,12 +30,14 @@
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipChildren="false"
         android:clipToPadding="false">
 
         <ListView
             android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipChildren="false"
             android:clipToPadding="false"
             android:focusable="true"
             android:listSelector="?selectableItemBackground"/>

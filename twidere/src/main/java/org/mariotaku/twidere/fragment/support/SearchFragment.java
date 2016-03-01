@@ -62,7 +62,7 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
 
 public class SearchFragment extends BaseSupportFragment implements RefreshScrollTopInterface,
         SupportFragmentCallback, SystemWindowsInsetsCallback, ControlBarOffsetListener,
-        OnPageChangeListener, KeyboardShortcutCallback {
+        OnPageChangeListener, KeyboardShortcutCallback, LinkHandlerActivity.HideUiOnScroll {
 
     private ViewPager mViewPager;
     private View mPagerWindowOverlay;
@@ -303,17 +303,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     }
 
     private int getControlBarHeight() {
-        final FragmentActivity activity = getActivity();
-        final int controlBarHeight;
-        if (activity instanceof LinkHandlerActivity) {
-            controlBarHeight = ((LinkHandlerActivity) activity).getControlBarHeight();
-        } else {
-            controlBarHeight = mControlBarHeight;
-        }
-        if (controlBarHeight == 0) {
-            return ThemeUtils.getActionBarHeight(activity);
-        }
-        return controlBarHeight;
+        return ThemeUtils.getControlBarHeight(getActivity(), mControlBarHeight);
     }
 
     private Fragment getKeyboardShortcutRecipient() {
@@ -351,16 +341,8 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     }
 
     private void updateTabOffset() {
-        final int controlBarHeight = getControlBarHeight();
-        final int translationY = controlBarHeight - mControlBarOffsetPixels;
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof LinkHandlerActivity) {
-            final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
-            if (view != null && controlBarHeight != 0) {
-                view.setAlpha(translationY / (float) controlBarHeight);
-            }
-        }
-        mPagerIndicator.setTranslationY(translationY);
-        mPagerWindowOverlay.setTranslationY(translationY);
+        ThemeUtils.updateControlBarUi(getActivity(), getControlBarHeight(), mControlBarOffsetPixels,
+                mPagerIndicator, mPagerWindowOverlay);
     }
+
 }

@@ -125,8 +125,9 @@ public abstract class BasePreferenceActivity extends AppCompatPreferenceActivity
     @Override
     public void onSupportActionModeStarted(android.support.v7.view.ActionMode mode) {
         super.onSupportActionModeStarted(mode);
-        ThemeUtils.applySupportActionModeColor(mode, this,
-                getCurrentThemeColor(), getThemeBackgroundOption(), true);
+        ThemeUtils.applySupportActionModeColor(mode, getCurrentThemeColor(),
+                getThemeBackgroundOption(), true);
+        ThemeUtils.applySupportActionModeItemColor(mode, getCurrentThemeColor());
     }
 
     @Override

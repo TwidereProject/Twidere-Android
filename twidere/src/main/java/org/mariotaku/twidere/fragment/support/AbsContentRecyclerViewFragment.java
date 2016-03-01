@@ -40,7 +40,8 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
-import org.mariotaku.twidere.util.ContentListScrollListener;
+import org.mariotaku.twidere.util.ContentScrollHandler;
+import org.mariotaku.twidere.util.RecyclerViewScrollHandler;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
@@ -55,7 +56,7 @@ import org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout;
 public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAdapter, L extends RecyclerView.LayoutManager>
         extends BaseSupportFragment implements SwipeRefreshLayout.OnRefreshListener,
         HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
-        ContentListScrollListener.ContentListSupport, IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener {
+        ContentScrollHandler.ContentListSupport, IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener {
 
     private View mProgressContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -69,7 +70,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
     // Callbacks and listeners
     private SimpleDrawerCallback mDrawerCallback;
-    private ContentListScrollListener mScrollListener;
+    private RecyclerViewScrollHandler mScrollListener;
 
     // Data fields
     private Rect mSystemWindowsInsets = new Rect();
@@ -248,7 +249,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         setupRecyclerView(context, compact);
         mRecyclerView.setAdapter(mAdapter);
 
-        mScrollListener = new ContentListScrollListener(this, new ContentListScrollListener.RecyclerViewCallback(mRecyclerView));
+        mScrollListener = new RecyclerViewScrollHandler(this, new RecyclerViewScrollHandler.RecyclerViewCallback(mRecyclerView));
         mRecyclerView.setOnTouchListener(mScrollListener.getOnTouchListener());
         mScrollListener.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());
     }

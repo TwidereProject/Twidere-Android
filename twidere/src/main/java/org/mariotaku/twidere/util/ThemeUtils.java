@@ -38,6 +38,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.WindowDecorActionBar;
 import android.support.v7.app.WindowDecorActionBar.ActionModeImpl;
 import android.support.v7.view.StandaloneActionMode;
+import android.support.v7.view.SupportActionModeWrapperAccessor;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionBarContainer;
 import android.support.v7.widget.ActionBarContextView;
@@ -48,6 +49,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.TwidereToolbar;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.ActionMode;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -58,11 +60,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
+import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.iface.DoNotWrapDrawable;
@@ -132,27 +136,75 @@ public class ThemeUtils implements Constants {
         }
     }
 
+    public static void applySupportActionModeColor(final ActionMode mode,
+                                                   int accentColor, String backgroundOption,
+                                                   boolean outlineEnabled) {
+        android.support.v7.view.ActionMode modeCompat = SupportActionModeWrapperAccessor.getWrappedObject(mode);
+        if (modeCompat == null) return;
+        applySupportActionModeColor(modeCompat, accentColor, backgroundOption,
+                outlineEnabled);
+    }
+
     public static void applySupportActionModeColor(final android.support.v7.view.ActionMode modeCompat,
-                                                   Activity activity,
                                                    int accentColor, String backgroundOption,
                                                    boolean outlineEnabled) {
         // Very dirty implementation
         // This call ensures TitleView created
         modeCompat.setTitle(modeCompat.getTitle());
-        View contextView = null;
+        final View contextView = findActionBarContextView(modeCompat);
+        if (!(contextView instanceof ActionBarContextView)) return;
+        setActionBarContextViewBackground((ActionBarContextView) contextView, accentColor,
+                backgroundOption, outlineEnabled);
+    }
+
+    public static void applySupportActionModeItemColor(final ActionMode mode, int accentColor) {
+        android.support.v7.view.ActionMode modeCompat = SupportActionModeWrapperAccessor.getWrappedObject(mode);
+        if (modeCompat == null) return;
+        applySupportActionModeItemColor(modeCompat, accentColor);
+    }
+
+    public static void applySupportActionModeItemColor(final android.support.v7.view.ActionMode modeCompat,
+                                                       int accentColor) {
+        // Very dirty implementation
+        // This call ensures TitleView created
+        modeCompat.setTitle(modeCompat.getTitle());
+        final View contextView = findActionBarContextView(modeCompat);
+        if (!(contextView instanceof ActionBarContextView)) return;
+        setActionBarContextViewItemColor((ActionBarContextView) contextView, accentColor);
+    }
+
+    private static void setActionBarContextViewItemColor(ActionBarContextView contextView, int toolbarColor) {
+        final Context context = contextView.getContext();
+        final int contrastForegroundColor = getContrastForegroundColor(context, toolbarColor);
+        if (isDarkTheme(context)) {
+            return;
+        }
+        final View titleView = contextView.findViewById(R.id.action_bar_title);
+        final View subtitleView = contextView.findViewById(R.id.action_bar_subtitle);
+        final View closeButton = contextView.findViewById(R.id.action_mode_close_button);
+        if (titleView instanceof TextView) {
+            ((TextView) titleView).setTextColor(contrastForegroundColor);
+        }
+        if (subtitleView instanceof TextView) {
+            ((TextView) subtitleView).setTextColor(contrastForegroundColor);
+        }
+        if (closeButton instanceof ImageView) {
+            ((ImageView) closeButton).setColorFilter(contrastForegroundColor, Mode.SRC_ATOP);
+        }
+    }
+
+    private static View findActionBarContextView(final android.support.v7.view.ActionMode modeCompat) {
         if (modeCompat instanceof ActionModeImpl) {
             WindowDecorActionBar actionBar = (WindowDecorActionBar) Utils.findFieldOfTypes(modeCompat,
                     ActionModeImpl.class, WindowDecorActionBar.class);
-            if (actionBar == null) return;
-            contextView = (View) Utils.findFieldOfTypes(actionBar, WindowDecorActionBar.class,
+            if (actionBar == null) return null;
+            return (View) Utils.findFieldOfTypes(actionBar, WindowDecorActionBar.class,
                     ActionBarContextView.class);
         } else if (modeCompat instanceof StandaloneActionMode) {
-            contextView = (View) Utils.findFieldOfTypes(modeCompat, StandaloneActionMode.class,
+            return (View) Utils.findFieldOfTypes(modeCompat, StandaloneActionMode.class,
                     ActionBarContextView.class);
         }
-        if (!(contextView instanceof ActionBarContextView)) return;
-        setActionBarContextViewBackground((ActionBarContextView) contextView,
-                accentColor, backgroundOption, outlineEnabled);
+        return null;
     }
 
     public static void setActionBarContextViewBackground(@NonNull ActionBarContextView contextView,
@@ -872,6 +924,33 @@ public class ThemeUtils implements Constants {
         if (toolbar instanceof TwidereToolbar) {
             ((TwidereToolbar) toolbar).setItemColor(contrastForegroundColor);
         }
+    }
+
+    public static void updateControlBarUi(FragmentActivity activity, int controlBarHeight,
+                                          int controlBarOffsetPixels, View pagerIndicator,
+                                          View pagerWindowOverlay) {
+        final int translationY = controlBarHeight - controlBarOffsetPixels;
+        if (activity instanceof LinkHandlerActivity) {
+            final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
+            if (view != null && controlBarHeight != 0) {
+                view.setAlpha(translationY / (float) controlBarHeight);
+            }
+        }
+        pagerIndicator.setTranslationY(translationY);
+        pagerWindowOverlay.setTranslationY(translationY);
+    }
+
+    public static int getControlBarHeight(FragmentActivity activity, int defaultControlBarHeight) {
+        final int controlBarHeight;
+        if (activity instanceof LinkHandlerActivity) {
+            controlBarHeight = ((LinkHandlerActivity) activity).getControlBarHeight();
+        } else {
+            controlBarHeight = defaultControlBarHeight;
+        }
+        if (controlBarHeight == 0) {
+            return getActionBarHeight(activity);
+        }
+        return controlBarHeight;
     }
 
 
