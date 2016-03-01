@@ -37,7 +37,6 @@ import javax.inject.Inject;
 
 public abstract class BaseThemedActivity extends Activity implements IThemedActivity {
 
-    private int mCurrentThemeResource;
     private int mCurrentThemeColor;
     private int mCurrentThemeBackgroundAlpha;
     private String mCurrentThemeFontFamily;
@@ -67,11 +66,6 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     }
 
     @Override
-    public final int getCurrentThemeResourceId() {
-        return mCurrentThemeResource;
-    }
-
-    @Override
     public int getThemeBackgroundAlpha() {
         return ThemeUtils.getUserThemeBackgroundAlpha(this);
     }
@@ -83,9 +77,6 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
     public String getThemeFontFamily() {
         return ThemeUtils.getThemeFontFamily(this);
     }
-
-    @Override
-    public abstract int getThemeResourceId();
 
     @Override
     @ShapedImageView.ShapeStyle
@@ -115,10 +106,9 @@ public abstract class BaseThemedActivity extends Activity implements IThemedActi
 
     @Override
     public void setTheme(int resId) {
-        final int themeResourceId = getThemeResourceId();
-        super.setTheme(mCurrentThemeResource = themeResourceId != 0 ? themeResourceId : resId);
+        super.setTheme(resId);
         if (shouldApplyWindowBackground()) {
-            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
+            ThemeUtils.applyWindowBackground(this, getWindow(),
                     mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
         }
     }

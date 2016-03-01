@@ -40,7 +40,9 @@ import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 public abstract class ThemedAppCompatActivity extends AppCompatActivity implements Constants,
         IThemedActivity, IAppCompatActivity {
 
-    private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
+    // Data fields
+    private int mCurrentThemeColor;
+    private int mCurrentThemeBackgroundAlpha;
     @ShapeStyle
     private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
@@ -67,11 +69,6 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
     @Override
     public int getCurrentThemeColor() {
         return mCurrentThemeColor;
-    }
-
-    @Override
-    public final int getCurrentThemeResourceId() {
-        return mCurrentThemeResource;
     }
 
     @Override
@@ -107,12 +104,13 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
             StrictModeUtils.detectAllThreadPolicy();
         }
         super.onCreate(savedInstanceState);
+        ThemeUtils.applyToolbarItemColor(this, getActionBarToolbar(), getCurrentThemeColor());
     }
 
     @Override
     public void onSupportActionModeStarted(@NonNull android.support.v7.view.ActionMode mode) {
         super.onSupportActionModeStarted(mode);
-        ThemeUtils.applySupportActionModeColor(mode, this, getCurrentThemeResourceId(),
+        ThemeUtils.applySupportActionModeColor(mode, this,
                 getCurrentThemeColor(), getThemeBackgroundOption(), true);
     }
 
@@ -124,28 +122,30 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
     }
 
     @Override
-    public void setTheme(int resid) {
-        super.setTheme(mCurrentThemeResource = getThemeResourceId());
+    public void setTheme(int resId) {
+        super.setTheme(resId);
         if (shouldApplyWindowBackground()) {
-            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource, mCurrentThemeBackgroundOption,
+            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeBackgroundOption,
                     mCurrentThemeBackgroundAlpha);
         }
     }
 
     @Override
-    protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resid, boolean first) {
+    protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resId, boolean first) {
         mCurrentThemeColor = getThemeColor();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mProfileImageStyle = Utils.getProfileImageStyle(this);
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mCurrentThemeFontFamily = getThemeFontFamily();
-        super.onApplyThemeResource(theme, resid, first);
+        super.onApplyThemeResource(theme, resId, first);
+        ThemeUtils.applyToolbarItemColor(this, getActionBarToolbar(), mCurrentThemeColor);
     }
 
     @Override
     public void setSupportActionBar(Toolbar toolbar) {
         super.setSupportActionBar(toolbar);
         mToolbar = toolbar;
+        ThemeUtils.applyToolbarItemColor(this, toolbar, mCurrentThemeColor);
     }
 
     @Nullable

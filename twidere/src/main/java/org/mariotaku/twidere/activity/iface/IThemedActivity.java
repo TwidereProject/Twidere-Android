@@ -29,8 +29,6 @@ public interface IThemedActivity {
 
     int getCurrentThemeColor();
 
-    int getCurrentThemeResourceId();
-
     int getThemeBackgroundAlpha();
 
     String getThemeBackgroundOption();
@@ -40,8 +38,6 @@ public interface IThemedActivity {
     String getThemeFontFamily();
 
     String getCurrentThemeFontFamily();
-
-    int getThemeResourceId();
 
     @ShapedImageView.ShapeStyle
     int getCurrentProfileImageStyle();

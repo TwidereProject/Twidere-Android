@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.app;
 
+import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -109,6 +110,7 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             StrictModeUtils.detectAllVmPolicy();
         }
         super.onCreate();
+        resetTheme(getSharedPreferences());
         initializeAsyncTask();
         initDebugMode();
         initBugReport();
@@ -243,6 +245,27 @@ public class TwidereApplication extends MultiDexApplication implements Constants
             }
             case KEY_EMOJI_SUPPORT: {
                 DependencyHolder.get(this).getExternalThemeManager().reloadEmojiPreferences();
+                break;
+            }
+            case KEY_THEME: {
+                resetTheme(preferences);
+                break;
+            }
+        }
+    }
+
+    private void resetTheme(SharedPreferences preferences) {
+        switch (Utils.getNonEmptyString(preferences, KEY_THEME, VALUE_THEME_NAME_LIGHT)) {
+            case VALUE_THEME_NAME_DARK: {
+                ((UiModeManager) getSystemService(UI_MODE_SERVICE)).setNightMode(UiModeManager.MODE_NIGHT_YES);
+                break;
+            }
+            case VALUE_THEME_NAME_AUTO: {
+                ((UiModeManager) getSystemService(UI_MODE_SERVICE)).setNightMode(UiModeManager.MODE_NIGHT_AUTO);
+                break;
+            }
+            default: {
+                ((UiModeManager) getSystemService(UI_MODE_SERVICE)).setNightMode(UiModeManager.MODE_NIGHT_NO);
                 break;
             }
         }

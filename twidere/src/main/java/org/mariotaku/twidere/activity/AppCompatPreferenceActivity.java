@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.activity.iface.IAppCompatActivity;
+import org.mariotaku.twidere.util.ThemeUtils;
 
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls

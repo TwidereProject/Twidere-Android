@@ -225,11 +225,6 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getComposeThemeResource(this);
-    }
-
-    @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
         switch (requestCode) {
             case REQUEST_TAKE_PHOTO:
@@ -1293,8 +1288,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     private void updateLocationState() {
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
         if (attachLocation) {
-            mLocationIcon.setColorFilter(ThemeUtils.getOptimalAccentColor(this, false,
-                    getCurrentThemeResourceId()), Mode.SRC_ATOP);
+            mLocationIcon.setColorFilter(ThemeUtils.getOptimalAccentColor(this, false
+            ), Mode.SRC_ATOP);
         } else {
             mLocationIcon.setColorFilter(mLocationIcon.getDefaultColor(), Mode.SRC_ATOP);
             mLocationText.setText(R.string.no_location);

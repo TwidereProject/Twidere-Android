@@ -32,6 +32,7 @@
     <string-array name="values_theme">
         <item>light</item>
         <item>dark</item>
+        <item>auto</item>
     </string-array>
     <string-array name="values_theme_background">
         <item>default</item>

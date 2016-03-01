@@ -61,9 +61,8 @@ public class HomeActionButtonCompat extends FrameLayout implements IHomeActionBu
         if (isInEditMode()) {
             inflate(context, R.layout.action_item_home_actions_compat, this);
         } else if (context instanceof IThemedActivity) {
-            int themeResourceId = ((IThemedActivity) context).getCurrentThemeResourceId();
             int themeColor = ((IThemedActivity) context).getCurrentThemeColor();
-            inflate(ThemeUtils.getActionBarThemedContext(context, themeResourceId, themeColor),
+            inflate(ThemeUtils.getActionBarThemedContext(context, themeColor),
                     R.layout.action_item_home_actions_compat, this);
         } else {
             inflate(ThemeUtils.getActionBarThemedContext(context), R.layout.action_item_home_actions_compat,

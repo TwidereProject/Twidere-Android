@@ -147,15 +147,14 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         // View context is not derived from ActionBar, apply color tint directly
         final Context viewContext = view.getContext();
         final boolean isActionBarContext = isActionBarContext(viewContext, getActionBarContext((Activity) activity));
-        final int themeResourceId = activity.getCurrentThemeResourceId();
-        final boolean isDarkTheme = ThemeUtils.isDarkTheme(themeResourceId);
+        final boolean isDarkTheme = ThemeUtils.isDarkTheme(viewContext);
         final int backgroundColorApprox;
         final int currentThemeColor = activity.getCurrentThemeColor();
         if (!isActionBarContext) {
             accentColor = currentThemeColor;
             final int[] darkLightColors = new int[2];
             ThemeUtils.getDarkLightForegroundColors((Context) activity,
-                    activity.getCurrentThemeResourceId(), darkLightColors);
+                    darkLightColors);
             noTintColor = TwidereColorUtils.getContrastYIQ(accentColor, ThemeUtils.ACCENT_COLOR_THRESHOLD,
                     darkLightColors[0], darkLightColors[1]);
             backgroundTintColor = accentColor;
@@ -186,7 +185,7 @@ public class ThemedLayoutInflaterFactory implements LayoutInflaterFactory {
         }
         if (view instanceof WizardHighlightTextView) {
             ((WizardHighlightTextView) view).setTextColor(ThemeUtils.getOptimalAccentColor((Context) activity,
-                    currentThemeColor, isActionBarContext, themeResourceId));
+                    currentThemeColor, isActionBarContext));
         }
         if (view instanceof IThemeAccentView) {
             if (isAccentOptimal || !isColorTint) {

@@ -46,7 +46,6 @@ public class TwidereActionBarContainer extends ActionBarContainer {
     private static Context wrapContext(Context context) {
         if (context instanceof IThemedActivity) {
             return ThemeUtils.getActionBarThemedContext(context,
-                    ((IThemedActivity) context).getCurrentThemeResourceId(),
                     ((IThemedActivity) context).getCurrentThemeColor());
         }
         return ThemeUtils.getActionBarThemedContext(context);

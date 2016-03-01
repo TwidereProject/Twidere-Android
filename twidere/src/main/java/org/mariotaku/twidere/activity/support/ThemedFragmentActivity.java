@@ -74,9 +74,9 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     @Inject
     protected PermissionsManager mPermissionsManager;
 
-
-    // Data fields
-    private int mCurrentThemeResource, mCurrentThemeColor, mCurrentThemeBackgroundAlpha;
+    //Data fields
+    private int mCurrentThemeColor;
+    private int mCurrentThemeBackgroundAlpha;
     @ShapeStyle
     private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
@@ -119,11 +119,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
-    public final int getCurrentThemeResourceId() {
-        return mCurrentThemeResource;
-    }
-
-    @Override
     public int getThemeBackgroundAlpha() {
         return ThemeUtils.getUserThemeBackgroundAlpha(this);
     }
@@ -160,10 +155,10 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
     }
 
     @Override
-    public void setTheme(int resid) {
-        super.setTheme(mCurrentThemeResource = getThemeResourceId());
+    public void setTheme(int resId) {
+        super.setTheme(resId);
         if (shouldApplyWindowBackground()) {
-            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeResource,
+            ThemeUtils.applyWindowBackground(this, getWindow(),
                     mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
         }
     }
@@ -210,11 +205,6 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event, mMetaState))
             return true;
         return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mMetaState) || super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public int getThemeResourceId() {
-        return 0;
     }
 
     protected boolean shouldApplyWindowBackground() {

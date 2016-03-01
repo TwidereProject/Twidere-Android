@@ -99,11 +99,6 @@ public class SettingsActivity extends BasePreferenceActivity {
     }
 
     @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getNoActionBarThemeResource(this);
-    }
-
-    @Override
     public void onBuildHeaders(final List<Header> target) {
         loadHeadersFromResource(R.xml.settings_headers, target);
         final HeaderAdapter adapter = getHeaderAdapter();
@@ -272,7 +267,7 @@ public class SettingsActivity extends BasePreferenceActivity {
         ViewCompat.setElevation(actionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
         ViewSupport.setOutlineProvider(actionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
         final View windowOverlay = findViewById(R.id.window_overlay);
-        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
+        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this));
         setIntent(getIntent().addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
 
 

@@ -284,8 +284,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         final Toolbar toolbar = peekActionBarToolbar();
         if (toolbar != null) {
             final int themeColor = getCurrentThemeColor();
-            final int themeId = getCurrentThemeResourceId();
-            final int itemColor = ThemeUtils.getContrastForegroundColor(this, themeId, themeColor);
+            final int itemColor = ThemeUtils.getContrastForegroundColor(this, themeColor);
             ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class), itemColor, itemColor);
         }
         return result;
@@ -331,7 +330,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         ViewCompat.setElevation(actionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
         ViewSupport.setOutlineProvider(actionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
         final View windowOverlay = findViewById(R.id.window_overlay);
-        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
+        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this));
 
         if (savedInstanceState != null) {
             mAPIUrlFormat = savedInstanceState.getString(Accounts.API_URL_FORMAT);
@@ -539,9 +538,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         if (actionBar == null) return;
 
         final int themeColor = getCurrentThemeColor();
-        final int themeId = getCurrentThemeResourceId();
         final String option = getThemeBackgroundOption();
-        ThemeUtils.applyActionBarBackground(actionBar, this, themeId, themeColor, option, isActionBarOutlineEnabled());
+        ThemeUtils.applyActionBarBackground(actionBar, this, themeColor, option, isActionBarOutlineEnabled());
     }
 
     private void setupTintStatusBar() {
@@ -550,7 +548,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption()) ?
                 getCurrentThemeBackgroundAlpha() : 0xFF;
         final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(),
-                getCurrentThemeResourceId(), getThemeBackgroundOption());
+                getThemeBackgroundOption());
         mMainContent.setColor(statusBarColor, alpha);
 
         mMainContent.setDrawShadow(false);

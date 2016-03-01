@@ -59,11 +59,6 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseThemedActivity
     }
 
     @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getDialogThemeResource(this);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_keyboard_shortcut_input);

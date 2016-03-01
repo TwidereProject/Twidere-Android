@@ -33,7 +33,6 @@ import android.widget.Toast;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.FileSelectorDialogFragment;
 import org.mariotaku.twidere.util.PermissionUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 import java.io.File;
 
@@ -43,11 +42,6 @@ public class FileSelectorActivity extends BaseSupportDialogActivity implements F
 
 
     private Runnable mResumeFragmentsRunnable;
-
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getNoDisplayThemeResource(this);
-    }
 
     @Override
     public void onCancelled(final DialogFragment df) {

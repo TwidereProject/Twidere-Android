@@ -177,11 +177,6 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
         return ThemeUtils.getUserAccentColor(this);
     }
 
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getNoActionBarThemeResource(this);
-    }
-
     @NonNull
     @Override
     public LayoutInflater getLayoutInflater() {

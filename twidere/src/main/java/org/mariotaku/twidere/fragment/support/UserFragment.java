@@ -58,9 +58,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ActionBarContainer;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.TwidereToolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -810,10 +808,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         setupUserPages();
 
         if (activity instanceof IThemedActivity) {
-            ViewSupport.setBackground(mPagerOverlay, ThemeUtils.getNormalWindowContentOverlay(activity,
-                    ((IThemedActivity) activity).getCurrentThemeResourceId()));
-            ViewSupport.setBackground(mErrorOverlay, ThemeUtils.getNormalWindowContentOverlay(activity,
-                    ((IThemedActivity) activity).getCurrentThemeResourceId()));
+            ViewSupport.setBackground(mPagerOverlay, ThemeUtils.getNormalWindowContentOverlay(activity
+            ));
+            ViewSupport.setBackground(mErrorOverlay, ThemeUtils.getNormalWindowContentOverlay(activity
+            ));
             setUiColor(((IThemedActivity) activity).getCurrentThemeColor());
         }
 
@@ -1420,9 +1418,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
         final IThemedActivity themed = (IThemedActivity) activity;
-        final int themeRes = themed.getCurrentThemeResourceId();
         final String backgroundOption = themed.getThemeBackgroundOption();
-        final int actionBarColor = ThemeUtils.getActionBarColor(activity, color, themeRes, backgroundOption);
+        final int actionBarColor = ThemeUtils.getActionBarColor(activity, color, backgroundOption);
         if (mTintedStatusContent != null) {
             final int alpha = ThemeUtils.isTransparentBackground(backgroundOption) ? themed.getCurrentThemeBackgroundAlpha() : 0xFF;
             mTintedStatusContent.setColor(actionBarColor, ThemeUtils.getActionBarAlpha(alpha));
@@ -1445,7 +1442,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mURLView.setLinkTextColor(optimalAccentColor);
         mProfileBannerView.setBackgroundColor(color);
         ViewSupport.setBackground(mPagerIndicator, ThemeUtils.getActionBarStackedBackground(activity,
-                themeRes, optimalAccentColor, backgroundOption, true));
+                optimalAccentColor, backgroundOption, true));
 
         final HeaderDrawerLayout drawer = mHeaderDrawerLayout;
         if (drawer != null) {
@@ -1463,7 +1460,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (actionBarContainer == null || actionBar == null) return;
         final Drawable shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null);
         mActionBarBackground = new ActionBarDrawable(shadow);
-        if (!ThemeUtils.isWindowFloating(linkHandler, linkHandler.getCurrentThemeResourceId())
+        if (!ThemeUtils.isWindowFloating(linkHandler)
                 && ThemeUtils.isTransparentBackground(linkHandler.getCurrentThemeBackgroundOption())) {
 //            mActionBarBackground.setAlpha(ThemeUtils.getActionBarAlpha(linkHandler.getCurrentThemeBackgroundAlpha()));
             mProfileBannerView.setAlpha(linkHandler.getCurrentThemeBackgroundAlpha() / 255f);
@@ -1570,8 +1567,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
 
             final Drawable tabBackground = mPagerIndicator.getBackground();
-            final int themeId = activity.getCurrentThemeResourceId();
-            int stackedTabColor = ThemeUtils.getActionBarColor(activity, mUiColor, themeId,
+            int stackedTabColor = ThemeUtils.getActionBarColor(activity, mUiColor,
                     activity.getThemeBackgroundOption());
 
             if (ThemeUtils.isTransparentBackground(activity.getCurrentThemeBackgroundOption())) {
@@ -1584,11 +1580,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
             if (mPreviousTabItemIsDark == 0 || (tabItemIsDark ? 1 : -1) != mPreviousTabItemIsDark) {
                 final int[] primaryColors = new int[2];
-                ThemeUtils.getDarkLightForegroundColors(activity, themeId, primaryColors);
+                ThemeUtils.getDarkLightForegroundColors(activity, primaryColors);
                 final int tabContrastColor = primaryColors[tabItemIsDark ? 0 : 1];
                 mPagerIndicator.setIconColor(tabContrastColor);
                 mPagerIndicator.setLabelColor(tabContrastColor);
-                if (ThemeUtils.isDarkTheme(themeId)) {
+                if (ThemeUtils.isDarkTheme(activity)) {
                     mPagerIndicator.setStripColor(ThemeUtils.getOptimalAccentColor(mUiColor,
                             tabContrastColor));
                 } else {
@@ -1601,18 +1597,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final int barColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor, stackedTabColor);
             final boolean actionItemIsDark = TwidereColorUtils.getYIQLuminance(barColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD;
             if (mPreviousActionBarItemIsDark == 0 || (actionItemIsDark ? 1 : -1) != mPreviousActionBarItemIsDark) {
-                final int contrastForegroundColor = ThemeUtils.getContrastForegroundColor(activity, themeId, barColor);
-                final Toolbar actionBarView = activity.getActionBarToolbar();
-                if (actionBarView != null) {
-                    actionBarView.setTitleTextColor(contrastForegroundColor);
-                    actionBarView.setSubtitleTextColor(contrastForegroundColor);
-                    ThemeUtils.setActionBarOverflowColor(actionBarView, contrastForegroundColor);
-                    ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(actionBarView, ActionMenuView.class),
-                            contrastForegroundColor, contrastForegroundColor);
-                    if (actionBarView instanceof TwidereToolbar) {
-                        ((TwidereToolbar) actionBarView).setItemColor(contrastForegroundColor);
-                    }
-                }
+                ThemeUtils.applyToolbarItemColor(activity, activity.getActionBarToolbar(), barColor);
             }
             mPreviousActionBarItemIsDark = actionItemIsDark ? 1 : -1;
         }

@@ -27,7 +27,6 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.util.StrictModeUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 public class MainActivity extends Activity implements Constants {
 
@@ -43,8 +42,4 @@ public class MainActivity extends Activity implements Constants {
         finish();
     }
 
-    @Override
-    public void setTheme(int resId) {
-        super.setTheme(ThemeUtils.getNoActionBarThemeResource(this));
-    }
 }

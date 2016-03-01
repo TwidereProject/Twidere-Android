@@ -8,14 +8,8 @@ import android.support.annotation.NonNull;
 import org.mariotaku.pickncrop.library.ImagePickerActivity;
 import org.mariotaku.twidere.activity.ImageCropperActivity;
 import org.mariotaku.twidere.util.RestFuNetworkStreamDownloader;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 public class ThemedImagePickerActivity extends ImagePickerActivity {
-
-    @Override
-    public void setTheme(final int resid) {
-        super.setTheme(ThemeUtils.getNoDisplayThemeResource(this));
-    }
 
     public static ThemedIntentBuilder withThemed(Context context) {
         return new ThemedIntentBuilder(context);

@@ -592,8 +592,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     public Context getThemedContext() {
         if (mThemedContext != null) return mThemedContext;
         final Context context = getActivity();
-        final int themeResource = ThemeUtils.getDrawerThemeResource(context);
-        return mThemedContext = new ContextThemeWrapper(context, themeResource);
+        return mThemedContext = new ContextThemeWrapper(context, R.style.Theme_Twidere_Drawer);
     }
 
     private void onAccountSelected(AccountProfileImageViewHolder holder, final ParcelableAccount account) {

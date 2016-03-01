@@ -90,15 +90,6 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
         return ThemeUtils.getUserAccentColor(this);
     }
 
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getNoActionBarThemeResource(this);
-    }
-
-    public TwidereApplication getTwidereApplication() {
-        return (TwidereApplication) getApplication();
-    }
-
     public boolean isVisible() {
         return mIsVisible;
     }

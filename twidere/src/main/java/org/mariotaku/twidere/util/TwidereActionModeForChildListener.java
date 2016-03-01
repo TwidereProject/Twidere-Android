@@ -107,7 +107,7 @@ public class TwidereActionModeForChildListener implements TintedStatusNativeActi
         if (mActionModeView == null) {
             // Use the action bar theme.
             final Context actionBarContext;
-            actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity, mThemed.getCurrentThemeResourceId(),
+            actionBarContext = ThemeUtils.getActionBarThemedContext(mActivity,
                     mThemed.getCurrentThemeColor());
 
             mActionModeView = new ActionBarContextView(actionBarContext);
@@ -122,7 +122,7 @@ public class TwidereActionModeForChildListener implements TintedStatusNativeActi
                     actionBarContext.getResources().getDisplayMetrics());
             mActionModeView.setContentHeight(height);
             ThemeUtils.setActionBarContextViewBackground(mActionModeView,
-                    mThemed.getCurrentThemeResourceId(), mThemed.getCurrentThemeColor(),
+                    mThemed.getCurrentThemeColor(),
                     mThemed.getCurrentThemeBackgroundOption(), false);
             mActionModePopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
             final Rect actionModeBounds = getActionModeBounds();

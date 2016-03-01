@@ -102,7 +102,9 @@ public class SettingsDetailsFragment extends BasePreferenceFragment implements S
                 SettingsActivity.setShouldNotifyChange(activity);
             }
             if (extras.containsKey(EXTRA_RESTART_ACTIVITY)) {
-                Utils.restartActivity(activity);
+                Utils.restartActivity(getActivity());
+            } else if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {
+                activity.recreate();
             }
         }
     }

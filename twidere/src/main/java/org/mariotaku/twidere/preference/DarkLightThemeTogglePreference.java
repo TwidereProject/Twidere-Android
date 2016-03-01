@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.preference;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.AttributeSet;
 
 import org.jraf.android.backport.switchwidget.SwitchPreference;
@@ -44,12 +43,11 @@ public class DarkLightThemeTogglePreference extends SwitchPreference implements 
 
     @Override
     protected boolean getPersistedBoolean(final boolean defaultReturnValue) {
-        final SharedPreferences preferences = getSharedPreferences();
-        return ThemeUtils.isDarkTheme(getPersistedString(VALUE_THEME_NAME_TWIDERE));
+        return ThemeUtils.isDarkTheme(getPersistedString(VALUE_THEME_NAME_LIGHT));
     }
 
     @Override
     protected boolean persistBoolean(final boolean value) {
-        return persistString(value ? VALUE_THEME_NAME_DARK : VALUE_THEME_NAME_TWIDERE);
+        return persistString(value ? VALUE_THEME_NAME_DARK : VALUE_THEME_NAME_LIGHT);
     }
 }

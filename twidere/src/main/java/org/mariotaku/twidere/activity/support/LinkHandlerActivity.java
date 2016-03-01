@@ -106,11 +106,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getNoActionBarThemeResource(this);
-    }
-
-    @Override
     public void onBackPressed() {
         if (mTwidereActionModeForChildListener.finishExisting()) {
             return;
@@ -226,7 +221,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         ViewCompat.setElevation(actionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
         ViewSupport.setOutlineProvider(actionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
         final View windowOverlay = findViewById(R.id.window_overlay);
-        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
+        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this));
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -274,8 +269,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final Toolbar toolbar = peekActionBarToolbar();
         if (toolbar != null) {
             final int themeColor = getCurrentThemeColor();
-            final int themeId = getCurrentThemeResourceId();
-            final int itemColor = ThemeUtils.getContrastForegroundColor(this, themeId, themeColor);
+            final int itemColor = ThemeUtils.getContrastForegroundColor(this, themeColor);
             ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class), itemColor, itemColor);
         }
     }
@@ -341,20 +335,19 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     @SuppressLint("AppCompatMethod")
     private void setActionBarTheme(ActionBar actionBar, int linkId, Uri data) {
         final int themeColor = getCurrentThemeColor();
-        final int themeId = getCurrentThemeResourceId();
         final String option = getThemeBackgroundOption();
-        int actionBarItemsColor = ThemeUtils.getContrastForegroundColor(this, themeId, themeColor);
+        int actionBarItemsColor = ThemeUtils.getContrastForegroundColor(this, themeColor);
         final ActionBarContainer actionBarContainer = (ActionBarContainer) findViewById(R.id.twidere_action_bar_container);
         switch (linkId) {
             case LINK_ID_SEARCH:
             case LINK_ID_USER_LISTS:
             case LINK_ID_USER_LIST:
             case LINK_ID_FILTERS: {
-                ThemeUtils.applyActionBarBackground(actionBarContainer, this, themeId, themeColor, option, false);
+                ThemeUtils.applyActionBarBackground(actionBarContainer, this, themeColor, option, false);
                 break;
             }
             default: {
-                ThemeUtils.applyActionBarBackground(actionBarContainer, this, themeId, themeColor, option, true);
+                ThemeUtils.applyActionBarBackground(actionBarContainer, this, themeColor, option, true);
                 break;
             }
         }
@@ -379,7 +372,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         mMainContent.setFactor(1);
         final int alpha = ThemeUtils.isTransparentBackground(getThemeBackgroundOption())
                 ? ThemeUtils.getActionBarAlpha(getCurrentThemeBackgroundAlpha()) : 0xFF;
-        final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getCurrentThemeResourceId(), getThemeBackgroundOption());
+        final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getThemeBackgroundOption());
         mMainContent.setColor(statusBarColor, alpha);
     }
 
@@ -573,7 +566,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     @Override
     protected void onResume() {
         super.onResume();
-        if (ThemeUtils.isColoredActionBar(getCurrentThemeResourceId())) {
+        if (ThemeUtils.isColoredActionBar(this)) {
             ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null,
                     getCurrentThemeColor()));
         }

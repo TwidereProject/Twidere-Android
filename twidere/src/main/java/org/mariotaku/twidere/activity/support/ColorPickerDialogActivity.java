@@ -25,16 +25,10 @@ import android.os.Bundle;
 
 import org.mariotaku.twidere.fragment.support.ColorPickerDialogFragment;
 import org.mariotaku.twidere.fragment.support.ColorPickerDialogFragment.Callback;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 public class ColorPickerDialogActivity extends BaseSupportDialogActivity implements Callback {
 
     public static final int RESULT_CLEARED = -2;
-
-    @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getNoDisplayThemeResource(this);
-    }
 
     @Override
     public void onCancelled() {

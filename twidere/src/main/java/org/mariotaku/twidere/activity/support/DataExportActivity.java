@@ -30,11 +30,6 @@ public class DataExportActivity extends ThemedFragmentActivity implements DataEx
     }
 
     @Override
-    public int getThemeResourceId() {
-        return ThemeUtils.getNoDisplayThemeResource(this);
-    }
-
-    @Override
     public void onCancelled(DialogFragment df) {
         if (!isFinishing()) {
             finish();

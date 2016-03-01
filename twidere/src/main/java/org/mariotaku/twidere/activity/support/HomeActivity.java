@@ -382,7 +382,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         ViewCompat.setElevation(mActionBarContainer, ThemeUtils.getSupportActionBarElevation(this));
         ViewSupport.setOutlineProvider(mActionBarContainer, ViewOutlineProviderCompat.BACKGROUND);
         final View windowOverlay = findViewById(R.id.window_overlay);
-        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this, getCurrentThemeResourceId()));
+        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this));
 
         setupSlidingMenu();
         setupBars();
@@ -424,7 +424,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
-        if (ThemeUtils.isDarkTheme(getCurrentThemeResourceId())) {
+        if (ThemeUtils.isDarkTheme(this)) {
             // TODO show dark bar
         } else {
             ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null, getThemeColor()));
@@ -773,19 +773,18 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     private void setupBars() {
         final int themeColor = getThemeColor();
-        final int themeResId = getCurrentThemeResourceId();
         final String backgroundOption = getCurrentThemeBackgroundOption();
         final boolean isTransparent = ThemeUtils.isTransparentBackground(backgroundOption);
         final int actionBarAlpha = isTransparent ? ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(this)) : 0xFF;
         final IHomeActionButton homeActionButton = (IHomeActionButton) mActionsButton;
-        mTabIndicator.setItemContext(ThemeUtils.getActionBarThemedContext(this, themeResId, themeColor));
-        ViewSupport.setBackground(mActionBarContainer, ThemeUtils.getActionBarBackground(this, themeResId, themeColor,
+        mTabIndicator.setItemContext(ThemeUtils.getActionBarThemedContext(this, themeColor));
+        ViewSupport.setBackground(mActionBarContainer, ThemeUtils.getActionBarBackground(this, themeColor,
                 backgroundOption, true));
-        final int actionBarColor = ThemeUtils.getActionBarColor(this, themeColor, themeResId, backgroundOption);
-        final int actionItemColor = ThemeUtils.getContrastForegroundColor(this, getCurrentThemeResourceId(), themeColor);
+        final int actionBarColor = ThemeUtils.getActionBarColor(this, themeColor, backgroundOption);
+        final int actionItemColor = ThemeUtils.getContrastForegroundColor(this, themeColor);
         final int[] foregroundColors = new int[2];
         ThemeUtils.getColorForegroundAndInverse(this, foregroundColors);
-        if (ThemeUtils.isDarkTheme(themeResId)) {
+        if (ThemeUtils.isDarkTheme(this)) {
             homeActionButton.setButtonColor(actionBarColor);
             homeActionButton.setIconColor(actionItemColor, Mode.SRC_ATOP);
             mTabIndicator.setStripColor(themeColor);
@@ -820,7 +819,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     private void setupSlidingMenu() {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow_start, GravityCompat.START);
         final Window window = getWindow();
-        ThemeUtils.applyWindowBackground(this, mHomeContent, getCurrentThemeResourceId(),
+        ThemeUtils.applyWindowBackground(this, mHomeContent,
                 getThemeBackgroundOption(), getCurrentThemeBackgroundAlpha());
         window.setBackgroundDrawable(new EmptyDrawable());
     }
