@@ -21,28 +21,37 @@ package org.mariotaku.twidere.api.twitter.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Path;
+import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.ConversationTimeline;
+import org.mariotaku.twidere.api.twitter.model.NewDm;
 import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.PrivateDirectMessages;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
+import org.mariotaku.twidere.api.twitter.model.UserInbox;
 
-@SuppressWarnings("RedundantThrows")
+
+@Queries(@KeyValue(key = "include_groups", value = "true"))
 public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @POST("/dm/conversation/{conversation_id}/delete.json")
     @BodyType(BodyType.FORM)
     ResponseCode destroyDirectMessagesConversation(@Path("conversation_id") String conversationId) throws TwitterException;
 
+    @POST("/dm/new.json")
+    ResponseCode sendDm(@Param NewDm newDm) throws TwitterException;
+
     @POST("/dm/conversation/{account_id}-{user_id}/delete.json")
     @BodyType(BodyType.FORM)
     ResponseCode destroyDirectMessagesConversation(@Path("account_id") long accountId, @Path("user_id") long userId) throws TwitterException;
 
-    @GET("/dm/user_updates.json")
-    PrivateDirectMessages getUserUpdates(@Query Paging paging);
-
     @GET("/dm/user_inbox.json")
-    PrivateDirectMessages getUserInbox(@Query Paging paging);
+    UserInbox getUserInbox(@Query Paging paging) throws TwitterException;
+
+    @GET("/dm/conversation/{conversation_id}.json")
+    ConversationTimeline getUserInbox(@Path("conversation_id") String conversationId, @Query Paging paging) throws TwitterException;
 }

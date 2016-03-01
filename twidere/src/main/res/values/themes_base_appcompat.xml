@@ -21,6 +21,9 @@
 <resources>
 
     <style name="Theme.Compat.Base" parent="Theme.AppCompat">
+        <!-- Window attributes -->
+        <item name="android:windowBackground">@color/background_color_window_dark</item>
+
         <item name="android:textColorTertiary">@color/tertiary_text_mtrl_dark</item>
         <item name="android:textColorTertiaryInverse">@color/tertiary_text_mtrl_light</item>
     </style>
@@ -31,6 +34,9 @@
     </style>
 
     <style name="Theme.Compat.Base.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+        <!-- Window attributes -->
+        <item name="android:windowBackground">@color/background_color_window_dark</item>
+
         <item name="android:textColorTertiary">@color/tertiary_text_mtrl_dark</item>
         <item name="android:textColorTertiaryInverse">@color/tertiary_text_mtrl_light</item>
     </style>
@@ -42,6 +48,10 @@
     </style>
 
     <style name="Theme.Compat.Base.Light" parent="Theme.AppCompat.Light">
+
+        <!-- Window attributes -->
+        <item name="android:windowBackground">@color/background_color_window_light</item>
+
         <item name="android:textColorTertiary">@color/tertiary_text_mtrl_light</item>
         <item name="android:textColorTertiaryInverse">@color/tertiary_text_mtrl_dark</item>
     </style>
@@ -52,6 +62,9 @@
     </style>
 
     <style name="Theme.Compat.Base.Light.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Window attributes -->
+        <item name="android:windowBackground">@color/background_color_window_light</item>
+
         <item name="android:textColorTertiary">@color/tertiary_text_mtrl_light</item>
         <item name="android:textColorTertiaryInverse">@color/tertiary_text_mtrl_dark</item>
     </style>

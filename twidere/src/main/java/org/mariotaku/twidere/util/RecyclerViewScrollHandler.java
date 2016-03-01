@@ -35,8 +35,7 @@ public class RecyclerViewScrollHandler extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         final int scrollState = recyclerView.getScrollState();
-        final int idleState = RecyclerView.SCROLL_STATE_IDLE;
-        mScrollHandler.handleScroll(dy, scrollState, idleState);
+        mScrollHandler.handleScroll(dy, scrollState, RecyclerView.SCROLL_STATE_IDLE);
     }
 
     public static class RecyclerViewCallback implements ViewCallback {

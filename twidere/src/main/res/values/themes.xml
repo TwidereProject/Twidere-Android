@@ -3,9 +3,6 @@
 
     <style name="Theme.Twidere" parent="Theme.Compat.Base.Light">
 
-        <!-- Window attributes -->
-        <item name="android:windowBackground">@color/background_color_window_light</item>
-
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
         </item>
@@ -26,9 +23,6 @@
     </style>
 
     <style name="Theme.Twidere.NoActionBar" parent="Theme.Compat.Base.Light.NoActionBar">
-
-        <!-- Window attributes -->
-        <item name="android:windowBackground">@color/background_color_window_light</item>
 
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
