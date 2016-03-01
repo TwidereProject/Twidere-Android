@@ -26,8 +26,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwidereValidator;
-import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.util.Locale;
 
@@ -37,7 +35,8 @@ public class StatusTextCountView extends AppCompatTextView {
 
     private final int mTextColor;
     private final Locale mLocale;
-    private final TwidereValidator mValidator;
+    private int mTextCount;
+    private int mMaxLength;
 
     public StatusTextCountView(final Context context) {
         this(context, null);
@@ -50,11 +49,9 @@ public class StatusTextCountView extends AppCompatTextView {
     public StatusTextCountView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         if (isInEditMode()) {
-            mValidator = new TwidereValidator(null);
             mTextColor = 0;
             mLocale = Locale.getDefault();
         } else {
-            mValidator = DependencyHolder.get(context).getValidator();
             final int textAppearance = ThemeUtils.getTitleTextAppearance(context);
             final TypedArray a = context.obtainStyledAttributes(textAppearance, new int[]{android.R.attr.textColor});
             mTextColor = a.getColor(0, 0);
@@ -65,11 +62,29 @@ public class StatusTextCountView extends AppCompatTextView {
     }
 
     public void setTextCount(final int count) {
-        final int maxLength = mValidator.getMaxTweetLength();
+        mTextCount = count;
+        updateTextCount();
+    }
+
+    public void setMaxLength(int maxLength) {
+        mMaxLength = maxLength;
+        updateTextCount();
+    }
+
+    public int getMaxLength() {
+        return mMaxLength;
+    }
+
+    public int getTextCount() {
+        return mTextCount;
+    }
+
+    public void updateTextCount() {
+        final int count = mTextCount, maxLength = mMaxLength;
         setText(getLocalizedNumber(mLocale, maxLength - count));
-        final boolean exceeded_limit = count < maxLength;
-        final boolean near_limit = count >= maxLength - 10;
-        final float hue = exceeded_limit ? near_limit ? 5 * (maxLength - count) : 50 : 0;
+        final boolean exceededLimit = count < maxLength;
+        final boolean nearLimit = count >= maxLength - 10;
+        final float hue = exceededLimit ? nearLimit ? 5 * (maxLength - count) : 50 : 0;
         final float[] textColorHsv = new float[3];
         Color.colorToHSV(mTextColor, textColorHsv);
         final float[] errorColorHsv = {hue, 1.0f, 0.75f + textColorHsv[2] / 4};

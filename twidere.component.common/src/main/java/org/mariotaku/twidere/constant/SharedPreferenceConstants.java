@@ -274,8 +274,6 @@ public interface SharedPreferenceConstants {
     String KEY_COMPACT_CARDS = "compact_cards";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_FORCE_USING_PRIVATE_APIS = "force_using_private_apis";
-    @Preference(type = STRING, hasDefault = true, defaultString = "140")
-    String KEY_STATUS_TEXT_LIMIT = "status_text_limit";
     @Preference(type = STRING, hasDefault = true, defaultString = VALUE_COMPOSE_NOW_ACTION_COMPOSE)
     String KEY_COMPOSE_NOW_ACTION = "compose_now_action";
     String KEY_FALLBACK_TWITTER_LINK_HANDLER = "fallback_twitter_link_handler";
