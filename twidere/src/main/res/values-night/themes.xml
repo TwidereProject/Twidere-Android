@@ -160,6 +160,8 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
 
         <item name="darkTheme">true</item>
         <!--<item name="android:windowNoDisplay">true</item>-->
