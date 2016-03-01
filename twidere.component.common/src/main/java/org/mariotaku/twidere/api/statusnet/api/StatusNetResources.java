@@ -14,7 +14,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 public interface StatusNetResources {
 
     @GET("/statusnet/config.json")
-    StatusNetConfig getConfig() throws TwitterException;
+    StatusNetConfig getStatusNetConfig() throws TwitterException;
 
     @GET("/search.json")
     ResponseList<Status> searchStatuses(@Query("q") String query, @Query Paging paging) throws TwitterException;

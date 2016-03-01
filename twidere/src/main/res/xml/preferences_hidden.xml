@@ -6,10 +6,6 @@
 
     <Preference android:layout="@layout/header_hidden_settings"/>
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
-        android:defaultValue="false"
-        android:key="force_using_private_apis"
-        android:title="@string/force_using_private_apis"/>
     <org.mariotaku.twidere.preference.SeekBarDialogPreference
         android:defaultValue="10"
         android:key="connection_timeout"
@@ -17,12 +13,6 @@
         app:max="30"
         app:min="5"
         app:progressTextSuffix="s"/>
-
-    <org.mariotaku.twidere.preference.AutoFixEditTextPreference
-        android:defaultValue="140"
-        android:inputType="number"
-        android:key="status_text_limit"
-        android:title="@string/status_text_limit"/>
 
     <edu.tsinghua.hotmobi.UploadLogsPreferences android:title="@string/report_usage_statistics_now"/>
 

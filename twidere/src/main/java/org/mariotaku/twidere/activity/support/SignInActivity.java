@@ -50,6 +50,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,6 +71,7 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
+import org.mariotaku.twidere.api.statusnet.model.StatusNetConfig;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
@@ -77,14 +79,18 @@ import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.EmptyAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.StatusNetAccountExtra;
+import org.mariotaku.twidere.model.TwitterAccountExtra;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
@@ -558,6 +564,36 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         }
     }
 
+    @Nullable
+    private static Pair<String, String> detectAccountType(Twitter twitter) {
+        try {
+            // Get StatusNet specific resource
+            StatusNetConfig config = twitter.getStatusNetConfig();
+            StatusNetAccountExtra extra = new StatusNetAccountExtra();
+            final StatusNetConfig.Site site = config.getSite();
+            if (site != null) {
+                extra.setTextLimit(site.getTextLimit());
+            }
+            return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_STATUSNET,
+                    JsonSerializer.serialize(extra, StatusNetAccountExtra.class));
+        } catch (TwitterException e) {
+            // Ignore
+        }
+        try {
+            // Get Twitter official only resource
+            Paging paging = new Paging();
+            paging.count(1);
+            twitter.getActivitiesAboutMe(paging);
+            TwitterAccountExtra extra = new TwitterAccountExtra();
+            extra.setIsOfficialCredentials(true);
+            return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_TWITTER,
+                    JsonSerializer.serialize(extra, TwitterAccountExtra.class));
+        } catch (TwitterException e) {
+            // Ignore
+        }
+        return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_TWITTER, null);
+    }
+
     public static abstract class AbstractSignInTask extends AsyncTask<Object, Runnable, SignInResponse> {
 
         protected final WeakReference<SignInActivity> activityRef;
@@ -642,7 +678,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 final int color = analyseUserProfileColor(user);
                 return new SignInResponse(isUserLoggedIn(context, userId), auth, user,
                         ParcelableCredentials.AUTH_TYPE_OAUTH, color, apiUrlFormat, sameOauthSigningUrl,
-                        noVersionSuffix);
+                        noVersionSuffix, detectAccountType(twitter));
             } catch (final TwitterException e) {
                 return new SignInResponse(false, false, e);
             }
@@ -714,6 +750,33 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             }
         }
 
+        private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
+            final SignInActivity activity = activityRef.get();
+            if (activity == null) return new SignInResponse(false, false, null);
+            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
+            OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
+            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
+            final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth, verificationCallback, userAgent);
+            final OAuthToken accessToken = authenticator.getOAuthAccessToken(username, password);
+            final long userId = accessToken.getUserId();
+            if (userId <= 0) return new SignInResponse(false, false, null);
+            return getOAuthSignInResponse(activity, accessToken, userId,
+                    ParcelableCredentials.AUTH_TYPE_OAUTH);
+        }
+
+        private SignInResponse authxAuth() throws TwitterException {
+            final SignInActivity activity = activityRef.get();
+            if (activity == null) return new SignInResponse(false, false, null);
+            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
+            OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
+            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
+            final OAuthToken accessToken = oauth.getAccessToken(username, password);
+            final long userId = accessToken.getUserId();
+            if (userId <= 0) return new SignInResponse(false, false, null);
+            return getOAuthSignInResponse(activity, accessToken, userId,
+                    ParcelableCredentials.AUTH_TYPE_XAUTH);
+        }
+
         private SignInResponse authBasic() throws TwitterException, AuthenticationException {
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
@@ -734,39 +797,11 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             }
             final long userId = user.getId();
             if (userId <= 0) return new SignInResponse(false, false, null);
-            if (isUserLoggedIn(activity, userId)) return new SignInResponse(true, false, null);
             final int color = analyseUserProfileColor(user);
             return new SignInResponse(isUserLoggedIn(activity, userId), username, password, user,
-                    color, apiUrlFormat, noVersionSuffix);
+                    color, apiUrlFormat, noVersionSuffix, detectAccountType(twitter));
         }
 
-        static class WrongBasicCredentialException extends AuthenticationException {
-
-        }
-
-        static class WrongAPIURLFormatException extends AuthenticationException {
-
-        }
-
-        private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
-            final SignInActivity activity = activityRef.get();
-            if (activity == null) return new SignInResponse(false, false, null);
-            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
-            OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
-            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
-            final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth, verificationCallback, userAgent);
-            final OAuthToken accessToken = authenticator.getOAuthAccessToken(username, password);
-            final long userId = accessToken.getUserId();
-            if (userId <= 0) return new SignInResponse(false, false, null);
-            endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
-            auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
-            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint,
-                    auth, Twitter.class);
-            final User user = twitter.verifyCredentials();
-            final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(activity, userId), auth, user, ParcelableCredentials.AUTH_TYPE_OAUTH, color,
-                    apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
-        }
 
         private SignInResponse authTwipOMode() throws TwitterException {
             final SignInActivity activity = activityRef.get();
@@ -779,25 +814,27 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             final long userId = user.getId();
             if (userId <= 0) return new SignInResponse(false, false, null);
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(activity, userId), user, color, apiUrlFormat, noVersionSuffix);
+            return new SignInResponse(isUserLoggedIn(activity, userId), user, color, apiUrlFormat,
+                    noVersionSuffix, detectAccountType(twitter));
         }
 
-        private SignInResponse authxAuth() throws TwitterException {
-            final SignInActivity activity = activityRef.get();
-            if (activity == null) return new SignInResponse(false, false, null);
-            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
-            OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
-            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
-            final OAuthToken accessToken = oauth.getAccessToken(username, password);
-            final long userId = accessToken.getUserId();
-            if (userId <= 0) return new SignInResponse(false, false, null);
-            auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
-            endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
+        private SignInResponse getOAuthSignInResponse(SignInActivity activity, OAuthToken accessToken,
+                                                      long userId, int authType) throws TwitterException {
+            final OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
+            final Endpoint endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
             final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(activity, userId), auth, user, ParcelableCredentials.AUTH_TYPE_XAUTH, color, apiUrlFormat,
-                    sameOAuthSigningUrl, noVersionSuffix);
+            return new SignInResponse(isUserLoggedIn(activity, userId), auth, user, authType, color,
+                    apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix, detectAccountType(twitter));
+        }
+
+        static class WrongBasicCredentialException extends AuthenticationException {
+
+        }
+
+        static class WrongAPIURLFormatException extends AuthenticationException {
+
         }
 
         class InputLoginVerificationCallback implements OAuthPasswordAuthenticator.LoginVerificationCallback {
@@ -952,15 +989,20 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         public final int authType, color;
         public final String apiUrlFormat;
         public final boolean sameOauthSigningUrl, noVersionSuffix;
+        public final Pair<String, String> accountType;
 
-        public SignInResponse(final boolean alreadyLoggedIn, final boolean succeed, final Exception exception) {
-            this(alreadyLoggedIn, succeed, exception, null, null, null, null, 0, 0, null, false, false);
+        public SignInResponse(final boolean alreadyLoggedIn, final boolean succeed,
+                              final Exception exception) {
+            this(alreadyLoggedIn, succeed, exception, null, null, null, null, 0, 0, null, false,
+                    false, null);
         }
 
-        public SignInResponse(final boolean alreadyLoggedIn, final boolean succeed, final Exception exception,
-                              final String basicUsername, final String basicPassword,
-                              final OAuthAuthorization oauth, final User user, final int authType, final int color,
-                              final String apiUrlFormat, final boolean sameOauthSigningUrl, final boolean noVersionSuffix) {
+        public SignInResponse(final boolean alreadyLoggedIn, final boolean succeed,
+                              final Exception exception, final String basicUsername,
+                              final String basicPassword, final OAuthAuthorization oauth,
+                              final User user, final int authType, final int color,
+                              final String apiUrlFormat, final boolean sameOauthSigningUrl,
+                              final boolean noVersionSuffix, final Pair<String, String> accountType) {
             this.alreadyLoggedIn = alreadyLoggedIn;
             this.succeed = succeed;
             this.exception = exception;
@@ -973,27 +1015,32 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             this.apiUrlFormat = apiUrlFormat;
             this.sameOauthSigningUrl = sameOauthSigningUrl;
             this.noVersionSuffix = noVersionSuffix;
+            this.accountType = accountType;
         }
 
         public SignInResponse(final boolean alreadyLoggedIn, final OAuthAuthorization oauth,
                               final User user, final int authType, final int color,
                               final String apiUrlFormat, final boolean sameOauthSigningUrl,
-                              final boolean noVersionSuffix) {
+                              final boolean noVersionSuffix, final Pair<String, String> accountType) {
             this(alreadyLoggedIn, true, null, null, null, oauth, user, authType, color, apiUrlFormat,
-                    sameOauthSigningUrl, noVersionSuffix);
+                    sameOauthSigningUrl, noVersionSuffix, accountType);
         }
 
         public SignInResponse(final boolean alreadyLoggedIn, final String basicUsername,
                               final String basicPassword, final User user, final int color,
-                              final String apiUrlFormat, final boolean noVersionSuffix) {
-            this(alreadyLoggedIn, true, null, basicUsername, basicPassword, null, user, ParcelableCredentials.AUTH_TYPE_BASIC, color,
-                    apiUrlFormat, false, noVersionSuffix);
+                              final String apiUrlFormat, final boolean noVersionSuffix,
+                              final Pair<String, String> accountType) {
+            this(alreadyLoggedIn, true, null, basicUsername, basicPassword, null, user,
+                    ParcelableCredentials.AUTH_TYPE_BASIC, color, apiUrlFormat, false,
+                    noVersionSuffix, accountType);
         }
 
         public SignInResponse(final boolean alreadyLoggedIn, final User user, final int color,
-                              final String apiUrlFormat, final boolean noVersionSuffix) {
-            this(alreadyLoggedIn, true, null, null, null, null, user, ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE, color,
-                    apiUrlFormat, false, noVersionSuffix);
+                              final String apiUrlFormat, final boolean noVersionSuffix,
+                              final Pair<String, String> accountType) {
+            this(alreadyLoggedIn, true, null, null, null, null, user,
+                    ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE, color, apiUrlFormat, false,
+                    noVersionSuffix, accountType);
         }
 
         private ContentValues toContentValues() {
@@ -1017,6 +1064,10 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 default: {
                     values = null;
                 }
+            }
+            if (values != null && accountType != null) {
+                values.put(Accounts.ACCOUNT_TYPE, accountType.first);
+                values.put(Accounts.ACCOUNT_EXTRAS, accountType.second);
             }
             return values;
         }
