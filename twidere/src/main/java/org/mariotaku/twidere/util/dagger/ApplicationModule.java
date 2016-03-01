@@ -235,7 +235,7 @@ public class ApplicationModule implements Constants {
     @Provides
     @Singleton
     public TwidereValidator twidereValidator(SharedPreferencesWrapper preferences) {
-        return new TwidereValidator(preferences);
+        return new TwidereValidator();
     }
 
     @Provides

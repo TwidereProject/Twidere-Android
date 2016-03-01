@@ -68,6 +68,7 @@ import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.DraftValuesCreator;
 import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
@@ -580,6 +581,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     shortener.waitForService();
                 }
                 for (final ParcelableAccount account : statusUpdate.accounts) {
+                    final ParcelableCredentials credentials = DataStoreUtils.getCredentials(this, account.account_id);
                     // Get Twitter instance corresponding to account
                     final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, account.account_id,
                             true, true);
@@ -587,7 +589,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                             true, true, TwitterUpload.class);
 
                     // Shouldn't happen
-                    if (twitter == null || upload == null) {
+                    if (twitter == null || upload == null || credentials == null) {
                         throw new UpdateStatusException("No account found");
                     }
 
@@ -614,7 +616,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                                 statusText);
                     }
 
-                    final boolean shouldShorten = mValidator.getTweetLength(statusText) > mValidator.getMaxTweetLength();
+                    final boolean shouldShorten = mValidator.getTweetLength(statusText) >
+                            TwidereValidator.getTextLimit(credentials);
                     StatusShortenResult shortenedResult = null;
                     if (shouldShorten && shortener != null) {
                         try {
