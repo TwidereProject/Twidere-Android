@@ -325,6 +325,8 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
         <!--<item name="android:windowNoDisplay">true</item>-->
     </style>
 
@@ -336,19 +338,14 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
         <!--<item name="android:windowNoDisplay">true</item>-->
     </style>
 
-    <style name="Theme.Test" parent="Theme.Compat.Base"/>
 
     <style name="Theme.Nyan" parent="Theme.Compat.Base.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>
-    </style>
-
-    <style name="Theme.Twidere.Wizard" parent="Theme.Twidere.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowBackground">@color/background_color_window_settings_wizard</item>
-        <item name="android:colorActivatedHighlight">@color/branding_color</item>
     </style>
 
 </resources>
