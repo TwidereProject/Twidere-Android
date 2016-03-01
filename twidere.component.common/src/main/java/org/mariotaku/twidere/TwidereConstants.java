@@ -50,8 +50,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
 
     String TWITTER_CONSUMER_KEY_LEGACY = "uAFVpMhBntJutfVj6abfA";
     String TWITTER_CONSUMER_SECRET_LEGACY = "JARXkJTfxo0F8MyctYy9bUmrLISjo8vXAHsZHYuk2E";
-    String TWITTER_CONSUMER_KEY = "YVROlQkXFvkPfH3jcFaR4A";
-    String TWITTER_CONSUMER_SECRET = "0UnEHDq5IzVK9nstiz2nWOtG5rOMM5JkUpATfM78Do";
+    String TWITTER_CONSUMER_KEY = "i5XtSVfoWjLjKlnrvhiLPMZC0";
+    String TWITTER_CONSUMER_SECRET = "sQncmZ2atQR6tKbqnnAtqjrECqN8k6FD4p4OoNS0XTDkUz3HGH";
 
     String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
     String DEFAULT_TWITTER_OAUTH_BASE_URL = "https://api.twitter.com/oauth/";

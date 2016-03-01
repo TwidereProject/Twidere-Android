@@ -184,6 +184,7 @@ public class ParcelableMediaUtils {
             media.media_url = ((CardEntity.ImageValue) photoImageFullSize).getUrl();
             media.width = ((CardEntity.ImageValue) photoImageFullSize).getWidth();
             media.height = ((CardEntity.ImageValue) photoImageFullSize).getHeight();
+            media.open_browser = true;
             final CardEntity.BindingValue summaryPhotoImage = card.getBindingValue("summary_photo_image");
             if (summaryPhotoImage instanceof CardEntity.ImageValue) {
                 media.preview_url = ((CardEntity.ImageValue) summaryPhotoImage).getUrl();

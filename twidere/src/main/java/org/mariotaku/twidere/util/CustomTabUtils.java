@@ -61,8 +61,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import static org.mariotaku.twidere.util.CompareUtils.classEquals;
-
 public class CustomTabUtils implements Constants {
     private static final HashMap<String, CustomTabConfiguration> CUSTOM_TABS_CONFIGURATION_MAP = new HashMap<>();
     private static final HashMap<String, Integer> CUSTOM_TABS_ICON_NAME_MAP = new HashMap<>();
@@ -132,7 +130,7 @@ public class CustomTabUtils implements Constants {
 
     public static String findTabType(final Class<? extends Fragment> cls) {
         for (final Entry<String, CustomTabConfiguration> entry : getConfigurationMap().entrySet()) {
-            if (classEquals(cls, entry.getValue().getFragmentClass())) return entry.getKey();
+            if (cls == entry.getValue().getFragmentClass()) return entry.getKey();
         }
         return null;
     }

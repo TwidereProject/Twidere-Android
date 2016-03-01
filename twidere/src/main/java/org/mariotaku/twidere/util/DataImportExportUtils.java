@@ -122,7 +122,7 @@ public class DataImportExportUtils implements Constants {
         final HashMap<String, Preference> supportedPrefsMap = new HashMap<>();
         for (final Field field : fields) {
             final Preference annotation = field.getAnnotation(Preference.class);
-            if (Modifier.isStatic(field.getModifiers()) && CompareUtils.classEquals(field.getType(), String.class)
+            if (Modifier.isStatic(field.getModifiers()) && field.getType() == String.class
                     && annotation != null && annotation.exportable() && annotation.type() != PreferenceType.INVALID) {
                 try {
                     supportedPrefsMap.put((String) field.get(null), annotation);

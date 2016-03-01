@@ -813,7 +813,7 @@ public final class Utils implements Constants {
 
     @Nullable
     public static String getReadPositionTagWithAccounts(Context context, boolean activatedIfMissing,
-                                                        @Nullable String tag,
+                                                        @Nullable @ReadPositionTag String tag,
                                                         long... accountIds) {
         if (tag == null) return null;
         if (accountIds == null || accountIds.length == 0 || (accountIds.length == 1 && accountIds[0] < 0)) {

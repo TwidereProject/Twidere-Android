@@ -81,8 +81,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mariotaku.twidere.util.CompareUtils.classEquals;
-
 public class SettingsWizardActivity extends BaseThemedActivity implements Constants {
 
     public static final String WIZARD_PREFERENCE_KEY_NEXT_PAGE = "next_page";
@@ -667,9 +665,9 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
 
         private boolean wasConfigured(final List<SupportTabSpec> tabs) {
             for (final SupportTabSpec spec : tabs) {
-                if (classEquals(spec.cls, HomeTimelineFragment.class)
-                        || classEquals(spec.cls, InteractionsTimelineFragment.class)
-                        || classEquals(spec.cls, DirectMessagesFragment.class)) return true;
+                if (spec.cls == HomeTimelineFragment.class
+                        || spec.cls == InteractionsTimelineFragment.class
+                        || spec.cls == DirectMessagesFragment.class) return true;
             }
             return false;
         }

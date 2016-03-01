@@ -165,19 +165,12 @@ public class ParcelableMedia implements Parcelable {
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
 
-        @Type
         int UNKNOWN = 0;
-        @Type
         int IMAGE = 1;
-        @Type
         int VIDEO = 2;
-        @Type
         int ANIMATED_GIF = 3;
-        @Type
         int CARD_ANIMATED_GIF = 4;
-        @Type
         int EXTERNAL_PLAYER = 5;
-        @Type
         int VARIABLE_TYPE = 6;
     }
 

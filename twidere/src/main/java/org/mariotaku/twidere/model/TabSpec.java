@@ -23,7 +23,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 
 import static org.mariotaku.twidere.util.CompareUtils.bundleEquals;
-import static org.mariotaku.twidere.util.CompareUtils.classEquals;
 import static org.mariotaku.twidere.util.CompareUtils.objectEquals;
 
 public class TabSpec {
@@ -51,7 +50,7 @@ public class TabSpec {
 	public boolean equals(final Object o) {
 		if (!(o instanceof TabSpec)) return false;
 		final TabSpec spec = (TabSpec) o;
-		return objectEquals(name, spec.name) && objectEquals(icon, spec.icon) && classEquals(cls, spec.cls)
+		return objectEquals(name, spec.name) && objectEquals(icon, spec.icon) && cls == spec.cls
 				&& bundleEquals(args, spec.args) && position == spec.position;
 	}
 

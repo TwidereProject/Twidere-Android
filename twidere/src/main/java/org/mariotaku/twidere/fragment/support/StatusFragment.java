@@ -112,13 +112,17 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -1584,11 +1588,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             public void onLinkClick(String link, String orig, long accountId, long extraId, int type, boolean sensitive, int start, int end) {
                 final ParcelableStatus status = adapter.getStatus();
                 ParcelableMedia current;
-                if ((current = ParcelableMediaUtils.findByUrl(status.media, link)) != null) {
+                if ((current = ParcelableMediaUtils.findByUrl(status.media, link)) != null &&
+                        !current.open_browser) {
                     expandOrOpenMedia(current);
                     return;
                 }
-                if ((current = ParcelableMediaUtils.findByUrl(status.quoted_media, link)) != null) {
+                if ((current = ParcelableMediaUtils.findByUrl(status.quoted_media, link)) != null &&
+                        !current.open_browser) {
                     expandOrOpenMedia(current);
                     return;
                 }
@@ -2432,26 +2438,29 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     }
                 }
                 activitySummary.setRetweeters(retweeters);
-                final ContentValues statusValues = new ContentValues();
+                final ContentValues countValues = new ContentValues();
                 final Status status = twitter.showStatus(mStatusId);
                 activitySummary.setFavoriteCount(status.getFavoriteCount());
                 activitySummary.setRetweetCount(status.getRetweetCount());
                 activitySummary.setReplyCount(status.getReplyCount());
 
-                statusValues.put(Statuses.REPLY_COUNT, activitySummary.replyCount);
-                statusValues.put(Statuses.FAVORITE_COUNT, activitySummary.favoriteCount);
-                statusValues.put(Statuses.RETWEET_COUNT, activitySummary.retweetCount);
+                countValues.put(Statuses.REPLY_COUNT, activitySummary.replyCount);
+                countValues.put(Statuses.FAVORITE_COUNT, activitySummary.favoriteCount);
+                countValues.put(Statuses.RETWEET_COUNT, activitySummary.retweetCount);
 
                 final ContentResolver cr = context.getContentResolver();
                 final Expression statusWhere = Expression.or(
                         Expression.equals(Statuses.STATUS_ID, mStatusId),
                         Expression.equals(Statuses.RETWEET_ID, mStatusId)
                 );
-                cr.update(Statuses.CONTENT_URI, statusValues, statusWhere.getSQL(), null);
+                cr.update(Statuses.CONTENT_URI, countValues, statusWhere.getSQL(), null);
                 final Expression activityWhere = Expression.or(
                         Expression.equals(Activities.STATUS_ID, mStatusId),
                         Expression.equals(Activities.STATUS_RETWEET_ID, mStatusId)
                 );
+
+                final ParcelableStatus pStatus = ParcelableStatusUtils.fromStatus(status, mAccountId, false);
+                cr.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(pStatus));
 
                 final Cursor activityCursor = cr.query(Activities.AboutMe.CONTENT_URI,
                         Activities.COLUMNS, activityWhere.getSQL(), null, null);
