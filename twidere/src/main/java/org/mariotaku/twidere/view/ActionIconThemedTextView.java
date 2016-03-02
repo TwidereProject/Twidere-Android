@@ -36,7 +36,7 @@ import org.mariotaku.twidere.util.support.TextViewSupport;
  */
 public class ActionIconThemedTextView extends AppCompatTextView {
 
-    private final int mIconWidth, mIconHeight;
+    private int mIconWidth, mIconHeight;
     @ColorInt
     private int mColor;
     @ColorInt
@@ -45,15 +45,21 @@ public class ActionIconThemedTextView extends AppCompatTextView {
     private int mActivatedColor;
 
     public ActionIconThemedTextView(Context context) {
-        this(context, null);
+        super(context);
+        init(context, null);
     }
 
     public ActionIconThemedTextView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init(context, attrs);
     }
 
     public ActionIconThemedTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
+
+    public void init(Context context, AttributeSet attrs) {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton);
         mColor = a.getColor(R.styleable.IconActionButton_iabColor, 0);
         mDisabledColor = a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0);

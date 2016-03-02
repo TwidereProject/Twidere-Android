@@ -30,10 +30,12 @@
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
         android:clipChildren="false"
+        android:clipToPadding="false"
         android:focusable="true"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/element_spacing_normal"
-        android:paddingRight="@dimen/element_spacing_normal">
+        android:paddingRight="@dimen/element_spacing_normal"
+        android:paddingTop="@dimen/element_spacing_normal">
 
         <org.mariotaku.twidere.view.ActionIconView
             android:id="@+id/status_info_icon"
@@ -57,7 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/element_spacing_small"
-            android:layout_marginStart="@dimen/element_spacing_small"
+            android:layout_marginStart="@dimen/element_spacing_mlarge"
+            android:layout_marginTop="@dimen/element_spacing_minus_normal"
             android:layout_toEndOf="@+id/status_info_icon"
             android:layout_toRightOf="@+id/status_info_icon"
             android:ellipsize="end"
@@ -105,7 +108,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/status_info_label"
-            android:layout_marginTop="@dimen/element_spacing_small"
             android:layout_toEndOf="@id/profile_image"
             android:layout_toRightOf="@id/profile_image"
             android:minHeight="@dimen/icon_size_status_profile_image"
