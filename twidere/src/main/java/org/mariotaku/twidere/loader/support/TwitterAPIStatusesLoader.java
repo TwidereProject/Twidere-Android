@@ -46,6 +46,7 @@ import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.io.File;
@@ -126,12 +127,14 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 }
             }
             statuses = getStatuses(twitter, paging);
-            if (!TwitterAPIFactory.isOfficialTwitterInstance(context, twitter)) {
+            if (!Utils.isOfficialCredentials(getContext(), getAccountId())) {
                 InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
             }
         } catch (final TwitterException e) {
             // mHandler.post(new ShowErrorRunnable(e));
-            Log.w(LOGTAG, e);
+            if (BuildConfig.DEBUG) {
+                Log.w(LOGTAG, e);
+            }
             return ListResponse.getListInstance(new CopyOnWriteArrayList<>(data), e);
         }
 

@@ -527,7 +527,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             public Object doLongOperation(Object o) {
                 for (long accountId : accountIds) {
                     Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId, false);
-                    if (TwitterAPIFactory.isOfficialTwitterInstance(mContext, twitter)) continue;
+                    if (!Utils.isOfficialCredentials(mContext, accountId)) continue;
                     try {
                         twitter.setActivitiesAboutMeUnread(cursor);
                     } catch (TwitterException e) {
@@ -540,10 +540,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             }
         };
         TaskStarter.execute(task);
-    }
-
-    public ErrorInfoStore getErrorInfoStore() {
-        return mErrorInfoStore;
     }
 
     private void addProcessingFriendshipRequestId(long accountId, long userId) {

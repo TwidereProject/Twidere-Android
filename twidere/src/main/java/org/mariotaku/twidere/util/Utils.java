@@ -970,6 +970,11 @@ public final class Utils implements Constants {
     }
 
     public static boolean isOfficialCredentials(@NonNull final Context context,
+                                                @NonNull final long accountId) {
+        return isOfficialCredentials(context, DataStoreUtils.getCredentials(context, accountId));
+    }
+
+    public static boolean isOfficialCredentials(@NonNull final Context context,
                                                 @NonNull final ParcelableCredentials account) {
         if (ParcelableCredentials.ACCOUNT_TYPE_TWITTER.equals(account.account_type)) {
             final TwitterAccountExtra extra = JsonSerializer.parse(account.account_extras,
@@ -2217,12 +2222,6 @@ public final class Utils implements Constants {
         return status.account_id == status.user_id;
     }
 
-    public static boolean shouldForceUsingPrivateAPIs(final Context context) {
-        if (context == null) return false;
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return prefs.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false);
-    }
-
     public static boolean shouldStopAutoRefreshOnBatteryLow(final Context context) {
         final SharedPreferences mPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
@@ -2648,7 +2647,6 @@ public final class Utils implements Constants {
     }
 
     public static boolean hasOfficialAPIAccess(Context context, SharedPreferences preferences, ParcelableCredentials account) {
-        if (preferences.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false)) return true;
         return isOfficialCredentials(context, account);
     }
 
@@ -2670,7 +2668,6 @@ public final class Utils implements Constants {
     }
 
     public static boolean shouldUsePrivateAPIs(Context context, long accountId) {
-        if (shouldForceUsingPrivateAPIs(context)) return true;
         return TwitterAPIFactory.isOfficialKeyAccount(context, accountId);
     }
 

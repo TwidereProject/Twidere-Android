@@ -34,7 +34,6 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.Nullables;
 import org.mariotaku.twidere.util.ParcelUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         final ParcelableStatus status = mStatus;
-        if (Utils.shouldForceUsingPrivateAPIs(getContext()) || TwitterAPIFactory.isOfficialTwitterInstance(getContext(), twitter)) {
+        if (Utils.isOfficialCredentials(getContext(), getAccountId())) {
             return twitter.showConversation(status.id, paging);
         }
         final List<Status> statuses = new ArrayList<>();

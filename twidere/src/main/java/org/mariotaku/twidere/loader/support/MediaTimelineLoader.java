@@ -34,7 +34,6 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.Utils;
 
@@ -62,7 +61,7 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
     @NonNull
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        if (Utils.shouldForceUsingPrivateAPIs(getContext()) || TwitterAPIFactory.isOfficialTwitterInstance(getContext(), twitter)) {
+        if (Utils.isOfficialCredentials(getContext(), getAccountId())) {
             if (mUserId != -1)
                 return twitter.getMediaTimeline(mUserId, paging);
             if (mUserScreenName != null)

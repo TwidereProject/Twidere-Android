@@ -828,7 +828,13 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     private void updateAttachedMediaView() {
-        mAttachedMediaPreview.setVisibility(hasMedia() ? View.VISIBLE : View.GONE);
+        final boolean hasMedia = hasMedia();
+        mAttachedMediaPreview.setVisibility(hasMedia ? View.VISIBLE : View.GONE);
+        if (hasMedia) {
+            mEditText.setMinLines(getResources().getInteger(R.integer.media_compose_min_lines));
+        } else {
+            mEditText.setMinLines(getResources().getInteger(R.integer.default_compose_min_lines));
+        }
         setMenu();
     }
 
@@ -1757,6 +1763,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         public MediaPreviewAdapter(final ComposeActivity activity, SimpleItemTouchHelperCallback.OnStartDragListener listener) {
             super(activity);
+            setHasStableIds(true);
             mInflater = LayoutInflater.from(activity);
             mDragStartListener = listener;
         }
@@ -1769,6 +1776,10 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             return Collections.unmodifiableList(mData);
         }
 
+        @Override
+        public long getItemId(int position) {
+            return System.identityHashCode(getItem(position));
+        }
 
         @Override
         public void onBindViewHolder(MediaPreviewViewHolder holder, int position, ParcelableMediaUpdate item) {
@@ -1795,11 +1806,17 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         }
 
         @Override
-        public void onItemDismiss(int position) {
-            mData.remove(position);
-            notifyItemRemoved(position);
+        public boolean remove(int position) {
+            boolean result = super.remove(position);
+            if (result) {
+                ((ComposeActivity) getContext()).updateAttachedMediaView();
+            }
+            return result;
+        }
 
-            ((ComposeActivity) getContext()).updateAttachedMediaView();
+        @Override
+        public void onItemDismiss(int position) {
+            // No-op
         }
 
         @Override
@@ -1810,15 +1827,18 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         }
     }
 
-    static class MediaPreviewViewHolder extends ViewHolder implements OnLongClickListener {
+    static class MediaPreviewViewHolder extends ViewHolder implements OnLongClickListener, OnClickListener {
 
         final ImageView image;
+        final View remove;
         MediaPreviewAdapter adapter;
 
         public MediaPreviewViewHolder(View itemView) {
             super(itemView);
             itemView.setOnLongClickListener(this);
             image = (ImageView) itemView.findViewById(R.id.image);
+            remove = itemView.findViewById(R.id.remove);
+            remove.setOnClickListener(this);
         }
 
         public void displayMedia(MediaPreviewAdapter adapter, ParcelableMediaUpdate media) {
@@ -1836,6 +1856,15 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             this.adapter = adapter;
         }
 
+        @Override
+        public void onClick(View v) {
+            if (adapter == null) return;
+            switch (v.getId()) {
+                case R.id.remove: {
+                    adapter.remove(getLayoutPosition());
+                }
+            }
+        }
     }
 
     public static class RetweetProtectedStatusWarnFragment extends BaseSupportDialogFragment implements
@@ -1904,7 +1933,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         public boolean isItemViewSwipeEnabled() {
-            return true;
+            return false;
         }
 
         @Override

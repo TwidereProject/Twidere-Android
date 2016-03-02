@@ -17,16 +17,42 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.SquareFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    tools:layout_gravity="center"
     tools:layout_height="128dp">
 
     <org.mariotaku.twidere.view.HighlightImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
+    <com.lnikkila.extendedtouchview.ExtendedTouchView
+        android:id="@+id/remove"
+        style="?borderlessButtonStyle"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="@dimen/element_spacing_minus_mlarge"
+        android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
+        android:layout_marginTop="@dimen/element_spacing_minus_mlarge"
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/remove"
+        app:touchHeight="@dimen/element_size_normal"
+        app:touchWidth="@dimen/element_size_normal">
+
+        <ImageView
+            android:layout_width="@dimen/element_size_small"
+            android:layout_height="@dimen/element_size_small"
+            android:layout_gravity="center"
+            android:contentDescription="@string/remove"
+            android:scaleType="center"
+            android:src="@drawable/ic_btn_grid_item_remove"/>
+    </com.lnikkila.extendedtouchview.ExtendedTouchView>
 </org.mariotaku.twidere.view.SquareFrameLayout>

@@ -402,16 +402,6 @@ public class TwitterAPIFactory implements TwidereConstants {
         return ConsumerKeyType.UNKNOWN;
     }
 
-    public static boolean isOfficialTwitterInstance(final Context context, final Twitter twitter) {
-        if (context == null || twitter == null) return false;
-        final RestClient restClient = RestAPIFactory.getRestClient(twitter);
-        final Authorization auth = restClient.getAuthorization();
-        if (!(auth instanceof OAuthSupport)) return false;
-        final String consumerKey = ((OAuthSupport) auth).getConsumerKey();
-        final String consumerSecret = ((OAuthSupport) auth).getConsumerSecret();
-        return TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
-    }
-
     public static class TwidereHttpRequestFactory implements HttpRequest.Factory {
 
         private final String userAgent;

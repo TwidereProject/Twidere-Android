@@ -54,9 +54,9 @@ public abstract class ArrayRecyclerAdapter<T, H extends ViewHolder> extends Base
     }
 
     public boolean remove(final int position) {
-        final boolean ret = mData.remove(position) != null;
-        notifyDataSetChanged();
-        return ret;
+        mData.remove(position);
+        notifyItemRemoved(position);
+        return true;
     }
 
     public void removeAll(final List<T> collection) {
