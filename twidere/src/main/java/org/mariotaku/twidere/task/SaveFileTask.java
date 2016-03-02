@@ -76,10 +76,13 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
             final String mimeType = fileInfoCallback.getMimeType(source);
             final String extension = fileInfoCallback.getExtension(mimeType);
             if (!destinationDir.isDirectory() && !destinationDir.mkdirs()) return null;
-            String nameToSave = getFileNameWithExtension(name, extension);
+            String nameToSave = getFileNameWithExtension(name, extension,
+                    fileInfoCallback.getSpecialCharacter(), null);
             File saveFile = new File(destinationDir, nameToSave);
             if (saveFile.exists()) {
-                nameToSave = getFileNameWithExtension(name + System.currentTimeMillis(), extension);
+                nameToSave = getFileNameWithExtension(name, extension,
+                        fileInfoCallback.getSpecialCharacter(),
+                        String.valueOf(System.currentTimeMillis()));
                 saveFile = new File(destinationDir, nameToSave);
             }
             final InputStream in = cr.openInputStream(source);
@@ -138,11 +141,30 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
         return contextRef.get();
     }
 
-    private static String getFileNameWithExtension(String name, @Nullable String extension) {
-        if (extension == null) return name;
-        int lastDotIdx = name.lastIndexOf('.');
-        if (lastDotIdx < 0) return name + "." + extension;
-        return name.substring(0, lastDotIdx) + "." + extension;
+    @NonNull
+    static String getFileNameWithExtension(@NonNull String name, @Nullable String extension,
+                                           char specialCharacter, @Nullable String suffix) {
+        StringBuilder sb = new StringBuilder();
+        int end = name.length();
+        if (extension != null) {
+            if (name.endsWith(extension)) {
+                for (int i = end - extension.length() - 1; i >= 0; i--) {
+                    if (name.charAt(i) != specialCharacter) {
+                        end = i + 1;
+                        break;
+                    }
+                }
+            }
+        }
+        sb.append(name, 0, end);
+        if (suffix != null) {
+            sb.append(suffix);
+        }
+        if (extension != null) {
+            sb.append('.');
+            sb.append(extension);
+        }
+        return sb.toString();
     }
 
     public interface FileInfoCallback {
@@ -154,6 +176,8 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
 
         @Nullable
         String getExtension(@Nullable String mimeType);
+
+        char getSpecialCharacter();
     }
 
     public static final class SaveFileResult {

@@ -514,11 +514,9 @@ public class ThemeUtils implements Constants {
         return textAppearance;
     }
 
-    public static int getUserAccentColor(final Context context) {
-        if (context == null) return Color.TRANSPARENT;
+    public static int getUserAccentColor(@NonNull final Context context) {
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
-        final Resources res = context.getResources();
-        final int def = res.getColor(R.color.branding_color);
+        final int def = ContextCompat.getColor(context, R.color.branding_color);
         return pref.getInt(KEY_THEME_COLOR, def);
     }
 

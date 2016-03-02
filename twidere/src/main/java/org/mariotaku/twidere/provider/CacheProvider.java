@@ -194,9 +194,13 @@ public class CacheProvider extends ContentProvider implements TwidereConstants {
         @Nullable
         @Override
         public String getFilename(@NonNull Uri source) {
-            final String cacheKey = getCacheKey(source);
+            String cacheKey = getCacheKey(source);
             if (cacheKey == null) return null;
-            return cacheKey.replaceAll("[^\\w\\d_]", "_");
+            final int indexOfSsp = cacheKey.indexOf("://");
+            if (indexOfSsp != -1) {
+                cacheKey = cacheKey.substring(indexOfSsp + 3);
+            }
+            return cacheKey.replaceAll("[^\\w\\d_]", String.valueOf(getSpecialCharacter()));
         }
 
         @Override
@@ -214,6 +218,11 @@ public class CacheProvider extends ContentProvider implements TwidereConstants {
         public String getExtension(@Nullable String mimeType) {
             if (mimeType == null) return null;
             return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+        }
+
+        @Override
+        public char getSpecialCharacter() {
+            return '_';
         }
     }
 
