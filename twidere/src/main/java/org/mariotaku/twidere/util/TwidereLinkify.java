@@ -61,14 +61,15 @@ public final class TwidereLinkify implements Constants {
 
     public static final int LINK_TYPE_MENTION = 1;
     public static final int LINK_TYPE_HASHTAG = 2;
-    public static final int LINK_TYPE_LINK = 4;
+    public static final int LINK_TYPE_ENTITY_URL = 4;
+    public static final int LINK_TYPE_LINK_IN_TEXT = 5;
     public static final int LINK_TYPE_LIST = 6;
     public static final int LINK_TYPE_CASHTAG = 7;
     public static final int LINK_TYPE_USER_ID = 8;
     public static final int LINK_TYPE_STATUS = 9;
 
-    public static final int[] ALL_LINK_TYPES = new int[]{LINK_TYPE_LINK, LINK_TYPE_MENTION, LINK_TYPE_HASHTAG,
-            LINK_TYPE_STATUS, LINK_TYPE_CASHTAG};
+    public static final int[] ALL_LINK_TYPES = new int[]{LINK_TYPE_ENTITY_URL, LINK_TYPE_LINK_IN_TEXT,
+            LINK_TYPE_MENTION, LINK_TYPE_HASHTAG, LINK_TYPE_STATUS, LINK_TYPE_CASHTAG};
 
     public static final String AVAILABLE_URL_SCHEME_PREFIX = "(https?://)?";
 
@@ -107,25 +108,31 @@ public final class TwidereLinkify implements Constants {
         setHighlightOption(highlightOption);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId, final long extraId, final boolean sensitive) {
-        return applyAllLinks(text, mOnLinkClickListener, accountId, extraId, sensitive, mHighlightOption);
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId,
+                                         final long extraId, final boolean sensitive,
+                                         final boolean skipLinksInText) {
+        return applyAllLinks(text, mOnLinkClickListener, accountId, extraId, sensitive,
+                mHighlightOption, skipLinksInText);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId, final boolean sensitive) {
-        return applyAllLinks(text, mOnLinkClickListener, accountId, -1, sensitive, mHighlightOption);
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId,
+                                         final boolean sensitive, final boolean skipLinksInText) {
+        return applyAllLinks(text, mOnLinkClickListener, accountId, -1, sensitive, mHighlightOption, skipLinksInText);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId, final long extraId,
-                                         final boolean sensitive, final int highlightOption) {
-        return applyAllLinks(text, mOnLinkClickListener, accountId, extraId, sensitive, highlightOption);
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final long accountId,
+                                         final long extraId, final boolean sensitive,
+                                         final int highlightOption, final boolean skipLinksInText) {
+        return applyAllLinks(text, mOnLinkClickListener, accountId, extraId, sensitive, highlightOption, skipLinksInText);
     }
 
     public SpannableString applyAllLinks(@Nullable final CharSequence text, final OnLinkClickListener listener,
                                          final long accountId, final long extraId, final boolean sensitive,
-                                         final int highlightOption) {
+                                         final int highlightOption, boolean skipLinksInText) {
         if (text == null) return null;
         final SpannableString string = SpannableString.valueOf(text);
         for (final int type : ALL_LINK_TYPES) {
+            if (type == LINK_TYPE_LINK_IN_TEXT && skipLinksInText) continue;
             addLinks(string, accountId, extraId, type, sensitive, listener, highlightOption);
         }
         return string;
@@ -202,7 +209,7 @@ public final class TwidereLinkify implements Constants {
                 addHashtagLinks(string, accountId, extraId, listener, highlightOption);
                 break;
             }
-            case LINK_TYPE_LINK: {
+            case LINK_TYPE_ENTITY_URL: {
                 final URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
                 for (final URLSpan span : spans) {
                     final int start = string.getSpanStart(span);
@@ -211,8 +218,11 @@ public final class TwidereLinkify implements Constants {
                         continue;
                     }
                     string.removeSpan(span);
-                    applyLink(span.getURL(), start, end, string, accountId, extraId, LINK_TYPE_LINK, sensitive, highlightOption, listener);
+                    applyLink(span.getURL(), start, end, string, accountId, extraId, LINK_TYPE_ENTITY_URL, sensitive, highlightOption, listener);
                 }
+                break;
+            }
+            case LINK_TYPE_LINK_IN_TEXT: {
                 final List<Extractor.Entity> urls = mExtractor.extractURLsWithIndices(ParseUtils.parseString(string));
                 for (final Extractor.Entity entity : urls) {
                     final int start = entity.getStart(), end = entity.getEnd();
@@ -220,7 +230,7 @@ public final class TwidereLinkify implements Constants {
                             || string.getSpans(start, end, URLSpan.class).length > 0) {
                         continue;
                     }
-                    applyLink(entity.getValue(), start, end, string, accountId, extraId, LINK_TYPE_LINK, sensitive, highlightOption, listener);
+                    applyLink(entity.getValue(), start, end, string, accountId, extraId, LINK_TYPE_ENTITY_URL, sensitive, highlightOption, listener);
                 }
                 break;
             }

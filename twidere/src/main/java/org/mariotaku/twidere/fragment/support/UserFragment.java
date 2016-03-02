@@ -533,7 +533,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
         final TwidereLinkify linkify = new TwidereLinkify(this);
         mDescriptionView.setText(linkify.applyAllLinks(user.description_html != null ?
-                HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain, user.account_id, false));
+                HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain,
+                user.account_id, false, false));
         mLocationContainer.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
         mLocationView.setText(user.location);
         mURLContainer.setVisibility(TextUtils.isEmpty(user.url) && TextUtils.isEmpty(user.url_expanded) ? View.GONE : View.VISIBLE);
@@ -1310,7 +1311,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 Utils.openTweetSearch(getActivity(), user.account_id, "#" + link);
                 break;
             }
-            case TwidereLinkify.LINK_TYPE_LINK: {
+            case TwidereLinkify.LINK_TYPE_ENTITY_URL: {
                 final Uri uri = Uri.parse(link);
                 final Intent intent;
                 if (uri.getScheme() != null) {

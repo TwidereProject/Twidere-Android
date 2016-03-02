@@ -136,7 +136,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                     TWIDERE_PREVIEW_TEXT_UNESCAPED);
             if (text instanceof Spanned) {
                 textView.setText(linkify.applyAllLinks(text, -1, -1, false,
-                        adapter.getLinkHighlightingStyle()));
+                        adapter.getLinkHighlightingStyle(), true));
             }
         } else {
             textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
@@ -206,6 +206,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         }
 
 
+        boolean skipLinksInText = status.extras != null && status.extras.support_entities;
         if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
 
             statusContentSpace.setVisibility(View.VISIBLE);
@@ -224,7 +225,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                 if (text instanceof Spanned) {
                     quotedTextView.setText(linkify.applyAllLinks(text, status.account_id,
                             getLayoutPosition(), status.is_possibly_sensitive,
-                            adapter.getLinkHighlightingStyle()));
+                            adapter.getLinkHighlightingStyle(), skipLinksInText));
                 }
             } else {
                 final String text = status.quoted_text_unescaped;
@@ -318,7 +319,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             final CharSequence text = HtmlSpanBuilder.fromHtml(status.text_html, status.text_unescaped);
             if (text instanceof Spanned) {
                 textView.setText(linkify.applyAllLinks(text, status.account_id, getLayoutPosition(),
-                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle()));
+                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(), skipLinksInText));
             }
         }
 

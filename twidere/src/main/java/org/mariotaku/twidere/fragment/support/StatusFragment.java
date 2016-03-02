@@ -999,6 +999,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             profileContainer.drawEnd(DataStoreUtils.getAccountColor(context, status.account_id));
 
             final int layoutPosition = getLayoutPosition();
+            final boolean skipLinksInText = status.extras != null && status.extras.support_entities;
             if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
 
                 quoteOriginalLink.setVisibility(View.VISIBLE);
@@ -1013,7 +1014,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         status.text_unescaped);
                 if (quotedText instanceof Spanned) {
                     quotedTextView.setText(linkify.applyAllLinks(quotedText, status.account_id,
-                            layoutPosition, status.is_possibly_sensitive));
+                            layoutPosition, status.is_possibly_sensitive, skipLinksInText));
                 }
 
                 quoteIndicator.setColor(manager.getUserColor(status.user_id, false));
@@ -1067,7 +1068,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     status.text_unescaped);
             if (text instanceof Spanned) {
                 textView.setText(linkify.applyAllLinks(text, status.account_id, layoutPosition,
-                        status.is_possibly_sensitive));
+                        status.is_possibly_sensitive, skipLinksInText));
             }
 
             final ParcelableLocation location;

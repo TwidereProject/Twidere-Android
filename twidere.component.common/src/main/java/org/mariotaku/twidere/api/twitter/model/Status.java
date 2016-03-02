@@ -281,6 +281,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return entities.getUrls();
     }
 
+    public Entities getEntities() {
+        return entities;
+    }
 
     public UserMentionEntity[] getUserMentionEntities() {
         if (entities == null) return null;

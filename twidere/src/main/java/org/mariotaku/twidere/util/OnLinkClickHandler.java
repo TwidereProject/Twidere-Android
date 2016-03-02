@@ -69,7 +69,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 Utils.openTweetSearch(context, accountId, "#" + link);
                 break;
             }
-            case TwidereLinkify.LINK_TYPE_LINK: {
+            case TwidereLinkify.LINK_TYPE_ENTITY_URL: {
                 if (PreviewMediaExtractor.isSupported(link)) {
                     openMedia(accountId, extraId, sensitive, link, start, end);
                 } else {

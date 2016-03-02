@@ -82,7 +82,8 @@ public class MessageViewHolder extends ViewHolder {
         final ParcelableMedia[] media = JsonSerializer.parseArray(cursor.getString(indices.media),
                 ParcelableMedia.class);
         final Spanned text = HtmlSpanBuilder.fromHtml(cursor.getString(indices.text_html));
-        textView.setText(linkify.applyAllLinks(text, accountId, false));
+        // Detect entity support
+        textView.setText(linkify.applyAllLinks(text, accountId, false, true));
         time.setText(Utils.formatToLongTimeString(context, timestamp));
         mediaContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
         mediaContainer.displayMedia(media, loader, accountId, getLayoutPosition(), true,
