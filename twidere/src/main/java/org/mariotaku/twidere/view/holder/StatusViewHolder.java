@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.widget.Space;
 import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -141,12 +142,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
         }
         timeView.setTime(System.currentTimeMillis());
+        final boolean showCardActions = isCardActionsShown();
         if (adapter.isMediaPreviewEnabled()) {
             mediaPreview.setVisibility(View.VISIBLE);
-            statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.GONE : View.VISIBLE);
+            statusContentSpace.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
         } else {
             mediaPreview.setVisibility(View.GONE);
-            statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.VISIBLE : View.GONE);
+            statusContentSpace.setVisibility(showCardActions ? View.GONE : View.VISIBLE);
         }
         mediaPreview.displayMedia(R.drawable.nyan_stars_background);
         extraTypeView.setImageResource(R.drawable.ic_action_gallery);
@@ -160,6 +162,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     @Override
     public void displayStatus(@NonNull final ParcelableStatus status, final boolean displayInReplyTo,
                               final boolean shouldDisplayExtraType) {
+
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
         final TwidereLinkify linkify = adapter.getTwidereLinkify();
@@ -167,6 +170,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         final BidiFormatter formatter = adapter.getBidiFormatter();
         final Context context = adapter.getContext();
         final boolean nameFirst = adapter.isNameFirst();
+
+
+        final boolean showCardActions = isCardActionsShown();
+
+        actionButtons.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
+        itemMenu.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
 
         final long replyCount = status.reply_count;
         final long retweetCount;
@@ -227,7 +236,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                     manager.getUserColor(status.user_id, false));
         } else {
 
-            statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.VISIBLE : View.GONE);
+            statusContentSpace.setVisibility(showCardActions ? View.GONE : View.VISIBLE);
 
             quotedNameView.setVisibility(View.GONE);
             quotedTextView.setVisibility(View.GONE);
@@ -293,7 +302,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             final boolean hasMedia = !ArrayUtils.isEmpty(media);
             if (hasMedia && (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive)) {
                 mediaPreview.setVisibility(View.VISIBLE);
-                statusContentSpace.setVisibility(adapter.isCardActionsHidden() ? View.GONE : View.VISIBLE);
+                statusContentSpace.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
 
                 mediaPreview.displayMedia(media, loader, status.account_id, -1, this,
                         adapter.getMediaLoadingHandler());
@@ -367,13 +376,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         return profileTypeView;
     }
 
-
     @Override
     public void onMediaClick(View view, ParcelableMedia media, long accountId, long extraId) {
         if (statusClickListener == null) return;
         final int position = getLayoutPosition();
         statusClickListener.onMediaClick(this, view, media, position);
     }
+
 
     public void setOnClickListeners() {
         setStatusClickListener(adapter.getStatusClickListener());
@@ -411,8 +420,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         setTextSize(adapter.getTextSize());
         mediaPreview.setStyle(adapter.getMediaPreviewStyle());
 //        profileImageView.setStyle(adapter.getProfileImageStyle());
-        actionButtons.setVisibility(adapter.isCardActionsHidden() ? View.GONE : View.VISIBLE);
-        itemMenu.setVisibility(adapter.isCardActionsHidden() ? View.GONE : View.VISIBLE);
 
         final boolean nameFirst = adapter.isNameFirst();
         nameView.setNameFirst(nameFirst);
@@ -453,7 +460,20 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         }
     }
 
-    void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location, String placeFullName, boolean sensitive) {
+    private boolean isCardActionsShown() {
+        return adapter.isCardActionsShown(getLayoutPosition());
+    }
+
+    private void showCardActions() {
+        adapter.showCardActions(getLayoutPosition());
+    }
+
+    private boolean hideTempCardActions() {
+        adapter.showCardActions(RecyclerView.NO_POSITION);
+        return !adapter.isCardActionsShown(RecyclerView.NO_POSITION);
+    }
+
+    private void displayExtraTypeIcon(String cardName, ParcelableMedia[] media, ParcelableLocation location, String placeFullName, boolean sensitive) {
         if (TwitterCardUtils.CARD_NAME_AUDIO.equals(cardName)) {
             extraTypeView.setImageResource(sensitive ? R.drawable.ic_action_warning : R.drawable.ic_action_music);
             extraTypeView.setVisibility(View.VISIBLE);
@@ -478,7 +498,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         }
     }
 
-    boolean hasVideo(ParcelableMedia[] media) {
+    private boolean hasVideo(ParcelableMedia[] media) {
         if (media == null) return false;
         for (ParcelableMedia item : media) {
             if (item == null) continue;
@@ -538,11 +558,18 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             final int position = holder.getLayoutPosition();
             switch (v.getId()) {
                 case R.id.item_content: {
+                    if (!holder.isCardActionsShown()) {
+                        holder.showCardActions();
+                        return true;
+                    } else if (holder.hideTempCardActions()) {
+                        return true;
+                    }
                     return listener.onStatusLongClick(holder, position);
                 }
             }
             return false;
         }
     }
+
 
 }

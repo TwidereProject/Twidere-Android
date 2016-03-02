@@ -120,7 +120,6 @@ import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
@@ -1683,7 +1682,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final boolean mDisplayMediaPreview;
         private final boolean mDisplayProfileImage;
         private final boolean mSensitiveContentEnabled;
-        private final boolean mHideCardActions;
+        private final boolean mShowCardActions;
         private final boolean mUseStarsForLikes;
         private final boolean mShowAbsoluteTime;
         private final AbsStatusesAdapter.EventListener mEventListener;
@@ -1697,6 +1696,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private List<ParcelableStatus> mData;
         private CharSequence mReplyError, mConversationError;
         private int mReplyStart;
+        private int mShowingActionCardPosition;
 
         public StatusAdapter(StatusFragment fragment, boolean compact) {
             super(fragment.getContext());
@@ -1724,7 +1724,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
             mDisplayMediaPreview = Utils.isMediaPreviewEnabled(context, mPreferences);
             mSensitiveContentEnabled = mPreferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
-            mHideCardActions = mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
+            mShowCardActions = !mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
             mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
             mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);
             if (compact) {
@@ -1832,8 +1832,20 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public boolean isCardActionsHidden() {
-            return mHideCardActions;
+        public boolean isCardActionsShown(int position) {
+            if (position == RecyclerView.NO_POSITION) return mShowCardActions;
+            return mShowCardActions || mShowingActionCardPosition == position;
+        }
+
+        @Override
+        public void showCardActions(int position) {
+            if (mShowingActionCardPosition != RecyclerView.NO_POSITION) {
+                notifyItemChanged(mShowingActionCardPosition);
+            }
+            mShowingActionCardPosition = position;
+            if (position != RecyclerView.NO_POSITION) {
+                notifyItemChanged(position);
+            }
         }
 
         @Override

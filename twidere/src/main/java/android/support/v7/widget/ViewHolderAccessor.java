@@ -29,4 +29,8 @@ public class ViewHolderAccessor {
     public static boolean isRemoved(ViewHolder holder) {
         return holder.isRemoved();
     }
+
+    public static boolean isUpdated(ViewHolder holder) {
+        return holder.isUpdated();
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.text.BidiFormatter;
+import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
@@ -31,6 +32,8 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     private final SharedPreferencesWrapper preferences;
     private final TwidereLinkify linkify;
     private final MediaLoadingHandler handler;
+    @Nullable
+    private final RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter;
     @Inject
     MediaLoaderWrapper loader;
     @Inject
@@ -47,22 +50,25 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     private boolean nameFirst;
     private boolean displayProfileImage;
     private boolean sensitiveContentEnabled;
-    private boolean hideCardActions;
+    private boolean showCardActions;
     private boolean displayMediaPreview;
     private boolean shouldShowAccountsColor;
     private boolean useStarsForLikes;
     private boolean showAbsoluteTime;
+    private int showingActionCardPosition;
 
     public DummyStatusHolderAdapter(Context context) {
-        this(context, new TwidereLinkify(null));
+        this(context, new TwidereLinkify(null), null);
     }
 
-    public DummyStatusHolderAdapter(Context context, TwidereLinkify linkify) {
+    public DummyStatusHolderAdapter(Context context, TwidereLinkify linkify,
+                                    @Nullable RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
         GeneralComponentHelper.build(context).inject(this);
         this.context = context;
         preferences = SharedPreferencesWrapper.getInstance(context, TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         handler = new MediaLoadingHandler(R.id.media_preview_progress);
         this.linkify = linkify;
+        this.adapter = adapter;
         updateOptions();
     }
 
@@ -214,9 +220,22 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
         return sensitiveContentEnabled;
     }
 
+
     @Override
-    public boolean isCardActionsHidden() {
-        return hideCardActions;
+    public boolean isCardActionsShown(int position) {
+        if (position == RecyclerView.NO_POSITION) return showCardActions;
+        return showCardActions || showingActionCardPosition == position;
+    }
+
+    @Override
+    public void showCardActions(int position) {
+        if (showingActionCardPosition != RecyclerView.NO_POSITION && adapter != null) {
+            adapter.notifyItemChanged(showingActionCardPosition);
+        }
+        showingActionCardPosition = position;
+        if (position != RecyclerView.NO_POSITION && adapter != null) {
+            adapter.notifyItemChanged(position);
+        }
     }
 
     @Override
@@ -270,7 +289,7 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
         displayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
         sensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
-        hideCardActions = preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
+        showCardActions = !preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
         linkHighlightStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
         useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
         showAbsoluteTime = preferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);

@@ -80,7 +80,8 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
         super(context);
-        mStatusAdapterDelegate = new DummyStatusHolderAdapter(context, new TwidereLinkify(new OnLinkClickHandler(context, null)));
+        mStatusAdapterDelegate = new DummyStatusHolderAdapter(context,
+                new TwidereLinkify(new OnLinkClickHandler(context, null)), this);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
                 ThemeUtils.getUserThemeBackgroundAlpha(context));

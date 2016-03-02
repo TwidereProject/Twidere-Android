@@ -3,6 +3,7 @@ package org.mariotaku.twidere.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +52,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     final boolean mDisplayMediaPreview;
     final boolean mDisplayProfileImage;
     final boolean mSensitiveContentEnabled;
-    final boolean mHideCardActions;
+    final boolean mShowCardActions;
     final boolean mUseStarsForLikes;
     final boolean mShowAbsoluteTime;
     final EventListener mEventListener;
@@ -59,6 +60,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     StatusAdapterListener mStatusAdapterListener;
     boolean mShowInReplyTo;
     boolean mShowAccountsColor;
+    private int mShowingActionCardPosition = RecyclerView.NO_POSITION;
 
     public AbsStatusesAdapter(Context context, boolean compact) {
         super(context);
@@ -75,7 +77,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
         mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
         mDisplayMediaPreview = Utils.isMediaPreviewEnabled(context, mPreferences);
         mSensitiveContentEnabled = mPreferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
-        mHideCardActions = mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
+        mShowCardActions = !mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
         mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
         mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME, false);
         mLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this));
@@ -154,8 +156,20 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     }
 
     @Override
-    public boolean isCardActionsHidden() {
-        return mHideCardActions;
+    public boolean isCardActionsShown(int position) {
+        if (position == RecyclerView.NO_POSITION) return mShowCardActions;
+        return mShowCardActions || mShowingActionCardPosition == position;
+    }
+
+    @Override
+    public void showCardActions(int position) {
+        if (mShowingActionCardPosition != RecyclerView.NO_POSITION) {
+            notifyItemChanged(mShowingActionCardPosition);
+        }
+        mShowingActionCardPosition = position;
+        if (position != RecyclerView.NO_POSITION) {
+            notifyItemChanged(position);
+        }
     }
 
     @Override
@@ -223,11 +237,6 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
     }
 
     @Override
-    public boolean isShowAbsoluteTime() {
-        return mShowAbsoluteTime;
-    }
-
-    @Override
     public int getItemViewType(int position) {
         if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
@@ -238,6 +247,11 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
             return ITEM_VIEW_TYPE_GAP;
         }
         return ITEM_VIEW_TYPE_STATUS;
+    }
+
+    @Override
+    public boolean isShowAbsoluteTime() {
+        return mShowAbsoluteTime;
     }
 
     @Override
