@@ -22,10 +22,11 @@
 
     <style name="Widget.Base" parent="android:Widget.Material"/>
 
+    <style name="Widget.Base.ImageButton" parent="android:Widget.Material.ImageButton"/>
+
     <style name="Widget.Base.Light" parent="android:Widget.Material.Light"/>
 
-    <style name="Widget.Base.Light.ImageButton" parent="android:Widget.Holo.Light.ImageButton"/>
+    <style name="Widget.Base.Light.ImageButton" parent="android:Widget.Material.Light.ImageButton"/>
 
-    <style name="Widget.Base.ImageButton" parent="android:Widget.Material.ImageButton"/>
 
 </resources>

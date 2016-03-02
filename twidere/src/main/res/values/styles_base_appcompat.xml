@@ -22,12 +22,10 @@
 
     <style name="Widget.Base" parent="android:Widget.Holo"/>
 
+    <style name="Widget.Base.ImageButton" parent="android:Widget.Holo.ImageButton"/>
+
     <style name="Widget.Base.Light" parent="android:Widget.Holo.Light"/>
 
     <style name="Widget.Base.Light.ImageButton" parent="android:Widget.Holo.Light.ImageButton"/>
-
-    <style name="Widget.Base.ImageButton" parent="android:Widget.Holo.ImageButton"/>
-
-
 
 </resources>

@@ -6,6 +6,8 @@ import android.graphics.PorterDuff.Mode;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 
+import org.mariotaku.twidere.R;
+
 /**
  * Created by mariotaku on 14/11/5.
  */
@@ -23,13 +25,9 @@ public class ActionIconButton extends ImageButton {
 
     public ActionIconButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.color,
-                android.R.attr.colorForeground});
-        if (a.hasValue(0)) {
-            mDefaultColor = a.getColor(0, 0);
-        } else {
-            mDefaultColor = a.getColor(1, 0);
-        }
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton,
+                R.attr.cardActionButtonStyle, R.style.Widget_CardActionButton);
+        mDefaultColor = a.getColor(R.styleable.IconActionButton_iabColor, 0);
         setColorFilter(mDefaultColor, Mode.SRC_ATOP);
         a.recycle();
     }

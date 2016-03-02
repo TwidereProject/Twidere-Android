@@ -60,7 +60,8 @@ public class ActionIconThemedTextView extends AppCompatTextView {
     }
 
     public void init(Context context, AttributeSet attrs) {
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton,
+                R.attr.cardActionButtonStyle, R.style.Widget_CardActionButton);
         mColor = a.getColor(R.styleable.IconActionButton_iabColor, 0);
         mDisabledColor = a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0);
         mActivatedColor = a.getColor(R.styleable.IconActionButton_iabActivatedColor, 0);
@@ -91,6 +92,18 @@ public class ActionIconThemedTextView extends AppCompatTextView {
     @Override
     public void setCompoundDrawablesRelativeWithIntrinsicBounds(Drawable start, Drawable top, Drawable end, Drawable bottom) {
         super.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom);
+        updateCompoundDrawables(start, top, end, bottom);
+    }
+
+    @Override
+    public void setCompoundDrawables(Drawable left, Drawable top, Drawable right, Drawable bottom) {
+        super.setCompoundDrawables(left, top, right, bottom);
+        updateCompoundDrawables(left, top, right, bottom);
+    }
+
+    @Override
+    public void setCompoundDrawablesRelative(Drawable start, Drawable top, Drawable end, Drawable bottom) {
+        super.setCompoundDrawablesRelative(start, top, end, bottom);
         updateCompoundDrawables(start, top, end, bottom);
     }
 
@@ -126,7 +139,7 @@ public class ActionIconThemedTextView extends AppCompatTextView {
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-        updateCompoundDrawables(TextViewSupport.getCompoundDrawablesRelative(this));
+        updateCompoundDrawables(getCompoundDrawables());
     }
 
     private void updateCompoundDrawables(Drawable... drawables) {

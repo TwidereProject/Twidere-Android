@@ -16,15 +16,15 @@
     </style>
 
     <style name="Widget.CardActionButton" parent="Widget.Base.ImageButton">
-        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
         <item name="android:color">?android:textColorSecondary</item>
+        <item name="iabColor">?android:textColorTertiary</item>
     </style>
 
     <style name="Widget.Light.CardActionButton" parent="Widget.Base.Light.ImageButton">
-        <item name="android:background">?selectableItemBackground</item>
-        <item name="android:color">?android:textColorSecondary</item>
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="iabColor">?android:textColorTertiary</item>
     </style>
-
 
     <style name="Widget.ProfileImage" parent="Widget.Base">
         <item name="android:scaleType">centerCrop</item>
