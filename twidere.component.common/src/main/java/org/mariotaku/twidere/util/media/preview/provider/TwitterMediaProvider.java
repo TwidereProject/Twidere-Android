@@ -15,16 +15,7 @@ import java.util.Locale;
 public class TwitterMediaProvider implements Provider {
     @Override
     public boolean supports(@NonNull String link) {
-        final String authority = PreviewMediaExtractor.getAuthority(link);
-        if (authority == null || !authority.endsWith(".twimg.com")) {
-            return false;
-        }
-        final String path = PreviewMediaExtractor.getPath(link);
-        if (path == null) return false;
-        if (path.startsWith("/media/")) {
-            return true;
-        }
-        return false;
+        return isSupported(link);
     }
 
     @Nullable
@@ -53,6 +44,19 @@ public class TwitterMediaProvider implements Provider {
     @Override
     public ParcelableMedia from(@NonNull String link, @NonNull RestHttpClient client, @Nullable Object extra) {
         return from(link);
+    }
+
+    public static boolean isSupported(@NonNull String link) {
+        final String authority = PreviewMediaExtractor.getAuthority(link);
+        if (authority == null || !authority.endsWith(".twimg.com")) {
+            return false;
+        }
+        final String path = PreviewMediaExtractor.getPath(link);
+        if (path == null) return false;
+        if (path.startsWith("/media/")) {
+            return true;
+        }
+        return false;
     }
 
 }

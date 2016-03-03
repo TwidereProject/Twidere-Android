@@ -19,10 +19,10 @@ android {
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
-        minSdkVersion 21
+        minSdkVersion 14
         targetSdkVersion 23
-        versionCode 155
-        versionName "3.0.6.4"
+        versionCode 156
+        versionName "3.0.6.5"
         multiDexEnabled true
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
@@ -109,13 +109,10 @@ dependencies {
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.11'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.11'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.12'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.12'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.5'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.5'
-    compile 'rapid.decoder:library:0.3.0'
-    compile 'rapid.decoder:jpeg-decoder:0.3.0'
-    compile 'rapid.decoder:png-decoder:0.3.0'
 
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
