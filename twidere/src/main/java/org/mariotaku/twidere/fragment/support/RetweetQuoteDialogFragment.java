@@ -44,6 +44,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.model.Draft;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.service.BackgroundOperationService;
@@ -53,6 +54,7 @@ import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.view.ComposeEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -103,8 +105,10 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         adapter.setShouldShowAccountsColor(true);
         final IStatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
-
         assert status != null;
+        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(wrapped,
+                status.account_id);
+        assert credentials != null;
 
         builder.setView(view);
         builder.setTitle(R.string.retweet_quote_confirm_title);
@@ -118,15 +122,20 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
         holder.displayStatus(status, false, true);
 
+
+        final StatusTextCountView textCountView = (StatusTextCountView) view.findViewById(R.id.comment_text_count);
+
+        textCountView.setMaxLength(TwidereValidator.getTextLimit(credentials));
+
         view.findViewById(R.id.item_menu).setVisibility(View.GONE);
         view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
         view.findViewById(R.id.item_content).setFocusable(false);
         view.findViewById(R.id.comment_container).setVisibility(status.user_is_protected ? View.GONE : View.VISIBLE);
-        final ComposeEditText mEditComment = (ComposeEditText) view.findViewById(R.id.edit_comment);
-        mEditComment.setAccountId(status.account_id);
+        final ComposeEditText editComment = (ComposeEditText) view.findViewById(R.id.edit_comment);
+        editComment.setAccountId(status.account_id);
 
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
-        final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(mEditComment, new EditTextEnterHandler.EnterListener() {
+        final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(editComment, new EditTextEnterHandler.EnterListener() {
             @Override
             public boolean shouldCallListener() {
                 return true;
@@ -188,7 +197,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                updateTextCount(dialog, mEditComment.getText(), status);
+                updateTextCount(dialog, editComment.getText(), status);
             }
         });
         return dialog;
