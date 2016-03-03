@@ -883,6 +883,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 Utils.setLastSeen(mContext, status.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
+                values.put(Statuses.REPLY_COUNT, status.reply_count);
+                values.put(Statuses.RETWEET_COUNT, status.retweet_count);
                 values.put(Statuses.FAVORITE_COUNT, status.favorite_count);
                 final Expression where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, mAccountId),
                         Expression.or(Expression.equals(Statuses.STATUS_ID, mStatusId),
@@ -2067,7 +2069,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 Utils.setLastSeen(mContext, status.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.MY_RETWEET_ID, status.id);
+                values.put(Statuses.REPLY_COUNT, status.reply_count);
                 values.put(Statuses.RETWEET_COUNT, status.retweet_count);
+                values.put(Statuses.FAVORITE_COUNT, status.favorite_count);
                 final Expression where = Expression.or(
                         Expression.equals(Statuses.STATUS_ID, statusId),
                         Expression.equals(Statuses.RETWEET_ID, statusId)
