@@ -348,18 +348,18 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         if (status == null) return;
         final FragmentActivity activity = getActivity();
         switch (id) {
-            case R.id.reply_count: {
+            case R.id.reply: {
                 final Intent intent = new Intent(INTENT_ACTION_REPLY);
                 intent.setPackage(activity.getPackageName());
                 intent.putExtra(EXTRA_STATUS, status);
                 activity.startActivity(intent);
                 break;
             }
-            case R.id.retweet_count: {
+            case R.id.retweet: {
                 RetweetQuoteDialogFragment.show(getFragmentManager(), status);
                 break;
             }
-            case R.id.favorite_count: {
+            case R.id.favorite: {
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {

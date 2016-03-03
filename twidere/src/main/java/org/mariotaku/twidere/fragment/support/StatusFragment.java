@@ -359,15 +359,15 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 });
             }
         });
+        mStatusAdapter = new StatusAdapter(this, compact);
         mLayoutManager = new StatusListLinearLayoutManager(context, mRecyclerView);
-        mItemDecoration = new DividerItemDecoration(context, mLayoutManager.getOrientation());
+        mItemDecoration = new StatusDividerItemDecoration(context, mStatusAdapter, mLayoutManager.getOrientation());
         if (compact) {
             mRecyclerView.addItemDecoration(mItemDecoration);
         }
         mLayoutManager.setRecycleChildrenOnDetach(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setClipToPadding(false);
-        mStatusAdapter = new StatusAdapter(this, compact);
         mStatusAdapter.setEventListener(this);
         mRecyclerView.setAdapter(mStatusAdapter);
         registerForContextMenu(mRecyclerView);
@@ -414,7 +414,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final ParcelableStatus status = mStatusAdapter.getStatus(position);
         if (status == null) return;
         switch (id) {
-            case R.id.reply_count: {
+            case R.id.reply: {
                 final Context context = getActivity();
                 final Intent intent = new Intent(IntentConstants.INTENT_ACTION_REPLY);
                 intent.setPackage(context.getPackageName());
@@ -422,11 +422,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 context.startActivity(intent);
                 break;
             }
-            case R.id.retweet_count: {
+            case R.id.retweet: {
                 RetweetQuoteDialogFragment.show(getFragmentManager(), status);
                 break;
             }
-            case R.id.favorite_count: {
+            case R.id.favorite: {
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {
@@ -659,10 +659,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     @Override
     public boolean isReachingStart() {
         return mLayoutManager.findFirstCompletelyVisibleItemPosition() <= 1;
-    }
-
-    private DividerItemDecoration getItemDecoration() {
-        return mItemDecoration;
     }
 
     private ParcelableStatus getStatus() {
@@ -2196,15 +2192,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         private void updateItemDecoration() {
             if (mRecyclerView == null) return;
-            final DividerItemDecoration decoration = mFragment.getItemDecoration();
-            decoration.setDecorationStart(0);
-            // Is loading replies
-            if (isRepliesLoading()) {
-                decoration.setDecorationEndOffset(2);
-            } else {
-                decoration.setDecorationEndOffset(1);
-            }
-            mRecyclerView.invalidateItemDecorations();
         }
 
         public void setRepliesLoading(boolean loading) {
@@ -2581,6 +2568,37 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     "statusId=" + statusId +
                     ", offsetTop=" + offsetTop +
                     '}';
+        }
+    }
+
+    private static class StatusDividerItemDecoration extends DividerItemDecoration {
+        private final StatusAdapter statusAdapter;
+
+        public StatusDividerItemDecoration(Context context, StatusAdapter statusAdapter, int orientation) {
+            super(context, orientation);
+            this.statusAdapter = statusAdapter;
+        }
+
+        @Override
+        protected boolean isDividerEnabled(int childPos) {
+            if (childPos >= statusAdapter.getItemCount() || childPos < 0) return false;
+            final int itemType = statusAdapter.getItemType(childPos);
+            switch (itemType) {
+                case StatusAdapter.ITEM_IDX_REPLY_LOAD_MORE:
+                case StatusAdapter.ITEM_IDX_REPLY_ERROR:
+                case StatusAdapter.ITEM_IDX_SPACE:
+                    return false;
+            }
+            return true;
+        }
+
+        private boolean shouldDrawDivider(int viewType) {
+            switch (viewType) {
+                case StatusAdapter.VIEW_TYPE_LIST_STATUS:
+                case StatusAdapter.VIEW_TYPE_DETAIL_STATUS:
+                    return true;
+            }
+            return false;
         }
     }
 }

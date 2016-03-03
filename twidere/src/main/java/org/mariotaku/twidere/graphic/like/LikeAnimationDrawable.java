@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.util.Property;
@@ -37,7 +38,8 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
     private LikeAnimationState mState;
     private boolean mMutated;
 
-    public LikeAnimationDrawable(final Drawable icon, final int defaultColor, final int activatedColor,
+    public LikeAnimationDrawable(final Drawable icon, @ColorInt final int defaultColor,
+                                 @ColorInt final int activatedColor,
                                  @Style final int style) {
         mState = new LikeAnimationState(icon, defaultColor, activatedColor, style, this);
     }

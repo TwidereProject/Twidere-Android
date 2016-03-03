@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 155
         versionName "3.0.6.4"

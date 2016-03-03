@@ -46,12 +46,10 @@ public class ActionIconThemedTextView extends AppCompatTextView {
 
     public ActionIconThemedTextView(Context context) {
         super(context);
-        init(context, null);
     }
 
     public ActionIconThemedTextView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs);
+        this(context, attrs, android.R.attr.textViewStyle);
     }
 
     public ActionIconThemedTextView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -68,43 +66,6 @@ public class ActionIconThemedTextView extends AppCompatTextView {
         mIconWidth = a.getDimensionPixelSize(R.styleable.IconActionButton_iabIconWidth, 0);
         mIconHeight = a.getDimensionPixelSize(R.styleable.IconActionButton_iabIconHeight, 0);
         a.recycle();
-        updateCompoundDrawables(getCompoundDrawables());
-    }
-
-    @ColorInt
-    public int getActivatedColor() {
-        if (mActivatedColor != 0) return mActivatedColor;
-        final ColorStateList colors = getLinkTextColors();
-        if (colors != null) return colors.getDefaultColor();
-        return getCurrentTextColor();
-    }
-
-    public void setActivatedColor(@ColorInt int color) {
-        this.mActivatedColor = color;
-    }
-
-    @Override
-    public void setCompoundDrawablesWithIntrinsicBounds(Drawable left, Drawable top, Drawable right, Drawable bottom) {
-        super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
-        updateCompoundDrawables(left, top, right, bottom);
-    }
-
-    @Override
-    public void setCompoundDrawablesRelativeWithIntrinsicBounds(Drawable start, Drawable top, Drawable end, Drawable bottom) {
-        super.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom);
-        updateCompoundDrawables(start, top, end, bottom);
-    }
-
-    @Override
-    public void setCompoundDrawables(Drawable left, Drawable top, Drawable right, Drawable bottom) {
-        super.setCompoundDrawables(left, top, right, bottom);
-        updateCompoundDrawables(left, top, right, bottom);
-    }
-
-    @Override
-    public void setCompoundDrawablesRelative(Drawable start, Drawable top, Drawable end, Drawable bottom) {
-        super.setCompoundDrawablesRelative(start, top, end, bottom);
-        updateCompoundDrawables(start, top, end, bottom);
     }
 
     @ColorInt
@@ -117,6 +78,20 @@ public class ActionIconThemedTextView extends AppCompatTextView {
 
     public void setColor(@ColorInt int color) {
         this.mColor = color;
+        refreshDrawableState();
+    }
+
+    @ColorInt
+    public int getActivatedColor() {
+        if (mActivatedColor != 0) return mActivatedColor;
+        final ColorStateList colors = getLinkTextColors();
+        if (colors != null) return colors.getDefaultColor();
+        return getCurrentTextColor();
+    }
+
+    public void setActivatedColor(@ColorInt int color) {
+        this.mActivatedColor = color;
+        refreshDrawableState();
     }
 
     @ColorInt
@@ -129,22 +104,17 @@ public class ActionIconThemedTextView extends AppCompatTextView {
 
     public void setDisabledColor(@ColorInt int color) {
         this.mDisabledColor = color;
+        refreshDrawableState();
     }
 
     @Override
-    public void setActivated(boolean activated) {
-        super.setActivated(activated);
+    public void refreshDrawableState() {
+        updateCompoundDrawables();
+        super.refreshDrawableState();
     }
 
-    @Override
-    protected void drawableStateChanged() {
-        super.drawableStateChanged();
-        updateCompoundDrawables(getCompoundDrawables());
-    }
-
-    private void updateCompoundDrawables(Drawable... drawables) {
-        if (drawables == null) return;
-        for (Drawable d : drawables) {
+    private void updateCompoundDrawables() {
+        for (Drawable d : TextViewSupport.getCompoundDrawablesRelative(this)) {
             if (d == null) continue;
             d.mutate();
             final int color;

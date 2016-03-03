@@ -22,23 +22,25 @@ package org.mariotaku.twidere.util.support;
 import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 /**
  * Created by mariotaku on 15/5/3.
  */
 public class TextViewSupport {
-    @Nullable
     public static Drawable[] getCompoundDrawablesRelative(TextView view) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) return null;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return view.getCompoundDrawables();
+        }
         return TextViewSupportJBMR1.getCompoundDrawablesRelative(view);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private static class TextViewSupportJBMR1 {
         public static Drawable[] getCompoundDrawablesRelative(TextView view) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) return null;
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                return view.getCompoundDrawables();
+            }
             return view.getCompoundDrawablesRelative();
         }
     }
