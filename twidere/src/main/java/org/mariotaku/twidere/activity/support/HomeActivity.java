@@ -704,31 +704,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                     }
                 }
             }
-
-            final long readPosition = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_READ_POSITION), -1);
-            switch (tabType) {
-                case CustomTabType.HOME_TIMELINE: {
-                    final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.HOME_TIMELINE,
-                            accountId);
-                    mReadStateManager.setPosition(tag, readPosition, false);
-                    break;
-                }
-                case CustomTabType.NOTIFICATIONS_TIMELINE: {
-                    if (initialTab == -1 && !restoreInstanceState) {
-                        Utils.openInteractions(this, accountId);
-                    }
-                    final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME,
-                            accountId);
-                    mReadStateManager.setPosition(tag, readPosition, false);
-                    break;
-                }
-                case CustomTabType.DIRECT_MESSAGES: {
-                    if (initialTab == -1 && !restoreInstanceState) {
-                        Utils.openDirectMessages(this, accountId);
-                    }
-                    break;
-                }
-            }
         }
         final Intent extraIntent = intent.getParcelableExtra(EXTRA_EXTRA_INTENT);
         if (extraIntent != null && handleExtraIntent) {

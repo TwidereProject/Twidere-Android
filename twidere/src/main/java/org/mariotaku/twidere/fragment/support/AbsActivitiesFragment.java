@@ -130,8 +130,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                final LinearLayoutManager layoutManager = getLayoutManager();
-                saveReadPosition(layoutManager.findFirstVisibleItemPosition());
+                saveReadPosition();
             }
         }
     };
@@ -247,10 +246,14 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            final LinearLayoutManager layoutManager = getLayoutManager();
-            if (layoutManager != null) {
-                saveReadPosition(layoutManager.findFirstVisibleItemPosition());
-            }
+            saveReadPosition();
+        }
+    }
+
+    protected void saveReadPosition() {
+        final LinearLayoutManager layoutManager = getLayoutManager();
+        if (layoutManager != null) {
+            saveReadPosition(layoutManager.findFirstVisibleItemPosition());
         }
     }
 
@@ -456,6 +459,9 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         mActiveHotMobiScrollTracker = null;
         recyclerView.removeOnScrollListener(mPauseOnScrollListener);
         recyclerView.removeOnScrollListener(mOnScrollListener);
+        if (getUserVisibleHint()) {
+            saveReadPosition();
+        }
         super.onStop();
     }
 

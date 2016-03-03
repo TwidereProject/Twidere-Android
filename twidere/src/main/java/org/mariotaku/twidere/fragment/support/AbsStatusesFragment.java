@@ -234,10 +234,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            final LinearLayoutManager layoutManager = getLayoutManager();
-            if (layoutManager != null) {
-                saveReadPosition(layoutManager.findFirstVisibleItemPosition());
-            }
+            saveReadPosition();
         }
     }
 
@@ -335,6 +332,13 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 adapter.isMediaPreviewEnabled());
         HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
         // END HotMobi
+    }
+
+    protected void saveReadPosition() {
+        final LinearLayoutManager layoutManager = getLayoutManager();
+        if (layoutManager != null) {
+            saveReadPosition(layoutManager.findFirstVisibleItemPosition());
+        }
     }
 
     @NonNull
@@ -440,6 +444,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         mActiveHotMobiScrollTracker = null;
         recyclerView.removeOnScrollListener(mPauseOnScrollListener);
         recyclerView.removeOnScrollListener(mOnScrollListener);
+        if (getUserVisibleHint()) {
+            saveReadPosition();
+        }
         super.onStop();
     }
 
