@@ -658,9 +658,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 final ParcelableAccount oldSelectedAccount = mAccountsAdapter.getSelectedAccount();
                 if (oldSelectedAccount == null) return;
                 mMediaLoader.displayDashboardProfileImage(clickedImageView,
-                        oldSelectedAccount.profile_image_url, profileDrawable);
-//                mMediaLoader.displayDashboardProfileImage(profileImageView,
-//                        account.profile_image_url, clickedDrawable);
+                        oldSelectedAccount, profileDrawable);
                 clickedImageView.setBorderColors(profileImageView.getBorderColors());
                 mSwitchAccountAnimationPlaying = true;
             }
@@ -710,8 +708,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         }
         mAccountProfileNameView.setText(account.name);
         mAccountProfileScreenNameView.setText(String.format("@%s", account.screen_name));
-        mMediaLoader.displayDashboardProfileImage(mAccountProfileImageView,
-                account.profile_image_url, profileImageSnapshot);
+        mMediaLoader.displayDashboardProfileImage(mAccountProfileImageView, account,
+                profileImageSnapshot);
         mAccountProfileImageView.setBorderColors(account.color);
         final int bannerWidth = mAccountProfileBannerView.getWidth();
         final Resources res = getResources();
@@ -840,10 +838,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
         @Override
         public void onBindViewHolder(AccountProfileImageViewHolder holder, int position) {
-//            holder.itemView.setAlpha(c.getInt(mIndices.is_activated) == 1 ? 1 : 0.5f);
             final ParcelableAccount account = getAdapterAccount(position);
-//            holder.icon.setImageDrawable(null);
-            mImageLoader.displayDashboardProfileImage(holder.icon, account.profile_image_url, null);
+            mImageLoader.displayDashboardProfileImage(holder.icon, account, null);
             holder.icon.setBorderColor(account.color);
         }
 

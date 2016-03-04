@@ -218,10 +218,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
             final long maxId = args.getLong(EXTRA_MAX_ID, -1);
             final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
-            final boolean twitterOptimizedSearches = mPreferences.getBoolean(KEY_TWITTER_OPTIMIZED_SEARCHES);
             assert status != null;
             final ConversationLoader loader = new ConversationLoader(getActivity(), status, sinceId,
-                    maxId, mStatusAdapter.getData(), true, twitterOptimizedSearches);
+                    maxId, mStatusAdapter.getData(), true);
             loader.setComparator(ParcelableStatus.REVERSE_ID_COMPARATOR);
             return loader;
         }
@@ -1035,7 +1034,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             nameView.setText(manager.getUserNickname(status.user_id, status.user_name, false));
             screenNameView.setText(String.format("@%s", status.user_screen_name));
 
-            loader.displayProfileImage(profileImageView, status.user_profile_image_url);
+            loader.displayProfileImage(profileImageView, status);
 
             final int typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected);
             final int typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected);

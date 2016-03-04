@@ -107,6 +107,7 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
@@ -152,6 +153,9 @@ import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.UserEvent;
 
 public class UserFragment extends BaseSupportFragment implements OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
@@ -216,6 +220,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private boolean mNameFirst;
     private int mPreviousTabItemIsDark, mPreviousActionBarItemIsDark;
     private boolean mHideBirthdayView;
+    private boolean mFirstCreate;
+    private UserEvent mUserEvent;
 
     private final LoaderCallbacks<SingleResponse<UserRelationship>> mFriendshipLoaderCallbacks =
             new LoaderCallbacks<SingleResponse<UserRelationship>>() {
@@ -501,6 +507,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     public void displayUser(final ParcelableUser user) {
+        if (mFirstCreate && user != null && !user.equals(mUser)) {
+
+        }
         mUser = user;
         final FragmentActivity activity = getActivity();
         if (user == null || user.id <= 0 || activity == null) return;
@@ -533,7 +542,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
         final TwidereLinkify linkify = new TwidereLinkify(this);
         mDescriptionView.setText(linkify.applyAllLinks(user.description_html != null ?
-                HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain,
+                        HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain,
                 user.account_id, false, false));
         mLocationContainer.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
         mLocationView.setText(user.location);
@@ -548,7 +557,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mFollowersCount.setText(Utils.getLocalizedNumber(mLocale, user.followers_count));
         mFriendsCount.setText(Utils.getLocalizedNumber(mLocale, user.friends_count));
 
-        mMediaLoader.displayProfileImage(mProfileImageView, Utils.getOriginalTwitterProfileImage(user.profile_image_url));
+        mMediaLoader.displayOriginalProfileImage(mProfileImageView, user);
         if (userColor != 0) {
             setUiColor(userColor);
         } else if (user.link_color != 0) {
@@ -707,6 +716,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mFirstCreate = savedInstanceState == null;
         final FragmentActivity activity = getActivity();
         setHasOptionsMenu(true);
         mUserColorNameManager.registerColorChangedListener(this);
@@ -823,16 +833,25 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void onStart() {
         super.onStart();
         mBus.register(this);
-    }
 
-    @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        outState.putParcelable(EXTRA_USER, getUser());
-        super.onSaveInstanceState(outState);
+        @UserEvent.Referral
+        final String referral = getArguments().getString(EXTRA_REFERRAL);
+        final Context context = getContext();
+        if (mUserEvent == null) {
+            mUserEvent = UserEvent.create(context, referral);
+        } else {
+            mUserEvent.markStart(context);
+        }
     }
 
     @Override
     public void onStop() {
+        final Context context = getContext();
+        if (mUserEvent != null && context != null && mUser != null) {
+            mUserEvent.setUser(mUser);
+            mUserEvent.markEnd();
+            HotMobiLogger.getInstance(context).log(mUserEvent);
+        }
         mBus.unregister(this);
         super.onStop();
     }
@@ -841,6 +860,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void onResume() {
         super.onResume();
         setUiColor(mUiColor);
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        outState.putParcelable(EXTRA_USER, getUser());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -1075,6 +1100,18 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.scheduled_statuses: {
                 Utils.openScheduledStatuses(getActivity(), user.account_id);
+                return true;
+            }
+            case R.id.open_in_browser: {
+                if (user.extras != null && user.extras.statusnet_profile_url != null) {
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(user.extras.statusnet_profile_url));
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    startActivity(intent);
+                } else {
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" + user.screen_name));
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    startActivity(intent);
+                }
                 return true;
             }
             default: {
@@ -1756,7 +1793,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         public Object doLongOperation(Pair<ParcelableUser, Relationship> args) {
             final ContentResolver resolver = context.getContentResolver();
             final ParcelableUser user = args.first;
-            resolver.insert(CachedUsers.CONTENT_URI, ContentValuesCreator.makeCachedUserContentValues(user));
+            resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user));
             resolver.insert(CachedRelationships.CONTENT_URI, CachedRelationshipValuesCreator.create(
                     new CachedRelationship(user.account_id, user.id, args.second)));
             return null;

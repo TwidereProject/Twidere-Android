@@ -458,9 +458,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
         final long rowId;
         if (tableId == TABLE_ID_CACHED_USERS) {
-            final Expression where = Expression.equals(CachedUsers.USER_ID,
-                    values.getAsLong(CachedUsers.USER_ID));
-            mDatabaseWrapper.update(table, values, where.getSQL(), null);
+            final Expression where = Expression.and(Expression.equalsArgs(CachedUsers.USER_ID),
+                    Expression.equalsArgs(CachedUsers.USER_TYPE));
+            final String[] whereArgs = {values.getAsString(CachedUsers.USER_ID),
+                    values.getAsString(CachedUsers.USER_TYPE)};
+            mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs);
             rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
                     SQLiteDatabase.CONFLICT_IGNORE);
         } else if (tableId == TABLE_ID_SEARCH_HISTORY) {

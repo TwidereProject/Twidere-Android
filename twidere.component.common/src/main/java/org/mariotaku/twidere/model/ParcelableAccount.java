@@ -30,6 +30,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
 @CursorObject(valuesCreator = true)
@@ -78,6 +79,11 @@ public class ParcelableAccount implements Parcelable {
     @CursorField(Accounts.ACCOUNT_TYPE)
     public String account_type;
 
+    @Nullable
+    @ParcelableThisPlease
+    @JsonField(name = "account_user")
+    @CursorField(value = Accounts.ACCOUNT_USER, converter = LoganSquareCursorFieldConverter.class)
+    public ParcelableUser account_user;
 
     public static final Creator<ParcelableAccount> CREATOR = new Creator<ParcelableAccount>() {
         public ParcelableAccount createFromParcel(Parcel source) {

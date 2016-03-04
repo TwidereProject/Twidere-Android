@@ -36,7 +36,7 @@ public class UserBlocksLoader extends CursorSupportUsersLoader {
 
     public UserBlocksLoader(final Context context, final long accountId, final long cursor,
                             final List<ParcelableUser> data, boolean fromUser) {
-        super(context, accountId, cursor, data, fromUser);
+        super(context, accountId, data, fromUser);
     }
 
     @NonNull

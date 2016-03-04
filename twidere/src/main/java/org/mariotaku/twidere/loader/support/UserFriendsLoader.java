@@ -22,15 +22,16 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.model.ParcelableUser;
-
-import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
-import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.util.DataStoreUtils;
+
+import java.util.List;
 
 public class UserFriendsLoader extends CursorSupportUsersLoader {
 
@@ -38,20 +39,29 @@ public class UserFriendsLoader extends CursorSupportUsersLoader {
     private final String mScreenName;
 
     public UserFriendsLoader(final Context context, final long accountId, final long userId,
-                             final String screenName, final long maxId, final List<ParcelableUser> userList,
+                             final String screenName, final List<ParcelableUser> userList,
                              boolean fromUser) {
-        super(context, accountId, maxId, userList, fromUser);
+        super(context, accountId, userList, fromUser);
         mUserId = userId;
         mScreenName = screenName;
     }
 
     @NonNull
     @Override
-    protected PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
+    protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
             throws TwitterException {
-        if (mUserId > 0)
+        final String accountType = DataStoreUtils.getAccountType(getContext(), getAccountId());
+        if (mUserId > 0) {
+            if (ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(accountType)) {
+                return twitter.getStatusesFriendsList(mUserId, paging);
+            }
             return twitter.getFriendsList(mUserId, paging);
-        else if (mScreenName != null) return twitter.getFriendsList(mScreenName, paging);
+        } else if (mScreenName != null) {
+            if (ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(accountType)) {
+                return twitter.getStatusesFriendsList(mScreenName, paging);
+            }
+            return twitter.getFriendsList(mScreenName, paging);
+        }
         throw new TwitterException("user_id or screen_name required");
     }
 

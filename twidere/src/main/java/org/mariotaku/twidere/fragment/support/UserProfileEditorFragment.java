@@ -336,7 +336,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             mEditDescription.setText(user.description_expanded);
             mEditLocation.setText(user.location);
             mEditUrl.setText(isEmpty(user.url_expanded) ? user.url : user.url_expanded);
-            mMediaLoader.displayProfileImage(mProfileImageView, user.profile_image_url);
+            mMediaLoader.displayProfileImage(mProfileImageView, user);
             final int def_width = getResources().getDisplayMetrics().widthPixels;
             mMediaLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, def_width);
             mLinkColor.setColor(user.link_color);

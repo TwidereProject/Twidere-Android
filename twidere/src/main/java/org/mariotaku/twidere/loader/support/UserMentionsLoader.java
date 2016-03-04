@@ -23,6 +23,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.util.List;
 import java.util.Locale;
@@ -32,16 +33,16 @@ public class UserMentionsLoader extends TweetSearchLoader {
     public UserMentionsLoader(final Context context, final long accountId, final String screenName,
                               final long maxId, final long sinceId, final List<ParcelableStatus> data,
                               final String[] savedStatusesArgs, final int tabPosition, boolean fromUser,
-                              boolean makeGap, boolean twitterOptimizedSearches) {
+                              boolean makeGap) {
         super(context, accountId, screenName, sinceId, maxId, data, savedStatusesArgs, tabPosition,
-                fromUser, makeGap, twitterOptimizedSearches);
+                fromUser, makeGap);
     }
 
     @NonNull
     @Override
     protected String processQuery(@NonNull final String query) {
         final String screenName = query.startsWith("@") ? query.substring(1) : query;
-        if (isTwitterOptimizedSearches()) {
+        if (TwitterAPIFactory.isTwitterCredentials(getContext(), getAccountId())) {
             return String.format(Locale.ROOT, "to:%s exclude:retweets", screenName);
         }
         return String.format(Locale.ROOT, "@%s -RT", screenName);

@@ -104,9 +104,8 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
-        final boolean twitterOptimizedSearches = mPreferences.getBoolean(KEY_TWITTER_OPTIMIZED_SEARCHES);
         return new MediaTimelineLoader(context, accountId, userId, screenName, sinceId, maxId,
-                getAdapter().getData(), null, tabPosition, fromUser, twitterOptimizedSearches);
+                getAdapter().getData(), null, tabPosition, fromUser);
     }
 
     @Override

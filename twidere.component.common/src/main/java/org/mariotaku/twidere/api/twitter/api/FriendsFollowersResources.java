@@ -64,10 +64,13 @@ public interface FriendsFollowersResources {
     @BodyType(BodyType.FORM)
     User destroyFriendship(@Param("screen_name") String screenName) throws TwitterException;
 
+    @GET("/followers/ids.json")
     IDs getFollowersIDs(@Query Paging paging) throws TwitterException;
 
+    @GET("/followers/ids.json")
     IDs getFollowersIDs(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
 
+    @GET("/followers/ids.json")
     IDs getFollowersIDs(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 
     @GET("/followers/list.json")
@@ -79,10 +82,13 @@ public interface FriendsFollowersResources {
     @GET("/followers/list.json")
     PageableResponseList<User> getFollowersList(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 
+    @GET("/friends/ids.json")
     IDs getFriendsIDs(Paging paging) throws TwitterException;
 
+    @GET("/friends/ids.json")
     IDs getFriendsIDs(long userId, Paging paging) throws TwitterException;
 
+    @GET("/friends/ids.json")
     IDs getFriendsIDs(String screenName, Paging paging) throws TwitterException;
 
     @GET("/friends/list.json")

@@ -34,12 +34,14 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
+import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
@@ -73,7 +75,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
             if (user != null) {
-                final ContentValues values = ContentValuesCreator.makeCachedUserContentValues(user);
+                final ContentValues values = ParcelableUserValuesCreator.create(user);
                 resolver.insert(CachedUsers.CONTENT_URI, values);
                 user.account_color = accountColor;
                 return SingleResponse.getInstance(user);
@@ -119,6 +121,8 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 accountValues.put(Accounts.SCREEN_NAME, user.screen_name);
                 accountValues.put(Accounts.PROFILE_IMAGE_URL, user.profile_image_url);
                 accountValues.put(Accounts.PROFILE_BANNER_URL, user.profile_banner_url);
+                accountValues.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(user,
+                        ParcelableUser.class));
                 final String accountWhere = Expression.equals(Accounts.ACCOUNT_ID, userId).getSQL();
                 resolver.update(Accounts.CONTENT_URI, accountValues, accountWhere, null);
             }

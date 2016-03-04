@@ -34,8 +34,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 
-@SuppressWarnings("RedundantThrows")
-public interface ListsResources {
+public interface ListResources {
     @POST("/lists/members/create.json")
     UserList addUserListMember(@Query("list_id") long listId, @Query("user_id") long userId) throws TwitterException;
 

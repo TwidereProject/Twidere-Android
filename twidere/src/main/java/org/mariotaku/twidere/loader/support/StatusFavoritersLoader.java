@@ -22,22 +22,21 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.IDs;
+import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.IDs;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
 
 public class StatusFavoritersLoader extends IDsUsersLoader {
 
     private final long mStatusId;
 
     public StatusFavoritersLoader(final Context context, final long accountId, final long statusId,
-                                  final long cursor, final List<ParcelableUser> data, boolean fromUser) {
-        super(context, accountId, cursor, data, fromUser);
+                                  final List<ParcelableUser> data, boolean fromUser) {
+        super(context, accountId, data, fromUser);
         mStatusId = statusId;
     }
 

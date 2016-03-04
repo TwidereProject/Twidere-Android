@@ -31,15 +31,15 @@ import java.util.List;
 public abstract class BaseCursorSupportUsersLoader extends TwitterAPIUsersLoader
         implements ICursorSupportLoader {
 
-    private final long mCursor;
+    private int mPage = -1;
+    private long mCursor;
     private final int mLoadItemLimit;
 
     private long mNextCursor, mPrevCursor;
 
-    public BaseCursorSupportUsersLoader(final Context context, final long accountId, final long cursor,
+    public BaseCursorSupportUsersLoader(final Context context, final long accountId,
                                         final List<ParcelableUser> data, boolean fromUser) {
         super(context, accountId, data, fromUser);
-        mCursor = cursor;
         final SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         mLoadItemLimit = Math.min(100, loadItemLimit);
@@ -47,6 +47,18 @@ public abstract class BaseCursorSupportUsersLoader extends TwitterAPIUsersLoader
 
     public final int getCount() {
         return mLoadItemLimit;
+    }
+
+    public final void setCursor(long cursor) {
+        mCursor = cursor;
+    }
+
+    public final int getPage() {
+        return mPage;
+    }
+
+    public final void setPage(int page) {
+        mPage = page;
     }
 
     @Override

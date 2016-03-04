@@ -108,6 +108,7 @@ public class ParcelableStatusUtils {
         result.user_is_protected = user.isProtected();
         result.user_is_verified = user.isVerified();
         result.user_is_following = user.isFollowing();
+        result.extras.user_profile_image_url_profile_size = user.getProfileImageUrlProfileSize();
         result.text_html = InternalTwitterContentUtils.formatStatusText(status);
         result.media = ParcelableMediaUtils.fromStatus(status);
         result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(status.getText());

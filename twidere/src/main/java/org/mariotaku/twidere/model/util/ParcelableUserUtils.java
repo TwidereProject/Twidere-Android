@@ -3,29 +3,31 @@ package org.mariotaku.twidere.model.util;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 
+import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
+import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 /**
  * Created by mariotaku on 16/2/24.
  */
-public class ParcelableUserUtils {
+public class ParcelableUserUtils implements TwidereConstants{
 
     public static ParcelableUser fromUser(User user, long accountId) {
         return fromUser(user, accountId, 0);
     }
 
     public static ParcelableUser fromUser(User user, long accountId, long position) {
-        ParcelableUser obj = new ParcelableUser();
+        final UrlEntity[] urlEntities = user.getUrlEntities();
+        final ParcelableUser obj = new ParcelableUser();
         obj.position = position;
         obj.account_id = accountId;
-        final UrlEntity[] urls_url_entities = user.getUrlEntities();
         obj.id = user.getId();
         obj.created_at = user.getCreatedAt().getTime();
         obj.is_protected = user.isProtected();
@@ -40,7 +42,9 @@ public class ParcelableUserUtils {
         obj.profile_image_url = TwitterContentUtils.getProfileImageUrl(user);
         obj.profile_banner_url = user.getProfileBannerImageUrl();
         obj.url = user.getUrl();
-        obj.url_expanded = obj.url != null && urls_url_entities != null && urls_url_entities.length > 0 ? urls_url_entities[0].getExpandedUrl() : null;
+        if (obj.url != null && urlEntities != null && urlEntities.length > 0) {
+            obj.url_expanded = urlEntities[0].getExpandedUrl();
+        }
         obj.is_follow_request_sent = user.isFollowRequestSent();
         obj.followers_count = user.getFollowersCount();
         obj.friends_count = user.getFriendsCount();
@@ -54,25 +58,29 @@ public class ParcelableUserUtils {
         obj.text_color = ParseUtils.parseColor("#" + user.getProfileTextColor(), 0);
         obj.is_cache = false;
         obj.is_basic = false;
+
+        ParcelableUser.Extras extras = new ParcelableUser.Extras();
+        extras.ostatus_uri = user.getOstatusUri();
+        extras.statusnet_profile_url = user.getStatusnetProfileUrl();
+        extras.profile_image_url_original = user.getProfileImageUrlOriginal();
+        extras.profile_image_url_profile_size = user.getProfileImageUrlProfileSize();
+        obj.extras = extras;
+        obj.user_type = getUserType(extras.ostatus_uri);
         return obj;
     }
 
-    public static ParcelableUser[] fromUsersArray(@Nullable final User[] users, long account_id) {
-        if (users == null) return null;
-        final ParcelableUser[] result = new ParcelableUser[users.length];
-        for (int i = 0, j = users.length; i < j; i++) {
-            result[i] = fromUser(users[i], account_id);
-        }
-        return result;
+    private static String getUserType(String uri) {
+        if (uri == null) return USER_TYPE_TWITTER_COM;
+        return PreviewMediaExtractor.getAuthority(uri);
     }
 
     public static ParcelableUser fromDirectMessageConversationEntry(final Cursor cursor) {
-        final long account_id = cursor.getLong(TwidereDataStore.DirectMessages.ConversationEntries.IDX_ACCOUNT_ID);
-        final long id = cursor.getLong(TwidereDataStore.DirectMessages.ConversationEntries.IDX_CONVERSATION_ID);
-        final String name = cursor.getString(TwidereDataStore.DirectMessages.ConversationEntries.IDX_NAME);
-        final String screen_name = cursor.getString(TwidereDataStore.DirectMessages.ConversationEntries.IDX_SCREEN_NAME);
-        final String profile_image_url = cursor.getString(TwidereDataStore.DirectMessages.ConversationEntries.IDX_PROFILE_IMAGE_URL);
-        return new ParcelableUser(account_id, id, name, screen_name, profile_image_url);
+        final long accountId = cursor.getLong(DirectMessages.ConversationEntries.IDX_ACCOUNT_ID);
+        final long id = cursor.getLong(DirectMessages.ConversationEntries.IDX_CONVERSATION_ID);
+        final String name = cursor.getString(DirectMessages.ConversationEntries.IDX_NAME);
+        final String screenName = cursor.getString(DirectMessages.ConversationEntries.IDX_SCREEN_NAME);
+        final String profileImageUrl = cursor.getString(DirectMessages.ConversationEntries.IDX_PROFILE_IMAGE_URL);
+        return new ParcelableUser(accountId, id, name, screenName, profileImageUrl);
     }
 
     public static ParcelableUser[] fromUsers(final User[] users, long accountId) {

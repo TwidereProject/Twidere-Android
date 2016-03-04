@@ -104,15 +104,12 @@ public class TwitterWrapper implements Constants {
 
     @NonNull
     public static User showUser(final Twitter twitter, final long id, final String screenName) throws TwitterException {
-//        if (twitter.getId() == id || twitter.getScreenName().equalsIgnoreCase(screenName)) {
-//            return twitter.verifyCredentials();
-//        } else
         if (id != -1) {
             return twitter.showUser(id);
         } else if (screenName != null) {
             return twitter.showUser(screenName);
         }
-        throw new IllegalArgumentException();
+        throw new TwitterException("Invalid user id or screen name");
     }
 
     @NonNull

@@ -110,7 +110,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         friendsCountView.setText(getLocalizedNumber(locale, user.friends_count));
         if (adapter.isProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
-            loader.displayProfileImage(profileImageView, user.profile_image_url);
+            loader.displayProfileImage(profileImageView, user);
         } else {
             profileImageView.setVisibility(View.GONE);
             loader.cancelDisplayTask(profileImageView);

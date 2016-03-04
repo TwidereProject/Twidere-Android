@@ -21,6 +21,9 @@ package org.mariotaku.twidere.util;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,6 +33,9 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.imageloader.OvalBitmapDisplayer;
 import org.mariotaku.twidere.util.media.MediaExtra;
 
@@ -130,11 +136,56 @@ public class MediaLoaderWrapper implements Constants {
         displayProfileBanner(view, getBestBannerUrl(baseUrl, width));
     }
 
+    public void displayOriginalProfileImage(final ImageView view, final ParcelableUser user) {
+        if (user.extras != null && !TextUtils.isEmpty(user.extras.profile_image_url_original)) {
+            displayProfileImage(view, user.extras.profile_image_url_original);
+        } else {
+            displayProfileImage(view, Utils.getOriginalTwitterProfileImage(user.profile_image_url));
+        }
+    }
+
+    public void displayProfileImage(final ImageView view, final ParcelableUser user) {
+        if (user.extras != null && !TextUtils.isEmpty(user.extras.profile_image_url_profile_size)) {
+            displayProfileImage(view, user.extras.profile_image_url_profile_size);
+        } else {
+            displayProfileImage(view, user.profile_image_url);
+        }
+    }
+
+    public void displayProfileImage(final ImageView view, final ParcelableAccount account) {
+        if (account.account_user != null && account.account_user.extras != null
+                && !TextUtils.isEmpty(account.account_user.extras.profile_image_url_profile_size)) {
+            displayProfileImage(view, account.account_user.extras.profile_image_url_profile_size);
+        } else {
+            displayProfileImage(view, account.profile_image_url);
+        }
+    }
+
+    public void displayProfileImage(final ImageView view, final ParcelableStatus status) {
+        if (status.extras != null && !TextUtils.isEmpty(status.extras.user_profile_image_url_profile_size)) {
+            displayProfileImage(view, status.extras.user_profile_image_url_profile_size);
+        } else {
+            displayProfileImage(view, status.user_profile_image_url);
+        }
+    }
+
     public void displayProfileImage(final ImageView view, final String url) {
         mImageLoader.displayImage(url, view, mProfileImageDisplayOptions);
     }
 
-    public void displayDashboardProfileImage(final ImageView view, final String url, Drawable drawableOnLoading) {
+    public void displayDashboardProfileImage(@NonNull final ImageView view,
+                                             @NonNull final ParcelableAccount account,
+                                             @Nullable final Drawable drawableOnLoading) {
+        if (account.account_user != null && account.account_user.extras != null
+                && !TextUtils.isEmpty(account.account_user.extras.profile_image_url_profile_size)) {
+            displayDashboardProfileImage(view, account.account_user.extras.profile_image_url_profile_size,
+                    drawableOnLoading);
+        } else {
+            displayDashboardProfileImage(view, account.profile_image_url, drawableOnLoading);
+        }
+    }
+
+    void displayDashboardProfileImage(final ImageView view, final String url, Drawable drawableOnLoading) {
         if (drawableOnLoading != null) {
             final Builder builder = new Builder();
             builder.cloneFrom(mDashboardProfileImageDisplayOptions);

@@ -912,11 +912,28 @@ public class DataStoreUtils implements Constants {
     @Nullable
     public static ParcelableCredentials getCredentials(final Context context, final long accountId) {
         if (context == null || accountId < 0) return null;
-        Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS, Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null, null);
+        Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS,
+                Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null, null);
         if (cur == null) return null;
         try {
             if (cur.moveToFirst()) {
                 return ParcelableCredentialsCursorIndices.fromCursor(cur);
+            }
+        } finally {
+            cur.close();
+        }
+        return null;
+    }
+
+    public static String getAccountType(final Context context, final long accountId) {
+        if (context == null || accountId < 0) return null;
+        final String[] projection = {Accounts.ACCOUNT_TYPE};
+        Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
+                Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null, null);
+        if (cur == null) return null;
+        try {
+            if (cur.moveToFirst()) {
+                return cur.getString(0);
             }
         } finally {
             cur.close();

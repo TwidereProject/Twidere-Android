@@ -590,7 +590,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         if (accounts.length == 1) {
             mCountView.setText(null);
             final ParcelableAccount account = accounts[0];
-            mImageLoader.displayProfileImage(mProfileImageView, account.profile_image_url);
+            mImageLoader.displayProfileImage(mProfileImageView, account);
             mProfileImageView.setBorderColor(account.color);
         } else {
             mCountView.setText(String.valueOf(accounts.length));

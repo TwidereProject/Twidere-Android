@@ -24,8 +24,9 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
+import org.mariotaku.twidere.api.twitter.model.CursorSupport;
 import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
 
@@ -33,13 +34,13 @@ import java.util.List;
 
 public abstract class CursorSupportUsersLoader extends BaseCursorSupportUsersLoader {
 
-    public CursorSupportUsersLoader(final Context context, final long accountId, final long cursor,
+    public CursorSupportUsersLoader(final Context context, final long accountId,
                                     final List<ParcelableUser> data, boolean fromUser) {
-        super(context, accountId, cursor, data, fromUser);
+        super(context, accountId, data, fromUser);
     }
 
     @NonNull
-    protected abstract PageableResponseList<User> getCursoredUsers(@NonNull Twitter twitter, Paging paging)
+    protected abstract ResponseList<User> getCursoredUsers(@NonNull Twitter twitter, Paging paging)
             throws TwitterException;
 
     @NonNull
@@ -49,9 +50,13 @@ public abstract class CursorSupportUsersLoader extends BaseCursorSupportUsersLoa
         paging.count(getCount());
         if (getCursor() > 0) {
             paging.setCursor(getCursor());
+        } else if (getPage() >= -1) {
+            paging.setPage(getPage());
         }
-        final PageableResponseList<User> users = getCursoredUsers(twitter, paging);
-        setCursorIds(users);
+        final ResponseList<User> users = getCursoredUsers(twitter, paging);
+        if (users instanceof CursorSupport) {
+            setCursorIds(((CursorSupport) users));
+        }
         return users;
     }
 

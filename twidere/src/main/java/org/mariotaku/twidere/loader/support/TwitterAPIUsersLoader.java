@@ -66,6 +66,10 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         return data;
     }
 
+    public long getAccountId() {
+        return mAccountId;
+    }
+
     @NonNull
     protected abstract List<User> getUsers(@NonNull Twitter twitter) throws TwitterException;
 }

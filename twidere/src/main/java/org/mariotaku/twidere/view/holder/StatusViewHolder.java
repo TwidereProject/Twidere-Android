@@ -313,9 +313,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             if (profileImageSpace != null) {
                 profileImageSpace.setVisibility(View.VISIBLE);
             }
-            final String user_profile_image_url = status.user_profile_image_url;
-
-            loader.displayProfileImage(profileImageView, user_profile_image_url);
+            loader.displayProfileImage(profileImageView, status);
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected));
             profileTypeView.setVisibility(View.VISIBLE);

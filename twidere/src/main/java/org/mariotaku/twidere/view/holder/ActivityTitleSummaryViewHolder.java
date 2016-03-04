@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
+import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;

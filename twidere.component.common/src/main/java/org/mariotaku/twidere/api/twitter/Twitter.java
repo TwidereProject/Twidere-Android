@@ -19,19 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter;
 
-import org.mariotaku.twidere.api.statusnet.api.StatusNetResources;
+import org.mariotaku.twidere.api.statusnet.StatusNet;
 import org.mariotaku.twidere.api.twitter.api.DirectMessagesResources;
 import org.mariotaku.twidere.api.twitter.api.FavoritesResources;
 import org.mariotaku.twidere.api.twitter.api.FriendsFollowersResources;
 import org.mariotaku.twidere.api.twitter.api.HelpResources;
-import org.mariotaku.twidere.api.twitter.api.ListsResources;
+import org.mariotaku.twidere.api.twitter.api.ListResources;
 import org.mariotaku.twidere.api.twitter.api.PlacesGeoResources;
-import org.mariotaku.twidere.api.twitter.api.PrivateActivityResources;
-import org.mariotaku.twidere.api.twitter.api.PrivateDirectMessagesResources;
-import org.mariotaku.twidere.api.twitter.api.PrivateFriendsFollowersResources;
-import org.mariotaku.twidere.api.twitter.api.PrivateScheduleResources;
-import org.mariotaku.twidere.api.twitter.api.PrivateTimelinesResources;
-import org.mariotaku.twidere.api.twitter.api.PrivateTweetResources;
 import org.mariotaku.twidere.api.twitter.api.SavedSearchesResources;
 import org.mariotaku.twidere.api.twitter.api.SearchResource;
 import org.mariotaku.twidere.api.twitter.api.SpamReportingResources;
@@ -41,9 +35,7 @@ import org.mariotaku.twidere.api.twitter.api.TweetResources;
 import org.mariotaku.twidere.api.twitter.api.UsersResources;
 
 public interface Twitter extends SearchResource, TimelineResources,
-        TweetResources, UsersResources, ListsResources, DirectMessagesResources, FriendsFollowersResources,
+        TweetResources, UsersResources, ListResources, DirectMessagesResources, FriendsFollowersResources,
         FavoritesResources, SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
-        HelpResources, StatusNetResources, PrivateActivityResources, PrivateTweetResources,
-        PrivateTimelinesResources, PrivateFriendsFollowersResources, PrivateDirectMessagesResources,
-        PrivateScheduleResources {
+        HelpResources, TwitterPrivate, StatusNet {
 }

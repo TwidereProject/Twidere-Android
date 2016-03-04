@@ -31,6 +31,7 @@ import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.util.List;
 
@@ -39,29 +40,31 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
     @NonNull
     private final String mQuery;
     private final boolean mGapEnabled;
-    private final boolean mTwitterOptimizedSearches;
 
     public TweetSearchLoader(final Context context, final long accountId, @NonNull final String query,
                              final long sinceId, final long maxId, final List<ParcelableStatus> data,
                              final String[] savedStatusesArgs, final int tabPosition, boolean fromUser,
-                             boolean makeGap, boolean twitterOptimizedSearches) {
+                             boolean makeGap) {
         super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
         mQuery = query;
         mGapEnabled = makeGap;
-        mTwitterOptimizedSearches = twitterOptimizedSearches;
     }
 
     @NonNull
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
-        final SearchQuery query = new SearchQuery(processQuery(mQuery));
-        query.paging(paging);
-        return twitter.search(query);
+        final String processedQuery = processQuery(mQuery);
+        if (TwitterAPIFactory.isTwitterCredentials(getContext(), getAccountId())) {
+            final SearchQuery query = new SearchQuery(processedQuery);
+            query.paging(paging);
+            return twitter.search(query);
+        }
+        return twitter.searchStatuses(processedQuery, paging);
     }
 
     @NonNull
     protected String processQuery(@NonNull final String query) {
-        if (mTwitterOptimizedSearches) {
+        if (TwitterAPIFactory.isTwitterCredentials(getContext(), getAccountId())) {
             return String.format("%s exclude:retweets", query);
         }
         return query;
@@ -78,7 +81,4 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
         return mGapEnabled;
     }
 
-    public boolean isTwitterOptimizedSearches() {
-        return mTwitterOptimizedSearches;
-    }
 }

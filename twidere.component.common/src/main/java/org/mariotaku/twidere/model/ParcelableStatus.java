@@ -440,6 +440,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         @JsonField(name = "support_entities")
         @ParcelableThisPlease
         public boolean support_entities;
+        @JsonField(name = "user_profile_image_url_profile_size")
+        @ParcelableThisPlease
+        public String user_profile_image_url_profile_size;
 
         @Override
         public int describeContents() {

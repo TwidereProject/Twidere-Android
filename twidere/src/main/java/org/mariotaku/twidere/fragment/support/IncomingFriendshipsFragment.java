@@ -52,7 +52,9 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
     @Override
     public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-        return new IncomingFriendshipsLoader(context, accountId, getNextCursor(), getData(), fromUser);
+        final IncomingFriendshipsLoader loader = new IncomingFriendshipsLoader(context, accountId, getData(), fromUser);
+        loader.setCursor(getNextCursor());
+        return loader;
     }
 
     @NonNull

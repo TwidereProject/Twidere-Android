@@ -29,11 +29,14 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.Nullables;
 import org.mariotaku.twidere.util.ParcelUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.ArrayList;
@@ -41,25 +44,24 @@ import java.util.List;
 
 public class ConversationLoader extends TwitterAPIStatusesLoader {
 
-    private final boolean mTwitterOptimizedSearches;
-
     @NonNull
     private final ParcelableStatus mStatus;
 
     public ConversationLoader(final Context context, @NonNull final ParcelableStatus status,
                               final long sinceId, final long maxId, final List<ParcelableStatus> data,
-                              final boolean fromUser, final boolean twitterOptimizedSearches) {
+                              final boolean fromUser) {
         super(context, status.account_id, sinceId, maxId, data, null, -1, fromUser);
         mStatus = Nullables.assertNonNull(ParcelUtils.clone(status));
         ParcelableStatusUtils.makeOriginalStatus(mStatus);
-        mTwitterOptimizedSearches = twitterOptimizedSearches;
     }
 
     @NonNull
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         final ParcelableStatus status = mStatus;
-        if (Utils.isOfficialCredentials(getContext(), getAccountId())) {
+        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(getContext(), getAccountId());
+        if (credentials == null) throw new TwitterException("Null credentials");
+        if (Utils.isOfficialCredentials(getContext(), credentials)) {
             return twitter.showConversation(status.id, paging);
         }
         final List<Status> statuses = new ArrayList<>();
@@ -79,7 +81,7 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
         // Load replies
         if ((sinceId > 0 && sinceId > status.id) || noSinceMaxId) {
             SearchQuery query = new SearchQuery();
-            if (mTwitterOptimizedSearches) {
+            if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
                 query.query("to:" + status.user_screen_name);
             } else {
                 query.query("@" + status.user_screen_name);

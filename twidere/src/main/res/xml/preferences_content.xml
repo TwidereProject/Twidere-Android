@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:key="settings_content"
-    android:title="@string/content_and_storage">
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:key="settings_content"
+                  android:title="@string/content_and_storage">
 
     <PreferenceCategory
         android:key="category_content"
@@ -16,7 +16,7 @@
             app:asb_summaryOn="@string/name_first_summary_on">
             <extra
                 android:name="notify_change"
-                android:value="true" />
+                android:value="true"/>
         </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
 
         <org.mariotaku.twidere.preference.SeekBarDialogPreference
@@ -26,53 +26,48 @@
             android:title="@string/load_item_limit"
             app:max="200"
             app:min="10"
-            app:step="5" />
+            app:step="5"/>
 
         <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="true"
             android:key="remember_position"
             android:summary="@string/remember_position_summary"
-            android:title="@string/remember_position" />
+            android:title="@string/remember_position"/>
         <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:key="read_from_bottom"
             android:summaryOff="@string/read_from_bottom_summary_off"
             android:summaryOn="@string/read_from_bottom_summary_on"
-            android:title="@string/read_from_bottom" />
+            android:title="@string/read_from_bottom"/>
 
         <org.mariotaku.twidere.preference.TrendsLocationPreference
             android:key="trends_location"
             android:summary="@string/trends_location_summary"
-            android:title="@string/trends_location" />
+            android:title="@string/trends_location"/>
 
         <org.mariotaku.twidere.preference.TranslationDestinationPreference
             android:key="translation_destination"
-            android:title="@string/translation_destination" />
+            android:title="@string/translation_destination"/>
         <org.mariotaku.twidere.preference.ComponentStatePreference
             android:name="org.mariotaku.twidere.activity.TwitterLinkHandlerActivity"
             android:key="twitter_link_handler"
-            android:title="@string/open_twitter_links" />
+            android:title="@string/open_twitter_links"/>
         <Preference
             android:fragment="org.mariotaku.twidere.fragment.KeyboardShortcutsFragment"
-            android:title="@string/keyboard_shortcuts" />
+            android:title="@string/keyboard_shortcuts"/>
 
         <org.mariotaku.twidere.preference.MediaUploaderPreference
             android:defaultValue=""
             android:key="media_uploader"
             android:summary="%s"
-            android:title="@string/media_uploader" />
+            android:title="@string/media_uploader"/>
 
         <org.mariotaku.twidere.preference.TimelineSyncPreference
             android:defaultValue=""
             android:key="timeline_sync_service"
             android:summary="%s"
-            android:title="@string/timeline_sync_service" />
+            android:title="@string/timeline_sync_service"/>
 
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
-            android:defaultValue="true"
-            android:key="twitter_optimized_searches"
-            android:summary="@string/twitter_optimized_searches_summary"
-            android:title="@string/twitter_optimized_searches" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -82,12 +77,12 @@
             android:defaultValue="true"
             android:key="phishing_link_warning"
             android:summary="@string/phishing_link_warning_summary"
-            android:title="@string/phishing_link_warning" />
+            android:title="@string/phishing_link_warning"/>
         <org.mariotaku.twidere.preference.AutoFixSwitchPreference
             android:defaultValue="false"
             android:key="display_sensitive_contents"
             android:summary="@string/display_sensitive_contents_summary"
-            android:title="@string/display_sensitive_contents" />
+            android:title="@string/display_sensitive_contents"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

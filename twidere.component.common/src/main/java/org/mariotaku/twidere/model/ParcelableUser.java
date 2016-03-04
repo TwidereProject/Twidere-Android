@@ -31,6 +31,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 
 
@@ -163,6 +164,17 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @ParcelableThisPlease
     @JsonField(name = "is_basic")
     public boolean is_basic;
+
+    @ParcelableThisPlease
+    @JsonField(name = "extras")
+    @CursorField(value = CachedUsers.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
+    public Extras extras;
+
+    @ParcelableThisPlease
+    @JsonField(name = "user_type")
+    @CursorField(value = CachedUsers.USER_TYPE)
+    public String user_type;
+
     public static final Creator<ParcelableUser> CREATOR = new Creator<ParcelableUser>() {
         public ParcelableUser createFromParcel(Parcel source) {
             ParcelableUser target = new ParcelableUser();
@@ -185,29 +197,6 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         this.name = name;
         this.screen_name = screen_name;
         this.profile_image_url = profile_image_url;
-        this.created_at = 0;
-        this.position = 0;
-        is_protected = false;
-        is_verified = false;
-        is_follow_request_sent = false;
-        is_following = false;
-        description_plain = null;
-        location = null;
-        profile_banner_url = null;
-        url = null;
-        url_expanded = null;
-        description_html = null;
-        description_unescaped = null;
-        description_expanded = null;
-        followers_count = 0;
-        friends_count = 0;
-        statuses_count = 0;
-        favorites_count = 0;
-        listed_count = 0;
-        media_count = 0;
-        background_color = 0;
-        link_color = 0;
-        text_color = 0;
         is_cache = true;
         is_basic = true;
     }
@@ -288,6 +277,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
                 ", text_color=" + text_color +
                 ", is_cache=" + is_cache +
                 ", is_basic=" + is_basic +
+                ", extras=" + extras +
                 '}';
     }
 
@@ -299,5 +289,45 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableUserParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    @ParcelablePlease
+    @JsonObject
+    public static class Extras implements Parcelable {
+
+        @JsonField(name = "statusnet_profile_url")
+        @ParcelableThisPlease
+        public String statusnet_profile_url;
+        @JsonField(name = "ostatus_uri")
+        @ParcelableThisPlease
+        public String ostatus_uri;
+        @JsonField(name = "profile_image_url_original")
+        @ParcelableThisPlease
+        public String profile_image_url_original;
+        @JsonField(name = "profile_image_url_profile_size")
+        @ParcelableThisPlease
+        public String profile_image_url_profile_size;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            ParcelableUser$ExtrasParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<Extras> CREATOR = new Creator<Extras>() {
+            public Extras createFromParcel(Parcel source) {
+                Extras target = new Extras();
+                ParcelableUser$ExtrasParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            public Extras[] newArray(int size) {
+                return new Extras[size];
+            }
+        };
     }
 }

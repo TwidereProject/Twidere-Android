@@ -85,8 +85,10 @@ import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.StatusNetAccountExtra;
 import org.mariotaku.twidere.model.TwitterAccountExtra;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -135,7 +137,6 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     private EditText mEditUsername, mEditPassword;
     private Button mSignInButton, mSignUpButton;
     private LinearLayout mSignInSignUpContainer, mUsernamePasswordContainer;
-    private SharedPreferences mPreferences;
     private ContentResolver mResolver;
     private AbstractSignInTask mTask;
     private TintedStatusLayout mMainContent;
@@ -316,7 +317,6 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     protected void onCreate(final Bundle savedInstanceState) {
         setupWindow();
         super.onCreate(savedInstanceState);
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         mResolver = getContentResolver();
         setContentView(R.layout.activity_sign_in);
         setSupportActionBar((Toolbar) findViewById(R.id.action_bar));
@@ -368,6 +368,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             df.setCancelable(false);
             df.show(getSupportFragmentManager(), "set_consumer_key_secret");
         }
+
     }
 
     private void doLogin() {
@@ -402,6 +403,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
 
 
     private void saveEditedText() {
+        if (mEditUsername == null || mEditPassword == null) return;
         mUsername = ParseUtils.parseString(mEditUsername.getText());
         mPassword = ParseUtils.parseString(mEditPassword.getText());
     }
@@ -782,7 +784,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             final String versionSuffix = noVersionSuffix ? null : "1.1";
             final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
             final Authorization auth = new BasicAuthorization(username, password);
-            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
+            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth,
+                    Twitter.class);
             User user;
             try {
                 user = twitter.verifyCredentials();
@@ -1067,6 +1070,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             if (values != null && accountType != null) {
                 values.put(Accounts.ACCOUNT_TYPE, accountType.first);
                 values.put(Accounts.ACCOUNT_EXTRAS, accountType.second);
+                values.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(ParcelableUserUtils.fromUser(user,
+                        user.getId()), ParcelableUser.class));
             }
             return values;
         }

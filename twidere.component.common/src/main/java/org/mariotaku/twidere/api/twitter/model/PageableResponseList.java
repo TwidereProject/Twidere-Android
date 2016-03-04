@@ -19,38 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.restfu.http.HttpResponse;
-import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
-
-import java.util.ArrayList;
-
 /**
  * Created by mariotaku on 15/5/7.
  */
-public class PageableResponseList<T> extends ArrayList<T> implements TwitterResponse, CursorSupport {
+public class PageableResponseList<T> extends ResponseList<T> implements TwitterResponse, CursorSupport {
 
-    int accessLevel;
-    RateLimitStatus rateLimitStatus;
     long previousCursor;
     long nextCursor;
-
-
-    @Override
-    public final void processResponseHeader(HttpResponse resp) {
-        rateLimitStatus = RateLimitStatus.createFromResponseHeader(resp);
-        accessLevel = InternalParseUtil.toAccessLevel(resp);
-    }
-
-    @Override
-    @AccessLevel
-    public final int getAccessLevel() {
-        return accessLevel;
-    }
-
-    @Override
-    public final RateLimitStatus getRateLimitStatus() {
-        return rateLimitStatus;
-    }
 
     @Override
     public long getNextCursor() {

@@ -34,8 +34,10 @@ public class UserFriendsFragment extends CursorSupportUsersListFragment {
         final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        return new UserFriendsLoader(context, accountId, userId, screenName, getNextCursor(),
-                getData(), fromUser);
+        final UserFriendsLoader loader = new UserFriendsLoader(context, accountId, userId,
+                screenName, getData(), fromUser);
+        loader.setCursor(getNextCursor());
+        return loader;
     }
 
 }

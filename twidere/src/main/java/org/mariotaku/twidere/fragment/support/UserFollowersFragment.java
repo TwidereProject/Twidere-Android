@@ -33,48 +33,50 @@ import static org.mariotaku.twidere.util.DataStoreUtils.getAccountScreenName;
 
 public class UserFollowersFragment extends CursorSupportUsersListFragment {
 
-	private final BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
 
-		@Override
-		public void onReceive(final Context context, final Intent intent) {
-			if (getActivity() == null || !isAdded() || isDetached()) return;
-			final String action = intent.getAction();
-			if (BROADCAST_MULTI_BLOCKSTATE_CHANGED.equals(action)) {
-				final long account_id = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
-				final String screen_name = getAccountScreenName(getActivity(), account_id);
-				final Bundle args = getArguments();
-				if (args == null) return;
-				if (account_id > 0 && args.getLong(EXTRA_USER_ID, -1) == account_id || screen_name != null
-						&& screen_name.equalsIgnoreCase(args.getString(EXTRA_SCREEN_NAME))) {
-					removeUsers(intent.getLongArrayExtra(EXTRA_USER_IDS));
-				}
-			}
-		}
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            if (getActivity() == null || !isAdded() || isDetached()) return;
+            final String action = intent.getAction();
+            if (BROADCAST_MULTI_BLOCKSTATE_CHANGED.equals(action)) {
+                final long account_id = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
+                final String screen_name = getAccountScreenName(getActivity(), account_id);
+                final Bundle args = getArguments();
+                if (args == null) return;
+                if (account_id > 0 && args.getLong(EXTRA_USER_ID, -1) == account_id || screen_name != null
+                        && screen_name.equalsIgnoreCase(args.getString(EXTRA_SCREEN_NAME))) {
+                    removeUsers(intent.getLongArrayExtra(EXTRA_USER_IDS));
+                }
+            }
+        }
 
-	};
+    };
 
-	@Override
-	public CursorSupportUsersLoader onCreateUsersLoader(final Context context,
-														@NonNull final Bundle args, boolean fromUser) {
-		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-		final long userId = args.getLong(EXTRA_USER_ID, -1);
-		final String screenName = args.getString(EXTRA_SCREEN_NAME);
-		return new UserFollowersLoader(context, accountId, userId, screenName, getNextCursor(),
-				getData(), fromUser);
-	}
+    @Override
+    public CursorSupportUsersLoader onCreateUsersLoader(final Context context,
+                                                        @NonNull final Bundle args, boolean fromUser) {
+        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        final UserFollowersLoader loader = new UserFollowersLoader(context, accountId, userId,
+                screenName, getData(), fromUser);
+        loader.setCursor(getNextCursor());
+        return loader;
+    }
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		final IntentFilter filter = new IntentFilter(BROADCAST_MULTI_BLOCKSTATE_CHANGED);
-		registerReceiver(mStateReceiver, filter);
+    @Override
+    public void onStart() {
+        super.onStart();
+        final IntentFilter filter = new IntentFilter(BROADCAST_MULTI_BLOCKSTATE_CHANGED);
+        registerReceiver(mStateReceiver, filter);
 
-	}
+    }
 
-	@Override
-	public void onStop() {
-		unregisterReceiver(mStateReceiver);
-		super.onStop();
-	}
+    @Override
+    public void onStop() {
+        unregisterReceiver(mStateReceiver);
+        super.onStop();
+    }
 
 }
