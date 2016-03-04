@@ -755,4 +755,5 @@
     <string name="translation">Translation</string>
     <string name="shortener_version_incompatible">Incompatible tweet shortener</string>
     <string name="uploader_version_incompatible">Incompatible media uploader</string>
+    <string name="groups">Groups</string>
 </resources>

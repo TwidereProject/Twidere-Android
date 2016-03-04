@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.api.statusnet.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.twidere.api.statusnet.model.StatusNetConfig;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -16,5 +17,6 @@ public interface StatusNetResources {
     @GET("/statusnet/config.json")
     StatusNetConfig getStatusNetConfig() throws TwitterException;
 
-
+    @GET("/statusnet/conversation/{id}.json")
+    ResponseList<Status> getStatusNetConversation(@Path("id") long statusId, @Query Paging paging) throws TwitterException;
 }

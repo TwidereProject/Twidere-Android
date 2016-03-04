@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.model.util;
 
 import android.database.Cursor;
-import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
@@ -17,7 +16,7 @@ import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 /**
  * Created by mariotaku on 16/2/24.
  */
-public class ParcelableUserUtils implements TwidereConstants{
+public class ParcelableUserUtils implements TwidereConstants {
 
     public static ParcelableUser fromUser(User user, long accountId) {
         return fromUser(user, accountId, 0);
@@ -64,6 +63,7 @@ public class ParcelableUserUtils implements TwidereConstants{
         extras.statusnet_profile_url = user.getStatusnetProfileUrl();
         extras.profile_image_url_original = user.getProfileImageUrlOriginal();
         extras.profile_image_url_profile_size = user.getProfileImageUrlProfileSize();
+        extras.groups_count = user.getGroupsCount();
         obj.extras = extras;
         obj.user_type = getUserType(extras.ostatus_uri);
         return obj;

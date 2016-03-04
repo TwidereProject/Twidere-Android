@@ -181,9 +181,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private ProfileBannerImageView mProfileBannerView;
     private View mProfileBirthdayBannerView;
     private TextView mNameView, mScreenNameView, mDescriptionView, mLocationView, mURLView, mCreatedAtView,
-            mListedCount, mFollowersCount, mFriendsCount, mHeaderErrorTextView;
-    private View mDescriptionContainer, mLocationContainer, mURLContainer, mListedContainer, mFollowersContainer,
-            mFriendsContainer;
+            mHeaderErrorTextView;
+    private TextView mListedCount, mFollowersCount, mFriendsCount, mGroupsCount;
+    private View mDescriptionContainer, mLocationContainer, mURLContainer;
+    private View mListedContainer, mFollowersContainer, mFriendsContainer, mGroupsContainer;
     private ImageView mHeaderErrorIcon;
     private ColorLabelRelativeLayout mProfileNameContainer;
     private View mProgressContainer, mHeaderErrorContainer;
@@ -554,8 +555,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mCreatedAtView.setText(resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
                 createdAt, dailyTweets));
         mListedCount.setText(Utils.getLocalizedNumber(mLocale, user.listed_count));
+        final long groupsCount = user.extras != null ? user.extras.groups_count : -1;
+        mGroupsCount.setText(Utils.getLocalizedNumber(mLocale, groupsCount));
         mFollowersCount.setText(Utils.getLocalizedNumber(mLocale, user.followers_count));
         mFriendsCount.setText(Utils.getLocalizedNumber(mLocale, user.friends_count));
+
+        mListedContainer.setVisibility(user.listed_count < 0 ? View.GONE : View.VISIBLE);
+        mGroupsContainer.setVisibility(groupsCount < 0 ? View.GONE : View.VISIBLE);
 
         mMediaLoader.displayOriginalProfileImage(mProfileImageView, user);
         if (userColor != 0) {
@@ -1150,7 +1156,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mURLView = (TextView) headerView.findViewById(R.id.url);
         mCreatedAtView = (TextView) headerView.findViewById(R.id.created_at);
         mListedContainer = headerView.findViewById(R.id.listed_container);
+        mGroupsContainer = headerView.findViewById(R.id.groups_container);
         mListedCount = (TextView) headerView.findViewById(R.id.listed_count);
+        mGroupsCount = (TextView) headerView.findViewById(R.id.groups_count);
         mFollowersContainer = headerView.findViewById(R.id.followers_container);
         mFollowersCount = (TextView) headerView.findViewById(R.id.followers_count);
         mFriendsContainer = headerView.findViewById(R.id.friends_container);

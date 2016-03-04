@@ -151,9 +151,12 @@ public class TwitterWrapper implements Constants {
         try {
             return showUser(twitter, id, screenName);
         } catch (final TwitterException e) {
-            if (e.isCausedByNetworkIssue()) throw e;
+            // Twitter specific error for private API calling through proxy
+            if (e.getStatusCode() == 200) {
+                return showUserAlternative(twitter, id, screenName);
+            }
+            throw e;
         }
-        return showUserAlternative(twitter, id, screenName);
     }
 
     public static void updateProfileBannerImage(final Context context, final long accountId,

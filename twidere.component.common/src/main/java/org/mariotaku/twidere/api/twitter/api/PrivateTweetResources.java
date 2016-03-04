@@ -44,12 +44,6 @@ public interface PrivateTweetResources extends PrivateResources {
     @GET("/statuses/{id}/activity/summary.json")
     StatusActivitySummary getStatusActivitySummary(@Path("id") long statusId) throws TwitterException;
 
-    @GET("/statuses/{id}/activity/summary.json")
-    StatusActivitySummary getStatusActivitySummary(@Path("id") long statusId, boolean includeUserEntities) throws TwitterException;
-
-    @GET("/conversation/show.json")
-    ResponseList<Status> showConversation(@Query("id") long statusId) throws TwitterException;
-
     @GET("/conversation/show.json")
     ResponseList<Status> showConversation(@Query("id") long statusId, @Query Paging paging) throws TwitterException;
 

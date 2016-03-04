@@ -63,6 +63,8 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
         if (credentials == null) throw new TwitterException("Null credentials");
         if (Utils.isOfficialCredentials(getContext(), credentials)) {
             return twitter.showConversation(status.id, paging);
+        } else if (!TwitterAPIFactory.isTwitterCredentials(credentials)) {
+            return twitter.getStatusNetConversation(status.id, paging);
         }
         final List<Status> statuses = new ArrayList<>();
         final long maxId = getMaxId(), sinceId = getSinceId();
