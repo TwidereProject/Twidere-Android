@@ -15,7 +15,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 import org.mariotaku.restfu.ExceptionFactory;
 import org.mariotaku.restfu.RestAPIFactory;
-import org.mariotaku.restfu.RestClient;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.restfu.RestRequest;
@@ -38,12 +37,12 @@ import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.EmptyAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
-import org.mariotaku.twidere.api.twitter.auth.OAuthSupport;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.util.TwitterConverterFactory;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
+import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.io.IOException;
@@ -381,21 +380,18 @@ public class TwitterAPIFactory implements TwidereConstants {
         return ('A' <= codePoint && codePoint <= 'Z') || ('a' <= codePoint && codePoint <= 'z') || '0' <= codePoint && codePoint <= '9';
     }
 
-    public static boolean isOfficialKeyAccount(final Context context, final long accountId) {
-        return getOfficialKeyType(context, accountId) != ConsumerKeyType.UNKNOWN;
-    }
-
     @NonNull
     public static ConsumerKeyType getOfficialKeyType(final Context context, final long accountId) {
         if (context == null) return ConsumerKeyType.UNKNOWN;
-        final String[] projection = {TwidereDataStore.Accounts.CONSUMER_KEY, TwidereDataStore.Accounts.CONSUMER_SECRET};
-        final String selection = Expression.equals(TwidereDataStore.Accounts.ACCOUNT_ID, accountId).getSQL();
-        final Cursor c = context.getContentResolver().query(TwidereDataStore.Accounts.CONTENT_URI, projection, selection, null, null);
+        final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET, Accounts.AUTH_TYPE};
+        final String selection = Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL();
+        final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection, selection, null, null);
         if (c == null) return ConsumerKeyType.UNKNOWN;
         //noinspection TryFinallyCanBeTryWithResources
         try {
-            if (c.moveToPosition(0))
+            if (c.moveToPosition(0) && ParcelableCredentialsUtils.isOAuth(c.getInt(2))) {
                 return TwitterContentUtils.getOfficialKeyType(context, c.getString(0), c.getString(1));
+            }
         } finally {
             c.close();
         }

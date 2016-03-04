@@ -87,7 +87,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             // We should delete old activities has intersection with new items
             try {
                 final ResponseList<Activity> activities = getActivities(twitter, accountId, paging);
-                storeActivities(cr, loadItemLimit, accountId, noItemsBefore, activities);
+                storeActivities(cr, accountId, noItemsBefore, activities);
 //                if (saveReadPosition && TwitterAPIFactory.isOfficialTwitterInstance(context, twitter)) {
                 if (saveReadPosition) {
                     saveReadPosition(accountId, twitter);
@@ -112,8 +112,8 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     @NonNull
     protected abstract String getErrorInfoKey();
 
-    private void storeActivities(ContentResolver cr, int loadItemLimit, long accountId,
-                                 boolean noItemsBefore, ResponseList<Activity> activities) {
+    private void storeActivities(ContentResolver cr, long accountId, boolean noItemsBefore,
+                                 ResponseList<Activity> activities) {
         long[] deleteBound = new long[2];
         Arrays.fill(deleteBound, -1);
         List<ContentValues> valuesList = new ArrayList<>();
@@ -140,8 +140,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                     Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
             );
             int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), null);
-            boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
-                    && rowsDeleted <= 0;
+            boolean insertGap = !noItemsBefore && rowsDeleted <= 0;
             if (insertGap && !valuesList.isEmpty()) {
                 valuesList.get(valuesList.size() - 1).put(Activities.IS_GAP, true);
             }

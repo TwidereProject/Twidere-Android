@@ -45,7 +45,7 @@ public class GetActivitiesAboutMeTask extends GetActivitiesTask {
 
     @Override
     protected ResponseList<Activity> getActivities(@NonNull final Twitter twitter, final long accountId, final Paging paging) throws TwitterException {
-        if (Utils.shouldUsePrivateAPIs(context, accountId)) {
+        if (Utils.isOfficialCredentials(context, accountId)) {
             return twitter.getActivitiesAboutMe(paging);
         }
         final ResponseList<Activity> activities = new ResponseList<>();
