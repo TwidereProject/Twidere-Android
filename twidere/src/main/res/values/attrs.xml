@@ -17,6 +17,7 @@
         <attr name="progressWheelStyle" format="reference"/>
         <attr name="darkTheme" format="boolean"/>
         <attr name="coloredActionBar" format="boolean"/>
+        <attr name="windowNormalBackground" format="reference"/>
     </declare-styleable>
     <declare-styleable name="ColorLabelView">
         <attr name="ignorePadding" format="boolean"/>

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.WindowDecorActionBar;
 import android.support.v7.app.WindowDecorActionBar.ActionModeImpl;
 import android.support.v7.view.StandaloneActionMode;
@@ -567,19 +569,21 @@ public class ThemeUtils implements Constants {
     }
 
     public static Drawable getWindowBackgroundFromTheme(final Context context) {
-        @SuppressWarnings("ConstantConditions")
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.windowBackground});
+        final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.windowNormalBackground,
+                android.R.attr.windowBackground});
         try {
-            return a.getDrawable(0);
+            if (a.hasValue(0)) {
+                return a.getDrawable(0);
+            } else {
+                return a.getDrawable(1);
+            }
         } finally {
             a.recycle();
         }
     }
 
     public static Drawable getWindowBackgroundFromThemeApplyAlpha(final Context context, final int alpha) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.windowBackground});
-        final Drawable d = a.getDrawable(0);
-        a.recycle();
+        final Drawable d = getWindowBackgroundFromTheme(context);
         if (d == null) return null;
         d.mutate();
         d.setAlpha(TwidereMathUtils.clamp(alpha, ThemeBackgroundPreference.MIN_ALPHA,
@@ -949,6 +953,36 @@ public class ThemeUtils implements Constants {
             return getActionBarHeight(activity);
         }
         return controlBarHeight;
+    }
+
+    public static int getLocalNightMode(SharedPreferences preferences) {
+        switch (Utils.getNonEmptyString(preferences, KEY_THEME, VALUE_THEME_NAME_LIGHT)) {
+            case VALUE_THEME_NAME_DARK: {
+                return AppCompatDelegate.MODE_NIGHT_YES;
+            }
+            case VALUE_THEME_NAME_AUTO: {
+                return AppCompatDelegate.MODE_NIGHT_AUTO;
+            }
+        }
+        return AppCompatDelegate.MODE_NIGHT_NO;
+    }
+
+    public static void applyDayNight(SharedPreferences preferences, AppCompatDelegate delegate) {
+        switch (getLocalNightMode(preferences)) {
+            case AppCompatDelegate.MODE_NIGHT_AUTO: {
+                delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                break;
+            }
+            case AppCompatDelegate.MODE_NIGHT_YES: {
+                delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            }
+            default: {
+                delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            }
+        }
+        delegate.applyDayNight();
     }
 
 

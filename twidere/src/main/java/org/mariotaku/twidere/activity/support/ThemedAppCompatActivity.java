@@ -50,6 +50,7 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
 
     private ThemedAppCompatDelegateFactory.ThemedAppCompatDelegate mDelegate;
     private Toolbar mToolbar;
+    private int mCurrentThemeResource;
 
     @Override
     public String getCurrentThemeFontFamily() {
@@ -103,6 +104,9 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
             StrictModeUtils.detectAllVmPolicy();
             StrictModeUtils.detectAllThreadPolicy();
         }
+        if (mCurrentThemeResource != 0) {
+            getTheme().applyStyle(mCurrentThemeResource, true);
+        }
         super.onCreate(savedInstanceState);
         ThemeUtils.applyToolbarItemColor(this, getActionBarToolbar(), getCurrentThemeColor());
     }
@@ -125,6 +129,7 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
     @Override
     public void setTheme(int resId) {
         super.setTheme(resId);
+        mCurrentThemeResource = resId;
         if (shouldApplyWindowBackground()) {
             ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeBackgroundOption,
                     mCurrentThemeBackgroundAlpha);

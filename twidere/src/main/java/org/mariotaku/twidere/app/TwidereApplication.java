@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.app;
 
+import android.app.Application;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -35,7 +36,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.multidex.MultiDexApplication;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -50,6 +51,7 @@ import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
 import org.mariotaku.twidere.util.HttpClientFactory;
 import org.mariotaku.twidere.util.StrictModeUtils;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereBugReporter;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
@@ -59,7 +61,7 @@ import org.mariotaku.twidere.util.net.TwidereDns;
 
 import static org.mariotaku.twidere.util.Utils.initAccountColor;
 
-public class TwidereApplication extends MultiDexApplication implements Constants,
+public class TwidereApplication extends Application implements Constants,
         OnSharedPreferenceChangeListener {
 
     private static final String KEY_UCD_DATA_PROFILING = "ucd_data_profiling";
@@ -79,6 +81,11 @@ public class TwidereApplication extends MultiDexApplication implements Constants
         return (TwidereApplication) context.getApplicationContext();
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     public Handler getHandler() {
         return mHandler;
@@ -256,15 +263,15 @@ public class TwidereApplication extends MultiDexApplication implements Constants
     }
 
     private void resetTheme(SharedPreferences preferences) {
-        switch (Utils.getNonEmptyString(preferences, KEY_THEME, VALUE_THEME_NAME_LIGHT)) {
-            case VALUE_THEME_NAME_DARK: {
-                ((UiModeManager) getSystemService(UI_MODE_SERVICE)).setNightMode(UiModeManager.MODE_NIGHT_YES);
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            }
-            case VALUE_THEME_NAME_AUTO: {
+        switch (ThemeUtils.getLocalNightMode(preferences)) {
+            case AppCompatDelegate.MODE_NIGHT_AUTO: {
                 ((UiModeManager) getSystemService(UI_MODE_SERVICE)).setNightMode(UiModeManager.MODE_NIGHT_AUTO);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                break;
+            }
+            case AppCompatDelegate.MODE_NIGHT_YES: {
+                ((UiModeManager) getSystemService(UI_MODE_SERVICE)).setNightMode(UiModeManager.MODE_NIGHT_YES);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 break;
             }
             default: {

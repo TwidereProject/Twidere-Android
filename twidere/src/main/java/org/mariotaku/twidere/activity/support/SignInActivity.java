@@ -361,8 +361,9 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
 
         final String consumerKey = mPreferences.getString(KEY_CONSUMER_KEY, null);
         final String consumerSecret = mPreferences.getString(KEY_CONSUMER_SECRET, null);
-        if (savedInstanceState == null && !mPreferences.getBoolean(KEY_CONSUMER_KEY_SECRET_SET, false)
-                && !Utils.isCustomConsumerKeySecret(consumerKey, consumerSecret)) {
+        if (BuildConfig.SHOW_CUSTOM_TOKEN_DIALOG && savedInstanceState == null &&
+                !mPreferences.getBoolean(KEY_CONSUMER_KEY_SECRET_SET, false) &&
+                !Utils.isCustomConsumerKeySecret(consumerKey, consumerSecret)) {
             final SetConsumerKeySecretDialogFragment df = new SetConsumerKeySecretDialogFragment();
             df.setCancelable(false);
             df.show(getSupportFragmentManager(), "set_consumer_key_secret");
