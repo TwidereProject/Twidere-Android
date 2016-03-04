@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.model.util;
 
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
@@ -65,13 +66,18 @@ public class ParcelableUserUtils implements TwidereConstants {
         extras.profile_image_url_profile_size = user.getProfileImageUrlProfileSize();
         extras.groups_count = user.getGroupsCount();
         obj.extras = extras;
-        obj.user_type = getUserType(extras.ostatus_uri);
+        obj.user_host = getUserHost(extras.ostatus_uri);
         return obj;
     }
 
-    private static String getUserType(String uri) {
+    public static String getUserHost(@Nullable String uri) {
         if (uri == null) return USER_TYPE_TWITTER_COM;
         return PreviewMediaExtractor.getAuthority(uri);
+    }
+
+    public static String getUserHost(ParcelableUser user) {
+        if (user.extras == null) return USER_TYPE_TWITTER_COM;
+        return getUserHost(user.extras.ostatus_uri);
     }
 
     public static ParcelableUser fromDirectMessageConversationEntry(final Cursor cursor) {

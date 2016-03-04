@@ -171,9 +171,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public Extras extras;
 
     @ParcelableThisPlease
-    @JsonField(name = "user_type")
-    @CursorField(value = CachedUsers.USER_TYPE)
-    public String user_type;
+    @JsonField(name = "user_host")
+    @CursorField(value = CachedUsers.USER_HOST)
+    public String user_host;
 
     public static final Creator<ParcelableUser> CREATOR = new Creator<ParcelableUser>() {
         public ParcelableUser createFromParcel(Parcel source) {

@@ -123,6 +123,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 accountValues.put(Accounts.PROFILE_BANNER_URL, user.profile_banner_url);
                 accountValues.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(user,
                         ParcelableUser.class));
+                accountValues.put(Accounts.ACCOUNT_HOST, ParcelableUserUtils.getUserHost(user));
                 final String accountWhere = Expression.equals(Accounts.ACCOUNT_ID, userId).getSQL();
                 resolver.update(Accounts.CONTENT_URI, accountValues, accountWhere, null);
             }

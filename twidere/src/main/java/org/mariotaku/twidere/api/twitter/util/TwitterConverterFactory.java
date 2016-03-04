@@ -54,12 +54,14 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
     }
 
     @NonNull
-    private static Object parseOrThrow(Body body, JsonMapper<?> mapper)
+    private static Object parseOrThrow(HttpResponse response, JsonMapper<?> mapper)
             throws IOException, TwitterException, RestConverter.ConvertException {
         try {
-            final Object parsed = mapper.parse(body.stream());
+            final Object parsed = mapper.parse(response.getBody().stream());
             if (parsed == null) {
-                throw new TwitterException("Empty data");
+                final TwitterException exception = new TwitterException("Empty data");
+                exception.setHttpResponse(response);
+                throw exception;
             }
             return parsed;
         } catch (JsonParseException e) {
@@ -106,8 +108,7 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
 
         @Override
         public Object convert(HttpResponse httpResponse) throws IOException, ConvertException, TwitterException {
-            final Body body = httpResponse.getBody();
-            final Object object = parseOrThrow(body, mapper);
+            final Object object = parseOrThrow(httpResponse, mapper);
             if (object instanceof TwitterResponse) {
                 ((TwitterResponse) object).processResponseHeader(httpResponse);
             }

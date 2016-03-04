@@ -459,9 +459,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final long rowId;
         if (tableId == TABLE_ID_CACHED_USERS) {
             final Expression where = Expression.and(Expression.equalsArgs(CachedUsers.USER_ID),
-                    Expression.equalsArgs(CachedUsers.USER_TYPE));
+                    Expression.equalsArgs(CachedUsers.USER_HOST));
             final String[] whereArgs = {values.getAsString(CachedUsers.USER_ID),
-                    values.getAsString(CachedUsers.USER_TYPE)};
+                    values.getAsString(CachedUsers.USER_HOST)};
             mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs);
             rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
                     SQLiteDatabase.CONFLICT_IGNORE);
