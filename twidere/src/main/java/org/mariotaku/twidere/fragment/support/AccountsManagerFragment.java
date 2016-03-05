@@ -149,7 +149,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final ParcelableAccount account = mAdapter.getAccount(position);
         IntentUtils.openUserProfile(getActivity(), account.account_id, account.account_id, account.screen_name,
-                null, true);
+                null, true, UserFragment.Referral.SELF_PROFILE);
     }
 
     @Override

@@ -44,7 +44,7 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
     @Override
     public List<ParcelableUser> loadInBackground() {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, accountHost, true);
         if (twitter == null) return null;
         final List<ParcelableUser> data = getData();
         final List<User> users;

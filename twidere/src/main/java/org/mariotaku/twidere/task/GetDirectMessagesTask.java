@@ -16,6 +16,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -62,12 +63,12 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
 
     @Override
     public List<TwitterWrapper.MessageListResponse> doLongOperation(final RefreshTaskParam param) {
-        final long[] accountIds = param.getAccountIds();
+        final AccountId[] accountIds = param.getAccountIds();
         final long[] sinceIds = param.getSinceIds(), maxIds = param.getMaxIds();
         final List<TwitterWrapper.MessageListResponse> result = new ArrayList<>();
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
-        for (final long accountId : accountIds) {
+        for (final AccountId accountId : accountIds) {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, true);
             if (twitter == null) continue;
             try {
@@ -108,14 +109,15 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
 
     }
 
-    private boolean storeMessages(long accountId, List<DirectMessage> messages, boolean isOutgoing, boolean notify) {
+    private boolean storeMessages(AccountId accountId, List<DirectMessage> messages, boolean isOutgoing, boolean notify) {
         if (messages == null) return true;
         final Uri uri = getDatabaseUri();
         final ContentValues[] valuesArray = new ContentValues[messages.size()];
 
         for (int i = 0, j = messages.size(); i < j; i++) {
             final DirectMessage message = messages.get(i);
-            valuesArray[i] = ContentValuesCreator.createDirectMessage(message, accountId, isOutgoing);
+            valuesArray[i] = ContentValuesCreator.createDirectMessage(message, accountId.getId(),
+                    accountId.getHost(), isOutgoing);
         }
 
         // Delete all rows conflicting before new data inserted.

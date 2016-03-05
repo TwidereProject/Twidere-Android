@@ -39,6 +39,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 public class ParcelableAccount implements Parcelable {
 
     @ParcelableThisPlease
+    @JsonField(name = "id")
+    @CursorField(value = Accounts._ID, excludeWrite = true)
+    public long id;
+
+    @ParcelableThisPlease
     @JsonField(name = "screen_name")
     @CursorField(Accounts.SCREEN_NAME)
     public String screen_name;

@@ -448,7 +448,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
         @Override
         protected SingleResponse<ParcelableUser> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, accountHost, true);
             try {
                 User user = null;
                 if (isProfileChanged()) {
@@ -547,7 +547,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
         public UpdateProfileBannerImageTaskInternal(final Context context, final AsyncTaskManager manager,
                                                     final long account_id, final Uri image_uri, final boolean delete_image) {
-            super(context, manager, account_id, image_uri, delete_image);
+            super(context, account_id, accountHost, image_uri, delete_image);
         }
 
         @Override
@@ -569,7 +569,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
         public UpdateProfileImageTaskInternal(final Context context, final AsyncTaskManager manager,
                                               final long account_id, final Uri image_uri, final boolean delete_image) {
-            super(context, account_id, image_uri, delete_image);
+            super(context, account_id, accountHost, image_uri, delete_image);
         }
 
         @Override

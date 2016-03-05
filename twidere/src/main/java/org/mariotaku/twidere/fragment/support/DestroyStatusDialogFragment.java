@@ -28,6 +28,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -43,7 +44,8 @@ public class DestroyStatusDialogFragment extends BaseSupportDialogFragment imple
                 final ParcelableStatus status = getStatus();
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (status == null || twitter == null) return;
-                twitter.destroyStatusAsync(status.account_id, status.id);
+                twitter.destroyStatusAsync(new AccountId(status.account_id, status.account_host),
+                        status.id);
                 break;
             default:
                 break;

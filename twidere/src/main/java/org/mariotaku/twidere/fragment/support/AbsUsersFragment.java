@@ -31,8 +31,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 
 import org.mariotaku.twidere.adapter.AbsUsersAdapter;
-import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -112,7 +112,13 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
     public void onUserClick(UserViewHolder holder, int position) {
         final ParcelableUser user = getAdapter().getUser(position);
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, user.account_id, user.id, user.screen_name, null, true);
+        IntentUtils.openUserProfile(activity, user.account_id, user.id, user.screen_name, null,
+                true, getUserReferral());
+    }
+
+    @UserFragment.Referral
+    protected String getUserReferral() {
+        return null;
     }
 
 

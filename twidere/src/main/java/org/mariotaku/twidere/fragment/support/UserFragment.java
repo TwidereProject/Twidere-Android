@@ -43,6 +43,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -697,8 +698,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
                     final long accountId = data.getLongExtra(EXTRA_ID, -1);
+                    @Referral
+                    final String referral = getArguments().getString(EXTRA_REFERRAL);
                     IntentUtils.openUserProfile(getActivity(), accountId, user.id, user.screen_name,
-                            null, true);
+                            null, true, referral);
                 }
                 break;
             }
@@ -840,7 +843,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         super.onStart();
         mBus.register(this);
 
-        @UserEvent.Referral
+        @Referral
         final String referral = getArguments().getString(EXTRA_REFERRAL);
         final Context context = getContext();
         if (mUserEvent == null) {
@@ -1349,7 +1352,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (user == null) return;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(getActivity(), user.account_id, -1, link, null, true);
+                IntentUtils.openUserProfile(getActivity(), user.account_id, -1, link, null,
+                        true, Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
@@ -1670,6 +1674,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
     }
 
+    @StringDef({Referral.SEARCH_RESULT, Referral.USER_MENTION, Referral.STATUS,
+            Referral.TIMELINE_STATUS, Referral.DIRECT, Referral.EXTERNAL, Referral.SELF_PROFILE})
+    public @interface Referral {
+
+        String SEARCH_RESULT = "search_result";
+        String USER_MENTION = "user_mention";
+        String STATUS = "status";
+        String TIMELINE_STATUS = "timeline_status";
+        String DIRECT = "direct";
+        String EXTERNAL = "external";
+        String SELF_PROFILE = "self_profile";
+    }
+
     private static class ActionBarDrawable extends LayerDrawable {
 
         private final Drawable mShadowDrawable;
@@ -1752,7 +1769,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final boolean isFiltering = DataStoreUtils.isFilteringUser(context, userId);
             if (accountId == userId)
                 return SingleResponse.getInstance();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, accountHost, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Relationship relationship = twitter.showFriendship(userId);

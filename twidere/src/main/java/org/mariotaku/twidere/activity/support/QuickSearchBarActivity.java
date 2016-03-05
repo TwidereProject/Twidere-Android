@@ -55,6 +55,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
@@ -170,12 +171,13 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         switch (mUsersSearchAdapter.getItemViewType(position)) {
             case SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM: {
                 IntentUtils.openUserProfile(this, getAccountId(), item.extra_id, item.summary, null,
-                        true);
+                        true, UserFragment.Referral.DIRECT);
                 finish();
                 break;
             }
             case SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME: {
-                IntentUtils.openUserProfile(this, getAccountId(), -1, item.title, null, true);
+                IntentUtils.openUserProfile(this, getAccountId(), -1, item.title, null, true,
+                        UserFragment.Referral.DIRECT);
                 finish();
                 break;
             }

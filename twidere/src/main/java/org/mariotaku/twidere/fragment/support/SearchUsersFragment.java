@@ -82,4 +82,8 @@ public class SearchUsersFragment extends ParcelableUsersFragment {
         super.onDestroyView();
     }
 
+    @Override
+    protected String getUserReferral() {
+        return UserFragment.Referral.SEARCH_RESULT;
+    }
 }

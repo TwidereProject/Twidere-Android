@@ -1,11 +1,13 @@
 package org.mariotaku.twidere.model.util;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
@@ -19,15 +21,18 @@ import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
  */
 public class ParcelableUserUtils implements TwidereConstants {
 
-    public static ParcelableUser fromUser(User user, long accountId) {
+    public static ParcelableUser fromUser(@NonNull User user, @Nullable AccountId accountId) {
         return fromUser(user, accountId, 0);
     }
 
-    public static ParcelableUser fromUser(User user, long accountId, long position) {
+    public static ParcelableUser fromUser(@NonNull User user, @Nullable AccountId accountId, long position) {
         final UrlEntity[] urlEntities = user.getUrlEntities();
         final ParcelableUser obj = new ParcelableUser();
         obj.position = position;
-        obj.account_id = accountId;
+        if (accountId != null) {
+            obj.account_id = accountId.getId();
+            obj.account_host = accountId.getHost();
+        }
         obj.id = user.getId();
         obj.created_at = user.getCreatedAt().getTime();
         obj.is_protected = user.isProtected();
@@ -89,7 +94,7 @@ public class ParcelableUserUtils implements TwidereConstants {
         return new ParcelableUser(accountId, id, name, screenName, profileImageUrl);
     }
 
-    public static ParcelableUser[] fromUsers(final User[] users, long accountId) {
+    public static ParcelableUser[] fromUsers(final User[] users, AccountId accountId) {
         if (users == null) return null;
         int size = users.length;
         final ParcelableUser[] result = new ParcelableUser[size];

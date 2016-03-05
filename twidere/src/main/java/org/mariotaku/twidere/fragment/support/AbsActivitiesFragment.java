@@ -47,6 +47,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -187,7 +188,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 case ACTION_STATUS_FAVORITE: {
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(activity.account_id, status.id);
+                        twitter.destroyFavoriteAsync(new AccountId(activity.account_id,
+                                activity.account_host), status.id);
                     } else {
                         final IStatusViewHolder holder = (IStatusViewHolder)
                                 recyclerView.findViewHolderForLayoutPosition(position);
@@ -378,7 +380,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status.account_id, status.id);
+                    twitter.destroyFavoriteAsync(new AccountId(status.account_id,
+                            status.account_host), status.id);
                 } else {
                     holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
                 }
@@ -501,7 +504,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         return new StatusesBusCallback();
     }
 
-    protected abstract long[] getAccountIds();
+    protected abstract AccountId[] getAccountIds();
 
     protected Data getAdapterData() {
         final AbsActivitiesAdapter<Data> adapter = getAdapter();

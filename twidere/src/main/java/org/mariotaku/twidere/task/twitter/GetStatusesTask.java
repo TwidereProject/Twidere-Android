@@ -23,6 +23,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
@@ -77,8 +78,9 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     @NonNull
     protected abstract Uri getContentUri();
 
-    private void storeStatus(long accountId, List<Status> statuses,
-                             long sinceId, long maxId, boolean notify) {
+    private void storeStatus(final long accountId, final String accountHost,
+                             final List<Status> statuses,
+                             final long sinceId, final long maxId, final boolean notify) {
         if (statuses == null || statuses.isEmpty() || accountId <= 0) {
             return;
         }
@@ -92,7 +94,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         boolean hasIntersection = false;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
-            values[i] = ContentValuesCreator.createStatus(status, accountId);
+            values[i] = ContentValuesCreator.createStatus(status, accountId, accountHost);
             values[i].put(Statuses.INSERTED_DATE, System.currentTimeMillis());
             final long id = status.getId();
             if (sinceId > 0 && id <= sinceId) {
@@ -157,13 +159,15 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
 
     @Override
     public List<TwitterWrapper.StatusListResponse> doLongOperation(final RefreshTaskParam param) {
-        final long[] accountIds = param.getAccountIds(), maxIds = param.getMaxIds(), sinceIds = param.getSinceIds();
+        final AccountId[] accountIds = param.getAccountIds();
+        final long[] maxIds = param.getMaxIds();
+        final long[] sinceIds = param.getSinceIds();
         final List<TwitterWrapper.StatusListResponse> result = new ArrayList<>();
-        if (accountIds == null) return result;
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
-        for (final long accountId : accountIds) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, true);
+        for (final AccountId accountId : accountIds) {
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId.getId(),
+                    accountId.getHost(), true);
             if (twitter == null) continue;
             try {
                 final Paging paging = new Paging();
@@ -186,18 +190,18 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
                 }
                 final List<Status> statuses = getStatuses(twitter, paging);
                 InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
-                storeStatus(accountId, statuses, sinceId, maxId, true);
+                storeStatus(accountId.getId(), accountId.getHost(), statuses, sinceId, maxId, true);
                 // TODO cache related data and preload
                 final CacheUsersStatusesTask cacheTask = new CacheUsersStatusesTask(context);
                 cacheTask.setParams(new TwitterWrapper.StatusListResponse(accountId, statuses));
                 TaskStarter.execute(cacheTask);
-                errorInfoStore.remove(getErrorInfoKey(), accountId);
+                errorInfoStore.remove(getErrorInfoKey(), accountId.getId());
             } catch (final TwitterException e) {
                 if (BuildConfig.DEBUG) {
                     Log.w(LOGTAG, e);
                 }
                 if (e.isCausedByNetworkIssue()) {
-                    errorInfoStore.put(getErrorInfoKey(), accountId,
+                    errorInfoStore.put(getErrorInfoKey(), accountId.getId(),
                             ErrorInfoStore.CODE_NETWORK_ERROR);
                 }
                 result.add(new TwitterWrapper.StatusListResponse(accountId, e));

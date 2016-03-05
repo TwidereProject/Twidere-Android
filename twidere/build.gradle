@@ -25,15 +25,21 @@ android {
         versionName "3.0.6.5"
         multiDexEnabled true
 
+        generatedDensities = []
+
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
         buildConfigField 'boolean', 'SHOW_CUSTOM_TOKEN_DIALOG', 'Boolean.parseBoolean("false")'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
     productFlavors {
         google {}
         fdroid {}
@@ -72,7 +78,7 @@ dependencies {
     androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.4'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
-    apt "com.github.mariotaku.ObjectCursor:processor:0.9.5"
+    apt "com.github.mariotaku.ObjectCursor:processor:0.9.6-SNAPSHOT"
 
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:23.2.0'
@@ -111,7 +117,7 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.12'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.12'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.5'
-    compile 'com.github.mariotaku.ObjectCursor:core:0.9.5'
+    compile 'com.github.mariotaku.ObjectCursor:core:0.9.6-SNAPSHOT'
 
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')

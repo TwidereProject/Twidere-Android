@@ -43,6 +43,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @ParcelableThisPlease
     @JsonField(name = "account_id")
     public long account_id;
+    @ParcelableThisPlease
+    @JsonField(name = "account_host")
+    public String account_host;
 
     @ParcelableThisPlease
     public int account_color;

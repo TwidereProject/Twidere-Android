@@ -95,6 +95,7 @@ import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
 import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.BuildConfig;
@@ -103,6 +104,7 @@ import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftValuesCreator;
@@ -115,6 +117,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.service.BackgroundOperationService;
@@ -1130,7 +1133,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     private void notifyAccountSelectionChanged() {
         final ParcelableCredentials[] accounts = mAccountsAdapter.getSelectedAccounts();
         setSelectedAccounts(accounts);
-        mEditText.setAccountId(accounts.length > 0 ? accounts[0].account_id : Utils.getDefaultAccountId(this));
+        if (ArrayUtils.isEmpty(accounts)) {
+            mEditText.setAccountId(Utils.getDefaultAccountId(this));
+        } else {
+            mEditText.setAccountId(new AccountId(accounts[0]));
+        }
         mSendTextCountView.setMaxLength(TwidereValidator.getTextLimit(accounts));
         setMenu();
 //        mAccountActionProvider.setSelectedAccounts(mAccountsAdapter.getSelectedAccounts());
@@ -1331,7 +1338,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         } else {
             action = getDraftAction(getIntent().getAction());
         }
-        update.accounts = DataStoreUtils.getAccounts(this, accountIds);
+        update.accounts = ParcelableAccountUtils.getAccounts(this, accountIds);
         update.text = text;
         update.location = statusLocation;
         update.media = getMedia();

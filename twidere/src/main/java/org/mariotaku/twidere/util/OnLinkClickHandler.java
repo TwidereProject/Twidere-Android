@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
@@ -62,7 +63,8 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(context, accountId, -1, link, null, true);
+                IntentUtils.openUserProfile(context, accountId, -1, link, null, true,
+                        UserFragment.Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
@@ -90,7 +92,8 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
-                IntentUtils.openUserProfile(context, accountId, NumberUtils.toLong(link, -1), null, null, true);
+                IntentUtils.openUserProfile(context, accountId, NumberUtils.toLong(link, -1), null,
+                        null, true, UserFragment.Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {

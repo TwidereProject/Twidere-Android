@@ -148,8 +148,10 @@ public final class TwidereLinkify implements Constants {
         return applyUserProfileLink(text, accountId, extraId, userId, screenName, highlightOption, mOnLinkClickListener);
     }
 
-    public final SpannableString applyUserProfileLink(final CharSequence text, final long accountId, final long extraId,
-                                                      final long userId, final String screenName, final int highlightOption, final OnLinkClickListener listener) {
+    public final SpannableString applyUserProfileLink(final CharSequence text, final long accountId,
+                                                      final long extraId, final long userId,
+                                                      final String screenName, final int highlightOption,
+                                                      final OnLinkClickListener listener) {
         final SpannableString string = SpannableString.valueOf(text);
         final URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
         for (final URLSpan span : spans) {

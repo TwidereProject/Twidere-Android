@@ -8,11 +8,12 @@ import android.support.annotation.Nullable;
  */
 public interface RefreshTaskParam {
     @NonNull
-    long[] getAccountIds();
+    org.mariotaku.twidere.model.AccountId[] getAccountIds();
 
     @Nullable
     long[] getMaxIds();
 
     @Nullable
     long[] getSinceIds();
+
 }

@@ -64,7 +64,7 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
             }
         }
         try {
-            final ParcelableStatus status = findStatus(getContext(), mAccountId, mStatusId);
+            final ParcelableStatus status = findStatus(getContext(), mAccountId, accountHost, mStatusId);
             final ParcelableCredentials credentials = DataStoreUtils.getCredentials(getContext(), mAccountId);
             final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(status);
             final Bundle extras = response.getExtras();

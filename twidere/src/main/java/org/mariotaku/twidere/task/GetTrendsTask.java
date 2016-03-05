@@ -34,7 +34,7 @@ public abstract class GetTrendsTask extends AbstractTask<Object, Object, Object>
 
     @Override
     public Object doLongOperation(final Object param) {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, false);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountId, accountHost, false);
         if (twitter == null) return null;
         try {
             final List<Trends> trends = getTrends(twitter);

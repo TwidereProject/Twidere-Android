@@ -29,27 +29,27 @@ import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 
 public class AccountPreferences implements Constants {
 
     private final Context mContext;
-    private final long mAccountId;
+    private final AccountId mAccountId;
     private final SharedPreferences mPreferences;
 
-    public AccountPreferences(final Context context, final long accountId) {
+    public AccountPreferences(final Context context, final AccountId accountId) {
         mContext = context;
         mAccountId = accountId;
         final String name = ACCOUNT_PREFERENCES_NAME_PREFIX + accountId;
         mPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public long getAccountId() {
+    public AccountId getAccountId() {
         return mAccountId;
     }
 
     public int getDefaultNotificationLightColor() {
-        final ParcelableAccount a = DataStoreUtils.getAccount(mContext, mAccountId);
+        final ParcelableAccount a = ParcelableAccountUtils.getAccount(mContext, mAccountId);
         if (a != null) {
             return a.color;
         } else {
@@ -130,14 +130,14 @@ public class AccountPreferences implements Constants {
         return mPreferences.getBoolean(KEY_NOTIFICATION, DEFAULT_NOTIFICATION);
     }
 
-    public static AccountPreferences getAccountPreferences(final AccountPreferences[] prefs, final long accountId) {
+    public static AccountPreferences getAccountPreferences(final AccountPreferences[] prefs, final AccountId accountId) {
         for (final AccountPreferences pref : prefs) {
             if (pref.getAccountId() == accountId) return pref;
         }
         return null;
     }
 
-    public static AccountPreferences[] getAccountPreferences(final Context context, final long[] accountIds) {
+    public static AccountPreferences[] getAccountPreferences(final Context context, final AccountId[] accountIds) {
         if (context == null || accountIds == null) return null;
         final AccountPreferences[] preferences = new AccountPreferences[accountIds.length];
         for (int i = 0, j = preferences.length; i < j; i++) {
@@ -147,26 +147,26 @@ public class AccountPreferences implements Constants {
     }
 
     @NonNull
-    public static long[] getAutoRefreshEnabledAccountIds(final Context context, final long[] accountIds) {
-        if (context == null || accountIds == null) return new long[0];
-        final long[] temp = new long[accountIds.length];
+    public static AccountId[] getAutoRefreshEnabledAccountIds(final Context context, final AccountId[] accountIds) {
+        if (context == null || accountIds == null) return new AccountId[0];
+        final AccountId[] temp = new AccountId[accountIds.length];
         int i = 0;
-        for (final long accountId : accountIds) {
+        for (final AccountId accountId : accountIds) {
             if (new AccountPreferences(context, accountId).isAutoRefreshEnabled()) {
                 temp[i++] = accountId;
             }
         }
-        final long[] enabledIds = new long[i];
+        final AccountId[] enabledIds = new AccountId[i];
         System.arraycopy(temp, 0, enabledIds, 0, i);
         return enabledIds;
     }
 
     @NonNull
-    public static AccountPreferences[] getNotificationEnabledPreferences(final Context context, final long[] accountIds) {
+    public static AccountPreferences[] getNotificationEnabledPreferences(final Context context, final AccountId[] accountIds) {
         if (context == null || accountIds == null) return new AccountPreferences[0];
         final AccountPreferences[] temp = new AccountPreferences[accountIds.length];
         int i = 0;
-        for (final long accountId : accountIds) {
+        for (final AccountId accountId : accountIds) {
             final AccountPreferences preference = new AccountPreferences(context, accountId);
             if (preference.isNotificationEnabled()) {
                 temp[i++] = preference;

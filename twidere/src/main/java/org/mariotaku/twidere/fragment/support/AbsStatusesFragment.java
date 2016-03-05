@@ -47,6 +47,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListene
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
@@ -184,7 +185,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 case ACTION_STATUS_FAVORITE: {
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(status.account_id, status.id);
+                        twitter.destroyFavoriteAsync(new AccountId(status.account_id,
+                                status.account_host), status.id);
                     } else {
                         final IStatusViewHolder holder = (IStatusViewHolder)
                                 recyclerView.findViewHolderForLayoutPosition(position);
@@ -367,7 +369,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status.account_id, status.id);
+                    twitter.destroyFavoriteAsync(new AccountId(status.account_id,
+                            status.account_host), status.id);
                 } else {
                     holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
                 }
@@ -401,7 +404,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
         IntentUtils.openUserProfile(activity, status.account_id, status.user_id,
-                status.user_screen_name, null, true);
+                status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
 
     @Override
@@ -588,8 +591,10 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
         @Override
         public boolean onLiked() {
-            if (mStatus.is_favorite) return false;
-            mTwitter.createFavoriteAsync(mStatus.account_id, mStatus.id);
+            final ParcelableStatus status = mStatus;
+            if (status.is_favorite) return false;
+            mTwitter.createFavoriteAsync(new AccountId(status.account_id, status.account_host),
+                    status.id);
             return true;
         }
     }

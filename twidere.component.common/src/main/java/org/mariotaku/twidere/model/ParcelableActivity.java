@@ -63,6 +63,10 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @CursorField(value = Activities.ACCOUNT_ID)
     public long account_id;
     @ParcelableThisPlease
+    @JsonField(name = "account_host")
+    @CursorField(value = Activities.ACCOUNT_HOST)
+    public String account_host;
+    @ParcelableThisPlease
     @JsonField(name = "timestamp")
     @CursorField(value = Activities.TIMESTAMP)
     public long timestamp;

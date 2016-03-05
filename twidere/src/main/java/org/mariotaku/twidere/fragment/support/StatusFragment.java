@@ -288,8 +288,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public Loader<StatusActivity> onCreateLoader(int id, Bundle args) {
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            final String accountHost = args.getString(EXTRA_ACCOUNT_HOST);
             final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
-            return new StatusActivitySummaryLoader(getActivity(), accountId, statusId);
+            return new StatusActivitySummaryLoader(getActivity(), accountId, accountHost, statusId);
         }
 
         @Override
@@ -460,7 +461,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
         IntentUtils.openUserProfile(activity, status.account_id, status.user_id,
-                status.user_screen_name, null, true);
+                status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
 
     @Override
@@ -815,7 +816,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     private void onUserClick(ParcelableUser user) {
-        IntentUtils.openUserProfile(getContext(), user, null, true);
+        IntentUtils.openUserProfile(getContext(), user, null, true,
+                UserFragment.Referral.TIMELINE_STATUS);
     }
 
     public static final class LoadSensitiveImageConfirmDialogFragment extends BaseSupportDialogFragment implements
@@ -863,7 +865,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         protected SingleResponse<TranslationResult> doInBackground(ParcelableStatus... params) {
             final ParcelableStatus status = params[0];
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, status.account_id,
-                    true);
+                    accountHost, true);
             final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                     Context.MODE_PRIVATE);
             if (twitter == null) return SingleResponse.getInstance();
@@ -1195,13 +1197,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 case R.id.profile_container: {
                     final FragmentActivity activity = fragment.getActivity();
                     IntentUtils.openUserProfile(activity, status.account_id, status.user_id,
-                            status.user_screen_name, null, true);
+                            status.user_screen_name, null, true, UserFragment.Referral.STATUS);
                     break;
                 }
                 case R.id.retweeted_by: {
                     if (status.retweet_id > 0) {
-                        IntentUtils.openUserProfile(adapter.getContext(), status.account_id, status.retweeted_by_user_id,
-                                status.retweeted_by_user_screen_name, null, true);
+                        IntentUtils.openUserProfile(adapter.getContext(), status.account_id,
+                                status.retweeted_by_user_id, status.retweeted_by_user_screen_name,
+                                null, true, UserFragment.Referral.STATUS);
                     }
                     break;
                 }
@@ -1212,8 +1215,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     break;
                 }
                 case R.id.quoted_name_container: {
-                    IntentUtils.openUserProfile(adapter.getContext(), status.account_id, status.quoted_user_id,
-                            status.quoted_user_screen_name, null, true);
+                    IntentUtils.openUserProfile(adapter.getContext(), status.account_id,
+                            status.quoted_user_id, status.quoted_user_screen_name, null, true,
+                            UserFragment.Referral.STATUS);
                     break;
                 }
                 case R.id.quote_original_link: {
@@ -2413,18 +2417,21 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     public static class StatusActivitySummaryLoader extends AsyncTaskLoader<StatusActivity> {
         private final long mAccountId;
+        private final String mAccountHost;
         private final long mStatusId;
 
-        public StatusActivitySummaryLoader(Context context, long accountId, long statusId) {
+        public StatusActivitySummaryLoader(Context context, long accountId, String accountHost,
+                                           long statusId) {
             super(context);
             mAccountId = accountId;
+            mAccountHost = accountHost;
             mStatusId = statusId;
         }
 
         @Override
         public StatusActivity loadInBackground() {
             final Context context = getContext();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountId, accountHost, false);
             final Paging paging = new Paging();
             paging.setCount(10);
             final StatusActivity activitySummary = new StatusActivity(mStatusId);
@@ -2458,7 +2465,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         Expression.equals(Activities.STATUS_RETWEET_ID, mStatusId)
                 );
 
-                final ParcelableStatus pStatus = ParcelableStatusUtils.fromStatus(status, mAccountId, false);
+                final ParcelableStatus pStatus = ParcelableStatusUtils.fromStatus(status, mAccountId,
+                        mAccountHost, false);
                 cr.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(pStatus));
 
                 final Cursor activityCursor = cr.query(Activities.AboutMe.CONTENT_URI,

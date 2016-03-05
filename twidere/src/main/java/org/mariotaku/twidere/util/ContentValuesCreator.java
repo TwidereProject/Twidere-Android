@@ -32,6 +32,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.Trend;
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
@@ -146,12 +147,12 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createCachedUser(final User user) {
         if (user == null) return null;
         final ContentValues values = new ContentValues();
-        ParcelableUserValuesCreator.writeTo(ParcelableUserUtils.fromUser(user, -1), values);
+        ParcelableUserValuesCreator.writeTo(ParcelableUserUtils.fromUser(user, null), values);
         return values;
     }
 
     public static ContentValues createDirectMessage(final DirectMessage message, final long accountId,
-                                                    final boolean isOutgoing) {
+                                                    final String accountHost, final boolean isOutgoing) {
         if (message == null) return null;
         final ContentValues values = new ContentValues();
         final User sender = message.getSender(), recipient = message.getRecipient();
@@ -159,6 +160,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         final String sender_profile_image_url = TwitterContentUtils.getProfileImageUrl(sender);
         final String recipient_profile_image_url = TwitterContentUtils.getProfileImageUrl(recipient);
         values.put(DirectMessages.ACCOUNT_ID, accountId);
+        values.put(DirectMessages.ACCOUNT_HOST, accountHost);
         values.put(DirectMessages.MESSAGE_ID, message.getId());
         values.put(DirectMessages.MESSAGE_TIMESTAMP, message.getCreatedAt().getTime());
         values.put(DirectMessages.SENDER_ID, sender.getId());
@@ -237,9 +239,11 @@ public final class ContentValuesCreator implements TwidereConstants {
         return values;
     }
 
-    public static ContentValues createSavedSearch(final SavedSearch savedSearch, final long accountId) {
+    public static ContentValues createSavedSearch(final SavedSearch savedSearch, final long accountId,
+                                                  final String accountHost) {
         final ContentValues values = new ContentValues();
         values.put(SavedSearches.ACCOUNT_ID, accountId);
+        values.put(SavedSearches.ACCOUNT_HOST, accountHost);
         values.put(SavedSearches.SEARCH_ID, savedSearch.getId());
         values.put(SavedSearches.CREATED_AT, savedSearch.getCreatedAt().getTime());
         values.put(SavedSearches.NAME, savedSearch.getName());
@@ -247,17 +251,19 @@ public final class ContentValuesCreator implements TwidereConstants {
         return values;
     }
 
-    public static ContentValues[] createSavedSearches(final List<SavedSearch> savedSearches, long accountId) {
+    public static ContentValues[] createSavedSearches(final List<SavedSearch> savedSearches,
+                                                      final long accountId, final String accountHost) {
         final ContentValues[] resultValuesArray = new ContentValues[savedSearches.size()];
         for (int i = 0, j = savedSearches.size(); i < j; i++) {
-            resultValuesArray[i] = createSavedSearch(savedSearches.get(i), accountId);
+            resultValuesArray[i] = createSavedSearch(savedSearches.get(i), accountId, accountHost);
         }
         return resultValuesArray;
     }
 
     @NonNull
-    public static ContentValues createStatus(final Status orig, final long accountId) {
-        return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.fromStatus(orig, accountId, false));
+    public static ContentValues createStatus(final Status orig, final AccountId accountId) {
+        return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.fromStatus(orig,
+                accountId, false));
     }
 
     @NonNull

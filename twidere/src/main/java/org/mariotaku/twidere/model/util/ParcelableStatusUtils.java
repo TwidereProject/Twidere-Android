@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountId;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
@@ -31,10 +32,12 @@ public class ParcelableStatusUtils {
         status.retweet_id = -1;
     }
 
-    public static ParcelableStatus fromStatus(final Status orig, final long accountId, final boolean isGap) {
+    public static ParcelableStatus fromStatus(final Status orig, final AccountId accountId,
+                                              final boolean isGap) {
         final ParcelableStatus result = new ParcelableStatus();
         result.is_gap = isGap;
-        result.account_id = accountId;
+        result.account_id = accountId.getId();
+        result.account_host = accountId.getHost();
         result.id = orig.getId();
         result.timestamp = getTime(orig.getCreatedAt());
         result.extras = new ParcelableStatus.Extras();
@@ -116,7 +119,11 @@ public class ParcelableStatusUtils {
         result.location = ParcelableLocation.fromGeoLocation(status.getGeoLocation());
         result.is_favorite = status.isFavorited();
         result.text_unescaped = HtmlEscapeHelper.toPlainText(result.text_html);
-        result.my_retweet_id = result.retweeted_by_user_id == accountId ? result.id : status.getCurrentUserRetweet();
+        if (result.retweeted_by_user_id == result.account_id) {
+            result.my_retweet_id = result.id;
+        } else {
+            result.my_retweet_id = status.getCurrentUserRetweet();
+        }
         result.is_possibly_sensitive = status.isPossiblySensitive();
         result.mentions = ParcelableUserMention.fromUserMentionEntities(status.getUserMentionEntities());
         result.card = ParcelableCardEntityUtils.fromCardEntity(status.getCard(), accountId);
@@ -126,7 +133,7 @@ public class ParcelableStatusUtils {
         return result;
     }
 
-    public static ParcelableStatus[] fromStatuses(Status[] statuses, long accountId) {
+    public static ParcelableStatus[] fromStatuses(Status[] statuses, AccountId accountId) {
         if (statuses == null) return null;
         int size = statuses.length;
         final ParcelableStatus[] result = new ParcelableStatus[size];

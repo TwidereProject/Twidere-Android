@@ -5,13 +5,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 /**
@@ -38,7 +38,7 @@ public class UserEvent extends BaseEvent implements Parcelable {
     long friendCount;
     @ParcelableThisPlease
     @JsonField(name = "referral")
-    @Referral
+    @UserFragment.Referral
     @Nullable
     String referral;
     public static final Creator<UserEvent> CREATOR = new Creator<UserEvent>() {
@@ -53,7 +53,7 @@ public class UserEvent extends BaseEvent implements Parcelable {
         }
     };
 
-    public static UserEvent create(Context context, @Referral @Nullable String referral) {
+    public static UserEvent create(Context context, @UserFragment.Referral @Nullable String referral) {
         UserEvent event = new UserEvent();
         event.markStart(context);
         event.referral = referral;
@@ -96,15 +96,4 @@ public class UserEvent extends BaseEvent implements Parcelable {
                 "} " + super.toString();
     }
 
-    @StringDef({Referral.SEARCH_RESULT, Referral.USER_MENTION, Referral.TWEET,
-            Referral.TIMELINE_TWEET, Referral.DIRECT, Referral.EXTERNAL})
-    public @interface Referral {
-
-        String SEARCH_RESULT = "search_result";
-        String USER_MENTION = "user_mention";
-        String TWEET = "tweet";
-        String TIMELINE_TWEET = "timeline_tweet";
-        String DIRECT = "direct";
-        String EXTERNAL = "external";
-    }
 }

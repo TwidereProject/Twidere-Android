@@ -332,7 +332,8 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onStatus(final Status status) {
-            final ContentValues values = ContentValuesCreator.createStatus(status, account.account_id);
+            final ContentValues values = ContentValuesCreator.createStatus(status, account.account_id,
+                    account.account_host);
             if (!statusStreamStarted) {
                 statusStreamStarted = true;
                 values.put(Statuses.IS_GAP, true);

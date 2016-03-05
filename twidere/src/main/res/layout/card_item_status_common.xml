@@ -80,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
+            android:layout_marginTop="@dimen/element_spacing_xsmall"
             android:layout_toEndOf="@+id/status_info_space"
             android:layout_toRightOf="@+id/status_info_space"
             android:ellipsize="end"

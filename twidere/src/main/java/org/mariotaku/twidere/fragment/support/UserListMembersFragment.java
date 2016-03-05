@@ -124,7 +124,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
         @Override
         @NonNull
         protected SingleResponse<ParcelableUserList> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getActivity(), accountId, true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getActivity(), accountId, accountHost, true);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final UserList list;

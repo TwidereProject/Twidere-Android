@@ -42,7 +42,7 @@ public class SavedSearchesLoader extends AsyncTaskLoader<ResponseList<SavedSearc
 
     @Override
     public ResponseList<SavedSearch> loadInBackground() {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, false);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, accountHost, false);
         if (twitter == null) return null;
         try {
             return twitter.getSavedSearches();

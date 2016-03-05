@@ -53,7 +53,7 @@ public class ScheduledStatusesLoader extends AsyncTaskLoader<List<ScheduledStatu
 
     @Override
     public List<ScheduledStatus> loadInBackground() {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, accountHost, true);
         final Paging paging = new Paging();
         if (mSinceId > 0) {
             paging.setSinceId(mSinceId);

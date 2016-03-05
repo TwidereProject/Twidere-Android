@@ -21,6 +21,7 @@ import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.activity.support.MediaViewerActivity;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.support.SensitiveContentWarningDialogFragment;
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -48,7 +49,8 @@ public class IntentUtils implements Constants {
     }
 
     public static void openUserProfile(final Context context, final ParcelableUser user,
-                                       final Bundle activityOptions, final boolean newDocument) {
+                                       final Bundle activityOptions, final boolean newDocument,
+                                       @UserFragment.Referral final String referral) {
         if (context == null || user == null) return;
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_USER, user);
@@ -65,6 +67,7 @@ public class IntentUtils implements Constants {
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setExtrasClassLoader(context.getClassLoader());
         intent.putExtras(extras);
+        intent.putExtra(EXTRA_REFERRAL, referral);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         }
@@ -77,10 +80,12 @@ public class IntentUtils implements Constants {
 
     public static void openUserProfile(final Context context, final long accountId, final long userId,
                                        final String screenName, final Bundle activityOptions,
-                                       final boolean newDocument) {
+                                       final boolean newDocument,
+                                       @UserFragment.Referral final String referral) {
         if (context == null || accountId <= 0 || userId <= 0 && isEmpty(screenName)) return;
         final Uri uri = LinkCreator.getTwidereUserLink(accountId, userId, screenName);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.putExtra(EXTRA_REFERRAL, referral);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         }

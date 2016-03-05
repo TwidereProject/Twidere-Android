@@ -89,6 +89,7 @@ import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.menu.support.AccountToggleProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -247,7 +248,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 if (account == null) return;
                 final FragmentActivity activity = getActivity();
                 IntentUtils.openUserProfile(activity, account.account_id, account.account_id,
-                        account.screen_name, null, true);
+                        account.screen_name, null, true, UserFragment.Referral.SELF_PROFILE);
                 break;
             }
         }
@@ -267,7 +268,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         if (cursor == null) return;
         final Menu menu = mAccountsToggleMenu.getMenu();
         mAccountActionProvider = (AccountToggleProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account));
-        final ParcelableAccount[] accounts = DataStoreUtils.getAccounts(cursor);
+        final ParcelableAccount[] accounts = ParcelableAccountUtils.getAccounts(cursor);
         if (accounts.length > 0) {
             mNoAccountContainer.setVisibility(View.GONE);
             mAccountProfileContainer.setVisibility(View.VISIBLE);

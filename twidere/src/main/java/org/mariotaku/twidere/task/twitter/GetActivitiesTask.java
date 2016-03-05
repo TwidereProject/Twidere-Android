@@ -70,7 +70,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final long accountId = accountIds[i];
             final boolean noItemsBefore = DataStoreUtils.getActivitiesCount(context, getContentUri(),
                     accountId) <= 0;
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, accountHost, true);
             if (twitter == null) continue;
             final Paging paging = new Paging();
             paging.count(loadItemLimit);
@@ -87,7 +87,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             // We should delete old activities has intersection with new items
             try {
                 final ResponseList<Activity> activities = getActivities(twitter, accountId, paging);
-                storeActivities(cr, accountId, noItemsBefore, activities);
+                storeActivities(cr, loadItemLimit, accountId, noItemsBefore, activities);
 //                if (saveReadPosition && TwitterAPIFactory.isOfficialTwitterInstance(context, twitter)) {
                 if (saveReadPosition) {
                     saveReadPosition(accountId, twitter);
@@ -112,13 +112,13 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     @NonNull
     protected abstract String getErrorInfoKey();
 
-    private void storeActivities(ContentResolver cr, long accountId, boolean noItemsBefore,
-                                 ResponseList<Activity> activities) {
+    private void storeActivities(ContentResolver cr, int loadItemLimit, long accountId,
+                                 boolean noItemsBefore, ResponseList<Activity> activities) {
         long[] deleteBound = new long[2];
         Arrays.fill(deleteBound, -1);
         List<ContentValues> valuesList = new ArrayList<>();
         for (Activity activity : activities) {
-            final ParcelableActivity parcelableActivity = ParcelableActivityUtils.fromActivity(activity, accountId, false);
+            final ParcelableActivity parcelableActivity = ParcelableActivityUtils.fromActivity(activity, accountId, accountHost, false);
             if (deleteBound[0] < 0) {
                 deleteBound[0] = parcelableActivity.min_position;
             } else {
@@ -140,7 +140,8 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                     Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
             );
             int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), null);
-            boolean insertGap = !noItemsBefore && rowsDeleted <= 0;
+            boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
+                    && rowsDeleted <= 0;
             if (insertGap && !valuesList.isEmpty()) {
                 valuesList.get(valuesList.size() - 1).put(Activities.IS_GAP, true);
             }

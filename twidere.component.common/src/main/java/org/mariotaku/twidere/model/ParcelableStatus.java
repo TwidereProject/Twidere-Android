@@ -64,6 +64,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.ACCOUNT_ID)
     public long account_id;
     @ParcelableThisPlease
+    @JsonField(name = "account_host")
+    @CursorField(Statuses.ACCOUNT_HOST)
+    public String account_host;
+    @ParcelableThisPlease
     @JsonField(name = "timestamp")
     @CursorField(Statuses.STATUS_TIMESTAMP)
     public long timestamp;

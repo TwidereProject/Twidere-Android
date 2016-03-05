@@ -35,6 +35,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.fragment.support.CursorActivitiesFragment;
+import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -438,7 +439,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
             assert status != null;
             IntentUtils.openUserProfile(context, status.account_id, status.user_id,
-                    status.user_screen_name, null, true);
+                    status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
         }
 
         @Override

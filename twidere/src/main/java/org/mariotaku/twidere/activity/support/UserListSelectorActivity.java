@@ -289,7 +289,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected SingleResponse<List<ParcelableUserList>> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, accountHost, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
@@ -351,7 +351,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
 
         @Override
         protected SingleResponse<List<ParcelableUser>> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, accountHost, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Paging paging = new Paging();

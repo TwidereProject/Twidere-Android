@@ -163,7 +163,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 && statuses.size() >= loadItemLimit;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
-            data.add(ParcelableStatusUtils.fromStatus(status, mAccountId, insertGap && isGapEnabled() && minIdx == i));
+            data.add(ParcelableStatusUtils.fromStatus(status, mAccountId, accountHost, insertGap && isGapEnabled() && minIdx == i));
         }
 
         final SQLiteDatabase db = TwidereApplication.getInstance(context).getSQLiteDatabase();

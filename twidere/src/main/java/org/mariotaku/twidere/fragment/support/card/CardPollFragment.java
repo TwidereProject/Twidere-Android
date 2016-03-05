@@ -175,7 +175,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                             @Override
                             public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) {
                                 final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(),
-                                        card.account_id, true, true, TwitterCaps.class);
+                                        card.account_id, accountHost, true, true, TwitterCaps.class);
                                 if (caps == null) return null;
                                 try {
                                     final CardEntity cardEntity = caps.sendPassThrough(cardDataMap).getCard();
@@ -339,7 +339,7 @@ public class CardPollFragment extends BaseSupportFragment implements
         @Override
         public ParcelableCardEntity loadInBackground() {
             final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId,
-                    true, true, TwitterCaps.class);
+                    accountHost, true, true, TwitterCaps.class);
             if (caps == null) return null;
             try {
                 final CardDataMap params = new CardDataMap();
