@@ -102,6 +102,7 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.CachedRelationship;
 import org.mariotaku.twidere.model.CachedRelationshipValuesCreator;
 import org.mariotaku.twidere.model.ConsumerKeyType;
@@ -234,7 +235,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mFollowButton.setVisibility(View.GONE);
                     mFollowProgress.setVisibility(View.VISIBLE);
                     mFollowingYouIndicator.setVisibility(View.GONE);
-                    final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+                    final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                     final long userId = args.getLong(EXTRA_USER_ID, -1);
                     return new UserRelationshipLoader(getActivity(), accountId, userId);
                 }
@@ -259,7 +260,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         @Override
         public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
             final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
-            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
             final long userId = args.getLong(EXTRA_USER_ID, -1);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
             if (mUser == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
@@ -645,7 +646,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Subscribe
     public void notifyFriendshipUpdated(FriendshipUpdatedEvent event) {
         final ParcelableUser user = getUser();
-        if (user == null || event.accountId != user.account_id || event.userId != user.id) return;
+        if (user == null || event.mAccountKey != user.account_id || event.userId != user.id) return;
         getFriendship();
     }
 
@@ -1755,30 +1756,32 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     static class UserRelationshipLoader extends AsyncTaskLoader<SingleResponse<UserRelationship>> {
 
         private final Context context;
-        private final long accountId, userId;
+        private final AccountKey mAccountKey;
+        private final long mUserId;
 
-        public UserRelationshipLoader(final Context context, final long accountId, final long userId) {
+        public UserRelationshipLoader(final Context context, @NonNull final AccountKey accountKey,
+                                      final long userId) {
             super(context);
             this.context = context;
-            this.accountId = accountId;
-            this.userId = userId;
+            this.mAccountKey = accountKey;
+            this.mUserId = userId;
         }
 
         @Override
         public SingleResponse<UserRelationship> loadInBackground() {
-            final boolean isFiltering = DataStoreUtils.isFilteringUser(context, userId);
-            if (accountId == userId)
+            final boolean isFiltering = DataStoreUtils.isFilteringUser(context, mUserId);
+            if (mAccountKey.getId() == mUserId)
                 return SingleResponse.getInstance();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, accountHost, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final Relationship relationship = twitter.showFriendship(userId);
+                final Relationship relationship = twitter.showFriendship(mUserId);
                 if (relationship.isSourceBlockingTarget() || relationship.isSourceBlockedByTarget()) {
-                    Utils.setLastSeen(context, userId, -1);
+                    Utils.setLastSeen(context, mUserId, -1);
                 } else {
-                    Utils.setLastSeen(context, userId, System.currentTimeMillis());
+                    Utils.setLastSeen(context, mUserId, System.currentTimeMillis());
                 }
-                Utils.updateRelationship(context, relationship, accountId);
+                Utils.updateRelationship(context, relationship, mAccountKey);
                 return SingleResponse.getInstance(new UserRelationship(relationship, isFiltering));
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);

@@ -53,7 +53,7 @@ import javax.inject.Inject;
 import edu.tsinghua.hotmobi.model.BatteryRecord;
 import edu.tsinghua.hotmobi.model.ScreenEvent;
 
-import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
+import static org.mariotaku.twidere.util.Utils.getDefaultAccountKey;
 import static org.mariotaku.twidere.util.Utils.hasAutoRefreshAccounts;
 import static org.mariotaku.twidere.util.Utils.isBatteryOkay;
 import static org.mariotaku.twidere.util.Utils.isNetworkAvailable;
@@ -94,10 +94,10 @@ public class RefreshService extends Service implements Constants {
 
                             @NonNull
                             @Override
-                            public long[] getAccountIds() {
+                            public long[] getAccountKeys() {
                                 if (accountIds != null) return accountIds;
                                 final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
-                                        DataStoreUtils.getAccountIds(context));
+                                        DataStoreUtils.getAccountKeys(context));
                                 return accountIds = getRefreshableIds(prefs, HomeRefreshableFilter.INSTANCE);
                             }
 
@@ -105,7 +105,7 @@ public class RefreshService extends Service implements Constants {
                             @Override
                             public long[] getSinceIds() {
                                 return DataStoreUtils.getNewestStatusIds(context,
-                                        Statuses.CONTENT_URI, getAccountIds());
+                                        Statuses.CONTENT_URI, getAccountKeys());
                             }
                         });
                     }
@@ -115,10 +115,10 @@ public class RefreshService extends Service implements Constants {
 
                         @NonNull
                         @Override
-                        public long[] getAccountIds() {
+                        public long[] getAccountKeys() {
                             if (accountIds != null) return accountIds;
                             final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
-                                    DataStoreUtils.getAccountIds(context));
+                                    DataStoreUtils.getAccountKeys(context));
                             return accountIds = getRefreshableIds(prefs, MentionsRefreshableFilter.INSTANCE);
                         }
 
@@ -126,7 +126,7 @@ public class RefreshService extends Service implements Constants {
                         @Override
                         public long[] getSinceIds() {
                             return DataStoreUtils.getNewestActivityMaxPositions(context,
-                                    Activities.AboutMe.CONTENT_URI, getAccountIds());
+                                    Activities.AboutMe.CONTENT_URI, getAccountKeys());
                         }
                     });
                 } else if (BROADCAST_REFRESH_DIRECT_MESSAGES.equals(action)) {
@@ -136,10 +136,10 @@ public class RefreshService extends Service implements Constants {
 
                             @NonNull
                             @Override
-                            public long[] getAccountIds() {
+                            public long[] getAccountKeys() {
                                 if (accountIds != null) return accountIds;
                                 final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
-                                        DataStoreUtils.getAccountIds(context));
+                                        DataStoreUtils.getAccountKeys(context));
                                 return accountIds = getRefreshableIds(prefs, MessagesRefreshableFilter.INSTANCE);
                             }
 
@@ -147,13 +147,13 @@ public class RefreshService extends Service implements Constants {
                             @Override
                             public long[] getSinceIds() {
                                 return DataStoreUtils.getNewestMessageIds(context,
-                                        DirectMessages.Inbox.CONTENT_URI, getAccountIds());
+                                        DirectMessages.Inbox.CONTENT_URI, getAccountKeys());
                             }
                         });
                     }
                 } else if (BROADCAST_REFRESH_TRENDS.equals(action)) {
                     final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
-                            DataStoreUtils.getAccountIds(context));
+                            DataStoreUtils.getAccountKeys(context));
                     final long[] refreshIds = getRefreshableIds(prefs, TrendsRefreshableFilter.INSTANCE);
                     if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, String.format("Auto refreshing trends for %s", Arrays.toString(refreshIds)));
@@ -275,7 +275,7 @@ public class RefreshService extends Service implements Constants {
     }
 
     private void getLocalTrends(final long[] accountIds) {
-        final long account_id = getDefaultAccountId(this);
+        final long account_id = getDefaultAccountKey(this);
         final int woeid = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
         mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
     }
@@ -286,7 +286,7 @@ public class RefreshService extends Service implements Constants {
         int i = 0;
         for (final AccountPreferences pref : prefs) {
             if (pref.isAutoRefreshEnabled() && filter.isRefreshable(pref)) {
-                temp[i++] = pref.getAccountId();
+                temp[i++] = pref.getAccountKey();
             }
         }
         final long[] result = new long[i];

@@ -27,8 +27,7 @@ import com.twitter.Extractor;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.AccountId;
-import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -66,9 +65,9 @@ public class CacheUsersStatusesTask extends AbstractTask<TwitterListResponse<Sta
                 final Set<ContentValues> statusesValues = new HashSet<>();
                 final Set<ContentValues> hashTagValues = new HashSet<>();
 
-                final AccountId accountId = params.accountId;
-                statusesValues.add(ContentValuesCreator.createStatus(status, accountId.getId(),
-                        accountId.getHost()));
+                final AccountKey accountKey = params.mAccountKey;
+                statusesValues.add(ContentValuesCreator.createStatus(status, accountKey.getId(),
+                        accountKey.getHost()));
                 final String text = InternalTwitterContentUtils.unescapeTwitterStatusText(status.getText());
                 for (final String hashtag : extractor.extractHashtags(text)) {
                     final ContentValues values = new ContentValues();

@@ -22,15 +22,15 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
 
 public class UserListMembersLoader extends CursorSupportUsersLoader {
 
@@ -38,10 +38,10 @@ public class UserListMembersLoader extends CursorSupportUsersLoader {
     private final long mUserId;
     private final String mScreenName, mListName;
 
-    public UserListMembersLoader(final Context context, final long accountId, final long listId,
+    public UserListMembersLoader(final Context context, final AccountKey accountKey, final long listId,
                                  final long userId, final String screenName, final String listName,
-                                 final long cursor, final List<ParcelableUser> data, boolean fromUser) {
-        super(context, accountId, data, fromUser);
+                                 final List<ParcelableUser> data, boolean fromUser) {
+        super(context, accountKey, data, fromUser);
         mListId = listId;
         mUserId = userId;
         mScreenName = screenName;

@@ -61,7 +61,7 @@ import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
-import org.mariotaku.twidere.annotation.CustomTabType;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
@@ -222,7 +222,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         final Resources res = getResources();
         final boolean hasOfficialKeyAccounts = Utils.hasAccountSignedWithOfficialKeys(getActivity());
         final boolean forcePrivateAPI = mPreferences.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false);
-        final long[] accountIds = DataStoreUtils.getAccountIds(getActivity());
+        final AccountKey[] accountIds = DataStoreUtils.getAccountKeys(getActivity());
         final MenuItem itemAdd = menu.findItem(R.id.add_submenu);
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             final SubMenu subMenu = itemAdd.getSubMenu();
@@ -235,19 +235,16 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
                 final String type = entry.getKey();
                 final CustomTabConfiguration conf = entry.getValue();
 
-                final boolean isOfficialKeyAccountRequired = CustomTabType.ACTIVITIES_BY_FRIENDS.equals(type);
                 final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
 
                 final Intent intent = new Intent(INTENT_ACTION_ADD_TAB);
                 intent.setClass(getActivity(), CustomTabEditorActivity.class);
                 intent.putExtra(EXTRA_TYPE, type);
-                intent.putExtra(EXTRA_OFFICIAL_KEY_ONLY, isOfficialKeyAccountRequired);
 
                 final MenuItem subItem = subMenu.add(conf.getDefaultTitle());
                 final boolean disabledByNoAccount = accountIdRequired && accountIds.length == 0;
-                final boolean disabledByNoOfficialKey = !forcePrivateAPI && isOfficialKeyAccountRequired && !hasOfficialKeyAccounts;
                 final boolean disabledByDuplicateTab = conf.isSingleTab() && isTabAdded(getActivity(), type);
-                final boolean shouldDisable = disabledByDuplicateTab || disabledByNoOfficialKey || disabledByNoAccount;
+                final boolean shouldDisable = disabledByDuplicateTab || disabledByNoAccount;
                 subItem.setVisible(!shouldDisable);
                 subItem.setEnabled(!shouldDisable);
                 final Drawable icon = ResourcesCompat.getDrawable(res, conf.getDefaultIcon(), null);

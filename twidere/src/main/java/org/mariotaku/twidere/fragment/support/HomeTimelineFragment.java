@@ -82,7 +82,7 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
         super.setUserVisibleHint(isVisibleToUser);
         final FragmentActivity activity = getActivity();
         if (isVisibleToUser && activity != null) {
-            for (long accountId : getAccountIds()) {
+            for (long accountId : getAccountKeys()) {
                 final String tag = "home_" + accountId;
                 mNotificationManager.cancel(tag, NOTIFICATION_ID_HOME_TIMELINE);
             }

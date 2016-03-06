@@ -48,10 +48,12 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.fragment.support.CreateUserListDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.message.UserListCreatedEvent;
+import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -88,7 +90,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
             case R.id.create_list: {
                 final DialogFragment f = new CreateUserListDialogFragment();
                 final Bundle args = new Bundle();
-                args.putLong(EXTRA_ACCOUNT_ID, getAccountId());
+                args.putParcelable(EXTRA_ACCOUNT_KEY, getAccountId());
                 f.setArguments(args);
                 f.show(getSupportFragmentManager(), null);
                 break;
@@ -162,7 +164,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
             }
         }
         final UserAutoCompleteAdapter adapter = new UserAutoCompleteAdapter(this);
-        adapter.setAccountId(getAccountId());
+        adapter.setAccountKey(getAccountId());
         mEditScreenName.setAdapter(adapter);
         mEditScreenName.setText(mScreenName);
         mUserListsListView.setAdapter(mUserListsAdapter = new SimpleParcelableUserListsAdapter(this));
@@ -201,8 +203,8 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
         getUserLists(mScreenName);
     }
 
-    private long getAccountId() {
-        return getIntent().getLongExtra(EXTRA_ACCOUNT_ID, -1);
+    private AccountKey getAccountId() {
+        return getIntent().getParcelableExtra(EXTRA_ACCOUNT_KEY);
     }
 
     private void getUserLists(final String screenName) {
@@ -278,30 +280,31 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
         private static final String FRAGMENT_TAG_GET_USER_LISTS = "get_user_lists";
 
         private final UserListSelectorActivity mActivity;
-        private final long mAccountId;
+        private final AccountKey mAccountKey;
         private final String mScreenName;
 
-        GetUserListsTask(final UserListSelectorActivity activity, final long accountId, final String screenName) {
+        GetUserListsTask(final UserListSelectorActivity activity, final AccountKey accountKey,
+                         final String screenName) {
             mActivity = activity;
-            mAccountId = accountId;
+            mAccountKey = accountKey;
             mScreenName = screenName;
         }
 
         @Override
         protected SingleResponse<List<ParcelableUserList>> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, accountHost, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
                 final List<ParcelableUserList> data = new ArrayList<>();
-                boolean is_my_account = mScreenName.equalsIgnoreCase(getAccountScreenName(mActivity, mAccountId));
+                boolean is_my_account = mScreenName.equalsIgnoreCase(getAccountScreenName(mActivity, mAccountKey.getId()));
                 for (final UserList item : lists) {
                     final User user = item.getUser();
                     if (user != null && mScreenName.equalsIgnoreCase(user.getScreenName())) {
-                        if (!is_my_account && user.getId() == mAccountId) {
+                        if (!is_my_account && user.getId() == mAccountKey.getId()) {
                             is_my_account = true;
                         }
-                        data.add(new ParcelableUserList(item, mAccountId));
+                        data.add(ParcelableUserListUtils.from(item, mAccountKey));
                     }
                 }
                 final SingleResponse<List<ParcelableUserList>> result = SingleResponse.getInstance(data);
@@ -340,25 +343,26 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
         private static final String FRAGMENT_TAG_SEARCH_USERS = "search_users";
         private final UserListSelectorActivity mActivity;
 
-        private final long mAccountId;
+        private final AccountKey mAccountKey;
         private final String mName;
 
-        SearchUsersTask(final UserListSelectorActivity activity, final long accountId, final String name) {
+        SearchUsersTask(final UserListSelectorActivity activity, final AccountKey accountKey,
+                        final String name) {
             mActivity = activity;
-            mAccountId = accountId;
+            mAccountKey = accountKey;
             mName = name;
         }
 
         @Override
         protected SingleResponse<List<ParcelableUser>> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, accountHost, false);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Paging paging = new Paging();
                 final ResponseList<User> lists = twitter.searchUsers(mName, paging);
                 final List<ParcelableUser> data = new ArrayList<>();
                 for (final User item : lists) {
-                    data.add(ParcelableUserUtils.fromUser(item, mAccountId));
+                    data.add(ParcelableUserUtils.fromUser(item, mAccountKey));
                 }
                 return SingleResponse.getInstance(data);
             } catch (final TwitterException e) {

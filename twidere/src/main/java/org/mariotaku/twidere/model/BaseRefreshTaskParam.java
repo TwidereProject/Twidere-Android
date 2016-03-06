@@ -8,14 +8,14 @@ import android.support.annotation.Nullable;
  */
 public class BaseRefreshTaskParam implements RefreshTaskParam {
 
-    private final org.mariotaku.twidere.model.AccountId[] accountIds;
+    private final AccountKey[] mAccountKeys;
     private final long[] maxIds;
     private final long[] sinceIds;
 
     @NonNull
     @Override
-    public org.mariotaku.twidere.model.AccountId[] getAccountIds() {
-        return accountIds;
+    public AccountKey[] getAccountKeys() {
+        return mAccountKeys;
     }
 
     @Nullable
@@ -30,8 +30,8 @@ public class BaseRefreshTaskParam implements RefreshTaskParam {
         return sinceIds;
     }
 
-    public BaseRefreshTaskParam(org.mariotaku.twidere.model.AccountId[] accountIds, long[] maxIds, long[] sinceIds) {
-        this.accountIds = accountIds;
+    public BaseRefreshTaskParam(AccountKey[] accountKeys, long[] maxIds, long[] sinceIds) {
+        this.mAccountKeys = accountKeys;
         this.maxIds = maxIds;
         this.sinceIds = sinceIds;
     }

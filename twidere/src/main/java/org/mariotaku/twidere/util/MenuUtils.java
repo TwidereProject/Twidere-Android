@@ -55,7 +55,7 @@ import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.menu.SupportStatusShareProvider;
 import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -138,7 +138,7 @@ public class MenuUtils implements Constants {
                                       @NonNull final ParcelableStatus status,
                                       @NonNull UserColorNameManager manager,
                                       @NonNull final AsyncTwitterWrapper twitter) {
-        final ParcelableCredentials account = DataStoreUtils.getCredentials(context, new AccountId(status.account_id,
+        final ParcelableCredentials account = DataStoreUtils.getCredentials(context, new AccountKey(status.account_id,
                 status.account_host));
         if (account == null) return;
         setupForStatus(context, preferences, menu, status, account, manager, twitter);
@@ -257,10 +257,10 @@ public class MenuUtils implements Constants {
             }
             case R.id.retweet: {
                 if (Utils.isMyRetweet(status)) {
-                    twitter.cancelRetweetAsync(new AccountId(status.account_id, status.account_host),
+                    twitter.cancelRetweetAsync(new AccountKey(status.account_id, status.account_host),
                             status.id, status.my_retweet_id);
                 } else {
-                    twitter.retweetStatusAsync(new AccountId(status.account_id, status.account_host),
+                    twitter.retweetStatusAsync(new AccountKey(status.account_id, status.account_host),
                             status.id);
                 }
                 break;
@@ -286,7 +286,7 @@ public class MenuUtils implements Constants {
                         ((FavoriteItemProvider) provider).invokeItem(item,
                                 new AbsStatusesFragment.DefaultOnLikedListener(twitter, status));
                     } else {
-                        twitter.createFavoriteAsync(new AccountId(status.account_id, status.account_host),
+                        twitter.createFavoriteAsync(new AccountKey(status.account_id, status.account_host),
                                 status.id);
                     }
                 }

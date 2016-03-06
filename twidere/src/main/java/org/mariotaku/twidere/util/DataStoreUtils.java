@@ -49,7 +49,7 @@ import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
@@ -82,7 +82,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.provider.TwidereDataStore.ACTIVITIES_URIS;
@@ -95,7 +97,7 @@ import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
  */
 public class DataStoreUtils implements Constants {
     static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-    static LongSparseArray<Integer> sAccountColors = new LongSparseArray<>();
+    static Map<AccountKey, Integer> sAccountColors = new HashMap<>();
     static LongSparseArray<String> sAccountScreenNames = new LongSparseArray<>();
     static LongSparseArray<String> sAccountNames = new LongSparseArray<>();
 
@@ -197,46 +199,46 @@ public class DataStoreUtils implements Constants {
 
     @NonNull
     public static long[] getNewestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
-                                             @NonNull final AccountId[] accountIds) {
-        return getLongFieldArray(context, uri, AccountId.getIds(accountIds),
+                                             @NonNull final AccountKey[] accountKeys) {
+        return getLongFieldArray(context, uri, AccountKey.getIds(accountKeys),
                 DirectMessages.ACCOUNT_ID, DirectMessages.MESSAGE_ID,
                 new OrderBy(SQLFunctions.MAX(DirectMessages.MESSAGE_TIMESTAMP)));
     }
 
     @NonNull
     public static long[] getNewestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
-                                            @NonNull final AccountId[] accountIds) {
-        return getLongFieldArray(context, uri, AccountId.getIds(accountIds), Statuses.ACCOUNT_ID, Statuses.STATUS_ID,
+                                            @NonNull final AccountKey[] accountKeys) {
+        return getLongFieldArray(context, uri, AccountKey.getIds(accountKeys), Statuses.ACCOUNT_ID, Statuses.STATUS_ID,
                 new OrderBy(SQLFunctions.MAX(Statuses.STATUS_TIMESTAMP)));
     }
 
 
     @NonNull
     public static long[] getOldestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
-                                             @NonNull final AccountId[] accountIds) {
-        return getLongFieldArray(context, uri, AccountId.getIds(accountIds), DirectMessages.ACCOUNT_ID,
+                                             @NonNull final AccountKey[] accountKeys) {
+        return getLongFieldArray(context, uri, AccountKey.getIds(accountKeys), DirectMessages.ACCOUNT_ID,
                 DirectMessages.MESSAGE_ID, new OrderBy(SQLFunctions.MIN(DirectMessages.MESSAGE_TIMESTAMP)));
     }
 
     @NonNull
     public static long[] getOldestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
-                                            @NonNull final AccountId[] accountIds) {
-        return getLongFieldArray(context, uri, AccountId.getIds(accountIds), Statuses.ACCOUNT_ID, Statuses.STATUS_ID,
+                                            @NonNull final AccountKey[] accountKeys) {
+        return getLongFieldArray(context, uri, AccountKey.getIds(accountKeys), Statuses.ACCOUNT_ID, Statuses.STATUS_ID,
                 new OrderBy(SQLFunctions.MIN(Statuses.STATUS_TIMESTAMP)));
     }
 
     @NonNull
     public static long[] getNewestActivityMaxPositions(final Context context, final Uri uri,
-                                                       final AccountId[] accountIds) {
-        return getLongFieldArray(context, uri, AccountId.getIds(accountIds), Activities.ACCOUNT_ID,
+                                                       final AccountKey[] accountKeys) {
+        return getLongFieldArray(context, uri, AccountKey.getIds(accountKeys), Activities.ACCOUNT_ID,
                 Activities.MAX_POSITION, new OrderBy(SQLFunctions.MAX(Activities.TIMESTAMP)));
     }
 
     @NonNull
     public static long[] getOldestActivityMaxPositions(@NonNull final Context context,
                                                        @NonNull final Uri uri,
-                                                       @NonNull final AccountId[] accountIds) {
-        return getLongFieldArray(context, uri, AccountId.getIds(accountIds), Activities.ACCOUNT_ID,
+                                                       @NonNull final AccountKey[] accountKeys) {
+        return getLongFieldArray(context, uri, AccountKey.getIds(accountKeys), Activities.ACCOUNT_ID,
                 Activities.MAX_POSITION, new OrderBy(SQLFunctions.MIN(Activities.TIMESTAMP)));
     }
 
@@ -245,9 +247,9 @@ public class DataStoreUtils implements Constants {
         return queryCount(context, uri, where, null);
     }
 
-    public static int getActivitiesCount(final Context context, final Uri uri, final long accountId) {
-        final String where = Expression.equals(Activities.ACCOUNT_ID, accountId).getSQL();
-        return queryCount(context, uri, where, null);
+    public static int getActivitiesCount(final Context context, final Uri uri, final AccountKey accountKey) {
+        final String where = Utils.getAccountCompareExpression().getSQL();
+        return queryCount(context, uri, where, new String[]{String.valueOf(accountKey.getId()), accountKey.getHost()});
     }
 
 
@@ -349,11 +351,11 @@ public class DataStoreUtils implements Constants {
         return getAccountScreenNames(context, null);
     }
 
-    public static String[] getAccountScreenNames(final Context context, @Nullable final AccountId[] accountIds) {
+    public static String[] getAccountScreenNames(final Context context, @Nullable final AccountKey[] accountKeys) {
         if (context == null) return new String[0];
         final String[] cols = new String[]{Accounts.SCREEN_NAME};
-        final String where = accountIds != null ? Expression.in(new Column(Accounts.ACCOUNT_ID),
-                new RawItemArray(accountIds)).getSQL() : null;
+        final String where = accountKeys != null ? Expression.in(new Column(Accounts.ACCOUNT_ID),
+                new RawItemArray(accountKeys)).getSQL() : null;
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, cols, where, null, null);
         if (cur == null) return new String[0];
         try {
@@ -371,17 +373,17 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    public static AccountId[] getActivatedAccountIds(final Context context) {
-        if (context == null) return new AccountId[0];
+    public static AccountKey[] getActivatedAccountKeys(final Context context) {
+        if (context == null) return new AccountKey[0];
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
-                new String[]{Accounts.ACCOUNT_ID,Accounts.ACCOUNT_HOST}, Accounts.IS_ACTIVATED + " = 1", null, null);
-        if (cur == null) return new AccountId[0];
+                new String[]{Accounts.ACCOUNT_ID, Accounts.ACCOUNT_HOST}, Accounts.IS_ACTIVATED + " = 1", null, null);
+        if (cur == null) return new AccountKey[0];
         try {
             cur.moveToFirst();
-            final AccountId[] ids = new AccountId[cur.getCount()];
+            final AccountKey[] ids = new AccountKey[cur.getCount()];
             int i = 0;
             while (!cur.isAfterLast()) {
-                ids[i++] = new AccountId(cur.getLong(0), cur.getString(1));
+                ids[i++] = new AccountKey(cur.getLong(0), cur.getString(1));
                 cur.moveToNext();
             }
             return ids;
@@ -390,13 +392,13 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static int getStatusesCount(final Context context, final Uri uri, final long sinceId, final long... accountIds) {
+    public static int getStatusesCount(final Context context, final Uri uri, final long sinceId, final AccountKey... accountKeys) {
         if (context == null) return 0;
         final RawItemArray idsIn;
-        if (accountIds == null || accountIds.length == 0 || (accountIds.length == 1 && accountIds[0] < 0)) {
-            idsIn = new RawItemArray(getActivatedAccountIds(context));
+        if (ArrayUtils.isEmpty(accountKeys)) {
+            idsIn = new RawItemArray(getActivatedAccountKeys(context));
         } else {
-            idsIn = new RawItemArray(accountIds);
+            idsIn = new RawItemArray(accountKeys);
         }
         final Expression selection = Expression.and(
                 Expression.in(new Column(Statuses.ACCOUNT_ID), idsIn),
@@ -408,13 +410,13 @@ public class DataStoreUtils implements Constants {
 
     public static int getActivitiesCount(final Context context, final Uri uri,
                                          final Expression extraWhere, final String[] extraWhereArgs,
-                                         final long sinceTimestamp, boolean followingOnly, final long... accountIds) {
+                                         final long sinceTimestamp, boolean followingOnly, final AccountKey... accountKeys) {
         if (context == null) return 0;
         final RawItemArray idsIn;
-        if (accountIds == null || accountIds.length == 0 || (accountIds.length == 1 && accountIds[0] < 0)) {
-            idsIn = new RawItemArray(getActivatedAccountIds(context));
+        if (ArrayUtils.isEmpty(accountKeys)) {
+            idsIn = new RawItemArray(getActivatedAccountKeys(context));
         } else {
-            idsIn = new RawItemArray(accountIds);
+            idsIn = new RawItemArray(accountKeys);
         }
         Expression[] expressions;
         if (extraWhere != null) {
@@ -580,16 +582,19 @@ public class DataStoreUtils implements Constants {
         return filterExpression;
     }
 
-    public static int getAccountColor(final Context context, final long accountId) {
+    public static int getAccountColor(final Context context, final AccountKey accountKey) {
         if (context == null) return Color.TRANSPARENT;
-        final Integer cached = sAccountColors.get(accountId);
+        final Integer cached = sAccountColors.get(accountKey);
         if (cached != null) return cached;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, new String[]{Accounts.COLOR}, Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null, null);
+        final String[] projection = {Accounts.COLOR};
+        String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
+                Utils.getAccountCompareExpression().getSQL(), whereArgs, null);
         if (cur == null) return Color.TRANSPARENT;
         try {
             if (cur.getCount() > 0 && cur.moveToFirst()) {
                 final int color = cur.getInt(0);
-                sAccountColors.put(accountId, color);
+                sAccountColors.put(accountKey, color);
                 return color;
             }
             return Color.TRANSPARENT;
@@ -639,18 +644,18 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    public static AccountId[] getAccountIds(final Context context) {
-        if (context == null) return new AccountId[0];
+    public static AccountKey[] getAccountKeys(final Context context) {
+        if (context == null) return new AccountKey[0];
         final String[] projection = {Accounts.ACCOUNT_ID, Accounts.ACCOUNT_HOST};
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
                 null, null, null);
-        if (cur == null) return new AccountId[0];
+        if (cur == null) return new AccountKey[0];
         try {
             cur.moveToFirst();
-            final AccountId[] ids = new AccountId[cur.getCount()];
+            final AccountKey[] ids = new AccountKey[cur.getCount()];
             int i = 0;
             while (!cur.isAfterLast()) {
-                ids[i++] = new AccountId(cur.getLong(0), cur.getString(1));
+                ids[i++] = new AccountKey(cur.getLong(0), cur.getString(1));
                 cur.moveToNext();
             }
             return ids;
@@ -695,7 +700,7 @@ public class DataStoreUtils implements Constants {
         final int itemLimit = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getInt(
                 KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT);
 
-        for (final AccountId accountId : getAccountIds(context)) {
+        for (final AccountKey accountKey : getAccountKeys(context)) {
             // Clean statuses.
             for (final Uri uri : STATUSES_URIS) {
                 if (CachedStatuses.CONTENT_URI.equals(uri)) {
@@ -713,8 +718,8 @@ public class DataStoreUtils implements Constants {
                 final Expression where = Expression.and(Expression.lesserThan(new Column(Statuses._ID),
                                 SQLQueryBuilder.select(SQLFunctions.MIN(new Column(Statuses._ID))).from(qb.build()).build()),
                         accountWhere);
-                final String[] whereArgs = {String.valueOf(accountId.getId()), accountId.getHost(),
-                        String.valueOf(accountId.getId()), accountId.getHost()};
+                final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost(),
+                        String.valueOf(accountKey.getId()), accountKey.getHost()};
                 resolver.delete(uri, where.getSQL(), whereArgs);
             }
             for (final Uri uri : ACTIVITIES_URIS) {
@@ -730,8 +735,8 @@ public class DataStoreUtils implements Constants {
                 final Expression where = Expression.and(Expression.lesserThan(new Column(Activities._ID),
                         SQLQueryBuilder.select(SQLFunctions.MIN(new Column(Activities._ID)))
                                 .from(qb.build()).build()), accountWhere);
-                final String[] whereArgs = {String.valueOf(accountId.getId()), accountId.getHost(),
-                        String.valueOf(accountId.getId()), accountId.getHost()};
+                final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost(),
+                        String.valueOf(accountKey.getId()), accountKey.getHost()};
                 resolver.delete(uri, where.getSQL(), whereArgs);
             }
             for (final Uri uri : DIRECT_MESSAGES_URIS) {
@@ -747,8 +752,8 @@ public class DataStoreUtils implements Constants {
                 final Expression where = Expression.and(Expression.lesserThan(new Column(DirectMessages._ID),
                         SQLQueryBuilder.select(SQLFunctions.MIN(new Column(DirectMessages._ID)))
                                 .from(qb.build()).build()), accountWhere);
-                final String[] whereArgs = {String.valueOf(accountId.getId()), accountId.getHost(),
-                        String.valueOf(accountId.getId()), accountId.getHost()};
+                final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost(),
+                        String.valueOf(accountKey.getId()), accountKey.getHost()};
                 resolver.delete(uri, where.getSQL(), whereArgs);
             }
         }
@@ -839,7 +844,7 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    public static long[] getAccountIds(final ParcelableAccount[] accounts) {
+    public static long[] getAccountKeys(final ParcelableAccount[] accounts) {
         final long[] ids = new long[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {
             ids[i] = accounts[i].account_id;
@@ -877,8 +882,8 @@ public class DataStoreUtils implements Constants {
     }
 
     @Nullable
-    public static ParcelableCredentials getCredentials(@NonNull final Context context, final AccountId accountId) {
-        return getCredentials(context, accountId.getId(), accountId.getHost());
+    public static ParcelableCredentials getCredentials(@NonNull final Context context, final AccountKey accountKey) {
+        return getCredentials(context, accountKey.getId(), accountKey.getHost());
     }
 
     @Nullable
@@ -957,7 +962,7 @@ public class DataStoreUtils implements Constants {
     }
 
     public static int getInteractionsCount(final Context context, @Nullable final Bundle extraArgs,
-                                           final long[] accountIds, final long position) {
+                                           final AccountKey[] accountIds, final long position) {
         Expression extraWhere = null;
         String[] extraWhereArgs = null;
         boolean followingOnly = false;

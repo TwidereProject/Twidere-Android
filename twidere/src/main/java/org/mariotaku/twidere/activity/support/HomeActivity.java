@@ -75,6 +75,7 @@ import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
@@ -148,12 +149,12 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     }
 
     @NonNull
-    public long[] getActivatedAccountIds() {
+    public AccountKey[] getActivatedAccountKeys() {
         final Fragment fragment = getLeftDrawerFragment();
         if (fragment instanceof AccountsDashboardFragment) {
             return ((AccountsDashboardFragment) fragment).getActivatedAccountIds();
         }
-        return DataStoreUtils.getActivatedAccountIds(this);
+        return DataStoreUtils.getActivatedAccountKeys(this);
     }
 
     @Override
@@ -386,7 +387,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
         if (savedInstanceState == null) {
             if (refreshOnStart) {
-                mTwitterWrapper.refreshAll(getActivatedAccountIds());
+                mTwitterWrapper.refreshAll(getActivatedAccountKeys());
             }
             if (intent.getBooleanExtra(EXTRA_OPEN_ACCOUNTS_DRAWER, false)) {
                 openAccountsDrawer();
@@ -671,13 +672,13 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         if (Intent.ACTION_SEARCH.equals(action)) {
             final String query = intent.getStringExtra(SearchManager.QUERY);
             final Bundle appSearchData = intent.getBundleExtra(SearchManager.APP_DATA);
-            final long accountId;
-            if (appSearchData != null && appSearchData.containsKey(EXTRA_ACCOUNT_ID)) {
-                accountId = appSearchData.getLong(EXTRA_ACCOUNT_ID, -1);
+            final AccountKey accountKey;
+            if (appSearchData != null && appSearchData.containsKey(EXTRA_ACCOUNT_KEY)) {
+                accountKey = appSearchData.getParcelable(EXTRA_ACCOUNT_KEY);
             } else {
-                accountId = Utils.getDefaultAccountId(this);
+                accountKey = Utils.getDefaultAccountKey(this);
             }
-            Utils.openSearch(this, accountId, query);
+            Utils.openSearch(this, accountKey, query);
             return -1;
         }
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
@@ -698,7 +699,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 final SupportTabSpec tab = mPagerAdapter.getTab(i);
                 if (tabType.equals(CustomTabUtils.getTabTypeAlias(tab.type))) {
                     if (tab.args != null && CustomTabUtils.hasAccountId(tab.args,
-                            getActivatedAccountIds(), accountId)) {
+                            getActivatedAccountKeys(), accountId)) {
                         initialTab = i;
                         break;
                     }
@@ -925,18 +926,18 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
                 switch (spec.type) {
                     case CustomTabType.HOME_TIMELINE: {
-                        final long[] accountIds = Utils.getAccountIds(spec.args);
+                        final AccountKey[] accountKeys = Utils.getAccountKeys(spec.args);
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext,
-                                true, ReadPositionTag.HOME_TIMELINE, accountIds);
+                                true, ReadPositionTag.HOME_TIMELINE, accountKeys);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
                         final int count = DataStoreUtils.getStatusesCount(mContext, Statuses.CONTENT_URI,
-                                position, accountIds);
+                                position, accountKeys);
                         result.put(i, count);
                         publishProgress(new TabBadge(i, count));
                         break;
                     }
                     case CustomTabType.NOTIFICATIONS_TIMELINE: {
-                        final long[] accountIds = Utils.getAccountIds(spec.args);
+                        final AccountKey[] accountIds = Utils.getAccountKeys(spec.args);
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext,
                                 true, ReadPositionTag.ACTIVITIES_ABOUT_ME, accountIds);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);

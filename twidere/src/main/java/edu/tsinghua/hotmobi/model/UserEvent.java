@@ -87,7 +87,7 @@ public class UserEvent extends BaseEvent implements Parcelable {
     @Override
     public String toString() {
         return "UserEvent{" +
-                "accountId=" + accountId +
+                "mAccountKey=" + accountId +
                 ", userId=" + userId +
                 ", statusCount=" + statusCount +
                 ", followerCount=" + followerCount +

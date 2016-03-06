@@ -34,22 +34,22 @@ import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 public class AccountPreferences implements Constants {
 
     private final Context mContext;
-    private final AccountId mAccountId;
+    private final AccountKey mAccountKey;
     private final SharedPreferences mPreferences;
 
-    public AccountPreferences(final Context context, final AccountId accountId) {
+    public AccountPreferences(final Context context, final AccountKey accountKey) {
         mContext = context;
-        mAccountId = accountId;
-        final String name = ACCOUNT_PREFERENCES_NAME_PREFIX + accountId;
+        mAccountKey = accountKey;
+        final String name = ACCOUNT_PREFERENCES_NAME_PREFIX + accountKey;
         mPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    public AccountId getAccountId() {
-        return mAccountId;
+    public AccountKey getAccountKey() {
+        return mAccountKey;
     }
 
     public int getDefaultNotificationLightColor() {
-        final ParcelableAccount a = ParcelableAccountUtils.getAccount(mContext, mAccountId);
+        final ParcelableAccount a = ParcelableAccountUtils.getAccount(mContext, mAccountKey);
         if (a != null) {
             return a.color;
         } else {
@@ -130,44 +130,44 @@ public class AccountPreferences implements Constants {
         return mPreferences.getBoolean(KEY_NOTIFICATION, DEFAULT_NOTIFICATION);
     }
 
-    public static AccountPreferences getAccountPreferences(final AccountPreferences[] prefs, final AccountId accountId) {
+    public static AccountPreferences getAccountPreferences(final AccountPreferences[] prefs, final AccountKey accountKey) {
         for (final AccountPreferences pref : prefs) {
-            if (pref.getAccountId() == accountId) return pref;
+            if (pref.getAccountKey() == accountKey) return pref;
         }
         return null;
     }
 
-    public static AccountPreferences[] getAccountPreferences(final Context context, final AccountId[] accountIds) {
-        if (context == null || accountIds == null) return null;
-        final AccountPreferences[] preferences = new AccountPreferences[accountIds.length];
+    public static AccountPreferences[] getAccountPreferences(final Context context, final AccountKey[] accountKeys) {
+        if (context == null || accountKeys == null) return null;
+        final AccountPreferences[] preferences = new AccountPreferences[accountKeys.length];
         for (int i = 0, j = preferences.length; i < j; i++) {
-            preferences[i] = new AccountPreferences(context, accountIds[i]);
+            preferences[i] = new AccountPreferences(context, accountKeys[i]);
         }
         return preferences;
     }
 
     @NonNull
-    public static AccountId[] getAutoRefreshEnabledAccountIds(final Context context, final AccountId[] accountIds) {
-        if (context == null || accountIds == null) return new AccountId[0];
-        final AccountId[] temp = new AccountId[accountIds.length];
+    public static AccountKey[] getAutoRefreshEnabledAccountIds(final Context context, final AccountKey[] accountKeys) {
+        if (context == null || accountKeys == null) return new AccountKey[0];
+        final AccountKey[] temp = new AccountKey[accountKeys.length];
         int i = 0;
-        for (final AccountId accountId : accountIds) {
-            if (new AccountPreferences(context, accountId).isAutoRefreshEnabled()) {
-                temp[i++] = accountId;
+        for (final AccountKey accountKey : accountKeys) {
+            if (new AccountPreferences(context, accountKey).isAutoRefreshEnabled()) {
+                temp[i++] = accountKey;
             }
         }
-        final AccountId[] enabledIds = new AccountId[i];
+        final AccountKey[] enabledIds = new AccountKey[i];
         System.arraycopy(temp, 0, enabledIds, 0, i);
         return enabledIds;
     }
 
     @NonNull
-    public static AccountPreferences[] getNotificationEnabledPreferences(final Context context, final AccountId[] accountIds) {
-        if (context == null || accountIds == null) return new AccountPreferences[0];
-        final AccountPreferences[] temp = new AccountPreferences[accountIds.length];
+    public static AccountPreferences[] getNotificationEnabledPreferences(final Context context, final AccountKey[] accountKeys) {
+        if (context == null || accountKeys == null) return new AccountPreferences[0];
+        final AccountPreferences[] temp = new AccountPreferences[accountKeys.length];
         int i = 0;
-        for (final AccountId accountId : accountIds) {
-            final AccountPreferences preference = new AccountPreferences(context, accountId);
+        for (final AccountKey accountKey : accountKeys) {
+            final AccountPreferences preference = new AccountPreferences(context, accountKey);
             if (preference.isNotificationEnabled()) {
                 temp[i++] = preference;
             }

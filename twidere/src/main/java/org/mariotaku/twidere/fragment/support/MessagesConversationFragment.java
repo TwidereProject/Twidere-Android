@@ -302,7 +302,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     account = args.getParcelable(EXTRA_ACCOUNT);
                     recipient = args.getParcelable(EXTRA_USER);
                 } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
-                    final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+                    final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                     final long userId = args.getLong(EXTRA_RECIPIENT_ID, -1);
                     final int accountPos = accountsSpinnerAdapter.findItemPosition(accountId);
                     if (accountPos >= 0) {
@@ -659,7 +659,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 if (((BaseAppCompatActivity) activity).getKeyMetaState() != 0) return false;
                 final ParcelableCredentials account = (ParcelableCredentials) mAccountSpinner.getSelectedItem();
                 if (account == null) return false;
-                mEditText.setAccountId(account.account_id);
+                mEditText.setAccountKey(account.account_id);
                 searchUsers(account.account_id, ParseUtils.parseString(mEditUserQuery.getText()), false);
                 return true;
             }
@@ -678,7 +678,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             public void afterTextChanged(Editable s) {
                 final ParcelableCredentials account = (ParcelableCredentials) mAccountSpinner.getSelectedItem();
                 if (account == null) return;
-                mEditText.setAccountId(account.account_id);
+                mEditText.setAccountKey(account.account_id);
                 searchUsers(account.account_id, ParseUtils.parseString(s), true);
             }
         });

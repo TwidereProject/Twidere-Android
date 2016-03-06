@@ -32,6 +32,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
@@ -51,10 +52,11 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
 
     private final boolean mOmitIntentExtra, mLoadFromCache;
     private final Bundle mExtras;
-    private final long mAccountId, mUserId;
+    private final AccountKey mAccountId;
+    private final long mUserId;
     private final String mScreenName;
 
-    public ParcelableUserLoader(final Context context, final long accountId, final long userId,
+    public ParcelableUserLoader(final Context context, final AccountKey accountId, final long userId,
                                 final String screenName, final Bundle extras, final boolean omitIntentExtra,
                                 final boolean loadFromCache) {
         super(context);
@@ -80,7 +82,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 return SingleResponse.getInstance(user);
             }
         }
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountId, accountHost, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountId, true);
         if (twitter == null) return SingleResponse.getInstance();
         if (mLoadFromCache) {
             final Expression where;

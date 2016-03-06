@@ -68,7 +68,7 @@ import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -163,19 +163,20 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        final AsyncTwitterWrapper twitter = mTwitterWrapper;
         switch (requestCode) {
             case REQUEST_SELECT_USER: {
-                if (resultCode != Activity.RESULT_OK || !data.hasExtra(EXTRA_USER) || mTwitterWrapper == null
-                        || mUserList == null) return;
+                final ParcelableUserList userList = mUserList;
+                if (resultCode != Activity.RESULT_OK || !data.hasExtra(EXTRA_USER) || twitter == null
+                        || userList == null) return;
                 final ParcelableUser user = data.getParcelableExtra(EXTRA_USER);
-                mTwitterWrapper.addUserListMembersAsync(mUserList.account_id, mUserList.id, user);
+                twitter.addUserListMembersAsync(new AccountKey(userList.account_id, userList.account_host), userList.id, user);
                 return;
             }
             case REQUEST_SELECT_ACCOUNT: {
-                final ParcelableUserList userList = mUserList;
-                if (userList == null) return;
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
+                    final ParcelableUserList userList = mUserList;
                     final long accountId = data.getLongExtra(EXTRA_ID, -1);
                     Utils.openUserListDetails(getActivity(), accountId, userList.id, userList.user_id,
                             userList.user_screen_name, userList.name);
@@ -316,7 +317,8 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 if (userList.is_following) {
                     DestroyUserListSubscriptionDialogFragment.show(getFragmentManager(), userList);
                 } else {
-                    twitter.createUserListSubscriptionAsync(userList.account_id, userList.id);
+                    twitter.createUserListSubscriptionAsync(new AccountKey(userList.account_id,
+                            userList.account_host), userList.id);
                 }
                 return true;
             }
@@ -363,13 +365,13 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     @Override
     public Loader<SingleResponse<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
         setProgressBarIndeterminateVisibility(true);
-        final AccountId accountId = args.getParcelable(EXTRA_ACCOUNT_ID);
+        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
-        return new ParcelableUserListLoader(getActivity(), omitIntentExtra, getArguments(), accountId, listId,
+        return new ParcelableUserListLoader(getActivity(), omitIntentExtra, getArguments(), accountKey, listId,
                 listName, userId, screenName);
     }
 
@@ -437,7 +439,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             DialogInterface.OnClickListener {
 
         private String mName, mDescription;
-        private AccountId mAccountId;
+        private AccountKey mAccountKey;
         private long mListId;
         private boolean mIsPublic;
 
@@ -457,7 +459,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                     update.setMode(isPublic ? UserList.Mode.PUBLIC : UserList.Mode.PRIVATE);
                     update.setName(name);
                     update.setDescription(description);
-                    mTwitterWrapper.updateUserListDetails(mAccountId, mListId, update);
+                    mTwitterWrapper.updateUserListDetails(mAccountKey, mListId, update);
                     break;
                 }
             }
@@ -468,7 +470,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
-            mAccountId = bundle != null ? bundle.<AccountId>getParcelable(EXTRA_ACCOUNT_ID) : null;
+            mAccountKey = bundle != null ? bundle.<AccountKey>getParcelable(EXTRA_ACCOUNT_KEY) : null;
             mListId = bundle != null ? bundle.getLong(EXTRA_LIST_ID, -1) : -1;
             mName = bundle != null ? bundle.getString(EXTRA_LIST_NAME) : null;
             mDescription = bundle != null ? bundle.getString(EXTRA_DESCRIPTION) : null;
@@ -504,7 +506,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
         @Override
         public void onSaveInstanceState(final Bundle outState) {
-            outState.putParcelable(EXTRA_ACCOUNT_ID, mAccountId);
+            outState.putParcelable(EXTRA_ACCOUNT_KEY, mAccountKey);
             outState.putLong(EXTRA_LIST_ID, mListId);
             outState.putString(EXTRA_LIST_NAME, mName);
             outState.putString(EXTRA_DESCRIPTION, mDescription);
@@ -518,18 +520,18 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
         private final boolean mOmitIntentExtra;
         private final Bundle mExtras;
-        private final AccountId mAccountId;
+        private final AccountKey mAccountKey;
         private final long mUserId;
         private final long mListId;
         private final String mScreenName, mListName;
 
         private ParcelableUserListLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                         final AccountId accountId, final long listId, final String listName, final long userId,
+                                         final AccountKey accountKey, final long listId, final String listName, final long userId,
                                          final String screenName) {
             super(context);
             mOmitIntentExtra = omitIntentExtra;
             mExtras = extras;
-            mAccountId = accountId;
+            mAccountKey = accountKey;
             mUserId = userId;
             mListId = listId;
             mScreenName = screenName;
@@ -542,7 +544,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 final ParcelableUserList cache = mExtras.getParcelable(EXTRA_USER_LIST);
                 if (cache != null) return SingleResponse.getInstance(cache);
             }
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId,
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountKey,
                     true);
             if (twitter == null) return SingleResponse.getInstance();
             try {
@@ -555,7 +557,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                     list = twitter.showUserList(mListName, mScreenName);
                 } else
                     return SingleResponse.getInstance();
-                return SingleResponse.getInstance(ParcelableUserListUtils.from(list, mAccountId));
+                return SingleResponse.getInstance(ParcelableUserListUtils.from(list, mAccountKey));
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
             }

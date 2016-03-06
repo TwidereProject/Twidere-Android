@@ -478,10 +478,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 setTitle(R.string.users_favorited_this);
                 break;
             }
-            case LINK_ID_STATUS_REPLIES: {
-                setTitle(R.string.view_replies);
-                break;
-            }
             case LINK_ID_SEARCH: {
                 setTitle(android.R.string.search_go);
                 setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY));

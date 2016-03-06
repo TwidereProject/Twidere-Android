@@ -12,7 +12,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -22,7 +22,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils;
 /**
  * Created by mariotaku on 16/2/13.
  */
-public class GetSavedSearchesTask extends AbstractTask<AccountId[], SingleResponse<Object>, Object>
+public class GetSavedSearchesTask extends AbstractTask<AccountKey[], SingleResponse<Object>, Object>
         implements Constants {
 
     private final Context mContext;
@@ -32,19 +32,19 @@ public class GetSavedSearchesTask extends AbstractTask<AccountId[], SingleRespon
     }
 
     @Override
-    public SingleResponse<Object> doLongOperation(AccountId[] params) {
+    public SingleResponse<Object> doLongOperation(AccountKey[] params) {
         final ContentResolver cr = mContext.getContentResolver();
-        for (AccountId accountId : params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountId.getId(),
-                    accountId.getHost(), true);
+        for (AccountKey accountKey : params) {
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountKey.getId(),
+                    accountKey.getHost(), true);
             if (twitter == null) continue;
             try {
                 final ResponseList<SavedSearch> searches = twitter.getSavedSearches();
                 final ContentValues[] values = ContentValuesCreator.createSavedSearches(searches,
-                        accountId.getId(), accountId.getHost());
+                        accountKey.getId(), accountKey.getHost());
                 final Expression where = Expression.and(Expression.equalsArgs(SavedSearches.ACCOUNT_ID),
                         Expression.equalsArgs(SavedSearches.ACCOUNT_HOST));
-                final String[] whereArgs = {String.valueOf(accountId.getId()), accountId.getHost()};
+                final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
                 cr.delete(SavedSearches.CONTENT_URI, where.getSQL(), whereArgs);
                 ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values);
             } catch (TwitterException e) {

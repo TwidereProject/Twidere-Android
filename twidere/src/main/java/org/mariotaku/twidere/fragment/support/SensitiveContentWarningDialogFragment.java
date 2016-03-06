@@ -43,7 +43,7 @@ public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFrag
                 final Context context = getActivity();
                 final Bundle args = getArguments();
                 if (args == null || context == null) return;
-                final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+                final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                 final ParcelableMedia current = args.getParcelable(EXTRA_CURRENT_MEDIA);
                 final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
                 final Bundle option = args.getBundle(EXTRA_ACTIVITY_OPTIONS);

@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
@@ -32,12 +32,12 @@ public class ParcelableStatusUtils {
         status.retweet_id = -1;
     }
 
-    public static ParcelableStatus fromStatus(final Status orig, final AccountId accountId,
+    public static ParcelableStatus fromStatus(final Status orig, final AccountKey accountKey,
                                               final boolean isGap) {
         final ParcelableStatus result = new ParcelableStatus();
         result.is_gap = isGap;
-        result.account_id = accountId.getId();
-        result.account_host = accountId.getHost();
+        result.account_id = accountKey.getId();
+        result.account_host = accountKey.getHost();
         result.id = orig.getId();
         result.timestamp = getTime(orig.getCreatedAt());
         result.extras = new ParcelableStatus.Extras();
@@ -126,19 +126,19 @@ public class ParcelableStatusUtils {
         }
         result.is_possibly_sensitive = status.isPossiblySensitive();
         result.mentions = ParcelableUserMention.fromUserMentionEntities(status.getUserMentionEntities());
-        result.card = ParcelableCardEntityUtils.fromCardEntity(status.getCard(), accountId);
+        result.card = ParcelableCardEntityUtils.fromCardEntity(status.getCard(), accountKey);
         result.place_full_name = getPlaceFullName(status.getPlace());
         result.card_name = result.card != null ? result.card.name : null;
         result.lang = status.getLang();
         return result;
     }
 
-    public static ParcelableStatus[] fromStatuses(Status[] statuses, AccountId accountId) {
+    public static ParcelableStatus[] fromStatuses(Status[] statuses, AccountKey accountKey) {
         if (statuses == null) return null;
         int size = statuses.length;
         final ParcelableStatus[] result = new ParcelableStatus[size];
         for (int i = 0; i < size; i++) {
-            result[i] = fromStatus(statuses[i], accountId, false);
+            result[i] = fromStatus(statuses[i], accountKey, false);
         }
         return result;
     }

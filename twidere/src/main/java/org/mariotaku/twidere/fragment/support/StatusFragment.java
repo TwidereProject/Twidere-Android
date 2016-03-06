@@ -287,7 +287,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private LoaderCallbacks<StatusActivity> mStatusActivityLoaderCallback = new LoaderCallbacks<StatusActivity>() {
         @Override
         public Loader<StatusActivity> onCreateLoader(int id, Bundle args) {
-            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+            final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
             final String accountHost = args.getString(EXTRA_ACCOUNT_HOST);
             final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
             return new StatusActivitySummaryLoader(getActivity(), accountId, accountHost, statusId);
@@ -800,7 +800,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void notifyFavoriteTask(FavoriteTaskEvent event) {
         if (!event.isSucceeded()) return;
         final StatusAdapter adapter = getAdapter();
-        final ParcelableStatus status = adapter.findStatusById(event.getAccountId(), event.getStatusId());
+        final ParcelableStatus status = adapter.findStatusById(event.getAccountKey(), event.getStatusId());
         if (status != null) {
             switch (event.getAction()) {
                 case FavoriteTaskEvent.Action.CREATE: {

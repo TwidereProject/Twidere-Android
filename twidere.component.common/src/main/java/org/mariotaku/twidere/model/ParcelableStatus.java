@@ -333,24 +333,27 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof ParcelableStatus)) return false;
-        final ParcelableStatus other = (ParcelableStatus) obj;
-        return account_id == other.account_id && id == other.id;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableStatus status = (ParcelableStatus) o;
+
+        if (id != status.id) return false;
+        if (account_id != status.account_id) return false;
+        return !(account_host != null ? !account_host.equals(status.account_host) : status.account_host != null);
+
     }
 
     @Override
     public int hashCode() {
-        return calculateHashCode(account_id, id);
+        return calculateHashCode(account_id, account_host, id);
     }
 
-    public static int calculateHashCode(long account_id, long id) {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (account_id ^ account_id >>> 32);
-        result = prime * result + (int) (id ^ id >>> 32);
+    public static int calculateHashCode(long accountId, String accountHost, long id) {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (accountId ^ (accountId >>> 32));
+        result = 31 * result + (accountHost != null ? accountHost.hashCode() : 0);
         return result;
     }
 

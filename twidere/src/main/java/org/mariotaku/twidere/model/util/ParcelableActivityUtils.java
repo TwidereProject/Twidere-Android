@@ -3,6 +3,7 @@ package org.mariotaku.twidere.model.util;
 import org.apache.commons.collections.primitives.ArrayLongList;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableUser;
 
@@ -54,22 +55,22 @@ public class ParcelableActivityUtils {
         return activity.after_filtered_sources = result;
     }
 
-    public static ParcelableActivity fromActivity(final Activity activity, final long accountId,
-                                                  final String accountHost, final boolean isGap) {
+    public static ParcelableActivity fromActivity(final Activity activity, final AccountKey accountKey,
+                                                  final boolean isGap) {
         ParcelableActivity result = new ParcelableActivity();
-        result.account_id = accountId;
-        result.account_host = accountHost;
+        result.account_id = accountKey.getId();
+        result.account_host = accountKey.getHost();
         result.timestamp = activity.getCreatedAt().getTime();
         result.action = activity.getAction();
         result.max_position = activity.getMaxPosition();
         result.min_position = activity.getMinPosition();
-        result.sources = ParcelableUserUtils.fromUsers(activity.getSources(), accountId);
-        result.target_users = ParcelableUserUtils.fromUsers(activity.getTargetUsers(), accountId);
-        result.target_user_lists = ParcelableUserListUtils.fromUserLists(activity.getTargetUserLists(), accountId);
-        result.target_statuses = ParcelableStatusUtils.fromStatuses(activity.getTargetStatuses(), accountId, accountHost);
-        result.target_object_statuses = ParcelableStatusUtils.fromStatuses(activity.getTargetObjectStatuses(), accountId, accountHost);
-        result.target_object_user_lists = ParcelableUserListUtils.fromUserLists(activity.getTargetObjectUserLists(), accountId);
-        result.target_object_users = ParcelableUserUtils.fromUsers(activity.getTargetObjectUsers(), accountId);
+        result.sources = ParcelableUserUtils.fromUsers(activity.getSources(), accountKey);
+        result.target_users = ParcelableUserUtils.fromUsers(activity.getTargetUsers(), accountKey);
+        result.target_user_lists = ParcelableUserListUtils.fromUserLists(activity.getTargetUserLists(), accountKey);
+        result.target_statuses = ParcelableStatusUtils.fromStatuses(activity.getTargetStatuses(), accountKey);
+        result.target_object_statuses = ParcelableStatusUtils.fromStatuses(activity.getTargetObjectStatuses(), accountKey);
+        result.target_object_user_lists = ParcelableUserListUtils.fromUserLists(activity.getTargetObjectUserLists(), accountKey);
+        result.target_object_users = ParcelableUserUtils.fromUsers(activity.getTargetObjectUsers(), accountKey);
         if (result.sources != null) {
             result.source_ids = new long[result.sources.length];
             for (int i = 0; i < result.sources.length; i++) {

@@ -37,6 +37,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
@@ -66,7 +67,7 @@ import javax.inject.Inject;
 
 public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader {
 
-    private final long mAccountId;
+    private final AccountKey mAccountKey;
     private final long mMaxId, mSinceId;
     @Nullable
     private final Object[] mSavedStatusesFileArgs;
@@ -76,12 +77,14 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     @Inject
     SharedPreferencesWrapper mPreferences;
 
-    public TwitterAPIStatusesLoader(final Context context, final long accountId, final long sinceId,
-                                    final long maxId, final List<ParcelableStatus> data,
-                                    @Nullable final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
+    public TwitterAPIStatusesLoader(final Context context, final AccountKey accountKey,
+                                    final long sinceId, final long maxId,
+                                    final List<ParcelableStatus> data,
+                                    @Nullable final String[] savedStatusesArgs,
+                                    final int tabPosition, final boolean fromUser) {
         super(context, data, tabPosition, fromUser);
         GeneralComponentHelper.build(context).inject(this);
-        mAccountId = accountId;
+        mAccountKey = accountKey;
         mMaxId = maxId;
         mSinceId = sinceId;
         mSavedStatusesFileArgs = savedStatusesArgs;
@@ -127,7 +130,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 }
             }
             statuses = getStatuses(twitter, paging);
-            if (!Utils.isOfficialCredentials(getContext(), getAccountId())) {
+            if (!Utils.isOfficialCredentials(getContext(), getAccountKey())) {
                 InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
             }
         } catch (final TwitterException e) {
@@ -163,7 +166,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 && statuses.size() >= loadItemLimit;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
-            data.add(ParcelableStatusUtils.fromStatus(status, mAccountId, accountHost, insertGap && isGapEnabled() && minIdx == i));
+            data.add(ParcelableStatusUtils.fromStatus(status, mAccountKey, insertGap && isGapEnabled() && minIdx == i));
         }
 
         final SQLiteDatabase db = TwidereApplication.getInstance(context).getSQLiteDatabase();
@@ -195,8 +198,8 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         return mMaxId;
     }
 
-    public long getAccountId() {
-        return mAccountId;
+    public AccountKey getAccountKey() {
+        return mAccountKey;
     }
 
     @NonNull
@@ -204,7 +207,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
 
     @Nullable
     protected final Twitter getTwitter() {
-        return TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true, true);
+        return TwitterAPIFactory.getTwitterInstance(getContext(), mAccountKey, true, true);
     }
 
     @WorkerThread

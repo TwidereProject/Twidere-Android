@@ -23,11 +23,9 @@ import java.lang.reflect.ParameterizedType;
 public class DraftExtrasConverter implements CursorFieldConverter<ActionExtra> {
     @Override
     public ActionExtra parseField(Cursor cursor, int columnIndex, ParameterizedType fieldType) {
+        final String actionType = cursor.getString(cursor.getColumnIndex(Drafts.ACTION_TYPE));
+        if (TextUtils.isEmpty(actionType)) return null;
         try {
-            final String actionType = cursor.getString(cursor.getColumnIndex(Drafts.ACTION_TYPE));
-            if (TextUtils.isEmpty(actionType)) {
-                return null;
-            }
             switch (actionType) {
                 case "0":
                 case "1":

@@ -32,7 +32,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.Trend;
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
@@ -132,9 +132,10 @@ public final class ContentValuesCreator implements TwidereConstants {
     }
 
     public static ContentValues createCachedRelationship(final Relationship relationship,
-                                                         final long accountId) {
+                                                         final AccountKey accountKey) {
         final ContentValues values = new ContentValues();
-        values.put(CachedRelationships.ACCOUNT_ID, accountId);
+        values.put(CachedRelationships.ACCOUNT_ID, accountKey.getId());
+        values.put(CachedRelationships.ACCOUNT_HOST, accountKey.getHost());
         values.put(CachedRelationships.USER_ID, relationship.getTargetUserId());
         values.put(CachedRelationships.FOLLOWING, relationship.isSourceFollowingTarget());
         values.put(CachedRelationships.FOLLOWED_BY, relationship.isSourceFollowedByTarget());
@@ -261,9 +262,9 @@ public final class ContentValuesCreator implements TwidereConstants {
     }
 
     @NonNull
-    public static ContentValues createStatus(final Status orig, final AccountId accountId) {
+    public static ContentValues createStatus(final Status orig, final AccountKey accountKey) {
         return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.fromStatus(orig,
-                accountId, false));
+                accountKey, false));
     }
 
     @NonNull

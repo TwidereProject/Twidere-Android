@@ -111,7 +111,7 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
 //        switch (view.getId()) {
 //            case R.id.profile_image: {
 //                if (mContext instanceof Activity) {
-//                    final long account_id = getAccountId(position);
+//                    final long account_id = getAccountKey(position);
 //                    final long user_id = getConversationId(position);
 //                    final String screen_name = getScreenName(position);
 //                    openUserProfile(mContext, account_id, user_id, screen_name, null);

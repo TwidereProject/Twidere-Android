@@ -124,7 +124,7 @@ public class TweetEvent extends BaseEvent implements Parcelable {
     public String toString() {
         return "TweetEvent{" +
                 "id=" + id +
-                ", accountId=" + accountId +
+                ", mAccountKey=" + accountId +
                 ", userId=" + userId +
                 ", tweetType=" + tweetType +
                 ", timelineType=" + timelineType +

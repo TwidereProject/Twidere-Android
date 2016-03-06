@@ -52,6 +52,7 @@ import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
+import org.mariotaku.twidere.model.TabCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 
 import java.io.File;
@@ -147,15 +148,15 @@ public class CustomTabUtils implements Constants {
         if (cur == null) return Collections.emptyList();
         final ArrayList<SupportTabSpec> tabs = new ArrayList<>();
         cur.moveToFirst();
-        final int idxName = cur.getColumnIndex(Tabs.NAME), idxIcon = cur.getColumnIndex(Tabs.ICON), idxType = cur
-                .getColumnIndex(Tabs.TYPE), idxArguments = cur.getColumnIndex(Tabs.ARGUMENTS), idxExtras = cur
-                .getColumnIndex(Tabs.EXTRAS), idxPosition = cur.getColumnIndex(Tabs.POSITION);
+        TabCursorIndices indices = new TabCursorIndices(cur);
+        final int idxArguments = cur.getColumnIndex(Tabs.ARGUMENTS);
+        final int idxExtras = cur.getColumnIndex(Tabs.EXTRAS);
         while (!cur.isAfterLast()) {
             @CustomTabType
-            final String type = getTabTypeAlias(cur.getString(idxType));
-            final int position = cur.getInt(idxPosition);
-            final String iconType = cur.getString(idxIcon);
-            final String name = cur.getString(idxName);
+            final String type = getTabTypeAlias(cur.getString(indices.type));
+            final int position = cur.getInt(indices.position);
+            final String iconType = cur.getString(indices.icon);
+            final String name = cur.getString(indices.name);
             final Bundle args = ParseUtils.jsonToBundle(cur.getString(idxArguments));
             @ReadPositionTag
             final String tag = getTagByType(type);

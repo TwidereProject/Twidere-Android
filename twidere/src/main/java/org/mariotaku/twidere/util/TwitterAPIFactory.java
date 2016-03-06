@@ -39,7 +39,7 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.util.TwitterConverterFactory;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
@@ -88,33 +88,33 @@ public class TwitterAPIFactory implements TwidereConstants {
     public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities,
                                                     final boolean includeRetweets) {
         if (context == null) return null;
-        final AccountId accountId = Utils.getDefaultAccountId(context);
-        if (accountId == null) return null;
-        return getTwitterInstance(context, accountId, includeEntities, includeRetweets);
+        final AccountKey accountKey = Utils.getDefaultAccountKey(context);
+        if (accountKey == null) return null;
+        return getTwitterInstance(context, accountKey, includeEntities, includeRetweets);
     }
 
     @WorkerThread
-    public static Twitter getTwitterInstance(final Context context, final AccountId accountId,
+    public static Twitter getTwitterInstance(final Context context, final AccountKey accountKey,
                                              final boolean includeEntities) {
-        return getTwitterInstance(context, accountId, includeEntities, true);
+        return getTwitterInstance(context, accountKey, includeEntities, true);
     }
 
     @Nullable
     @WorkerThread
-    public static Twitter getTwitterInstance(final Context context, final AccountId accountId,
+    public static Twitter getTwitterInstance(final Context context, final AccountKey accountKey,
                                              final boolean includeEntities,
                                              final boolean includeRetweets) {
-        return getTwitterInstance(context, accountId, includeEntities, includeRetweets, Twitter.class);
+        return getTwitterInstance(context, accountKey, includeEntities, includeRetweets, Twitter.class);
     }
 
     @Nullable
     @WorkerThread
-    public static <T> T getTwitterInstance(final Context context, final AccountId accountId,
+    public static <T> T getTwitterInstance(final Context context, final AccountKey accountKey,
                                            final boolean includeEntities, final boolean includeRetweets,
                                            Class<T> cls) {
         if (context == null) return null;
         final ParcelableCredentials credentials = DataStoreUtils.getCredentials(context,
-                accountId.getId(), accountId.getHost());
+                accountKey.getId(), accountKey.getHost());
         final HashMap<String, String> extraParams = new HashMap<>();
         extraParams.put("include_entities", String.valueOf(includeEntities));
         extraParams.put("include_retweets", String.valueOf(includeRetweets));
@@ -177,7 +177,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                 isTwitterCredentials(credentials));
     }
 
-    public static boolean isTwitterCredentials(Context context, long accountId) {
+    public static boolean isTwitterCredentials(Context context, AccountKey accountId) {
         return isTwitterCredentials(DataStoreUtils.getCredentials(context, accountId));
     }
 

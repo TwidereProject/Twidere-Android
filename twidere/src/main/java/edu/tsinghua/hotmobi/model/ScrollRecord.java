@@ -74,7 +74,7 @@ public class ScrollRecord implements LogModel {
     public String toString() {
         return "ScrollRecord{" +
                 "id=" + id +
-                ", accountId=" + accountId +
+                ", mAccountKey=" + accountId +
                 ", timestamp=" + timestamp +
                 ", timeOffset=" + timeOffset +
                 ", scrollState=" + scrollState +

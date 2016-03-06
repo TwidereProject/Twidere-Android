@@ -9,15 +9,11 @@ import android.text.TextUtils;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
-import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
-import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.TwitterContentUtils;
 
 import java.util.List;
 
@@ -60,8 +56,8 @@ public class ParcelableAccountUtils {
         return null;
     }
 
-    public static ParcelableAccount getAccount(final Context context, final AccountId accountId) {
-        return getAccount(context, accountId.getId(), accountId.getHost());
+    public static ParcelableAccount getAccount(final Context context, final AccountKey accountKey) {
+        return getAccount(context, accountKey.getId(), accountKey.getHost());
     }
 
     @NonNull

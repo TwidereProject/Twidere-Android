@@ -25,15 +25,15 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.loader.support.IDsUsersLoader;
 import org.mariotaku.twidere.loader.support.StatusRetweetersLoader;
+import org.mariotaku.twidere.model.AccountKey;
 
 public class StatusRetweetersListFragment extends CursorSupportUsersListFragment {
 
 	@Override
 	public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
-		if (args == null) return null;
-		final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+		final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
 		final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
-		final StatusRetweetersLoader loader = new StatusRetweetersLoader(context, accountId, statusId,
+		final StatusRetweetersLoader loader = new StatusRetweetersLoader(context, accountKey, statusId,
 				getData(), fromUser);
 		loader.setCursor(getNextCursor());
 		return loader;

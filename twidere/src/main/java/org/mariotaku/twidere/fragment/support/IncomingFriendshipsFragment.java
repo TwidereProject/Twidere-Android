@@ -51,7 +51,7 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
 
     @Override
     public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
-        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final IncomingFriendshipsLoader loader = new IncomingFriendshipsLoader(context, accountId, getData(), fromUser);
         loader.setCursor(getNextCursor());
         return loader;
@@ -84,7 +84,7 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
     @Subscribe
     public void onFollowRequestTaskEvent(FollowRequestTaskEvent event) {
         final ParcelableUsersAdapter adapter = getAdapter();
-        final int position = adapter.findPosition(event.getAccountId(), event.getUserId());
+        final int position = adapter.findPosition(event.getAccountKey(), event.getUserId());
         if (event.isFinished() && event.isSucceeded()) {
             adapter.removeUserAt(position);
         } else {

@@ -34,6 +34,7 @@ import org.mariotaku.sqliteqb.library.OrderBy;
 import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -60,8 +61,7 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Cons
     private final boolean mDisplayProfileImage;
 
     private int mIdIdx, mNameIdx, mScreenNameIdx, mProfileImageIdx;
-    private long mAccountId;
-    private char mToken;
+    private AccountKey mAccountKey;
 
     public UserAutoCompleteAdapter(final Context context) {
         super(context, R.layout.list_item_auto_complete, null, FROM, TO, 0);
@@ -121,14 +121,14 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Cons
                 CachedUsers.NAME};
         final boolean[] ascending = {false, false, true, true};
         final OrderBy orderBy = new OrderBy(order, ascending);
-        final Uri uri = Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, String.valueOf(mAccountId));
+        final Uri uri = Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, String.valueOf(mAccountKey));
         return mContext.getContentResolver().query(uri, CachedUsers.COLUMNS, usersSelection.getSQL(),
                 selectionArgs, orderBy.getSQL());
     }
 
 
-    public void setAccountId(long accountId) {
-        mAccountId = accountId;
+    public void setAccountKey(AccountKey accountKey) {
+        mAccountKey = accountKey;
     }
 
     @Override

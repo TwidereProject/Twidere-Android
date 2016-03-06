@@ -72,7 +72,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
-import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
+import static org.mariotaku.twidere.util.Utils.getDefaultAccountKey;
 
 public abstract class BaseFiltersFragment extends AbsContentListViewFragment<SimpleCursorAdapter>
         implements LoaderManager.LoaderCallbacks<Cursor>, MultiChoiceModeListener {
@@ -301,7 +301,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
                             mUserAutoCompleteAdapter = new SourceAutoCompleteAdapter(activity);
                         } else {
                             final ComposeAutoCompleteAdapter adapter = new ComposeAutoCompleteAdapter(activity);
-                            adapter.setAccountId(Utils.getDefaultAccountId(activity));
+                            adapter.setAccountKey(Utils.getDefaultAccountKey(activity));
                             mUserAutoCompleteAdapter = adapter;
                         }
                         editText.setAdapter(mUserAutoCompleteAdapter);
@@ -429,7 +429,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
                 case R.id.add: {
                     final Intent intent = new Intent(INTENT_ACTION_SELECT_USER);
                     intent.setClass(getContext(), UserListSelectorActivity.class);
-                    intent.putExtra(EXTRA_ACCOUNT_ID, getDefaultAccountId(getActivity()));
+                    intent.putExtra(EXTRA_ACCOUNT_ID, getDefaultAccountKey(getActivity()));
                     startActivityForResult(intent, REQUEST_SELECT_USER);
                     return true;
                 }

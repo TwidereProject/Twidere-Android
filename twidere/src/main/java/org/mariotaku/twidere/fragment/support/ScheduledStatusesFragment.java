@@ -59,7 +59,7 @@ public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragmen
 
     @Override
     public Loader<List<ScheduledStatus>> onCreateLoader(int id, Bundle args) {
-        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final String[] states = {ScheduledStatus.State.SCHEDULED, ScheduledStatus.State.FAILED};

@@ -63,7 +63,6 @@ public interface Constants extends TwidereConstants {
     int LINK_ID_USERS = 23;
     int LINK_ID_STATUSES = 24;
     int LINK_ID_STATUS_RETWEETERS = 25;
-    int LINK_ID_STATUS_REPLIES = 26;
     int LINK_ID_STATUS_FAVORITERS = 27;
     int LINK_ID_SEARCH = 28;
     int LINK_ID_DIRECT_MESSAGES = 29;

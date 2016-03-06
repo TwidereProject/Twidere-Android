@@ -2,7 +2,7 @@ package org.mariotaku.twidere.model.util;
 
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 
@@ -10,16 +10,16 @@ import org.mariotaku.twidere.util.TwitterContentUtils;
  * Created by mariotaku on 16/3/5.
  */
 public class ParcelableUserListUtils {
-    public static ParcelableUserList from(UserList list, AccountId accountId) {
-        return from(list, accountId, 0, false);
+    public static ParcelableUserList from(UserList list, AccountKey accountKey) {
+        return from(list, accountKey, 0, false);
     }
 
-    public static ParcelableUserList from(UserList list, AccountId accountId, long position, boolean isFollowing) {
+    public static ParcelableUserList from(UserList list, AccountKey accountKey, long position, boolean isFollowing) {
         ParcelableUserList obj = new ParcelableUserList();
         final User user = list.getUser();
         obj.position = position;
-        obj.account_id = accountId.getId();
-        obj.account_host = accountId.getHost();
+        obj.account_id = accountKey.getId();
+        obj.account_host = accountKey.getHost();
         obj.id = list.getId();
         obj.is_public = UserList.Mode.PUBLIC.equals(list.getMode());
         obj.is_following = isFollowing;
@@ -34,12 +34,12 @@ public class ParcelableUserListUtils {
         return obj;
     }
 
-    public static ParcelableUserList[] fromUserLists(UserList[] userLists, long accountId) {
+    public static ParcelableUserList[] fromUserLists(UserList[] userLists, AccountKey accountKey) {
         if (userLists == null) return null;
         int size = userLists.length;
         final ParcelableUserList[] result = new ParcelableUserList[size];
         for (int i = 0; i < size; i++) {
-            result[i] = new ParcelableUserList(userLists[i], accountId);
+            result[i] = from(userLists[i], accountKey);
         }
         return result;
     }

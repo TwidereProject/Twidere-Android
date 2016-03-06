@@ -1212,10 +1212,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     @Override
                     public void run() {
                         final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                                DataStoreUtils.getAccountIds(context));
+                                DataStoreUtils.getAccountKeys(context));
                         for (final AccountPreferences pref : prefs) {
                             if (!pref.isHomeTimelineNotificationEnabled()) continue;
-                            final long positionTag = getPositionTag(CustomTabType.HOME_TIMELINE, pref.getAccountId());
+                            final long positionTag = getPositionTag(CustomTabType.HOME_TIMELINE, pref.getAccountKey());
                             showTimelineNotification(pref, positionTag);
                         }
                         notifyUnreadCountChanged(NOTIFICATION_ID_HOME_TIMELINE);
@@ -1228,12 +1228,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     @Override
                     public void run() {
                         final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                                DataStoreUtils.getAccountIds(context));
+                                DataStoreUtils.getAccountKeys(context));
                         final boolean combined = mPreferences.getBoolean(KEY_COMBINED_NOTIFICATIONS);
                         for (final AccountPreferences pref : prefs) {
                             if (!pref.isInteractionsNotificationEnabled()) continue;
                             showInteractionsNotification(pref, getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME,
-                                    pref.getAccountId()), combined);
+                                    pref.getAccountKey()), combined);
                         }
                         notifyUnreadCountChanged(NOTIFICATION_ID_INTERACTIONS_TIMELINE);
                     }
@@ -1242,7 +1242,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
             case TABLE_ID_DIRECT_MESSAGES_INBOX: {
                 final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                        DataStoreUtils.getAccountIds(context));
+                        DataStoreUtils.getAccountKeys(context));
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isDirectMessagesNotificationEnabled()) continue;
                     final StringLongPair[] pairs = mReadStateManager.getPositionPairs(CustomTabType.DIRECT_MESSAGES);
@@ -1265,7 +1265,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void showTimelineNotification(AccountPreferences pref, long position) {
-        final long accountId = pref.getAccountId();
+        final long accountId = pref.getAccountKey();
         final Context context = getContext();
         if (context == null) return;
         final Resources resources = context.getResources();
@@ -1337,9 +1337,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showInteractionsNotification(AccountPreferences pref, long position, boolean combined) {
         final Context context = getContext();
         if (context == null) return;
-        final long accountId = pref.getAccountId();
+        final long accountId = pref.getAccountKey();
         final String where = Expression.and(
-                Expression.equals(Activities.ACCOUNT_ID, pref.getAccountId()),
+                Expression.equals(Activities.ACCOUNT_ID, pref.getAccountKey()),
                 Expression.greaterThan(Activities.TIMESTAMP, position)
         ).getSQL();
         Cursor c = query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, null,
@@ -1483,7 +1483,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showMessagesNotification(AccountPreferences pref, StringLongPair[] pairs, ContentValues[] valuesArray) {
         final Context context = getContext();
         assert context != null;
-        final long accountId = pref.getAccountId();
+        final long accountId = pref.getAccountKey();
         final long prevOldestId = mReadStateManager.getPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountId));
         long oldestId = -1;
         for (final ContentValues contentValues : valuesArray) {

@@ -58,10 +58,10 @@ import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
-import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
@@ -104,7 +104,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     private View mEditProfileBanner;
     private View mSetLinkColor, mSetBackgroundColor;
     private ForegroundColorView mLinkColor, mBackgroundColor;
-    private long mAccountId;
+    private AccountKey mAccountId;
     private ParcelableUser mUser;
     private boolean mUserInfoLoaderInitialized;
     private boolean mGetUserInfoCalled;
@@ -167,7 +167,8 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
         mProgressContainer.setVisibility(View.VISIBLE);
         mEditProfileContent.setVisibility(View.GONE);
-        return new ParcelableUserLoader(getActivity(), mAccountId, mAccountId, null, getArguments(), false, false);
+        return new ParcelableUserLoader(getActivity(), mAccountId, mAccountId.getId(), null,
+                getArguments(), false, false);
     }
 
     @Override
@@ -214,9 +215,9 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         final Bundle args = getArguments();
-        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-        mAccountId = accountId;
-        if (!Utils.isMyAccount(getActivity(), accountId)) {
+        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        mAccountId = accountKey;
+        if (!Utils.isMyAccount(getActivity(), accountKey)) {
             getActivity().finish();
             return;
         }
@@ -298,13 +299,13 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
                 if (resultCode == RESULT_REMOVE_BANNER) {
                     mTask = new RemoveProfileBannerTaskInternal(mAccountId);
                 } else {
-                    mTask = new UpdateProfileBannerImageTaskInternal(getActivity(), mAsyncTaskManager, mAccountId, data.getData(), true);
+                    mTask = new UpdateProfileBannerImageTaskInternal(getActivity(), mAccountId, data.getData(), true);
                 }
                 break;
             }
             case REQUEST_UPLOAD_PROFILE_IMAGE: {
                 if (mTask != null && mTask.getStatus() == Status.RUNNING) return;
-                mTask = new UpdateProfileImageTaskInternal(getActivity(), mAsyncTaskManager, mAccountId, data.getData(), true);
+                mTask = new UpdateProfileImageTaskInternal(getActivity(), mAccountId, data.getData(), true);
                 break;
             }
             case REQUEST_PICK_LINK_COLOR: {
@@ -419,7 +420,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         private final Handler mHandler;
 
         // Data fields
-        private final long mAccountId;
+        private final AccountKey mAccountKey;
         private final ParcelableUser mOriginal;
         private final String mName;
         private final String mUrl;
@@ -429,14 +430,14 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         private final int mBackgroundColor;
 
         public UpdateProfileTaskInternal(final UserProfileEditorFragment fragment,
-                                         final long accountId, final ParcelableUser original,
+                                         final AccountKey accountKey, final ParcelableUser original,
                                          final String name, final String url, final String location,
                                          final String description, final int linkColor,
                                          final int backgroundColor) {
             mFragment = fragment;
             mActivity = fragment.getActivity();
             mHandler = new Handler(mActivity.getMainLooper());
-            mAccountId = accountId;
+            mAccountKey = accountKey;
             mOriginal = original;
             mName = name;
             mUrl = url;
@@ -448,7 +449,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
         @Override
         protected SingleResponse<ParcelableUser> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountId, accountHost, true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountKey, true);
             try {
                 User user = null;
                 if (isProfileChanged()) {
@@ -465,7 +466,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
                     // User profile unchanged
                     return SingleResponse.getInstance();
                 }
-                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountId));
+                return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey));
             } catch (TwitterException e) {
                 return SingleResponse.getInstance(e);
             }
@@ -511,15 +512,15 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
     class RemoveProfileBannerTaskInternal extends AsyncTask<Object, Object, SingleResponse<Boolean>> {
 
-        private final long account_id;
+        private final AccountKey mAccountKey;
 
-        RemoveProfileBannerTaskInternal(final long account_id) {
-            this.account_id = account_id;
+        RemoveProfileBannerTaskInternal(final AccountKey accountKey) {
+            this.mAccountKey = accountKey;
         }
 
         @Override
         protected SingleResponse<Boolean> doInBackground(final Object... params) {
-            return TwitterWrapper.deleteProfileBannerImage(getActivity(), account_id);
+            return TwitterWrapper.deleteProfileBannerImage(getActivity(), mAccountKey);
         }
 
         @Override
@@ -545,9 +546,9 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
     private class UpdateProfileBannerImageTaskInternal extends UpdateProfileBannerImageTask {
 
-        public UpdateProfileBannerImageTaskInternal(final Context context, final AsyncTaskManager manager,
-                                                    final long account_id, final Uri image_uri, final boolean delete_image) {
-            super(context, account_id, accountHost, image_uri, delete_image);
+        public UpdateProfileBannerImageTaskInternal(final Context context, final AccountKey accountKey,
+                                                    final Uri imageUri, final boolean deleteImage) {
+            super(context, accountKey, imageUri, deleteImage);
         }
 
         @Override
@@ -567,9 +568,9 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
 
     private class UpdateProfileImageTaskInternal extends UpdateProfileImageTask {
 
-        public UpdateProfileImageTaskInternal(final Context context, final AsyncTaskManager manager,
-                                              final long account_id, final Uri image_uri, final boolean delete_image) {
-            super(context, account_id, accountHost, image_uri, delete_image);
+        public UpdateProfileImageTaskInternal(final Context context, final AccountKey accountKey,
+                                              final Uri imageUri, final boolean deleteImage) {
+            super(context, accountKey, imageUri, deleteImage);
         }
 
         @Override

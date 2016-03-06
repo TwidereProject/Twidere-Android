@@ -106,6 +106,8 @@ public interface IntentConstants {
     String EXTRA_URI = "uri";
     String EXTRA_URI_ORIG = "uri_orig";
     String EXTRA_MENTIONS = "mentions";
+    String EXTRA_ACCOUNT_KEY = "account_key";
+    String EXTRA_ACCOUNT_KEYS = "account_keys";
     String EXTRA_ACCOUNT_ID = "account_id";
     String EXTRA_ACCOUNT_HOST = "account_host";
     String EXTRA_ACCOUNT_IDS = "account_ids";

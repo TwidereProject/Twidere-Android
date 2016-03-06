@@ -29,11 +29,13 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -97,8 +99,8 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     }
 
     @Override
-    protected long[] getAccountIds() {
-        return new long[]{getAccountId()};
+    protected AccountKey[] getAccountKeys() {
+        return Utils.getAccountKeys(getArguments());
     }
 
     @Override
@@ -147,7 +149,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     public boolean triggerRefresh() {
         super.triggerRefresh();
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
-        final long[] accountIds = getAccountIds();
+        final AccountKey[] accountIds = getAccountKeys();
         if (adapter.getStatusCount() > 0) {
             final long[] sinceIds = new long[]{adapter.getStatus(0).id};
             getStatuses(accountIds, null, sinceIds);
@@ -176,9 +178,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     private void updateFavoritedStatus(ParcelableStatus status) {
         final Context context = getActivity();
         if (context == null) return;
-        if (status.account_id == getAccountId()) {
-            replaceStatus(status);
-        }
+        replaceStatus(status);
     }
 
     private void updateRetweetedStatuses(ParcelableStatus status) {

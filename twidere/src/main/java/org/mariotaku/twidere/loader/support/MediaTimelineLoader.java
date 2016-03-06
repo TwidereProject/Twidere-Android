@@ -61,7 +61,7 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         final Context context = getContext();
-        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(context, getAccountId());
+        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(context, getAccountKey());
         if (credentials == null) throw new TwitterException("Null credentials");
         if (Utils.isOfficialCredentials(context, credentials)) {
             if (mUserId != -1)
@@ -107,9 +107,9 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
 
     private boolean isMyTimeline() {
         if (mUserId > 0) {
-            return getAccountId() == mUserId;
+            return getAccountKey() == mUserId;
         } else {
-            final String accountScreenName = DataStoreUtils.getAccountScreenName(getContext(), getAccountId());
+            final String accountScreenName = DataStoreUtils.getAccountScreenName(getContext(), getAccountKey());
             return accountScreenName != null && accountScreenName.equalsIgnoreCase(mUserScreenName);
         }
     }

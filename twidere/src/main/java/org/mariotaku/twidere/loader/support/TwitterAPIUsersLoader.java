@@ -26,6 +26,7 @@ import android.util.Log;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -35,16 +36,16 @@ import java.util.List;
 
 public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
-    private final long mAccountId;
+    private final AccountKey mAccountKey;
 
-    public TwitterAPIUsersLoader(final Context context, final long accountId, final List<ParcelableUser> data, boolean fromUser) {
+    public TwitterAPIUsersLoader(final Context context, final AccountKey accountKey, final List<ParcelableUser> data, boolean fromUser) {
         super(context, data, fromUser);
-        mAccountId = accountId;
+        mAccountKey = accountKey;
     }
 
     @Override
     public List<ParcelableUser> loadInBackground() {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, accountHost, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountKey, true);
         if (twitter == null) return null;
         final List<ParcelableUser> data = getData();
         final List<User> users;
@@ -59,15 +60,15 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
             if (hasId(user.getId())) {
                 continue;
             }
-            data.add(ParcelableUserUtils.fromUser(user, mAccountId, pos));
+            data.add(ParcelableUserUtils.fromUser(user, mAccountKey, pos));
             pos++;
         }
         Collections.sort(data);
         return data;
     }
 
-    public long getAccountId() {
-        return mAccountId;
+    public final AccountKey getAccountId() {
+        return mAccountKey;
     }
 
     @NonNull

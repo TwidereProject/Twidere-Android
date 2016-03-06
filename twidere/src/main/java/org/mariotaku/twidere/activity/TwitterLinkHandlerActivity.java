@@ -21,7 +21,7 @@ import org.mariotaku.twidere.util.support.IntentSupport;
 
 import java.util.List;
 
-import static org.mariotaku.twidere.util.Utils.getDefaultAccountId;
+import static org.mariotaku.twidere.util.Utils.getDefaultAccountKey;
 
 public class TwitterLinkHandlerActivity extends Activity implements Constants {
 
@@ -153,21 +153,21 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);
                     builder.authority(AUTHORITY_USER_FRIENDS);
-                    builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(getDefaultAccountId(this)));
+                    builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(getDefaultAccountKey(this)));
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
                 }
                 case "followers": {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);
                     builder.authority(AUTHORITY_USER_FOLLOWERS);
-                    builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(getDefaultAccountId(this)));
+                    builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(getDefaultAccountKey(this)));
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
                 }
                 case "favorites": {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);
                     builder.authority(AUTHORITY_USER_FAVORITES);
-                    builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(getDefaultAccountId(this)));
+                    builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(getDefaultAccountKey(this)));
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
                 }
                 default: {

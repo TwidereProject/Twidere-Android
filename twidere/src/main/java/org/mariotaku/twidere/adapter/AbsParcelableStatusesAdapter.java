@@ -66,8 +66,9 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
             final long account_id = cursor.getLong(indices.account_id);
+            final String account_host = cursor.getString(indices.account_host);
             final long id = cursor.getLong(indices.id);
-            return ParcelableStatus.calculateHashCode(account_id, id);
+            return ParcelableStatus.calculateHashCode(account_id, account_host, id);
         }
         return System.identityHashCode(mData.get(dataPosition));
     }

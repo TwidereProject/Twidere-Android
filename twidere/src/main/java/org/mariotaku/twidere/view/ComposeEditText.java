@@ -33,7 +33,7 @@ import android.widget.AdapterView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.util.EmojiSupportUtils;
 import org.mariotaku.twidere.util.widget.StatusTextTokenizer;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
@@ -41,7 +41,7 @@ import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 public class ComposeEditText extends AppCompatMultiAutoCompleteTextView implements IThemeBackgroundTintView {
 
     private ComposeAutoCompleteAdapter mAdapter;
-    private AccountId mAccountId;
+    private AccountKey mAccountKey;
 
     public ComposeEditText(final Context context) {
         this(context, null);
@@ -70,8 +70,8 @@ public class ComposeEditText extends AppCompatMultiAutoCompleteTextView implemen
         setSupportBackgroundTintList(color);
     }
 
-    public void setAccountId(AccountId accountId) {
-        mAccountId = accountId;
+    public void setAccountKey(AccountKey accountKey) {
+        mAccountKey = accountKey;
         updateAccountId();
     }
 
@@ -101,7 +101,7 @@ public class ComposeEditText extends AppCompatMultiAutoCompleteTextView implemen
 
     private void updateAccountId() {
         if (mAdapter == null) return;
-        mAdapter.setAccountId(mAccountId);
+        mAdapter.setAccountKey(mAccountKey);
     }
 
     private void removeIMESuggestions() {

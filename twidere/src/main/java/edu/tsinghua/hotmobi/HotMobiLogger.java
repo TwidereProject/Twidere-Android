@@ -22,11 +22,13 @@ package edu.tsinghua.hotmobi;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.io.File;
@@ -49,8 +51,6 @@ import edu.tsinghua.hotmobi.model.LogModel;
  */
 @Singleton
 public class HotMobiLogger implements HotMobiConstants {
-
-    public static final long ACCOUNT_ID_NOT_NEEDED = -1;
 
     public static final String LOGTAG = "HotMobiLogger";
     public static final long UPLOAD_INTERVAL_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
@@ -91,15 +91,15 @@ public class HotMobiLogger implements HotMobiConstants {
         return DependencyHolder.get(context).getHotMobiLogger();
     }
 
-    public static File getLogFile(Context context, long accountId, String type) {
+    public static File getLogFile(Context context, @Nullable AccountKey accountKey, String type) {
         final File logsDir = getLogsDir(context);
         final File todayLogDir = new File(logsDir, DATE_FORMAT.format(new Date()));
         if (!todayLogDir.exists()) {
             todayLogDir.mkdirs();
         }
         final String logFilename;
-        if (accountId > 0) {
-            logFilename = type + "_" + accountId + ".log";
+        if (accountKey != null) {
+            logFilename = type + "_" + accountKey + ".log";
         } else {
             logFilename = type + ".log";
         }
@@ -127,11 +127,11 @@ public class HotMobiLogger implements HotMobiConstants {
             return false;
     }
 
-    public <T extends LogModel> void log(long accountId, final T event, final PreProcessing<T> preProcessing) {
+    public <T extends LogModel> void log(AccountKey accountId, final T event, final PreProcessing<T> preProcessing) {
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, event, preProcessing));
     }
 
-    public <T extends LogModel> void log(long accountId, final T event) {
+    public <T extends LogModel> void log(AccountKey accountId, final T event) {
         log(accountId, event, null);
     }
 
@@ -140,14 +140,14 @@ public class HotMobiLogger implements HotMobiConstants {
     }
 
     public void log(final LogModel event, final PreProcessing preProcessing) {
-        log(ACCOUNT_ID_NOT_NEEDED, event, preProcessing);
+        log(null, event, preProcessing);
     }
 
-    public <T extends LogModel> void logList(List<T> events, long accountId, String type) {
+    public <T extends LogModel> void logList(List<T> events, AccountKey accountId, String type) {
         logList(events, accountId, type, null);
     }
 
-    public <T extends LogModel> void logList(List<T> events, long accountId, String type, final PreProcessing<T> preProcessing) {
+    public <T extends LogModel> void logList(List<T> events, AccountKey accountId, String type, final PreProcessing<T> preProcessing) {
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, type, events, preProcessing));
     }
 

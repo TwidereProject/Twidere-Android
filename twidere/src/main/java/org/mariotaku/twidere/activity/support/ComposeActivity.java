@@ -104,7 +104,7 @@ import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftValuesCreator;
@@ -626,7 +626,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             finish();
             return;
         }
-        final long[] defaultAccountIds = DataStoreUtils.getAccountIds(accounts);
+        final long[] defaultAccountIds = DataStoreUtils.getAccountKeys(accounts);
         mMenuBar.setOnMenuItemClickListener(this);
         setupEditText();
         mAccountSelectorContainer.setOnClickListener(this);
@@ -672,7 +672,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         } else {
             // The context was first created
             final int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1);
-            final long notificationAccount = intent.getLongExtra(EXTRA_NOTIFICATION_ACCOUNT, -1);
+            final AccountKey notificationAccount = intent.getParcelableExtra(EXTRA_NOTIFICATION_ACCOUNT);
             if (notificationId != -1) {
                 mTwitterWrapper.clearNotificationAsync(notificationId, notificationAccount);
             }
@@ -1134,9 +1134,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         final ParcelableCredentials[] accounts = mAccountsAdapter.getSelectedAccounts();
         setSelectedAccounts(accounts);
         if (ArrayUtils.isEmpty(accounts)) {
-            mEditText.setAccountId(Utils.getDefaultAccountId(this));
+            mEditText.setAccountKey(Utils.getDefaultAccountKey(this));
         } else {
-            mEditText.setAccountId(new AccountId(accounts[0]));
+            mEditText.setAccountKey(new AccountKey(accounts[0]));
         }
         mSendTextCountView.setMaxLength(TwidereValidator.getTextLimit(accounts));
         setMenu();

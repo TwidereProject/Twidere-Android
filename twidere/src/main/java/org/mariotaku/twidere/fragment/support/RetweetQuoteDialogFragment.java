@@ -43,7 +43,7 @@ import android.widget.EditText;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -109,7 +109,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final ParcelableStatus status = getStatus();
         assert status != null;
         final ParcelableCredentials credentials = DataStoreUtils.getCredentials(wrapped,
-                status.account_id);
+                new AccountKey(status.account_id, status.account_host));
         assert credentials != null;
 
         builder.setView(view);
@@ -134,7 +134,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         view.findViewById(R.id.item_content).setFocusable(false);
         view.findViewById(R.id.comment_container).setVisibility(status.user_is_protected ? View.GONE : View.VISIBLE);
         final ComposeEditText editComment = (ComposeEditText) view.findViewById(R.id.edit_comment);
-        editComment.setAccountId(status.account_id);
+        editComment.setAccountKey(new AccountKey(status.account_id, status.account_host));
 
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
         final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(editComment, new EditTextEnterHandler.EnterListener() {
@@ -250,10 +250,10 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             update.is_possibly_sensitive = status.is_possibly_sensitive;
             BackgroundOperationService.updateStatusesAsync(getContext(), Draft.Action.QUOTE, update);
         } else if (isMyRetweet(status)) {
-            twitter.cancelRetweetAsync(status.account_id, status.account_host, status.id,
-                    status.my_retweet_id);
+            twitter.cancelRetweetAsync(new AccountKey(status.account_id, status.account_host),
+                    status.id, status.my_retweet_id);
         } else {
-            twitter.retweetStatusAsync(new AccountId(status.account_id, status.account_host),
+            twitter.retweetStatusAsync(new AccountKey(status.account_id, status.account_host),
                     status.id);
         }
     }

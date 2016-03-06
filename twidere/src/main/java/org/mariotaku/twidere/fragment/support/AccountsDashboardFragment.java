@@ -87,6 +87,7 @@ import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.menu.support.AccountToggleProvider;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
@@ -158,11 +159,11 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private boolean mLoaderInitialized;
 
     @NonNull
-    public long[] getActivatedAccountIds() {
+    public AccountKey[] getActivatedAccountIds() {
         if (mAccountActionProvider != null) {
             return mAccountActionProvider.getActivatedAccountIds();
         }
-        return DataStoreUtils.getActivatedAccountIds(getActivity());
+        return DataStoreUtils.getActivatedAccountKeys(getActivity());
     }
 
     @Override

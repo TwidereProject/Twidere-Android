@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
@@ -21,17 +21,17 @@ import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
  */
 public class ParcelableUserUtils implements TwidereConstants {
 
-    public static ParcelableUser fromUser(@NonNull User user, @Nullable AccountId accountId) {
-        return fromUser(user, accountId, 0);
+    public static ParcelableUser fromUser(@NonNull User user, @Nullable AccountKey accountKey) {
+        return fromUser(user, accountKey, 0);
     }
 
-    public static ParcelableUser fromUser(@NonNull User user, @Nullable AccountId accountId, long position) {
+    public static ParcelableUser fromUser(@NonNull User user, @Nullable AccountKey accountKey, long position) {
         final UrlEntity[] urlEntities = user.getUrlEntities();
         final ParcelableUser obj = new ParcelableUser();
         obj.position = position;
-        if (accountId != null) {
-            obj.account_id = accountId.getId();
-            obj.account_host = accountId.getHost();
+        if (accountKey != null) {
+            obj.account_id = accountKey.getId();
+            obj.account_host = accountKey.getHost();
         }
         obj.id = user.getId();
         obj.created_at = user.getCreatedAt().getTime();
@@ -94,12 +94,12 @@ public class ParcelableUserUtils implements TwidereConstants {
         return new ParcelableUser(accountId, id, name, screenName, profileImageUrl);
     }
 
-    public static ParcelableUser[] fromUsers(final User[] users, AccountId accountId) {
+    public static ParcelableUser[] fromUsers(final User[] users, AccountKey accountKey) {
         if (users == null) return null;
         int size = users.length;
         final ParcelableUser[] result = new ParcelableUser[size];
         for (int i = 0; i < size; i++) {
-            result[i] = fromUser(users[i], accountId);
+            result[i] = fromUser(users[i], accountKey);
         }
         return result;
     }

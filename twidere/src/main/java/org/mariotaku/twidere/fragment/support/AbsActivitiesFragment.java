@@ -47,10 +47,12 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.task.AbstractTask;
@@ -120,7 +122,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             mScrollState = newState;
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 if (mRecords != null) {
-                    HotMobiLogger.getInstance(getActivity()).logList(mRecords, HotMobiLogger.ACCOUNT_ID_NOT_NEEDED, "scroll");
+                    HotMobiLogger.getInstance(getActivity()).logList(mRecords, null, "scroll");
                 }
                 mRecords = null;
             }
@@ -143,7 +145,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         mStatusesBusCallback = createMessageBusCallback();
     }
 
-    public abstract boolean getActivities(long[] accountIds, long[] maxIds, long[] sinceIds);
+    public abstract boolean getActivities(RefreshTaskParam param);
 
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
@@ -188,7 +190,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 case ACTION_STATUS_FAVORITE: {
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(new AccountId(activity.account_id,
+                        twitter.destroyFavoriteAsync(new AccountKey(activity.account_id,
                                 activity.account_host), status.id);
                     } else {
                         final IStatusViewHolder holder = (IStatusViewHolder)
@@ -337,9 +339,9 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     public void onGapClick(GapViewHolder holder, int position) {
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
-        final long[] accountIds = {activity.account_id};
+        final AccountKey[] accountIds = {new AccountKey(activity.account_id, activity.account_host)};
         final long[] maxIds = {activity.min_position};
-        getActivities(accountIds, maxIds, null);
+        getActivities(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
 
     @Override
@@ -351,7 +353,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         // BEGIN HotMobi
         final MediaEvent event = MediaEvent.create(getActivity(), status, media,
                 getTimelineType(), adapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
+        HotMobiLogger.getInstance(getActivity()).log(new AccountKey(status.account_id,
+                status.account_host), event);
         // END HotMobi
     }
 
@@ -380,7 +383,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(new AccountId(status.account_id,
+                    twitter.destroyFavoriteAsync(new AccountKey(status.account_id,
                             status.account_host), status.id);
                 } else {
                     holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
@@ -436,7 +439,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                         Context.MODE_PRIVATE);
                 if (!prefs.getBoolean(KEY_USAGE_STATISTICS, false)) return false;
-                final File logFile = HotMobiLogger.getLogFile(context, HotMobiLogger.ACCOUNT_ID_NOT_NEEDED, "scroll");
+                final File logFile = HotMobiLogger.getLogFile(context, null, "scroll");
                 return logFile.length() < 131072;
             }
 
@@ -504,7 +507,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         return new StatusesBusCallback();
     }
 
-    protected abstract AccountId[] getAccountIds();
+    protected abstract AccountKey[] getAccountKeys();
 
     protected Data getAdapterData() {
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
@@ -537,7 +540,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         final ParcelableActivity activity = adapter.getActivity(position);
         if (activity == null) return;
         if (mReadStateManager.setPosition(readPositionTag, activity.timestamp)) {
-            mTwitterWrapper.setActivitiesAboutMeUnreadAsync(getAccountIds(), activity.timestamp);
+            mTwitterWrapper.setActivitiesAboutMeUnreadAsync(getAccountKeys(), activity.timestamp);
         }
         mReadStateManager.setPosition(getCurrentReadPositionTag(), activity.timestamp, true);
     }
@@ -641,7 +644,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     }
 
     private String getReadPositionTagWithAccounts() {
-        return Utils.getReadPositionTagWithAccounts(getReadPositionTag(), getAccountIds());
+        return Utils.getReadPositionTagWithAccounts(getReadPositionTag(), getAccountKeys());
     }
 
     protected final class StatusesBusCallback {

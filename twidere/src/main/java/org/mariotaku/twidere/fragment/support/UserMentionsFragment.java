@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.UserMentionsLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
@@ -39,14 +40,13 @@ public class UserMentionsFragment extends StatusesSearchFragment {
                                                                     final boolean fromUser) {
         if (args == null) return null;
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean makeGap = args.getBoolean(EXTRA_MAKE_GAP, true);
-        return new UserMentionsLoader(getActivity(), accountId, screenName, maxId, sinceId,
-                getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser, makeGap
-        );
+        return new UserMentionsLoader(getActivity(), accountKey, screenName, maxId, sinceId,
+                getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser, makeGap);
     }
 
     @Override

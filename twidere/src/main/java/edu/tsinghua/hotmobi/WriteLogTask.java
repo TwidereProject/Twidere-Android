@@ -27,6 +27,7 @@ import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
 
@@ -48,20 +49,20 @@ public class WriteLogTask<T extends LogModel> implements Runnable, Constants {
     private static final byte[] LF = {'\n'};
 
     private final Context context;
-    private final long accountId;
+    private final AccountKey accountKey;
     private final String type;
     private final List<T> events;
     @Nullable
     private final PreProcessing<T> preProcessing;
 
-    public WriteLogTask(Context context, long accountId, T event, @Nullable PreProcessing<T> preProcessing) {
-        this(context, accountId, HotMobiLogger.getLogFilename(event), Collections.singletonList(event), preProcessing);
+    public WriteLogTask(Context context, AccountKey accountKey, T event, @Nullable PreProcessing<T> preProcessing) {
+        this(context, accountKey, HotMobiLogger.getLogFilename(event), Collections.singletonList(event), preProcessing);
     }
 
-    public WriteLogTask(Context context, long accountId, String type, List<T> events,
+    public WriteLogTask(Context context, AccountKey accountKey, String type, List<T> events,
                         @Nullable PreProcessing<T> preProcessing) {
         this.context = context;
-        this.accountId = accountId;
+        this.accountKey = accountKey;
         this.type = type;
         this.events = events;
         this.preProcessing = preProcessing;
@@ -75,7 +76,7 @@ public class WriteLogTask<T extends LogModel> implements Runnable, Constants {
         RandomAccessFile raf = null;
         FileChannel fc = null;
         try {
-            raf = new RandomAccessFile(HotMobiLogger.getLogFile(context, accountId, type), "rw");
+            raf = new RandomAccessFile(HotMobiLogger.getLogFile(context, accountKey, type), "rw");
             fc = raf.getChannel();
             final FileLock lock = fc.lock();
             for (T event : events) {
@@ -83,8 +84,8 @@ public class WriteLogTask<T extends LogModel> implements Runnable, Constants {
                     preProcessing.process(event, context);
                 }
                 if (BuildConfig.DEBUG) {
-                    if (accountId > 0) {
-                        Log.v(HotMobiLogger.LOGTAG, "Log " + type + " for account " + accountId + ": " + event);
+                    if (accountKey != null) {
+                        Log.v(HotMobiLogger.LOGTAG, "Log " + type + " for account " + accountKey + ": " + event);
                     } else {
                         Log.v(HotMobiLogger.LOGTAG, "Log " + type + ": " + event);
                     }

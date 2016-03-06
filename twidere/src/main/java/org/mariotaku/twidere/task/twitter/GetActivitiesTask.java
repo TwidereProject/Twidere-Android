@@ -18,6 +18,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
@@ -62,15 +63,17 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
 
     @Override
     public Object doLongOperation(RefreshTaskParam param) {
-        final long[] accountIds = param.getAccountIds(), maxIds = param.getMaxIds(), sinceIds = param.getSinceIds();
+        final AccountKey[] accountIds = param.getAccountKeys();
+        final long[] maxIds = param.getMaxIds();
+        final long[] sinceIds = param.getSinceIds();
         final ContentResolver cr = context.getContentResolver();
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT);
         boolean saveReadPosition = false;
         for (int i = 0; i < accountIds.length; i++) {
-            final long accountId = accountIds[i];
+            final AccountKey accountKey = accountIds[i];
             final boolean noItemsBefore = DataStoreUtils.getActivitiesCount(context, getContentUri(),
-                    accountId) <= 0;
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountId, accountHost, true);
+                    accountKey) <= 0;
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
             if (twitter == null) continue;
             final Paging paging = new Paging();
             paging.count(loadItemLimit);
@@ -86,22 +89,22 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             }
             // We should delete old activities has intersection with new items
             try {
-                final ResponseList<Activity> activities = getActivities(twitter, accountId, paging);
-                storeActivities(cr, loadItemLimit, accountId, noItemsBefore, activities);
+                final ResponseList<Activity> activities = getActivities(twitter, accountKey, paging);
+                storeActivities(cr, loadItemLimit, accountKey, noItemsBefore, activities);
 //                if (saveReadPosition && TwitterAPIFactory.isOfficialTwitterInstance(context, twitter)) {
                 if (saveReadPosition) {
-                    saveReadPosition(accountId, twitter);
+                    saveReadPosition(accountKey, twitter);
                 }
-                errorInfoStore.remove(getErrorInfoKey(), accountId);
+                errorInfoStore.remove(getErrorInfoKey(), accountKey);
             } catch (TwitterException e) {
                 if (BuildConfig.DEBUG) {
                     Log.w(LOGTAG, e);
                 }
                 if (e.getErrorCode() == 220) {
-                    errorInfoStore.put(getErrorInfoKey(), accountId,
+                    errorInfoStore.put(getErrorInfoKey(), accountKey,
                             ErrorInfoStore.CODE_NO_ACCESS_FOR_CREDENTIALS);
                 } else if (e.isCausedByNetworkIssue()) {
-                    errorInfoStore.put(getErrorInfoKey(), accountId,
+                    errorInfoStore.put(getErrorInfoKey(), accountKey,
                             ErrorInfoStore.CODE_NETWORK_ERROR);
                 }
             }
@@ -112,13 +115,14 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     @NonNull
     protected abstract String getErrorInfoKey();
 
-    private void storeActivities(ContentResolver cr, int loadItemLimit, long accountId,
+    private void storeActivities(ContentResolver cr, int loadItemLimit, AccountKey accountKey,
                                  boolean noItemsBefore, ResponseList<Activity> activities) {
         long[] deleteBound = new long[2];
         Arrays.fill(deleteBound, -1);
         List<ContentValues> valuesList = new ArrayList<>();
         for (Activity activity : activities) {
-            final ParcelableActivity parcelableActivity = ParcelableActivityUtils.fromActivity(activity, accountId, accountHost, false);
+            final ParcelableActivity parcelableActivity = ParcelableActivityUtils.fromActivity(activity,
+                    accountKey, false);
             if (deleteBound[0] < 0) {
                 deleteBound[0] = parcelableActivity.min_position;
             } else {
@@ -135,7 +139,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
         }
         if (deleteBound[0] > 0 && deleteBound[1] > 0) {
             Expression where = Expression.and(
-                    Expression.equals(Activities.ACCOUNT_ID, accountId),
+                    Expression.equals(Activities.ACCOUNT_ID, accountKey),
                     Expression.greaterEquals(Activities.MIN_POSITION, deleteBound[0]),
                     Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
             );

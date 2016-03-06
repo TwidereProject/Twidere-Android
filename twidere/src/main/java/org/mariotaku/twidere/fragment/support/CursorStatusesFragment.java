@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 
@@ -40,8 +41,10 @@ import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
+import org.mariotaku.twidere.model.SimpleRefreshTaskParam;
 import org.mariotaku.twidere.model.message.AccountChangedEvent;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
@@ -51,10 +54,9 @@ import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.twidere.task.AbstractTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
 
@@ -68,13 +70,13 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
 
     @Override
     protected void onLoadingFinished() {
-        final long[] accountIds = getAccountIds();
+        final AccountKey[] accountKeys = getAccountKeys();
         final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         if (adapter.getItemCount() > 0) {
             showContent();
-        } else if (accountIds.length > 0) {
+        } else if (accountKeys.length > 0) {
             final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
-                    mErrorInfoStore.get(getErrorInfoKey(), accountIds[0]));
+                    mErrorInfoStore.get(getErrorInfoKey(), accountKeys[0]));
             if (errorInfo != null) {
                 showEmpty(errorInfo.getIcon(), errorInfo.getMessage());
             } else {
@@ -99,8 +101,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
         final String sortOrder = Statuses.DEFAULT_SORT_ORDER;
-        final long[] accountIds = getAccountIds();
-        final Expression accountWhere = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountIds));
+        final AccountKey[] accountKeys = getAccountKeys();
+        final Expression accountWhere = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountKeys));
         final Expression filterWhere = getFiltersWhere(table), where;
         if (filterWhere != null) {
             where = Expression.and(accountWhere, filterWhere);
@@ -109,7 +111,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         }
         final String selection = processWhere(where).getSQL();
         final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
-        adapter.setShowAccountsColor(accountIds.length > 1);
+        adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Statuses.COLUMNS;
         return new ExtendedObjectCursorLoader<>(context, ParcelableStatusCursorIndices.class, uri,
                 projection, selection, null, sortOrder, fromUser);
@@ -176,16 +178,17 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     }
 
     @Override
-    protected long[] getAccountIds() {
+    protected AccountKey[] getAccountKeys() {
         final Bundle args = getArguments();
-        if (args != null && args.getLong(EXTRA_ACCOUNT_ID) > 0) {
-            return new long[]{args.getLong(EXTRA_ACCOUNT_ID)};
+        final AccountKey[] accountKeys = Utils.getAccountKeys(args);
+        if (accountKeys != null) {
+            return accountKeys;
         }
         final FragmentActivity activity = getActivity();
         if (activity instanceof HomeActivity) {
-            return ((HomeActivity) activity).getActivatedAccountIds();
+            return ((HomeActivity) activity).getActivatedAccountKeys();
         }
-        return DataStoreUtils.getActivatedAccountIds(getActivity());
+        return DataStoreUtils.getActivatedAccountKeys(getActivity());
     }
 
     @Override
@@ -243,41 +246,37 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         if ((position & IndicatorPosition.START) != 0) return;
         super.onLoadMoreContents(position);
         if (position == 0) return;
-        TaskStarter.execute(new AbstractTask<Object, long[][], CursorStatusesFragment>() {
+        getStatuses(new SimpleRefreshTaskParam() {
+            @NonNull
             @Override
-            public long[][] doLongOperation(Object o) {
-                if (getContext() == null) return null;
-                final long[][] result = new long[3][];
-                result[0] = getAccountIds();
-                result[1] = getOldestStatusIds(result[0]);
-                return result;
+            public AccountKey[] getAccountKeys() {
+                return CursorStatusesFragment.this.getAccountKeys();
             }
 
+            @Nullable
             @Override
-            public void afterExecute(CursorStatusesFragment fragment, long[][] result) {
-                if (result == null) return;
-                fragment.getStatuses(result[0], result[1], result[2]);
+            public long[] getMaxIds() {
+                return getOldestStatusIds(getAccountKeys());
             }
-        }.setResultHandler(this));
+        });
     }
 
     @Override
     public boolean triggerRefresh() {
         super.triggerRefresh();
-        TaskStarter.execute(new AbstractTask<Object, long[][], CursorStatusesFragment>() {
+        getStatuses(new SimpleRefreshTaskParam() {
+            @NonNull
             @Override
-            public long[][] doLongOperation(Object o) {
-                final long[][] result = new long[3][];
-                result[0] = getAccountIds();
-                result[2] = getNewestStatusIds(result[0]);
-                return result;
+            public AccountKey[] getAccountKeys() {
+                return CursorStatusesFragment.this.getAccountKeys();
             }
 
+            @Nullable
             @Override
-            public void afterExecute(CursorStatusesFragment fragment, long[][] result) {
-                fragment.getStatuses(result[0], result[1], result[2]);
+            public long[] getSinceIds() {
+                return getNewestStatusIds(getAccountKeys());
             }
-        }.setResultHandler(this));
+        });
         return true;
     }
 
@@ -286,10 +285,10 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         return buildStatusFilterWhereClause(table, null);
     }
 
-    protected long[] getNewestStatusIds(long[] accountIds) {
+    protected long[] getNewestStatusIds(AccountKey[] accountKeys) {
         final Context context = getContext();
         if (context == null) return null;
-        return DataStoreUtils.getNewestStatusIds(context, getContentUri(), accountIds);
+        return DataStoreUtils.getNewestStatusIds(context, getContentUri(), accountKeys);
     }
 
     protected abstract int getNotificationType();
@@ -298,16 +297,16 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            for (long accountId : getAccountIds()) {
+            for (AccountKey accountId : getAccountKeys()) {
                 mTwitterWrapper.clearNotificationAsync(getNotificationType(), accountId);
             }
         }
     }
 
-    protected long[] getOldestStatusIds(long[] accountIds) {
+    protected long[] getOldestStatusIds(AccountKey[] accountKeys) {
         final Context context = getContext();
         if (context == null) return null;
-        return DataStoreUtils.getOldestStatusIds(context, getContentUri(), accountIds);
+        return DataStoreUtils.getOldestStatusIds(context, getContentUri(), accountKeys);
     }
 
     protected abstract boolean isFilterEnabled();

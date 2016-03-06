@@ -22,7 +22,7 @@ package org.mariotaku.twidere.model.message;
 import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.api.twitter.model.Relationship;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
 
 /**
  * Created by mariotaku on 14/12/7.
@@ -30,13 +30,13 @@ import org.mariotaku.twidere.model.AccountId;
 public class FriendshipUpdatedEvent {
 
     @NonNull
-    public final AccountId accountId;
+    public final AccountKey mAccountKey;
     public final long userId;
     @NonNull
     public final Relationship relationship;
 
-    public FriendshipUpdatedEvent(@NonNull AccountId accountId, long userId, @NonNull Relationship relationship) {
-        this.accountId = accountId;
+    public FriendshipUpdatedEvent(@NonNull AccountKey accountKey, long userId, @NonNull Relationship relationship) {
+        this.mAccountKey = accountKey;
         this.userId = userId;
         this.relationship = relationship;
     }

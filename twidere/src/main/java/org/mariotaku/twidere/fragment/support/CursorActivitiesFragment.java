@@ -42,8 +42,11 @@ import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
+import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
+import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.AccountChangedEvent;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
@@ -57,6 +60,7 @@ import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
 
@@ -69,7 +73,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
 
     @Override
     protected void onLoadingFinished() {
-        final long[] accountIds = getAccountIds();
+        final AccountKey[] accountIds = getAccountKeys();
         final AbsActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
         if (adapter.getItemCount() > 0) {
             showContent();
@@ -100,7 +104,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
         final String sortOrder = getSortOrder();
-        final long[] accountIds = getAccountIds();
+        final AccountKey[] accountIds = getAccountKeys();
         final Expression accountWhere = Expression.in(new Column(Activities.ACCOUNT_ID),
                 new RawItemArray(accountIds));
         final Expression filterWhere = getFiltersWhere(table), where;
@@ -124,16 +128,17 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     }
 
     @Override
-    protected long[] getAccountIds() {
+    protected AccountKey[] getAccountKeys() {
         final Bundle args = getArguments();
-        if (args != null && args.getLong(EXTRA_ACCOUNT_ID) > 0) {
-            return new long[]{args.getLong(EXTRA_ACCOUNT_ID)};
+        AccountKey[] accountKeys = Utils.getAccountKeys(args);
+        if (accountKeys != null) {
+            return accountKeys;
         }
         final FragmentActivity activity = getActivity();
         if (activity instanceof HomeActivity) {
-            return ((HomeActivity) activity).getActivatedAccountIds();
+            return ((HomeActivity) activity).getActivatedAccountKeys();
         }
-        return DataStoreUtils.getActivatedAccountIds(getActivity());
+        return DataStoreUtils.getActivatedAccountKeys(getActivity());
     }
 
     @Override
@@ -185,18 +190,17 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         if ((position & IndicatorPosition.START) != 0) return;
         super.onLoadMoreContents(position);
         if (position == 0) return;
-        TaskStarter.execute(new AbstractTask<Object, long[][], CursorActivitiesFragment>() {
+        TaskStarter.execute(new AbstractTask<Object, RefreshTaskParam, CursorActivitiesFragment>() {
             @Override
-            public long[][] doLongOperation(Object o) {
-                final long[][] result = new long[3][];
-                result[0] = getAccountIds();
-                result[1] = getOldestActivityIds(result[0]);
-                return result;
+            public RefreshTaskParam doLongOperation(Object o) {
+                final AccountKey[] accountKeys = getAccountKeys();
+                final long[] maxIds = getOldestActivityIds(accountKeys);
+                return new BaseRefreshTaskParam(accountKeys, maxIds, null);
             }
 
             @Override
-            public void afterExecute(CursorActivitiesFragment fragment, long[][] result) {
-                fragment.getActivities(result[0], result[1], result[2]);
+            public void afterExecute(CursorActivitiesFragment fragment, RefreshTaskParam result) {
+                fragment.getActivities(result);
             }
         }.setResultHandler(this));
     }
@@ -204,22 +208,21 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     @Override
     public boolean triggerRefresh() {
         super.triggerRefresh();
-        TaskStarter.execute(new AbstractTask<Object, long[][], CursorActivitiesFragment>() {
+        TaskStarter.execute(new AbstractTask<Object, RefreshTaskParam, CursorActivitiesFragment>() {
             @Override
-            public long[][] doLongOperation(Object o) {
+            public RefreshTaskParam doLongOperation(Object o) {
                 if (getActivity() == null) {
                     return null;
                 }
-                final long[][] result = new long[3][];
-                result[0] = getAccountIds();
-                result[2] = getNewestActivityIds(result[0]);
-                return result;
+                final AccountKey[] accountKeys = getAccountKeys();
+                final long[] sinceIds = getNewestActivityIds(accountKeys);
+                return new BaseRefreshTaskParam(accountKeys, sinceIds, null);
             }
 
             @Override
-            public void afterExecute(CursorActivitiesFragment fragment, long[][] result) {
+            public void afterExecute(CursorActivitiesFragment fragment, RefreshTaskParam result) {
                 if (result == null) return;
-                fragment.getActivities(result[0], result[1], result[2]);
+                fragment.getActivities(result);
             }
         }.setResultHandler(this));
         return true;
@@ -230,8 +233,8 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         return DataStoreUtils.buildActivityFilterWhereClause(table, null);
     }
 
-    protected long[] getNewestActivityIds(long[] accountIds) {
-        return DataStoreUtils.getNewestActivityMaxPositions(getActivity(), getContentUri(), accountIds);
+    protected long[] getNewestActivityIds(AccountKey[] accountKeys) {
+        return DataStoreUtils.getNewestActivityMaxPositions(getActivity(), getContentUri(), accountKeys);
     }
 
     protected abstract int getNotificationType();
@@ -240,14 +243,14 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            for (long accountId : getAccountIds()) {
-                mTwitterWrapper.clearNotificationAsync(getNotificationType(), accountId);
+            for (AccountKey accountKey : getAccountKeys()) {
+                mTwitterWrapper.clearNotificationAsync(getNotificationType(), accountKey);
             }
         }
     }
 
-    protected long[] getOldestActivityIds(long[] accountIds) {
-        return DataStoreUtils.getOldestActivityMaxPositions(getActivity(), getContentUri(), accountIds);
+    protected long[] getOldestActivityIds(AccountKey[] accountKeys) {
+        return DataStoreUtils.getOldestActivityMaxPositions(getActivity(), getContentUri(), accountKeys);
     }
 
     protected abstract boolean isFilterEnabled();

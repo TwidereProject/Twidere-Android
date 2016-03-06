@@ -47,9 +47,11 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListene
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
-import org.mariotaku.twidere.model.AccountId;
+import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
@@ -119,7 +121,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
             mScrollState = newState;
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 if (mRecords != null) {
-                    HotMobiLogger.getInstance(getActivity()).logList(mRecords, HotMobiLogger.ACCOUNT_ID_NOT_NEEDED, "scroll");
+                    HotMobiLogger.getInstance(getActivity()).logList(mRecords, null, "scroll");
                 }
                 mRecords = null;
             }
@@ -142,7 +144,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         mStatusesBusCallback = createMessageBusCallback();
     }
 
-    public abstract boolean getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds);
+    public abstract boolean getStatuses(RefreshTaskParam param);
 
     @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
@@ -185,7 +187,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 case ACTION_STATUS_FAVORITE: {
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(new AccountId(status.account_id,
+                        twitter.destroyFavoriteAsync(new AccountKey(status.account_id,
                                 status.account_host), status.id);
                     } else {
                         final IStatusViewHolder holder = (IStatusViewHolder)
@@ -318,9 +320,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
-        final long[] accountIds = {status.account_id};
+        final AccountKey[] accountIds = {new AccountKey(status.account_id, status.account_host)};
         final long[] maxIds = {status.id};
-        getStatuses(accountIds, maxIds, null);
+        getStatuses(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
 
     @Override
@@ -332,7 +334,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         // BEGIN HotMobi
         final MediaEvent event = MediaEvent.create(getActivity(), status, media, getTimelineType(),
                 adapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(status.account_id, event);
+        HotMobiLogger.getInstance(getActivity()).log(new AccountKey(status.account_id,
+                status.account_host), event);
         // END HotMobi
     }
 
@@ -369,7 +372,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(new AccountId(status.account_id,
+                    twitter.destroyFavoriteAsync(new AccountKey(status.account_id,
                             status.account_host), status.id);
                 } else {
                     holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
@@ -421,7 +424,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                         Context.MODE_PRIVATE);
                 if (!prefs.getBoolean(KEY_USAGE_STATISTICS, false)) return false;
-                final File logFile = HotMobiLogger.getLogFile(context, HotMobiLogger.ACCOUNT_ID_NOT_NEEDED, "scroll");
+                final File logFile = HotMobiLogger.getLogFile(context, null, "scroll");
                 return logFile.length() < 131072;
             }
 
@@ -491,7 +494,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         return new StatusesBusCallback();
     }
 
-    protected abstract long[] getAccountIds();
+    protected abstract AccountKey[] getAccountKeys();
 
     protected Data getAdapterData() {
         final AbsStatusesAdapter<Data> adapter = getAdapter();
@@ -577,7 +580,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     }
 
     private String getReadPositionTagWithAccounts() {
-        return Utils.getReadPositionTagWithAccounts(getReadPositionTagWithArguments(), getAccountIds());
+        return Utils.getReadPositionTagWithAccounts(getReadPositionTagWithArguments(), getAccountKeys());
     }
 
     public static final class DefaultOnLikedListener implements LikeAnimationDrawable.OnLikedListener {
@@ -593,7 +596,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         public boolean onLiked() {
             final ParcelableStatus status = mStatus;
             if (status.is_favorite) return false;
-            mTwitter.createFavoriteAsync(new AccountId(status.account_id, status.account_host),
+            mTwitter.createFavoriteAsync(new AccountKey(status.account_id, status.account_host),
                     status.id);
             return true;
         }
