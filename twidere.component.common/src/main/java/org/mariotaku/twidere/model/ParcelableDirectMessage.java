@@ -57,6 +57,10 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     @CursorField(DirectMessages.ACCOUNT_ID)
     public long account_id;
     @ParcelableThisPlease
+    @JsonField(name = "account_host")
+    @CursorField(DirectMessages.ACCOUNT_HOST)
+    public String account_host;
+    @ParcelableThisPlease
     @JsonField(name = "id")
     @CursorField(DirectMessages.MESSAGE_ID)
     public long id;

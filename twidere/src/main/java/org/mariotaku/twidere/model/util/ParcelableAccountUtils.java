@@ -68,10 +68,10 @@ public class ParcelableAccountUtils {
     }
 
     @NonNull
-    public static ParcelableAccount[] getAccounts(@Nullable final Context context, @Nullable final long... accountIds) {
+    public static ParcelableAccount[] getAccounts(@Nullable final Context context, @Nullable final AccountKey... accountIds) {
         if (context == null) return new ParcelableAccount[0];
         final String where = accountIds != null ? Expression.in(new Columns.Column(Accounts.ACCOUNT_ID),
-                new RawItemArray(accountIds)).getSQL() : null;
+                new RawItemArray(AccountKey.getIds(accountIds))).getSQL() : null;
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS_NO_CREDENTIALS, where, null, null);
         if (cur == null) return new ParcelableAccount[0];
         return getAccounts(cur, new ParcelableAccountCursorIndices(cur));

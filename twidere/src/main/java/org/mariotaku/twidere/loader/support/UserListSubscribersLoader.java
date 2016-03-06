@@ -27,6 +27,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
@@ -37,10 +38,10 @@ public class UserListSubscribersLoader extends CursorSupportUsersLoader {
     private final long mUserId;
     private final String mScreenName, mListName;
 
-    public UserListSubscribersLoader(final Context context, final long accountId, final long listId,
-                                     final long userId, final String screenName, final String listName, final long cursor,
+    public UserListSubscribersLoader(final Context context, final AccountKey accountKey, final long listId,
+                                     final long userId, final String screenName, final String listName,
                                      final List<ParcelableUser> data, boolean fromUser) {
-        super(context, accountId, data, fromUser);
+        super(context, accountKey, data, fromUser);
         mListId = listId;
         mUserId = userId;
         mScreenName = screenName;

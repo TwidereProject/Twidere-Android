@@ -173,16 +173,23 @@ public class TwidereQueryBuilder {
 
         public static SQLSelectQuery build(final String selection) {
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
-            qb.select(new Columns(new Column(ConversationEntries._ID), new Column(ConversationEntries.MESSAGE_TIMESTAMP),
-                    new Column(ConversationEntries.MESSAGE_ID), new Column(ConversationEntries.ACCOUNT_ID), new Column(
-                    ConversationEntries.IS_OUTGOING), new Column(ConversationEntries.NAME), new Column(
-                    ConversationEntries.SCREEN_NAME), new Column(ConversationEntries.PROFILE_IMAGE_URL),
-                    new Column(ConversationEntries.TEXT_HTML), new Column(ConversationEntries.CONVERSATION_ID)));
+            qb.select(new Columns(new Column(ConversationEntries._ID),
+                    new Column(ConversationEntries.MESSAGE_TIMESTAMP),
+                    new Column(ConversationEntries.MESSAGE_ID),
+                    new Column(ConversationEntries.ACCOUNT_ID),
+                    new Column(ConversationEntries.ACCOUNT_HOST),
+                    new Column(ConversationEntries.IS_OUTGOING),
+                    new Column(ConversationEntries.NAME),
+                    new Column(ConversationEntries.SCREEN_NAME),
+                    new Column(ConversationEntries.PROFILE_IMAGE_URL),
+                    new Column(ConversationEntries.TEXT_HTML),
+                    new Column(ConversationEntries.CONVERSATION_ID)));
             final SQLSelectQuery.Builder entryIds = new SQLSelectQuery.Builder();
             entryIds.select(new Columns(new Column(DirectMessages._ID),
                     new Column(DirectMessages.MESSAGE_TIMESTAMP),
                     new Column(DirectMessages.MESSAGE_ID),
                     new Column(DirectMessages.ACCOUNT_ID),
+                    new Column(DirectMessages.ACCOUNT_HOST),
                     new Column("0", DirectMessages.IS_OUTGOING),
                     new Column(DirectMessages.SENDER_NAME, ConversationEntries.NAME),
                     new Column(DirectMessages.SENDER_SCREEN_NAME, ConversationEntries.SCREEN_NAME),
@@ -195,6 +202,7 @@ public class TwidereQueryBuilder {
                     new Column(DirectMessages.MESSAGE_TIMESTAMP),
                     new Column(DirectMessages.MESSAGE_ID),
                     new Column(DirectMessages.ACCOUNT_ID),
+                    new Column(DirectMessages.ACCOUNT_HOST),
                     new Column("1", DirectMessages.IS_OUTGOING),
                     new Column(DirectMessages.RECIPIENT_NAME, ConversationEntries.NAME),
                     new Column(DirectMessages.RECIPIENT_SCREEN_NAME, ConversationEntries.SCREEN_NAME),

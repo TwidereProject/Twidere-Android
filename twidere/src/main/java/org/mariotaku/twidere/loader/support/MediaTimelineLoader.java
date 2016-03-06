@@ -31,6 +31,7 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -49,10 +50,11 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
 
     private User mUser;
 
-    public MediaTimelineLoader(final Context context, final long accountId, final long userId, final String screenName,
-                               final long sinceId, final long maxId, final List<ParcelableStatus> data, final String[] savedStatusesArgs,
+    public MediaTimelineLoader(final Context context, final AccountKey accountKey, final long userId,
+                               final String screenName, final long sinceId, final long maxId,
+                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, final boolean fromUser) {
-        super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
         mUserId = userId;
         mUserScreenName = screenName;
     }
@@ -107,7 +109,7 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
 
     private boolean isMyTimeline() {
         if (mUserId > 0) {
-            return getAccountKey() == mUserId;
+            return getAccountKey().getId() == mUserId;
         } else {
             final String accountScreenName = DataStoreUtils.getAccountScreenName(getContext(), getAccountKey());
             return accountScreenName != null && accountScreenName.equalsIgnoreCase(mUserScreenName);

@@ -32,6 +32,7 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AbsUserListsAdapter;
 import org.mariotaku.twidere.loader.support.UserListsLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -47,7 +48,7 @@ public class UserListsFragment extends ParcelableUserListsFragment {
         final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        return new UserListsLoader(getActivity(), accountId, userId, screenName, true, getData());
+        return new UserListsLoader(getActivity(), accountKey, userId, screenName, true, getData());
     }
 
     @Override

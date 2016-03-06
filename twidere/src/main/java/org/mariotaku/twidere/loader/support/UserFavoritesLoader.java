@@ -29,6 +29,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
@@ -37,14 +38,14 @@ public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
 
     private final long mUserId;
     private final String mUserScreenName;
-    private int mTotalItemsCount;
 
-    public UserFavoritesLoader(final Context context, final long accountId, final long userId,
-                               final String screen_name, final long sinceId, final long maxId, final List<ParcelableStatus> data,
-                               final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
-        super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+    public UserFavoritesLoader(final Context context, final AccountKey accountKey, final long userId,
+                               final String screenName, final long sinceId, final long maxId,
+                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
+                               final int tabPosition, boolean fromUser) {
+        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
         mUserId = userId;
-        mUserScreenName = screen_name;
+        mUserScreenName = screenName;
     }
 
     @NonNull
@@ -54,10 +55,6 @@ public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
             return twitter.getFavorites(mUserId, paging);
         else if (mUserScreenName != null) return twitter.getFavorites(mUserScreenName, paging);
         throw new IllegalArgumentException();
-    }
-
-    public int getTotalItemsCount() {
-        return mTotalItemsCount;
     }
 
     @WorkerThread

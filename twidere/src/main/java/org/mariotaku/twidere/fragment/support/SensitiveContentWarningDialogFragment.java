@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -50,7 +51,7 @@ public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFrag
                 final boolean newDocument = args.getBoolean(EXTRA_NEW_DOCUMENT);
                 final ParcelableMedia[] media = Utils.newParcelableArray(args.getParcelableArray(EXTRA_MEDIA),
                         ParcelableMedia.CREATOR);
-                IntentUtils.openMediaDirectly(context, accountId, status, null, current, media,
+                IntentUtils.openMediaDirectly(context, accountKey, status, null, current, media,
                         option, newDocument);
                 break;
             }

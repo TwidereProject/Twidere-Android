@@ -49,6 +49,7 @@ import android.os.ParcelFileDescriptor;
 import android.os.Process;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
 import android.support.v4.text.BidiFormatter;
@@ -80,6 +81,7 @@ import org.mariotaku.twidere.annotation.NotificationType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
 import org.mariotaku.twidere.model.Draft;
@@ -190,13 +192,15 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private boolean mUseStarForLikes;
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, @NotificationType String type,
-                                                         long accountId, long position, boolean extraUserFollowing) {
-        return getMarkReadDeleteIntent(context, type, accountId, position, -1, -1, extraUserFollowing);
+                                                         @Nullable AccountKey accountKey, long position,
+                                                         boolean extraUserFollowing) {
+        return getMarkReadDeleteIntent(context, type, accountKey, position, -1, -1, extraUserFollowing);
     }
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, @NotificationType String type,
-                                                         long accountId, long position, long extraId,
-                                                         long extraUserId, boolean extraUserFollowing) {
+                                                         @Nullable AccountKey accountKey, long position,
+                                                         long extraId, long extraUserId,
+                                                         boolean extraUserFollowing) {
         // Setup delete intent
         final Intent intent = new Intent(context, NotificationReceiver.class);
         intent.setAction(BROADCAST_NOTIFICATION_DELETED);
@@ -204,7 +208,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         linkBuilder.scheme(SCHEME_TWIDERE);
         linkBuilder.authority(AUTHORITY_INTERACTIONS);
         linkBuilder.appendPath(type);
-        linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (accountKey != null) {
+            linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+        }
         linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, String.valueOf(position));
         linkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
         linkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type);
@@ -217,14 +223,16 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, @NotificationType String notificationType,
-                                                         long accountId, StringLongPair[] positions) {
+                                                         @Nullable AccountKey accountId, StringLongPair[] positions) {
         // Setup delete intent
         final Intent intent = new Intent(context, NotificationReceiver.class);
         final Uri.Builder linkBuilder = new Uri.Builder();
         linkBuilder.scheme(SCHEME_TWIDERE);
         linkBuilder.authority(AUTHORITY_INTERACTIONS);
         linkBuilder.appendPath(notificationType);
-        linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (accountId != null) {
+            linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountId.toString());
+        }
         linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITIONS, StringLongPair.toString(positions));
         linkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
         linkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, notificationType);
@@ -405,11 +413,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     clearNotification();
                 } else if (segments.size() == 2) {
                     final int notificationType = NumberUtils.toInt(segments.get(1), -1);
-                    clearNotification(notificationType, 0);
+                    clearNotification(notificationType, null);
                 } else if (segments.size() == 3) {
                     final int notificationType = NumberUtils.toInt(segments.get(1), -1);
-                    final long accountId = NumberUtils.toLong(segments.get(2), -1);
-                    clearNotification(notificationType, accountId);
+                    final AccountKey accountKey = AccountKey.valueOf(segments.get(2));
+                    clearNotification(notificationType, accountKey);
                 }
                 return 1;
             }
@@ -1063,7 +1071,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         mNotificationManager.cancelAll();
     }
 
-    private void clearNotification(final int notificationType, final long accountId) {
+    private void clearNotification(final int notificationType, final AccountKey accountId) {
         mNotificationManager.cancelById(Utils.getNotificationId(notificationType, accountId));
     }
 
@@ -1257,29 +1265,30 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
     }
 
-    private long getPositionTag(String tag, long accountId) {
+    private long getPositionTag(String tag, AccountKey accountKey) {
         final long position = mReadStateManager.getPosition(Utils.getReadPositionTagWithAccounts(tag,
-                accountId));
+                accountKey));
         if (position != -1) return position;
         return mReadStateManager.getPosition(tag);
     }
 
     private void showTimelineNotification(AccountPreferences pref, long position) {
-        final long accountId = pref.getAccountKey();
+        final AccountKey accountKey = pref.getAccountKey();
         final Context context = getContext();
         if (context == null) return;
         final Resources resources = context.getResources();
         final NotificationManagerWrapper nm = mNotificationManager;
-        final Expression selection = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountId),
+        final Expression selection = Expression.and(Utils.getAccountCompareExpression(),
                 Expression.greaterThan(Statuses.STATUS_ID, position));
         final String filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(Statuses.TABLE_NAME,
                 selection).getSQL();
+        final String[] selectionArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
         final String[] userProjection = {Statuses.USER_ID, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
         final String[] statusProjection = {Statuses.STATUS_ID};
         final Cursor statusCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, statusProjection,
-                filteredSelection, null, null, null, Statuses.DEFAULT_SORT_ORDER);
+                filteredSelection, selectionArgs, null, null, Statuses.DEFAULT_SORT_ORDER);
         final Cursor userCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, userProjection,
-                filteredSelection, null, Statuses.USER_ID, null, Statuses.DEFAULT_SORT_ORDER);
+                filteredSelection, selectionArgs, Statuses.USER_ID, null, Statuses.DEFAULT_SORT_ORDER);
         //noinspection TryFinallyCanBeTryWithResources
         try {
             final int usersCount = userCursor.getCount();
@@ -1316,14 +1325,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setContentText(notificationContent);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
             builder.setContentIntent(getContentIntent(context, CustomTabType.HOME_TIMELINE,
-                    NotificationType.HOME_TIMELINE, accountId, statusId));
+                    NotificationType.HOME_TIMELINE, accountKey, statusId));
             builder.setDeleteIntent(getMarkReadDeleteIntent(context, NotificationType.HOME_TIMELINE,
-                    accountId, statusId, false));
+                    accountKey, statusId, false));
             builder.setNumber(statusesCount);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
             applyNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
             try {
-                nm.notify("home_" + accountId, Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountId), builder.build());
+                nm.notify("home_" + accountKey, Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountKey), builder.build());
                 Utils.sendPebbleNotification(context, notificationContent);
             } catch (SecurityException e) {
                 // Silently ignore
@@ -1337,12 +1346,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showInteractionsNotification(AccountPreferences pref, long position, boolean combined) {
         final Context context = getContext();
         if (context == null) return;
-        final long accountId = pref.getAccountKey();
+        final AccountKey accountKey = pref.getAccountKey();
         final String where = Expression.and(
-                Expression.equals(Activities.ACCOUNT_ID, pref.getAccountKey()),
+                Utils.getAccountCompareExpression(),
                 Expression.greaterThan(Activities.TIMESTAMP, position)
         ).getSQL();
-        Cursor c = query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, null,
+        final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+        Cursor c = query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, whereArgs,
                 new OrderBy(Activities.TIMESTAMP, false).getSQL());
         if (c == null) return;
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
@@ -1354,7 +1364,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             applyNotificationPreferences(builder, pref, pref.getMentionsNotificationType());
 
             final Resources resources = context.getResources();
-            final String accountName = DataStoreUtils.getAccountDisplayName(context, accountId, mNameFirst);
+            final String accountName = DataStoreUtils.getAccountDisplayName(context, accountKey, mNameFirst);
             builder.setContentText(accountName);
             final InboxStyle style = new InboxStyle();
             builder.setStyle(style);
@@ -1405,27 +1415,29 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             style.setBigContentTitle(title);
             builder.setNumber(displayCount);
             builder.setContentIntent(getContentIntent(context, CustomTabType.NOTIFICATIONS_TIMELINE,
-                    NotificationType.INTERACTIONS, accountId, timestamp));
+                    NotificationType.INTERACTIONS, accountKey, timestamp));
             if (timestamp != -1) {
                 builder.setDeleteIntent(getMarkReadDeleteIntent(context,
-                        NotificationType.INTERACTIONS, accountId, timestamp, false));
+                        NotificationType.INTERACTIONS, accountKey, timestamp, false));
             }
         } finally {
             c.close();
         }
-        final int notificationId = Utils.getNotificationId(NOTIFICATION_ID_INTERACTIONS_TIMELINE, accountId);
+        final int notificationId = Utils.getNotificationId(NOTIFICATION_ID_INTERACTIONS_TIMELINE,
+                accountKey);
         mNotificationManager.notify("interactions", notificationId, builder.build());
     }
 
     private PendingIntent getContentIntent(final Context context, @CustomTabType final String type,
                                            @NotificationType final String notificationType,
-                                           final long accountId, final long readPosition) {
+                                           @Nullable final AccountKey accountKey, final long readPosition) {
         // Setup click intent
         final Intent homeIntent = new Intent(context, HomeActivity.class);
         final Uri.Builder homeLinkBuilder = new Uri.Builder();
         homeLinkBuilder.scheme(SCHEME_TWIDERE);
         homeLinkBuilder.authority(type);
-        homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (accountKey != null)
+            homeLinkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, String.valueOf(true));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
         homeLinkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, notificationType);
@@ -1483,19 +1495,21 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showMessagesNotification(AccountPreferences pref, StringLongPair[] pairs, ContentValues[] valuesArray) {
         final Context context = getContext();
         assert context != null;
-        final long accountId = pref.getAccountKey();
-        final long prevOldestId = mReadStateManager.getPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountId));
+        final AccountKey accountKey = pref.getAccountKey();
+        final long prevOldestId = mReadStateManager.getPosition(TAG_OLDEST_MESSAGES,
+                String.valueOf(accountKey));
         long oldestId = -1;
         for (final ContentValues contentValues : valuesArray) {
             final long messageId = contentValues.getAsLong(DirectMessages.MESSAGE_ID);
             oldestId = oldestId < 0 ? messageId : Math.min(oldestId, messageId);
             if (messageId <= prevOldestId) return;
         }
-        mReadStateManager.setPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountId), oldestId, false);
+        mReadStateManager.setPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountKey), oldestId,
+                false);
         final Resources resources = context.getResources();
         final NotificationManagerWrapper nm = mNotificationManager;
         final ArrayList<Expression> orExpressions = new ArrayList<>();
-        final String prefix = accountId + "-";
+        final String prefix = accountKey + "-";
         final int prefixLength = prefix.length();
         final Set<Long> senderIds = new CompactHashSet<>();
         for (StringLongPair pair : pairs) {
@@ -1512,27 +1526,30 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
         orExpressions.add(Expression.notIn(new Column(DirectMessages.SENDER_ID), new RawItemArray(senderIds.toArray())));
         final Expression selection = Expression.and(
-                Expression.equals(DirectMessages.ACCOUNT_ID, accountId),
+                Utils.getAccountCompareExpression(),
                 Expression.greaterThan(DirectMessages.MESSAGE_ID, prevOldestId),
                 Expression.or(orExpressions.toArray(new Expression[orExpressions.size()]))
         );
         final String filteredSelection = selection.getSQL();
+        final String[] selectionArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
         final String[] userProjection = {DirectMessages.SENDER_ID, DirectMessages.SENDER_NAME,
                 DirectMessages.SENDER_SCREEN_NAME};
         final String[] messageProjection = {DirectMessages.MESSAGE_ID, DirectMessages.SENDER_ID,
                 DirectMessages.SENDER_NAME, DirectMessages.SENDER_SCREEN_NAME, DirectMessages.TEXT_UNESCAPED,
                 DirectMessages.MESSAGE_TIMESTAMP};
-        final Cursor messageCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME, messageProjection,
-                filteredSelection, null, null, null, DirectMessages.DEFAULT_SORT_ORDER);
-        final Cursor userCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME, userProjection,
-                filteredSelection, null, DirectMessages.SENDER_ID, null, DirectMessages.DEFAULT_SORT_ORDER);
+        final Cursor messageCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME,
+                messageProjection, filteredSelection, selectionArgs, null, null,
+                DirectMessages.DEFAULT_SORT_ORDER);
+        final Cursor userCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME,
+                userProjection, filteredSelection, selectionArgs, DirectMessages.SENDER_ID, null,
+                DirectMessages.DEFAULT_SORT_ORDER);
         //noinspection TryFinallyCanBeTryWithResources
         try {
             final int usersCount = userCursor.getCount();
             final int messagesCount = messageCursor.getCount();
             if (messagesCount == 0 || usersCount == 0) return;
-            final String accountName = DataStoreUtils.getAccountName(context, accountId);
-            final String accountScreenName = DataStoreUtils.getAccountScreenName(context, accountId);
+            final String accountName = DataStoreUtils.getAccountName(context, accountKey);
+            final String accountScreenName = DataStoreUtils.getAccountScreenName(context, accountKey);
             final int idxMessageText = messageCursor.getColumnIndex(DirectMessages.TEXT_UNESCAPED),
                     idxMessageTimestamp = messageCursor.getColumnIndex(DirectMessages.MESSAGE_TIMESTAMP),
                     idxMessageId = messageCursor.getColumnIndex(DirectMessages.MESSAGE_ID),
@@ -1601,16 +1618,16 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setContentText(notificationContent);
             builder.setCategory(NotificationCompat.CATEGORY_MESSAGE);
             builder.setContentIntent(getContentIntent(context, CustomTabType.DIRECT_MESSAGES,
-                    NotificationType.DIRECT_MESSAGES, accountId, -1));
+                    NotificationType.DIRECT_MESSAGES, accountKey, -1));
             builder.setDeleteIntent(getMarkReadDeleteIntent(context,
-                    NotificationType.DIRECT_MESSAGES, accountId, positions));
+                    NotificationType.DIRECT_MESSAGES, accountKey, positions));
             builder.setNumber(messagesCount);
             builder.setWhen(when);
             builder.setStyle(style);
             builder.setColor(pref.getNotificationLightColor());
             applyNotificationPreferences(builder, pref, pref.getDirectMessagesNotificationType());
             try {
-                nm.notify("messages_" + accountId, NOTIFICATION_ID_DIRECT_MESSAGES, builder.build());
+                nm.notify("messages_" + accountKey, NOTIFICATION_ID_DIRECT_MESSAGES, builder.build());
                 Utils.sendPebbleNotification(context, notificationContent);
             } catch (SecurityException e) {
                 // Silently ignore

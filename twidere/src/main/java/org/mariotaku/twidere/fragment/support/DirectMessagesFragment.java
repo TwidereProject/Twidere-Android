@@ -195,7 +195,8 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
     @Override
     public void onEntryClick(int position, DirectMessageEntry entry) {
-        Utils.openMessageConversation(getActivity(), entry.account_id, entry.conversation_id);
+        Utils.openMessageConversation(getActivity(), new AccountKey(entry.account_id,
+                entry.account_host), entry.conversation_id);
     }
 
     @Override
@@ -324,7 +325,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         if (accountIds.length == 1) {
             Utils.openMessageConversation(getActivity(), accountIds[0], -1);
         } else {
-            Utils.openMessageConversation(getActivity(), -1, -1);
+            Utils.openMessageConversation(getActivity(), null, -1);
         }
     }
 

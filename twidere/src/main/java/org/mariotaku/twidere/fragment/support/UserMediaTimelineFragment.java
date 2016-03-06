@@ -19,6 +19,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.Utils;
@@ -104,7 +105,7 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
-        return new MediaTimelineLoader(context, accountId, userId, screenName, sinceId, maxId,
+        return new MediaTimelineLoader(context, accountKey, userId, screenName, sinceId, maxId,
                 getAdapter().getData(), null, tabPosition, fromUser);
     }
 

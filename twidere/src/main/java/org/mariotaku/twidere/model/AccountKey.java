@@ -10,12 +10,26 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Created by mariotaku on 16/3/5.
  */
 @JsonObject
 @ParcelablePlease
 public class AccountKey implements Comparable<AccountKey>, Parcelable {
+
+    public static final Creator<AccountKey> CREATOR = new Creator<AccountKey>() {
+        public AccountKey createFromParcel(Parcel source) {
+            AccountKey target = new AccountKey();
+            AccountKeyParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public AccountKey[] newArray(int size) {
+            return new AccountKey[size];
+        }
+    };
 
     @JsonField(name = "id")
     @ParcelableThisPlease
@@ -50,32 +64,6 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
     public String toString() {
         if (host != null) return id + "@" + host;
         return String.valueOf(id);
-    }
-
-    @Nullable
-    public static AccountKey valueOf(@Nullable String str) {
-        if (str == null) return null;
-        int idxOfAt = str.indexOf("@");
-        try {
-            if (idxOfAt != -1) {
-                final String idStr = str.substring(0, idxOfAt);
-                return new AccountKey(Long.parseLong(idStr),
-                        str.substring(idxOfAt + 1, str.length()));
-
-            } else {
-                return new AccountKey(Long.parseLong(str), null);
-            }
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public static long[] getIds(AccountKey[] ids) {
-        long[] result = new long[ids.length];
-        for (int i = 0, idsLength = ids.length; i < idsLength; i++) {
-            result[i] = ids[i].getId();
-        }
-        return result;
     }
 
     @Override
@@ -119,15 +107,45 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
         AccountKeyParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static final Creator<AccountKey> CREATOR = new Creator<AccountKey>() {
-        public AccountKey createFromParcel(Parcel source) {
-            AccountKey target = new AccountKey();
-            AccountKeyParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
+    public boolean isAccount(long accountId, String accountHost) {
+        return this.id == accountId;
+    }
 
-        public AccountKey[] newArray(int size) {
-            return new AccountKey[size];
+    @Nullable
+    public static AccountKey valueOf(@Nullable String str) {
+        if (str == null) return null;
+        int idxOfAt = str.indexOf("@");
+        try {
+            if (idxOfAt != -1) {
+                final String idStr = str.substring(0, idxOfAt);
+                return new AccountKey(Long.parseLong(idStr),
+                        str.substring(idxOfAt + 1, str.length()));
+
+            } else {
+                return new AccountKey(Long.parseLong(str), null);
+            }
+        } catch (NumberFormatException e) {
+            return null;
         }
-    };
+    }
+
+    @Nullable
+    public static AccountKey[] arrayOf(@Nullable String str) {
+        if (str == null) return null;
+        String[] split = StringUtils.split(str, ",");
+        AccountKey[] keys = new AccountKey[split.length];
+        for (int i = 0, splitLength = split.length; i < splitLength; i++) {
+            keys[i] = valueOf(split[i]);
+            if (keys[i] == null) return null;
+        }
+        return keys;
+    }
+
+    public static long[] getIds(AccountKey[] ids) {
+        long[] result = new long[ids.length];
+        for (int i = 0, idsLength = ids.length; i < idsLength; i++) {
+            result[i] = ids[i].getId();
+        }
+        return result;
+    }
 }

@@ -61,6 +61,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.Response;
+import org.mariotaku.twidere.model.SimpleRefreshTaskParam;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.FollowRequestTaskEvent;
@@ -287,7 +288,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return true;
     }
 
-    public void getLocalTrendsAsync(final long accountId, final int woeid) {
+    public void getLocalTrendsAsync(final AccountKey accountId, final int woeid) {
         final GetLocalTrendsTask task = new GetLocalTrendsTask(mContext, accountId, woeid);
         TaskStarter.execute(task);
     }
@@ -373,41 +374,50 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public boolean refreshAll(final AccountKey[] accountKeys) {
-        AsyncTaskUtils.executeTask(new AsyncTask<AccountKey, Object, Object[]>() {
+        getHomeTimelineAsync(new SimpleRefreshTaskParam() {
+
+            @NonNull
             @Override
-            protected Object[] doInBackground(AccountKey... accountKeys) {
-                final Object[] result = new Object[8];
-                result[0] = DataStoreUtils.getNewestStatusIds(mContext, Statuses.CONTENT_URI, accountKeys);
-                if (Boolean.TRUE.equals(result[1] = mPreferences.getBoolean(KEY_HOME_REFRESH_MENTIONS))) {
-                    result[2] = DataStoreUtils.getNewestActivityMaxPositions(mContext,
-                            Activities.AboutMe.CONTENT_URI, accountKeys);
-                }
-                if (Boolean.TRUE.equals(result[3] = mPreferences.getBoolean(KEY_HOME_REFRESH_DIRECT_MESSAGES))) {
-                    result[4] = DataStoreUtils.getNewestMessageIds(mContext, DirectMessages.Inbox.CONTENT_URI, accountKeys);
-                }
-                if (Boolean.TRUE.equals(result[5] = mPreferences.getBoolean(KEY_HOME_REFRESH_TRENDS))) {
-                    result[6] = Utils.getDefaultAccountKey(mContext);
-                    result[7] = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
-                }
-                return result;
+            public AccountKey[] getAccountKeys() {
+                return accountKeys;
             }
 
+            @Nullable
             @Override
-            protected void onPostExecute(Object[] result) {
-                getHomeTimelineAsync(accountKeys, null, (long[]) result[0]);
-                if (Boolean.TRUE.equals(result[1])) {
-                    getActivitiesAboutMeAsync(accountKeys, null, (long[]) result[2]);
-                }
-                if (Boolean.TRUE.equals(result[3])) {
-                    getReceivedDirectMessagesAsync(accountKeys, null, (long[]) result[4]);
-                    getSentDirectMessagesAsync(accountKeys, null, null);
-                }
-                if (Boolean.TRUE.equals(result[5])) {
-                    getLocalTrendsAsync((Long) result[6], (Integer) result[7]);
-                }
-                getSavedSearchesAsync(accountKeys);
+            public long[] getSinceIds() {
+                return DataStoreUtils.getNewestStatusIds(mContext, Statuses.CONTENT_URI,
+                        accountKeys);
             }
-        }, accountKeys);
+        });
+        getActivitiesAboutMeAsync(new SimpleRefreshTaskParam() {
+            @NonNull
+            @Override
+            public AccountKey[] getAccountKeys() {
+                return accountKeys;
+            }
+
+            @Nullable
+            @Override
+            public long[] getSinceIds() {
+                return DataStoreUtils.getNewestActivityMaxPositions(mContext,
+                        Activities.AboutMe.CONTENT_URI, accountKeys);
+            }
+        });
+        getReceivedDirectMessagesAsync(new SimpleRefreshTaskParam() {
+            @NonNull
+            @Override
+            public AccountKey[] getAccountKeys() {
+                return accountKeys;
+            }
+        });
+        getSentDirectMessagesAsync(new SimpleRefreshTaskParam() {
+            @NonNull
+            @Override
+            public AccountKey[] getAccountKeys() {
+                return accountKeys;
+            }
+        });
+        getSavedSearchesAsync(accountKeys);
         return true;
     }
 
@@ -423,7 +433,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         AsyncTaskUtils.executeTask(task);
     }
 
-    public void reportMultiSpam(final long accountId, final long[] userIds) {
+    public void reportMultiSpam(final AccountKey accountKey, final long[] userIds) {
         // TODO implementation
     }
 

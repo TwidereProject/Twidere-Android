@@ -58,8 +58,10 @@ public final class ParcelableCardEntity implements Parcelable {
     };
     @ParcelableThisPlease
     @JsonField(name = "account_id")
-    public
-    long account_id;
+    public long account_id;
+    @ParcelableThisPlease
+    @JsonField(name = "account_host")
+    public String account_host;
     @ParcelableThisPlease
     @JsonField(name = "name")
     public String name;

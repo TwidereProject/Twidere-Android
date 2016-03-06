@@ -28,6 +28,7 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserFollowersLoader;
+import org.mariotaku.twidere.model.AccountKey;
 
 import static org.mariotaku.twidere.util.DataStoreUtils.getAccountScreenName;
 
@@ -59,7 +60,7 @@ public class UserFollowersFragment extends CursorSupportUsersListFragment {
         final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        final UserFollowersLoader loader = new UserFollowersLoader(context, accountId, userId,
+        final UserFollowersLoader loader = new UserFollowersLoader(context, accountKey, userId,
                 screenName, getData(), fromUser);
         loader.setCursor(getNextCursor());
         return loader;

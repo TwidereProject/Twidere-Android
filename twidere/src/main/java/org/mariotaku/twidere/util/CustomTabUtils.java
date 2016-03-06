@@ -49,6 +49,7 @@ import org.mariotaku.twidere.fragment.support.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.fragment.support.UserFavoritesFragment;
 import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
@@ -290,12 +291,14 @@ public class CustomTabUtils implements Constants {
         return tabType != null && CUSTOM_TABS_CONFIGURATION_MAP.containsKey(getTabTypeAlias(tabType));
     }
 
-    public static boolean hasAccountId(@NonNull Bundle args, long[] activatedAccountIds, long accountId) {
-        if (args.containsKey(EXTRA_ACCOUNT_ID)) {
-            return args.getLong(EXTRA_ACCOUNT_ID) == accountId;
-        } else if (args.containsKey(EXTRA_ACCOUNT_IDS)) {
-            return ArrayUtils.contains(args.getLongArray(EXTRA_ACCOUNT_IDS), accountId);
+    public static boolean hasAccountId(@NonNull Bundle args, AccountKey[] activatedAccountKeys, AccountKey accountKey) {
+        final AccountKey[] accountKeys = Utils.getAccountKeys(args);
+        if (accountKeys != null) {
+            return ArrayUtils.contains(accountKeys, accountKey);
         }
-        return ArrayUtils.contains(activatedAccountIds, accountId);
+        if (activatedAccountKeys != null) {
+            return ArrayUtils.contains(activatedAccountKeys, accountKey);
+        }
+        return false;
     }
 }

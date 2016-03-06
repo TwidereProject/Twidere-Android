@@ -128,13 +128,13 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
                 '}';
     }
 
-    public static Activity fromMention(long accountId, Status status) {
+    public static Activity fromMention(long twitterId, Status status) {
         final Activity activity = new Activity();
 
         activity.maxPosition = activity.minPosition = status.getId();
         activity.createdAt = status.getCreatedAt();
 
-        if (status.getInReplyToUserId() == accountId) {
+        if (status.getInReplyToUserId() == twitterId) {
             activity.action = Action.REPLY;
             activity.rawAction = "reply";
             activity.targetStatuses = new Status[]{status};

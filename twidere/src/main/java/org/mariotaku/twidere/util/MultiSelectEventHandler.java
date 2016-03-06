@@ -35,6 +35,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.menu.AccountActionProvider;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -122,7 +123,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                     final ParcelableStatus first_status = (ParcelableStatus) firstObj;
                     bundle.putLong(EXTRA_IN_REPLY_TO_ID, first_status.id);
                 }
-                bundle.putLong(EXTRA_ACCOUNT_ID, mMultiSelectManager.getAccountId());
+                bundle.putParcelable(EXTRA_ACCOUNT_KEY, mMultiSelectManager.getAccountKey());
                 bundle.putStringArray(EXTRA_SCREEN_NAMES, allMentions.toArray(new String[allMentions.size()]));
                 intent.putExtras(bundle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -153,19 +154,19 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 break;
             }
             case R.id.block: {
-                final long accountId = mMultiSelectManager.getAccountId();
+                final AccountKey accountKey = mMultiSelectManager.getAccountKey();
                 final long[] userIds = MultiSelectManager.getSelectedUserIds(selectedItems);
-                if (accountId > 0 && userIds != null) {
-                    mTwitterWrapper.createMultiBlockAsync(accountId, userIds);
+                if (accountKey != null && userIds != null) {
+                    mTwitterWrapper.createMultiBlockAsync(accountKey, userIds);
                 }
                 mode.finish();
                 break;
             }
             case R.id.report_spam: {
-                final long accountId = mMultiSelectManager.getAccountId();
+                final AccountKey accountKey = mMultiSelectManager.getAccountKey();
                 final long[] userIds = MultiSelectManager.getSelectedUserIds(selectedItems);
-                if (accountId > 0 && userIds != null) {
-                    mTwitterWrapper.reportMultiSpam(accountId, userIds);
+                if (accountKey != null && userIds != null) {
+                    mTwitterWrapper.reportMultiSpam(accountKey, userIds);
                 }
                 mode.finish();
                 break;
@@ -175,7 +176,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
             final Intent intent = item.getIntent();
             if (intent == null || !intent.hasExtra(EXTRA_ACCOUNT)) return false;
             final ParcelableAccount account = intent.getParcelableExtra(EXTRA_ACCOUNT);
-            mMultiSelectManager.setAccountId(account.account_id);
+            mMultiSelectManager.setAccountKey(new AccountKey(account.account_id, account.account_host));
             if (mAccountActionProvider != null) {
                 mAccountActionProvider.setSelectedAccountIds(account.account_id);
             }
@@ -188,7 +189,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
         mode.getMenuInflater().inflate(R.menu.action_multi_select_contents, menu);
         mAccountActionProvider = (AccountActionProvider) menu.findItem(R.id.select_account).getActionProvider();
-        mAccountActionProvider.setSelectedAccountIds(mMultiSelectManager.getFirstSelectAccountId());
+        mAccountActionProvider.setSelectedAccountIds(mMultiSelectManager.getFirstSelectAccountKey());
         return true;
     }
 

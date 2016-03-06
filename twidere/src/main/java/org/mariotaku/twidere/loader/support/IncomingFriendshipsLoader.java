@@ -26,15 +26,16 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
 public class IncomingFriendshipsLoader extends IDsUsersLoader {
 
-    public IncomingFriendshipsLoader(final Context context, final long accountId,
+    public IncomingFriendshipsLoader(final Context context, final AccountKey accountKey,
                                      final List<ParcelableUser> data, boolean fromUser) {
-        super(context, accountId, data, fromUser);
+        super(context, accountKey, data, fromUser);
     }
 
     @NonNull

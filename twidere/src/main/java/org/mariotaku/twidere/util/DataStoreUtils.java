@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
 
 import com.bluelinelabs.logansquare.JsonMapper;
@@ -98,8 +97,8 @@ import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 public class DataStoreUtils implements Constants {
     static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     static Map<AccountKey, Integer> sAccountColors = new HashMap<>();
-    static LongSparseArray<String> sAccountScreenNames = new LongSparseArray<>();
-    static LongSparseArray<String> sAccountNames = new LongSparseArray<>();
+    static Map<AccountKey, String> sAccountScreenNames = new HashMap<>();
+    static Map<AccountKey, String> sAccountNames = new HashMap<>();
 
     static {
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Accounts.CONTENT_PATH,
@@ -327,18 +326,51 @@ public class DataStoreUtils implements Constants {
         return filterExpression;
     }
 
-    public static String getAccountScreenName(final Context context, final long accountId) {
+
+    public static String getAccountDisplayName(final Context context, final AccountKey accountKey, final boolean nameFirst) {
+        final String name;
+        if (nameFirst) {
+            name = getAccountName(context, accountKey);
+        } else {
+            name = String.format("@%s", getAccountScreenName(context, accountKey));
+        }
+        return name;
+    }
+
+    public static String getAccountName(final Context context, final AccountKey accountKey) {
         if (context == null) return null;
-        final String cached = sAccountScreenNames.get(accountId);
+        final String cached = sAccountNames.get(accountKey);
         if (!isEmpty(cached)) return cached;
         final String[] projection = {Accounts.SCREEN_NAME};
+        String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
-                Accounts.ACCOUNT_ID + " = " + accountId, null, null);
+                Utils.getAccountCompareExpression().getSQL(), whereArgs, null);
         if (cur == null) return null;
         try {
             if (cur.getCount() > 0 && cur.moveToFirst()) {
                 final String name = cur.getString(0);
-                sAccountScreenNames.put(accountId, name);
+                sAccountNames.put(accountKey, name);
+                return name;
+            }
+            return null;
+        } finally {
+            cur.close();
+        }
+    }
+
+    public static String getAccountScreenName(final Context context, final AccountKey accountKey) {
+        if (context == null) return null;
+        final String cached = sAccountScreenNames.get(accountKey);
+        if (!isEmpty(cached)) return cached;
+        final String[] projection = {Accounts.SCREEN_NAME};
+        String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
+                Utils.getAccountCompareExpression().getSQL(), whereArgs, null);
+        if (cur == null) return null;
+        try {
+            if (cur.getCount() > 0 && cur.moveToFirst()) {
+                final String name = cur.getString(0);
+                sAccountScreenNames.put(accountKey, name);
                 return name;
             }
             return null;
@@ -621,16 +653,6 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static String getAccountDisplayName(final Context context, final long accountId, final boolean nameFirst) {
-        final String name;
-        if (nameFirst) {
-            name = getAccountName(context, accountId);
-        } else {
-            name = String.format("@%s", getAccountScreenName(context, accountId));
-        }
-        return name;
-    }
-
     public static long getAccountId(final Context context, final String screenName) {
         if (context == null || isEmpty(screenName)) return -1;
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, new String[]{Accounts.ACCOUNT_ID}, Expression.equalsArgs(Accounts.SCREEN_NAME).getSQL(), new String[]{screenName}, null);
@@ -671,24 +693,6 @@ public class DataStoreUtils implements Constants {
         try {
             cur.moveToFirst();
             return cur.getInt(0) > 0;
-        } finally {
-            cur.close();
-        }
-    }
-
-    public static String getAccountName(final Context context, final long accountId) {
-        if (context == null) return null;
-        final String cached = sAccountNames.get(accountId);
-        if (!isEmpty(cached)) return cached;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, new String[]{Accounts.NAME}, Accounts.ACCOUNT_ID + " = " + accountId, null, null);
-        if (cur == null) return null;
-        try {
-            if (cur.getCount() > 0 && cur.moveToFirst()) {
-                final String name = cur.getString(0);
-                sAccountNames.put(accountId, name);
-                return name;
-            }
-            return null;
         } finally {
             cur.close();
         }
@@ -844,10 +848,11 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    public static long[] getAccountKeys(final ParcelableAccount[] accounts) {
-        final long[] ids = new long[accounts.length];
+    public static AccountKey[] getAccountKeys(final ParcelableAccount[] accounts) {
+        final AccountKey[] ids = new AccountKey[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {
-            ids[i] = accounts[i].account_id;
+            final ParcelableAccount account = accounts[i];
+            ids[i] = new AccountKey(account.account_id, account.account_host);
         }
         return ids;
     }
@@ -910,11 +915,11 @@ public class DataStoreUtils implements Constants {
         return null;
     }
 
-    public static String getAccountType(final Context context, final long accountId) {
-        if (context == null || accountId < 0) return null;
+    public static String getAccountType(@NonNull final Context context, @NonNull final AccountKey accountKey) {
         final String[] projection = {Accounts.ACCOUNT_TYPE};
+        String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
         Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
-                Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null, null);
+                Utils.getAccountCompareExpression().getSQL(), whereArgs, null);
         if (cur == null) return null;
         try {
             if (cur.moveToFirst()) {
@@ -981,5 +986,20 @@ public class DataStoreUtils implements Constants {
         }
         return getActivitiesCount(context, Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
                 position, followingOnly, accountIds);
+    }
+
+    public static void initAccountColor(final Context context) {
+        if (context == null) return;
+        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, new String[]{
+                Accounts.ACCOUNT_ID, Accounts.COLOR}, null, null, null);
+        if (cur == null) return;
+        final int id_idx = cur.getColumnIndex(Accounts.ACCOUNT_ID), color_idx = cur.getColumnIndex(Accounts.COLOR);
+        cur.moveToFirst();
+        while (!cur.isAfterLast()) {
+//            sAccountColors.put(cur.getLong(id_idx), cur.getInt(color_idx));
+            // TODO
+            cur.moveToNext();
+        }
+        cur.close();
     }
 }

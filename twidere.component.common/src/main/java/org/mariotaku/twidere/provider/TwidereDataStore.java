@@ -440,11 +440,11 @@ public interface TwidereDataStore {
             String CONTENT_PATH_SEGMENT = "conversation_entries";
             String CONTENT_PATH = DirectMessages.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
 
-            Uri CONTENT_URI = Uri
-                    .withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
+            Uri CONTENT_URI = Uri.withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
 
             String MESSAGE_ID = DirectMessages.MESSAGE_ID;
             String ACCOUNT_ID = DirectMessages.ACCOUNT_ID;
+            String ACCOUNT_HOST = DirectMessages.ACCOUNT_HOST;
             String IS_OUTGOING = DirectMessages.IS_OUTGOING;
             String MESSAGE_TIMESTAMP = DirectMessages.MESSAGE_TIMESTAMP;
             String NAME = "name";
@@ -457,12 +457,13 @@ public interface TwidereDataStore {
             int IDX_MESSAGE_TIMESTAMP = 1;
             int IDX_MESSAGE_ID = 2;
             int IDX_ACCOUNT_ID = 3;
-            int IDX_IS_OUTGOING = 4;
-            int IDX_NAME = 5;
-            int IDX_SCREEN_NAME = 6;
-            int IDX_PROFILE_IMAGE_URL = 7;
-            int IDX_TEXT = 8;
-            int IDX_CONVERSATION_ID = 9;
+            int IDX_ACCOUNT_HOST = 4;
+            int IDX_IS_OUTGOING = 5;
+            int IDX_NAME = 6;
+            int IDX_SCREEN_NAME = 7;
+            int IDX_PROFILE_IMAGE_URL = 8;
+            int IDX_TEXT = 9;
+            int IDX_CONVERSATION_ID = 10;
         }
 
         interface Inbox extends DirectMessages {

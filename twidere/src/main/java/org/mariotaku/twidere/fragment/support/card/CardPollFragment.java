@@ -51,6 +51,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.CardDataMap;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;
@@ -175,11 +176,13 @@ public class CardPollFragment extends BaseSupportFragment implements
                             @Override
                             public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) {
                                 final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(),
-                                        card.account_id, accountHost, true, true, TwitterCaps.class);
+                                        new AccountKey(card.account_id, card.account_host),
+                                        true, true, TwitterCaps.class);
                                 if (caps == null) return null;
                                 try {
                                     final CardEntity cardEntity = caps.sendPassThrough(cardDataMap).getCard();
-                                    return ParcelableCardEntityUtils.fromCardEntity(cardEntity, card.account_id);
+                                    return ParcelableCardEntityUtils.fromCardEntity(cardEntity,
+                                            new AccountKey(card.account_id, card.account_host));
                                 } catch (TwitterException e) {
                                     Log.w(LOGTAG, e);
                                 }
@@ -267,7 +270,8 @@ public class CardPollFragment extends BaseSupportFragment implements
     @Override
     public Loader<ParcelableCardEntity> onCreateLoader(int id, Bundle args) {
         final ParcelableCardEntity card = getCard();
-        return new ParcelableCardEntityLoader(getContext(), card.account_id, card.url, card.name);
+        return new ParcelableCardEntityLoader(getContext(), new AccountKey(card.account_id,
+                card.account_host), card.url, card.name);
     }
 
     @Override
@@ -325,21 +329,22 @@ public class CardPollFragment extends BaseSupportFragment implements
     }
 
     public static class ParcelableCardEntityLoader extends AsyncTaskLoader<ParcelableCardEntity> {
-        private final long mAccountId;
+        private final AccountKey mAccountKey;
         private final String mCardUri;
         private final String mCardName;
 
-        public ParcelableCardEntityLoader(Context context, long accountId, String cardUri, String cardName) {
+        public ParcelableCardEntityLoader(Context context, AccountKey accountKey,
+                                          String cardUri, String cardName) {
             super(context);
-            mAccountId = accountId;
+            mAccountKey = accountKey;
             mCardUri = cardUri;
             mCardName = cardName;
         }
 
         @Override
         public ParcelableCardEntity loadInBackground() {
-            final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId,
-                    accountHost, true, true, TwitterCaps.class);
+            final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountKey,
+                    true, true, TwitterCaps.class);
             if (caps == null) return null;
             try {
                 final CardDataMap params = new CardDataMap();
@@ -350,7 +355,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                 if (card == null || card.getName() == null) {
                     return null;
                 }
-                final ParcelableCardEntity parcelableCard = ParcelableCardEntityUtils.fromCardEntity(card, mAccountId);
+                final ParcelableCardEntity parcelableCard = ParcelableCardEntityUtils.fromCardEntity(card, mAccountKey);
 
                 return parcelableCard;
             } catch (TwitterException e) {

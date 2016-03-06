@@ -30,7 +30,9 @@ import org.mariotaku.twidere.api.twitter.model.CursorSupport;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 
@@ -42,19 +44,19 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
         implements TwidereConstants, ICursorSupportLoader {
 
     protected final NoDuplicatesArrayList<ParcelableUserList> mData = new NoDuplicatesArrayList<>();
-    protected final long mAccountId;
+    protected final AccountKey mAccountId;
     private final long mCursor;
 
     private long mNextCursor, mPrevCursor;
 
-    public BaseUserListsLoader(final Context context, final long accountId, final long cursor,
+    public BaseUserListsLoader(final Context context, final AccountKey accountKey, final long cursor,
                                final List<ParcelableUserList> data) {
         super(context);
         if (data != null) {
             mData.addAll(data);
         }
         mCursor = cursor;
-        mAccountId = accountId;
+        mAccountId = accountKey;
     }
 
     @Override
@@ -76,7 +78,7 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
 
     @Override
     public List<ParcelableUserList> loadInBackground() {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, accountHost, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
         List<UserList> listLoaded = null;
         try {
             listLoaded = getUserLists(twitter);
@@ -91,12 +93,12 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
                 final int dataSize = mData.size();
                 for (int i = 0; i < listSize; i++) {
                     final UserList list = listLoaded.get(i);
-                    mData.add(new ParcelableUserList(list, mAccountId, dataSize + i, isFollowing(list)));
+                    mData.add(ParcelableUserListUtils.from(list, mAccountId, dataSize + i, isFollowing(list)));
                 }
             } else {
                 for (int i = 0; i < listSize; i++) {
                     final UserList list = listLoaded.get(i);
-                    mData.add(new ParcelableUserList(listLoaded.get(i), mAccountId, i, isFollowing(list)));
+                    mData.add(ParcelableUserListUtils.from(listLoaded.get(i), mAccountId, i, isFollowing(list)));
                 }
             }
         }

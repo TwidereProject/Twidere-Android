@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
@@ -29,166 +30,170 @@ import java.util.List;
 
 public class MultiSelectManager implements Constants {
 
-	private final NoDuplicatesArrayList<Long> mSelectedStatusIds = new NoDuplicatesArrayList<>();
-	private final NoDuplicatesArrayList<Long> mSelectedUserIds = new NoDuplicatesArrayList<>();
-	private final NoDuplicatesArrayList<Callback> mCallbacks = new NoDuplicatesArrayList<>();
-	private final ItemsList mSelectedItems = new ItemsList(this);
-	private long mAccountId;
+    private final NoDuplicatesArrayList<Long> mSelectedStatusIds = new NoDuplicatesArrayList<>();
+    private final NoDuplicatesArrayList<Long> mSelectedUserIds = new NoDuplicatesArrayList<>();
+    private final NoDuplicatesArrayList<Callback> mCallbacks = new NoDuplicatesArrayList<>();
+    private final ItemsList mSelectedItems = new ItemsList(this);
+    private AccountKey mAccountKey;
 
-	public void clearSelectedItems() {
-		mSelectedItems.clear();
-	}
+    public void clearSelectedItems() {
+        mSelectedItems.clear();
+    }
 
-	public long getAccountId() {
-		if (mAccountId <= 0) return getFirstSelectAccountId(mSelectedItems);
-		return mAccountId;
-	}
+    public AccountKey getAccountKey() {
+        if (mAccountKey == null) return getFirstSelectAccountKey(mSelectedItems);
+        return mAccountKey;
+    }
 
-	public int getCount() {
-		return mSelectedItems.size();
-	}
+    public int getCount() {
+        return mSelectedItems.size();
+    }
 
-	public long getFirstSelectAccountId() {
-		return getFirstSelectAccountId(mSelectedItems);
-	}
+    public AccountKey getFirstSelectAccountKey() {
+        return getFirstSelectAccountKey(mSelectedItems);
+    }
 
-	public List<Object> getSelectedItems() {
-		return mSelectedItems;
-	}
+    public List<Object> getSelectedItems() {
+        return mSelectedItems;
+    }
 
-	public boolean isActive() {
-		return !mSelectedItems.isEmpty();
-	}
+    public boolean isActive() {
+        return !mSelectedItems.isEmpty();
+    }
 
-	public boolean isSelected(final Object object) {
-		return mSelectedItems.contains(object);
-	}
+    public boolean isSelected(final Object object) {
+        return mSelectedItems.contains(object);
+    }
 
-	public boolean isStatusSelected(final long status_id) {
-		return mSelectedStatusIds.contains(status_id);
-	}
+    public boolean isStatusSelected(final long status_id) {
+        return mSelectedStatusIds.contains(status_id);
+    }
 
-	public boolean isUserSelected(final long user_id) {
-		return mSelectedUserIds.contains(user_id);
-	}
+    public boolean isUserSelected(final long user_id) {
+        return mSelectedUserIds.contains(user_id);
+    }
 
-	public void registerCallback(final Callback callback) {
-		if (callback == null) return;
-		mCallbacks.add(callback);
-	}
+    public void registerCallback(final Callback callback) {
+        if (callback == null) return;
+        mCallbacks.add(callback);
+    }
 
-	public boolean selectItem(final Object item) {
-		return mSelectedItems.add(item);
-	}
+    public boolean selectItem(final Object item) {
+        return mSelectedItems.add(item);
+    }
 
-	public void setAccountId(final long accountId) {
-		mAccountId = accountId;
-	}
+    public void setAccountKey(final AccountKey accountKey) {
+        mAccountKey = accountKey;
+    }
 
-	public void unregisterCallback(final Callback callback) {
-		mCallbacks.remove(callback);
-	}
+    public void unregisterCallback(final Callback callback) {
+        mCallbacks.remove(callback);
+    }
 
-	public boolean deselectItem(final Object item) {
-		return mSelectedItems.remove(item);
-	}
+    public boolean deselectItem(final Object item) {
+        return mSelectedItems.remove(item);
+    }
 
-	private void onItemsCleared() {
-		for (final Callback callback : mCallbacks) {
-			callback.onItemsCleared();
-		}
-		mAccountId = -1;
-	}
+    private void onItemsCleared() {
+        for (final Callback callback : mCallbacks) {
+            callback.onItemsCleared();
+        }
+        mAccountKey = null;
+    }
 
-	private void onItemSelected(final Object object) {
-		for (final Callback callback : mCallbacks) {
-			callback.onItemSelected(object);
-		}
-	}
+    private void onItemSelected(final Object object) {
+        for (final Callback callback : mCallbacks) {
+            callback.onItemSelected(object);
+        }
+    }
 
-	private void onItemUnselected(final Object object) {
-		for (final Callback callback : mCallbacks) {
-			callback.onItemUnselected(object);
-		}
-	}
+    private void onItemUnselected(final Object object) {
+        for (final Callback callback : mCallbacks) {
+            callback.onItemUnselected(object);
+        }
+    }
 
-	public static long getFirstSelectAccountId(final List<Object> selected_items) {
-		final Object obj = selected_items.get(0);
-		if (obj instanceof ParcelableUser)
-			return ((ParcelableUser) obj).account_id;
-		else if (obj instanceof ParcelableStatus) return ((ParcelableStatus) obj).account_id;
-		return -1;
-	}
+    public static AccountKey getFirstSelectAccountKey(final List<Object> selectedItems) {
+        final Object obj = selectedItems.get(0);
+        if (obj instanceof ParcelableUser) {
+            final ParcelableUser user = (ParcelableUser) obj;
+            return new AccountKey(user.account_id, user.account_host);
+        } else if (obj instanceof ParcelableStatus) {
+            final ParcelableStatus status = (ParcelableStatus) obj;
+            return new AccountKey(status.account_id, status.account_host);
+        }
+        return null;
+    }
 
-	public static long[] getSelectedUserIds(final List<Object> selected_items) {
-		final ArrayList<Long> ids_list = new ArrayList<>();
-		for (final Object item : selected_items) {
-			if (item instanceof ParcelableUser) {
-				ids_list.add(((ParcelableUser) item).id);
-			} else if (item instanceof ParcelableStatus) {
-				ids_list.add(((ParcelableStatus) item).user_id);
-			}
-		}
-		return TwidereArrayUtils.fromList(ids_list);
-	}
+    public static long[] getSelectedUserIds(final List<Object> selected_items) {
+        final ArrayList<Long> ids_list = new ArrayList<>();
+        for (final Object item : selected_items) {
+            if (item instanceof ParcelableUser) {
+                ids_list.add(((ParcelableUser) item).id);
+            } else if (item instanceof ParcelableStatus) {
+                ids_list.add(((ParcelableStatus) item).user_id);
+            }
+        }
+        return TwidereArrayUtils.fromList(ids_list);
+    }
 
-	public interface Callback {
+    public interface Callback {
 
-		void onItemsCleared();
+        void onItemsCleared();
 
-		void onItemSelected(Object item);
+        void onItemSelected(Object item);
 
-		void onItemUnselected(Object item);
+        void onItemUnselected(Object item);
 
-	}
+    }
 
-	@SuppressWarnings("serial")
-	static class ItemsList extends NoDuplicatesArrayList<Object> {
+    @SuppressWarnings("serial")
+    static class ItemsList extends NoDuplicatesArrayList<Object> {
 
-		private final MultiSelectManager manager;
+        private final MultiSelectManager manager;
 
-		ItemsList(final MultiSelectManager manager) {
-			this.manager = manager;
-		}
+        ItemsList(final MultiSelectManager manager) {
+            this.manager = manager;
+        }
 
-		@Override
-		public boolean add(final Object object) {
-			if (object instanceof ParcelableStatus) {
-				manager.mSelectedStatusIds.add(((ParcelableStatus) object).id);
-			} else if (object instanceof ParcelableUser) {
-				manager.mSelectedUserIds.add(((ParcelableUser) object).id);
-			} else
-				return false;
-			final boolean ret = super.add(object);
-			manager.onItemSelected(object);
-			return ret;
-		}
+        @Override
+        public boolean add(final Object object) {
+            if (object instanceof ParcelableStatus) {
+                manager.mSelectedStatusIds.add(((ParcelableStatus) object).id);
+            } else if (object instanceof ParcelableUser) {
+                manager.mSelectedUserIds.add(((ParcelableUser) object).id);
+            } else
+                return false;
+            final boolean ret = super.add(object);
+            manager.onItemSelected(object);
+            return ret;
+        }
 
-		@Override
-		public void clear() {
-			super.clear();
-			manager.mSelectedStatusIds.clear();
-			manager.mSelectedUserIds.clear();
-			manager.onItemsCleared();
-		}
+        @Override
+        public void clear() {
+            super.clear();
+            manager.mSelectedStatusIds.clear();
+            manager.mSelectedUserIds.clear();
+            manager.onItemsCleared();
+        }
 
-		@Override
-		public boolean remove(final Object object) {
-			final boolean ret = super.remove(object);
-			if (object instanceof ParcelableStatus) {
-				manager.mSelectedStatusIds.remove(((ParcelableStatus) object).id);
-			} else if (object instanceof ParcelableUser) {
-				manager.mSelectedUserIds.remove(((ParcelableUser) object).id);
-			}
-			if (ret) {
-				if (isEmpty()) {
-					manager.onItemsCleared();
-				} else {
-					manager.onItemUnselected(object);
-				}
-			}
-			return ret;
-		}
+        @Override
+        public boolean remove(final Object object) {
+            final boolean ret = super.remove(object);
+            if (object instanceof ParcelableStatus) {
+                manager.mSelectedStatusIds.remove(((ParcelableStatus) object).id);
+            } else if (object instanceof ParcelableUser) {
+                manager.mSelectedUserIds.remove(((ParcelableUser) object).id);
+            }
+            if (ret) {
+                if (isEmpty()) {
+                    manager.onItemsCleared();
+                } else {
+                    manager.onItemUnselected(object);
+                }
+            }
+            return ret;
+        }
 
-	}
+    }
 }

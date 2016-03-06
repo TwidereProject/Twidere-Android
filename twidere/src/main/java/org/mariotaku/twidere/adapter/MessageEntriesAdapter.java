@@ -241,11 +241,14 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
 
     public static class DirectMessageEntry {
 
-        public final long account_id, conversation_id;
+        public final long account_id;
+        public final String account_host;
+        public final long conversation_id;
         public final String screen_name, name;
 
         DirectMessageEntry(Cursor cursor) {
             account_id = cursor.getLong(ConversationEntries.IDX_ACCOUNT_ID);
+            account_host = cursor.getString(ConversationEntries.IDX_ACCOUNT_HOST);
             conversation_id = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);
             screen_name = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
             name = cursor.getString(ConversationEntries.IDX_NAME);

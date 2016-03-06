@@ -1549,20 +1549,6 @@ public final class Utils implements Constants {
         return false;
     }
 
-    public static void initAccountColor(final Context context) {
-        if (context == null) return;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, new String[]{
-                Accounts.ACCOUNT_ID, Accounts.COLOR}, null, null, null);
-        if (cur == null) return;
-        final int id_idx = cur.getColumnIndex(Accounts.ACCOUNT_ID), color_idx = cur.getColumnIndex(Accounts.COLOR);
-        cur.moveToFirst();
-        while (!cur.isAfterLast()) {
-            DataStoreUtils.sAccountColors.put(cur.getLong(id_idx), cur.getInt(color_idx));
-            cur.moveToNext();
-        }
-        cur.close();
-    }
-
     public static boolean isBatteryOkay(final Context context) {
         if (context == null) return false;
         final Context app = context.getApplicationContext();
@@ -1696,14 +1682,14 @@ public final class Utils implements Constants {
         return null;
     }
 
-    public static void openMessageConversation(final Context context, final long accountId,
+    public static void openMessageConversation(final Context context, final AccountKey accountKey,
                                                final long recipientId) {
         if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
-        if (accountId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
             if (recipientId > 0) {
                 builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, String.valueOf(recipientId));
             }
@@ -1778,21 +1764,25 @@ public final class Utils implements Constants {
         activity.startActivity(intent);
     }
 
-    public static void openSearch(final Context context, final AccountKey accountKey, final String query) {
+    public static void openSearch(final Context context, @Nullable final AccountKey accountKey, final String query) {
         openSearch(context, accountKey, query, null);
     }
 
-    public static void openSearch(final Context context, final AccountKey accountId, final String query, String type) {
+    public static void openSearch(final Context context, @Nullable final AccountKey accountKey, final String query, String type) {
         if (context == null) return;
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         // Some devices cannot process query parameter with hashes well, so add this intent extra
         intent.putExtra(EXTRA_QUERY, query);
-        intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
+        if (accountKey != null) {
+            intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
+        }
 
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_SEARCH);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+        }
         builder.appendQueryParameter(QUERY_PARAM_QUERY, query);
         if (!TextUtils.isEmpty(type)) {
             builder.appendQueryParameter(QUERY_PARAM_TYPE, type);
@@ -2647,9 +2637,9 @@ public final class Utils implements Constants {
         return isOfficialCredentials(context, account);
     }
 
-    public static int getNotificationId(int baseId, long accountId) {
+    public static int getNotificationId(int baseId, @Nullable AccountKey accountId) {
         int result = baseId;
-        result = 31 * result + (int) (accountId ^ (accountId >>> 32));
+        result = 31 * result + (accountId != null ? accountId.hashCode() : 0);
         return result;
     }
 

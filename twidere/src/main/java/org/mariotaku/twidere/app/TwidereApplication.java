@@ -58,7 +58,7 @@ import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
 
-import static org.mariotaku.twidere.util.Utils.initAccountColor;
+import static org.mariotaku.twidere.util.DataStoreUtils.initAccountColor;
 
 public class TwidereApplication extends Application implements Constants,
         OnSharedPreferenceChangeListener {

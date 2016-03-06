@@ -31,6 +31,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.NotificationType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.ReadStateManager;
@@ -56,15 +57,15 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
                 DependencyHolder holder = DependencyHolder.get(context);
                 @NotificationType
                 final String notificationType = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
-                final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
+                final AccountKey accountKey = AccountKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
                 final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
                 final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
                 final boolean itemUserFollowing = Boolean.parseBoolean(UriExtraUtils.getExtra(uri, "item_user_following"));
                 final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
                 if (CustomTabType.NOTIFICATIONS_TIMELINE.equals(CustomTabUtils.getTabTypeAlias(notificationType))
-                        && accountId != -1 && itemId != -1 && timestamp != -1) {
+                        && accountKey != null && itemId != -1 && timestamp != -1) {
                     final HotMobiLogger logger = holder.getHotMobiLogger();
-                    logger.log(accountId, NotificationEvent.deleted(context, timestamp, notificationType, accountId,
+                    logger.log(accountKey, NotificationEvent.deleted(context, timestamp, notificationType, accountKey,
                             itemId, itemUserId, itemUserFollowing));
                 }
                 final ReadStateManager manager = holder.getReadStateManager();
@@ -73,7 +74,7 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
                 final String tag = getPositionTag(notificationType);
                 if (tag != null && !TextUtils.isEmpty(paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION))) {
                     final long def = -1;
-                    manager.setPosition(Utils.getReadPositionTagWithAccounts(tag, accountId),
+                    manager.setPosition(Utils.getReadPositionTagWithAccounts(tag, accountKey),
                             NumberUtils.toLong(paramReadPosition, def));
                 } else if (!TextUtils.isEmpty(paramReadPositions = uri.getQueryParameter(QUERY_PARAM_READ_POSITIONS))) {
                     try {

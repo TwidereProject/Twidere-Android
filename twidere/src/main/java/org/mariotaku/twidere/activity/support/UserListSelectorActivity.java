@@ -297,7 +297,8 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
             try {
                 final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
                 final List<ParcelableUserList> data = new ArrayList<>();
-                boolean is_my_account = mScreenName.equalsIgnoreCase(getAccountScreenName(mActivity, mAccountKey.getId()));
+                boolean is_my_account = mScreenName.equalsIgnoreCase(getAccountScreenName(mActivity,
+                        mAccountKey));
                 for (final UserList item : lists) {
                     final User user = item.getUser();
                     if (user != null && mScreenName.equalsIgnoreCase(user.getScreenName())) {

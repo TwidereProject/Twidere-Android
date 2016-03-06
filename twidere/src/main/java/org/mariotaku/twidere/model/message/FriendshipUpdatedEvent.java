@@ -30,14 +30,36 @@ import org.mariotaku.twidere.model.AccountKey;
 public class FriendshipUpdatedEvent {
 
     @NonNull
-    public final AccountKey mAccountKey;
-    public final long userId;
+    AccountKey accountKey;
+    long userId;
     @NonNull
-    public final Relationship relationship;
+    Relationship relationship;
 
     public FriendshipUpdatedEvent(@NonNull AccountKey accountKey, long userId, @NonNull Relationship relationship) {
-        this.mAccountKey = accountKey;
+        this.accountKey = accountKey;
         this.userId = userId;
         this.relationship = relationship;
+    }
+
+    @NonNull
+    public AccountKey getAccountKey() {
+        return accountKey;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    @NonNull
+    public Relationship getRelationship() {
+        return relationship;
+    }
+
+    public boolean isAccount(long accountId, String accountHost) {
+        return accountKey.isAccount(accountId, accountHost);
+    }
+
+    public boolean isUser(long id) {
+        return userId == id;
     }
 }

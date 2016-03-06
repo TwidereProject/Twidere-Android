@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.UserListMembershipsLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class UserListMembershipsFragment extends ParcelableUserListsFragment {
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final long cursor = args.getLong(EXTRA_NEXT_CURSOR, -1);
-        return new UserListMembershipsLoader(getActivity(), accountId, userId, screenName, cursor, getData());
+        return new UserListMembershipsLoader(getActivity(), accountKey, userId, screenName, cursor, getData());
     }
 
 }

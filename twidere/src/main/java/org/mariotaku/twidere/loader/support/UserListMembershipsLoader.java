@@ -21,26 +21,27 @@ package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
+import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.List;
-
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.UserList;
 
 public class UserListMembershipsLoader extends BaseUserListsLoader {
 
     private final long mUserId;
     private final String mScreenName;
 
-    public UserListMembershipsLoader(final Context context, final long account_id, final long user_id,
-                                     final String screen_name, final long cursor, final List<ParcelableUserList> data) {
-        super(context, account_id, cursor, data);
-        mUserId = user_id;
-        mScreenName = screen_name;
+    public UserListMembershipsLoader(final Context context, final AccountKey accountKey,
+                                     final long userId, final String screenName,
+                                     final long cursor, final List<ParcelableUserList> data) {
+        super(context, accountKey, cursor, data);
+        mUserId = userId;
+        mScreenName = screenName;
     }
 
     @Override

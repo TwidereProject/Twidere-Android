@@ -31,6 +31,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.twidere.model.AccountKey;
+
 import java.util.TimeZone;
 
 import edu.tsinghua.hotmobi.util.LocationUtils;
@@ -92,9 +94,9 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
     }
 
     public static NotificationEvent deleted(Context context, long postTime, String type,
-                                            long accountId, long itemId, long itemUserId,
+                                            AccountKey accountKey, long itemId, long itemUserId,
                                             boolean itemUserFollowing) {
-        return create(context, Action.DELETE, System.currentTimeMillis(), postTime, type, accountId,
+        return create(context, Action.DELETE, System.currentTimeMillis(), postTime, type, accountKey.getId(),
                 itemId, itemUserId, itemUserFollowing);
     }
 

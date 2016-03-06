@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Trends;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class GetLocalTrendsTask extends GetTrendsTask {
 
     private final int woeid;
 
-    public GetLocalTrendsTask(final Context context, final long accountId, final int woeid) {
-        super(context, accountId);
+    public GetLocalTrendsTask(final Context context, final AccountKey accountKey, final int woeid) {
+        super(context, accountKey);
         this.woeid = woeid;
     }
 
