@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -69,8 +69,8 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final UserColorNameManager manager = adapter.getUserColorNameManager();
 
-        final AccountKey accountKey = AccountKey.valueOf(cursor.getString(ConversationEntries.IDX_ACCOUNT_KEY));
-        final long conversationId = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);
+        final UserKey accountKey = UserKey.valueOf(cursor.getString(ConversationEntries.IDX_ACCOUNT_KEY));
+        final UserKey conversationId = UserKey.valueOf(cursor.getString(ConversationEntries.IDX_CONVERSATION_ID));
         final long timestamp = cursor.getLong(ConversationEntries.IDX_MESSAGE_TIMESTAMP);
         final boolean isOutgoing = cursor.getInt(ConversationEntries.IDX_IS_OUTGOING) == 1;
 

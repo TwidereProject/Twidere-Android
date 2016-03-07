@@ -27,7 +27,7 @@ import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
 
@@ -49,17 +49,17 @@ public class WriteLogTask<T extends LogModel> implements Runnable, Constants {
     private static final byte[] LF = {'\n'};
 
     private final Context context;
-    private final AccountKey accountKey;
+    private final UserKey accountKey;
     private final String type;
     private final List<T> events;
     @Nullable
     private final PreProcessing<T> preProcessing;
 
-    public WriteLogTask(Context context, AccountKey accountKey, T event, @Nullable PreProcessing<T> preProcessing) {
+    public WriteLogTask(Context context, UserKey accountKey, T event, @Nullable PreProcessing<T> preProcessing) {
         this(context, accountKey, HotMobiLogger.getLogFilename(event), Collections.singletonList(event), preProcessing);
     }
 
-    public WriteLogTask(Context context, AccountKey accountKey, String type, List<T> events,
+    public WriteLogTask(Context context, UserKey accountKey, String type, List<T> events,
                         @Nullable PreProcessing<T> preProcessing) {
         this.context = context;
         this.accountKey = accountKey;

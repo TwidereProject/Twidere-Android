@@ -18,7 +18,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
@@ -63,14 +63,14 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
 
     @Override
     public Object doLongOperation(RefreshTaskParam param) {
-        final AccountKey[] accountIds = param.getAccountKeys();
+        final UserKey[] accountIds = param.getAccountKeys();
         final long[] maxIds = param.getMaxIds();
         final long[] sinceIds = param.getSinceIds();
         final ContentResolver cr = context.getContentResolver();
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT);
         boolean saveReadPosition = false;
         for (int i = 0; i < accountIds.length; i++) {
-            final AccountKey accountKey = accountIds[i];
+            final UserKey accountKey = accountIds[i];
             final boolean noItemsBefore = DataStoreUtils.getActivitiesCount(context, getContentUri(),
                     accountKey) <= 0;
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
@@ -115,7 +115,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     @NonNull
     protected abstract String getErrorInfoKey();
 
-    private void storeActivities(ContentResolver cr, int loadItemLimit, AccountKey accountKey,
+    private void storeActivities(ContentResolver cr, int loadItemLimit, UserKey accountKey,
                                  boolean noItemsBefore, ResponseList<Activity> activities) {
         long[] deleteBound = new long[2];
         Arrays.fill(deleteBound, -1);
@@ -155,11 +155,11 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
         ContentResolverUtils.bulkInsert(cr, getContentUri(), valuesList);
     }
 
-    protected abstract void saveReadPosition(@NonNull final AccountKey accountId,
+    protected abstract void saveReadPosition(@NonNull final UserKey accountId,
                                              @NonNull final Twitter twitter);
 
     protected abstract ResponseList<Activity> getActivities(@NonNull final Twitter twitter,
-                                                            @NonNull final AccountKey accountId,
+                                                            @NonNull final UserKey accountId,
                                                             @NonNull final Paging paging)
             throws TwitterException;
 

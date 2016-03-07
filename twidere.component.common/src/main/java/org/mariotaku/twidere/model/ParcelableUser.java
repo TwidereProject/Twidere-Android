@@ -31,7 +31,8 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.model.util.AccountKeyConverter;
+import org.mariotaku.twidere.model.util.UserKeyConverter;
+import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 
@@ -42,16 +43,16 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
 
     @ParcelableThisPlease
-    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
-    public AccountKey account_key;
+    @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
+    public UserKey account_key;
 
     @ParcelableThisPlease
     public int account_color;
 
     @ParcelableThisPlease
-    @JsonField(name = "id")
-    @CursorField(CachedUsers.USER_ID)
-    public long id;
+    @JsonField(name = "id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = CachedUsers.USER_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey key;
     @ParcelableThisPlease
     @JsonField(name = "created_at")
     @CursorField(CachedUsers.CREATED_AT)
@@ -171,11 +172,6 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @CursorField(value = CachedUsers.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
     public Extras extras;
 
-    @ParcelableThisPlease
-    @JsonField(name = "user_host")
-    @CursorField(value = CachedUsers.USER_HOST)
-    public String user_host;
-
     public static final Creator<ParcelableUser> CREATOR = new Creator<ParcelableUser>() {
         public ParcelableUser createFromParcel(Parcel source) {
             ParcelableUser target = new ParcelableUser();
@@ -191,13 +187,13 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public ParcelableUser() {
     }
 
-    public ParcelableUser(final AccountKey account_key, final long id, final String name,
-                          final String screen_name, final String profile_image_url) {
+    public ParcelableUser(final UserKey account_key, final UserKey key, final String name,
+                          final String screenName, final String profileImageUrl) {
         this.account_key = account_key;
-        this.id = id;
+        this.key = key;
         this.name = name;
-        this.screen_name = screen_name;
-        this.profile_image_url = profile_image_url;
+        this.screen_name = screenName;
+        this.profile_image_url = profileImageUrl;
         is_cache = true;
         is_basic = true;
     }
@@ -235,19 +231,19 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
 
         ParcelableUser user = (ParcelableUser) o;
 
-        if (id != user.id) return false;
-        return account_key.equals(user.account_key);
+        if (!account_key.equals(user.account_key)) return false;
+        return key.equals(user.key);
 
     }
 
     @Override
     public int hashCode() {
-        return calculateHashCode(account_key, id);
+        return calculateHashCode(account_key, key);
     }
 
-    public static int calculateHashCode(AccountKey account_key, long id) {
-        int result = account_key.hashCode();
-        result = 31 * result + (int) (id ^ (id >>> 32));
+    public static int calculateHashCode(UserKey accountKey, UserKey userKey) {
+        int result = accountKey.hashCode();
+        result = 31 * result + userKey.hashCode();
         return result;
     }
 
@@ -256,7 +252,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         return "ParcelableUser{" +
                 "account_id=" + account_key +
                 ", account_color=" + account_color +
-                ", id=" + id +
+                ", id=" + key +
                 ", created_at=" + created_at +
                 ", position=" + position +
                 ", is_protected=" + is_protected +

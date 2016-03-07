@@ -32,7 +32,7 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -58,7 +58,7 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
     private final boolean mDisplayProfileImage;
 
     private int mTypeIdx, mIconIdx, mTitleIdx, mSummaryIdx, mExtraIdIdx, mValueIdx;
-    private AccountKey mAccountKey;
+    private UserKey mAccountKey;
     private char mToken;
 
     public ComposeAutoCompleteAdapter(final Context context) {
@@ -77,8 +77,9 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
         icon.setImageDrawable(null);
 
         if (Suggestions.AutoComplete.TYPE_USERS.equals(cursor.getString(mTypeIdx))) {
-            text1.setText(mUserColorNameManager.getUserNickname(cursor.getLong(mExtraIdIdx), cursor.getString(mTitleIdx)));
-            text2.setText('@' + cursor.getString(mSummaryIdx));
+            text1.setText(mUserColorNameManager.getUserNickname(cursor.getString(mExtraIdIdx),
+                    cursor.getString(mTitleIdx)));
+            text2.setText(String.format("@%s", cursor.getString(mSummaryIdx)));
             if (mDisplayProfileImage) {
                 final String profileImageUrl = cursor.getString(mIconIdx);
                 mProfileImageLoader.displayProfileImage(icon, profileImageUrl);
@@ -88,7 +89,7 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
 
             icon.clearColorFilter();
         } else {
-            text1.setText('#' + cursor.getString(mTitleIdx));
+            text1.setText(String.format("#%s", cursor.getString(mTitleIdx)));
             text2.setText(R.string.hashtag);
 
             icon.setImageResource(R.drawable.ic_action_hashtag);
@@ -149,7 +150,7 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
     }
 
 
-    public void setAccountKey(AccountKey accountKey) {
+    public void setAccountKey(UserKey accountKey) {
         mAccountKey = accountKey;
     }
 

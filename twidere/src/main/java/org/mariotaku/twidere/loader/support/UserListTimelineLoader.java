@@ -29,7 +29,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 
@@ -41,7 +41,7 @@ public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
     private final String mScreenName, mListName;
     private final long mListId;
 
-    public UserListTimelineLoader(final Context context, final AccountKey accountKey, final long listId,
+    public UserListTimelineLoader(final Context context, final UserKey accountKey, final long listId,
                                   final long userId, final String screenName, final String listName,
                                   final long sinceId, final long maxId, final List<ParcelableStatus> data,
                                   final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {

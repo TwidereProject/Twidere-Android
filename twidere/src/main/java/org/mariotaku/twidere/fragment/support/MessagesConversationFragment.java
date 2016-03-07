@@ -83,11 +83,11 @@ import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.loader.support.UserSearchLoader;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -139,7 +139,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             mUsersSearchList.setVisibility(View.GONE);
             mUsersSearchEmpty.setVisibility(View.GONE);
             mUsersSearchProgress.setVisibility(View.VISIBLE);
-            final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+            final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
             final String query = args.getString(EXTRA_QUERY);
             final boolean fromCache = args.getBoolean(EXTRA_FROM_CACHE);
             final boolean fromUser = args.getBoolean(EXTRA_FROM_USER, false);
@@ -304,7 +304,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     account = args.getParcelable(EXTRA_ACCOUNT);
                     recipient = args.getParcelable(EXTRA_USER);
                 } else if (args.containsKey(EXTRA_ACCOUNT_KEY)) {
-                    final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+                    final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                     final long userId = args.getLong(EXTRA_RECIPIENT_ID, -1);
                     final int accountPos = accountsSpinnerAdapter.findItemPosition(accountKey.getId());
                     if (accountPos >= 0) {
@@ -319,7 +319,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 }
                 showConversation(account, recipient);
                 if (account != null && recipient != null) {
-                    final String key = getDraftsTextKey(account.account_key, recipient.id);
+                    final String key = getDraftsTextKey(account.account_key, recipient.key.getId());
                     mEditText.setText(mMessageDrafts.getString(key, null));
                 }
             }
@@ -373,7 +373,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final ParcelableCredentials account = mAccount;
         final ParcelableUser recipient = mRecipient;
         if (account != null && recipient != null) {
-            final String key = getDraftsTextKey(account.account_key, recipient.id);
+            final String key = getDraftsTextKey(account.account_key, recipient.key.getId());
             final SharedPreferences.Editor editor = mMessageDrafts.edit();
             final String text = ParseUtils.parseString(mEditText.getText());
             if (TextUtils.isEmpty(text)) {
@@ -405,7 +405,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             case R.id.delete_all: {
                 final ParcelableCredentials account = mAccount;
                 if (account == null || mRecipient == null) return true;
-                mTwitterWrapper.destroyMessageConversationAsync(account.account_key, mRecipient.id);
+                mTwitterWrapper.destroyMessageConversationAsync(account.account_key,
+                        mRecipient.key.getId());
                 return true;
             }
         }
@@ -432,7 +433,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
-        final AccountKey accountId = args != null ? args.<AccountKey>getParcelable(EXTRA_ACCOUNT_KEY) : null;
+        final UserKey accountId = args != null ? args.<UserKey>getParcelable(EXTRA_ACCOUNT_KEY) : null;
         final long recipientId = args != null ? args.getLong(EXTRA_RECIPIENT_ID, -1) : -1;
         final String[] cols = DirectMessages.COLUMNS;
         final boolean isValid = accountId != null && recipientId > 0;
@@ -567,7 +568,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final LoaderManager lm = getLoaderManager();
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, account.account_key);
-        args.putLong(EXTRA_RECIPIENT_ID, recipient.id);
+        args.putLong(EXTRA_RECIPIENT_ID, recipient.key.getId());
         if (mLoaderInitialized) {
             lm.restartLoader(0, args, this);
         } else {
@@ -584,11 +585,11 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         return mConversationContainer.getVisibility() == View.VISIBLE;
     }
 
-    private String getDraftsTextKey(AccountKey accountKey, long userId) {
+    private String getDraftsTextKey(UserKey accountKey, long userId) {
         return String.format(Locale.ROOT, "text_%s_to_%d", accountKey, userId);
     }
 
-    private void searchUsers(AccountKey accountKey, String query, boolean fromCache) {
+    private void searchUsers(UserKey accountKey, String query, boolean fromCache) {
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
         args.putString(EXTRA_QUERY, query);
@@ -638,8 +639,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (TextUtils.isEmpty(message)) {
             mEditText.setError(getString(R.string.error_message_no_content));
         } else {
-            mTwitterWrapper.sendDirectMessageAsync(account.account_key, recipient.id, message,
-                    mImageUri);
+            mTwitterWrapper.sendDirectMessageAsync(account.account_key, recipient.key.getId(),
+                    message, mImageUri);
             mEditText.setText(null);
             mImageUri = null;
             updateAddImageButton();
@@ -834,7 +835,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         private final boolean mFromCache;
         private final UserColorNameManager mUserColorNameManager;
 
-        public CacheUserSearchLoader(MessagesConversationFragment fragment, AccountKey accountKey,
+        public CacheUserSearchLoader(MessagesConversationFragment fragment, UserKey accountKey,
                                      String query, boolean fromCache, boolean fromUser) {
             super(fragment.getContext(), accountKey, query, 0, null, fromUser);
             mUserColorNameManager = fragment.mUserColorNameManager;
@@ -855,7 +856,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
                     selection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                             Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
-                            Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
+                            Expression.in(new Column(CachedUsers.USER_KEY), new RawItemArray(nicknameIds)));
                     selectionArgs = new String[]{queryEscaped, queryEscaped};
                 } else {
                     selection = null;
@@ -902,7 +903,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     final ParcelableUser user = args.getParcelable(EXTRA_USER);
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     if (account == null || user == null || twitter == null) return;
-                    twitter.destroyMessageConversationAsync(account.account_key, user.id);
+                    twitter.destroyMessageConversationAsync(account.account_key, user.key.getId());
                     break;
                 }
             }
@@ -933,7 +934,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     Expression.equalsArgs(ConversationEntries.CONVERSATION_ID)
             ).getSQL();
             final String[] selectionArgs = {String.valueOf(mAccount.account_key),
-                    String.valueOf(mRecipient.id)};
+                    String.valueOf(mRecipient.key)};
             final String orderBy = new OrderBy(ConversationEntries.MESSAGE_ID, false).getSQL();
             return resolver.query(ConversationEntries.CONTENT_URI, projection, selection,
                     selectionArgs, orderBy);
@@ -943,7 +944,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         protected void onPostExecute(Cursor cursor) {
             if (cursor.moveToFirst()) {
                 final int messageIdIdx = cursor.getColumnIndex(ConversationEntries.MESSAGE_ID);
-                final String key = mAccount.account_key + "-" + mRecipient.id;
+                final String key = mAccount.account_key + "-" + mRecipient.key;
                 mReadStateManager.setPosition(CustomTabType.DIRECT_MESSAGES, key, cursor.getLong(messageIdIdx), false);
             }
             cursor.close();

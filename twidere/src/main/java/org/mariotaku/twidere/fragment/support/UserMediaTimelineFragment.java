@@ -19,7 +19,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -98,7 +98,7 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
     @Override
     public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
         final Context context = getActivity();
-        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final long userId = args.getLong(EXTRA_USER_ID, -1);

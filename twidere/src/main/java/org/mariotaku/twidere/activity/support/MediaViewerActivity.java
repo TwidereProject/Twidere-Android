@@ -81,7 +81,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.provider.CacheProvider;
@@ -825,7 +825,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         @Override
         protected Object getDownloadExtra() {
             final MediaExtra mediaExtra = new MediaExtra();
-            mediaExtra.setAccountKey(getArguments().<AccountKey>getParcelable(EXTRA_ACCOUNT_KEY));
+            mediaExtra.setAccountKey(getArguments().<UserKey>getParcelable(EXTRA_ACCOUNT_KEY));
             final Uri origDownloadUri = super.getDownloadUri();
             final Uri downloadUri = getDownloadUri();
             if (origDownloadUri != null && downloadUri != null) {

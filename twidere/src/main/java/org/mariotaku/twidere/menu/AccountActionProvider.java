@@ -10,7 +10,7 @@ import android.view.View;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 
@@ -20,7 +20,7 @@ public class AccountActionProvider extends ActionProvider implements TwidereCons
 
     private ParcelableAccount[] mAccounts;
 
-    private AccountKey[] mAccountIds;
+    private UserKey[] mAccountIds;
     private boolean mExclusive;
 
     public AccountActionProvider(final Context context, final ParcelableAccount[] accounts) {
@@ -79,7 +79,7 @@ public class AccountActionProvider extends ActionProvider implements TwidereCons
         mExclusive = exclusive;
     }
 
-    public void setSelectedAccountIds(final AccountKey... accountIds) {
+    public void setSelectedAccountIds(final UserKey... accountIds) {
         mAccountIds = accountIds;
     }
 

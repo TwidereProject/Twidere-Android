@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
  */
 public interface RefreshTaskParam {
     @NonNull
-    AccountKey[] getAccountKeys();
+    UserKey[] getAccountKeys();
 
     @Nullable
     long[] getMaxIds();

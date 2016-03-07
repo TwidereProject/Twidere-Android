@@ -66,7 +66,7 @@ public abstract class ParcelableUsersLoader extends AsyncTaskLoader<List<Parcela
 
     protected boolean hasId(final long id) {
         for (final ParcelableUser user : mData) {
-            if (user.id == id) return true;
+            if (user.key.getId() == id) return true;
         }
         return false;
     }

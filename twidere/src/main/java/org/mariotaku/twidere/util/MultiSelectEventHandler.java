@@ -35,10 +35,10 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.menu.AccountActionProvider;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
@@ -134,27 +134,28 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
             case R.id.mute_user: {
                 final ContentResolver resolver = mActivity.getContentResolver();
                 final ArrayList<ContentValues> valuesList = new ArrayList<>();
-                final Set<Long> userIds = new HashSet<>();
+                final Set<UserKey> userIds = new HashSet<>();
                 for (final Object object : selectedItems) {
                     if (object instanceof ParcelableStatus) {
                         final ParcelableStatus status = (ParcelableStatus) object;
-                        userIds.add(status.user_id);
+                        userIds.add(status.user_key);
                         valuesList.add(ContentValuesCreator.createFilteredUser(status));
                     } else if (object instanceof ParcelableUser) {
                         final ParcelableUser user = (ParcelableUser) object;
-                        userIds.add(user.id);
+                        userIds.add(user.key);
                         valuesList.add(ContentValuesCreator.createFilteredUser(user));
                     }
                 }
-                ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, userIds, null, false);
+                ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
+                        Filters.Users.USER_ID, userIds, null);
                 ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, valuesList);
                 Toast.makeText(mActivity, R.string.message_users_muted, Toast.LENGTH_SHORT).show();
                 mode.finish();
                 break;
             }
             case R.id.block: {
-                final AccountKey accountKey = mMultiSelectManager.getAccountKey();
-                final long[] userIds = MultiSelectManager.getSelectedUserIds(selectedItems);
+                final UserKey accountKey = mMultiSelectManager.getAccountKey();
+                final long[] userIds = UserKey.getIds(MultiSelectManager.getSelectedUserIds(selectedItems));
                 if (accountKey != null && userIds != null) {
                     mTwitterWrapper.createMultiBlockAsync(accountKey, userIds);
                 }
@@ -162,8 +163,8 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 break;
             }
             case R.id.report_spam: {
-                final AccountKey accountKey = mMultiSelectManager.getAccountKey();
-                final long[] userIds = MultiSelectManager.getSelectedUserIds(selectedItems);
+                final UserKey accountKey = mMultiSelectManager.getAccountKey();
+                final long[] userIds = UserKey.getIds(MultiSelectManager.getSelectedUserIds(selectedItems));
                 if (accountKey != null && userIds != null) {
                     mTwitterWrapper.reportMultiSpam(accountKey, userIds);
                 }

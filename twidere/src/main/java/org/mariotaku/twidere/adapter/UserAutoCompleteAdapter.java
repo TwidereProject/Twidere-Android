@@ -34,7 +34,7 @@ import org.mariotaku.sqliteqb.library.OrderBy;
 import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -61,7 +61,7 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Cons
     private final boolean mDisplayProfileImage;
 
     private int mIdIdx, mNameIdx, mScreenNameIdx, mProfileImageIdx;
-    private AccountKey mAccountKey;
+    private UserKey mAccountKey;
 
     public UserAutoCompleteAdapter(final Context context) {
         super(context, R.layout.list_item_auto_complete, null, FROM, TO, 0);
@@ -78,8 +78,8 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Cons
         // Clear images in order to prevent images in recycled view shown.
         icon.setImageDrawable(null);
 
-        text1.setText(mUserColorNameManager.getUserNickname(cursor.getLong(mIdIdx), cursor.getString(mNameIdx)));
-        text2.setText('@' + cursor.getString(mScreenNameIdx));
+        text1.setText(mUserColorNameManager.getUserNickname(cursor.getString(mIdIdx), cursor.getString(mNameIdx)));
+        text2.setText(String.format("@%s", cursor.getString(mScreenNameIdx)));
         if (mDisplayProfileImage) {
             final String profileImageUrl = cursor.getString(mProfileImageIdx);
             mProfileImageLoader.displayProfileImage(icon, profileImageUrl);
@@ -115,7 +115,7 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Cons
         final Expression usersSelection = Expression.or(
                 Expression.likeRaw(new Columns.Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                 Expression.likeRaw(new Columns.Column(CachedUsers.NAME), "?||'%'", "^"),
-                Expression.in(new Columns.Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
+                Expression.in(new Columns.Column(CachedUsers.USER_KEY), new RawItemArray(nicknameIds)));
         final String[] selectionArgs = new String[]{queryEscaped, queryEscaped};
         final String[] order = {CachedUsers.LAST_SEEN, CachedUsers.SCORE, CachedUsers.SCREEN_NAME,
                 CachedUsers.NAME};
@@ -127,14 +127,14 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Cons
     }
 
 
-    public void setAccountKey(AccountKey accountKey) {
+    public void setAccountKey(UserKey accountKey) {
         mAccountKey = accountKey;
     }
 
     @Override
     public Cursor swapCursor(final Cursor cursor) {
         if (cursor != null) {
-            mIdIdx = cursor.getColumnIndex(CachedUsers.USER_ID);
+            mIdIdx = cursor.getColumnIndex(CachedUsers.USER_KEY);
             mNameIdx = cursor.getColumnIndex(CachedUsers.NAME);
             mScreenNameIdx = cursor.getColumnIndex(CachedUsers.SCREEN_NAME);
             mProfileImageIdx = cursor.getColumnIndex(CachedUsers.PROFILE_IMAGE_URL);

@@ -27,27 +27,15 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
+import org.mariotaku.twidere.model.util.UserKeyConverter;
 
 @JsonObject
 @ParcelablePlease(allFields = false)
 public class ParcelableUserMention implements Parcelable {
 
-    public static final Parcelable.Creator<ParcelableUserMention> CREATOR = new Parcelable.Creator<ParcelableUserMention>() {
-        @Override
-        public ParcelableUserMention createFromParcel(final Parcel in) {
-            return new ParcelableUserMention(in);
-        }
-
-        @Override
-        public ParcelableUserMention[] newArray(final int size) {
-            return new ParcelableUserMention[size];
-        }
-    };
-
     @ParcelableThisPlease
-    @JsonField(name = "id")
-    public long id;
+    @JsonField(name = "id", typeConverter = UserKeyConverter.class)
+    public UserKey key;
     @ParcelableThisPlease
     @JsonField(name = "name")
     public String name;
@@ -59,17 +47,32 @@ public class ParcelableUserMention implements Parcelable {
 
     }
 
-    public ParcelableUserMention(final Parcel in) {
-        id = in.readLong();
-        name = in.readString();
-        screen_name = in.readString();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableUserMention that = (ParcelableUserMention) o;
+
+        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return !(screen_name != null ? !screen_name.equals(that.screen_name) : that.screen_name != null);
+
     }
 
-    public ParcelableUserMention(final UserMentionEntity entity) {
-        id = entity.getId();
-        name = entity.getName();
-        screen_name = entity.getScreenName();
+    @Override
+    public int hashCode() {
+        int result = key != null ? key.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (screen_name != null ? screen_name.hashCode() : 0);
+        return result;
     }
+
+    @Override
+    public String toString() {
+        return "ParcelableUserMention{id=" + key + ", name=" + name + ", screen_name=" + screen_name + "}";
+    }
+
 
     @Override
     public int describeContents() {
@@ -77,44 +80,19 @@ public class ParcelableUserMention implements Parcelable {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof ParcelableUserMention)) return false;
-        final ParcelableUserMention other = (ParcelableUserMention) obj;
-        if (id != other.id) return false;
-        return true;
+    public void writeToParcel(Parcel dest, int flags) {
+        ParcelableUserMentionParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ id >>> 32);
-        return result;
-    }
-
-
-    @Override
-    public String toString() {
-        return "ParcelableUserMention{id=" + id + ", name=" + name + ", screen_name=" + screen_name + "}";
-    }
-
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeLong(id);
-        dest.writeString(name);
-        dest.writeString(screen_name);
-    }
-
-    public static ParcelableUserMention[] fromUserMentionEntities(final UserMentionEntity[] entities) {
-        if (entities == null) return null;
-        final ParcelableUserMention[] mentions = new ParcelableUserMention[entities.length];
-        for (int i = 0, j = entities.length; i < j; i++) {
-            mentions[i] = new ParcelableUserMention(entities[i]);
+    public static final Creator<ParcelableUserMention> CREATOR = new Creator<ParcelableUserMention>() {
+        public ParcelableUserMention createFromParcel(Parcel source) {
+            ParcelableUserMention target = new ParcelableUserMention();
+            ParcelableUserMentionParcelablePlease.readFromParcel(target, source);
+            return target;
         }
-        return mentions;
-    }
 
+        public ParcelableUserMention[] newArray(int size) {
+            return new ParcelableUserMention[size];
+        }
+    };
 }

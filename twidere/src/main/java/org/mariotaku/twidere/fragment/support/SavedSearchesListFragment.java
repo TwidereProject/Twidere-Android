@@ -34,7 +34,7 @@ import org.mariotaku.twidere.adapter.SavedSearchesAdapter;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.loader.support.SavedSearchesLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent;
 
 import java.util.Collections;
@@ -87,7 +87,7 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
         return new SavedSearchesLoader(getActivity(), getAccountKey());
     }
 
-    public AccountKey getAccountKey() {
+    public UserKey getAccountKey() {
         return getArguments().getParcelable(EXTRA_ACCOUNT_KEY);
     }
 

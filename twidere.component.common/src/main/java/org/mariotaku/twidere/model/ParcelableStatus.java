@@ -34,9 +34,9 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.model.util.AccountKeyConverter;
-import org.mariotaku.twidere.model.util.AccountKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
+import org.mariotaku.twidere.model.util.UserKeyConverter;
+import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
 import java.io.IOException;
@@ -47,50 +47,42 @@ import java.util.Comparator;
 @JsonObject
 @ParcelablePlease
 public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus>, Cloneable {
+
+    public static final Comparator<ParcelableStatus> REVERSE_TIMESTAMP_COMPARATOR = new Comparator<ParcelableStatus>() {
+
+        @Override
+        public int compare(final ParcelableStatus object1, final ParcelableStatus object2) {
+            final long diff = object1.timestamp - object2.timestamp;
+            if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+            if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+            return (int) diff;
+        }
+    };
+
     @ParcelableThisPlease
     @JsonField(name = "id")
     @CursorField(Statuses.STATUS_ID)
     public long id;
-    public static final Comparator<ParcelableStatus> REVERSE_ID_COMPARATOR = new Comparator<ParcelableStatus>() {
-
-        @Override
-        public int compare(final ParcelableStatus object1, final ParcelableStatus object2) {
-            final long diff = object1.id - object2.id;
-            if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-            if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
-            return (int) diff;
-        }
-    };
     @ParcelableThisPlease
-    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
-    @CursorField(value = Statuses.ACCOUNT_KEY, converter = AccountKeyCursorFieldConverter.class)
-    public AccountKey account_key;
+    @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = Statuses.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "timestamp")
     @CursorField(Statuses.STATUS_TIMESTAMP)
     public long timestamp;
-    public static final Comparator<ParcelableStatus> TIMESTAMP_COMPARATOR = new Comparator<ParcelableStatus>() {
-
-        @Override
-        public int compare(final ParcelableStatus object1, final ParcelableStatus object2) {
-            final long diff = object2.timestamp - object1.timestamp;
-            if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-            if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
-            return (int) diff;
-        }
-    };
     @ParcelableThisPlease
-    @JsonField(name = "user_id")
-    @CursorField(Statuses.USER_ID)
-    public long user_id = -1;
+    @JsonField(name = "user_id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = Statuses.USER_ID, converter = UserKeyCursorFieldConverter.class)
+    public UserKey user_key;
     @ParcelableThisPlease
     @JsonField(name = "retweet_id")
     @CursorField(Statuses.RETWEET_ID)
     public long retweet_id = -1;
     @ParcelableThisPlease
-    @JsonField(name = "retweeted_by_user_id")
-    @CursorField(Statuses.RETWEETED_BY_USER_ID)
-    public long retweeted_by_user_id = -1;
+    @JsonField(name = "retweeted_by_user_id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = Statuses.RETWEETED_BY_USER_ID, converter = UserKeyCursorFieldConverter.class)
+    public UserKey retweeted_by_user_id;
     @ParcelableThisPlease
     @JsonField(name = "retweet_timestamp")
     @CursorField(Statuses.RETWEET_TIMESTAMP)
@@ -112,9 +104,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.IN_REPLY_TO_STATUS_ID)
     public long in_reply_to_status_id;
     @ParcelableThisPlease
-    @JsonField(name = "in_reply_to_user_id")
-    @CursorField(Statuses.IN_REPLY_TO_USER_ID)
-    public long in_reply_to_user_id;
+    @JsonField(name = "in_reply_to_user_id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = Statuses.IN_REPLY_TO_USER_ID, converter = UserKeyCursorFieldConverter.class)
+    public UserKey in_reply_to_user_id;
     @ParcelableThisPlease
     @JsonField(name = "my_retweet_id")
     @CursorField(Statuses.MY_RETWEET_ID)
@@ -128,9 +120,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.QUOTED_TIMESTAMP)
     public long quoted_timestamp;
     @ParcelableThisPlease
-    @JsonField(name = "quoted_user_id")
-    @CursorField(Statuses.QUOTED_USER_ID)
-    public long quoted_user_id;
+    @JsonField(name = "quoted_user_id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = Statuses.QUOTED_USER_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey quoted_user_id;
     @ParcelableThisPlease
     @JsonField(name = "is_gap")
     @CursorField(Statuses.IS_GAP)
@@ -351,7 +343,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         return calculateHashCode(account_key, id);
     }
 
-    public static int calculateHashCode(AccountKey account_key, long id) {
+    public static int calculateHashCode(UserKey account_key, long id) {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + account_key.hashCode();
         return result;
@@ -363,7 +355,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 "id=" + id +
                 ", account_key=" + account_key +
                 ", timestamp=" + timestamp +
-                ", user_id=" + user_id +
+                ", user_id=" + user_key +
                 ", retweet_id=" + retweet_id +
                 ", retweeted_by_user_id=" + retweeted_by_user_id +
                 ", retweet_timestamp=" + retweet_timestamp +

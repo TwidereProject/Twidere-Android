@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -44,9 +45,10 @@ public class SetUserNicknameDialogFragment extends BaseSupportDialogFragment imp
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
         final Bundle args = getArguments();
+        assert args != null;
         final String text = ParseUtils.parseString(mEditText.getText());
-        final long userId = args != null ? args.getLong(EXTRA_USER_ID, -1) : -1;
-        if (userId == -1) return;
+        final UserKey userId = args.getParcelable(EXTRA_USER_ID);
+        assert userId != null;
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE: {
                 if (TextUtils.isEmpty(text)) {
@@ -89,10 +91,10 @@ public class SetUserNicknameDialogFragment extends BaseSupportDialogFragment imp
         return builder.create();
     }
 
-    public static SetUserNicknameDialogFragment show(final FragmentManager fm, final long user_id, final String nickname) {
+    public static SetUserNicknameDialogFragment show(final FragmentManager fm, final UserKey userKey, final String nickname) {
         final SetUserNicknameDialogFragment f = new SetUserNicknameDialogFragment();
         final Bundle args = new Bundle();
-        args.putLong(EXTRA_USER_ID, user_id);
+        args.putParcelable(EXTRA_USER_KEY, userKey);
         args.putString(EXTRA_NAME, nickname);
         f.setArguments(args);
         f.show(fm, FRAGMENT_TAG_SET_USER_NICKNAME);

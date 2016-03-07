@@ -61,6 +61,7 @@ import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -406,7 +407,9 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
                     final ParcelableUser user = data.getParcelableExtra(EXTRA_USER);
                     final ContentValues values = ContentValuesCreator.createFilteredUser(user);
                     final ContentResolver resolver = getContentResolver();
-                    resolver.delete(Filters.Users.CONTENT_URI, Expression.equals(Filters.Users.USER_ID, user.id).getSQL(), null);
+                    final String where = Expression.equalsArgs(Filters.Users.USER_ID).getSQL();
+                    final String[] whereArgs = {user.key.toString()};
+                    resolver.delete(Filters.Users.CONTENT_URI, where, whereArgs);
                     resolver.insert(Filters.Users.CONTENT_URI, values);
                     break;
                 }
@@ -453,7 +456,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
             private int mUserIdIdx, mNameIdx, mScreenNameIdx;
 
             FilterUsersListAdapter(final Context context) {
-                super(context, android.R.layout.simple_list_item_activated_1, null, new String[0], new int[0], 0);
+                super(context, android.R.layout.simple_list_item_activated_2, null, new String[0], new int[0], 0);
                 GeneralComponentHelper.build(context).inject(this);
                 mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST, true);
             }
@@ -462,12 +465,15 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
             public void bindView(@NonNull final View view, final Context context, @NonNull final Cursor cursor) {
                 super.bindView(view, context, cursor);
                 final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                final long userId = cursor.getLong(mUserIdIdx);
+                final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+                final UserKey userId = UserKey.valueOf(cursor.getString(mUserIdIdx));
+                assert userId != null;
                 final String name = cursor.getString(mNameIdx);
                 final String screenName = cursor.getString(mScreenNameIdx);
                 final String displayName = mUserColorNameManager.getDisplayName(userId, name, screenName,
                         mNameFirst, false);
                 text1.setText(displayName);
+                text2.setText(userId.getHost());
             }
 
             @Override

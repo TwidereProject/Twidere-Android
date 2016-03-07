@@ -72,7 +72,7 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final UserColorNameManager manager = adapter.getUserColorNameManager();
 
-        itemContent.drawStart(manager.getUserColor(userList.user_id, false));
+        itemContent.drawStart(manager.getUserColor(userList.user_key, false));
         nameView.setText(userList.name);
         final boolean nameFirst = adapter.isNameFirst();
         final String createdByDisplayName = manager.getDisplayName(userList, nameFirst, false);

@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
@@ -31,7 +31,7 @@ import java.util.Locale;
 
 public class UserMentionsLoader extends TweetSearchLoader {
 
-    public UserMentionsLoader(final Context context, final AccountKey accountId, final String screenName,
+    public UserMentionsLoader(final Context context, final UserKey accountId, final String screenName,
                               final long maxId, final long sinceId, final List<ParcelableStatus> data,
                               final String[] savedStatusesArgs, final int tabPosition, boolean fromUser,
                               boolean makeGap) {

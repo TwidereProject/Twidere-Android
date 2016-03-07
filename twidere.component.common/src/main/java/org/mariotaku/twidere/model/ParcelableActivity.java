@@ -22,7 +22,6 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -31,9 +30,8 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.model.util.AccountKeyConverter;
-import org.mariotaku.twidere.model.util.AccountKeyCursorFieldConverter;
+import org.mariotaku.twidere.model.util.UserKeyConverter;
+import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LongArrayConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -61,9 +59,9 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @CursorField(value = Activities._ID, excludeWrite = true)
     public long _id;
     @ParcelableThisPlease
-    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
-    @CursorField(value = Activities.ACCOUNT_KEY, converter = AccountKeyCursorFieldConverter.class)
-    public AccountKey account_key;
+    @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = Activities.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "timestamp")
     @CursorField(value = Activities.TIMESTAMP)
@@ -134,7 +132,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     public ParcelableActivity() {
     }
 
-    public static int calculateHashCode(AccountKey accountKey, long timestamp, long maxPosition, long minPosition) {
+    public static int calculateHashCode(UserKey accountKey, long timestamp, long maxPosition, long minPosition) {
         int result = accountKey.hashCode();
         result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
         result = 31 * result + (int) (maxPosition ^ (maxPosition >>> 32));

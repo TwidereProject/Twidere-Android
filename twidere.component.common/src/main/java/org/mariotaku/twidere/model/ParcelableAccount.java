@@ -30,8 +30,8 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.model.util.AccountKeyConverter;
-import org.mariotaku.twidere.model.util.AccountKeyCursorFieldConverter;
+import org.mariotaku.twidere.model.util.UserKeyConverter;
+import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
@@ -46,9 +46,9 @@ public class ParcelableAccount implements Parcelable {
     public long id;
 
     @ParcelableThisPlease
-    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
-    @CursorField(value = Accounts.ACCOUNT_KEY, converter = AccountKeyCursorFieldConverter.class)
-    public AccountKey account_key;
+    @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = Accounts.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey account_key;
 
     @ParcelableThisPlease
     @JsonField(name = "screen_name")

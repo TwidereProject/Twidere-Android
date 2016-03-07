@@ -47,11 +47,11 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListene
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
@@ -90,7 +90,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
         public List<ScrollRecord> mRecords;
         private long mFirstVisibleId = -1;
-        private AccountKey mFirstVisibleAccountId = null;
+        private UserKey mFirstVisibleAccountId = null;
         private int mFirstVisiblePosition = -1;
         private int mScrollState;
 
@@ -104,7 +104,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 final ParcelableStatus status = adapter.getStatus(firstVisiblePosition);
                 if (status != null) {
                     final long id = status.id;
-                    final AccountKey accountId = status.account_key;
+                    final UserKey accountId = status.account_key;
                     if (id != mFirstVisibleId || !accountId.equals(mFirstVisibleAccountId)) {
                         if (mRecords == null) mRecords = new ArrayList<>();
                         final long time = System.currentTimeMillis();
@@ -321,7 +321,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
-        final AccountKey[] accountIds = {status.account_key};
+        final UserKey[] accountIds = {status.account_key};
         final long[] maxIds = {status.id};
         getStatuses(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
@@ -405,7 +405,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     @Override
     public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, status.account_key, status.user_id,
+        IntentUtils.openUserProfile(activity, status.account_key, status.user_key.getId(),
                 status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
 
@@ -493,7 +493,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         return new StatusesBusCallback();
     }
 
-    protected abstract AccountKey[] getAccountKeys();
+    protected abstract UserKey[] getAccountKeys();
 
     protected Data getAdapterData() {
         final AbsStatusesAdapter<Data> adapter = getAdapter();

@@ -30,7 +30,7 @@ import android.widget.CheckBox;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.text.validator.UserListNameValidator;
 import org.mariotaku.twidere.util.ParseUtils;
 
@@ -42,7 +42,7 @@ public class CreateUserListDialogFragment extends BaseSupportDialogFragment impl
             case DialogInterface.BUTTON_POSITIVE: {
                 final AlertDialog alertDialog = (AlertDialog) dialog;
                 final Bundle args = getArguments();
-                final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+                final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                 final MaterialEditText mEditName = (MaterialEditText) alertDialog.findViewById(R.id.name);
                 final MaterialEditText mEditDescription = (MaterialEditText) alertDialog.findViewById(R.id.description);
                 final CheckBox mPublicCheckBox = (CheckBox) alertDialog.findViewById(R.id.is_public);

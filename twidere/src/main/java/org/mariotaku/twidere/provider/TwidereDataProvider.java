@@ -81,16 +81,17 @@ import org.mariotaku.twidere.annotation.NotificationType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
+import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.model.UnreadItem;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
@@ -193,13 +194,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private boolean mUseStarForLikes;
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, @NotificationType String type,
-                                                         @Nullable AccountKey accountKey, long position,
+                                                         @Nullable UserKey accountKey, long position,
                                                          boolean extraUserFollowing) {
         return getMarkReadDeleteIntent(context, type, accountKey, position, -1, -1, extraUserFollowing);
     }
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, @NotificationType String type,
-                                                         @Nullable AccountKey accountKey, long position,
+                                                         @Nullable UserKey accountKey, long position,
                                                          long extraId, long extraUserId,
                                                          boolean extraUserFollowing) {
         // Setup delete intent
@@ -224,7 +225,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, @NotificationType String notificationType,
-                                                         @Nullable AccountKey accountId, StringLongPair[] positions) {
+                                                         @Nullable UserKey accountId, StringLongPair[] positions) {
         // Setup delete intent
         final Intent intent = new Intent(context, NotificationReceiver.class);
         final Uri.Builder linkBuilder = new Uri.Builder();
@@ -348,8 +349,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             mDatabaseWrapper.beginTransaction();
             if (tableId == TABLE_ID_CACHED_USERS) {
                 for (final ContentValues values : valuesArray) {
-                    final Expression where = Expression.equals(CachedUsers.USER_ID,
-                            values.getAsLong(CachedUsers.USER_ID));
+                    final Expression where = Expression.equals(CachedUsers.USER_KEY,
+                            values.getAsLong(CachedUsers.USER_KEY));
                     mDatabaseWrapper.update(table, values, where.getSQL(), null);
                     newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
                             values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -417,7 +418,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     clearNotification(notificationType, null);
                 } else if (segments.size() == 3) {
                     final int notificationType = NumberUtils.toInt(segments.get(1), -1);
-                    final AccountKey accountKey = AccountKey.valueOf(segments.get(2));
+                    final UserKey accountKey = UserKey.valueOf(segments.get(2));
                     clearNotification(notificationType, accountKey);
                 }
                 return 1;
@@ -467,9 +468,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
         final long rowId;
         if (tableId == TABLE_ID_CACHED_USERS) {
-            final Expression where = Expression.and(Expression.equalsArgs(CachedUsers.USER_ID),
+            final Expression where = Expression.and(Expression.equalsArgs(CachedUsers.USER_KEY),
                     Expression.equalsArgs(CachedUsers.USER_HOST));
-            final String[] whereArgs = {values.getAsString(CachedUsers.USER_ID),
+            final String[] whereArgs = {values.getAsString(CachedUsers.USER_KEY),
                     values.getAsString(CachedUsers.USER_HOST)};
             mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs);
             rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
@@ -483,12 +484,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     SQLiteDatabase.CONFLICT_IGNORE);
         } else if (tableId == TABLE_ID_CACHED_RELATIONSHIPS) {
             final String accountKey = values.getAsString(CachedRelationships.ACCOUNT_KEY);
-            final long userId = values.getAsLong(CachedRelationships.USER_ID);
+            final String userId = values.getAsString(CachedRelationships.USER_ID);
             final Expression where = Expression.and(
                     Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
                     Expression.equalsArgs(CachedRelationships.USER_ID)
             );
-            final String[] whereArgs = {accountKey, String.valueOf(userId)};
+            final String[] whereArgs = {accountKey, userId};
             if (mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs) > 0) {
                 final String[] projection = {CachedRelationships._ID};
                 final Cursor c = mDatabaseWrapper.query(table, projection, where.getSQL(), null,
@@ -827,7 +828,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(CachedUsers.NAME, Suggestions.Search.TITLE).getSQL(),
                     new Column(CachedUsers.SCREEN_NAME, Suggestions.Search.SUMMARY).getSQL(),
                     new Column(CachedUsers.PROFILE_IMAGE_URL, Suggestions.Search.ICON).getSQL(),
-                    new Column(CachedUsers.USER_ID, Suggestions.Search.EXTRA_ID).getSQL(),
+                    new Column(CachedUsers.USER_KEY, Suggestions.Search.EXTRA_ID).getSQL(),
                     new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL(),
                     new Column(CachedUsers.SCREEN_NAME, Suggestions.Search.VALUE).getSQL(),
             };
@@ -836,7 +837,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final Expression usersSelection = Expression.or(
                     Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
-                    Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
+                    Expression.in(new Column(CachedUsers.USER_KEY), new RawItemArray(nicknameIds)));
             final String[] selectionArgs = new String[]{queryTrimmed, queryTrimmed};
             final String[] order = {CachedUsers.LAST_SEEN, CachedUsers.SCORE, CachedUsers.SCREEN_NAME,
                     CachedUsers.NAME};
@@ -879,14 +880,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
             final Expression where = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
-                    Expression.in(new Column(CachedUsers.USER_ID), new RawItemArray(nicknameIds)));
+                    Expression.in(new Column(CachedUsers.USER_KEY), new RawItemArray(nicknameIds)));
             final String[] whereArgs = {queryEscaped, queryEscaped};
             final String[] mappedProjection = {
                     new Column(CachedUsers._ID, Suggestions._ID).getSQL(),
                     new Column("'" + Suggestions.AutoComplete.TYPE_USERS + "'", Suggestions.TYPE).getSQL(),
                     new Column(CachedUsers.NAME, Suggestions.TITLE).getSQL(),
                     new Column(CachedUsers.SCREEN_NAME, Suggestions.SUMMARY).getSQL(),
-                    new Column(CachedUsers.USER_ID, Suggestions.EXTRA_ID).getSQL(),
+                    new Column(CachedUsers.USER_KEY, Suggestions.EXTRA_ID).getSQL(),
                     new Column(CachedUsers.PROFILE_IMAGE_URL, Suggestions.ICON).getSQL(),
                     new Column(CachedUsers.SCREEN_NAME, Suggestions.VALUE).getSQL(),
             };
@@ -1073,7 +1074,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         mNotificationManager.cancelAll();
     }
 
-    private void clearNotification(final int notificationType, final AccountKey accountId) {
+    private void clearNotification(final int notificationType, final UserKey accountId) {
         mNotificationManager.cancelById(Utils.getNotificationId(notificationType, accountId));
     }
 
@@ -1267,7 +1268,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
     }
 
-    private long getPositionTag(String tag, AccountKey accountKey) {
+    private long getPositionTag(String tag, UserKey accountKey) {
         final long position = mReadStateManager.getPosition(Utils.getReadPositionTagWithAccounts(tag,
                 accountKey));
         if (position != -1) return position;
@@ -1275,7 +1276,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void showTimelineNotification(AccountPreferences pref, long position) {
-        final AccountKey accountKey = pref.getAccountKey();
+        final UserKey accountKey = pref.getAccountKey();
         final Context context = getContext();
         if (context == null) return;
         final Resources resources = context.getResources();
@@ -1305,14 +1306,16 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     statusesCount, statusesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final String displayName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
-                    mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
+            final String displayName = mUserColorNameManager.getDisplayName(userCursor.getString(idxUserId),
+                    userCursor.getString(idxUserName), userCursor.getString(idxUserScreenName),
+                    mNameFirst, false);
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.from_name, displayName);
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1);
-                final String othersName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
-                        mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
+                final String othersName = mUserColorNameManager.getDisplayName(userCursor.getString(idxUserId),
+                        userCursor.getString(idxUserName), userCursor.getString(idxUserScreenName),
+                        mNameFirst, false);
                 notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName);
             } else {
                 notificationContent = resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1);
@@ -1348,7 +1351,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showInteractionsNotification(AccountPreferences pref, long position, boolean combined) {
         final Context context = getContext();
         if (context == null) return;
-        final AccountKey accountKey = pref.getAccountKey();
+        final UserKey accountKey = pref.getAccountKey();
         final String where = Expression.and(
                 Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
                 Expression.greaterThanArgs(Activities.TIMESTAMP)
@@ -1432,7 +1435,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private PendingIntent getContentIntent(final Context context, @CustomTabType final String type,
                                            @NotificationType final String notificationType,
-                                           @Nullable final AccountKey accountKey, final long readPosition) {
+                                           @Nullable final UserKey accountKey, final long readPosition) {
         // Setup click intent
         final Intent homeIntent = new Intent(context, HomeActivity.class);
         final Uri.Builder homeLinkBuilder = new Uri.Builder();
@@ -1497,7 +1500,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showMessagesNotification(AccountPreferences pref, StringLongPair[] pairs, ContentValues[] valuesArray) {
         final Context context = getContext();
         assert context != null;
-        final AccountKey accountKey = pref.getAccountKey();
+        final UserKey accountKey = pref.getAccountKey();
         final long prevOldestId = mReadStateManager.getPosition(TAG_OLDEST_MESSAGES,
                 String.valueOf(accountKey));
         long oldestId = -1;
@@ -1552,13 +1555,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             if (messagesCount == 0 || usersCount == 0) return;
             final String accountName = DataStoreUtils.getAccountName(context, accountKey);
             final String accountScreenName = DataStoreUtils.getAccountScreenName(context, accountKey);
-            final int idxMessageText = messageCursor.getColumnIndex(DirectMessages.TEXT_UNESCAPED),
-                    idxMessageTimestamp = messageCursor.getColumnIndex(DirectMessages.MESSAGE_TIMESTAMP),
-                    idxMessageId = messageCursor.getColumnIndex(DirectMessages.MESSAGE_ID),
-                    idxMessageUserId = messageCursor.getColumnIndex(DirectMessages.SENDER_ID),
-                    idxMessageUserName = messageCursor.getColumnIndex(DirectMessages.SENDER_NAME),
-                    idxMessageUserScreenName = messageCursor.getColumnIndex(DirectMessages.SENDER_SCREEN_NAME),
-                    idxUserName = userCursor.getColumnIndex(DirectMessages.SENDER_NAME),
+            final ParcelableDirectMessageCursorIndices messageIndices = new ParcelableDirectMessageCursorIndices(messageCursor);
+            final int idxUserName = userCursor.getColumnIndex(DirectMessages.SENDER_NAME),
                     idxUserScreenName = userCursor.getColumnIndex(DirectMessages.SENDER_NAME),
                     idxUserId = userCursor.getColumnIndex(DirectMessages.SENDER_NAME);
 
@@ -1566,7 +1564,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     messagesCount, messagesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final String displayName = mUserColorNameManager.getUserNickname(userCursor.getLong(idxUserId),
+            final String displayName = mUserColorNameManager.getUserNickname(userCursor.getString(idxUserId),
                     mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
             if (usersCount == 1) {
                 if (messagesCount == 1) {
@@ -1586,19 +1584,20 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final InboxStyle style = new InboxStyle();
             for (int i = 0; messageCursor.moveToPosition(i) && i < messagesCount; i++) {
                 if (when < 0) {
-                    when = messageCursor.getLong(idxMessageTimestamp);
+                    when = messageCursor.getLong(messageIndices.timestamp);
                 }
                 if (i < 5) {
                     final SpannableStringBuilder sb = new SpannableStringBuilder();
-                    sb.append(mUserColorNameManager.getUserNickname(messageCursor.getLong(idxUserId),
-                            mNameFirst ? messageCursor.getString(idxMessageUserName) : messageCursor.getString(idxMessageUserScreenName)));
+                    sb.append(mUserColorNameManager.getUserNickname(messageCursor.getString(idxUserId),
+                            mNameFirst ? messageCursor.getString(messageIndices.sender_name) :
+                                    messageCursor.getString(messageIndices.sender_screen_name)));
                     sb.setSpan(new StyleSpan(Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     sb.append(' ');
-                    sb.append(messageCursor.getString(idxMessageText));
+                    sb.append(messageCursor.getString(messageIndices.text_unescaped));
                     style.addLine(sb);
                 }
-                final long userId = messageCursor.getLong(idxMessageUserId);
-                final long messageId = messageCursor.getLong(idxMessageId);
+                final long userId = messageCursor.getLong(messageIndices.sender_id);
+                final long messageId = messageCursor.getLong(messageIndices.id);
                 idsMap.put(userId, Math.max(idsMap.get(userId, -1L), messageId));
             }
             if (mNameFirst) {

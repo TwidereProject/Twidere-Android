@@ -34,11 +34,10 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.Warning;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
-import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -59,12 +58,12 @@ public class StreamingService extends Service implements Constants {
 
     private static final int NOTIFICATION_SERVICE_STARTED = 1;
 
-    private final SimpleArrayMap<AccountKey, UserStreamCallback> mCallbacks = new SimpleArrayMap<>();
+    private final SimpleArrayMap<UserKey, UserStreamCallback> mCallbacks = new SimpleArrayMap<>();
     private ContentResolver mResolver;
 
     private NotificationManager mNotificationManager;
 
-    private AccountKey[] mAccountKeys;
+    private UserKey[] mAccountKeys;
 
     private static final Uri[] MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI,
             DirectMessages.Outbox.CONTENT_URI};
@@ -129,7 +128,7 @@ public class StreamingService extends Service implements Constants {
 
     private boolean setTwitterInstances() {
         final List<ParcelableCredentials> accountsList = DataStoreUtils.getCredentialsList(this, true);
-        final AccountKey[] accountKeys = new AccountKey[accountsList.size()];
+        final UserKey[] accountKeys = new UserKey[accountsList.size()];
         for (int i = 0, j = accountKeys.length; i < j; i++) {
             final ParcelableCredentials credentials = accountsList.get(i);
             accountKeys[i] = credentials.account_key;

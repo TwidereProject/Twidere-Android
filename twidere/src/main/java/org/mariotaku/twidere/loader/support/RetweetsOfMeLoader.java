@@ -29,8 +29,8 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.List;
 
 public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
 
-    public RetweetsOfMeLoader(final Context context, final AccountKey accountKey,
+    public RetweetsOfMeLoader(final Context context, final UserKey accountKey,
                               final long sinceId, final long maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                               final int tabPosition, boolean fromUser) {
@@ -54,7 +54,7 @@ public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
     @WorkerThread
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        return InternalTwitterContentUtils.isFiltered(database, -1, status.text_plain, status.text_html, status.source,
-                status.retweeted_by_user_id, status.quoted_user_id);
+        return InternalTwitterContentUtils.isFiltered(database, null, status.text_plain,
+                status.text_html, status.source, status.retweeted_by_user_id, status.quoted_user_id);
     }
 }

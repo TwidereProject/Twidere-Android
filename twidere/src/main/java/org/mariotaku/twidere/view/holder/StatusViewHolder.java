@@ -21,12 +21,11 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
@@ -234,7 +233,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             if (statusContentUpperSpace != null) {
                 statusContentUpperSpace.setVisibility(View.GONE);
             }
-        } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id > 0 && displayInReplyTo) {
+        } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id != null && displayInReplyTo) {
             final String inReplyTo = manager.getDisplayName(status.in_reply_to_user_id,
                     status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst, false);
             statusInfoLabel.setText(context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo)));
@@ -280,7 +279,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             }
 
             quoteIndicator.setColor(manager.getUserColor(status.quoted_user_id, false));
-            itemContent.drawStart(manager.getUserColor(status.user_id, false));
+            itemContent.drawStart(manager.getUserColor(status.user_key, false));
         } else {
 
             quotedNameView.setVisibility(View.GONE);
@@ -289,9 +288,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
             if (status.is_retweet) {
                 itemContent.drawStart(manager.getUserColor(status.retweeted_by_user_id, false),
-                        manager.getUserColor(status.user_id, false));
+                        manager.getUserColor(status.user_key, false));
             } else {
-                itemContent.drawStart(manager.getUserColor(status.user_id, false));
+                itemContent.drawStart(manager.getUserColor(status.user_key, false));
             }
         }
 
@@ -300,7 +299,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         } else {
             timeView.setTime(status.timestamp);
         }
-        nameView.setName(manager.getUserNickname(status.user_id, status.user_name, false));
+        nameView.setName(manager.getUserNickname(status.user_key, status.user_name, false));
         nameView.setScreenName("@" + status.user_screen_name);
 
         if (statusInfoSpace != null) {
@@ -391,7 +390,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         } else {
             final boolean creatingRetweet = twitter.isCreatingRetweet(status.account_key, status.id);
             retweetIconView.setActivated(creatingRetweet || status.retweeted ||
-                    Utils.isMyRetweet(status.account_key.getId(), status.retweeted_by_user_id,
+                    Utils.isMyRetweet(status.account_key, status.retweeted_by_user_id,
                             status.my_retweet_id));
             retweetCount = status.retweet_count + (creatingRetweet ? 1 : 0);
         }
@@ -439,7 +438,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     }
 
     @Override
-    public void onMediaClick(View view, ParcelableMedia media, AccountKey accountId, long extraId) {
+    public void onMediaClick(View view, ParcelableMedia media, UserKey accountId, long extraId) {
         if (statusClickListener == null) return;
         final int position = getLayoutPosition();
         statusClickListener.onMediaClick(this, view, media, position);

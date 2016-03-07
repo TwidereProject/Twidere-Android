@@ -85,7 +85,7 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         event.setId(status.id);
         event.setAccountId(status.account_key.getId());
         event.setAccountHost(status.account_key.getHost());
-        event.setUserId(status.user_id);
+        event.setUserId(status.user_key.getId());
         event.setTimelineType(timelineType);
         event.setTweetType(TwidereDataUtils.getTweetType(status));
         event.setFollowing(status.user_is_following);

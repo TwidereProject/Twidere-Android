@@ -27,14 +27,14 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
 public class UserBlocksLoader extends CursorSupportUsersLoader {
 
-    public UserBlocksLoader(final Context context, final AccountKey accountKey,
+    public UserBlocksLoader(final Context context, final UserKey accountKey,
                             final List<ParcelableUser> data, boolean fromUser) {
         super(context, accountKey, data, fromUser);
     }

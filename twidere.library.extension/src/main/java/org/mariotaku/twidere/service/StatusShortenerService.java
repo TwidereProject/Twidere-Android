@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import org.mariotaku.twidere.IStatusShortener;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
@@ -29,7 +29,7 @@ public abstract class StatusShortenerService extends Service {
     }
 
     protected abstract StatusShortenResult shorten(ParcelableStatusUpdate status,
-                                                   AccountKey currentAccountKey,
+                                                   UserKey currentAccountKey,
                                                    String overrideStatusText);
 
     protected abstract boolean callback(StatusShortenResult result, ParcelableStatus status);
@@ -54,7 +54,7 @@ public abstract class StatusShortenerService extends Service {
             try {
                 final ParcelableStatusUpdate statusUpdate = LoganSquareMapperFinder.mapperFor(ParcelableStatusUpdate.class)
                         .parse(statusJson);
-                final AccountKey currentAccountId = AccountKey.valueOf(currentAccountIdStr);
+                final UserKey currentAccountId = UserKey.valueOf(currentAccountIdStr);
                 final StatusShortenResult shorten = mService.get().shorten(statusUpdate, currentAccountId,
                         overrideStatusText);
                 return LoganSquareMapperFinder.mapperFor(StatusShortenResult.class).serialize(shorten);

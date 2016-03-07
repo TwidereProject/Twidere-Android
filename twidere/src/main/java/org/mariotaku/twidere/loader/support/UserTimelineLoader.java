@@ -29,8 +29,8 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
     private final String mUserScreenName;
     private final boolean mIsMyTimeline;
 
-    public UserTimelineLoader(final Context context, final AccountKey accountId, final long userId,
+    public UserTimelineLoader(final Context context, final UserKey accountId, final long userId,
                               final String screenName, final long sinceId, final long maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                               final int tabPosition, boolean fromUser) {
@@ -66,8 +66,8 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
         if (mIsMyTimeline) return false;
-        final long retweetUserId = status.is_retweet ? status.user_id : -1;
+        final UserKey retweetUserId = status.is_retweet ? status.user_key : null;
         return InternalTwitterContentUtils.isFiltered(database, retweetUserId, status.text_plain,
-                status.text_html, status.source, -1, status.quoted_user_id);
+                status.text_html, status.source, null, status.quoted_user_id);
     }
 }

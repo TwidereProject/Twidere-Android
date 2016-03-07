@@ -24,7 +24,7 @@ import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.library.objectcursor.ObjectCursor;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 
@@ -66,7 +66,7 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
-            final AccountKey accountKey = AccountKey.valueOf(cursor.getString(indices.account_key));
+            final UserKey accountKey = UserKey.valueOf(cursor.getString(indices.account_key));
             final long id = cursor.getLong(indices.id);
             return ParcelableStatus.calculateHashCode(accountKey, id);
         }
@@ -86,13 +86,13 @@ public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<Li
     }
 
     @Override
-    public AccountKey getAccountKey(int adapterPosition) {
+    public UserKey getAccountKey(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
         if (dataPosition < 0 || dataPosition >= getStatusCount()) return null;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
-            return AccountKey.valueOf(cursor.getString(indices.account_key));
+            return UserKey.valueOf(cursor.getString(indices.account_key));
         }
         return mData.get(dataPosition).account_key;
     }

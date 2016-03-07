@@ -51,7 +51,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.RecentSearchProvider;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -74,7 +74,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     private int mControlBarOffsetPixels;
     private int mControlBarHeight;
 
-    public AccountKey getAccountKey() {
+    public UserKey getAccountKey() {
         return getArguments().getParcelable(EXTRA_ACCOUNT_KEY);
     }
 

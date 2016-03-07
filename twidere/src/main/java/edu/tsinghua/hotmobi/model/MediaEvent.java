@@ -76,7 +76,7 @@ public class MediaEvent extends BaseEvent implements Parcelable {
         final MediaEvent event = new MediaEvent();
         event.markStart(context);
         event.setId(status.id);
-        event.setUserId(status.user_id);
+        event.setUserId(status.user_key.getId());
         event.setMediaUrl(media.media_url);
         event.setPreviewUrl(media.preview_url);
         event.setPreviewEnabled(previewEnabled);

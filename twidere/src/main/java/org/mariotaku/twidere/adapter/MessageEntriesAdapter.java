@@ -33,7 +33,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IContentCardAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.util.ReadStateManager.OnReadStateChangeListener;
@@ -242,12 +242,12 @@ public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> im
 
     public static class DirectMessageEntry {
 
-        public final AccountKey account_key;
+        public final UserKey account_key;
         public final long conversation_id;
         public final String screen_name, name;
 
         DirectMessageEntry(Cursor cursor) {
-            account_key = AccountKey.valueOf(cursor.getString(ConversationEntries.IDX_ACCOUNT_KEY));
+            account_key = UserKey.valueOf(cursor.getString(ConversationEntries.IDX_ACCOUNT_KEY));
             conversation_id = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);
             screen_name = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
             name = cursor.getString(ConversationEntries.IDX_NAME);

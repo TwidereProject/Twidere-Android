@@ -2,7 +2,7 @@ package org.mariotaku.twidere.model.message;
 
 import android.support.annotation.IntDef;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 16/2/15.
@@ -13,10 +13,10 @@ public class FollowRequestTaskEvent {
     private int action;
     private boolean finished;
     private boolean succeeded;
-    private AccountKey mAccountKey;
+    private UserKey mAccountKey;
     private long userId;
 
-    public FollowRequestTaskEvent(@Action int action, AccountKey accountKey, long userId) {
+    public FollowRequestTaskEvent(@Action int action, UserKey accountKey, long userId) {
         this.action = action;
         this.mAccountKey = accountKey;
         this.userId = userId;
@@ -35,7 +35,7 @@ public class FollowRequestTaskEvent {
         this.finished = finished;
     }
 
-    public AccountKey getAccountKey() {
+    public UserKey getAccountKey() {
         return mAccountKey;
     }
 

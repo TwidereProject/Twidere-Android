@@ -48,7 +48,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.fragment.support.CreateUserListDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -203,7 +203,7 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
         getUserLists(mScreenName);
     }
 
-    private AccountKey getAccountKey() {
+    private UserKey getAccountKey() {
         return getIntent().getParcelableExtra(EXTRA_ACCOUNT_KEY);
     }
 
@@ -280,10 +280,10 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
         private static final String FRAGMENT_TAG_GET_USER_LISTS = "get_user_lists";
 
         private final UserListSelectorActivity mActivity;
-        private final AccountKey mAccountKey;
+        private final UserKey mAccountKey;
         private final String mScreenName;
 
-        GetUserListsTask(final UserListSelectorActivity activity, final AccountKey accountKey,
+        GetUserListsTask(final UserListSelectorActivity activity, final UserKey accountKey,
                          final String screenName) {
             mActivity = activity;
             mAccountKey = accountKey;
@@ -344,10 +344,10 @@ public class UserListSelectorActivity extends BaseSupportDialogActivity implemen
         private static final String FRAGMENT_TAG_SEARCH_USERS = "search_users";
         private final UserListSelectorActivity mActivity;
 
-        private final AccountKey mAccountKey;
+        private final UserKey mAccountKey;
         private final String mName;
 
-        SearchUsersTask(final UserListSelectorActivity activity, final AccountKey accountKey,
+        SearchUsersTask(final UserListSelectorActivity activity, final UserKey accountKey,
                         final String name) {
             mActivity = activity;
             mAccountKey = accountKey;

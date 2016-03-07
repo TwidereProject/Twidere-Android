@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.mariotaku.twidere.Twidere;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -31,7 +31,7 @@ public class TwitLongerStatusShortenerService extends StatusShortenerService imp
      */
     @Override
     protected StatusShortenResult shorten(final ParcelableStatusUpdate status,
-                                          final AccountKey currentAccountKey,
+                                          final UserKey currentAccountKey,
                                           final String overrideStatusText) {
         final int granted = Twidere.isPermissionGranted(this);
         if (granted == Twidere.Permission.DENIED) {
@@ -119,7 +119,7 @@ public class TwitLongerStatusShortenerService extends StatusShortenerService imp
     }
 
     @Nullable
-    private ParcelableCredentials getOAuthCredentials(AccountKey accountId) {
+    private ParcelableCredentials getOAuthCredentials(UserKey accountId) {
         ParcelableCredentials credentials = Twidere.getCredentials(this, accountId);
         if (credentials == null) return null;
         switch (credentials.auth_type) {

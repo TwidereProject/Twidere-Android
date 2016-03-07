@@ -33,7 +33,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -155,7 +155,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             }
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
 
-            for (AccountKey accountKey : DataStoreUtils.getAccountKeys(mContext)) {
+            for (UserKey accountKey : DataStoreUtils.getAccountKeys(mContext)) {
                 final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mContext, accountKey);
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountKey, false);
                 if (credentials == null || twitter == null) continue;

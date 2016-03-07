@@ -26,7 +26,7 @@ import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.UserSearchLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class SearchUsersFragment extends ParcelableUsersFragment {
 
     @Override
     public Loader<List<ParcelableUser>> onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
-        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final String query = args.getString(EXTRA_QUERY);
         final int page = args.getInt(EXTRA_PAGE, 1);
         return new UserSearchLoader(context, accountKey, query, page, getData(), fromUser);

@@ -31,6 +31,9 @@ public class UserEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "user_id")
     long userId;
     @ParcelableThisPlease
+    @JsonField(name = "user_host")
+    String userHost;
+    @ParcelableThisPlease
     @JsonField(name = "status_count")
     long statusCount;
     @ParcelableThisPlease
@@ -66,7 +69,8 @@ public class UserEvent extends BaseEvent implements Parcelable {
     public void setUser(@NonNull ParcelableUser user) {
         accountId = user.account_key.getId();
         accountHost = user.account_key.getHost();
-        userId = user.id;
+        userId = user.key.getId();
+        userHost = user.key.toString();
         statusCount = user.statuses_count;
         followerCount = user.followers_count;
         friendCount = user.friends_count;

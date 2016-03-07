@@ -27,7 +27,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -39,7 +39,7 @@ public class UserFollowersLoader extends CursorSupportUsersLoader {
     private final long mUserId;
     private final String mScreenName;
 
-    public UserFollowersLoader(final Context context, final AccountKey accountId, final long userId,
+    public UserFollowersLoader(final Context context, final UserKey accountId, final long userId,
                                final String screenName, final List<ParcelableUser> data,
                                final boolean fromUser) {
         super(context, accountId, data, fromUser);
@@ -51,7 +51,7 @@ public class UserFollowersLoader extends CursorSupportUsersLoader {
     @Override
     protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
             throws TwitterException {
-        final AccountKey accountId = getAccountId();
+        final UserKey accountId = getAccountId();
         if (accountId == null) throw new TwitterException("No account");
         final String accountType = DataStoreUtils.getAccountType(getContext(), accountId);
         if (mUserId > 0) {

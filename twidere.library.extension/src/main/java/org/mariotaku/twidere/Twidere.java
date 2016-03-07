@@ -33,7 +33,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ComposingStatus;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
@@ -234,7 +234,7 @@ public final class Twidere implements TwidereConstants {
 
     @Nullable
     public static ParcelableCredentials getCredentials(@NonNull final Context context,
-                                                       @NonNull final AccountKey accountId)
+                                                       @NonNull final UserKey accountId)
             throws SecurityException {
         final String selection = Accounts.ACCOUNT_KEY + " = ?";
         final String[] selectionArgs = {String.valueOf(accountId)};

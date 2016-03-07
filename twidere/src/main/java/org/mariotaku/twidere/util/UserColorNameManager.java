@@ -23,15 +23,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
-import android.support.v4.util.LongSparseArray;
+import android.support.annotation.NonNull;
+import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.UserKeyUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -40,8 +42,8 @@ import static android.text.TextUtils.isEmpty;
 
 public class UserColorNameManager implements TwidereConstants {
 
-    private final LongSparseArray<Integer> mUserColors = new LongSparseArray<>();
-    private final LongSparseArray<String> mUserNicknames = new LongSparseArray<>();
+    private final SimpleArrayMap<String, Integer> mUserColors = new SimpleArrayMap<>();
+    private final SimpleArrayMap<String, String> mUserNicknames = new SimpleArrayMap<>();
     private final SharedPreferences mColorPreferences, mNicknamePreferences;
 
     public UserColorNameManager(Context context) {
@@ -59,55 +61,65 @@ public class UserColorNameManager implements TwidereConstants {
         mNicknamePreferences.registerOnSharedPreferenceChangeListener(new OnNickPreferenceChangeListener(listener));
     }
 
-    public void clearUserColor(final long userId) {
-        if (userId < 0) return;
+    public void clearUserColor(@NonNull final UserKey userId) {
         mUserColors.remove(userId);
         final SharedPreferences.Editor editor = mColorPreferences.edit();
-        editor.remove(Long.toString(userId));
+        editor.remove(userId.toString());
         editor.apply();
     }
 
-    public void setUserColor(final long userId, final int color) {
-        if (userId < 0) return;
+    public void setUserColor(@NonNull final UserKey userId, final int color) {
+        setUserColor(userId.toString(), color);
+    }
+
+    public void setUserColor(@NonNull final String userId, final int color) {
         mUserColors.put(userId, color);
         final SharedPreferences.Editor editor = mColorPreferences.edit();
-        editor.putInt(String.valueOf(userId), color);
+        editor.putInt(userId, color);
         editor.apply();
     }
 
-    public void setUserNickname(final long userId, final String nickname) {
-        if (userId < 0) return;
+    public void setUserNickname(@NonNull final UserKey userId, final String nickname) {
+        setUserNickname(userId.toString(), nickname);
+    }
+
+    public void setUserNickname(@NonNull final String userId, final String nickname) {
         mUserNicknames.put(userId, nickname);
         final SharedPreferences.Editor editor = mNicknamePreferences.edit();
-        editor.putString(String.valueOf(userId), nickname);
+        editor.putString(userId, nickname);
         editor.apply();
     }
 
-    public void clearUserNickname(final long userId) {
-        if (userId < 0) return;
+    public void clearUserNickname(@NonNull final UserKey userId) {
         mUserNicknames.remove(userId);
         final SharedPreferences.Editor editor = mNicknamePreferences.edit();
-        editor.remove(Long.toString(userId));
+        editor.remove(userId.toString());
         editor.apply();
     }
 
     public String getDisplayName(final ParcelableUser user, final boolean nameFirst, final boolean ignoreCache) {
-        return getDisplayName(user.id, user.name, user.screen_name, nameFirst, ignoreCache);
+        return getDisplayName(user.key, user.name, user.screen_name, nameFirst, ignoreCache);
     }
 
     public String getDisplayName(final User user, final boolean nameFirst, final boolean ignoreCache) {
-        return getDisplayName(user.getId(), user.getName(), user.getScreenName(), nameFirst, ignoreCache);
+        return getDisplayName(UserKeyUtils.fromUser(user), user.getName(), user.getScreenName(), nameFirst, ignoreCache);
     }
 
     public String getDisplayName(final ParcelableUserList user, final boolean nameFirst, final boolean ignoreCache) {
-        return getDisplayName(user.user_id, user.user_name, user.user_screen_name, nameFirst, ignoreCache);
+        return getDisplayName(user.user_key, user.user_name, user.user_screen_name, nameFirst, ignoreCache);
     }
 
     public String getDisplayName(final ParcelableStatus status, final boolean nameFirst, final boolean ignoreCache) {
-        return getDisplayName(status.user_id, status.user_name, status.user_screen_name, nameFirst, ignoreCache);
+        return getDisplayName(status.user_key, status.user_name, status.user_screen_name, nameFirst, ignoreCache);
     }
 
-    public String getDisplayName(final long userId, final String name,
+    public String getDisplayName(@NonNull final UserKey userId, final String name,
+                                 final String screenName, final boolean nameFirst,
+                                 final boolean ignoreCache) {
+        return getDisplayName(userId.toString(), name, screenName, nameFirst, ignoreCache);
+    }
+
+    public String getDisplayName(@NonNull final String userId, final String name,
                                  final String screenName, final boolean nameFirst,
                                  final boolean ignoreCache) {
         final String nick = getUserNickname(userId, ignoreCache);
@@ -115,32 +127,50 @@ public class UserColorNameManager implements TwidereConstants {
         return nameFirst && !isEmpty(name) ? name : "@" + screenName;
     }
 
-    public int getUserColor(final long userId, final boolean ignoreCache) {
-        if (userId == -1) return Color.TRANSPARENT;
+    public static String getDisplayName(final String name, final String screenName, final boolean nameFirst) {
+        return nameFirst && !isEmpty(name) ? name : "@" + screenName;
+    }
+
+    public int getUserColor(@NonNull final UserKey userId, final boolean ignoreCache) {
+        return getUserColor(userId.toString(), ignoreCache);
+    }
+
+    public int getUserColor(@NonNull final String userId, final boolean ignoreCache) {
         if (!ignoreCache && mUserColors.indexOfKey(userId) >= 0) return mUserColors.get(userId);
-        final int color = mColorPreferences.getInt(Long.toString(userId), Color.TRANSPARENT);
+        final int color = mColorPreferences.getInt(userId, Color.TRANSPARENT);
         mUserColors.put(userId, color);
         return color;
     }
 
-    public String getUserNickname(final long userId) {
+    public String getUserNickname(@NonNull final UserKey userId) {
         return getUserNickname(userId, false);
     }
 
-    public String getUserNickname(final long userId, final boolean ignoreCache) {
-        if (userId == -1) return null;
-        if (!ignoreCache && LongSparseArrayUtils.hasKey(mUserNicknames, userId))
+    public String getUserNickname(@NonNull final UserKey userId, final boolean ignoreCache) {
+        return getUserNickname(userId.toString(), ignoreCache);
+    }
+
+    public String getUserNickname(@NonNull final String userId, final boolean ignoreCache) {
+        if (!ignoreCache && mUserNicknames.containsKey(userId))
             return mUserNicknames.get(userId);
-        final String nickname = mNicknamePreferences.getString(Long.toString(userId), null);
+        final String nickname = mNicknamePreferences.getString(userId, null);
         mUserNicknames.put(userId, nickname);
         return nickname;
     }
 
-    public String getUserNickname(final long userId, final String name) {
+    public String getUserNickname(@NonNull final UserKey userId, final String name) {
         return getUserNickname(userId, name, false);
     }
 
-    public String getUserNickname(final long userId, final String name, final boolean ignoreCache) {
+    public String getUserNickname(@NonNull final String userId, final String name) {
+        return getUserNickname(userId, name, false);
+    }
+
+    public String getUserNickname(@NonNull final UserKey userId, final String name, final boolean ignoreCache) {
+        return getUserNickname(userId.toString(), name, ignoreCache);
+    }
+
+    public String getUserNickname(@NonNull final String userId, final String name, final boolean ignoreCache) {
         final String nick = getUserNickname(userId, ignoreCache);
         return isEmpty(nick) ? name : nick;
     }
@@ -149,17 +179,17 @@ public class UserColorNameManager implements TwidereConstants {
         return mNicknamePreferences.getAll().entrySet();
     }
 
-    public String getName(long id, String name) {
+    public String getName(@NonNull final UserKey id, String name) {
         final String nick = getUserNickname(id, true);
         return TextUtils.isEmpty(nick) ? name : nick;
     }
 
     public interface UserColorChangedListener {
-        void onUserColorChanged(long userId, int color);
+        void onUserColorChanged(@NonNull UserKey userId, int color);
     }
 
     public interface UserNicknameChangedListener {
-        void onUserNicknameChanged(long userId, String nick);
+        void onUserNicknameChanged(@NonNull UserKey userId, String nick);
     }
 
     private static final class OnColorPreferenceChangeListener implements OnSharedPreferenceChangeListener {
@@ -172,9 +202,8 @@ public class UserColorNameManager implements TwidereConstants {
 
         @Override
         public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-            final long def = -1;
-            final long userId = NumberUtils.toLong(key, def);
-            if (mListener != null) {
+            final UserKey userId = UserKey.valueOf(key);
+            if (mListener != null && userId != null) {
                 mListener.onUserColorChanged(userId, sharedPreferences.getInt(key, 0));
             }
         }
@@ -191,9 +220,8 @@ public class UserColorNameManager implements TwidereConstants {
 
         @Override
         public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-            final long def = -1;
-            final long userId = NumberUtils.toLong(key, def);
-            if (mListener != null) {
+            final UserKey userId = UserKey.valueOf(key);
+            if (mListener != null && userId != null) {
                 mListener.onUserNicknameChanged(userId, sharedPreferences.getString(key, null));
             }
         }

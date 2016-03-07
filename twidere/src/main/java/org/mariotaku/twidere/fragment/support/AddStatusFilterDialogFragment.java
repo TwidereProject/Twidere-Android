@@ -36,6 +36,7 @@ import com.twitter.Extractor;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
@@ -59,7 +60,7 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
-        final Set<Long> user_ids = new HashSet<>();
+        final Set<UserKey> userKeys = new HashSet<>();
         final Set<String> keywords = new HashSet<>();
         final Set<String> sources = new HashSet<>();
         final ArrayList<ContentValues> userValues = new ArrayList<>();
@@ -69,11 +70,11 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
             final Object value = info.value;
             if (value instanceof ParcelableUserMention) {
                 final ParcelableUserMention mention = (ParcelableUserMention) value;
-                user_ids.add(mention.id);
+                userKeys.add(mention.key);
                 userValues.add(ContentValuesCreator.createFilteredUser(mention));
             } else if (value instanceof UserItem) {
                 final UserItem item = (UserItem) value;
-                user_ids.add(item.id);
+                userKeys.add(item.key);
                 userValues.add(createFilteredUser(item));
             } else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
                 if (value != null) {
@@ -94,9 +95,9 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
             }
         }
         final ContentResolver resolver = getContentResolver();
-        ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, user_ids, null, false);
-        ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords, null, true);
-        ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources, null, true);
+        ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, userKeys, null);
+        ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords, null);
+        ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources, null);
         ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues);
         ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues);
         ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues);
@@ -154,12 +155,12 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
             list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.quoted_user_id,
                     status.quoted_user_name, status.quoted_user_screen_name)));
         }
-        list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.user_id,
+        list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.user_key,
                 status.user_name, status.user_screen_name)));
         final ParcelableUserMention[] mentions = status.mentions;
         if (mentions != null) {
             for (final ParcelableUserMention mention : mentions) {
-                if (mention.id != status.user_id) {
+                if (!mention.key.equals(status.user_key)) {
                     list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, mention));
                 }
             }
@@ -177,11 +178,11 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
     private String getName(final UserColorNameManager manager, final Object value, boolean nameFirst) {
         if (value instanceof ParcelableUserMention) {
             final ParcelableUserMention mention = (ParcelableUserMention) value;
-            return manager.getDisplayName(mention.id, mention.name, mention.screen_name, nameFirst,
+            return manager.getDisplayName(mention.key, mention.name, mention.screen_name, nameFirst,
                     true);
         } else if (value instanceof UserItem) {
             final UserItem item = (UserItem) value;
-            return manager.getDisplayName(item.id, item.name, item.screen_name, nameFirst, true);
+            return manager.getDisplayName(item.key, item.name, item.screen_name, nameFirst, true);
         } else
             return ParseUtils.parseString(value);
     }
@@ -189,7 +190,7 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
     private static ContentValues createFilteredUser(UserItem item) {
         if (item == null) return null;
         final ContentValues values = new ContentValues();
-        values.put(Filters.Users.USER_ID, item.id);
+        values.put(Filters.Users.USER_ID, item.key.toString());
         values.put(Filters.Users.NAME, item.name);
         values.put(Filters.Users.SCREEN_NAME, item.screen_name);
         return values;
@@ -248,11 +249,11 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
     }
 
     private static class UserItem {
-        private final long id;
+        private final UserKey key;
         private final String name, screen_name;
 
-        public UserItem(long id, String name, String screen_name) {
-            this.id = id;
+        public UserItem(UserKey key, String name, String screen_name) {
+            this.key = key;
             this.name = name;
             this.screen_name = screen_name;
         }

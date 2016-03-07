@@ -51,9 +51,9 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.CardDataMap;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;
 import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
@@ -138,7 +138,7 @@ public class CardPollFragment extends BaseSupportFragment implements
         final int selectedChoice = ParcelableCardEntityUtils.getAsInteger(card, "selected_choice", -1);
         final Date endDatetimeUtc = ParcelableCardEntityUtils.getAsDate(card, "end_datetime_utc", new Date());
         final boolean hasChoice = selectedChoice != -1;
-        final boolean isMyPoll = status.account_key.getId() == status.user_id;
+        final boolean isMyPoll = status.account_key.equals(status.user_key);
         final boolean showResult = countsAreFinal || isMyPoll || hasChoice;
         for (int i = 0; i < choicesCount; i++) {
             final int choiceIndex = i + 1;
@@ -327,11 +327,11 @@ public class CardPollFragment extends BaseSupportFragment implements
     }
 
     public static class ParcelableCardEntityLoader extends AsyncTaskLoader<ParcelableCardEntity> {
-        private final AccountKey mAccountKey;
+        private final UserKey mAccountKey;
         private final String mCardUri;
         private final String mCardName;
 
-        public ParcelableCardEntityLoader(Context context, AccountKey accountKey,
+        public ParcelableCardEntityLoader(Context context, UserKey accountKey,
                                           String cardUri, String cardName) {
             super(context);
             mAccountKey = accountKey;

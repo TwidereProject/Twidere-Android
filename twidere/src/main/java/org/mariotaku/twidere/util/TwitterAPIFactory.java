@@ -39,7 +39,7 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.util.TwitterConverterFactory;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
@@ -88,14 +88,14 @@ public class TwitterAPIFactory implements TwidereConstants {
     public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities,
                                                     final boolean includeRetweets) {
         if (context == null) return null;
-        final AccountKey accountKey = Utils.getDefaultAccountKey(context);
+        final UserKey accountKey = Utils.getDefaultAccountKey(context);
         if (accountKey == null) return null;
         return getTwitterInstance(context, accountKey, includeEntities, includeRetweets);
     }
 
     @WorkerThread
     public static Twitter getTwitterInstance(@NonNull final Context context,
-                                             @NonNull final AccountKey accountKey,
+                                             @NonNull final UserKey accountKey,
                                              final boolean includeEntities) {
         return getTwitterInstance(context, accountKey, includeEntities, true);
     }
@@ -103,7 +103,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     @Nullable
     @WorkerThread
     public static Twitter getTwitterInstance(@NonNull final Context context,
-                                             @NonNull final AccountKey accountKey,
+                                             @NonNull final UserKey accountKey,
                                              final boolean includeEntities,
                                              final boolean includeRetweets) {
         return getTwitterInstance(context, accountKey, includeEntities, includeRetweets, Twitter.class);
@@ -120,7 +120,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     @Nullable
     @WorkerThread
     public static <T> T getTwitterInstance(@NonNull final Context context,
-                                           @NonNull final AccountKey accountKey,
+                                           @NonNull final UserKey accountKey,
                                            final boolean includeEntities,
                                            final boolean includeRetweets,
                                            @NonNull Class<T> cls) {
@@ -196,13 +196,17 @@ public class TwitterAPIFactory implements TwidereConstants {
                 isTwitterCredentials(credentials));
     }
 
-    public static boolean isTwitterCredentials(Context context, AccountKey accountId) {
+    public static boolean isTwitterCredentials(Context context, UserKey accountId) {
         return isTwitterCredentials(ParcelableCredentialsUtils.getCredentials(context, accountId));
     }
 
     public static boolean isTwitterCredentials(ParcelableCredentials credentials) {
         return credentials.account_type == null ||
                 ParcelableCredentials.ACCOUNT_TYPE_TWITTER.equals(credentials.account_type);
+    }
+
+    public static boolean isStatusNetCredentials(ParcelableCredentials credentials) {
+        return ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(credentials.account_type);
     }
 
     @WorkerThread
@@ -418,7 +422,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     @NonNull
-    public static ConsumerKeyType getOfficialKeyType(final Context context, final AccountKey accountKey) {
+    public static ConsumerKeyType getOfficialKeyType(final Context context, final UserKey accountKey) {
         if (context == null) return ConsumerKeyType.UNKNOWN;
         final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET, Accounts.AUTH_TYPE};
         final String selection = Expression.equalsArgs(Accounts.ACCOUNT_KEY).getSQL();

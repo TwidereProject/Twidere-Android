@@ -30,7 +30,7 @@ import org.mariotaku.twidere.api.twitter.model.CursorSupport;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -44,12 +44,12 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
         implements TwidereConstants, ICursorSupportLoader {
 
     protected final NoDuplicatesArrayList<ParcelableUserList> mData = new NoDuplicatesArrayList<>();
-    protected final AccountKey mAccountId;
+    protected final UserKey mAccountId;
     private final long mCursor;
 
     private long mNextCursor, mPrevCursor;
 
-    public BaseUserListsLoader(final Context context, final AccountKey accountKey, final long cursor,
+    public BaseUserListsLoader(final Context context, final UserKey accountKey, final long cursor,
                                final List<ParcelableUserList> data) {
         super(context);
         if (data != null) {

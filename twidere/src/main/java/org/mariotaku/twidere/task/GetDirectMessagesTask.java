@@ -16,7 +16,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -63,12 +63,12 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
 
     @Override
     public List<TwitterWrapper.MessageListResponse> doLongOperation(final RefreshTaskParam param) {
-        final AccountKey[] accountKeys = param.getAccountKeys();
+        final UserKey[] accountKeys = param.getAccountKeys();
         final long[] sinceIds = param.getSinceIds(), maxIds = param.getMaxIds();
         final List<TwitterWrapper.MessageListResponse> result = new ArrayList<>();
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
-        for (final AccountKey accountKey : accountKeys) {
+        for (final UserKey accountKey : accountKeys) {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
             if (twitter == null) continue;
             try {
@@ -109,7 +109,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
 
     }
 
-    private boolean storeMessages(AccountKey accountKey, List<DirectMessage> messages, boolean isOutgoing, boolean notify) {
+    private boolean storeMessages(UserKey accountKey, List<DirectMessage> messages, boolean isOutgoing, boolean notify) {
         if (messages == null) return true;
         final Uri uri = getDatabaseUri();
         final ContentValues[] valuesArray = new ContentValues[messages.size()];

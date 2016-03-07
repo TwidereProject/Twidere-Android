@@ -25,7 +25,7 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.constant.IntentConstants;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -41,11 +41,11 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
 
     private final boolean mOmitIntentExtra;
     private final Bundle mExtras;
-    private final AccountKey mAccountId;
+    private final UserKey mAccountId;
     private final long mStatusId;
 
     public ParcelableStatusLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                  final AccountKey accountId, final long statusId) {
+                                  final UserKey accountId, final long statusId) {
         super(context);
         mOmitIntentExtra = omitIntentExtra;
         mExtras = extras;

@@ -47,7 +47,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -91,7 +91,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
         public List<ScrollRecord> mRecords;
         private long mFirstVisibleTimestamp = -1;
-        private AccountKey mFirstVisibleAccountId = null;
+        private UserKey mFirstVisibleAccountId = null;
         private int mFirstVisiblePosition = -1;
         private int mScrollState;
 
@@ -105,7 +105,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 final ParcelableActivity activity = adapter.getActivity(firstVisiblePosition);
                 if (activity != null) {
                     final long timestamp = activity.timestamp;
-                    final AccountKey accountKey = activity.account_key;
+                    final UserKey accountKey = activity.account_key;
                     if (timestamp != mFirstVisibleTimestamp || !accountKey.equals(mFirstVisibleAccountId)) {
                         if (mRecords == null) mRecords = new ArrayList<>();
                         final long time = System.currentTimeMillis();
@@ -340,7 +340,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     public void onGapClick(GapViewHolder holder, int position) {
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
-        final AccountKey[] accountIds = {activity.account_key};
+        final UserKey[] accountIds = {activity.account_key};
         final long[] maxIds = {activity.min_position};
         getActivities(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
@@ -507,7 +507,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         return new StatusesBusCallback();
     }
 
-    protected abstract AccountKey[] getAccountKeys();
+    protected abstract UserKey[] getAccountKeys();
 
     protected Data getAdapterData() {
         final AbsActivitiesAdapter<Data> adapter = getAdapter();

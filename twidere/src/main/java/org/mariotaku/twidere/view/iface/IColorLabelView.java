@@ -24,12 +24,11 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 import org.mariotaku.twidere.R;
-
-import static org.mariotaku.twidere.util.Utils.isRTL;
 
 public interface IColorLabelView {
 
@@ -76,7 +75,7 @@ public interface IColorLabelView {
             a.recycle();
             final Resources res = context.getResources();
             mDensity = res.getDisplayMetrics().density;
-            mIsRTL = isRTL(context);
+            mIsRTL = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL;
         }
 
         public void dispatchDrawBackground(final Canvas canvas) {

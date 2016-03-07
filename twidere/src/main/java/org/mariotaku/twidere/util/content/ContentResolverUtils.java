@@ -25,6 +25,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.mariotaku.sqliteqb.library.ArgsArray;
+import org.mariotaku.sqliteqb.library.Columns;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.lang.reflect.Array;
@@ -36,35 +39,27 @@ public class ContentResolverUtils {
 
     public static <T> int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
                                      @NonNull final String inColumn, final Collection<T> colValues,
-                                     final String extraWhere, final boolean valuesIsString) {
+                                     final String extraWhere) {
         if (colValues == null) return 0;
-        return bulkDelete(resolver, uri, inColumn, colValues.toArray(), extraWhere, valuesIsString);
+        return bulkDelete(resolver, uri, inColumn, colValues.toArray(), extraWhere);
     }
 
     public static int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-                                     @NonNull final String inColumn, final Object colValues,
-                                     final String extraWhere, final boolean valuesIsString) {
+                                 @NonNull final String inColumn, final Object colValues,
+                                 final String extraWhere) {
         if (colValues == null) return 0;
         final int colValuesLength = Array.getLength(colValues), blocksCount = colValuesLength / MAX_BULK_COUNT + 1;
         int rowsDeleted = 0;
         for (int i = 0; i < blocksCount; i++) {
-            final int start = i * MAX_BULK_COUNT, end = Math.min(start + MAX_BULK_COUNT, colValuesLength);
+            final int start = i * MAX_BULK_COUNT, end = Math.min(start + MAX_BULK_COUNT,
+                    colValuesLength);
             final String[] block = TwidereArrayUtils.toStringArray(colValues, start, end);
-            if (valuesIsString) {
-                final StringBuilder where = new StringBuilder(inColumn + " IN(" + TwidereArrayUtils.toStringForSQL(block)
-                        + ")");
-                if (!TextUtils.isEmpty(extraWhere)) {
-                    where.append("AND ").append(extraWhere);
-                }
-                rowsDeleted += resolver.delete(uri, where.toString(), block);
-            } else {
-                final StringBuilder where = new StringBuilder(inColumn + " IN("
-                        + TwidereArrayUtils.toString(block, ',', true) + ")");
-                if (!TextUtils.isEmpty(extraWhere)) {
-                    where.append("AND ").append(extraWhere);
-                }
-                rowsDeleted += resolver.delete(uri, where.toString(), null);
+            final StringBuilder where = new StringBuilder(Expression.in(new Columns.Column(inColumn),
+                    new ArgsArray(block.length)).getSQL());
+            if (!TextUtils.isEmpty(extraWhere)) {
+                where.append(" AND ").append(extraWhere);
             }
+            rowsDeleted += resolver.delete(uri, where.toString(), block);
         }
         return rowsDeleted;
     }

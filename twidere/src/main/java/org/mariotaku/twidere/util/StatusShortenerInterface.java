@@ -32,7 +32,7 @@ import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.IStatusShortener;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
@@ -51,7 +51,7 @@ public final class StatusShortenerInterface extends AbsServiceInterface<IStatusS
     }
 
     public StatusShortenResult shorten(final ParcelableStatusUpdate status,
-                                       final AccountKey currentAccountId,
+                                       final UserKey currentAccountId,
                                        final String overrideStatusText) {
         final IStatusShortener iface = getInterface();
         if (iface == null) return null;

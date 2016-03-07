@@ -19,7 +19,8 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
@@ -76,60 +77,68 @@ public class InternalTwitterContentUtils {
         return list;
     }
 
-    public static boolean isFiltered(final SQLiteDatabase database, final long user_id, final String text_plain,
-                                     final String text_html, final String source, final long retweeted_by_id, final long quotedUserId) {
-        return isFiltered(database, user_id, text_plain, text_html, source, retweeted_by_id, quotedUserId, true);
+    public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
+                                     final String textPlain, final String textHtml,
+                                     final String source, final UserKey retweetedById,
+                                     final UserKey quotedUserId) {
+        return isFiltered(database, userKey, textPlain, textHtml, source, retweetedById,
+                quotedUserId, true);
     }
 
-    public static boolean isFiltered(final SQLiteDatabase database, final long userId,
-                                     final String textPlain, final String textHtml, final String source,
-                                     final long retweetedById, final long quotedUserId, final boolean filterRts) {
+    public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
+                                     final String textPlain, final String textHtml,
+                                     final String source, final UserKey retweetedById,
+                                     final UserKey quotedUserId, final boolean filterRts) {
         if (database == null) return false;
-        if (textPlain == null && textHtml == null && userId <= 0 && source == null) return false;
+        if (textPlain == null && textHtml == null && userKey == null && source == null)
+            return false;
         final StringBuilder builder = new StringBuilder();
-        final List<String> selection_args = new ArrayList<>();
+        final List<String> selectionArgs = new ArrayList<>();
         builder.append("SELECT NULL WHERE");
         if (textPlain != null) {
-            selection_args.add(textPlain);
-            builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||" + TwidereDataStore.Filters.Keywords.TABLE_NAME + "." + TwidereDataStore.Filters.VALUE
-                    + "||'%' FROM " + TwidereDataStore.Filters.Keywords.TABLE_NAME + "))");
+            selectionArgs.add(textPlain);
+            builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.VALUE
+                    + "||'%' FROM " + Filters.Keywords.TABLE_NAME + "))");
         }
         if (textHtml != null) {
-            if (!selection_args.isEmpty()) {
+            if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            selection_args.add(textHtml);
-            builder.append("(SELECT 1 IN (SELECT ? LIKE '%<a href=\"%'||" + TwidereDataStore.Filters.Links.TABLE_NAME + "."
-                    + TwidereDataStore.Filters.VALUE + "||'%\">%' FROM " + TwidereDataStore.Filters.Links.TABLE_NAME + "))");
+            selectionArgs.add(textHtml);
+            builder.append("(SELECT 1 IN (SELECT ? LIKE '%<a href=\"%'||" + Filters.Links.TABLE_NAME + "."
+                    + Filters.VALUE + "||'%\">%' FROM " + Filters.Links.TABLE_NAME + "))");
         }
-        if (userId > 0) {
-            if (!selection_args.isEmpty()) {
+        if (userKey != null) {
+            if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            builder.append("(SELECT ").append(userId).append(" IN (SELECT ").append(TwidereDataStore.Filters.Users.USER_ID).append(" FROM ").append(TwidereDataStore.Filters.Users.TABLE_NAME).append("))");
+            selectionArgs.add(String.valueOf(selectionArgs));
+            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_ID).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
         }
-        if (retweetedById > 0) {
-            if (!selection_args.isEmpty()) {
+        if (retweetedById != null) {
+            if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            builder.append("(SELECT ").append(retweetedById).append(" IN (SELECT ").append(TwidereDataStore.Filters.Users.USER_ID).append(" FROM ").append(TwidereDataStore.Filters.Users.TABLE_NAME).append("))");
+            selectionArgs.add(String.valueOf(retweetedById));
+            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_ID).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
         }
-        if (quotedUserId > 0) {
-            if (!selection_args.isEmpty()) {
+        if (quotedUserId != null) {
+            if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            builder.append("(SELECT ").append(quotedUserId).append(" IN (SELECT ").append(TwidereDataStore.Filters.Users.USER_ID).append(" FROM ").append(TwidereDataStore.Filters.Users.TABLE_NAME).append("))");
+            selectionArgs.add(String.valueOf(quotedUserId));
+            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_ID).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
         }
         if (source != null) {
-            if (!selection_args.isEmpty()) {
+            if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            selection_args.add(source);
-            builder.append("(SELECT 1 IN (SELECT ? LIKE '%>'||" + TwidereDataStore.Filters.Sources.TABLE_NAME + "." + TwidereDataStore.Filters.VALUE
-                    + "||'</a>%' FROM " + TwidereDataStore.Filters.Sources.TABLE_NAME + "))");
+            selectionArgs.add(source);
+            builder.append("(SELECT 1 IN (SELECT ? LIKE '%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.VALUE
+                    + "||'</a>%' FROM " + Filters.Sources.TABLE_NAME + "))");
         }
         final Cursor cur = database.rawQuery(builder.toString(),
-                selection_args.toArray(new String[selection_args.size()]));
+                selectionArgs.toArray(new String[selectionArgs.size()]));
         if (cur == null) return false;
         try {
             return cur.getCount() > 0;
@@ -141,7 +150,7 @@ public class InternalTwitterContentUtils {
     public static boolean isFiltered(final SQLiteDatabase database, final ParcelableStatus status,
                                      final boolean filter_rts) {
         if (database == null || status == null) return false;
-        return isFiltered(database, status.user_id, status.text_plain, status.text_html, status.source,
+        return isFiltered(database, status.user_key, status.text_plain, status.text_html, status.source,
                 status.retweeted_by_user_id, status.quoted_user_id, filter_rts);
     }
 

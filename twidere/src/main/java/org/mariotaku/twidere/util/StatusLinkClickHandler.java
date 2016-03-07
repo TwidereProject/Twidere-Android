@@ -21,7 +21,7 @@ package org.mariotaku.twidere.util;
 
 import android.content.Context;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
@@ -33,7 +33,7 @@ public class StatusLinkClickHandler extends OnLinkClickHandler {
     private ParcelableStatus mStatus;
 
     @Override
-    protected void openMedia(final AccountKey accountId, final long extraId, final boolean sensitive,
+    protected void openMedia(final UserKey accountId, final long extraId, final boolean sensitive,
                              final String link, final int start, final int end) {
         final ParcelableStatus status = mStatus;
         final ParcelableMedia current = findByLink(status.media, link);

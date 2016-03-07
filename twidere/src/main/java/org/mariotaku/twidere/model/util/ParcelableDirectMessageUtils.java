@@ -2,7 +2,7 @@ package org.mariotaku.twidere.model.util;
 
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
@@ -16,7 +16,7 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
  */
 public class ParcelableDirectMessageUtils {
 
-    public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, AccountKey accountKey, boolean isOutgoing) {
+    public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, UserKey accountKey, boolean isOutgoing) {
         ParcelableDirectMessage result = new ParcelableDirectMessage();
         result.account_key = accountKey;
         result.is_outgoing = isOutgoing;

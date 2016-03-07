@@ -27,7 +27,7 @@ import android.widget.ImageView;
 
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.view.CardMediaContainer;
@@ -48,7 +48,7 @@ public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListen
     ImageView getProfileTypeView();
 
     @Override
-    void onMediaClick(View view, ParcelableMedia media, AccountKey accountKey, long extraId);
+    void onMediaClick(View view, ParcelableMedia media, UserKey accountKey, long extraId);
 
     void setStatusClickListener(StatusClickListener listener);
 

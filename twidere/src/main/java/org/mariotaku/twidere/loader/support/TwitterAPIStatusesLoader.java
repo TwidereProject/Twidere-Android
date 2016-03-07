@@ -37,7 +37,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -69,7 +69,7 @@ import javax.inject.Inject;
 
 public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader {
 
-    private final AccountKey mAccountKey;
+    private final UserKey mAccountKey;
     private final long mMaxId, mSinceId;
     @Nullable
     private final Object[] mSavedStatusesFileArgs;
@@ -80,7 +80,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     SharedPreferencesWrapper mPreferences;
 
     public TwitterAPIStatusesLoader(@NonNull final Context context,
-                                    @Nullable final AccountKey accountKey,
+                                    @Nullable final UserKey accountKey,
                                     final long sinceId, final long maxId,
                                     final List<ParcelableStatus> data,
                                     @Nullable final String[] savedStatusesArgs,
@@ -216,7 +216,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         return mMaxId;
     }
 
-    public AccountKey getAccountKey() {
+    public UserKey getAccountKey() {
         return mAccountKey;
     }
 

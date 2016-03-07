@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
@@ -283,7 +283,7 @@ public abstract class AbsStatusesAdapter<D> extends LoadMoreSupportAdapter<ViewH
 
     @Nullable
     @Override
-    public ParcelableStatus findStatusById(AccountKey accountKey, long statusId) {
+    public ParcelableStatus findStatusById(UserKey accountKey, long statusId) {
         for (int i = 0, j = getStatusCount(); i < j; i++) {
             if (accountKey.equals(getAccountKey(i)) && statusId == getStatusId(i)) {
                 return getStatus(i);

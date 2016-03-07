@@ -23,7 +23,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
@@ -79,7 +79,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     @NonNull
     protected abstract Uri getContentUri();
 
-    private void storeStatus(final AccountKey accountKey, final List<Status> statuses,
+    private void storeStatus(final UserKey accountKey, final List<Status> statuses,
                              final long sinceId, final long maxId, final boolean notify) {
         if (statuses == null || statuses.isEmpty() || accountKey == null) {
             return;
@@ -160,13 +160,13 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
 
     @Override
     public List<TwitterWrapper.StatusListResponse> doLongOperation(final RefreshTaskParam param) {
-        final AccountKey[] accountKeys = param.getAccountKeys();
+        final UserKey[] accountKeys = param.getAccountKeys();
         final long[] maxIds = param.getMaxIds();
         final long[] sinceIds = param.getSinceIds();
         final List<TwitterWrapper.StatusListResponse> result = new ArrayList<>();
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
-        for (final AccountKey accountKey : accountKeys) {
+        for (final UserKey accountKey : accountKeys) {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
             if (twitter == null) continue;
             try {

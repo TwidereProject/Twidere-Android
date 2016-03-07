@@ -49,7 +49,7 @@ import org.mariotaku.twidere.fragment.support.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.fragment.support.UserFavoritesFragment;
 import org.mariotaku.twidere.fragment.support.UserListTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
@@ -292,8 +292,8 @@ public class CustomTabUtils implements Constants {
     }
 
     public static boolean hasAccountId(final Context context, @NonNull final Bundle args,
-                                       final AccountKey[] activatedAccountKeys, AccountKey accountKey) {
-        final AccountKey[] accountKeys = Utils.getAccountKeys(context, args);
+                                       final UserKey[] activatedAccountKeys, UserKey accountKey) {
+        final UserKey[] accountKeys = Utils.getAccountKeys(context, args);
         if (accountKeys != null) {
             return ArrayUtils.contains(accountKeys, accountKey);
         }

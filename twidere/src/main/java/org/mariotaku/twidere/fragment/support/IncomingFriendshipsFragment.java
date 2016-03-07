@@ -30,7 +30,7 @@ import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.loader.support.IDsUsersLoader;
 import org.mariotaku.twidere.loader.support.IncomingFriendshipsLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FollowRequestTaskEvent;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
@@ -53,7 +53,7 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
     @Override
     public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args,
                                               final boolean fromUser) {
-        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final IncomingFriendshipsLoader loader = new IncomingFriendshipsLoader(context, accountKey,
                 getData(), fromUser);
         loader.setCursor(getNextCursor());
@@ -73,7 +73,7 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
         final AbsUsersAdapter<List<ParcelableUser>> adapter = getAdapter();
         final ParcelableUser user = adapter.getUser(position);
         if (user == null) return;
-        mTwitterWrapper.acceptFriendshipAsync(user.account_key, user.id);
+        mTwitterWrapper.acceptFriendshipAsync(user.account_key, user.key);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
         final AbsUsersAdapter<List<ParcelableUser>> adapter = getAdapter();
         final ParcelableUser user = adapter.getUser(position);
         if (user == null) return;
-        mTwitterWrapper.denyFriendshipAsync(user.account_key, user.id);
+        mTwitterWrapper.denyFriendshipAsync(user.account_key, user.key);
     }
 
     @Subscribe

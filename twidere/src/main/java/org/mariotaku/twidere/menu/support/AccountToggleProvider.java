@@ -29,7 +29,7 @@ import android.view.SubMenu;
 import android.view.View;
 
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 
 public class AccountToggleProvider extends ActionProvider implements TwidereConstants {
@@ -53,16 +53,16 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
     }
 
     @NonNull
-    public AccountKey[] getActivatedAccountIds() {
-        if (mAccounts == null) return new AccountKey[0];
-        AccountKey[] temp = new AccountKey[mAccounts.length];
+    public UserKey[] getActivatedAccountIds() {
+        if (mAccounts == null) return new UserKey[0];
+        UserKey[] temp = new UserKey[mAccounts.length];
         int len = 0;
         for (ParcelableAccount account : mAccounts) {
             if (account.is_activated) {
                 temp[len++] = account.account_key;
             }
         }
-        final AccountKey[] result = new AccountKey[len];
+        final UserKey[] result = new UserKey[len];
         System.arraycopy(temp, 0, result, 0, len);
         return result;
     }
@@ -110,7 +110,7 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
         }
     }
 
-    public void setAccountActivated(AccountKey accountId, boolean isChecked) {
+    public void setAccountActivated(UserKey accountId, boolean isChecked) {
         if (mAccounts == null) return;
         for (final ParcelableAccount account : mAccounts) {
             if (account.account_key == accountId) {

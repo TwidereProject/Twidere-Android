@@ -85,7 +85,7 @@ public class TwidereQueryBuilder {
             final Column[] columns = new Column[CachedUsers.COLUMNS.length + 1];
             for (int i = 0, j = columns.length - 1; i < j; i++) {
                 final String column = CachedUsers.COLUMNS[i];
-                if (CachedUsers._ID.equals(column) || CachedUsers.USER_ID.equals(column)) {
+                if (CachedUsers._ID.equals(column) || CachedUsers.USER_KEY.equals(column)) {
                     columns[i] = new Column(new Table(CachedUsers.TABLE_NAME), column, column);
                 } else {
                     columns[i] = new Column(column);

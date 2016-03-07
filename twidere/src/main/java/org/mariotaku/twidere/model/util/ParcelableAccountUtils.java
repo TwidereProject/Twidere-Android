@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class ParcelableAccountUtils {
 
-    public static AccountKey[] getAccountKeys(@NonNull ParcelableAccount[] accounts) {
-        AccountKey[] ids = new AccountKey[accounts.length];
+    public static UserKey[] getAccountKeys(@NonNull ParcelableAccount[] accounts) {
+        UserKey[] ids = new UserKey[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {
             ids[i] = accounts[i].account_key;
         }
@@ -32,7 +32,7 @@ public class ParcelableAccountUtils {
 
     @Nullable
     public static ParcelableAccount getAccount(@NonNull final Context context,
-                                               @NonNull final AccountKey accountKey) {
+                                               @NonNull final UserKey accountKey) {
         final Cursor c = DataStoreUtils.getAccountCursor(context,
                 Accounts.COLUMNS_NO_CREDENTIALS, accountKey);
         if (c == null) return null;
@@ -62,7 +62,7 @@ public class ParcelableAccountUtils {
     }
 
     @NonNull
-    public static ParcelableAccount[] getAccounts(@NonNull final Context context, @NonNull final AccountKey... accountIds) {
+    public static ParcelableAccount[] getAccounts(@NonNull final Context context, @NonNull final UserKey... accountIds) {
         final String where = Expression.in(new Columns.Column(Accounts.ACCOUNT_KEY),
                 new ArgsArray(accountIds.length)).getSQL();
         final String[] whereArgs = TwidereArrayUtils.toStringArray(accountIds);

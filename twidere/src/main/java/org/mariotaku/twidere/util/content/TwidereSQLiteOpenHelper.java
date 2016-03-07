@@ -32,6 +32,7 @@ import org.mariotaku.sqliteqb.library.Constraint;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.NewColumn;
 import org.mariotaku.sqliteqb.library.OnConflict;
+import org.mariotaku.sqliteqb.library.RawSQLLang;
 import org.mariotaku.sqliteqb.library.SQLQuery;
 import org.mariotaku.sqliteqb.library.SQLQueryBuilder;
 import org.mariotaku.sqliteqb.library.SetValue;
@@ -82,7 +83,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         db.execSQL(createTable(Activities.ByFriends.TABLE_NAME, Activities.ByFriends.COLUMNS, Activities.ByFriends.TYPES, true));
         db.execSQL(createTable(Drafts.TABLE_NAME, Drafts.COLUMNS, Drafts.TYPES, true));
         db.execSQL(createTable(CachedUsers.TABLE_NAME, CachedUsers.COLUMNS, CachedUsers.TYPES, true,
-                createConflictReplaceConstraint(CachedUsers.USER_ID, CachedUsers.USER_HOST)));
+                createConflictReplaceConstraint(CachedUsers.USER_KEY, CachedUsers.USER_HOST)));
         db.execSQL(createTable(CachedStatuses.TABLE_NAME, CachedStatuses.COLUMNS, CachedStatuses.TYPES, true));
         db.execSQL(createTable(CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, CachedHashtags.TYPES, true));
         db.execSQL(createTable(CachedRelationships.TABLE_NAME, CachedRelationships.COLUMNS, CachedRelationships.TYPES, true,
@@ -150,7 +151,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
                 .actions(SQLQueryBuilder.update(OnConflict.REPLACE, filteredUsersTable)
                         .set(new SetValue(new Column(Filters.Users.NAME), new Column(Table.NEW, CachedUsers.NAME)),
                                 new SetValue(new Column(Filters.Users.SCREEN_NAME), new Column(Table.NEW, CachedUsers.SCREEN_NAME)))
-                        .where(Expression.equals(new Column(Filters.Users.USER_ID), new Column(Table.NEW, CachedUsers.USER_ID)))
+                        .where(Expression.equals(new Column(Filters.Users.USER_ID), new Column(Table.NEW, CachedUsers.USER_KEY)))
                         .build())
                 .buildSQL());
 
@@ -233,7 +234,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
                 Activities.ByFriends.TYPES, true, null);
         safeUpgrade(db, Drafts.TABLE_NAME, Drafts.COLUMNS, Drafts.TYPES, false, draftsAlias);
         safeUpgrade(db, CachedUsers.TABLE_NAME, CachedUsers.COLUMNS, CachedUsers.TYPES, true, null,
-                createConflictReplaceConstraint(CachedUsers.USER_ID, CachedUsers.USER_HOST));
+                createConflictReplaceConstraint(CachedUsers.USER_KEY, CachedUsers.USER_HOST));
         safeUpgrade(db, CachedStatuses.TABLE_NAME, CachedStatuses.COLUMNS, CachedStatuses.TYPES, true, null);
         safeUpgrade(db, CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, CachedHashtags.TYPES, true, null);
         safeUpgrade(db, CachedRelationships.TABLE_NAME, CachedRelationships.COLUMNS, CachedRelationships.TYPES, true, null,
@@ -255,6 +256,11 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         safeUpgrade(db, Tabs.TABLE_NAME, Tabs.COLUMNS, Tabs.TYPES, false, null);
         safeUpgrade(db, SavedSearches.TABLE_NAME, SavedSearches.COLUMNS, SavedSearches.TYPES, true, null);
         safeUpgrade(db, SearchHistory.TABLE_NAME, SearchHistory.COLUMNS, SearchHistory.TYPES, true, null);
+
+        if (oldVersion < 131) {
+            migrateFilteredUsers(db);
+        }
+
         db.beginTransaction();
         db.execSQL(SQLQueryBuilder.dropTable(true, "network_usages").getSQL());
         db.execSQL(SQLQueryBuilder.dropTable(true, "mentions").getSQL());
@@ -263,6 +269,14 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         createIndices(db);
         db.setTransactionSuccessful();
         db.endTransaction();
+    }
+
+    private void migrateFilteredUsers(SQLiteDatabase db) {
+        db.execSQL(SQLQueryBuilder.update(OnConflict.REPLACE, Filters.Users.TABLE_NAME)
+                        .set(new SetValue(Filters.Users.USER_ID, new RawSQLLang(Filters.Users.USER_ID + "||?")))
+                        .where(Expression.notLikeArgs(new Column(Filters.Users.USER_ID)))
+                        .buildSQL(),
+                new Object[]{"@twitter.com", "%@%"});
     }
 
     private static String createTable(final String tableName, final String[] columns, final String[] types,

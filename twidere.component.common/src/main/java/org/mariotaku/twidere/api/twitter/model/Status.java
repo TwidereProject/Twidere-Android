@@ -27,6 +27,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
 import org.mariotaku.twidere.api.gnusocial.model.Attachment;
+import org.mariotaku.twidere.api.statusnet.model.Attention;
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
 import java.io.IOException;
@@ -123,6 +124,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     @JsonField(name = "external_url")
     String externalUrl;
+
+    @JsonField(name = "attentions")
+    Attention[] attentions;
 
 
     public User getUser() {
@@ -308,6 +312,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return externalUrl;
     }
 
+    public Attention[] getAttentions() {
+        return attentions;
+    }
+
     @Override
     public int compareTo(@NonNull final Status that) {
         final long delta = id - that.getId();
@@ -316,7 +324,6 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         else if (delta > Integer.MAX_VALUE) return Integer.MAX_VALUE;
         return (int) delta;
     }
-
 
     @Override
     public String toString() {
@@ -347,7 +354,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
                 ", quotedStatus=" + quotedStatus +
                 ", card=" + card +
                 ", possiblySensitive=" + possiblySensitive +
-                '}';
+                ", attachments=" + Arrays.toString(attachments) +
+                ", externalUrl='" + externalUrl + '\'' +
+                ", attentions=" + Arrays.toString(attentions) +
+                "} " + super.toString();
     }
 
 

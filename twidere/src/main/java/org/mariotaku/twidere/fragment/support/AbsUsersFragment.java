@@ -112,8 +112,8 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
     public void onUserClick(UserViewHolder holder, int position) {
         final ParcelableUser user = getAdapter().getUser(position);
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, user.account_key, user.id, user.screen_name, null,
-                true, getUserReferral());
+        IntentUtils.openUserProfile(activity, user.account_key, user.key.getId(),
+                user.screen_name, null, true, getUserReferral());
     }
 
     @UserFragment.Referral

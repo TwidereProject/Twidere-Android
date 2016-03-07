@@ -3,7 +3,7 @@ package org.mariotaku.twidere.model.tab;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 16/3/6.
@@ -14,7 +14,7 @@ public class Arguments {
     long accountId;
 
     @JsonField(name = "account_key")
-    AccountKey accountKey;
+    UserKey accountKey;
 
     public long getAccountId() {
         return accountId;
@@ -24,11 +24,11 @@ public class Arguments {
         this.accountId = accountId;
     }
 
-    public AccountKey getAccountKey() {
+    public UserKey getAccountKey() {
         return accountKey;
     }
 
-    public void setAccountKey(AccountKey accountKey) {
+    public void setAccountKey(UserKey accountKey) {
         this.accountKey = accountKey;
     }
 }

@@ -30,7 +30,7 @@ import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -56,7 +56,7 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             final Object tag = buttonView.getTag();
             if (!(tag instanceof String) || mOnAccountToggleListener == null) return;
-            final AccountKey accountKey = AccountKey.valueOf((String) tag);
+            final UserKey accountKey = UserKey.valueOf((String) tag);
             mOnAccountToggleListener.onAccountToggle(accountKey, isChecked);
         }
     };
@@ -181,6 +181,6 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
     }
 
     public interface OnAccountToggleListener {
-        void onAccountToggle(AccountKey accountId, boolean state);
+        void onAccountToggle(UserKey accountId, boolean state);
     }
 }

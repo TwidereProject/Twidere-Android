@@ -30,7 +30,7 @@ import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.RefreshTaskParam;
@@ -104,7 +104,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     }
 
     @Override
-    protected AccountKey[] getAccountKeys() {
+    protected UserKey[] getAccountKeys() {
         return Utils.getAccountKeys(getContext(), getArguments());
     }
 
@@ -137,7 +137,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(adapter.getStatusStartIndex() +
                 adapter.getStatusCount() - 1);
-        AccountKey[] accountKeys = {status.account_key};
+        UserKey[] accountKeys = {status.account_key};
         final long[] maxIds = {status.id};
         getStatuses(new BaseRefreshTaskParam(accountKeys, maxIds, null));
     }
@@ -157,7 +157,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     public boolean triggerRefresh() {
         super.triggerRefresh();
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
-        final AccountKey[] accountIds = getAccountKeys();
+        final UserKey[] accountIds = getAccountKeys();
         if (adapter.getStatusCount() > 0) {
             final long[] sinceIds = new long[]{adapter.getStatus(0).id};
             getStatuses(new BaseRefreshTaskParam(accountIds, null, sinceIds));

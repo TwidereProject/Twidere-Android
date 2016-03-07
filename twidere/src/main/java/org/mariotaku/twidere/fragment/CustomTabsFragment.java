@@ -61,7 +61,7 @@ import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.support.CustomTabEditorActivity;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
@@ -222,7 +222,7 @@ public class CustomTabsFragment extends BaseFragment implements LoaderCallbacks<
         final Resources res = getResources();
         final boolean hasOfficialKeyAccounts = Utils.hasAccountSignedWithOfficialKeys(getActivity());
         final boolean forcePrivateAPI = mPreferences.getBoolean(KEY_FORCE_USING_PRIVATE_APIS, false);
-        final AccountKey[] accountIds = DataStoreUtils.getAccountKeys(getActivity());
+        final UserKey[] accountIds = DataStoreUtils.getAccountKeys(getActivity());
         final MenuItem itemAdd = menu.findItem(R.id.add_submenu);
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             final SubMenu subMenu = itemAdd.getSubMenu();

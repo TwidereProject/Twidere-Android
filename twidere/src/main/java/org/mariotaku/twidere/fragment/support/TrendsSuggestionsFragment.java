@@ -34,7 +34,7 @@ import android.widget.ListView;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.adapter.TrendsAdapter;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
@@ -46,7 +46,7 @@ import static org.mariotaku.twidere.util.IntentUtils.openTweetSearch;
 public class TrendsSuggestionsFragment extends AbsContentListViewFragment<TrendsAdapter>
         implements LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
-    private AccountKey mAccountId;
+    private UserKey mAccountId;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {

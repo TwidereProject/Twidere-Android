@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Trends;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -24,9 +24,9 @@ import java.util.List;
 public abstract class GetTrendsTask extends AbstractTask<Object, Object, Object> {
 
     private final Context mContext;
-    private final AccountKey mAccountId;
+    private final UserKey mAccountId;
 
-    public GetTrendsTask(Context context, final AccountKey accountKey) {
+    public GetTrendsTask(Context context, final UserKey accountKey) {
         this.mContext = context;
         this.mAccountId = accountKey;
     }
@@ -65,7 +65,7 @@ public abstract class GetTrendsTask extends AbstractTask<Object, Object, Object>
             }
             cr.delete(uri, null, null);
             ContentResolverUtils.bulkInsert(cr, uri, valuesArray);
-            ContentResolverUtils.bulkDelete(cr, TwidereDataStore.CachedHashtags.CONTENT_URI, TwidereDataStore.CachedHashtags.NAME, hashtags, null, true);
+            ContentResolverUtils.bulkDelete(cr, TwidereDataStore.CachedHashtags.CONTENT_URI, TwidereDataStore.CachedHashtags.NAME, hashtags, null);
             ContentResolverUtils.bulkInsert(cr, TwidereDataStore.CachedHashtags.CONTENT_URI,
                     hashtagValues.toArray(new ContentValues[hashtagValues.size()]));
         }

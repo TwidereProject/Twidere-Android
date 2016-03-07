@@ -105,7 +105,6 @@ import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLiked
 import org.mariotaku.twidere.loader.support.ConversationLoader;
 import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
 import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
@@ -116,6 +115,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
@@ -223,7 +223,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             assert status != null;
             final ConversationLoader loader = new ConversationLoader(getActivity(), status, sinceId,
                     maxId, mStatusAdapter.getData(), true);
-            loader.setComparator(ParcelableStatus.REVERSE_ID_COMPARATOR);
+            loader.setComparator(ParcelableStatus.REVERSE_TIMESTAMP_COMPARATOR);
             return loader;
         }
 
@@ -248,8 +248,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
             mStatusAdapter.setLoadMoreSupportedPosition(supportedPositions);
             setConversation(data);
-            final ParcelableCredentials account = mStatusAdapter.getStatusAccount();
-            if (Utils.hasOfficialAPIAccess(loader.getContext(), account)) {
+            final boolean canLoadAllReplies = ((ConversationLoader) loader).canLoadAllReplies();
+            if (canLoadAllReplies) {
                 mStatusAdapter.setReplyError(null);
             } else {
                 final SpannableStringBuilder error = SpannableStringBuilder.valueOf(
@@ -289,7 +289,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private LoaderCallbacks<StatusActivity> mStatusActivityLoaderCallback = new LoaderCallbacks<StatusActivity>() {
         @Override
         public Loader<StatusActivity> onCreateLoader(int id, Bundle args) {
-            final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+            final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
             final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
             return new StatusActivitySummaryLoader(getActivity(), accountKey, statusId);
         }
@@ -317,9 +317,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null) return;
                     final int color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT);
-                    mUserColorNameManager.setUserColor(status.user_id, color);
+                    mUserColorNameManager.setUserColor(status.user_key, color);
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
-                    mUserColorNameManager.clearUserColor(status.user_id);
+                    mUserColorNameManager.clearUserColor(status.user_key);
                 }
                 break;
             }
@@ -328,7 +328,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (status == null) return;
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
-                    final AccountKey accountKey = data.getParcelableExtra(EXTRA_KEY);
+                    final UserKey accountKey = data.getParcelableExtra(EXTRA_KEY);
                     IntentUtils.openStatus(activity, accountKey, status.id);
                 }
                 break;
@@ -461,12 +461,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     @Override
     public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, status.account_key, status.user_id,
+        IntentUtils.openUserProfile(activity, status.account_key, status.user_key.getId(),
                 status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
 
     @Override
-    public void onMediaClick(View view, ParcelableMedia media, AccountKey accountKey, long extraId) {
+    public void onMediaClick(View view, ParcelableMedia media, UserKey accountKey, long extraId) {
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
         IntentUtils.openMediaDirectly(getActivity(), accountKey, status, media, null, true);
@@ -543,7 +543,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     @Override
     public Loader<SingleResponse<ParcelableStatus>> onCreateLoader(final int id, final Bundle args) {
         final Bundle fragmentArgs = getArguments();
-        final AccountKey accountKey = fragmentArgs.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = fragmentArgs.getParcelable(EXTRA_ACCOUNT_KEY);
         final long statusId = fragmentArgs.getLong(EXTRA_STATUS_ID, -1);
         return new ParcelableStatusLoader(getActivity(), false, fragmentArgs, accountKey, statusId);
     }
@@ -590,7 +590,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final TweetEvent event = mStatusEvent;
         if (event == null) return;
         event.markEnd();
-        final AccountKey accountKey = new AccountKey(event.getAccountId(), event.getAccountHost());
+        final UserKey accountKey = new UserKey(event.getAccountId(), event.getAccountHost());
         HotMobiLogger.getInstance(getActivity()).log(accountKey, event);
     }
 
@@ -989,7 +989,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             if (status.retweet_id > 0) {
                 final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_id,
-                        status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst, false);
+                        status.retweeted_by_user_name, status.retweeted_by_user_screen_name,
+                        nameFirst, false);
                 retweetedByView.setText(context.getString(R.string.name_retweeted, retweetedBy));
                 retweetedByView.setVisibility(View.VISIBLE);
             } else {
@@ -1018,7 +1019,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                             layoutPosition, status.is_possibly_sensitive, skipLinksInText));
                 }
 
-                quoteIndicator.setColor(manager.getUserColor(status.user_id, false));
+                quoteIndicator.setColor(manager.getUserColor(status.user_key, false));
                 profileContainer.drawStart(manager.getUserColor(status.quoted_user_id, false));
             } else {
                 quoteOriginalLink.setVisibility(View.GONE);
@@ -1026,7 +1027,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quotedTextView.setVisibility(View.GONE);
                 quoteIndicator.setVisibility(View.GONE);
 
-                profileContainer.drawStart(manager.getUserColor(status.user_id, false));
+                profileContainer.drawStart(manager.getUserColor(status.user_key, false));
             }
 
             final long timestamp;
@@ -1037,7 +1038,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 timestamp = status.timestamp;
             }
 
-            nameView.setText(manager.getUserNickname(status.user_id, status.user_name, false));
+            nameView.setText(manager.getUserNickname(status.user_key, status.user_name, false));
             screenNameView.setText(String.format("@%s", status.user_screen_name));
 
             loader.displayProfileImage(profileImageView, status);
@@ -1200,14 +1201,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case R.id.profile_container: {
                     final FragmentActivity activity = fragment.getActivity();
-                    IntentUtils.openUserProfile(activity, status.account_key, status.user_id,
+                    IntentUtils.openUserProfile(activity, status.account_key, status.user_key.getId(),
                             status.user_screen_name, null, true, UserFragment.Referral.STATUS);
                     break;
                 }
                 case R.id.retweeted_by: {
                     if (status.retweet_id > 0) {
                         IntentUtils.openUserProfile(adapter.getContext(), status.account_key,
-                                status.retweeted_by_user_id, status.retweeted_by_user_screen_name,
+                                status.retweeted_by_user_id.getId(), status.retweeted_by_user_screen_name,
                                 null, true, UserFragment.Referral.STATUS);
                     }
                     break;
@@ -1220,8 +1221,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case R.id.quoted_name_container: {
                     IntentUtils.openUserProfile(adapter.getContext(), status.account_key,
-                            status.quoted_user_id, status.quoted_user_screen_name, null, true,
-                            UserFragment.Referral.STATUS);
+                            status.quoted_user_id.getId(), status.quoted_user_screen_name, null,
+                            true, UserFragment.Referral.STATUS);
                     break;
                 }
                 case R.id.quote_original_link: {
@@ -1592,7 +1593,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
 
             @Override
-            public void onLinkClick(final String link, final String orig, final AccountKey accountKey,
+            public void onLinkClick(final String link, final String orig, final UserKey accountKey,
                                     long extraId, int type, boolean sensitive, int start, int end) {
                 final ParcelableStatus status = adapter.getStatus();
                 ParcelableMedia current;
@@ -1814,13 +1815,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public AccountKey getAccountKey(int position) {
+        public UserKey getAccountKey(int position) {
             final ParcelableStatus status = getStatus(position);
             return status != null ? status.account_key : null;
         }
 
         @Override
-        public ParcelableStatus findStatusById(AccountKey accountId, long statusId) {
+        public ParcelableStatus findStatusById(UserKey accountId, long statusId) {
             if (mStatus != null && accountId.equals(mStatus.account_key) && statusId == mStatus.id) {
                 return mStatus;
             }
@@ -2426,10 +2427,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     public static class StatusActivitySummaryLoader extends AsyncTaskLoader<StatusActivity> {
-        private final AccountKey mAccountKey;
+        private final UserKey mAccountKey;
         private final long mStatusId;
 
-        public StatusActivitySummaryLoader(Context context, AccountKey accountKey, long statusId) {
+        public StatusActivitySummaryLoader(Context context, UserKey accountKey, long statusId) {
             super(context);
             mAccountKey = accountKey;
             mStatusId = statusId;

@@ -127,7 +127,6 @@ import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.support.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
@@ -161,7 +160,6 @@ import org.mariotaku.twidere.fragment.support.UserProfileEditorFragment;
 import org.mariotaku.twidere.fragment.support.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.support.UsersListFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -174,10 +172,11 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.PebbleMessage;
 import org.mariotaku.twidere.model.TwitterAccountExtra;
-import org.mariotaku.twidere.model.util.AccountKeyUtils;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
+import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -748,14 +747,14 @@ public final class Utils implements Constants {
         if (isAccountIdRequired) {
             final String paramAccountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY);
             if (paramAccountKey != null) {
-                args.putParcelable(EXTRA_ACCOUNT_KEY, AccountKey.valueOf(paramAccountKey));
+                args.putParcelable(EXTRA_ACCOUNT_KEY, UserKey.valueOf(paramAccountKey));
             } else {
                 final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
                 if (paramAccountName != null) {
                     args.putParcelable(EXTRA_ACCOUNT_KEY, DataStoreUtils.getAccountKey(context,
                             paramAccountName));
                 } else {
-                    final AccountKey accountKey = getDefaultAccountKey(context);
+                    final UserKey accountKey = getDefaultAccountKey(context);
                     if (isMyAccount(context, accountKey)) {
                         args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
                     }
@@ -780,37 +779,37 @@ public final class Utils implements Constants {
     }
 
     @Nullable
-    public static AccountKey[] getAccountKeys(@NonNull Context context, @Nullable Bundle args) {
+    public static UserKey[] getAccountKeys(@NonNull Context context, @Nullable Bundle args) {
         if (args == null) return null;
         if (args.containsKey(EXTRA_ACCOUNT_KEYS)) {
-            return newParcelableArray(args.getParcelableArray(EXTRA_ACCOUNT_KEYS), AccountKey.CREATOR);
+            return newParcelableArray(args.getParcelableArray(EXTRA_ACCOUNT_KEYS), UserKey.CREATOR);
         } else if (args.containsKey(EXTRA_ACCOUNT_KEY)) {
-            final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            if (accountKey == null) return new AccountKey[0];
-            return new AccountKey[]{accountKey};
+            final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+            if (accountKey == null) return new UserKey[0];
+            return new UserKey[]{accountKey};
         } else if (args.containsKey(EXTRA_ACCOUNT_IDS)) {
             final long[] accountIds = args.getLongArray(EXTRA_ACCOUNT_IDS);
             if (accountIds == null) return null;
-            final AccountKey[] accountKeys = AccountKeyUtils.findByIds(context, accountIds);
+            final UserKey[] accountKeys = UserKeyUtils.findByIds(context, accountIds);
             args.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountKeys);
             return accountKeys;
         } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
             final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
             if (accountId <= 0) return null;
-            final AccountKey accountKey = AccountKeyUtils.findById(context, accountId);
+            final UserKey accountKey = UserKeyUtils.findById(context, accountId);
             args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
-            if (accountKey == null) return new AccountKey[0];
-            return new AccountKey[]{accountKey};
+            if (accountKey == null) return new UserKey[0];
+            return new UserKey[]{accountKey};
         }
         return null;
     }
 
     @Nullable
     public static String getReadPositionTagWithAccounts(@Nullable final String tag,
-                                                        final AccountKey... accountKeys) {
+                                                        final UserKey... accountKeys) {
         if (tag == null) return null;
         if (ArrayUtils.isEmpty(accountKeys)) return tag;
-        final AccountKey[] accountIdsClone = accountKeys.clone();
+        final UserKey[] accountIdsClone = accountKeys.clone();
         Arrays.sort(accountIdsClone);
         return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
     }
@@ -818,14 +817,14 @@ public final class Utils implements Constants {
     @Nullable
     public static String getReadPositionTagWithAccounts(Context context, boolean activatedIfMissing,
                                                         @Nullable @ReadPositionTag String tag,
-                                                        AccountKey... accountKeys) {
+                                                        UserKey... accountKeys) {
         if (tag == null) return null;
         if (ArrayUtils.isEmpty(accountKeys)) {
-            final AccountKey[] activatedIds = DataStoreUtils.getActivatedAccountKeys(context);
+            final UserKey[] activatedIds = DataStoreUtils.getActivatedAccountKeys(context);
             Arrays.sort(activatedIds);
             return tag + "_" + TwidereArrayUtils.toString(activatedIds, '_', false);
         }
-        final AccountKey[] accountIdsClone = accountKeys.clone();
+        final UserKey[] accountIdsClone = accountKeys.clone();
         Arrays.sort(accountIdsClone);
         return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
     }
@@ -853,7 +852,7 @@ public final class Utils implements Constants {
     }
 
     public static ParcelableDirectMessage findDirectMessageInDatabases(final Context context,
-                                                                       final AccountKey accountKey,
+                                                                       final UserKey accountKey,
                                                                        final long messageId) {
         if (context == null) return null;
         final ContentResolver resolver = context.getContentResolver();
@@ -875,7 +874,7 @@ public final class Utils implements Constants {
     }
 
     @NonNull
-    public static ParcelableStatus findStatus(final Context context, final AccountKey accountKey,
+    public static ParcelableStatus findStatus(final Context context, final UserKey accountKey,
                                               final long statusId)
             throws TwitterException {
         if (context == null) throw new NullPointerException();
@@ -893,7 +892,7 @@ public final class Utils implements Constants {
     }
 
     @Nullable
-    public static ParcelableStatus findStatusInDatabases(final Context context, final AccountKey accountKey,
+    public static ParcelableStatus findStatusInDatabases(final Context context, final UserKey accountKey,
                                                          final long statusId) {
         if (context == null) return null;
         final ContentResolver resolver = context.getContentResolver();
@@ -975,7 +974,7 @@ public final class Utils implements Constants {
         return hasNavBar(context);
     }
 
-    public static boolean isOfficialCredentials(@NonNull final Context context, final AccountKey accountKey) {
+    public static boolean isOfficialCredentials(@NonNull final Context context, final UserKey accountKey) {
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context, accountKey);
         if (credentials == null) return false;
         return isOfficialCredentials(context, credentials);
@@ -1009,21 +1008,12 @@ public final class Utils implements Constants {
         if (entities == null) return false;
         boolean result = false;
         for (ParcelableUserMention entity : entities) {
-            result |= setLastSeen(context, entity.id, time);
+            result |= setLastSeen(context, entity.key, time);
         }
         return result;
     }
 
-    public static boolean setLastSeen(Context context, UserMentionEntity[] entities, long time) {
-        if (entities == null) return false;
-        boolean result = false;
-        for (UserMentionEntity entity : entities) {
-            result |= setLastSeen(context, entity.getId(), time);
-        }
-        return result;
-    }
-
-    public static boolean setLastSeen(Context context, long userId, long time) {
+    public static boolean setLastSeen(Context context, UserKey userId, long time) {
         final ContentResolver cr = context.getContentResolver();
         final ContentValues values = new ContentValues();
         if (time > 0) {
@@ -1032,8 +1022,9 @@ public final class Utils implements Constants {
             // Zero or negative value means remove last seen
             values.putNull(CachedUsers.LAST_SEEN);
         }
-        final Expression where = Expression.equals(CachedUsers.USER_ID, userId);
-        return cr.update(CachedUsers.CONTENT_URI, values, where.getSQL(), null) != 0;
+        final String where = Expression.equalsArgs(CachedUsers.USER_KEY).getSQL();
+        final String[] selectionArgs = {userId.toString()};
+        return cr.update(CachedUsers.CONTENT_URI, values, where, selectionArgs) > 0;
     }
 
     public static File getBestCacheDir(final Context context, final String cacheDirName) {
@@ -1121,12 +1112,12 @@ public final class Utils implements Constants {
     }
 
     @Nullable
-    public static AccountKey getDefaultAccountKey(final Context context) {
+    public static UserKey getDefaultAccountKey(final Context context) {
         if (context == null) return null;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
-        AccountKey accountKey = AccountKey.valueOf(prefs.getString(KEY_DEFAULT_ACCOUNT_KEY, null));
-        final AccountKey[] accountKeys = DataStoreUtils.getAccountKeys(context);
+        UserKey accountKey = UserKey.valueOf(prefs.getString(KEY_DEFAULT_ACCOUNT_KEY, null));
+        final UserKey[] accountKeys = DataStoreUtils.getAccountKeys(context);
         int idMatchIdx = -1;
         for (int i = 0, accountIdsLength = accountKeys.length; i < accountIdsLength; i++) {
             if (accountKeys[i].equals(accountKey)) {
@@ -1548,7 +1539,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean hasAutoRefreshAccounts(final Context context) {
-        final AccountKey[] accountKeys = DataStoreUtils.getAccountKeys(context);
+        final UserKey[] accountKeys = DataStoreUtils.getAccountKeys(context);
         return !ArrayUtils.isEmpty(AccountPreferences.getAutoRefreshEnabledAccountIds(context, accountKeys));
     }
 
@@ -1585,7 +1576,7 @@ public final class Utils implements Constants {
         }
     }
 
-    public static boolean isMyAccount(final Context context, @Nullable final AccountKey accountKey) {
+    public static boolean isMyAccount(final Context context, @Nullable final UserKey accountKey) {
         if (context == null || accountKey == null) return false;
         final String[] projection = new String[]{SQLFunctions.COUNT()};
         final Cursor cur = DataStoreUtils.getAccountCursor(context, projection, accountKey);
@@ -1614,11 +1605,12 @@ public final class Utils implements Constants {
     }
 
     public static boolean isMyRetweet(final ParcelableStatus status) {
-        return status != null && isMyRetweet(status.account_key.getId(), status.retweeted_by_user_id, status.my_retweet_id);
+        return status != null && isMyRetweet(status.account_key, status.retweeted_by_user_id,
+                status.my_retweet_id);
     }
 
-    public static boolean isMyRetweet(final long accountId, final long retweetedById, final long myRetweetId) {
-        return retweetedById == accountId || myRetweetId > 0;
+    public static boolean isMyRetweet(final UserKey accountId, final UserKey retweetedById, final long myRetweetId) {
+        return accountId.equals(retweetedById) || myRetweetId > 0;
     }
 
     public static boolean isNetworkAvailable(final Context context) {
@@ -1627,23 +1619,10 @@ public final class Utils implements Constants {
         return info != null && info.isConnected();
     }
 
-    public static boolean isRedirected(final int code) {
-        return code == 301 || code == 302 || code == 307;
-    }
-
-    public static boolean isRTL(final Context context) {
-        if (context == null) return false;
-        final Resources res = context.getResources();
-        return "ar".equals(res.getConfiguration().locale.getLanguage());
-        // return
-        // ConfigurationAccessor.getLayoutDirection(res.getConfiguration()) ==
-        // SCREENLAYOUT_LAYOUTDIR_RTL;
-    }
-
     public static boolean isUserLoggedIn(final Context context, final long accountId) {
         if (context == null) return false;
-        final AccountKey[] ids = DataStoreUtils.getAccountKeys(context);
-        for (final AccountKey id : ids) {
+        final UserKey[] ids = DataStoreUtils.getAccountKeys(context);
+        for (final UserKey id : ids) {
             if (id.getId() == accountId) return true;
         }
         return false;
@@ -1797,7 +1776,7 @@ public final class Utils implements Constants {
 
     static boolean isMyStatus(ParcelableStatus status) {
         if (isMyRetweet(status)) return true;
-        return status.account_key.getId() == status.user_id;
+        return status.account_key.maybeEquals(status.user_key);
     }
 
     public static boolean shouldStopAutoRefreshOnBatteryLow(final Context context) {
@@ -2022,7 +2001,7 @@ public final class Utils implements Constants {
         return in.size() != out.size();
     }
 
-    public static void updateRelationship(Context context, Relationship relationship, AccountKey accountId) {
+    public static void updateRelationship(Context context, Relationship relationship, UserKey accountId) {
         final ContentResolver resolver = context.getContentResolver();
         final ContentValues values = ContentValuesCreator.createCachedRelationship(relationship, accountId);
         resolver.insert(CachedRelationships.CONTENT_URI, values);
@@ -2097,7 +2076,7 @@ public final class Utils implements Constants {
 
     @Nullable
     public static ParcelableUser getUserForConversation(@NonNull final Context context,
-                                                        @NonNull final AccountKey accountKey,
+                                                        @NonNull final UserKey accountKey,
                                                         final long conversationId) {
         final ContentResolver cr = context.getContentResolver();
         final Expression where = Expression.and(Expression.equalsArgs(ConversationEntries.ACCOUNT_KEY),
@@ -2147,7 +2126,7 @@ public final class Utils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openProfileEditor(Context context, @Nullable AccountKey accountId) {
+    public static void openProfileEditor(Context context, @Nullable UserKey accountId) {
         final Intent intent = new Intent();
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
@@ -2217,7 +2196,7 @@ public final class Utils implements Constants {
     public static void logOpenNotificationFromUri(Context context, Uri uri) {
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, false)) return;
         final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
-        final AccountKey accountKey = AccountKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
+        final UserKey accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
         final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
         final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
         final boolean itemUserFollowing = Boolean.parseBoolean(UriExtraUtils.getExtra(uri, "item_user_following"));
@@ -2242,7 +2221,7 @@ public final class Utils implements Constants {
         return isOAuth && TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
     }
 
-    public static int getNotificationId(int baseId, @Nullable AccountKey accountId) {
+    public static int getNotificationId(int baseId, @Nullable UserKey accountId) {
         int result = baseId;
         result = 31 * result + (accountId != null ? accountId.hashCode() : 0);
         return result;

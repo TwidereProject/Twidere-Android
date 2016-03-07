@@ -12,7 +12,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -22,7 +22,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils;
 /**
  * Created by mariotaku on 16/2/13.
  */
-public class GetSavedSearchesTask extends AbstractTask<AccountKey[], SingleResponse<Object>, Object>
+public class GetSavedSearchesTask extends AbstractTask<UserKey[], SingleResponse<Object>, Object>
         implements Constants {
 
     private final Context mContext;
@@ -32,9 +32,9 @@ public class GetSavedSearchesTask extends AbstractTask<AccountKey[], SingleRespo
     }
 
     @Override
-    public SingleResponse<Object> doLongOperation(AccountKey[] params) {
+    public SingleResponse<Object> doLongOperation(UserKey[] params) {
         final ContentResolver cr = mContext.getContentResolver();
-        for (AccountKey accountKey : params) {
+        for (UserKey accountKey : params) {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountKey, true);
             if (twitter == null) continue;
             try {

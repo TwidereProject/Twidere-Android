@@ -1,21 +1,21 @@
 package org.mariotaku.twidere.util.media;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 16/1/28.
  */
 public class MediaExtra {
-    AccountKey accountKey;
+    UserKey accountKey;
     boolean useThumbor = true;
     String fallbackUrl;
     boolean skipUrlReplacing;
 
-    public AccountKey getAccountKey() {
+    public UserKey getAccountKey() {
         return accountKey;
     }
 
-    public void setAccountKey(AccountKey accountKey) {
+    public void setAccountKey(UserKey accountKey) {
         this.accountKey = accountKey;
     }
 

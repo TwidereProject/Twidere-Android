@@ -27,7 +27,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -39,7 +39,7 @@ public class UserFriendsLoader extends CursorSupportUsersLoader {
     private final long mUserId;
     private final String mScreenName;
 
-    public UserFriendsLoader(final Context context, final AccountKey accountKey, final long userId,
+    public UserFriendsLoader(final Context context, final UserKey accountKey, final long userId,
                              final String screenName, final List<ParcelableUser> userList,
                              boolean fromUser) {
         super(context, accountKey, userList, fromUser);

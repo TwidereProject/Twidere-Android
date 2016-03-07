@@ -27,7 +27,7 @@ import android.util.Log;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
@@ -39,9 +39,9 @@ import java.util.List;
 public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
     @Nullable
-    private final AccountKey mAccountKey;
+    private final UserKey mAccountKey;
 
-    public TwitterAPIUsersLoader(final Context context, @Nullable final AccountKey accountKey,
+    public TwitterAPIUsersLoader(final Context context, @Nullable final UserKey accountKey,
                                  final List<ParcelableUser> data, boolean fromUser) {
         super(context, data, fromUser);
         mAccountKey = accountKey;
@@ -76,7 +76,7 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
     }
 
     @Nullable
-    public final AccountKey getAccountId() {
+    public final UserKey getAccountId() {
         return mAccountKey;
     }
 

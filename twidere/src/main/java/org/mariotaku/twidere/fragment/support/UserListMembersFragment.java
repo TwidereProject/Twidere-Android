@@ -33,7 +33,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserListMembersLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
@@ -62,7 +62,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
     @Override
     public CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
-        final AccountKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final String listName = args.getString(EXTRA_LIST_NAME);
@@ -83,7 +83,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
         super.onActivityCreated(savedInstanceState);
         if (mUserList == null && args != null) {
             final long listId = args.getLong(EXTRA_LIST_ID, -1);
-            final AccountKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
+            final UserKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
             final long userId = args.getLong(EXTRA_USER_ID, -1);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
             final String listName = args.getString(EXTRA_LIST_NAME);
@@ -113,12 +113,12 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
     private class GetUserListTask extends AsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         @Nullable
-        private final AccountKey mAccountKey;
+        private final UserKey mAccountKey;
         private final long mUserId;
         private final long mListId;
         private final String mScreenName, mListName;
 
-        private GetUserListTask(@Nullable final AccountKey accountKey, final long listId,
+        private GetUserListTask(@Nullable final UserKey accountKey, final long listId,
                                 final String listName, final long userId, final String screenName) {
             this.mAccountKey = accountKey;
             this.mUserId = userId;

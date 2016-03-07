@@ -33,7 +33,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -111,7 +111,7 @@ public class MediaLoaderWrapper implements Constants {
     }
 
     public void displayPreviewImageWithCredentials(final ImageView view, final String url,
-                                                   final AccountKey accountKey,
+                                                   final UserKey accountKey,
                                                    final MediaLoadingHandler loadingHandler) {
         if (accountKey == null) {
             displayPreviewImage(view, url, loadingHandler);

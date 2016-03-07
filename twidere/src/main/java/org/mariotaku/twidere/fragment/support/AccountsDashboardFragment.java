@@ -87,9 +87,9 @@ import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.menu.support.AccountToggleProvider;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
@@ -159,7 +159,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private boolean mLoaderInitialized;
 
     @NonNull
-    public AccountKey[] getActivatedAccountIds() {
+    public UserKey[] getActivatedAccountIds() {
         if (mAccountActionProvider != null) {
             return mAccountActionProvider.getActivatedAccountIds();
         }
@@ -278,7 +278,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             mNoAccountContainer.setVisibility(View.VISIBLE);
             mAccountProfileContainer.setVisibility(View.INVISIBLE);
         }
-        AccountKey defaultId = null;
+        UserKey defaultId = null;
         for (ParcelableAccount account : accounts) {
             if (account.is_activated) {
                 defaultId = account.account_key;
@@ -288,7 +288,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
 
         mAccountsAdapter.setAccounts(accounts);
-        AccountKey accountKey = AccountKey.valueOf(mPreferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null));
+        UserKey accountKey = UserKey.valueOf(mPreferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null));
         if (accountKey == null) {
             accountKey = defaultId;
         }
@@ -580,9 +580,9 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, R.id.lists));
     }
 
-    private boolean hasAccountInTab(SupportTabSpec tab, AccountKey accountId, boolean isActivated) {
+    private boolean hasAccountInTab(SupportTabSpec tab, UserKey accountId, boolean isActivated) {
         if (tab.args == null) return false;
-        final AccountKey[] accountKeys = Utils.getAccountKeys(getContext(), tab.args);
+        final UserKey[] accountKeys = Utils.getAccountKeys(getContext(), tab.args);
         if (accountKeys == null) return isActivated;
         return ArrayUtils.contains(accountKeys, accountId);
     }
@@ -754,8 +754,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             final ParcelableAccount account = mSelectedAccount;
             if (account != null && option.id == R.id.compose) {
                 final Context context = getContext();
-                final String displayName = mUserColorNameManager.getDisplayName(-1, account.name,
-                        account.screen_name, mNameFirst, false);
+                final String displayName = UserColorNameManager.getDisplayName(account.name,
+                        account.screen_name, mNameFirst);
                 return context.getString(R.string.tweet_from_name, displayName);
             }
             return super.getTitle(position, option);
@@ -798,7 +798,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             setHasStableIds(true);
         }
 
-        private static int indexOfAccount(List<ParcelableAccount> accounts, AccountKey accountId) {
+        private static int indexOfAccount(List<ParcelableAccount> accounts, UserKey accountId) {
             for (int i = 0, j = accounts.size(); i < j; i++) {
                 if (accounts.get(i).account_key.equals(accountId)) return i;
             }
@@ -821,13 +821,13 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         }
 
         @Nullable
-        public AccountKey getSelectedAccountKey() {
+        public UserKey getSelectedAccountKey() {
             final ParcelableAccount selectedAccount = getSelectedAccount();
             if (selectedAccount == null) return null;
             return selectedAccount.account_key;
         }
 
-        public void setSelectedAccountKey(@Nullable AccountKey accountKey) {
+        public void setSelectedAccountKey(@Nullable UserKey accountKey) {
             final ParcelableAccount selectedAccount = getSelectedAccount();
             if (selectedAccount == null || accountKey == null) return;
             swap(accountKey, selectedAccount.account_key);
@@ -889,7 +889,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             return mInternalAccounts;
         }
 
-        private void swap(AccountKey fromId, AccountKey toId) {
+        private void swap(UserKey fromId, UserKey toId) {
             int fromIdx = -1, toIdx = -1;
             for (int i = 0, j = mInternalAccounts.length; i < j; i++) {
                 final ParcelableAccount account = mInternalAccounts[i];

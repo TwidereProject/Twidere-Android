@@ -27,7 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -44,7 +44,7 @@ public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFrag
                 final Context context = getActivity();
                 final Bundle args = getArguments();
                 if (args == null || context == null) return;
-                final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+                final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                 final ParcelableMedia current = args.getParcelable(EXTRA_CURRENT_MEDIA);
                 final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
                 final Bundle option = args.getBundle(EXTRA_ACTIVITY_OPTIONS);

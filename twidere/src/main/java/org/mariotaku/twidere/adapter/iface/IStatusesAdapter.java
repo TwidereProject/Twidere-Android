@@ -3,7 +3,7 @@ package org.mariotaku.twidere.adapter.iface;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
@@ -27,10 +27,10 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupport
     long getStatusId(int position);
 
     @Nullable
-    AccountKey getAccountKey(int position);
+    UserKey getAccountKey(int position);
 
     @Nullable
-    ParcelableStatus findStatusById(AccountKey accountKey, long statusId);
+    ParcelableStatus findStatusById(UserKey accountKey, long statusId);
 
     int getStatusCount();
 

@@ -35,7 +35,7 @@ import android.util.Log;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.SimpleRefreshTaskParam;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -91,11 +91,11 @@ public class RefreshService extends Service implements Constants {
                 if (BROADCAST_REFRESH_HOME_TIMELINE.equals(action)) {
                     if (!isHomeTimelineRefreshing()) {
                         mTwitterWrapper.getHomeTimelineAsync(new SimpleRefreshTaskParam() {
-                            private AccountKey[] accountIds;
+                            private UserKey[] accountIds;
 
                             @NonNull
                             @Override
-                            public AccountKey[] getAccountKeys() {
+                            public UserKey[] getAccountKeys() {
                                 if (accountIds != null) return accountIds;
                                 final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
                                         DataStoreUtils.getAccountKeys(context));
@@ -112,11 +112,11 @@ public class RefreshService extends Service implements Constants {
                     }
                 } else if (BROADCAST_REFRESH_NOTIFICATIONS.equals(action)) {
                     mTwitterWrapper.getActivitiesAboutMeAsync(new SimpleRefreshTaskParam() {
-                        private AccountKey[] accountIds;
+                        private UserKey[] accountIds;
 
                         @NonNull
                         @Override
-                        public AccountKey[] getAccountKeys() {
+                        public UserKey[] getAccountKeys() {
                             if (accountIds != null) return accountIds;
                             final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
                                     DataStoreUtils.getAccountKeys(context));
@@ -133,11 +133,11 @@ public class RefreshService extends Service implements Constants {
                 } else if (BROADCAST_REFRESH_DIRECT_MESSAGES.equals(action)) {
                     if (!isReceivedDirectMessagesRefreshing()) {
                         mTwitterWrapper.getReceivedDirectMessagesAsync(new SimpleRefreshTaskParam() {
-                            private AccountKey[] accountIds;
+                            private UserKey[] accountIds;
 
                             @NonNull
                             @Override
-                            public AccountKey[] getAccountKeys() {
+                            public UserKey[] getAccountKeys() {
                                 if (accountIds != null) return accountIds;
                                 final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
                                         DataStoreUtils.getAccountKeys(context));
@@ -155,7 +155,7 @@ public class RefreshService extends Service implements Constants {
                 } else if (BROADCAST_REFRESH_TRENDS.equals(action)) {
                     final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
                             DataStoreUtils.getAccountKeys(context));
-                    final AccountKey[] refreshIds = getRefreshableIds(prefs, TrendsRefreshableFilter.INSTANCE);
+                    final UserKey[] refreshIds = getRefreshableIds(prefs, TrendsRefreshableFilter.INSTANCE);
                     if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, String.format("Auto refreshing trends for %s", Arrays.toString(refreshIds)));
                     }
@@ -275,22 +275,22 @@ public class RefreshService extends Service implements Constants {
         return isNetworkAvailable(this) && (isBatteryOkay(this) || !shouldStopAutoRefreshOnBatteryLow(this));
     }
 
-    private void getLocalTrends(final AccountKey[] accountIds) {
-        final AccountKey account_id = getDefaultAccountKey(this);
+    private void getLocalTrends(final UserKey[] accountIds) {
+        final UserKey account_id = getDefaultAccountKey(this);
         final int woeid = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
         mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
     }
 
-    private AccountKey[] getRefreshableIds(final AccountPreferences[] prefs, final RefreshableAccountFilter filter) {
+    private UserKey[] getRefreshableIds(final AccountPreferences[] prefs, final RefreshableAccountFilter filter) {
         if (prefs == null) return null;
-        final AccountKey[] temp = new AccountKey[prefs.length];
+        final UserKey[] temp = new UserKey[prefs.length];
         int i = 0;
         for (final AccountPreferences pref : prefs) {
             if (pref.isAutoRefreshEnabled() && filter.isRefreshable(pref)) {
                 temp[i++] = pref.getAccountKey();
             }
         }
-        final AccountKey[] result = new AccountKey[i];
+        final UserKey[] result = new UserKey[i];
         System.arraycopy(temp, 0, result, 0, i);
         return result;
     }

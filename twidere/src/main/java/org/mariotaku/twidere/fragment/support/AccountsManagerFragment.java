@@ -44,7 +44,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.SignInActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -71,7 +71,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
 
     private AccountsAdapter mAdapter;
     private ParcelableAccount mSelectedAccount;
-    private SimpleArrayMap<AccountKey, Boolean> mActivatedState = new SimpleArrayMap<>();
+    private SimpleArrayMap<UserKey, Boolean> mActivatedState = new SimpleArrayMap<>();
 
     private DragSortListView mListView;
     private View mEmptyView;
@@ -163,7 +163,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     }
 
     private void saveActivatedState() {
-        final Set<AccountKey> trueIds = new CompactHashSet<>(), falseIds = new CompactHashSet<>();
+        final Set<UserKey> trueIds = new CompactHashSet<>(), falseIds = new CompactHashSet<>();
         for (int i = 0, j = mActivatedState.size(); i < j; i++) {
             if (mActivatedState.valueAt(i)) {
                 trueIds.add(mActivatedState.keyAt(i));
@@ -184,7 +184,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     }
 
     @Override
-    public void onAccountToggle(AccountKey accountId, boolean state) {
+    public void onAccountToggle(UserKey accountId, boolean state) {
         mActivatedState.put(accountId, state);
     }
 
@@ -303,7 +303,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         @Override
         public void onClick(final DialogInterface dialog, final int which) {
             final Bundle args = getArguments();
-            final AccountKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
+            final UserKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
             if (accountId == null) return;
             final ContentResolver resolver = getContentResolver();
             switch (which) {

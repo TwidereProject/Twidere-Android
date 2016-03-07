@@ -102,7 +102,6 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.loader.support.ParcelableUserLoader;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.CachedRelationship;
 import org.mariotaku.twidere.model.CachedRelationshipValuesCreator;
 import org.mariotaku.twidere.model.ConsumerKeyType;
@@ -112,6 +111,7 @@ import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.SupportTabSpec;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.model.message.FriendshipUserUpdatedEvent;
 import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
@@ -236,7 +236,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mFollowButton.setVisibility(View.GONE);
                     mFollowProgress.setVisibility(View.VISIBLE);
                     mFollowingYouIndicator.setVisibility(View.GONE);
-                    final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+                    final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                     final long userId = args.getLong(EXTRA_USER_ID, -1);
                     return new UserRelationshipLoader(getActivity(), accountKey, userId);
                 }
@@ -261,7 +261,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         @Override
         public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
             final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
-            final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+            final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
             final long userId = args.getLong(EXTRA_USER_ID, -1);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
             if (mUser == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
@@ -274,8 +274,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             setProgressBarIndeterminateVisibility(true);
             final ParcelableUser user = mUser;
+            final boolean loadFromCache = user == null || !user.is_cache && userId != user.key.getId();
             return new ParcelableUserLoader(getActivity(), accountKey, userId, screenName, getArguments(),
-                    omitIntentExtra, user == null || !user.is_cache && userId != user.id);
+                    omitIntentExtra, loadFromCache);
         }
 
         @Override
@@ -297,7 +298,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (user.is_cache) {
                     final Bundle args = new Bundle();
                     args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
-                    args.putLong(EXTRA_USER_ID, user.id);
+                    args.putLong(EXTRA_USER_ID, user.key.getId());
                     args.putString(EXTRA_SCREEN_NAME, user.screen_name);
                     args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
                     getLoaderManager().restartLoader(LOADER_ID_USER, args, this);
@@ -340,7 +341,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mRelationship = null;
             return;
         }
-        if (user.account_key.isAccount(user.id, user.user_host)) {
+        if (user.account_key.maybeEquals(user.key)) {
             mFollowButton.setText(R.string.edit);
             mFollowButton.setVisibility(View.VISIBLE);
             mRelationship = null;
@@ -513,7 +514,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void displayUser(final ParcelableUser user) {
         mUser = user;
         final FragmentActivity activity = getActivity();
-        if (user == null || user.id <= 0 || activity == null) return;
+        if (user == null || user.key == null || activity == null) return;
         final Resources resources = getResources();
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
@@ -522,10 +523,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mHeaderErrorContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
-        final int userColor = mUserColorNameManager.getUserColor(user.id, true);
+        final int userColor = mUserColorNameManager.getUserColor(user.key, true);
         mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
         mProfileNameContainer.drawEnd(user.account_color);
-        final String nick = mUserColorNameManager.getUserNickname(user.id, true);
+        final String nick = mUserColorNameManager.getUserNickname(user.key, true);
         mNameView.setText(mBidiFormatter.unicodeWrap(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick)));
         final int typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected);
         if (typeIconRes != 0) {
@@ -615,7 +616,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return mUser;
     }
 
-    public void getUserInfo(final AccountKey accountId, final long userId, final String screenName,
+    public void getUserInfo(final UserKey accountId, final long userId, final String screenName,
                             final boolean omitIntentExtra) {
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
@@ -640,7 +641,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Subscribe
     public void notifyFriendshipUpdated(FriendshipUpdatedEvent event) {
         final ParcelableUser user = getUser();
-        if (user == null || !event.isAccount(user.account_key) || !event.isUser(user.id)) return;
+        if (user == null || !event.isAccount(user.account_key) || !event.isUser(user.key.getId()))
+            return;
         getFriendship();
     }
 
@@ -672,9 +674,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null) return;
                     final int color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT);
-                    mUserColorNameManager.setUserColor(mUser.id, color);
+                    mUserColorNameManager.setUserColor(mUser.key, color);
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
-                    mUserColorNameManager.clearUserColor(mUser.id);
+                    mUserColorNameManager.clearUserColor(mUser.key);
                 }
                 break;
             }
@@ -692,10 +694,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (user == null) return;
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
-                    final AccountKey accountKey = data.getParcelableExtra(EXTRA_KEY);
+                    final UserKey accountKey = data.getParcelableExtra(EXTRA_KEY);
                     @Referral
                     final String referral = getArguments().getString(EXTRA_REFERRAL);
-                    IntentUtils.openUserProfile(getActivity(), accountKey, user.id,
+                    IntentUtils.openUserProfile(getActivity(), accountKey, user.key.getId(),
                             user.screen_name, null, true, referral);
                 }
                 break;
@@ -732,7 +734,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 ThemeUtils.getUserThemeBackgroundAlpha(activity));
         mActionBarShadowColor = 0xA0000000;
         final Bundle args = getArguments();
-        AccountKey accountId = null;
+        UserKey accountId = null;
         long userId = -1;
         String screenName = null;
         if (savedInstanceState != null) {
@@ -894,7 +896,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (twitter == null || user == null || userRelationship == null) return;
         final Relationship relationship = userRelationship.relationship;
 
-        final boolean isMyself = user.account_key.getId() == user.id;
+        final boolean isMyself = user.account_key.equals(user.key);
         final MenuItem mentionItem = menu.findItem(R.id.mention);
         if (mentionItem != null) {
             final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
@@ -975,7 +977,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.block: {
                 if (userRelationship == null) return true;
                 if (userRelationship.relationship.isSourceBlockingTarget()) {
-                    twitter.destroyBlockAsync(user.account_key, user.id);
+                    twitter.destroyBlockAsync(user.account_key, user.key.getId());
                 } else {
                     CreateUserBlockDialogFragment.show(getFragmentManager(), user);
                 }
@@ -989,8 +991,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (userRelationship == null) return true;
                 final ContentResolver cr = getContentResolver();
                 if (userRelationship.isFiltering) {
-                    final Expression where = Expression.equals(Filters.Users.USER_ID, user.id);
-                    cr.delete(Filters.Users.CONTENT_URI, where.getSQL(), null);
+                    final String where = Expression.equalsArgs(Filters.Users.USER_ID).getSQL();
+                    final String[] whereArgs = {user.key.toString()};
+                    cr.delete(Filters.Users.CONTENT_URI, where, whereArgs);
                     Utils.showInfoMessage(getActivity(), R.string.message_user_unmuted, false);
                 } else {
                     cr.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.createFilteredUser(user));
@@ -1001,7 +1004,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.mute_user: {
                 if (userRelationship == null) return true;
                 if (userRelationship.relationship.isSourceMutingTarget()) {
-                    twitter.destroyMuteAsync(user.account_key, user.id);
+                    twitter.destroyMuteAsync(user.account_key, user.key.getId());
                 } else {
                     CreateUserMuteDialogFragment.show(getFragmentManager(), user);
                 }
@@ -1020,7 +1023,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 builder.scheme(SCHEME_TWIDERE);
                 builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
                 builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(user.account_key));
-                builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user.id));
+                builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user.key));
                 final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
                 intent.putExtra(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(getActivity(), user.account_key));
                 intent.putExtra(EXTRA_USER, user);
@@ -1029,19 +1032,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.set_color: {
                 final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
-                intent.putExtra(EXTRA_COLOR, mUserColorNameManager.getUserColor(user.id, true));
+                intent.putExtra(EXTRA_COLOR, mUserColorNameManager.getUserColor(user.key, true));
                 intent.putExtra(EXTRA_ALPHA_SLIDER, false);
                 intent.putExtra(EXTRA_CLEAR_BUTTON, true);
                 startActivityForResult(intent, REQUEST_SET_COLOR);
                 break;
             }
             case R.id.clear_nickname: {
-                mUserColorNameManager.clearUserNickname(user.id);
+                mUserColorNameManager.clearUserNickname(user.key);
                 break;
             }
             case R.id.set_nickname: {
-                final String nick = mUserColorNameManager.getUserNickname(user.id, true);
-                SetUserNicknameDialogFragment.show(getFragmentManager(), user.id, nick);
+                final String nick = mUserColorNameManager.getUserNickname(user.key, true);
+                SetUserNicknameDialogFragment.show(getFragmentManager(), user.key, nick);
                 break;
             }
             case R.id.add_to_list: {
@@ -1063,13 +1066,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.follow: {
                 if (userRelationship == null) return true;
                 final boolean isFollowing = userRelationship.relationship.isSourceFollowingTarget();
-                final boolean isCreatingFriendship = twitter.isCreatingFriendship(user.account_key, user.id);
-                final boolean isDestroyingFriendship = twitter.isDestroyingFriendship(user.account_key, user.id);
+                final boolean isCreatingFriendship = twitter.isCreatingFriendship(user.account_key,
+                        user.key.getId());
+                final boolean isDestroyingFriendship = twitter.isDestroyingFriendship(user.account_key,
+                        user.key.getId());
                 if (!isCreatingFriendship && !isDestroyingFriendship) {
                     if (isFollowing) {
                         DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
                     } else {
-                        twitter.createFriendshipAsync(user.account_key, user.id);
+                        twitter.createFriendshipAsync(user.account_key, user.key.getId());
                     }
                 }
                 return true;
@@ -1078,7 +1083,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final boolean newState = !item.isChecked();
                 final FriendshipUpdate update = new FriendshipUpdate();
                 update.retweets(newState);
-                twitter.updateFriendship(user.account_key, user.id, update);
+                twitter.updateFriendship(user.account_key, user.key.getId(), update);
                 item.setChecked(newState);
                 return true;
             }
@@ -1280,7 +1285,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.follow: {
-                if (user.account_key.isAccount(user.id, user.user_host)) {
+                if (user.account_key.equals(user.key)) {
                     Utils.openProfileEditor(getActivity(), user.account_key);
                     break;
                 }
@@ -1288,11 +1293,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (userRelationship == null || twitter == null) return;
                 if (userRelationship.relationship.isSourceBlockingTarget()) {
-                    twitter.destroyBlockAsync(user.account_key, user.id);
+                    twitter.destroyBlockAsync(user.account_key, user.key.getId());
                 } else if (userRelationship.relationship.isSourceFollowingTarget()) {
                     DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
                 } else {
-                    twitter.createFriendshipAsync(user.account_key, user.id);
+                    twitter.createFriendshipAsync(user.account_key, user.key.getId());
                 }
                 break;
             }
@@ -1314,19 +1319,22 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.listed_container: {
-                IntentUtils.openUserLists(getActivity(), user.account_key, user.id, user.screen_name);
+                IntentUtils.openUserLists(getActivity(), user.account_key, user.key.getId(),
+                        user.screen_name);
                 break;
             }
             case R.id.followers_container: {
-                IntentUtils.openUserFollowers(getActivity(), user.account_key, user.id, user.screen_name);
+                IntentUtils.openUserFollowers(getActivity(), user.account_key, user.key.getId(),
+                        user.screen_name);
                 break;
             }
             case R.id.friends_container: {
-                IntentUtils.openUserFriends(getActivity(), user.account_key, user.id, user.screen_name);
+                IntentUtils.openUserFriends(getActivity(), user.account_key, user.key.getId(),
+                        user.screen_name);
                 break;
             }
             case R.id.name_container: {
-                if (user.account_key.isAccount(user.id, user.user_host)) return;
+                if (user.account_key.equals(user.key)) return;
                 Utils.openProfileEditor(getActivity(), user.account_key);
                 break;
             }
@@ -1341,7 +1349,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final AccountKey accountKey, long extraId, final int type,
+    public void onLinkClick(final String link, final String orig, final UserKey accountKey, long extraId, final int type,
                             final boolean sensitive, int start, int end) {
         final ParcelableUser user = getUser();
         if (user == null) return;
@@ -1382,14 +1390,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onUserNicknameChanged(long userId, String nick) {
-        if (mUser == null || mUser.id != userId) return;
+    public void onUserNicknameChanged(@NonNull UserKey userId, String nick) {
+        if (mUser == null || !mUser.key.equals(userId)) return;
         displayUser(mUser);
     }
 
     @Override
-    public void onUserColorChanged(long userId, int color) {
-        if (mUser == null || mUser.id != userId) return;
+    public void onUserColorChanged(@NonNull UserKey userId, int color) {
+        if (mUser == null || !mUser.key.equals(userId)) return;
         displayUser(mUser);
     }
 
@@ -1439,7 +1447,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
-        args.putLong(EXTRA_USER_ID, user.id);
+        args.putLong(EXTRA_USER_ID, user.key.getId());
         if (!mGetFriendShipLoaderInitialized) {
             lm.initLoader(LOADER_ID_FRIENDSHIP, args, mFriendshipLoaderCallbacks);
             mGetFriendShipLoaderInitialized = true;
@@ -1451,7 +1459,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private void getUserInfo(final boolean omitIntentExtra) {
         final ParcelableUser user = mUser;
         if (user == null) return;
-        getUserInfo(user.account_key, user.id, user.screen_name, omitIntentExtra);
+        getUserInfo(user.account_key, user.key.getId(), user.screen_name, omitIntentExtra);
     }
 
     private void setUiColor(int color) {
@@ -1516,15 +1524,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private void setupUserPages() {
         final Context context = getActivity();
         final Bundle args = getArguments(), tabArgs = new Bundle();
-        final AccountKey accountId;
         final ParcelableUser user = args.getParcelable(EXTRA_USER);
         if (user != null) {
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, accountId = user.account_key);
-            tabArgs.putLong(EXTRA_USER_ID, user.id);
+            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
+            tabArgs.putLong(EXTRA_USER_ID, user.key.getId());
             tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name);
         } else {
-            accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, accountId);
+            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
             tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
         }
@@ -1551,11 +1557,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         final LoaderManager lm = getLoaderManager();
         final boolean loadingRelationship = lm.getLoader(LOADER_ID_FRIENDSHIP) != null;
-        final AccountKey accountKey = user.account_key;
-        final boolean creatingFriendship = twitter.isCreatingFriendship(accountKey, user.id);
-        final boolean destroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.id);
-        final boolean creatingBlock = twitter.isCreatingFriendship(accountKey, user.id);
-        final boolean destroyingBlock = twitter.isDestroyingFriendship(accountKey, user.id);
+        final UserKey accountKey = user.account_key;
+        final boolean creatingFriendship = twitter.isCreatingFriendship(accountKey, user.key.getId());
+        final boolean destroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.key.getId());
+        final boolean creatingBlock = twitter.isCreatingFriendship(accountKey, user.key.getId());
+        final boolean destroyingBlock = twitter.isDestroyingFriendship(accountKey, user.key.getId());
         if (loadingRelationship || creatingFriendship || destroyingFriendship || creatingBlock || destroyingBlock) {
             mFollowButton.setVisibility(View.GONE);
             mFollowProgress.setVisibility(View.VISIBLE);
@@ -1572,9 +1578,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = getUser();
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (user == null || twitter == null) return;
-        final AccountKey accountKey = user.account_key;
-        final boolean isCreatingFriendship = twitter.isCreatingFriendship(accountKey, user.id);
-        final boolean destroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.id);
+        final UserKey accountKey = user.account_key;
+        final boolean isCreatingFriendship = twitter.isCreatingFriendship(accountKey, user.key.getId());
+        final boolean destroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.key.getId());
         setProgressBarIndeterminateVisibility(isCreatingFriendship || destroyingFriendship);
         invalidateOptionsMenu();
     }
@@ -1750,10 +1756,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     static class UserRelationshipLoader extends AsyncTaskLoader<SingleResponse<UserRelationship>> {
 
         private final Context context;
-        private final AccountKey mAccountKey;
+        private final UserKey mAccountKey;
         private final long mUserId;
 
-        public UserRelationshipLoader(final Context context, @NonNull final AccountKey accountKey,
+        public UserRelationshipLoader(final Context context, @Nullable final UserKey accountKey,
                                       final long userId) {
             super(context);
             this.context = context;
@@ -1763,17 +1769,23 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         @Override
         public SingleResponse<UserRelationship> loadInBackground() {
+            if (mAccountKey == null) {
+                return SingleResponse.getInstance(new TwitterException("No Account"));
+            }
             final boolean isFiltering = DataStoreUtils.isFilteringUser(context, mUserId);
             if (mAccountKey.getId() == mUserId)
                 return SingleResponse.getInstance();
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountKey, false);
-            if (twitter == null) return SingleResponse.getInstance();
+            if (twitter == null) {
+                return SingleResponse.getInstance(new TwitterException("No Account"));
+            }
             try {
                 final Relationship relationship = twitter.showFriendship(mUserId);
+                final UserKey userKey = new UserKey(mUserId, mAccountKey.getHost());
                 if (relationship.isSourceBlockingTarget() || relationship.isSourceBlockedByTarget()) {
-                    Utils.setLastSeen(context, mUserId, -1);
+                    Utils.setLastSeen(context, userKey, -1);
                 } else {
-                    Utils.setLastSeen(context, mUserId, System.currentTimeMillis());
+                    Utils.setLastSeen(context, userKey, System.currentTimeMillis());
                 }
                 Utils.updateRelationship(context, relationship, mAccountKey);
                 return SingleResponse.getInstance(new UserRelationship(relationship, isFiltering));
@@ -1800,7 +1812,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         public boolean check(@NonNull ParcelableUser user) {
             return relationship.getSourceUserId() == user.account_key.getId()
-                    && relationship.getTargetUserId() == user.id;
+                    && user.key.check(relationship.getTargetUserId(), null);
         }
     }
 
@@ -1817,7 +1829,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final ParcelableUser user = args.first;
             resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user));
             resolver.insert(CachedRelationships.CONTENT_URI, CachedRelationshipValuesCreator.create(
-                    new CachedRelationship(user.account_key, user.id, args.second)));
+                    new CachedRelationship(user.account_key, user.key.getId(), args.second)));
             return null;
         }
     }

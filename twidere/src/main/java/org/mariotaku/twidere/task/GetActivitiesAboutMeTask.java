@@ -12,7 +12,7 @@ import org.mariotaku.twidere.api.twitter.model.CursorTimestampResponse;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.util.ErrorInfoStore;
@@ -34,7 +34,7 @@ public class GetActivitiesAboutMeTask extends GetActivitiesTask {
     }
 
     @Override
-    protected void saveReadPosition(@NonNull AccountKey accountId, @NonNull Twitter twitter) {
+    protected void saveReadPosition(@NonNull UserKey accountId, @NonNull Twitter twitter) {
         try {
             CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
             final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME, accountId);
@@ -45,7 +45,7 @@ public class GetActivitiesAboutMeTask extends GetActivitiesTask {
     }
 
     @Override
-    protected ResponseList<Activity> getActivities(@NonNull final Twitter twitter, @NonNull final AccountKey accountId, @NonNull final Paging paging) throws TwitterException {
+    protected ResponseList<Activity> getActivities(@NonNull final Twitter twitter, @NonNull final UserKey accountId, @NonNull final Paging paging) throws TwitterException {
         if (Utils.isOfficialCredentials(context, accountId)) {
             return twitter.getActivitiesAboutMe(paging);
         }

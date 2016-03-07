@@ -25,14 +25,14 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserListSubscribersLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 
 public class UserListSubscribersFragment extends CursorSupportUsersListFragment {
 
     @Override
     public CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
-        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final String listName = args.getString(EXTRA_LIST_NAME);

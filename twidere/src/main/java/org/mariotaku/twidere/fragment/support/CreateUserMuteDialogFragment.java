@@ -44,7 +44,7 @@ public class CreateUserMuteDialogFragment extends BaseSupportDialogFragment impl
                 final ParcelableUser user = getUser();
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (user == null || twitter == null) return;
-                twitter.createMuteAsync(user.account_key, user.id);
+                twitter.createMuteAsync(user.account_key, user.key.getId());
                 break;
             default:
                 break;

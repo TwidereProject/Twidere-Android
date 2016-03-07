@@ -31,7 +31,7 @@ import android.widget.TextView;
 import org.mariotaku.messagebubbleview.library.MessageBubbleView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
@@ -78,7 +78,7 @@ public class MessageViewHolder extends ViewHolder {
         final TwidereLinkify linkify = adapter.getLinkify();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
 
-        final AccountKey accountKey = AccountKey.valueOf(cursor.getString(indices.account_key));
+        final UserKey accountKey = UserKey.valueOf(cursor.getString(indices.account_key));
         final long timestamp = cursor.getLong(indices.timestamp);
         final ParcelableMedia[] media = JsonSerializer.parseArray(cursor.getString(indices.media),
                 ParcelableMedia.class);

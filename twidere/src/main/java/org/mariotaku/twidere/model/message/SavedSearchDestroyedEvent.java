@@ -1,20 +1,20 @@
 package org.mariotaku.twidere.model.message;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 16/2/26.
  */
 public class SavedSearchDestroyedEvent {
-    private final AccountKey mAccountKey;
+    private final UserKey mAccountKey;
     private final long searchId;
 
-    public SavedSearchDestroyedEvent(AccountKey accountKey, long searchId) {
+    public SavedSearchDestroyedEvent(UserKey accountKey, long searchId) {
         this.mAccountKey = accountKey;
         this.searchId = searchId;
     }
 
-    public AccountKey getAccountKey() {
+    public UserKey getAccountKey() {
         return mAccountKey;
     }
 

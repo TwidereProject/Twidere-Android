@@ -31,7 +31,7 @@ import com.twitter.Extractor.Entity;
 import com.twitter.Regex;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.text.TwidereURLSpan;
 
 import java.lang.annotation.Retention;
@@ -110,26 +110,26 @@ public final class TwidereLinkify implements Constants {
         setHighlightOption(highlightOption);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final AccountKey accountKey,
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final UserKey accountKey,
                                          final long extraId, final boolean sensitive,
                                          final boolean skipLinksInText) {
         return applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive,
                 mHighlightOption, skipLinksInText);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final AccountKey accountKey,
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final UserKey accountKey,
                                          final boolean sensitive, final boolean skipLinksInText) {
         return applyAllLinks(text, mOnLinkClickListener, accountKey, -1, sensitive, mHighlightOption, skipLinksInText);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final AccountKey accountKey,
+    public SpannableString applyAllLinks(@Nullable CharSequence text, final UserKey accountKey,
                                          final long extraId, final boolean sensitive,
                                          final int highlightOption, final boolean skipLinksInText) {
         return applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive, highlightOption, skipLinksInText);
     }
 
     public SpannableString applyAllLinks(@Nullable final CharSequence text, final OnLinkClickListener listener,
-                                         final AccountKey accountKey, final long extraId, final boolean sensitive,
+                                         final UserKey accountKey, final long extraId, final boolean sensitive,
                                          final int highlightOption, boolean skipLinksInText) {
         if (text == null) return null;
         final SpannableString string = SpannableString.valueOf(text);
@@ -140,17 +140,17 @@ public final class TwidereLinkify implements Constants {
         return string;
     }
 
-    public SpannableString applyUserProfileLink(final CharSequence text, final AccountKey accountKey, final long extraId,
+    public SpannableString applyUserProfileLink(final CharSequence text, final UserKey accountKey, final long extraId,
                                                 final long userId, final String screenName) {
         return applyUserProfileLink(text, accountKey, extraId, userId, screenName, mHighlightOption);
     }
 
-    public SpannableString applyUserProfileLink(final CharSequence text, final AccountKey accountKey, final long extraId,
+    public SpannableString applyUserProfileLink(final CharSequence text, final UserKey accountKey, final long extraId,
                                                 final long userId, final String screenName, final int highlightOption) {
         return applyUserProfileLink(text, accountKey, extraId, userId, screenName, highlightOption, mOnLinkClickListener);
     }
 
-    public final SpannableString applyUserProfileLink(final CharSequence text, final AccountKey accountKey,
+    public final SpannableString applyUserProfileLink(final CharSequence text, final UserKey accountKey,
                                                       final long extraId, final long userId,
                                                       final String screenName, final int highlightOption,
                                                       final OnLinkClickListener listener) {
@@ -173,7 +173,7 @@ public final class TwidereLinkify implements Constants {
         mHighlightOption = style;
     }
 
-    private boolean addCashtagLinks(final Spannable spannable, final AccountKey accountKey, final long extraId,
+    private boolean addCashtagLinks(final Spannable spannable, final UserKey accountKey, final long extraId,
                                     final OnLinkClickListener listener, final int highlightOption) {
         boolean hasMatches = false;
         for (final Entity entity : mExtractor.extractCashtagsWithIndices(spannable.toString())) {
@@ -186,7 +186,7 @@ public final class TwidereLinkify implements Constants {
         return hasMatches;
     }
 
-    private boolean addHashtagLinks(final Spannable spannable, final AccountKey accountId, final long extraId,
+    private boolean addHashtagLinks(final Spannable spannable, final UserKey accountId, final long extraId,
                                     final OnLinkClickListener listener, final int highlightOption) {
         boolean hasMatches = false;
         for (final Entity entity : mExtractor.extractHashtagsWithIndices(spannable.toString())) {
@@ -202,7 +202,7 @@ public final class TwidereLinkify implements Constants {
     /**
      * Applies a regex to the text of a TextView turning the matches into links.
      */
-    private void addLinks(final SpannableString string, final AccountKey accountKey, final long extraId, final int type,
+    private void addLinks(final SpannableString string, final UserKey accountKey, final long extraId, final int type,
                           final boolean sensitive, final OnLinkClickListener listener, final int highlightOption) {
         switch (type) {
             case LINK_TYPE_MENTION: {
@@ -259,7 +259,7 @@ public final class TwidereLinkify implements Constants {
         }
     }
 
-    private boolean addMentionOrListLinks(final Spannable spannable, final AccountKey accountKey,
+    private boolean addMentionOrListLinks(final Spannable spannable, final UserKey accountKey,
                                           final long extraId, final int highlightOption, final OnLinkClickListener listener) {
         boolean hasMatches = false;
         // Extract lists from status text
@@ -298,7 +298,7 @@ public final class TwidereLinkify implements Constants {
     }
 
     private void applyLink(final String url, final String orig, final int start, final int end,
-                           final Spannable text, final AccountKey accountKey, final long extraId, final int type, final boolean sensitive,
+                           final Spannable text, final UserKey accountKey, final long extraId, final int type, final boolean sensitive,
                            final int highlightOption, final OnLinkClickListener listener) {
         final TwidereURLSpan span = new TwidereURLSpan(url, orig, accountKey, extraId, type, sensitive,
                 highlightOption, start, end, listener);
@@ -306,7 +306,7 @@ public final class TwidereLinkify implements Constants {
     }
 
     private void applyLink(final String url, final int start, final int end, final Spannable text,
-                           final AccountKey accountKey, final long extraId, final int type, final boolean sensitive,
+                           final UserKey accountKey, final long extraId, final int type, final boolean sensitive,
                            final int highlightOption, final OnLinkClickListener listener) {
         applyLink(url, null, start, end, text, accountKey, extraId, type, sensitive, highlightOption,
                 listener);
@@ -320,7 +320,7 @@ public final class TwidereLinkify implements Constants {
     }
 
     public interface OnLinkClickListener {
-        void onLinkClick(String link, String orig, AccountKey accountKey, long extraId, int type,
+        void onLinkClick(String link, String orig, UserKey accountKey, long extraId, int type,
                          boolean sensitive, int start, int end);
     }
 }

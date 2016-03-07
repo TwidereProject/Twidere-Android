@@ -45,7 +45,7 @@ public class DestroyFriendshipDialogFragment extends BaseSupportDialogFragment i
                 final ParcelableUser user = getUser();
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (user == null || twitter == null) return;
-                twitter.destroyFriendshipAsync(user.account_key, user.id);
+                twitter.destroyFriendshipAsync(user.account_key, user.key.getId());
                 break;
             default:
                 break;

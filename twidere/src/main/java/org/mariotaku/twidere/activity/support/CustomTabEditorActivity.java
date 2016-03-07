@@ -50,7 +50,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -223,7 +223,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         icon.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
         if (value instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) value;
-            text1.setText(mUserColorNameManager.getUserNickname(user.id, user.name, false));
+            text1.setText(mUserColorNameManager.getUserNickname(user.key, user.name, false));
             text2.setText("@" + user.screen_name);
             if (displayProfileImage) {
                 mImageLoader.displayProfileImage(icon, user);
@@ -372,14 +372,14 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         if (value == null || args == null || conf == null) return;
         if (value instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) value;
-            args.putLong(EXTRA_USER_ID, user.id);
+            args.putLong(EXTRA_USER_ID, user.key.getId());
             args.putString(EXTRA_SCREEN_NAME, user.screen_name);
             args.putString(EXTRA_NAME, user.name);
         } else if (value instanceof ParcelableUserList) {
             final ParcelableUserList user_list = (ParcelableUserList) value;
             args.putLong(EXTRA_LIST_ID, user_list.id);
             args.putString(EXTRA_LIST_NAME, user_list.name);
-            args.putLong(EXTRA_USER_ID, user_list.user_id);
+            args.putLong(EXTRA_USER_ID, user_list.user_key.getId());
             args.putString(EXTRA_SCREEN_NAME, user_list.user_screen_name);
         } else if (value instanceof CharSequence) {
             final String key = conf.getSecondaryFieldTextKey();
@@ -392,7 +392,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         addFieldValueToArguments(value, args);
     }
 
-    private AccountKey getAccountKey() {
+    private UserKey getAccountKey() {
         final int pos = mAccountSpinner.getSelectedItemPosition();
         if (mAccountSpinner.getCount() > pos && pos >= 0) {
             ParcelableCredentials credentials = mAccountsAdapter.getItem(pos);

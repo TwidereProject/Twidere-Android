@@ -19,17 +19,17 @@ import java.util.List;
  */
 @JsonObject
 @ParcelablePlease
-public class AccountKey implements Comparable<AccountKey>, Parcelable {
+public class UserKey implements Comparable<UserKey>, Parcelable {
 
-    public static final Creator<AccountKey> CREATOR = new Creator<AccountKey>() {
-        public AccountKey createFromParcel(Parcel source) {
-            AccountKey target = new AccountKey();
-            AccountKeyParcelablePlease.readFromParcel(target, source);
+    public static final Creator<UserKey> CREATOR = new Creator<UserKey>() {
+        public UserKey createFromParcel(Parcel source) {
+            UserKey target = new UserKey();
+            UserKeyParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
-        public AccountKey[] newArray(int size) {
-            return new AccountKey[size];
+        public UserKey[] newArray(int size) {
+            return new UserKey[size];
         }
     };
 
@@ -40,12 +40,12 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
     @ParcelableThisPlease
     String host;
 
-    public AccountKey(long id, String host) {
+    public UserKey(long id, String host) {
         this.id = id;
         this.host = host;
     }
 
-    AccountKey() {
+    UserKey() {
 
     }
 
@@ -64,7 +64,7 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
     }
 
     @Override
-    public int compareTo(@NonNull AccountKey another) {
+    public int compareTo(@NonNull UserKey another) {
         if (this.id == another.id) {
             if (this.host != null && another.host != null) {
                 return this.host.compareTo(another.host);
@@ -83,7 +83,7 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AccountKey accountKey = (AccountKey) o;
+        UserKey accountKey = (UserKey) o;
 
         return id == accountKey.id;
 
@@ -101,25 +101,25 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        AccountKeyParcelablePlease.writeToParcel(this, dest, flags);
+        UserKeyParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public boolean isAccount(long accountId, String accountHost) {
+    public boolean check(long accountId, String accountHost) {
         return this.id == accountId;
     }
 
     @Nullable
-    public static AccountKey valueOf(@Nullable String str) {
+    public static UserKey valueOf(@Nullable String str) {
         if (str == null) return null;
         int idxOfAt = str.indexOf("@");
         try {
             if (idxOfAt != -1) {
                 final String idStr = str.substring(0, idxOfAt);
-                return new AccountKey(Long.parseLong(idStr),
+                return new UserKey(Long.parseLong(idStr),
                         str.substring(idxOfAt + 1, str.length()));
 
             } else {
-                return new AccountKey(Long.parseLong(str), null);
+                return new UserKey(Long.parseLong(str), null);
             }
         } catch (NumberFormatException e) {
             return null;
@@ -127,10 +127,10 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
     }
 
     @Nullable
-    public static AccountKey[] arrayOf(@Nullable String str) {
+    public static UserKey[] arrayOf(@Nullable String str) {
         if (str == null) return null;
         List<String> split = TwitterDateConverter.split(str, ",");
-        AccountKey[] keys = new AccountKey[split.size()];
+        UserKey[] keys = new UserKey[split.size()];
         for (int i = 0, splitLength = split.size(); i < splitLength; i++) {
             keys[i] = valueOf(split.get(i));
             if (keys[i] == null) return null;
@@ -138,11 +138,15 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
         return keys;
     }
 
-    public static long[] getIds(AccountKey[] ids) {
+    public static long[] getIds(UserKey[] ids) {
         long[] result = new long[ids.length];
         for (int i = 0, idsLength = ids.length; i < idsLength; i++) {
             result[i] = ids[i].getId();
         }
         return result;
+    }
+
+    public boolean maybeEquals(@Nullable UserKey another) {
+        return another != null && another.getId() == id;
     }
 }

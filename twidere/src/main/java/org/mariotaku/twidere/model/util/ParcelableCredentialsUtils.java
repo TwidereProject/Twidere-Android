@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -27,7 +27,7 @@ public class ParcelableCredentialsUtils {
 
     @Nullable
     public static ParcelableCredentials getCredentials(@NonNull final Context context,
-                                                       @NonNull final AccountKey accountKey) {
+                                                       @NonNull final UserKey accountKey) {
         final Cursor c = DataStoreUtils.getAccountCursor(context, Accounts.COLUMNS, accountKey);
         if (c == null) return null;
         try {

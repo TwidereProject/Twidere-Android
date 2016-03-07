@@ -21,7 +21,7 @@ package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class UserListsLoader extends BaseUserListsLoader {
     private final String mScreenName;
     private final boolean mReverse;
 
-    public UserListsLoader(final Context context, final AccountKey accountKey, final long userId,
+    public UserListsLoader(final Context context, final UserKey accountKey, final long userId,
                            final String screenName, final boolean reverse, final List<ParcelableUserList> data) {
         super(context, accountKey, 0, data);
         mUserId = userId;

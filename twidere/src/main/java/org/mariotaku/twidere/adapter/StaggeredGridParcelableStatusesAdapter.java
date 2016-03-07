@@ -33,7 +33,7 @@ import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
@@ -137,7 +137,7 @@ public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatuse
         }
 
         @Override
-        public void onMediaClick(View view, ParcelableMedia media, AccountKey accountKey, long extraId) {
+        public void onMediaClick(View view, ParcelableMedia media, UserKey accountKey, long extraId) {
         }
 
         @Override

@@ -438,7 +438,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             final ParcelableActivity activity = adapter.getActivity(position);
             final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
             assert status != null;
-            IntentUtils.openUserProfile(context, status.account_key, status.user_id,
+            IntentUtils.openUserProfile(context, status.account_key, status.user_key.getId(),
                     status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
         }
 

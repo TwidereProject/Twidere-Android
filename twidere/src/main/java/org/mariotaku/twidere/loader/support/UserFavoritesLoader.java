@@ -29,7 +29,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
     private final long mUserId;
     private final String mUserScreenName;
 
-    public UserFavoritesLoader(final Context context, final AccountKey accountKey, final long userId,
+    public UserFavoritesLoader(final Context context, final UserKey accountKey, final long userId,
                                final String screenName, final long sinceId, final long maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, boolean fromUser) {

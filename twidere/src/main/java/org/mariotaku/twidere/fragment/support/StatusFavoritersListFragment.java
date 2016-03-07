@@ -25,13 +25,13 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.loader.support.IDsUsersLoader;
 import org.mariotaku.twidere.loader.support.StatusFavoritersLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 
 public class StatusFavoritersListFragment extends CursorSupportUsersListFragment {
 
 	@Override
 	public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
-		final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+		final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
 		final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
 		final StatusFavoritersLoader loader = new StatusFavoritersLoader(context, accountKey,
 				statusId, getData(), false);

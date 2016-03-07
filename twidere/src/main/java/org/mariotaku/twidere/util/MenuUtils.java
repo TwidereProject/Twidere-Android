@@ -301,7 +301,7 @@ public class MenuUtils implements Constants {
             }
             case R.id.set_color: {
                 final Intent intent = new Intent(context, ColorPickerDialogActivity.class);
-                final int color = colorNameManager.getUserColor(status.user_id, true);
+                final int color = colorNameManager.getUserColor(status.user_key, true);
                 if (color != 0) {
                     intent.putExtra(IntentConstants.EXTRA_COLOR, color);
                 }
@@ -315,12 +315,12 @@ public class MenuUtils implements Constants {
                 break;
             }
             case R.id.clear_nickname: {
-                colorNameManager.clearUserNickname(status.user_id);
+                colorNameManager.clearUserNickname(status.user_key);
                 break;
             }
             case R.id.set_nickname: {
-                final String nick = colorNameManager.getUserNickname(status.user_id, true);
-                SetUserNicknameDialogFragment.show(fm, status.user_id, nick);
+                final String nick = colorNameManager.getUserNickname(status.user_key, true);
+                SetUserNicknameDialogFragment.show(fm, status.user_key, nick);
                 break;
             }
             case R.id.open_with_account: {

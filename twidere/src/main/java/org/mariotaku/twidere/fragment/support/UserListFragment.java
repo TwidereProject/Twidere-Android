@@ -68,10 +68,10 @@ import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.text.validator.UserListNameValidator;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -177,9 +177,9 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
                     final ParcelableUserList userList = mUserList;
-                    final AccountKey accountKey = data.getParcelableExtra(EXTRA_KEY);
+                    final UserKey accountKey = data.getParcelableExtra(EXTRA_KEY);
                     IntentUtils.openUserListDetails(getActivity(), accountKey, userList.id,
-                            userList.user_id, userList.user_screen_name, userList.name);
+                            userList.user_key.getId(), userList.user_screen_name, userList.name);
                 }
                 break;
             }
@@ -256,7 +256,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         MenuUtils.setMenuItemAvailability(menu, R.id.info, userList != null);
         menu.removeGroup(MENU_GROUP_USER_LIST_EXTENSION);
         if (userList != null) {
-            final boolean isMyList = userList.user_id == userList.account_key.getId();
+            final boolean isMyList = userList.user_key.equals(userList.account_key);
             final boolean isFollowing = userList.is_following;
             MenuUtils.setMenuItemAvailability(menu, R.id.edit, isMyList);
             MenuUtils.setMenuItemAvailability(menu, R.id.follow, !isMyList);
@@ -289,7 +289,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         if (twitter == null || userList == null) return false;
         switch (item.getItemId()) {
             case R.id.add: {
-                if (userList.user_id != userList.account_key.getId()) return false;
+                if (!userList.user_key.equals(userList.account_key)) return false;
                 final Intent intent = new Intent(INTENT_ACTION_SELECT_USER);
                 intent.setClass(getActivity(), UserListSelectorActivity.class);
                 intent.putExtra(EXTRA_ACCOUNT_KEY, userList.account_key);
@@ -297,7 +297,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 break;
             }
             case R.id.delete: {
-                if (userList.user_id != userList.account_key.getId()) return false;
+                if (!userList.user_key.equals(userList.account_key)) return false;
                 DestroyUserListDialogFragment.show(getFragmentManager(), userList);
                 break;
             }
@@ -353,8 +353,8 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             case R.id.profile_image: {
                 final ParcelableUserList userList = mUserList;
                 if (userList == null) return;
-                IntentUtils.openUserProfile(getActivity(), userList.account_key, userList.user_id,
-                        userList.user_screen_name, null, true, null);
+                IntentUtils.openUserProfile(getActivity(), userList.account_key,
+                        userList.user_key.getId(), userList.user_screen_name, null, true, null);
                 break;
             }
         }
@@ -364,7 +364,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     @Override
     public Loader<SingleResponse<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
         setProgressBarIndeterminateVisibility(true);
-        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long userId = args.getLong(EXTRA_USER_ID, -1);
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final String listName = args.getString(EXTRA_LIST_NAME);
@@ -406,7 +406,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             final ParcelableUserList userList = args.getParcelable(EXTRA_USER_LIST);
             assert userList != null;
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userList.account_key);
-            tabArgs.putLong(EXTRA_USER_ID, userList.user_id);
+            tabArgs.putLong(EXTRA_USER_ID, userList.user_key.getId());
             tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name);
             tabArgs.putLong(EXTRA_LIST_ID, userList.id);
             tabArgs.putString(EXTRA_LIST_NAME, userList.name);
@@ -439,7 +439,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             DialogInterface.OnClickListener {
 
         private String mName, mDescription;
-        private AccountKey mAccountKey;
+        private UserKey mAccountKey;
         private long mListId;
         private boolean mIsPublic;
 
@@ -470,7 +470,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
-            mAccountKey = bundle != null ? bundle.<AccountKey>getParcelable(EXTRA_ACCOUNT_KEY) : null;
+            mAccountKey = bundle != null ? bundle.<UserKey>getParcelable(EXTRA_ACCOUNT_KEY) : null;
             mListId = bundle != null ? bundle.getLong(EXTRA_LIST_ID, -1) : -1;
             mName = bundle != null ? bundle.getString(EXTRA_LIST_NAME) : null;
             mDescription = bundle != null ? bundle.getString(EXTRA_DESCRIPTION) : null;
@@ -520,13 +520,13 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
         private final boolean mOmitIntentExtra;
         private final Bundle mExtras;
-        private final AccountKey mAccountKey;
+        private final UserKey mAccountKey;
         private final long mUserId;
         private final long mListId;
         private final String mScreenName, mListName;
 
         private ParcelableUserListLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                         final AccountKey accountKey, final long listId, final String listName, final long userId,
+                                         final UserKey accountKey, final long listId, final String listName, final long userId,
                                          final String screenName) {
             super(context);
             mOmitIntentExtra = omitIntentExtra;

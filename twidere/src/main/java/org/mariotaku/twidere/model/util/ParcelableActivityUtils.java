@@ -6,10 +6,10 @@ import android.support.annotation.Nullable;
 import org.apache.commons.collections.primitives.ArrayLongList;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Processing ParcelableActivity
@@ -33,8 +33,8 @@ public class ParcelableActivityUtils {
                 if (followingOnly && !user.is_following) {
                     continue;
                 }
-                if (!ArrayUtils.contains(filteredUserIds, user.id)) {
-                    list.add(user.id);
+                if (!ArrayUtils.contains(filteredUserIds, user.key.getId())) {
+                    list.add(user.key.getId());
                 }
             }
             activity.after_filtered_source_ids = list.toArray();
@@ -53,7 +53,7 @@ public class ParcelableActivityUtils {
         ParcelableUser[] result = new ParcelableUser[activity.after_filtered_source_ids.length];
         for (int i = 0; i < activity.after_filtered_source_ids.length; i++) {
             for (ParcelableUser user : activity.sources) {
-                if (user.id == activity.after_filtered_source_ids[i]) {
+                if (user.key.getId() == activity.after_filtered_source_ids[i]) {
                     result[i] = user;
                 }
             }
@@ -62,7 +62,7 @@ public class ParcelableActivityUtils {
     }
 
     public static ParcelableActivity fromActivity(final Activity activity,
-                                                  final AccountKey accountKey,
+                                                  final UserKey accountKey,
                                                   final boolean isGap) {
         ParcelableActivity result = new ParcelableActivity();
         result.account_key = accountKey;
@@ -80,7 +80,7 @@ public class ParcelableActivityUtils {
         if (result.sources != null) {
             result.source_ids = new long[result.sources.length];
             for (int i = 0; i < result.sources.length; i++) {
-                result.source_ids[i] = result.sources[i].id;
+                result.source_ids[i] = result.sources[i].key.getId();
             }
         }
         result.is_gap = isGap;

@@ -40,18 +40,6 @@ public class TwitterContentUtils {
 
     public static final int TWITTER_BULK_QUERY_COUNT = 100;
 
-    @NonNull
-    public static String getInReplyToName(@NonNull final Status status) {
-        final Status orig = status.isRetweet() ? status.getRetweetedStatus() : status;
-        final long inReplyToUserId = status.getInReplyToUserId();
-        final UserMentionEntity[] entities = status.getUserMentionEntities();
-        if (entities == null) return orig.getInReplyToScreenName();
-        for (final UserMentionEntity entity : entities) {
-            if (inReplyToUserId == entity.getId()) return entity.getName();
-        }
-        return orig.getInReplyToScreenName();
-    }
-
     public static boolean isOfficialKey(final Context context, final String consumerKey,
                                         final String consumerSecret) {
         if (context == null || consumerKey == null || consumerSecret == null) return false;

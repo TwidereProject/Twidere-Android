@@ -237,7 +237,7 @@ public interface TwidereDataStore {
         Uri CONTENT_URI_WITH_SCORE = Uri.withAppendedPath(BASE_CONTENT_URI,
                 CONTENT_PATH_WITH_SCORE);
 
-        String USER_ID = "user_id";
+        String USER_KEY = "user_id";
 
         String CREATED_AT = "created_at";
 
@@ -300,13 +300,13 @@ public interface TwidereDataStore {
 
         String USER_HOST = "user_host";
 
-        String[] COLUMNS = {_ID, USER_ID, CREATED_AT, NAME, SCREEN_NAME, DESCRIPTION_PLAIN, LOCATION,
+        String[] COLUMNS = {_ID, USER_KEY, CREATED_AT, NAME, SCREEN_NAME, DESCRIPTION_PLAIN, LOCATION,
                 URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING,
                 FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT, FAVORITES_COUNT, LISTED_COUNT,
                 MEDIA_COUNT, DESCRIPTION_HTML, DESCRIPTION_EXPANDED, URL_EXPANDED, BACKGROUND_COLOR,
                 LINK_COLOR, TEXT_COLOR, LAST_SEEN, DESCRIPTION_UNESCAPED, EXTRAS, USER_HOST};
 
-        String[] BASIC_COLUMNS = {_ID, USER_ID, NAME, SCREEN_NAME, PROFILE_IMAGE_URL};
+        String[] BASIC_COLUMNS = {_ID, USER_KEY, NAME, SCREEN_NAME, PROFILE_IMAGE_URL};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_BOOLEAN,
@@ -639,7 +639,7 @@ public interface TwidereDataStore {
 
             String[] COLUMNS = {_ID, USER_ID, NAME, SCREEN_NAME};
 
-            String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT_UNIQUE, TYPE_TEXT_NOT_NULL,
+            String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL,
                     TYPE_TEXT_NOT_NULL};
         }
     }
@@ -857,7 +857,7 @@ public interface TwidereDataStore {
         String QUOTED_MEDIA_JSON = "quoted_media_json";
         String QUOTED_TIMESTAMP = "quoted_timestamp";
         String QUOTED_SOURCE = "quoted_source";
-        String QUOTED_USER_ID = "quoted_user_id";
+        String QUOTED_USER_KEY = "quoted_user_id";
         String QUOTED_USER_NAME = "quoted_user_name";
         String QUOTED_USER_SCREEN_NAME = "quoted_user_screen_name";
         String QUOTED_USER_PROFILE_IMAGE = "quoted_user_profile_image";
@@ -876,7 +876,7 @@ public interface TwidereDataStore {
                 IN_REPLY_TO_USER_SCREEN_NAME, SOURCE, LOCATION, RETWEET_COUNT, FAVORITE_COUNT, REPLY_COUNT,
                 RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_ID, RETWEETED_BY_USER_NAME,
                 RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE, QUOTED_ID, QUOTED_TEXT_HTML,
-                QUOTED_TEXT_PLAIN, QUOTED_TEXT_UNESCAPED, QUOTED_TIMESTAMP, QUOTED_SOURCE, QUOTED_USER_ID,
+                QUOTED_TEXT_PLAIN, QUOTED_TEXT_UNESCAPED, QUOTED_TIMESTAMP, QUOTED_SOURCE, QUOTED_USER_KEY,
                 QUOTED_USER_NAME, QUOTED_USER_SCREEN_NAME, QUOTED_USER_PROFILE_IMAGE,
                 QUOTED_USER_IS_VERIFIED, QUOTED_USER_IS_PROTECTED, MY_RETWEET_ID, IS_RETWEET,
                 IS_QUOTE, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,

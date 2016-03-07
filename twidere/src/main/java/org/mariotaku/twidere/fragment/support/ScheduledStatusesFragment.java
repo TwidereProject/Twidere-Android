@@ -35,7 +35,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.api.twitter.model.ScheduledStatus;
 import org.mariotaku.twidere.loader.support.ScheduledStatusesLoader;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 
 import java.util.List;
@@ -60,7 +60,7 @@ public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragmen
 
     @Override
     public Loader<List<ScheduledStatus>> onCreateLoader(int id, Bundle args) {
-        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final String[] states = {ScheduledStatus.State.SCHEDULED, ScheduledStatus.State.FAILED};

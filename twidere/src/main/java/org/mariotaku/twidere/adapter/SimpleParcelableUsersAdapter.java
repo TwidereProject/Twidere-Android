@@ -35,21 +35,18 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUser> implements IBaseAdapter {
 
-    private final Context mContext;
-
     public SimpleParcelableUsersAdapter(final Context context) {
         this(context, R.layout.list_item_user);
     }
 
     public SimpleParcelableUsersAdapter(final Context context, final int layoutRes) {
         super(context, layoutRes);
-        mContext = context;
         configBaseAdapter(context, this);
     }
 
     @Override
     public long getItemId(final int position) {
-        return getItem(position) != null ? getItem(position).id : -1;
+        return getItem(position) != null ? getItem(position).key.getId() : -1;
     }
 
     @Override
@@ -68,8 +65,8 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
 
         holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, 0,
                 getUserTypeIconRes(user.is_verified, user.is_protected), 0);
-        holder.text1.setText(mUserColorNameManager.getUserNickname(user.id, user.name));
-        holder.text2.setText("@" + user.screen_name);
+        holder.text1.setText(mUserColorNameManager.getUserNickname(user.key, user.name));
+        holder.text2.setText(String.format("@%s", user.screen_name));
         holder.icon.setVisibility(isProfileImageDisplayed() ? View.VISIBLE : View.GONE);
         if (isProfileImageDisplayed()) {
             mImageLoader.displayProfileImage(holder.icon, user.profile_image_url);
@@ -89,7 +86,7 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
         }
         if (data == null) return;
         for (final ParcelableUser user : data) {
-            if (clearOld || findItemPosition(user.id) < 0) {
+            if (clearOld || findItemPosition(user.key.getId()) < 0) {
                 add(user);
             }
         }

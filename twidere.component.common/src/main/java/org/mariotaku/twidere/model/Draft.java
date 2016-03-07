@@ -30,7 +30,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.model.draft.ActionExtra;
-import org.mariotaku.twidere.model.util.AccountKeysCursorFieldConverter;
+import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
 import org.mariotaku.twidere.model.util.DraftExtrasConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
@@ -43,8 +43,8 @@ import java.lang.annotation.RetentionPolicy;
 public class Draft implements Parcelable {
 
     @ParcelableThisPlease
-    @CursorField(value = Drafts.ACCOUNT_IDS, converter = AccountKeysCursorFieldConverter.class)
-    public AccountKey[] account_ids;
+    @CursorField(value = Drafts.ACCOUNT_IDS, converter = UserKeysCursorFieldConverter.class)
+    public UserKey[] account_ids;
     @ParcelableThisPlease
     @CursorField(value = Drafts._ID, excludeWrite = true)
     public long _id;

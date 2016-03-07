@@ -9,7 +9,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 
 import java.text.ParseException;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class ParcelableCardEntityUtils implements TwidereConstants {
 
     @Nullable
-    public static ParcelableCardEntity fromCardEntity(@Nullable CardEntity card, @Nullable AccountKey accountKey) {
+    public static ParcelableCardEntity fromCardEntity(@Nullable CardEntity card, @Nullable UserKey accountKey) {
         if (card == null) return null;
         final ParcelableCardEntity obj = new ParcelableCardEntity();
         obj.name = card.getName();

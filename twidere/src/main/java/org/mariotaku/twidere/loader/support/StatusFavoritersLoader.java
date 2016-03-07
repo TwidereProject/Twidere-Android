@@ -26,7 +26,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class StatusFavoritersLoader extends IDsUsersLoader {
 
     private final long mStatusId;
 
-    public StatusFavoritersLoader(final Context context, final AccountKey accountKey, final long statusId,
+    public StatusFavoritersLoader(final Context context, final UserKey accountKey, final long statusId,
                                   final List<ParcelableUser> data, boolean fromUser) {
         super(context, accountKey, data, fromUser);
         mStatusId = statusId;

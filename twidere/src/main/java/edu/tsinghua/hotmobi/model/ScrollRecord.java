@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 15/8/8.
@@ -44,7 +44,7 @@ public class ScrollRecord implements LogModel {
     @JsonField(name = "scroll_state")
     int scrollState;
 
-    public static ScrollRecord create(long id, AccountKey accountKey, long timestamp, long timeOffset, int scrollState) {
+    public static ScrollRecord create(long id, UserKey accountKey, long timestamp, long timeOffset, int scrollState) {
         final ScrollRecord record = new ScrollRecord();
         record.setId(id);
         record.setAccountId(accountKey.getId());
