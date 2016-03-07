@@ -26,25 +26,25 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
+import android.util.Pair;
 
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+import org.mariotaku.twidere.task.UpdateAccountInfoTask;
+import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
-import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
 
@@ -117,18 +117,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final long userId = twitterUser.getId();
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
             final ParcelableUser user = ParcelableUserUtils.fromUser(twitterUser, accountKey);
-            if (Utils.isMyAccount(context, user.key)) {
-                final ContentValues accountValues = new ContentValues();
-                accountValues.put(Accounts.NAME, user.name);
-                accountValues.put(Accounts.SCREEN_NAME, user.screen_name);
-                accountValues.put(Accounts.PROFILE_IMAGE_URL, user.profile_image_url);
-                accountValues.put(Accounts.PROFILE_BANNER_URL, user.profile_banner_url);
-                accountValues.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(user,
-                        ParcelableUser.class));
-                accountValues.put(Accounts.ACCOUNT_KEY, String.valueOf(user.key));
-                final String accountWhere = Expression.equals(Accounts.ACCOUNT_KEY, userId).getSQL();
-                resolver.update(Accounts.CONTENT_URI, accountValues, accountWhere, null);
-            }
+
             user.account_color = accountColor;
             return SingleResponse.getInstance(user);
         } catch (final TwitterException e) {
@@ -142,4 +131,13 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         forceLoad();
     }
 
+    @Override
+    public void deliverResult(SingleResponse<ParcelableUser> data) {
+        super.deliverResult(data);
+        if (data.hasData()) {
+            final UpdateAccountInfoTask task = new UpdateAccountInfoTask(getContext());
+            task.setParams(Pair.create(mAccountKey, data.getData()));
+            TaskStarter.execute(task);
+        }
+    }
 }
