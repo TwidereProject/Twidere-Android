@@ -28,6 +28,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.twidere.model.util.AccountKeyConverter;
+
 @ParcelablePlease
 @JsonObject
 public class ParcelableUserList implements Parcelable, Comparable<ParcelableUserList> {
@@ -39,11 +41,8 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
     @JsonField(name = "subscribers_count")
     public long subscribers_count;
     @ParcelableThisPlease
-    @JsonField(name = "account_id")
-    public long account_id;
-    @ParcelableThisPlease
-    @JsonField(name = "account_host")
-    public String account_host;
+    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
+    public AccountKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "id")
     public long id;
@@ -78,22 +77,6 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
     public ParcelableUserList() {
     }
 
-    public ParcelableUserList(final Parcel in) {
-        position = in.readLong();
-        account_id = in.readLong();
-        id = in.readLong();
-        is_public = in.readInt() == 1;
-        is_following = in.readInt() == 1;
-        name = in.readString();
-        description = in.readString();
-        user_id = in.readLong();
-        user_name = in.readString();
-        user_screen_name = in.readString();
-        user_profile_image_url = in.readString();
-        members_count = in.readLong();
-        subscribers_count = in.readLong();
-    }
-
     @Override
     public int compareTo(@NonNull final ParcelableUserList another) {
         final long diff = position - another.position;
@@ -103,22 +86,21 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof ParcelableUserList)) return false;
-        final ParcelableUserList other = (ParcelableUserList) obj;
-        if (account_id != other.account_id) return false;
-        if (id != other.id) return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableUserList that = (ParcelableUserList) o;
+
+        if (id != that.id) return false;
+        return account_key.equals(that.account_key);
+
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (account_id ^ account_id >>> 32);
-        result = prime * result + (int) (id ^ id >>> 32);
+        int result = account_key.hashCode();
+        result = 31 * result + (int) (id ^ (id >>> 32));
         return result;
     }
 
@@ -127,8 +109,7 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
         return "ParcelableUserList{" +
                 "members_count=" + members_count +
                 ", subscribers_count=" + subscribers_count +
-                ", account_id=" + account_id +
-                ", account_host='" + account_host + '\'' +
+                ", account_key=" + account_key +
                 ", id=" + id +
                 ", user_id=" + user_id +
                 ", position=" + position +

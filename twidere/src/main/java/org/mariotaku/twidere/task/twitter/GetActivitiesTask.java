@@ -32,7 +32,6 @@ import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -140,11 +139,12 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
         }
         if (deleteBound[0] > 0 && deleteBound[1] > 0) {
             final Expression where = Expression.and(
-                    Utils.getAccountCompareExpression(),
-                    Expression.greaterEquals(Activities.MIN_POSITION, deleteBound[0]),
-                    Expression.lesserEquals(Activities.MAX_POSITION, deleteBound[1])
+                    Expression.equalsArgs(Activities.ACCOUNT_KEY),
+                    Expression.greaterEqualsArgs(Activities.MIN_POSITION),
+                    Expression.lesserEqualsArgs(Activities.MAX_POSITION)
             );
-            final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+            final String[] whereArgs = {accountKey.toString(), String.valueOf(deleteBound[0]),
+                    String.valueOf(deleteBound[1])};
             int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), whereArgs);
             boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
                     && rowsDeleted <= 0;

@@ -28,7 +28,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -45,8 +44,7 @@ public class DestroyUserListSubscriptionDialogFragment extends BaseSupportDialog
                 final ParcelableUserList userList = getUserList();
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (userList == null || twitter == null) return;
-                twitter.destroyUserListSubscriptionAsync(new AccountKey(userList.account_id,
-                        userList.account_host), userList.id);
+                twitter.destroyUserListSubscriptionAsync(userList.account_key, userList.id);
                 break;
             default:
                 break;

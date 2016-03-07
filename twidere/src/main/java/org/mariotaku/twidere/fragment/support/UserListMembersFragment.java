@@ -26,6 +26,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -111,13 +112,14 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
 
     private class GetUserListTask extends AsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
+        @Nullable
         private final AccountKey mAccountKey;
         private final long mUserId;
         private final long mListId;
         private final String mScreenName, mListName;
 
-        private GetUserListTask(final AccountKey accountKey, final long listId, final String listName, final long userId,
-                                final String screenName) {
+        private GetUserListTask(@Nullable final AccountKey accountKey, final long listId,
+                                final String listName, final long userId, final String screenName) {
             this.mAccountKey = accountKey;
             this.mUserId = userId;
             this.mListId = listId;
@@ -128,6 +130,8 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
         @Override
         @NonNull
         protected SingleResponse<ParcelableUserList> doInBackground(final Object... params) {
+            if (mAccountKey == null)
+                return SingleResponse.getInstance(new TwitterException("No Account"));
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getActivity(), mAccountKey, true);
             if (twitter == null) return SingleResponse.getInstance();
             try {

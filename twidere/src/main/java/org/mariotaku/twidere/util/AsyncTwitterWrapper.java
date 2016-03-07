@@ -892,11 +892,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 values.put(Statuses.REPLY_COUNT, status.reply_count);
                 values.put(Statuses.RETWEET_COUNT, status.retweet_count);
                 values.put(Statuses.FAVORITE_COUNT, status.favorite_count);
-                final Expression where = Expression.and(Utils.getAccountCompareExpression(),
-                        Expression.or(Expression.equals(Statuses.STATUS_ID, mStatusId),
-                                Expression.equals(Statuses.RETWEET_ID, mStatusId)));
-                final String[] whereArgs = {String.valueOf(mAccountKey.getId()), mAccountKey.getHost(),
-                        String.valueOf(mStatusId), String.valueOf(mStatusId)};
+                final Expression where = Expression.and(
+                        Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
+                        Expression.or(
+                                Expression.equalsArgs(Statuses.STATUS_ID),
+                                Expression.equalsArgs(Statuses.RETWEET_ID)
+                        )
+                );
+                final String[] whereArgs = {mAccountKey.toString(), String.valueOf(mStatusId),
+                        String.valueOf(mStatusId)};
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), whereArgs);
                 }
@@ -1479,12 +1483,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         private void deleteMessages(final AccountKey accountKey, final long userId) {
-            final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost(),
-                    String.valueOf(userId)};
-            mResolver.delete(DirectMessages.Inbox.CONTENT_URI, Expression.and(Utils.getAccountCompareExpression(),
-                    Expression.equalsArgs(Inbox.SENDER_ID)).getSQL(), whereArgs);
-            mResolver.delete(DirectMessages.Outbox.CONTENT_URI, Expression.and(Utils.getAccountCompareExpression(),
-                    Expression.equalsArgs(Outbox.RECIPIENT_ID)).getSQL(), whereArgs);
+            final String[] whereArgs = {accountKey.toString(), String.valueOf(userId)};
+            mResolver.delete(DirectMessages.Inbox.CONTENT_URI, Expression.and(
+                    Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
+                    Expression.equalsArgs(Inbox.SENDER_ID)
+            ).getSQL(), whereArgs);
+            mResolver.delete(DirectMessages.Outbox.CONTENT_URI, Expression.and(
+                    Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
+                    Expression.equalsArgs(Outbox.RECIPIENT_ID)
+            ).getSQL(), whereArgs);
         }
 
         private boolean isMessageNotFound(final Exception e) {
@@ -1551,11 +1558,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, false);
                 values.put(Statuses.FAVORITE_COUNT, status.favorite_count - 1);
-                final Expression where = Expression.and(Utils.getAccountCompareExpression(),
+                final Expression where = Expression.and(Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
                         Expression.or(Expression.equals(Statuses.STATUS_ID, mStatusId),
                                 Expression.equals(Statuses.RETWEET_ID, mStatusId)));
-                String[] whereArgs = {String.valueOf(mAccountKey.getId()), mAccountKey.getHost(),
-                        String.valueOf(mStatusId), String.valueOf(mStatusId)};
+                final String[] whereArgs = {mAccountKey.toString(), String.valueOf(mStatusId),
+                        String.valueOf(mStatusId)};
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), whereArgs);
                 }
@@ -1627,11 +1634,15 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     final User user = twitter.destroyFriendship(mUserId);
                     // remove user tweets and retweets
                     Utils.setLastSeen(mContext, user.getId(), -1);
-                    final Expression where = Expression.and(Utils.getAccountCompareExpression(),
-                            Expression.or(Expression.equals(Statuses.USER_ID, mUserId),
-                                    Expression.equals(Statuses.RETWEETED_BY_USER_ID, mUserId)));
-                    String[] whereArgs = {String.valueOf(mAccountKey.getId()), mAccountKey.getHost(),
-                            String.valueOf(mUserId), String.valueOf(mUserId)};
+                    final Expression where = Expression.and(
+                            Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
+                            Expression.or(
+                                    Expression.equalsArgs(Statuses.USER_ID),
+                                    Expression.equalsArgs(Statuses.RETWEETED_BY_USER_ID)
+                            )
+                    );
+                    final String[] whereArgs = {mAccountKey.toString(), String.valueOf(mUserId),
+                            String.valueOf(mUserId)};
                     mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), whereArgs);
                     return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey), null);
                 } catch (final TwitterException e) {

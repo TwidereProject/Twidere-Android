@@ -28,8 +28,7 @@ public class ParcelableCredentialsUtils {
     @Nullable
     public static ParcelableCredentials getCredentials(@NonNull final Context context,
                                                        @NonNull final AccountKey accountKey) {
-        final Cursor c = DataStoreUtils.getAccountCursor(context,
-                Accounts.COLUMNS, accountKey);
+        final Cursor c = DataStoreUtils.getAccountCursor(context, Accounts.COLUMNS, accountKey);
         if (c == null) return null;
         try {
             final ParcelableCredentialsCursorIndices i = new ParcelableCredentialsCursorIndices(c);

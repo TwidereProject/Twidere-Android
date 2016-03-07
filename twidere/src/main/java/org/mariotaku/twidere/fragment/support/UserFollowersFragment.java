@@ -19,9 +19,7 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -56,7 +54,7 @@ public class UserFollowersFragment extends CursorSupportUsersListFragment {
 
     @Override
     public void onStop() {
-        mBus.register(this);
+        mBus.unregister(this);
         super.onStop();
     }
 

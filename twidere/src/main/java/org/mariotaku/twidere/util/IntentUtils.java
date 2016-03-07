@@ -524,8 +524,7 @@ public class IntentUtils implements Constants {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_LIST);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, new AccountKey(userList.account_id,
-                userList.account_host).toString());
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, userList.account_key.toString());
         builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
         builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());

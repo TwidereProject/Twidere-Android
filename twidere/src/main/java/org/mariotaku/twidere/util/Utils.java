@@ -110,6 +110,7 @@ import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.sqliteqb.library.SQLFunctions;
 import org.mariotaku.sqliteqb.library.Selectable;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
@@ -1584,22 +1585,15 @@ public final class Utils implements Constants {
 
     public static boolean isMyAccount(final Context context, @Nullable final AccountKey accountKey) {
         if (context == null || accountKey == null) return false;
-        return isMyAccount(context, accountKey.getId(), accountKey.getHost());
-    }
-
-    public static boolean isMyAccount(@NonNull final Context context, final long accountId,
-                                      final String accountHost) {
-        final ContentResolver resolver = context.getContentResolver();
-        final String where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).getSQL();
-        final String[] projection = new String[]{};
-        final String[] whereArgs = {String.valueOf(accountId)};
-        final Cursor cur = resolver.query(Accounts.CONTENT_URI, projection, where, whereArgs, null);
+        final String[] projection = new String[]{SQLFunctions.COUNT()};
+        final Cursor cur = DataStoreUtils.getAccountCursor(context, projection, accountKey);
         if (cur == null) return false;
         try {
-            return cur.getCount() > 0;
+            if (cur.moveToFirst()) return cur.getLong(0) > 0;
         } finally {
             cur.close();
         }
+        return false;
     }
 
     public static boolean isMyAccount(final Context context, final String screen_name) {

@@ -18,8 +18,7 @@ public class ParcelableUserListUtils {
         ParcelableUserList obj = new ParcelableUserList();
         final User user = list.getUser();
         obj.position = position;
-        obj.account_id = accountKey.getId();
-        obj.account_host = accountKey.getHost();
+        obj.account_key = accountKey;
         obj.id = list.getId();
         obj.is_public = UserList.Mode.PUBLIC.equals(list.getMode());
         obj.is_following = isFollowing;

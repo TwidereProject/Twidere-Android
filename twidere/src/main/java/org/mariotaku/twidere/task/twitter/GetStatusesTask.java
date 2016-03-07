@@ -26,6 +26,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
+import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.CacheUsersStatusesTask;
@@ -106,11 +107,11 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             statusIds[i] = id;
         }
         // Delete all rows conflicting before new data inserted.
-        final Expression accountWhere = Utils.getAccountCompareExpression();
+        final Expression accountWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY);
         final Expression statusWhere = Expression.in(new Columns.Column(Statuses.STATUS_ID),
                 new RawItemArray(statusIds));
         final String countWhere = Expression.and(accountWhere, statusWhere).getSQL();
-        String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+        final String[] whereArgs = {accountKey.toString()};
         final String[] projection = {SQLFunctions.COUNT()};
         final int rowsDeleted;
         final Cursor countCur = resolver.query(uri, projection, countWhere, whereArgs, null);

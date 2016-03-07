@@ -34,9 +34,9 @@ import org.mariotaku.twidere.adapter.AbsUserListsAdapter;
 import org.mariotaku.twidere.loader.support.UserListsLoader;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
 
 import java.util.List;
 
@@ -68,7 +68,7 @@ public class UserListsFragment extends ParcelableUserListsFragment {
             case R.id.new_user_list: {
                 final DialogFragment f = new CreateUserListDialogFragment();
                 final Bundle args = new Bundle();
-                args.putLong(EXTRA_ACCOUNT_ID, getAccountId());
+                args.putParcelable(EXTRA_ACCOUNT_KEY, getAccountKey());
                 f.setArguments(args);
                 f.show(getFragmentManager(), null);
                 return true;
@@ -80,9 +80,10 @@ public class UserListsFragment extends ParcelableUserListsFragment {
     @Override
     public void onPrepareOptionsMenu(final Menu menu) {
         final MenuItem item = menu.findItem(R.id.new_user_list);
-        if (item == null) return;
-        final long accountId = getAccountId(), userId = getUserId();
-        if (accountId == userId) {
+        final AccountKey accountId = getAccountKey();
+        if (accountId == null || item == null) return;
+        final long userId = getUserId();
+        if (accountId.getId() == userId) {
             MenuUtils.setMenuItemAvailability(menu, R.id.new_user_list, true);
         } else {
             MenuUtils.setMenuItemAvailability(menu, R.id.new_user_list, Utils.isMyAccount(getActivity(), getScreenName()));

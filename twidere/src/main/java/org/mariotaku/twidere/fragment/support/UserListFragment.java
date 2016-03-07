@@ -170,7 +170,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 if (resultCode != Activity.RESULT_OK || !data.hasExtra(EXTRA_USER) || twitter == null
                         || userList == null) return;
                 final ParcelableUser user = data.getParcelableExtra(EXTRA_USER);
-                twitter.addUserListMembersAsync(new AccountKey(userList.account_id, userList.account_host), userList.id, user);
+                twitter.addUserListMembersAsync(userList.account_key, userList.id, user);
                 return;
             }
             case REQUEST_SELECT_ACCOUNT: {
@@ -256,7 +256,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         MenuUtils.setMenuItemAvailability(menu, R.id.info, userList != null);
         menu.removeGroup(MENU_GROUP_USER_LIST_EXTENSION);
         if (userList != null) {
-            final boolean isMyList = userList.user_id == userList.account_id;
+            final boolean isMyList = userList.user_id == userList.account_key.getId();
             final boolean isFollowing = userList.is_following;
             MenuUtils.setMenuItemAvailability(menu, R.id.edit, isMyList);
             MenuUtils.setMenuItemAvailability(menu, R.id.follow, !isMyList);
@@ -289,21 +289,21 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         if (twitter == null || userList == null) return false;
         switch (item.getItemId()) {
             case R.id.add: {
-                if (userList.user_id != userList.account_id) return false;
+                if (userList.user_id != userList.account_key.getId()) return false;
                 final Intent intent = new Intent(INTENT_ACTION_SELECT_USER);
                 intent.setClass(getActivity(), UserListSelectorActivity.class);
-                intent.putExtra(EXTRA_ACCOUNT_ID, userList.account_id);
+                intent.putExtra(EXTRA_ACCOUNT_KEY, userList.account_key);
                 startActivityForResult(intent, REQUEST_SELECT_USER);
                 break;
             }
             case R.id.delete: {
-                if (userList.user_id != userList.account_id) return false;
+                if (userList.user_id != userList.account_key.getId()) return false;
                 DestroyUserListDialogFragment.show(getFragmentManager(), userList);
                 break;
             }
             case R.id.edit: {
                 final Bundle args = new Bundle();
-                args.putLong(EXTRA_ACCOUNT_ID, userList.account_id);
+                args.putParcelable(EXTRA_ACCOUNT_KEY, userList.account_key);
                 args.putString(EXTRA_LIST_NAME, userList.name);
                 args.putString(EXTRA_DESCRIPTION, userList.description);
                 args.putBoolean(EXTRA_IS_PUBLIC, userList.is_public);
@@ -317,8 +317,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 if (userList.is_following) {
                     DestroyUserListSubscriptionDialogFragment.show(getFragmentManager(), userList);
                 } else {
-                    twitter.createUserListSubscriptionAsync(new AccountKey(userList.account_id,
-                            userList.account_host), userList.id);
+                    twitter.createUserListSubscriptionAsync(userList.account_key, userList.id);
                 }
                 return true;
             }
@@ -354,9 +353,8 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             case R.id.profile_image: {
                 final ParcelableUserList userList = mUserList;
                 if (userList == null) return;
-                IntentUtils.openUserProfile(getActivity(), new AccountKey(userList.account_id,
-                                userList.account_host), userList.user_id, userList.user_screen_name, null,
-                        true, null);
+                IntentUtils.openUserProfile(getActivity(), userList.account_key, userList.user_id,
+                        userList.user_screen_name, null, true, null);
                 break;
             }
         }
@@ -406,13 +404,14 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         final Bundle args = getArguments(), tabArgs = new Bundle();
         if (args.containsKey(EXTRA_USER_LIST)) {
             final ParcelableUserList userList = args.getParcelable(EXTRA_USER_LIST);
-            tabArgs.putLong(EXTRA_ACCOUNT_ID, userList.account_id);
+            assert userList != null;
+            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userList.account_key);
             tabArgs.putLong(EXTRA_USER_ID, userList.user_id);
             tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name);
             tabArgs.putLong(EXTRA_LIST_ID, userList.id);
             tabArgs.putString(EXTRA_LIST_NAME, userList.name);
         } else {
-            tabArgs.putLong(EXTRA_ACCOUNT_ID, args.getLong(EXTRA_ACCOUNT_ID, -1));
+            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
             tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
             tabArgs.putLong(EXTRA_LIST_ID, args.getLong(EXTRA_LIST_ID, -1));

@@ -52,18 +52,18 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
 
     private final boolean mOmitIntentExtra, mLoadFromCache;
     private final Bundle mExtras;
-    private final AccountKey mAccountId;
+    private final AccountKey mAccountKey;
     private final long mUserId;
     private final String mScreenName;
 
-    public ParcelableUserLoader(final Context context, final AccountKey accountId, final long userId,
+    public ParcelableUserLoader(final Context context, final AccountKey accountKey, final long userId,
                                 final String screenName, final Bundle extras, final boolean omitIntentExtra,
                                 final boolean loadFromCache) {
         super(context);
         this.mOmitIntentExtra = omitIntentExtra;
         this.mLoadFromCache = loadFromCache;
         this.mExtras = extras;
-        this.mAccountId = accountId;
+        this.mAccountKey = accountKey;
         this.mUserId = userId;
         this.mScreenName = screenName;
     }
@@ -72,7 +72,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
     public SingleResponse<ParcelableUser> loadInBackground() {
         final Context context = getContext();
         final ContentResolver resolver = context.getContentResolver();
-        final AccountKey accountKey = mAccountId;
+        final AccountKey accountKey = mAccountKey;
         int accountColor = DataStoreUtils.getAccountColor(context, accountKey);
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
@@ -117,7 +117,8 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final long userId = twitterUser.getId();
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
             final ParcelableUser user = ParcelableUserUtils.fromUser(twitterUser, accountKey);
-            if (Utils.isMyAccount(context, user.id, user.user_host)) {
+            final AccountKey userAccountKey = new AccountKey(user.id, user.user_host);
+            if (Utils.isMyAccount(context, userAccountKey)) {
                 final ContentValues accountValues = new ContentValues();
                 accountValues.put(Accounts.NAME, user.name);
                 accountValues.put(Accounts.SCREEN_NAME, user.screen_name);
@@ -125,9 +126,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 accountValues.put(Accounts.PROFILE_BANNER_URL, user.profile_banner_url);
                 accountValues.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(user,
                         ParcelableUser.class));
-                accountValues.put(Accounts.ACCOUNT_KEY,
-                        String.valueOf(new AccountKey(user.id, user.user_host)));
-                // TODO update account key
+                accountValues.put(Accounts.ACCOUNT_KEY, String.valueOf(userAccountKey));
                 final String accountWhere = Expression.equals(Accounts.ACCOUNT_KEY, userId).getSQL();
                 resolver.update(Accounts.CONTENT_URI, accountValues, accountWhere, null);
             }

@@ -1279,11 +1279,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (context == null) return;
         final Resources resources = context.getResources();
         final NotificationManagerWrapper nm = mNotificationManager;
-        final Expression selection = Expression.and(Utils.getAccountCompareExpression(),
+        final Expression selection = Expression.and(Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
                 Expression.greaterThan(Statuses.STATUS_ID, position));
         final String filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(Statuses.TABLE_NAME,
                 selection).getSQL();
-        final String[] selectionArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+        final String[] selectionArgs = {accountKey.toString()};
         final String[] userProjection = {Statuses.USER_ID, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
         final String[] statusProjection = {Statuses.STATUS_ID};
         final Cursor statusCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, statusProjection,
