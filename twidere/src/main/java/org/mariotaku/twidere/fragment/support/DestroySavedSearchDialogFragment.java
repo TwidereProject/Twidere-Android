@@ -84,10 +84,11 @@ public class DestroySavedSearchDialogFragment extends BaseSupportDialogFragment 
         return args.getString(EXTRA_NAME);
     }
 
-    public static DestroySavedSearchDialogFragment show(final FragmentManager fm, final long accountId,
+    public static DestroySavedSearchDialogFragment show(final FragmentManager fm,
+                                                        final AccountKey accountKey,
                                                         final long searchId, final String name) {
         final Bundle args = new Bundle();
-        args.putLong(EXTRA_ACCOUNT_ID, accountId);
+        args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
         args.putLong(EXTRA_SEARCH_ID, searchId);
         args.putString(EXTRA_NAME, name);
         final DestroySavedSearchDialogFragment f = new DestroySavedSearchDialogFragment();

@@ -53,9 +53,9 @@ public class UserMentionsFragment extends StatusesSearchFragment {
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
         if (args == null) return null;
-        final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final String screen_name = args.getString(EXTRA_SCREEN_NAME);
-        return new String[]{AUTHORITY_USER_MENTIONS, "account" + account_id, "screen_name" + screen_name};
+        return new String[]{AUTHORITY_USER_MENTIONS, "account" + accountKey, "screen_name" + screen_name};
     }
 
 

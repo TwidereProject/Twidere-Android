@@ -34,12 +34,13 @@ import org.mariotaku.twidere.adapter.SavedSearchesAdapter;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.loader.support.SavedSearchesLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent;
 
 import java.util.Collections;
 import java.util.Comparator;
 
-import static org.mariotaku.twidere.util.Utils.openTweetSearch;
+import static org.mariotaku.twidere.util.IntentUtils.openTweetSearch;
 
 public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedSearchesAdapter> implements
         LoaderCallbacks<ResponseList<SavedSearch>>, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -52,7 +53,6 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
         }
 
     };
-    private long mAccountId;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -60,8 +60,6 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
         final ListView listView = getListView();
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
-        final Bundle args = getArguments();
-        mAccountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
         getLoaderManager().initLoader(0, null, this);
         showProgress();
     }
@@ -86,14 +84,18 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
 
     @Override
     public Loader<ResponseList<SavedSearch>> onCreateLoader(final int id, final Bundle args) {
-        return new SavedSearchesLoader(getActivity(), mAccountId);
+        return new SavedSearchesLoader(getActivity(), getAccountKey());
+    }
+
+    public AccountKey getAccountKey() {
+        return getArguments().getParcelable(EXTRA_ACCOUNT_KEY);
     }
 
     @Override
     public boolean onItemLongClick(final AdapterView<?> view, final View child, final int position, final long id) {
         final SavedSearch item = getAdapter().findItem(id);
         if (item == null) return false;
-        DestroySavedSearchDialogFragment.show(getFragmentManager(), mAccountId, item.getId(), item.getName());
+        DestroySavedSearchDialogFragment.show(getFragmentManager(), getAccountKey(), item.getId(), item.getName());
         return true;
     }
 
@@ -101,7 +103,7 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
     public void onItemClick(final AdapterView<?> view, final View child, final int position, final long id) {
         final SavedSearch item = getAdapter().findItem(id);
         if (item == null) return;
-        openTweetSearch(getActivity(), mAccountId, item.getQuery());
+        openTweetSearch(getActivity(), getAccountKey(), item.getQuery());
     }
 
     @Override
@@ -133,6 +135,6 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
     @Subscribe
     public void onSavedSearchDestroyed(SavedSearchDestroyedEvent event) {
         SavedSearchesAdapter adapter = getAdapter();
-        adapter.removeItem(event.getAccountKey(), event.getSearchId());
+        adapter.removeItem(event.getAccountKey().getId(), event.getSearchId());
     }
 }

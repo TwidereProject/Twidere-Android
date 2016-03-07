@@ -22,37 +22,19 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+
+import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserFollowersLoader;
 import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.message.UsersBlockedEvent;
 
 import static org.mariotaku.twidere.util.DataStoreUtils.getAccountScreenName;
 
 public class UserFollowersFragment extends CursorSupportUsersListFragment {
-
-    private final BroadcastReceiver mStateReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            if (getActivity() == null || !isAdded() || isDetached()) return;
-            final String action = intent.getAction();
-            if (BROADCAST_MULTI_BLOCKSTATE_CHANGED.equals(action)) {
-                final AccountKey accountKey = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY);
-                final String screen_name = getAccountScreenName(getActivity(), accountKey);
-                final Bundle args = getArguments();
-                if (args == null) return;
-                if (accountKey != null && accountKey.getId() == args.getLong(EXTRA_USER_ID, -1) || screen_name != null
-                        && screen_name.equalsIgnoreCase(args.getString(EXTRA_SCREEN_NAME))) {
-                    removeUsers(intent.getLongArrayExtra(EXTRA_USER_IDS));
-                }
-            }
-        }
-
-    };
 
     @Override
     public CursorSupportUsersLoader onCreateUsersLoader(final Context context,
@@ -69,15 +51,25 @@ public class UserFollowersFragment extends CursorSupportUsersListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        final IntentFilter filter = new IntentFilter(BROADCAST_MULTI_BLOCKSTATE_CHANGED);
-        registerReceiver(mStateReceiver, filter);
-
+        mBus.register(this);
     }
 
     @Override
     public void onStop() {
-        unregisterReceiver(mStateReceiver);
+        mBus.register(this);
         super.onStop();
+    }
+
+    @Subscribe
+    public void onUsersBlocked(UsersBlockedEvent event) {
+        final AccountKey accountKey = event.getAccountKey();
+        final String screen_name = getAccountScreenName(getActivity(), accountKey);
+        final Bundle args = getArguments();
+        if (args == null) return;
+        if (accountKey != null && accountKey.getId() == args.getLong(EXTRA_USER_ID, -1) || screen_name != null
+                && screen_name.equalsIgnoreCase(args.getString(EXTRA_SCREEN_NAME))) {
+            removeUsers(event.getUserIds());
+        }
     }
 
 }

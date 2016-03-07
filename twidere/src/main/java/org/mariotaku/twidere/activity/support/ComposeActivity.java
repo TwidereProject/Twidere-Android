@@ -563,7 +563,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         final Draft draft = new Draft();
 
         draft.action_type = getDraftAction(getIntent().getAction());
-        draft.account_ids = AccountKey.getIds(mAccountsAdapter.getSelectedAccountKeys());
+        draft.account_ids = mAccountsAdapter.getSelectedAccountKeys();
         draft.text = text;
         final UpdateStatusActionExtra extra = new UpdateStatusActionExtra();
         extra.setInReplyToStatus(mInReplyToStatus);
@@ -628,7 +628,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             finish();
             return;
         }
-        final AccountKey[] defaultAccountIds = DataStoreUtils.getAccountKeys(accounts);
+        final AccountKey[] defaultAccountIds = ParcelableAccountUtils.getAccountKeys(accounts);
         mMenuBar.setOnMenuItemClickListener(this);
         setupEditText();
         mAccountSelectorContainer.setOnClickListener(this);
@@ -871,12 +871,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         if (intent == null) return false;
         final String action = intent.getAction();
         final boolean hasAccountIds;
-        if (intent.hasExtra(EXTRA_ACCOUNT_IDS)) {
+        if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
             final AccountKey[] accountKeys = Utils.newParcelableArray(
                     intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS), AccountKey.CREATOR);
             mAccountsAdapter.setSelectedAccountIds(accountKeys);
             hasAccountIds = true;
-        } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
+        } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
             final AccountKey accountKey = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY);
             mAccountsAdapter.setSelectedAccountIds(accountKey);
             hasAccountIds = true;

@@ -26,6 +26,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
 
 /**
@@ -93,6 +95,7 @@ public class ScheduledStatus {
     }
 
     @StringDef({State.SCHEDULED, State.FAILED, State.CANCELED})
+    @Retention(RetentionPolicy.CLASS)
     public @interface State {
         String SCHEDULED = ("scheduled"), FAILED = ("failed"), CANCELED = ("canceled");
 

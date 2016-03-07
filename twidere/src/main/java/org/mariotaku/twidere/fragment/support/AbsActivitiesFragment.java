@@ -207,7 +207,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     private void openActivity(ParcelableActivity activity) {
         final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
         if (status != null) {
-            Utils.openStatus(getContext(), status, null);
+            IntentUtils.openStatus(getContext(), status, null);
         } else {
 
         }
@@ -414,7 +414,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     @Override
     public void onStatusClick(IStatusViewHolder holder, int position) {
         final ParcelableStatus status = getActivityStatus(position);
-        Utils.openStatus(getContext(), status, null);
+        IntentUtils.openStatus(getContext(), status, null);
     }
 
     @Nullable

@@ -166,7 +166,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
             final ParcelableStatus status = getAdapter().getStatus(position);
             if (status == null) return false;
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                Utils.openStatus(getActivity(), status, null);
+                IntentUtils.openStatus(getActivity(), status, null);
                 return true;
             }
             if (action == null) {
@@ -385,7 +385,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     @Override
     public void onStatusClick(IStatusViewHolder holder, int position) {
         final AbsStatusesAdapter<Data> adapter = getAdapter();
-        Utils.openStatus(getActivity(), adapter.getStatus(position), null);
+        IntentUtils.openStatus(getActivity(), adapter.getStatus(position), null);
     }
 
     @Override

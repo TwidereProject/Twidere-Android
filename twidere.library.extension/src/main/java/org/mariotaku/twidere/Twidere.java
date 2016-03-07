@@ -44,6 +44,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
 import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -256,6 +258,7 @@ public final class Twidere implements TwidereConstants {
     }
 
     @IntDef({Permission.DENIED, Permission.NONE, Permission.GRANTED})
+    @Retention(RetentionPolicy.CLASS)
     public @interface Permission {
         int NONE = 0;
         int GRANTED = 1;

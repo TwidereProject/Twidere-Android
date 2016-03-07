@@ -269,9 +269,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                 if (ArrayUtils.isEmpty(item.account_ids) || recipientId <= 0) {
                     return;
                 }
-                final long accountId = item.account_ids[0];
-                final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
-                sendMessage(accountId, recipientId, item.text, imageUri);
+                final AccountKey accountKey = item.account_ids[0];
+                final String imageUri = ArrayUtils.isEmpty(item.media) ? null : item.media[0].uri;
+                sendMessage(accountKey, recipientId, item.text, imageUri);
                 break;
             }
         }
@@ -355,7 +355,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             mNotificationManager.notify(NOTIFICATION_ID_UPDATE_STATUS,
                     updateUpdateStatusNotification(this, builder, 0, item));
             final Draft draft = new Draft();
-            draft.account_ids = ParcelableAccountUtils.getAccountIds(item.accounts);
+            draft.account_ids = ParcelableAccountUtils.getAccountKeys(item.accounts);
             if (actionType != null) {
                 draft.action_type = actionType;
             } else {
@@ -378,7 +378,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             Exception exception = null;
             final Expression where = Expression.equals(Drafts._ID, draftId);
             final List<AccountKey> failedAccountIds = new ArrayList<>();
-            Collections.addAll(failedAccountIds, DataStoreUtils.getAccountKeys(item.accounts));
+            Collections.addAll(failedAccountIds, ParcelableAccountUtils.getAccountKeys(item.accounts));
 
             for (final SingleResponse<ParcelableStatus> response : result) {
                 final ParcelableStatus data = response.getData();

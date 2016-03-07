@@ -31,6 +31,7 @@ import android.widget.TextView;
 import org.mariotaku.messagebubbleview.library.MessageBubbleView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
@@ -77,16 +78,17 @@ public class MessageViewHolder extends ViewHolder {
         final TwidereLinkify linkify = adapter.getLinkify();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
 
-        final long accountId = cursor.getLong(indices.account_id);
+        final AccountKey accountKey = new AccountKey(cursor.getLong(indices.account_id),
+                cursor.getString(indices.account_host));
         final long timestamp = cursor.getLong(indices.timestamp);
         final ParcelableMedia[] media = JsonSerializer.parseArray(cursor.getString(indices.media),
                 ParcelableMedia.class);
         final Spanned text = HtmlSpanBuilder.fromHtml(cursor.getString(indices.text_html));
         // Detect entity support
-        textView.setText(linkify.applyAllLinks(text, accountId, false, true));
+        textView.setText(linkify.applyAllLinks(text, accountKey, false, true));
         time.setText(Utils.formatToLongTimeString(context, timestamp));
         mediaContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
-        mediaContainer.displayMedia(media, loader, accountId, getLayoutPosition(), true,
+        mediaContainer.displayMedia(media, loader, accountKey, getLayoutPosition(), true,
                 adapter.getOnMediaClickListener(), adapter.getMediaLoadingHandler());
     }
 

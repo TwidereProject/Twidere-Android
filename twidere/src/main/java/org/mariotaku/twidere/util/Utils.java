@@ -64,7 +64,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -168,11 +167,9 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
-import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.PebbleMessage;
 import org.mariotaku.twidere.model.TwitterAccountExtra;
@@ -467,7 +464,7 @@ public final class Utils implements Constants {
                 break;
             }
             case LINK_ID_PROFILE_EDITOR: {
-                if (!args.containsKey(EXTRA_ACCOUNT_ID) && uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID) == null) {
+                if (noAccount(uri, args)) {
                     return null;
                 }
                 fragment = new UserProfileEditorFragment();
@@ -560,14 +557,14 @@ public final class Utils implements Constants {
             case LINK_ID_USER_FOLLOWERS: {
                 fragment = new UserFollowersFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(param_user_id, -1));
+                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
                 }
-                if (isEmpty(paramScreenName) && isEmpty(param_user_id)) return null;
+                if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
             }
             case LINK_ID_USER_FRIENDS: {
@@ -745,22 +742,29 @@ public final class Utils implements Constants {
                 return null;
             }
         }
-        final String paramAccountId = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID);
-        if (paramAccountId != null) {
-            args.putLong(EXTRA_ACCOUNT_ID, NumberUtils.toLong(paramAccountId, -1));
-        } else {
-            final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
-            if (paramAccountName != null) {
-                args.putLong(EXTRA_ACCOUNT_ID, DataStoreUtils.getAccountId(context, paramAccountName));
-            } else if (isAccountIdRequired) {
-                final AccountKey accountKey = getDefaultAccountKey(context);
-                if (isMyAccount(context, accountKey)) {
-                    args.putLong(EXTRA_ACCOUNT_ID, accountKey.getId());
+        if (isAccountIdRequired) {
+            final String paramAccountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY);
+            if (paramAccountKey != null) {
+                args.putParcelable(EXTRA_ACCOUNT_KEY, AccountKey.valueOf(paramAccountKey));
+            } else {
+                final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
+                if (paramAccountName != null) {
+                    args.putParcelable(EXTRA_ACCOUNT_KEY, DataStoreUtils.getAccountKey(context,
+                            paramAccountName));
+                } else {
+                    final AccountKey accountKey = getDefaultAccountKey(context);
+                    if (isMyAccount(context, accountKey)) {
+                        args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
+                    }
                 }
             }
         }
         fragment.setArguments(args);
         return fragment;
+    }
+
+    protected static boolean noAccount(Uri uri, Bundle args) {
+        return TextUtils.isEmpty(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID)) && !args.containsKey(EXTRA_ACCOUNT_ID);
     }
 
     public static Intent createStatusShareIntent(@NonNull final Context context, @NonNull final ParcelableStatus status) {
@@ -1115,21 +1119,18 @@ public final class Utils implements Constants {
         if (context == null) return null;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
-        final long accountId = prefs.getLong(KEY_DEFAULT_ACCOUNT_ID, -1);
-        final String accountHost = prefs.getString(KEY_DEFAULT_ACCOUNT_HOST, null);
+        AccountKey accountKey = AccountKey.valueOf(prefs.getString(KEY_DEFAULT_ACCOUNT_KEY, null));
         final AccountKey[] accountKeys = DataStoreUtils.getAccountKeys(context);
         int idMatchIdx = -1;
         for (int i = 0, accountIdsLength = accountKeys.length; i < accountIdsLength; i++) {
-            AccountKey id = accountKeys[i];
-            if (accountId == id.getId()) {
+            if (accountKeys[i].equals(accountKey)) {
                 idMatchIdx = i;
-                if (TextUtils.equals(accountHost, id.getHost())) return id;
             }
         }
         if (idMatchIdx != -1) {
             return accountKeys[idMatchIdx];
         }
-        if (accountKeys.length > 0 && !ArrayUtils.contains(accountKeys, accountId)) {
+        if (accountKeys.length > 0 && !ArrayUtils.contains(accountKeys, accountKey)) {
              /* TODO: this is just a quick fix */
             return accountKeys[0];
         }
@@ -1682,23 +1683,6 @@ public final class Utils implements Constants {
         return null;
     }
 
-    public static void openMessageConversation(final Context context, final AccountKey accountKey,
-                                               final long recipientId) {
-        if (context == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
-        if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
-            if (recipientId > 0) {
-                builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, String.valueOf(recipientId));
-            }
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setPackage(BuildConfig.APPLICATION_ID);
-        context.startActivity(intent);
-    }
-
 
     @SuppressWarnings("SuspiciousSystemArraycopy")
     public static <T extends Parcelable> T[] newParcelableArray(Parcelable[] array, Parcelable.Creator<T> creator) {
@@ -1706,399 +1690,6 @@ public final class Utils implements Constants {
         final T[] result = creator.newArray(array.length);
         System.arraycopy(array, 0, result, 0, array.length);
         return result;
-    }
-
-    public static void openIncomingFriendships(final Context context, final long accountId) {
-        if (context == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_INCOMING_FRIENDSHIPS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setPackage(BuildConfig.APPLICATION_ID);
-        context.startActivity(intent);
-    }
-
-    public static void openMap(final Context context, final double latitude, final double longitude) {
-        if (context == null || !ParcelableLocation.isValidLocation(latitude, longitude)) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_MAP);
-        builder.appendQueryParameter(QUERY_PARAM_LAT, String.valueOf(latitude));
-        builder.appendQueryParameter(QUERY_PARAM_LNG, String.valueOf(longitude));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setPackage(BuildConfig.APPLICATION_ID);
-        context.startActivity(intent);
-    }
-
-    public static void openMutesUsers(final Activity activity, final long accountId) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_MUTES_USERS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setPackage(BuildConfig.APPLICATION_ID);
-        activity.startActivity(intent);
-    }
-
-    public static void openScheduledStatuses(final Activity activity, final long accountId) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_SCHEDULED_STATUSES);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setPackage(BuildConfig.APPLICATION_ID);
-        activity.startActivity(intent);
-    }
-
-    public static void openSavedSearches(final Activity activity, final long account_id) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_SAVED_SEARCHES);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setPackage(BuildConfig.APPLICATION_ID);
-        activity.startActivity(intent);
-    }
-
-    public static void openSearch(final Context context, @Nullable final AccountKey accountKey, final String query) {
-        openSearch(context, accountKey, query, null);
-    }
-
-    public static void openSearch(final Context context, @Nullable final AccountKey accountKey, final String query, String type) {
-        if (context == null) return;
-        final Intent intent = new Intent(Intent.ACTION_VIEW);
-        // Some devices cannot process query parameter with hashes well, so add this intent extra
-        intent.putExtra(EXTRA_QUERY, query);
-        if (accountKey != null) {
-            intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
-        }
-
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_SEARCH);
-        if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
-        }
-        builder.appendQueryParameter(QUERY_PARAM_QUERY, query);
-        if (!TextUtils.isEmpty(type)) {
-            builder.appendQueryParameter(QUERY_PARAM_TYPE, type);
-            intent.putExtra(EXTRA_TYPE, type);
-        }
-        intent.setData(builder.build());
-
-        context.startActivity(intent);
-    }
-
-    public static void openStatus(final Context context, final AccountKey accountKey, final long statusId) {
-        if (context == null || statusId <= 0) return;
-        final Uri uri = LinkCreator.getTwidereStatusLink(accountKey, statusId);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        context.startActivity(intent);
-    }
-
-    public static void openStatus(final Context context, final ParcelableStatus status, Bundle activityOptions) {
-        if (context == null || status == null) return;
-        final AccountKey accountKey = new AccountKey(status.account_id, status.account_host);
-        final long statusId = status.id;
-        final Bundle extras = new Bundle();
-        extras.putParcelable(EXTRA_STATUS, status);
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_STATUS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setExtrasClassLoader(context.getClassLoader());
-        intent.putExtras(extras);
-        if (context instanceof Activity) {
-            ActivityCompat.startActivity((Activity) context, intent, activityOptions);
-        } else {
-            context.startActivity(intent);
-        }
-    }
-
-    public static void openStatuses(final Context context, final List<ParcelableStatus> statuses) {
-        if (context == null || statuses == null) return;
-        final Bundle extras = new Bundle();
-        extras.putParcelableArrayList(EXTRA_STATUSES, new ArrayList<>(statuses));
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_STATUSES);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.putExtras(extras);
-        context.startActivity(intent);
-    }
-
-    public static void openStatusFavoriters(final Context context, final long accountId, final long statusId) {
-        if (context == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_STATUS_FAVORITERS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        context.startActivity(intent);
-    }
-
-    public static void openStatusRetweeters(final Context context, final long accountId, final long statusId) {
-        if (context == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_STATUS_RETWEETERS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        context.startActivity(intent);
-    }
-
-    public static void openTweetSearch(final Context context, final AccountKey accountKey, final String query) {
-        openSearch(context, accountKey, query, QUERY_PARAM_VALUE_TWEETS);
-    }
-
-    public static void openUserBlocks(final Activity activity, final long accountId) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_BLOCKS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-    }
-
-    public static void openUserFavorites(final Activity activity, final long accountId,
-                                         final long userId, final String screenName) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_FAVORITES);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
-        }
-        if (screenName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-
-    }
-
-    public static void openUserFollowers(final Activity activity, final long account_id, final long user_id,
-                                         final String screen_name) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_FOLLOWERS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        if (user_id > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
-        }
-        if (screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-    }
-
-    public static void openUserFriends(final Activity activity, final long account_id, final long user_id,
-                                       final String screen_name) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_FRIENDS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        if (user_id > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
-        }
-        if (screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-
-    }
-
-    public static void openUserListDetails(final Context context, final AccountKey accountId, final long listId,
-                                           final long userId, final String screenName, final String listName) {
-        if (context == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_LIST);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        if (listId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
-        }
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
-        }
-        if (screenName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
-        }
-        if (listName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, listName);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        context.startActivity(intent);
-    }
-
-    public static void openUserListDetails(final Activity activity, final ParcelableUserList userList) {
-        if (activity == null || userList == null) return;
-        final long accountId = userList.account_id, userId = userList.user_id;
-        final long listId = userList.id;
-        final Bundle extras = new Bundle();
-        extras.putParcelable(EXTRA_USER_LIST, userList);
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_LIST);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
-        builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.setExtrasClassLoader(activity.getClassLoader());
-        intent.putExtras(extras);
-        activity.startActivity(intent);
-    }
-
-    public static void openUserListMembers(final Activity activity, final long accountId, final long listId,
-                                           final long userId, final String screenName, final String listName) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_LIST_MEMBERS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        if (listId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
-        }
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
-        }
-        if (screenName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
-        }
-        if (listName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, listName);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-    }
-
-    public static void openUserListMembers(final Activity activity, final ParcelableUserList list) {
-        if (activity == null || list == null) return;
-        openUserListMembers(activity, list.account_id, list.id, list.user_id, list.user_screen_name, list.name);
-    }
-
-    public static void openUserListMemberships(final Activity activity, final long account_id, final long user_id,
-                                               final String screen_name) {
-        if (activity == null || account_id <= 0 || user_id <= 0 && isEmpty(screen_name)) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_LIST_MEMBERSHIPS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        if (user_id > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
-        }
-        if (screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-    }
-
-    public static void openUserLists(final Activity activity, final long account_id, final long user_id,
-                                     final String screen_name) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_LISTS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        if (user_id > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
-        }
-        if (screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-    }
-
-    public static void openDirectMessages(final Context context, final long accountId) {
-        if (context == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_DIRECT_MESSAGES);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        context.startActivity(intent);
-    }
-
-    public static void openInteractions(final Context context, final long accountId) {
-        if (context == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_INTERACTIONS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        context.startActivity(intent);
-    }
-
-    public static void openUserListSubscribers(final Activity activity, final long accountId, final long listId,
-                                               final long userId, final String screenName, final String listName) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_LIST_SUBSCRIBERS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        if (listId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
-        }
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
-        }
-        if (screenName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
-        }
-        if (listName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, listName);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-    }
-
-    public static void openUserListSubscribers(final Activity activity, final ParcelableUserList list) {
-        if (activity == null || list == null) return;
-        openUserListSubscribers(activity, list.account_id, list.id, list.user_id, list.user_screen_name, list.name);
-    }
-
-    public static void openUserListTimeline(final Activity activity, final long accountId, final long listId,
-                                            final long userId, final String screenName, final String listName) {
-        if (activity == null) return;
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER_LIST_TIMELINE);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
-        if (listId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
-        }
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
-        }
-        if (screenName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
-        }
-        if (listName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, listName);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        activity.startActivity(intent);
-    }
-
-    public static void openUserListTimeline(final Activity activity, final ParcelableUserList list) {
-        if (activity == null || list == null) return;
-        openUserListTimeline(activity, list.account_id, list.id, list.user_id, list.user_screen_name, list.name);
     }
 
     public static boolean setNdefPushMessageCallback(Activity activity, CreateNdefMessageCallback callback) {
@@ -2557,12 +2148,14 @@ public final class Utils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openProfileEditor(Context context, long accountId) {
+    public static void openProfileEditor(Context context, @Nullable AccountKey accountId) {
         final Intent intent = new Intent();
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_PROFILE_EDITOR);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, ParseUtils.parseString(accountId));
+        if (accountId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountId.toString());
+        }
         intent.setData(builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);
         context.startActivity(intent);

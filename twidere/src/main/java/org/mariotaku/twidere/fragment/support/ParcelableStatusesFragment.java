@@ -165,11 +165,6 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         return true;
     }
 
-    protected long getAccountId() {
-        final Bundle args = getArguments();
-        return args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
-    }
-
     @Override
     public boolean isRefreshing() {
         if (getContext() == null || isDetached()) return false;

@@ -63,6 +63,7 @@ import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
@@ -294,7 +295,7 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
                     if (ArrayUtils.isEmpty(item.account_ids) || recipientId <= 0) {
                         continue;
                     }
-                    final long accountId = item.account_ids[0];
+                    final AccountKey accountId = item.account_ids[0];
                     final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
                     twitter.sendDirectMessageAsync(accountId, recipientId, item.text, imageUri);
                     break;

@@ -136,6 +136,25 @@ public class ParcelableAccount implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableAccount account = (ParcelableAccount) o;
+
+        if (id != account.id) return false;
+        return !(account_host != null ? !account_host.equals(account.account_host) : account.account_host != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (account_host != null ? account_host.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

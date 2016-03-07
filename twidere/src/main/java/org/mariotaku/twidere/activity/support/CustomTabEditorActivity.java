@@ -50,9 +50,11 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -122,14 +124,14 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
                     case CustomTabConfiguration.FIELD_TYPE_USER: {
                         final Intent intent = new Intent(this, UserListSelectorActivity.class);
                         intent.setAction(INTENT_ACTION_SELECT_USER);
-                        intent.putExtra(EXTRA_ACCOUNT_ID, getAccountId());
+                        intent.putExtra(EXTRA_ACCOUNT_KEY, getAccountKey());
                         startActivityForResult(intent, REQUEST_SELECT_USER);
                         break;
                     }
                     case CustomTabConfiguration.FIELD_TYPE_USER_LIST: {
                         final Intent intent = new Intent(this, UserListSelectorActivity.class);
                         intent.setAction(INTENT_ACTION_SELECT_USER_LIST);
-                        intent.putExtra(EXTRA_ACCOUNT_ID, getAccountId());
+                        intent.putExtra(EXTRA_ACCOUNT_KEY, getAccountKey());
                         startActivityForResult(intent, REQUEST_SELECT_USER_LIST);
                         break;
                     }
@@ -146,9 +148,9 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
                 if (!isEditMode()) {
                     if (conf == null) return;
                     final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
-                    final boolean no_account_id = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_NONE;
+                    final boolean noAccountId = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_NONE;
                     final boolean secondaryFieldRequired = conf.getSecondaryFieldType() != CustomTabConfiguration.FIELD_TYPE_NONE;
-                    final boolean accountIdInvalid = getAccountId() <= 0;
+                    final boolean accountIdInvalid = getAccountKey() == null;
                     final boolean secondaryFieldInvalid = mSecondaryFieldValue == null;
                     if (accountIdRequired && accountIdInvalid) {
                         Toast.makeText(this, R.string.no_account_selected, Toast.LENGTH_SHORT).show();
@@ -159,8 +161,8 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
                     }
                     final Intent data = new Intent();
                     final Bundle args = new Bundle();
-                    if (!no_account_id) {
-                        args.putLong(EXTRA_ACCOUNT_ID, getAccountId());
+                    if (!noAccountId) {
+                        args.putParcelable(EXTRA_ACCOUNT_KEY, getAccountKey());
                     }
                     if (secondaryFieldRequired) {
                         addSecondaryFieldValueToArguments(args);
@@ -390,11 +392,13 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         addFieldValueToArguments(value, args);
     }
 
-    private long getAccountId() {
+    private AccountKey getAccountKey() {
         final int pos = mAccountSpinner.getSelectedItemPosition();
-        if (mAccountSpinner.getCount() > pos && pos >= 0)
-            return mAccountsAdapter.getItem(pos).account_id;
-        return -1;
+        if (mAccountSpinner.getCount() > pos && pos >= 0) {
+            ParcelableCredentials credentials = mAccountsAdapter.getItem(pos);
+            return new AccountKey(credentials.account_id, credentials.account_host);
+        }
+        return null;
     }
 
     private String getIconKey() {

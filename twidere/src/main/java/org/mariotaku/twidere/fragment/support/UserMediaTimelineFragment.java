@@ -22,7 +22,7 @@ import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
@@ -172,7 +172,7 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
 
     @Override
     public void onStatusClick(IStatusViewHolder holder, int position) {
-        Utils.openStatus(getContext(), getAdapter().getStatus(position), null);
+        IntentUtils.openStatus(getContext(), getAdapter().getStatus(position), null);
     }
 
     @Override

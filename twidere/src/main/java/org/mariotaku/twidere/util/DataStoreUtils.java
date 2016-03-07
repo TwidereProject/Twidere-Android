@@ -654,13 +654,19 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static long getAccountId(final Context context, final String screenName) {
-        if (context == null || isEmpty(screenName)) return -1;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, new String[]{Accounts.ACCOUNT_ID}, Expression.equalsArgs(Accounts.SCREEN_NAME).getSQL(), new String[]{screenName}, null);
-        if (cur == null) return -1;
+    public static AccountKey getAccountKey(final Context context, final String screenName) {
+        if (context == null || isEmpty(screenName)) return null;
+        final String[] projection = {Accounts.ACCOUNT_ID, Accounts.ACCOUNT_HOST};
+        final String where = Expression.equalsArgs(Accounts.SCREEN_NAME).getSQL();
+        final String[] whereArgs = {screenName};
+        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
+                where, whereArgs, null);
+        if (cur == null) return null;
         try {
-            if (cur.getCount() > 0 && cur.moveToFirst()) return cur.getLong(0);
-            return -1;
+            if (cur.moveToFirst()) {
+                return new AccountKey(cur.getLong(0), cur.getString(1));
+            }
+            return null;
         } finally {
             cur.close();
         }
@@ -846,16 +852,6 @@ public class DataStoreUtils implements Constants {
         } finally {
             cur.close();
         }
-    }
-
-    @NonNull
-    public static AccountKey[] getAccountKeys(final ParcelableAccount[] accounts) {
-        final AccountKey[] ids = new AccountKey[accounts.length];
-        for (int i = 0, j = accounts.length; i < j; i++) {
-            final ParcelableAccount account = accounts[i];
-            ids[i] = new AccountKey(account.account_id, account.account_host);
-        }
-        return ids;
     }
 
     public static List<ParcelableAccount> getAccountsList(final Context context, final boolean activatedOnly) {

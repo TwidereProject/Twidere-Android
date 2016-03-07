@@ -47,7 +47,6 @@ import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
@@ -124,12 +123,13 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         final ContextMenuInfo menuInfo = item.getMenuInfo();
         if (!(menuInfo instanceof AdapterContextMenuInfo)) return false;
         final AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-        mSelectedAccount = mAdapter.getAccount(info.position);
-        if (mSelectedAccount == null) return false;
+        ParcelableAccount account = mAdapter.getAccount(info.position);
+        mSelectedAccount = account;
+        if (account == null) return false;
         switch (item.getItemId()) {
             case R.id.set_color: {
                 final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
-                intent.putExtra(EXTRA_COLOR, mSelectedAccount.color);
+                intent.putExtra(EXTRA_COLOR, account.color);
                 intent.putExtra(EXTRA_ALPHA_SLIDER, false);
                 startActivityForResult(intent, REQUEST_SET_COLOR);
                 break;
@@ -137,7 +137,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
             case R.id.delete: {
                 final AccountDeletionDialogFragment f = new AccountDeletionDialogFragment();
                 final Bundle args = new Bundle();
-                args.putLong(EXTRA_ACCOUNT_ID, mSelectedAccount.account_id);
+                args.putParcelable(EXTRA_ACCOUNT_KEY, new AccountKey(account.account_id, account.account_host));
                 f.setArguments(args);
                 f.show(getChildFragmentManager(), FRAGMENT_TAG_ACCOUNT_DELETION);
                 break;
@@ -150,7 +150,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final ParcelableAccount account = mAdapter.getAccount(position);
         IntentUtils.openUserProfile(getActivity(), new AccountKey(account.account_id,
-                account.account_host), account.account_id, account.screen_name, null, true,
+                        account.account_host), account.account_id, account.screen_name, null, true,
                 UserFragment.Referral.SELF_PROFILE);
     }
 
@@ -284,7 +284,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (KEY_DEFAULT_ACCOUNT_ID.equals(key)) {
+        if (KEY_DEFAULT_ACCOUNT_KEY.equals(key)) {
             updateDefaultAccount();
         }
     }
@@ -299,18 +299,19 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         @Override
         public void onClick(final DialogInterface dialog, final int which) {
             final Bundle args = getArguments();
-            final long accountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
-            if (accountId < 0) return;
+            final AccountKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
+            if (accountId == null) return;
             final ContentResolver resolver = getContentResolver();
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    resolver.delete(Accounts.CONTENT_URI, Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL(), null);
+                    final String[] whereArgs = {String.valueOf(accountId.getId()), accountId.getHost()};
+                    resolver.delete(Accounts.CONTENT_URI, Utils.getAccountCompareExpression().getSQL(), whereArgs);
                     // Also delete tweets related to the account we previously
                     // deleted.
-                    resolver.delete(Statuses.CONTENT_URI, Expression.equals(Statuses.ACCOUNT_ID, accountId).getSQL(), null);
-                    resolver.delete(Mentions.CONTENT_URI, Expression.equals(Mentions.ACCOUNT_ID, accountId).getSQL(), null);
-                    resolver.delete(Inbox.CONTENT_URI, Expression.equals(DirectMessages.ACCOUNT_ID, accountId).getSQL(), null);
-                    resolver.delete(Outbox.CONTENT_URI, Expression.equals(DirectMessages.ACCOUNT_ID, accountId).getSQL(), null);
+                    resolver.delete(Statuses.CONTENT_URI, Utils.getAccountCompareExpression().getSQL(), whereArgs);
+                    resolver.delete(Mentions.CONTENT_URI, Utils.getAccountCompareExpression().getSQL(), whereArgs);
+                    resolver.delete(Inbox.CONTENT_URI, Utils.getAccountCompareExpression().getSQL(), whereArgs);
+                    resolver.delete(Outbox.CONTENT_URI, Utils.getAccountCompareExpression().getSQL(), whereArgs);
                     break;
                 }
             }

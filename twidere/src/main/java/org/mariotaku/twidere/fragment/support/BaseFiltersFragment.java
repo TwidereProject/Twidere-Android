@@ -429,7 +429,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
                 case R.id.add: {
                     final Intent intent = new Intent(INTENT_ACTION_SELECT_USER);
                     intent.setClass(getContext(), UserListSelectorActivity.class);
-                    intent.putExtra(EXTRA_ACCOUNT_ID, getDefaultAccountKey(getActivity()));
+                    intent.putExtra(EXTRA_ACCOUNT_KEY, getDefaultAccountKey(getActivity()));
                     startActivityForResult(intent, REQUEST_SELECT_USER);
                     return true;
                 }

@@ -160,9 +160,10 @@ public class MenuUtils implements Constants {
         final int favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite);
         final int likeHighlight = ContextCompat.getColor(context, R.color.highlight_like);
         final boolean isMyRetweet;
-        if (twitter.isCreatingRetweet(status.account_id, status.id)) {
+        final AccountKey accountKey = new AccountKey(status.account_id, status.account_host);
+        if (twitter.isCreatingRetweet(accountKey, status.id)) {
             isMyRetweet = true;
-        } else if (twitter.isDestroyingStatus(status.account_id, status.id)) {
+        } else if (twitter.isDestroyingStatus(accountKey, status.id)) {
             isMyRetweet = false;
         } else {
             isMyRetweet = status.retweeted || Utils.isMyRetweet(status);
@@ -179,9 +180,9 @@ public class MenuUtils implements Constants {
         final MenuItem favorite = menu.findItem(R.id.favorite);
         if (favorite != null) {
             final boolean isFavorite;
-            if (twitter.isCreatingFavorite(status.account_id, status.id)) {
+            if (twitter.isCreatingFavorite(accountKey, status.id)) {
                 isFavorite = true;
-            } else if (twitter.isDestroyingFavorite(status.account_id, status.id)) {
+            } else if (twitter.isDestroyingFavorite(accountKey, status.id)) {
                 isFavorite = false;
             } else {
                 isFavorite = status.is_favorite;
@@ -248,6 +249,7 @@ public class MenuUtils implements Constants {
                                             @NonNull final AsyncTwitterWrapper twitter,
                                             @NonNull final ParcelableStatus status,
                                             @NonNull final MenuItem item) {
+        final AccountKey accountKey = new AccountKey(status.account_id, status.account_host);
         switch (item.getItemId()) {
             case R.id.copy: {
                 if (ClipboardUtils.setText(context, status.text_plain)) {
@@ -257,10 +259,10 @@ public class MenuUtils implements Constants {
             }
             case R.id.retweet: {
                 if (Utils.isMyRetweet(status)) {
-                    twitter.cancelRetweetAsync(new AccountKey(status.account_id, status.account_host),
+                    twitter.cancelRetweetAsync(accountKey,
                             status.id, status.my_retweet_id);
                 } else {
-                    twitter.retweetStatusAsync(new AccountKey(status.account_id, status.account_host),
+                    twitter.retweetStatusAsync(accountKey,
                             status.id);
                 }
                 break;
@@ -279,15 +281,14 @@ public class MenuUtils implements Constants {
             }
             case R.id.favorite: {
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status.account_id, status.id);
+                    twitter.destroyFavoriteAsync(accountKey, status.id);
                 } else {
                     ActionProvider provider = MenuItemCompat.getActionProvider(item);
                     if (provider instanceof FavoriteItemProvider) {
                         ((FavoriteItemProvider) provider).invokeItem(item,
                                 new AbsStatusesFragment.DefaultOnLikedListener(twitter, status));
                     } else {
-                        twitter.createFavoriteAsync(new AccountKey(status.account_id, status.account_host),
-                                status.id);
+                        twitter.createFavoriteAsync(accountKey, status.id);
                     }
                 }
                 break;

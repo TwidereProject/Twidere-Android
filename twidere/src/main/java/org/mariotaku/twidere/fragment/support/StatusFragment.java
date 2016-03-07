@@ -327,8 +327,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (status == null) return;
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
-                    final long accountId = data.getLongExtra(EXTRA_ID, -1);
-                    Utils.openStatus(activity, accountId, status.id);
+                    final AccountKey accountKey = data.getParcelableExtra(EXTRA_KEY);
+                    IntentUtils.openStatus(activity, accountKey, status.id);
                 }
                 break;
             }
@@ -443,7 +443,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public void onStatusClick(IStatusViewHolder holder, int position) {
-        Utils.openStatus(getActivity(), mStatusAdapter.getStatus(position), null);
+        IntentUtils.openStatus(getActivity(), mStatusAdapter.getStatus(position), null);
     }
 
     @Override
@@ -691,7 +691,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private void loadActivity(ParcelableStatus status) {
         if (status == null) return;
         final Bundle args = new Bundle();
-        args.putLong(EXTRA_ACCOUNT_ID, status.account_id);
+        args.putParcelable(EXTRA_ACCOUNT_KEY, new AccountKey(status.account_id, status.account_host));
         args.putLong(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
         if (mActivityLoaderInitialized) {
             getLoaderManager().restartLoader(LOADER_ID_STATUS_ACTIVITY, args, mStatusActivityLoaderCallback);
@@ -1220,7 +1220,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 case R.id.location_view: {
                     final ParcelableLocation location = status.location;
                     if (!ParcelableLocation.isValidLocation(location)) return;
-                    Utils.openMap(adapter.getContext(), location.latitude, location.longitude);
+                    IntentUtils.openMap(adapter.getContext(), location.latitude, location.longitude);
                     break;
                 }
                 case R.id.quoted_name_container: {
@@ -1230,7 +1230,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     break;
                 }
                 case R.id.quote_original_link: {
-                    Utils.openStatus(adapter.getContext(), accountKey, status.quoted_id);
+                    IntentUtils.openStatus(adapter.getContext(), accountKey, status.quoted_id);
                     break;
                 }
                 case R.id.translate_label: {
@@ -1470,12 +1470,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         final LabeledCount count = getCount(position);
                         final ParcelableStatus status = mStatusAdapter.getStatus();
                         if (count == null || status == null) return;
+                        final AccountKey accountKey = new AccountKey(status.account_id,
+                                status.account_host);
                         switch (count.type) {
                             case KEY_RETWEET_COUNT: {
                                 if (status.is_retweet) {
-                                    Utils.openStatusRetweeters(getContext(), status.account_id, status.retweet_id);
+                                    IntentUtils.openStatusRetweeters(getContext(), accountKey, status.retweet_id);
                                 } else {
-                                    Utils.openStatusRetweeters(getContext(), status.account_id, status.id);
+                                    IntentUtils.openStatusRetweeters(getContext(), accountKey, status.id);
                                 }
                                 break;
                             }
@@ -1483,9 +1485,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                                 final ParcelableCredentials account = mStatusAdapter.getStatusAccount();
                                 if (!Utils.isOfficialCredentials(getContext(), account)) return;
                                 if (status.is_retweet) {
-                                    Utils.openStatusFavoriters(getContext(), status.account_id, status.retweet_id);
+                                    IntentUtils.openStatusFavoriters(getContext(), accountKey, status.retweet_id);
                                 } else {
-                                    Utils.openStatusFavoriters(getContext(), status.account_id, status.id);
+                                    IntentUtils.openStatusFavoriters(getContext(), accountKey, status.id);
                                 }
                                 break;
                             }

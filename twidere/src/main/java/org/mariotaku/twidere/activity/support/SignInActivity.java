@@ -463,7 +463,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 }
                 final long loggedId = result.user.getId();
                 final Intent intent = new Intent(this, HomeActivity.class);
-                intent.putExtra(EXTRA_REFRESH_IDS, new long[]{loggedId});
+                //TODO refresh timelines
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 finish();

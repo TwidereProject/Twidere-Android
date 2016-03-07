@@ -13,8 +13,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
@@ -24,9 +26,11 @@ import org.mariotaku.twidere.fragment.support.SensitiveContentWarningDialogFragm
 import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
+import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.ParcelableUserList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +53,10 @@ public class IntentUtils implements Constants {
                 status.user_name, status.user_screen_name, timeString);
     }
 
-    public static void openUserProfile(final Context context, final ParcelableUser user,
+    public static void openUserProfile(@NonNull final Context context, final ParcelableUser user,
                                        final Bundle activityOptions, final boolean newDocument,
                                        @UserFragment.Referral final String referral) {
-        if (context == null || user == null) return;
+        if (user == null) return;
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_USER, user);
         final Uri.Builder builder = new Uri.Builder();
@@ -79,12 +83,12 @@ public class IntentUtils implements Constants {
         }
     }
 
-    public static void openUserProfile(final Context context, @Nullable final AccountKey accountId,
+    public static void openUserProfile(@NonNull final Context context, @Nullable final AccountKey accountKey,
                                        final long userId, final String screenName,
                                        final Bundle activityOptions, final boolean newDocument,
                                        @UserFragment.Referral final String referral) {
-        if (context == null || userId <= 0 && isEmpty(screenName)) return;
-        final Uri uri = LinkCreator.getTwidereUserLink(accountId, userId, screenName);
+        if (userId <= 0 && isEmpty(screenName)) return;
+        final Uri uri = LinkCreator.getTwidereUserLink(accountKey, userId, screenName);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(EXTRA_REFERRAL, referral);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
@@ -97,8 +101,8 @@ public class IntentUtils implements Constants {
         }
     }
 
-    public static void openUsers(final Context context, final List<ParcelableUser> users) {
-        if (context == null || users == null) return;
+    public static void openUsers(@NonNull final Context context, final List<ParcelableUser> users) {
+        if (users == null) return;
         final Bundle extras = new Bundle();
         extras.putParcelableArrayList(EXTRA_USERS, new ArrayList<>(users));
         final Uri.Builder builder = new Uri.Builder();
@@ -109,12 +113,13 @@ public class IntentUtils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openUserMentions(final Context context, final long accountId, final String screenName) {
-        if (context == null) return;
+    public static void openUserMentions(@NonNull final Context context, @Nullable final AccountKey accountKey, final String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(TwidereConstants.SCHEME_TWIDERE);
         builder.authority(TwidereConstants.AUTHORITY_USER_MENTIONS);
-        builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (accountKey != null) {
+            builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
         if (screenName != null) {
             builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_SCREEN_NAME, screenName);
         }
@@ -122,14 +127,14 @@ public class IntentUtils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openMedia(final Context context, final ParcelableDirectMessage message,
+    public static void openMedia(@NonNull final Context context, final ParcelableDirectMessage message,
                                  final ParcelableMedia current, @Nullable final Bundle options,
                                  final boolean newDocument) {
         openMedia(context, new AccountKey(message.account_id, message.account_host), false, null,
                 message, current, message.media, options, newDocument);
     }
 
-    public static void openMedia(final Context context, final ParcelableStatus status,
+    public static void openMedia(@NonNull final Context context, final ParcelableStatus status,
                                  final ParcelableMedia current, final Bundle options,
                                  final boolean newDocument) {
         openMedia(context, new AccountKey(status.account_id, status.account_host),
@@ -137,17 +142,17 @@ public class IntentUtils implements Constants {
                 options, newDocument);
     }
 
-    public static void openMedia(final Context context, final AccountKey accountKey, final boolean isPossiblySensitive,
+    public static void openMedia(@NonNull final Context context, @Nullable final AccountKey accountKey, final boolean isPossiblySensitive,
                                  final ParcelableMedia current, final ParcelableMedia[] media,
                                  final Bundle options, final boolean newDocument) {
         openMedia(context, accountKey, isPossiblySensitive, null, null, current, media, options, newDocument);
     }
 
-    public static void openMedia(final Context context, final AccountKey accountKey, final boolean isPossiblySensitive,
+    public static void openMedia(@NonNull final Context context, @Nullable final AccountKey accountKey, final boolean isPossiblySensitive,
                                  final ParcelableStatus status, final ParcelableDirectMessage message,
                                  final ParcelableMedia current, final ParcelableMedia[] media,
                                  final Bundle options, final boolean newDocument) {
-        if (context == null || media == null) return;
+        if (media == null) return;
         final SharedPreferences prefs = context.getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         if (context instanceof FragmentActivity && isPossiblySensitive
                 && !prefs.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS, false)) {
@@ -175,7 +180,7 @@ public class IntentUtils implements Constants {
         }
     }
 
-    public static void openMediaDirectly(final Context context, final AccountKey accountKey,
+    public static void openMediaDirectly(@NonNull final Context context, @Nullable final AccountKey accountKey,
                                          final ParcelableStatus status, final ParcelableMedia current,
                                          final Bundle options, final boolean newDocument) {
         openMediaDirectly(context, accountKey, status, null, current, getPrimaryMedia(status),
@@ -190,20 +195,21 @@ public class IntentUtils implements Constants {
         }
     }
 
-    public static void openMediaDirectly(final Context context, final AccountKey accountKey,
+    public static void openMediaDirectly(@NonNull final Context context,
+                                         @Nullable final AccountKey accountKey,
                                          final ParcelableDirectMessage message, final ParcelableMedia current,
                                          final ParcelableMedia[] media, final Bundle options,
                                          final boolean newDocument) {
         openMediaDirectly(context, accountKey, null, message, current, media, options, newDocument);
     }
 
-    public static void openMediaDirectly(final Context context, final AccountKey accountKey,
+    public static void openMediaDirectly(@NonNull final Context context, @Nullable final AccountKey accountKey,
                                          final ParcelableStatus status, final ParcelableDirectMessage message,
                                          final ParcelableMedia current, final ParcelableMedia[] media,
                                          final Bundle options, final boolean newDocument) {
-        if (context == null || media == null) return;
+        if (media == null) return;
         final Intent intent = new Intent(context, MediaViewerActivity.class);
-        intent.putExtra(EXTRA_ACCOUNT_ID, accountKey);
+        intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
         intent.putExtra(EXTRA_CURRENT_MEDIA, current);
         intent.putExtra(EXTRA_MEDIA, media);
         if (status != null) {
@@ -224,7 +230,8 @@ public class IntentUtils implements Constants {
         }
     }
 
-    public static Uri getMediaViewerUri(String type, long id, AccountKey accountKey) {
+    public static Uri getMediaViewerUri(@NonNull final String type, final long id,
+                                        @Nullable final AccountKey accountKey) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority("media");
@@ -235,4 +242,337 @@ public class IntentUtils implements Constants {
         }
         return builder.build();
     }
+
+    public static void openMessageConversation(@NonNull final Context context,
+                                               @Nullable final AccountKey accountKey,
+                                               final long recipientId) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+            if (recipientId > 0) {
+                builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, String.valueOf(recipientId));
+            }
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openIncomingFriendships(@NonNull final Context context,
+                                               @Nullable final AccountKey accountKey) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_INCOMING_FRIENDSHIPS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openMap(@NonNull final Context context, final double latitude, final double longitude) {
+        if (!ParcelableLocation.isValidLocation(latitude, longitude)) return;
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_MAP);
+        builder.appendQueryParameter(QUERY_PARAM_LAT, String.valueOf(latitude));
+        builder.appendQueryParameter(QUERY_PARAM_LNG, String.valueOf(longitude));
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openMutesUsers(@NonNull final Context context,
+                                      @Nullable final AccountKey accountKey) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_MUTES_USERS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openScheduledStatuses(@NonNull final Context context,
+                                             @Nullable final AccountKey accountKey) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_SCHEDULED_STATUSES);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openSavedSearches(@NonNull final Context context, @Nullable final AccountKey accountKey) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_SAVED_SEARCHES);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openSearch(@NonNull final Context context, @Nullable final AccountKey accountKey, final String query) {
+        openSearch(context, accountKey, query, null);
+    }
+
+    public static void openSearch(@NonNull final Context context, @Nullable final AccountKey accountKey, final String query, String type) {
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
+        // Some devices cannot process query parameter with hashes well, so add this intent extra
+        intent.putExtra(EXTRA_QUERY, query);
+        if (accountKey != null) {
+            intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
+        }
+
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_SEARCH);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+        }
+        builder.appendQueryParameter(QUERY_PARAM_QUERY, query);
+        if (!TextUtils.isEmpty(type)) {
+            builder.appendQueryParameter(QUERY_PARAM_TYPE, type);
+            intent.putExtra(EXTRA_TYPE, type);
+        }
+        intent.setData(builder.build());
+
+        context.startActivity(intent);
+    }
+
+    public static void openStatus(@NonNull final Context context, @Nullable final AccountKey accountKey, final long statusId) {
+        if (statusId <= 0) return;
+        final Uri uri = LinkCreator.getTwidereStatusLink(accountKey, statusId);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
+    }
+
+    public static void openStatus(@NonNull final Context context, @NonNull final ParcelableStatus status, Bundle activityOptions) {
+        final AccountKey accountKey = new AccountKey(status.account_id, status.account_host);
+        final long statusId = status.id;
+        final Bundle extras = new Bundle();
+        extras.putParcelable(EXTRA_STATUS, status);
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_STATUS);
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setExtrasClassLoader(context.getClassLoader());
+        intent.putExtras(extras);
+        if (context instanceof Activity) {
+            ActivityCompat.startActivity((Activity) context, intent, activityOptions);
+        } else {
+            context.startActivity(intent);
+        }
+    }
+
+    public static void openStatuses(final Context context, final List<ParcelableStatus> statuses) {
+        if (context == null || statuses == null) return;
+        final Bundle extras = new Bundle();
+        extras.putParcelableArrayList(EXTRA_STATUSES, new ArrayList<>(statuses));
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_STATUSES);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.putExtras(extras);
+        context.startActivity(intent);
+    }
+
+    public static void openStatusFavoriters(final Context context, @Nullable final AccountKey accountKey,
+                                            final long statusId) {
+        if (context == null) return;
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_STATUS_FAVORITERS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
+    public static void openStatusRetweeters(final Context context, @Nullable final AccountKey accountKey,
+                                            final long statusId) {
+        if (context == null) return;
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_STATUS_RETWEETERS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
+    public static void openTweetSearch(final Context context, @Nullable final AccountKey accountKey,
+                                       final String query) {
+        openSearch(context, accountKey, query, QUERY_PARAM_VALUE_TWEETS);
+    }
+
+    public static void openUserBlocks(final Activity activity, final AccountKey accountKey) {
+        if (activity == null) return;
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_BLOCKS);
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        activity.startActivity(intent);
+    }
+
+    public static void openUserFavorites(@NonNull final Context context,
+                                         @Nullable final AccountKey accountKey,
+                                         final long userId, final String screenName) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_FAVORITES);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        if (userId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        }
+        if (screenName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+
+    }
+
+    public static void openUserFollowers(@NonNull final Context context,
+                                         @Nullable final AccountKey accountKey, final long userId,
+                                         final String screenName) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_FOLLOWERS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        if (userId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        }
+        if (screenName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
+    public static void openUserFriends(@NonNull final Context context,
+                                       @Nullable final AccountKey accountKey, final long userId,
+                                       final String screenName) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_FRIENDS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        if (userId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        }
+        if (screenName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+
+    }
+
+    public static void openUserListDetails(@NonNull final Context context,
+                                           @Nullable final AccountKey accountKey, final long listId,
+                                           final long userId, final String screenName, final String listName) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_LIST);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        if (listId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
+        }
+        if (userId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        }
+        if (screenName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
+        }
+        if (listName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, listName);
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
+    public static void openUserListDetails(@NonNull final Context context, @NonNull final ParcelableUserList userList) {
+        final long userId = userList.user_id;
+        final long listId = userList.id;
+        final Bundle extras = new Bundle();
+        extras.putParcelable(EXTRA_USER_LIST, userList);
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_LIST);
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, new AccountKey(userList.account_id,
+                userList.account_host).toString());
+        builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.setExtrasClassLoader(context.getClassLoader());
+        intent.putExtras(extras);
+        context.startActivity(intent);
+    }
+
+    public static void openUserLists(@NonNull final Context context, @Nullable final AccountKey accountKey, final long user_id,
+                                     final String screen_name) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_LISTS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        if (user_id > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
+        }
+        if (screen_name != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
+    public static void openDirectMessages(@NonNull final Context context, @Nullable final AccountKey accountKey) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_DIRECT_MESSAGES);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
+    public static void openInteractions(@NonNull final Context context, @Nullable final AccountKey accountKey) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_INTERACTIONS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
 }

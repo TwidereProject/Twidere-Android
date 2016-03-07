@@ -133,7 +133,7 @@ public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
         return "GMT" + seg;
     }
 
-    private static List<String> split(String input, String delim) {
+    public static List<String> split(String input, String delim) {
         List<String> l = new ArrayList<>();
         int offset = 0;
 

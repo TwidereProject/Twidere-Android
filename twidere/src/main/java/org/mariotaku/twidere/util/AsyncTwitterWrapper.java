@@ -74,6 +74,7 @@ import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
 import org.mariotaku.twidere.model.message.UserListCreatedEvent;
 import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
+import org.mariotaku.twidere.model.message.UsersBlockedEvent;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
@@ -317,8 +318,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mSendingDraftIds.toArray();
     }
 
-    public boolean isCreatingFavorite(final long accountId, final long statusId) {
-        return mCreatingFavoriteIds.has(accountId, statusId);
+    public boolean isCreatingFavorite(final AccountKey accountId, final long statusId) {
+        return mCreatingFavoriteIds.has(accountId.getId(), statusId);
     }
 
     public boolean isCreatingFriendship(final AccountKey accountKey, final long userId) {
@@ -347,8 +348,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return false;
     }
 
-    public boolean isDestroyingStatus(final long accountId, final long statusId) {
-        return mDestroyingStatusIds.has(accountId, statusId);
+    public boolean isDestroyingStatus(final AccountKey accountId, final long statusId) {
+        return mDestroyingStatusIds.has(accountId.getId(), statusId);
     }
 
     public boolean isHomeTimelineRefreshing() {
@@ -368,56 +369,69 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.hasRunningTasksForTag(TASK_TAG_GET_SENT_DIRECT_MESSAGES);
     }
 
-    @Deprecated
     public void refreshAll() {
-        refreshAll(DataStoreUtils.getActivatedAccountKeys(mContext));
+        refreshAll(new GetAccountKeysClosure() {
+            @Override
+            public AccountKey[] getAccountKeys() {
+                return DataStoreUtils.getActivatedAccountKeys(mContext);
+            }
+        });
     }
 
     public boolean refreshAll(final AccountKey[] accountKeys) {
+        return refreshAll(new GetAccountKeysClosure() {
+            @Override
+            public AccountKey[] getAccountKeys() {
+                return accountKeys;
+            }
+        });
+    }
+
+    public boolean refreshAll(final GetAccountKeysClosure closure) {
         getHomeTimelineAsync(new SimpleRefreshTaskParam() {
 
             @NonNull
             @Override
             public AccountKey[] getAccountKeys() {
-                return accountKeys;
+                return closure.getAccountKeys();
             }
 
             @Nullable
             @Override
             public long[] getSinceIds() {
                 return DataStoreUtils.getNewestStatusIds(mContext, Statuses.CONTENT_URI,
-                        accountKeys);
+                        getAccountKeys());
             }
         });
         getActivitiesAboutMeAsync(new SimpleRefreshTaskParam() {
             @NonNull
             @Override
             public AccountKey[] getAccountKeys() {
-                return accountKeys;
+                return closure.getAccountKeys();
             }
 
             @Nullable
             @Override
             public long[] getSinceIds() {
                 return DataStoreUtils.getNewestActivityMaxPositions(mContext,
-                        Activities.AboutMe.CONTENT_URI, accountKeys);
+                        Activities.AboutMe.CONTENT_URI, getAccountKeys());
             }
         });
         getReceivedDirectMessagesAsync(new SimpleRefreshTaskParam() {
             @NonNull
             @Override
             public AccountKey[] getAccountKeys() {
-                return accountKeys;
+                return closure.getAccountKeys();
             }
         });
         getSentDirectMessagesAsync(new SimpleRefreshTaskParam() {
             @NonNull
             @Override
             public AccountKey[] getAccountKeys() {
-                return accountKeys;
+                return closure.getAccountKeys();
             }
         });
-        getSavedSearchesAsync(accountKeys);
+        getSavedSearchesAsync(closure.getAccountKeys());
         return true;
     }
 
@@ -447,11 +461,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int sendDirectMessageAsync(final long accountId, final long recipientId, final String text,
+    public int sendDirectMessageAsync(final AccountKey accountKey, final long recipientId, final String text,
                                       final String imageUri) {
         final Intent intent = new Intent(mContext, BackgroundOperationService.class);
         intent.setAction(INTENT_ACTION_SEND_DIRECT_MESSAGE);
-        intent.putExtra(EXTRA_ACCOUNT_ID, accountId);
+        intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
         intent.putExtra(EXTRA_RECIPIENT_ID, recipientId);
         intent.putExtra(EXTRA_TEXT, text);
         intent.putExtra(EXTRA_IMAGE_URI, imageUri);
@@ -1043,9 +1057,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_blocking, result.getException(), true);
             }
-            final Intent intent = new Intent(BROADCAST_MULTI_BLOCKSTATE_CHANGED);
-            intent.putExtra(EXTRA_USER_ID, mUserIds);
-            mContext.sendBroadcast(intent);
+            mBus.post(new UsersBlockedEvent(mAccountKey, mUserIds));
             super.onPostExecute(result);
         }
 
@@ -2100,4 +2112,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
+    public interface GetAccountKeysClosure {
+        AccountKey[] getAccountKeys();
+    }
 }

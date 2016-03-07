@@ -30,7 +30,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -229,7 +228,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         switch (media.type) {
             case ParcelableMedia.Type.IMAGE: {
                 final Bundle args = new Bundle();
-                args.putLong(EXTRA_ACCOUNT_ID, getIntent().getLongExtra(EXTRA_ACCOUNT_ID, -1));
+                args.putParcelable(EXTRA_ACCOUNT_KEY, getIntent().getParcelableExtra(EXTRA_ACCOUNT_KEY));
                 args.putParcelable(ImagePageFragment.EXTRA_MEDIA_URI, Uri.parse(media.media_url));
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         ImagePageFragment.class.getName(), args);

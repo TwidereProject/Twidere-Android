@@ -565,6 +565,8 @@ public interface TwidereDataStore {
          */
         String ACCOUNT_IDS = "account_ids";
 
+        String ACCOUNT_KEYS = "account_keys";
+
         String LOCATION = "location";
 
         String IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id";

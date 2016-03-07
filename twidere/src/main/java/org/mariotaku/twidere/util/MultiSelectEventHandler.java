@@ -150,7 +150,6 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, valuesList);
                 Toast.makeText(mActivity, R.string.message_users_muted, Toast.LENGTH_SHORT).show();
                 mode.finish();
-                mActivity.sendBroadcast(new Intent(BROADCAST_MULTI_MUTESTATE_CHANGED));
                 break;
             }
             case R.id.block: {
@@ -176,9 +175,10 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
             final Intent intent = item.getIntent();
             if (intent == null || !intent.hasExtra(EXTRA_ACCOUNT)) return false;
             final ParcelableAccount account = intent.getParcelableExtra(EXTRA_ACCOUNT);
-            mMultiSelectManager.setAccountKey(new AccountKey(account.account_id, account.account_host));
+            final AccountKey accountKey = new AccountKey(account.account_id, account.account_host);
+            mMultiSelectManager.setAccountKey(accountKey);
             if (mAccountActionProvider != null) {
-                mAccountActionProvider.setSelectedAccountIds(account.account_id);
+                mAccountActionProvider.setSelectedAccountIds(accountKey);
             }
             mode.invalidate();
         }

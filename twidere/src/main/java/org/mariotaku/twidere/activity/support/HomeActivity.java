@@ -60,7 +60,6 @@ import android.widget.FrameLayout.LayoutParams;
 
 import com.squareup.otto.Subscribe;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
@@ -88,6 +87,7 @@ import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
@@ -347,7 +347,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         }
         setContentView(R.layout.activity_home);
         setSupportActionBar(mActionBar);
-        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONCREATE));
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
         int tabDisplayOptionInt = Utils.getTabDisplayOptionInt(this);
 
@@ -423,7 +422,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         } else {
             ActivitySupport.setTaskDescription(this, new TaskDescriptionCompat(null, null, getThemeColor()));
         }
-        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONRESUME));
         invalidateOptionsMenu();
         updateActionsButtonStyle();
         updateActionsButton();
@@ -431,7 +429,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     @Override
     protected void onPause() {
-        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONPAUSE));
         super.onPause();
     }
 
@@ -568,7 +565,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 return null;
             }
         });
-        sendBroadcast(new Intent(BROADCAST_HOME_ACTIVITY_ONDESTROY));
         super.onDestroy();
     }
 
@@ -678,14 +674,11 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             } else {
                 accountKey = Utils.getDefaultAccountKey(this);
             }
-            Utils.openSearch(this, accountKey, query);
+            IntentUtils.openSearch(this, accountKey, query);
             return -1;
         }
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
-        final long[] refreshedIds = intent.getLongArrayExtra(EXTRA_REFRESH_IDS);
-        if (refreshedIds != null) {
-            mTwitterWrapper.refreshAll(refreshedIds);
-        } else if (handleExtraIntent && refreshOnStart) {
+        if (handleExtraIntent && refreshOnStart) {
             mTwitterWrapper.refreshAll();
         }
 
@@ -819,7 +812,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         if (mPagerAdapter.getCount() == 0) return;
         final SupportTabSpec tab = mPagerAdapter.getTab(position);
         if (DirectMessagesFragment.class == tab.cls) {
-            Utils.openMessageConversation(this, null, -1);
+            IntentUtils.openMessageConversation(this, null, -1);
         } else if (TrendsSuggestionsFragment.class == tab.cls) {
             openSearchView(null);
         } else {

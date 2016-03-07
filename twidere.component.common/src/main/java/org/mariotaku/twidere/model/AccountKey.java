@@ -10,7 +10,9 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.apache.commons.lang3.StringUtils;
+import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
+
+import java.util.List;
 
 /**
  * Created by mariotaku on 16/3/5.
@@ -132,10 +134,10 @@ public class AccountKey implements Comparable<AccountKey>, Parcelable {
     @Nullable
     public static AccountKey[] arrayOf(@Nullable String str) {
         if (str == null) return null;
-        String[] split = StringUtils.split(str, ",");
-        AccountKey[] keys = new AccountKey[split.length];
-        for (int i = 0, splitLength = split.length; i < splitLength; i++) {
-            keys[i] = valueOf(split[i]);
+        List<String> split = TwitterDateConverter.split(str, ",");
+        AccountKey[] keys = new AccountKey[split.size()];
+        for (int i = 0, splitLength = split.size(); i < splitLength; i++) {
+            keys[i] = valueOf(split.get(i));
             if (keys[i] == null) return null;
         }
         return keys;

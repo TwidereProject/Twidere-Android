@@ -295,7 +295,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 displayUser(user);
                 if (user.is_cache) {
                     final Bundle args = new Bundle();
-                    args.putLong(EXTRA_ACCOUNT_ID, user.account_id);
+                    args.putParcelable(EXTRA_ACCOUNT_KEY, new AccountKey(user.account_id,
+                            user.account_host));
                     args.putLong(EXTRA_USER_ID, user.id);
                     args.putString(EXTRA_SCREEN_NAME, user.screen_name);
                     args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
@@ -510,9 +511,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     public void displayUser(final ParcelableUser user) {
-        if (mFirstCreate && user != null && !user.equals(mUser)) {
-
-        }
         mUser = user;
         final FragmentActivity activity = getActivity();
         if (user == null || user.id <= 0 || activity == null) return;
@@ -545,9 +543,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mScreenNameView.setText(String.format("@%s", user.screen_name));
         mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
         final TwidereLinkify linkify = new TwidereLinkify(this);
+        final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
         mDescriptionView.setText(linkify.applyAllLinks(user.description_html != null ?
                         HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain,
-                user.account_id, false, false));
+                accountKey, false, false));
         mLocationContainer.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
         mLocationView.setText(user.location);
         mURLContainer.setVisibility(TextUtils.isEmpty(user.url) && TextUtils.isEmpty(user.url_expanded) ? View.GONE : View.VISIBLE);
@@ -701,11 +700,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (user == null) return;
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
-                    final long accountId = data.getLongExtra(EXTRA_ID, -1);
+                    final AccountKey accountKey = data.getParcelableExtra(EXTRA_KEY);
                     @Referral
                     final String referral = getArguments().getString(EXTRA_REFERRAL);
-                    IntentUtils.openUserProfile(getActivity(), accountId, user.id, user.screen_name,
-                            null, true, referral);
+                    IntentUtils.openUserProfile(getActivity(), accountKey, user.id,
+                            user.screen_name, null, true, referral);
                 }
                 break;
             }
@@ -981,11 +980,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = getUser();
         final UserRelationship userRelationship = mRelationship;
         if (user == null || twitter == null) return false;
+        final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
         switch (item.getItemId()) {
             case R.id.block: {
                 if (userRelationship == null) return true;
                 if (userRelationship.relationship.isSourceBlockingTarget()) {
-                    final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
                     twitter.destroyBlockAsync(accountKey, user.id);
                 } else {
                     CreateUserBlockDialogFragment.show(getFragmentManager(), user);
@@ -1012,7 +1011,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.mute_user: {
                 if (userRelationship == null) return true;
                 if (userRelationship.relationship.isSourceMutingTarget()) {
-                    final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
                     twitter.destroyMuteAsync(accountKey, user.id);
                 } else {
                     CreateUserMuteDialogFragment.show(getFragmentManager(), user);
@@ -1031,10 +1029,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final Uri.Builder builder = new Uri.Builder();
                 builder.scheme(SCHEME_TWIDERE);
                 builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
-                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(user.account_id));
+                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountKey));
                 builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user.id));
                 final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-                final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
                 intent.putExtra(EXTRA_ACCOUNT, DataStoreUtils.getCredentials(getActivity(), accountKey));
                 intent.putExtra(EXTRA_USER, user);
                 startActivity(intent);
@@ -1060,9 +1057,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.add_to_list: {
                 final Intent intent = new Intent(INTENT_ACTION_SELECT_USER_LIST);
                 intent.setClass(getActivity(), UserListSelectorActivity.class);
-                intent.putExtra(EXTRA_ACCOUNT_ID, user.account_id);
+                intent.putExtra(EXTRA_ACCOUNT_ID, accountKey);
                 intent.putExtra(EXTRA_SCREEN_NAME, DataStoreUtils.getAccountScreenName(getActivity(),
-                        new AccountKey(user.account_id, user.account_host)));
+                        accountKey));
                 startActivityForResult(intent, REQUEST_ADD_TO_LIST);
                 break;
             }
@@ -1076,7 +1073,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.follow: {
                 if (userRelationship == null) return true;
                 final boolean isFollowing = userRelationship.relationship.isSourceFollowingTarget();
-                final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
                 final boolean isCreatingFriendship = twitter.isCreatingFriendship(accountKey, user.id);
                 final boolean isDestroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.id);
                 if (!isCreatingFriendship && !isDestroyingFriendship) {
@@ -1092,33 +1088,32 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final boolean newState = !item.isChecked();
                 final FriendshipUpdate update = new FriendshipUpdate();
                 update.retweets(newState);
-                final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
                 twitter.updateFriendship(accountKey, user.id, update);
                 item.setChecked(newState);
                 return true;
             }
             case R.id.muted_users: {
-                Utils.openMutesUsers(getActivity(), user.account_id);
+                IntentUtils.openMutesUsers(getActivity(), accountKey);
                 return true;
             }
             case R.id.blocked_users: {
-                Utils.openUserBlocks(getActivity(), user.account_id);
+                IntentUtils.openUserBlocks(getActivity(), accountKey);
                 return true;
             }
             case R.id.incoming_friendships: {
-                Utils.openIncomingFriendships(getActivity(), user.account_id);
+                IntentUtils.openIncomingFriendships(getActivity(), accountKey);
                 return true;
             }
             case R.id.user_mentions: {
-                IntentUtils.openUserMentions(getActivity(), user.account_id, user.screen_name);
+                IntentUtils.openUserMentions(getActivity(), accountKey, user.screen_name);
                 return true;
             }
             case R.id.saved_searches: {
-                Utils.openSavedSearches(getActivity(), user.account_id);
+                IntentUtils.openSavedSearches(getActivity(), accountKey);
                 return true;
             }
             case R.id.scheduled_statuses: {
-                Utils.openScheduledStatuses(getActivity(), user.account_id);
+                IntentUtils.openScheduledStatuses(getActivity(), accountKey);
                 return true;
             }
             case R.id.open_in_browser: {
@@ -1289,6 +1284,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final FragmentActivity activity = getActivity();
         final ParcelableUser user = getUser();
         if (activity == null || user == null) return;
+        final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
         switch (view.getId()) {
             case R.id.error_container: {
                 getUserInfo(true);
@@ -1296,19 +1292,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.follow: {
                 if (user.id == user.account_id) {
-                    Utils.openProfileEditor(getActivity(), user.account_id);
+                    Utils.openProfileEditor(getActivity(), accountKey);
                     break;
                 }
                 final UserRelationship userRelationship = mRelationship;
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (userRelationship == null || twitter == null) return;
                 if (userRelationship.relationship.isSourceBlockingTarget()) {
-                    final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
                     twitter.destroyBlockAsync(accountKey, user.id);
                 } else if (userRelationship.relationship.isSourceFollowingTarget()) {
                     DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
                 } else {
-                    final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
                     twitter.createFriendshipAsync(accountKey, user.id);
                 }
                 break;
@@ -1318,8 +1312,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 ParcelableMedia profileImage = ParcelableMediaUtils.image(url);
                 profileImage.type = ParcelableMedia.Type.IMAGE;
                 final ParcelableMedia[] media = {profileImage};
-                IntentUtils.openMedia(activity, new AccountKey(user.account_id, user.account_host),
-                        false, null, media, null, true);
+                IntentUtils.openMedia(activity, accountKey, false, null, media, null, true);
                 break;
             }
             case R.id.profile_banner: {
@@ -1328,25 +1321,24 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 ParcelableMedia profileBanner = ParcelableMediaUtils.image(url);
                 profileBanner.type = ParcelableMedia.Type.IMAGE;
                 final ParcelableMedia[] media = {profileBanner};
-                IntentUtils.openMedia(activity, new AccountKey(user.account_id, user.account_host),
-                        false, null, media, null, true);
+                IntentUtils.openMedia(activity, accountKey, false, null, media, null, true);
                 break;
             }
             case R.id.listed_container: {
-                Utils.openUserLists(getActivity(), user.account_id, user.id, user.screen_name);
+                IntentUtils.openUserLists(getActivity(), accountKey, user.id, user.screen_name);
                 break;
             }
             case R.id.followers_container: {
-                Utils.openUserFollowers(getActivity(), user.account_id, user.id, user.screen_name);
+                IntentUtils.openUserFollowers(getActivity(), accountKey, user.id, user.screen_name);
                 break;
             }
             case R.id.friends_container: {
-                Utils.openUserFriends(getActivity(), user.account_id, user.id, user.screen_name);
+                IntentUtils.openUserFriends(getActivity(), accountKey, user.id, user.screen_name);
                 break;
             }
             case R.id.name_container: {
                 if (user.account_id != user.id) return;
-                Utils.openProfileEditor(getActivity(), user.account_id);
+                Utils.openProfileEditor(getActivity(), accountKey);
                 break;
             }
             case R.id.profile_birthday_banner: {
@@ -1360,7 +1352,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final long accountId, long extraId, final int type,
+    public void onLinkClick(final String link, final String orig, final AccountKey accountKey, long extraId, final int type,
                             final boolean sensitive, int start, int end) {
         final ParcelableUser user = getUser();
         if (user == null) return;
@@ -1371,7 +1363,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
-                Utils.openTweetSearch(getActivity(), new AccountKey(user.account_id, user.account_host),
+                IntentUtils.openTweetSearch(getActivity(), new AccountKey(user.account_id, user.account_host),
                         "#" + link);
                 break;
             }
@@ -1395,7 +1387,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {
-                Utils.openStatus(getActivity(), accountId, NumberUtils.toLong(link, -1));
+                IntentUtils.openStatus(getActivity(), accountKey, NumberUtils.toLong(link, -1));
                 break;
             }
         }

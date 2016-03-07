@@ -243,7 +243,8 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             final String commentText = editComment.getText() + " " + statusLink;
             ParcelableStatusUpdate update = new ParcelableStatusUpdate();
             update.text = commentText;
-            update.accounts = ParcelableAccountUtils.getAccounts(getContext(), status.account_id);
+            update.accounts = ParcelableAccountUtils.getAccounts(getContext(), new AccountKey(status.account_id,
+                    status.account_host));
             if (linkToQuotedStatus.isChecked()) {
                 update.in_reply_to_status = status;
             }

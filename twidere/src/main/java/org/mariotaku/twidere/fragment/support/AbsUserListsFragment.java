@@ -34,10 +34,10 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.UserListViewHolder;
 
 abstract class AbsUserListsFragment<Data> extends AbsContentListRecyclerViewFragment<AbsUserListsAdapter<Data>>
@@ -118,7 +118,7 @@ abstract class AbsUserListsFragment<Data> extends AbsContentListRecyclerViewFrag
     public void onUserListClick(UserListViewHolder holder, int position) {
         final ParcelableUserList userList = getAdapter().getUserList(position);
         if (userList == null) return;
-        Utils.openUserListDetails(getActivity(), userList);
+        IntentUtils.openUserListDetails(getActivity(), userList);
     }
 
     public long getPrevCursor() {

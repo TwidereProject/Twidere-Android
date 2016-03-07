@@ -62,7 +62,7 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableCredentials> 
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).account_id;
+        return System.identityHashCode(getItem(position));
     }
 
     @Override

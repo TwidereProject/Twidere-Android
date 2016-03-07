@@ -22,10 +22,10 @@ import java.util.List;
  */
 public class ParcelableAccountUtils {
 
-    public static long[] getAccountIds(@NonNull ParcelableAccount[] accounts) {
-        long[] ids = new long[accounts.length];
+    public static AccountKey[] getAccountKeys(@NonNull ParcelableAccount[] accounts) {
+        AccountKey[] ids = new AccountKey[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {
-            ids[i] = accounts[i].account_id;
+            ids[i] = new AccountKey(accounts[i].account_id, accounts[i].account_host);
         }
         return ids;
     }

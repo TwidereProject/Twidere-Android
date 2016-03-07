@@ -55,12 +55,12 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
-    public static Uri getTwidereUserLink(@Nullable AccountKey accountId, long userId, String screenName) {
+    public static Uri getTwidereUserLink(@Nullable AccountKey accountKey, long userId, String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER);
-        if (accountId != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountId.toString());
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         if (userId > 0) {
             builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));

@@ -302,7 +302,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 if (args.containsKey(EXTRA_ACCOUNT)) {
                     account = args.getParcelable(EXTRA_ACCOUNT);
                     recipient = args.getParcelable(EXTRA_USER);
-                } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
+                } else if (args.containsKey(EXTRA_ACCOUNT_KEY)) {
                     final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                     final long userId = args.getLong(EXTRA_RECIPIENT_ID, -1);
                     final int accountPos = accountsSpinnerAdapter.findItemPosition(accountKey.getId());
@@ -432,16 +432,16 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
-        final long accountId = args != null ? args.getLong(EXTRA_ACCOUNT_ID, -1) : -1;
+        final AccountKey accountId = args != null ? args.<AccountKey>getParcelable(EXTRA_ACCOUNT_KEY) : null;
         final long recipientId = args != null ? args.getLong(EXTRA_RECIPIENT_ID, -1) : -1;
         final String[] cols = DirectMessages.COLUMNS;
-        final boolean isValid = accountId > 0 && recipientId > 0;
+        final boolean isValid = accountId != null && recipientId > 0;
         mConversationContainer.setVisibility(isValid ? View.VISIBLE : View.GONE);
         mRecipientSelectorContainer.setVisibility(isValid ? View.GONE : View.VISIBLE);
         if (!isValid) {
             return new CursorLoader(getActivity(), TwidereDataStore.CONTENT_URI_NULL, cols, null, null, null);
         }
-        final Uri uri = buildDirectMessageConversationUri(accountId, recipientId, null);
+        final Uri uri = buildDirectMessageConversationUri(accountId.getId(), recipientId, null);
         return new CursorLoader(getActivity(), uri, cols, null, null, Conversation.DEFAULT_SORT_ORDER);
     }
 
@@ -639,7 +639,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (TextUtils.isEmpty(message)) {
             mEditText.setError(getString(R.string.error_message_no_content));
         } else {
-            mTwitterWrapper.sendDirectMessageAsync(account.account_id, recipient.id, message, mImageUri);
+            final AccountKey accountKey = new AccountKey(account.account_id, account.account_host);
+            mTwitterWrapper.sendDirectMessageAsync(accountKey, recipient.id, message, mImageUri);
             mEditText.setText(null);
             mImageUri = null;
             updateAddImageButton();
