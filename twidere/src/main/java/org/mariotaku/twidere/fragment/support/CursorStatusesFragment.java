@@ -258,6 +258,11 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
             public long[] getMaxIds() {
                 return getOldestStatusIds(getAccountKeys());
             }
+
+            @Override
+            public boolean hasMaxIds() {
+                return true;
+            }
         });
     }
 
@@ -269,6 +274,11 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
             @Override
             public AccountKey[] getAccountKeys() {
                 return CursorStatusesFragment.this.getAccountKeys();
+            }
+
+            @Override
+            public boolean hasMaxIds() {
+                return false;
             }
 
             @Nullable

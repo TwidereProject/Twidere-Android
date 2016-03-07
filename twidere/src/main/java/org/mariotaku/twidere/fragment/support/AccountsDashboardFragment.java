@@ -248,8 +248,9 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 final ParcelableAccount account = mAccountsAdapter.getSelectedAccount();
                 if (account == null) return;
                 final FragmentActivity activity = getActivity();
-                IntentUtils.openUserProfile(activity, account.account_id, account.account_id,
-                        account.screen_name, null, true, UserFragment.Referral.SELF_PROFILE);
+                IntentUtils.openUserProfile(activity, new AccountKey(account.account_id,
+                        account.account_host), account.account_id, account.screen_name, null, true,
+                        UserFragment.Referral.SELF_PROFILE);
                 break;
             }
         }

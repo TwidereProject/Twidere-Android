@@ -25,25 +25,26 @@ import android.text.style.URLSpan;
 import android.view.View;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 
 public class TwidereURLSpan extends URLSpan implements Constants {
 
     private final int type, highlightStyle;
-    private final long accountId;
+    private final AccountKey accountKey;
     private final long extraId;
     private final String url, orig;
     private final boolean sensitive;
     private final OnLinkClickListener listener;
     private final int start, end;
 
-    public TwidereURLSpan(final String url, final String orig, final long accountId, final long extraId,
+    public TwidereURLSpan(final String url, final String orig, final AccountKey accountKey, final long extraId,
                           final int type, final boolean sensitive, final int highlightStyle, int start, int end,
                           final OnLinkClickListener listener) {
         super(url);
         this.url = url;
         this.orig = orig;
-        this.accountId = accountId;
+        this.accountKey = accountKey;
         this.extraId = extraId;
         this.type = type;
         this.sensitive = sensitive;
@@ -56,7 +57,7 @@ public class TwidereURLSpan extends URLSpan implements Constants {
     @Override
     public void onClick(@NonNull final View widget) {
         if (listener != null) {
-            listener.onLinkClick(url, orig, accountId, extraId, type, sensitive, start, end);
+            listener.onLinkClick(url, orig, accountKey, extraId, type, sensitive, start, end);
         }
     }
 

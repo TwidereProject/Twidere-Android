@@ -26,6 +26,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
@@ -35,9 +36,9 @@ public class UserSearchLoader extends TwitterAPIUsersLoader {
     private final String mQuery;
     private final int mPage;
 
-    public UserSearchLoader(final Context context, final long accountId, final String query, final int page,
-                            final List<ParcelableUser> data, boolean fromUser) {
-        super(context, accountId, data, fromUser);
+    public UserSearchLoader(final Context context, final AccountKey accountKey, final String query,
+                            final int page, final List<ParcelableUser> data, boolean fromUser) {
+        super(context, accountKey, data, fromUser);
         mQuery = query;
         mPage = page;
     }

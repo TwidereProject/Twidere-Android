@@ -1318,7 +1318,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 ParcelableMedia profileImage = ParcelableMediaUtils.image(url);
                 profileImage.type = ParcelableMedia.Type.IMAGE;
                 final ParcelableMedia[] media = {profileImage};
-                IntentUtils.openMedia(activity, user.account_id, false, null, media, null, true);
+                IntentUtils.openMedia(activity, new AccountKey(user.account_id, user.account_host),
+                        false, null, media, null, true);
                 break;
             }
             case R.id.profile_banner: {
@@ -1327,7 +1328,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 ParcelableMedia profileBanner = ParcelableMediaUtils.image(url);
                 profileBanner.type = ParcelableMedia.Type.IMAGE;
                 final ParcelableMedia[] media = {profileBanner};
-                IntentUtils.openMedia(activity, user.account_id, false, null, media, null, true);
+                IntentUtils.openMedia(activity, new AccountKey(user.account_id, user.account_host),
+                        false, null, media, null, true);
                 break;
             }
             case R.id.listed_container: {
@@ -1364,8 +1366,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (user == null) return;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(getActivity(), user.account_id, -1, link, null,
-                        true, Referral.USER_MENTION);
+                IntentUtils.openUserProfile(getActivity(), new AccountKey(user.account_id,
+                        user.account_host), -1, link, null, true, Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {

@@ -29,6 +29,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
@@ -50,7 +51,8 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
     public ConversationLoader(final Context context, @NonNull final ParcelableStatus status,
                               final long sinceId, final long maxId, final List<ParcelableStatus> data,
                               final boolean fromUser) {
-        super(context, status.account_id, sinceId, maxId, data, null, -1, fromUser);
+        super(context, new AccountKey(status.account_id, status.account_host), sinceId, maxId, data,
+                null, -1, fromUser);
         mStatus = Nullables.assertNonNull(ParcelUtils.clone(status));
         ParcelableStatusUtils.makeOriginalStatus(mStatus);
     }

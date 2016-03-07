@@ -41,11 +41,11 @@ public class UserFollowersFragment extends CursorSupportUsersListFragment {
             if (getActivity() == null || !isAdded() || isDetached()) return;
             final String action = intent.getAction();
             if (BROADCAST_MULTI_BLOCKSTATE_CHANGED.equals(action)) {
-                final long account_id = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
-                final String screen_name = getAccountScreenName(getActivity(), account_id);
+                final AccountKey accountKey = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY);
+                final String screen_name = getAccountScreenName(getActivity(), accountKey);
                 final Bundle args = getArguments();
                 if (args == null) return;
-                if (account_id > 0 && args.getLong(EXTRA_USER_ID, -1) == account_id || screen_name != null
+                if (accountKey != null && accountKey.getId() == args.getLong(EXTRA_USER_ID, -1) || screen_name != null
                         && screen_name.equalsIgnoreCase(args.getString(EXTRA_SCREEN_NAME))) {
                     removeUsers(intent.getLongArrayExtra(EXTRA_USER_IDS));
                 }

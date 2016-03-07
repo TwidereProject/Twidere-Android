@@ -406,8 +406,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     @Override
     public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, status.account_id, status.user_id,
-                status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
+        IntentUtils.openUserProfile(activity, new AccountKey(status.account_id, status.account_host),
+                status.user_id, status.user_screen_name, null, true,
+                UserFragment.Referral.TIMELINE_STATUS);
     }
 
     @Override

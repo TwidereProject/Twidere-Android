@@ -24,6 +24,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import org.mariotaku.twidere.annotation.ReadPositionTag;
+import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ErrorInfoStore;
@@ -70,11 +72,11 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
     }
 
     @Override
-    public boolean getStatuses(long[] accountIds, long[] maxIds, long[] sinceIds) {
+    public boolean getStatuses(RefreshTaskParam param) {
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (twitter == null) return false;
-        if (maxIds == null) return twitter.refreshAll(accountIds);
-        return twitter.getHomeTimelineAsync(accountIds, maxIds, sinceIds);
+        if (!param.hasMaxIds()) return twitter.refreshAll(param.getAccountKeys());
+        return twitter.getHomeTimelineAsync(param);
     }
 
     @Override
@@ -82,7 +84,7 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
         super.setUserVisibleHint(isVisibleToUser);
         final FragmentActivity activity = getActivity();
         if (isVisibleToUser && activity != null) {
-            for (long accountId : getAccountKeys()) {
+            for (AccountKey accountId : getAccountKeys()) {
                 final String tag = "home_" + accountId;
                 mNotificationManager.cancel(tag, NOTIFICATION_ID_HOME_TIMELINE);
             }

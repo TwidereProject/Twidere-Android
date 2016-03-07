@@ -79,11 +79,11 @@ public class IntentUtils implements Constants {
         }
     }
 
-    public static void openUserProfile(final Context context, final long accountId, final long userId,
-                                       final String screenName, final Bundle activityOptions,
-                                       final boolean newDocument,
+    public static void openUserProfile(final Context context, @Nullable final AccountKey accountId,
+                                       final long userId, final String screenName,
+                                       final Bundle activityOptions, final boolean newDocument,
                                        @UserFragment.Referral final String referral) {
-        if (context == null || accountId <= 0 || userId <= 0 && isEmpty(screenName)) return;
+        if (context == null || userId <= 0 && isEmpty(screenName)) return;
         final Uri uri = LinkCreator.getTwidereUserLink(accountId, userId, screenName);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(EXTRA_REFERRAL, referral);

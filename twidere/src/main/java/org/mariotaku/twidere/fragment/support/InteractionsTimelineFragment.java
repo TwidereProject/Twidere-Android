@@ -30,6 +30,7 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 
@@ -38,8 +39,8 @@ import edu.tsinghua.hotmobi.model.TimelineType;
 public class InteractionsTimelineFragment extends CursorActivitiesFragment {
 
     @Override
-    public boolean getActivities(long[] accountIds, long[] maxIds, long[] sinceIds) {
-        mTwitterWrapper.getActivitiesAboutMeAsync(accountIds, maxIds, sinceIds);
+    public boolean getActivities(RefreshTaskParam param) {
+        mTwitterWrapper.getActivitiesAboutMeAsync(param);
         return true;
     }
 

@@ -134,7 +134,7 @@ public class ParcelableMediaUtils {
         if ("animated_gif".equals(name) || "player".equals(name)) {
             final ParcelableMedia media = new ParcelableMedia();
             final CardEntity.BindingValue playerStreamUrl = card.getBindingValue("player_stream_url");
-            media.card = ParcelableCardEntityUtils.fromCardEntity(card, -1);
+            media.card = ParcelableCardEntityUtils.fromCardEntity(card, null);
             CardEntity.StringValue appUrlResolved = (CardEntity.StringValue) card.getBindingValue("app_url_resolved");
             media.url = checkUrl(appUrlResolved) ? appUrlResolved.getValue() : card.getUrl();
             if ("animated_gif".equals(name)) {
@@ -179,7 +179,7 @@ public class ParcelableMediaUtils {
 
             final ParcelableMedia media = new ParcelableMedia();
             media.url = card.getUrl();
-            media.card = ParcelableCardEntityUtils.fromCardEntity(card, -1);
+            media.card = ParcelableCardEntityUtils.fromCardEntity(card, null);
             media.type = ParcelableMedia.Type.IMAGE;
             media.media_url = ((CardEntity.ImageValue) photoImageFullSize).getUrl();
             media.width = ((CardEntity.ImageValue) photoImageFullSize).getWidth();

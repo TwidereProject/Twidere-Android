@@ -29,6 +29,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 
@@ -37,10 +38,11 @@ import java.util.List;
 
 public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
 
-    public RetweetsOfMeLoader(final Context context, final long accountId, final long sinceId, final long maxId,
+    public RetweetsOfMeLoader(final Context context, final AccountKey accountKey,
+                              final long sinceId, final long maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                               final int tabPosition, boolean fromUser) {
-        super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
     }
 
     @NonNull

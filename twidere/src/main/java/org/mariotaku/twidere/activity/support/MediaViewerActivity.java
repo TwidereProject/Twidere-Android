@@ -30,6 +30,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -81,6 +82,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.provider.CacheProvider;
@@ -824,7 +826,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         @Override
         protected Object getDownloadExtra() {
             final MediaExtra mediaExtra = new MediaExtra();
-            mediaExtra.setAccountId(getArguments().getLong(EXTRA_ACCOUNT_ID, -1));
+            mediaExtra.setAccountKey(getArguments().<AccountKey>getParcelable(EXTRA_ACCOUNT_KEY));
             final Uri origDownloadUri = super.getDownloadUri();
             final Uri downloadUri = getDownloadUri();
             if (origDownloadUri != null && downloadUri != null) {

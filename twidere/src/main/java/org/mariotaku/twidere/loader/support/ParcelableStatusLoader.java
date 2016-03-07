@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.constant.IntentConstants;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -41,10 +42,11 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
 
     private final boolean mOmitIntentExtra;
     private final Bundle mExtras;
-    private final long mAccountId, mStatusId;
+    private final AccountKey mAccountId;
+    private final long mStatusId;
 
     public ParcelableStatusLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                  final long accountId, final long statusId) {
+                                  final AccountKey accountId, final long statusId) {
         super(context);
         mOmitIntentExtra = omitIntentExtra;
         mExtras = extras;
@@ -64,7 +66,7 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
             }
         }
         try {
-            final ParcelableStatus status = findStatus(getContext(), mAccountId, accountHost, mStatusId);
+            final ParcelableStatus status = findStatus(getContext(), mAccountId, mStatusId);
             final ParcelableCredentials credentials = DataStoreUtils.getCredentials(getContext(), mAccountId);
             final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(status);
             final Bundle extras = response.getExtras();

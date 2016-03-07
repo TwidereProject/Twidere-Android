@@ -29,6 +29,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.fragment.support.UserFragment;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
@@ -50,30 +51,30 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final long accountId,
+    public void onLinkClick(final String link, final String orig, final AccountKey accountKey,
                             final long extraId, final int type, final boolean sensitive,
                             final int start, final int end) {
         if (manager != null && manager.isActive()) return;
         if (!isPrivateData()) {
             // BEGIN HotMobi
             final LinkEvent event = LinkEvent.create(context, link, type);
-            HotMobiLogger.getInstance(context).log(accountId, event);
+            HotMobiLogger.getInstance(context).log(accountKey, event);
             // END HotMobi
         }
 
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(context, accountId, -1, link, null, true,
+                IntentUtils.openUserProfile(context, accountKey, -1, link, null, true,
                         UserFragment.Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
-                Utils.openTweetSearch(context, accountId, "#" + link);
+                Utils.openTweetSearch(context, accountKey, "#" + link);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_ENTITY_URL: {
                 if (PreviewMediaExtractor.isSupported(link)) {
-                    openMedia(accountId, extraId, sensitive, link, start, end);
+                    openMedia(accountKey, extraId, sensitive, link, start, end);
                 } else {
                     openLink(link);
                 }
@@ -84,20 +85,20 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 if (mentionList.length != 2) {
                     break;
                 }
-                Utils.openUserListDetails(context, accountId, -1, -1, mentionList[0], mentionList[1]);
+                Utils.openUserListDetails(context, accountKey, -1, -1, mentionList[0], mentionList[1]);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_CASHTAG: {
-                Utils.openTweetSearch(context, accountId, link);
+                Utils.openTweetSearch(context, accountKey, link);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
-                IntentUtils.openUserProfile(context, accountId, NumberUtils.toLong(link, -1), null,
+                IntentUtils.openUserProfile(context, accountKey, NumberUtils.toLong(link, -1), null,
                         null, true, UserFragment.Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {
-                Utils.openStatus(context, accountId, NumberUtils.toLong(link, -1));
+                Utils.openStatus(context, accountKey, NumberUtils.toLong(link, -1));
                 break;
             }
         }
@@ -107,9 +108,9 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
         return false;
     }
 
-    protected void openMedia(long accountId, long extraId, boolean sensitive, String link, int start, int end) {
+    protected void openMedia(AccountKey accountKey, long extraId, boolean sensitive, String link, int start, int end) {
         final ParcelableMedia[] media = {ParcelableMediaUtils.image(link)};
-        IntentUtils.openMedia(context, accountId, sensitive, null, media, null, true);
+        IntentUtils.openMedia(context, accountKey, sensitive, null, media, null, true);
     }
 
     protected void openLink(final String link) {

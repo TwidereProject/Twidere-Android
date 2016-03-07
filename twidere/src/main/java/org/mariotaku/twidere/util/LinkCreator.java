@@ -20,9 +20,11 @@
 package org.mariotaku.twidere.util;
 
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 /**
@@ -42,23 +44,23 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
-    public static Uri getTwidereStatusLink(long accountId, long statusId) {
+    public static Uri getTwidereStatusLink(AccountKey accountKey, long statusId) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS);
-        if (accountId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
         return builder.build();
     }
 
-    public static Uri getTwidereUserLink(long accountId, long userId, String screenName) {
+    public static Uri getTwidereUserLink(@Nullable AccountKey accountId, long userId, String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER);
-        if (accountId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(accountId));
+        if (accountId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountId.toString());
         }
         if (userId > 0) {
             builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));

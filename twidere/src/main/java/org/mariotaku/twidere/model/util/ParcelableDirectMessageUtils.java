@@ -2,6 +2,7 @@ package org.mariotaku.twidere.model.util;
 
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
@@ -14,9 +15,14 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
  * Created by mariotaku on 16/2/13.
  */
 public class ParcelableDirectMessageUtils {
-    public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, long accountId, boolean isOutgoing) {
+    public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, AccountKey accountKey, boolean isOutgoing) {
+        return fromDirectMessage(message, accountKey.getId(), accountKey.getHost(), isOutgoing);
+    }
+
+    public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, long accountId, String accountHost, boolean isOutgoing) {
         ParcelableDirectMessage result = new ParcelableDirectMessage();
         result.account_id = accountId;
+        result.account_host = accountHost;
         result.is_outgoing = isOutgoing;
         final User sender = message.getSender(), recipient = message.getRecipient();
         assert sender != null && recipient != null;

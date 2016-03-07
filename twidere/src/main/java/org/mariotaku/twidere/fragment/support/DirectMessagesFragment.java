@@ -201,8 +201,8 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
     @Override
     public void onUserClick(int position, DirectMessageEntry entry) {
-        IntentUtils.openUserProfile(getActivity(), entry.account_id, entry.conversation_id,
-                entry.screen_name, null, true, null);
+        IntentUtils.openUserProfile(getActivity(), new AccountKey(entry.account_id, entry.account_host),
+                entry.conversation_id, entry.screen_name, null, true, null);
     }
 
     @Subscribe

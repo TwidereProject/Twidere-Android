@@ -35,6 +35,7 @@ import android.widget.TextView;
 import org.apache.commons.lang3.ObjectUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -90,7 +91,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
 
     public void displayMedia(@Nullable final ParcelableMedia[] mediaArray,
                              @NonNull final MediaLoaderWrapper loader,
-                             final long accountId, final long extraId,
+                             final AccountKey accountId, final long extraId,
                              final OnMediaClickListener mediaClickListener,
                              final MediaLoadingHandler loadingHandler) {
         displayMedia(mediaArray, loader, accountId, extraId, false, mediaClickListener,
@@ -99,7 +100,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
 
     public void displayMedia(@Nullable final ParcelableMedia[] mediaArray,
                              @NonNull final MediaLoaderWrapper loader,
-                             final long accountId, final long extraId, boolean withCredentials,
+                             final AccountKey accountId, final long extraId, boolean withCredentials,
                              final OnMediaClickListener mediaClickListener,
                              final MediaLoadingHandler loadingHandler) {
         if (mediaArray == null || mMediaPreviewStyle == VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE) {
@@ -300,18 +301,18 @@ public class CardMediaContainer extends ViewGroup implements Constants {
     }
 
     public interface OnMediaClickListener {
-        void onMediaClick(View view, ParcelableMedia media, long accountId, long id);
+        void onMediaClick(View view, ParcelableMedia media, AccountKey accountKey, long id);
     }
 
     private static class ImageGridClickListener implements View.OnClickListener {
         private final WeakReference<OnMediaClickListener> mListenerRef;
-        private final long mAccountId;
+        private final AccountKey mAccountKey;
         private final long mExtraId;
 
-        ImageGridClickListener(final OnMediaClickListener listener, final long accountId,
+        ImageGridClickListener(final OnMediaClickListener listener, final AccountKey accountKey,
                                final long extraId) {
             mListenerRef = new WeakReference<>(listener);
-            mAccountId = accountId;
+            mAccountKey = accountKey;
             mExtraId = extraId;
         }
 
@@ -319,7 +320,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
         public void onClick(final View v) {
             final OnMediaClickListener listener = mListenerRef.get();
             if (listener == null) return;
-            listener.onMediaClick(v, (ParcelableMedia) v.getTag(), mAccountId, mExtraId);
+            listener.onMediaClick(v, (ParcelableMedia) v.getTag(), mAccountKey, mExtraId);
         }
 
     }

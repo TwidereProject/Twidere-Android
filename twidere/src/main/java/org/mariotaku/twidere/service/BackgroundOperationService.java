@@ -63,6 +63,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.DraftValuesCreator;
@@ -288,15 +289,15 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     private void handleSendDirectMessageIntent(final Intent intent) {
-        final long accountId = intent.getLongExtra(EXTRA_ACCOUNT_ID, -1);
+        final AccountKey accountId = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY);
         final long recipientId = intent.getLongExtra(EXTRA_RECIPIENT_ID, -1);
         final String imageUri = intent.getStringExtra(EXTRA_IMAGE_URI);
         final String text = intent.getStringExtra(EXTRA_TEXT);
         sendMessage(accountId, recipientId, text, imageUri);
     }
 
-    private void sendMessage(long accountId, long recipientId, String text, String imageUri) {
-        if (accountId <= 0 || recipientId <= 0 || isEmpty(text)) return;
+    private void sendMessage(AccountKey accountId, long recipientId, String text, String imageUri) {
+        if (accountId == null || recipientId <= 0 || isEmpty(text)) return;
         final String title = getString(R.string.sending_direct_message);
         final Builder builder = new Builder(this);
         builder.setSmallIcon(R.drawable.ic_stat_send);
@@ -376,7 +377,8 @@ public class BackgroundOperationService extends IntentService implements Constan
             boolean failed = false;
             Exception exception = null;
             final Expression where = Expression.equals(Drafts._ID, draftId);
-            final List<Long> failedAccountIds = TwidereListUtils.fromArray(DataStoreUtils.getAccountKeys(item.accounts));
+            final List<AccountKey> failedAccountIds = new ArrayList<>();
+            Collections.addAll(failedAccountIds, DataStoreUtils.getAccountKeys(item.accounts));
 
             for (final SingleResponse<ParcelableStatus> response : result) {
                 final ParcelableStatus data = response.getData();
@@ -386,11 +388,12 @@ public class BackgroundOperationService extends IntentService implements Constan
                         exception = response.getException();
                     }
                 } else if (data.account_id > 0) {
-                    failedAccountIds.remove(data.account_id);
+                    failedAccountIds.remove(new AccountKey(data.account_id, data.account_host));
                     // BEGIN HotMobi
                     final TweetEvent event = TweetEvent.create(this, data, TimelineType.OTHER);
                     event.setAction(TweetEvent.Action.TWEET);
-                    HotMobiLogger.getInstance(this).log(data.account_id, event);
+                    HotMobiLogger.getInstance(this).log(new AccountKey(data.account_id,
+                            data.account_host), event);
                     // END HotMobi
                 }
             }
@@ -442,10 +445,10 @@ public class BackgroundOperationService extends IntentService implements Constan
 
 
     private SingleResponse<ParcelableDirectMessage> sendDirectMessage(final NotificationCompat.Builder builder,
-                                                                      final long accountId, final long recipientId,
+                                                                      final AccountKey accountKey, final long recipientId,
                                                                       final String text, final String imageUri) {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, accountId, true, true);
-        final TwitterUpload twitterUpload = TwitterAPIFactory.getTwitterInstance(this, accountId, accountHost, true, true, TwitterUpload.class);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, accountKey, true, true);
+        final TwitterUpload twitterUpload = TwitterAPIFactory.getTwitterInstance(this, accountKey, true, true, TwitterUpload.class);
         if (twitter == null || twitterUpload == null) return SingleResponse.getInstance();
         try {
             final ParcelableDirectMessage directMessage;
@@ -462,12 +465,12 @@ public class BackgroundOperationService extends IntentService implements Constan
 //                final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
                 final MediaUploadResponse uploadResp = twitterUpload.uploadMedia(file);
                 directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text,
-                        uploadResp.getId()), accountId, true);
+                        uploadResp.getId()), accountKey, true);
                 if (!file.delete()) {
                     Log.d(LOGTAG, String.format("unable to delete %s", path));
                 }
             } else {
-                directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text), accountId, true);
+                directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text), accountKey, true);
             }
             Utils.setLastSeen(this, recipientId, System.currentTimeMillis());
 
@@ -581,12 +584,14 @@ public class BackgroundOperationService extends IntentService implements Constan
                     shortener.waitForService();
                 }
                 for (final ParcelableAccount account : statusUpdate.accounts) {
-                    final ParcelableCredentials credentials = DataStoreUtils.getCredentials(this, account.account_id);
+                    final AccountKey accountKey = new AccountKey(account.account_id, account.account_host);
+                    final ParcelableCredentials credentials = DataStoreUtils.getCredentials(this,
+                            accountKey);
                     // Get Twitter instance corresponding to account
-                    final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, account.account_id,
+                    final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, accountKey,
                             true, true);
-                    final TwitterUpload upload = TwitterAPIFactory.getTwitterInstance(this, account.account_id,
-                            accountHost, true, true, TwitterUpload.class);
+                    final TwitterUpload upload = TwitterAPIFactory.getTwitterInstance(this,
+                            accountKey, true, true, TwitterUpload.class);
 
                     // Shouldn't happen
                     if (twitter == null || upload == null || credentials == null) {
@@ -621,7 +626,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     StatusShortenResult shortenedResult = null;
                     if (shouldShorten && shortener != null) {
                         try {
-                            shortenedResult = shortener.shorten(statusUpdate, account.account_id,
+                            shortenedResult = shortener.shorten(statusUpdate, accountKey.getId(),
                                     statusText);
                         } catch (final Exception e) {
                             throw new ShortenException(getString(R.string.error_message_tweet_shorten_failed), e);
@@ -701,7 +706,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                                 notReplyToOther = true;
                             }
                         }
-                        final ParcelableStatus result = ParcelableStatusUtils.fromStatus(resultStatus, account.account_id, accountHost, false);
+                        final ParcelableStatus result = ParcelableStatusUtils.fromStatus(resultStatus,
+                                accountKey, false);
                         if (shouldShorten && shortener != null && shortenedResult != null) {
                             shortener.callback(shortenedResult, result);
                         }

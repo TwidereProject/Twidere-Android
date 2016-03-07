@@ -27,22 +27,24 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
 
 public class SavedSearchesLoader extends AsyncTaskLoader<ResponseList<SavedSearch>> {
 
-    private final long mAccountId;
+    private final AccountKey mAccountId;
 
-    public SavedSearchesLoader(final Context context, final long account_id) {
+    public SavedSearchesLoader(final Context context, final AccountKey accountKey) {
         super(context);
-        mAccountId = account_id;
+        mAccountId = accountKey;
     }
 
     @Override
     public ResponseList<SavedSearch> loadInBackground() {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, accountHost, false);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId,
+                false);
         if (twitter == null) return null;
         try {
             return twitter.getSavedSearches();

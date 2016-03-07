@@ -354,8 +354,9 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             case R.id.profile_image: {
                 final ParcelableUserList userList = mUserList;
                 if (userList == null) return;
-                IntentUtils.openUserProfile(getActivity(), userList.account_id, userList.user_id,
-                        userList.user_screen_name, null, true, null);
+                IntentUtils.openUserProfile(getActivity(), new AccountKey(userList.account_id,
+                        userList.account_host), userList.user_id, userList.user_screen_name, null,
+                        true, null);
                 break;
             }
         }

@@ -35,8 +35,7 @@ public class GetSavedSearchesTask extends AbstractTask<AccountKey[], SingleRespo
     public SingleResponse<Object> doLongOperation(AccountKey[] params) {
         final ContentResolver cr = mContext.getContentResolver();
         for (AccountKey accountKey : params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountKey.getId(),
-                    accountKey.getHost(), true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountKey, true);
             if (twitter == null) continue;
             try {
                 final ResponseList<SavedSearch> searches = twitter.getSavedSearches();

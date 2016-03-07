@@ -44,9 +44,9 @@ import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
+import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
-import static org.mariotaku.twidere.util.Utils.isMyAccount;
 
 public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<ParcelableUser>> implements Constants {
 
@@ -72,7 +72,8 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
     public SingleResponse<ParcelableUser> loadInBackground() {
         final Context context = getContext();
         final ContentResolver resolver = context.getContentResolver();
-        int accountColor = DataStoreUtils.getAccountColor(context, mAccountId);
+        final AccountKey accountKey = mAccountId;
+        int accountColor = DataStoreUtils.getAccountColor(context, accountKey);
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
             if (user != null) {
@@ -82,7 +83,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 return SingleResponse.getInstance(user);
             }
         }
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountId, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
         if (twitter == null) return SingleResponse.getInstance();
         if (mLoadFromCache) {
             final Expression where;
@@ -101,7 +102,8 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                     if (cur.moveToFirst()) {
                         final ParcelableUserCursorIndices indices = new ParcelableUserCursorIndices(cur);
                         final ParcelableUser user = indices.newObject(cur);
-                        user.account_id = mAccountId;
+                        user.account_id = accountKey.getId();
+                        user.account_host = accountKey.getHost();
                         user.account_color = accountColor;
                         return SingleResponse.getInstance(user);
                     }
@@ -115,8 +117,8 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final ContentValues cachedUserValues = createCachedUser(twitterUser);
             final long userId = twitterUser.getId();
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
-            final ParcelableUser user = ParcelableUserUtils.fromUser(twitterUser, mAccountId);
-            if (isMyAccount(context, userId)) {
+            final ParcelableUser user = ParcelableUserUtils.fromUser(twitterUser, accountKey);
+            if (Utils.isMyAccount(context, user.id, user.user_host)) {
                 final ContentValues accountValues = new ContentValues();
                 accountValues.put(Accounts.NAME, user.name);
                 accountValues.put(Accounts.SCREEN_NAME, user.screen_name);

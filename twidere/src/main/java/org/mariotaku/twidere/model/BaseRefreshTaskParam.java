@@ -8,14 +8,14 @@ import android.support.annotation.Nullable;
  */
 public class BaseRefreshTaskParam implements RefreshTaskParam {
 
-    private final AccountKey[] mAccountKeys;
+    private final AccountKey[] accountKeys;
     private final long[] maxIds;
     private final long[] sinceIds;
 
     @NonNull
     @Override
     public AccountKey[] getAccountKeys() {
-        return mAccountKeys;
+        return accountKeys;
     }
 
     @Nullable
@@ -30,8 +30,18 @@ public class BaseRefreshTaskParam implements RefreshTaskParam {
         return sinceIds;
     }
 
+    @Override
+    public boolean hasMaxIds() {
+        return maxIds != null;
+    }
+
+    @Override
+    public boolean hasSinceIds() {
+        return sinceIds != null;
+    }
+
     public BaseRefreshTaskParam(AccountKey[] accountKeys, long[] maxIds, long[] sinceIds) {
-        this.mAccountKeys = accountKeys;
+        this.accountKeys = accountKeys;
         this.maxIds = maxIds;
         this.sinceIds = sinceIds;
     }

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
 
@@ -102,7 +103,11 @@ public class ParcelableUsersAdapter extends AbsUsersAdapter<List<ParcelableUser>
         return true;
     }
 
-    public int findPosition(long accountId, long userId) {
+    public int findPosition(AccountKey accountKey, long userId) {
+        return findPosition(accountKey.getId(), accountKey.getHost(), userId);
+    }
+
+    public int findPosition(long accountId, String accountHost, long userId) {
         if (mData == null) return RecyclerView.NO_POSITION;
         for (int i = getUserStartIndex(), j = i + getUserCount(); i < j; i++) {
             final ParcelableUser user = mData.get(i);

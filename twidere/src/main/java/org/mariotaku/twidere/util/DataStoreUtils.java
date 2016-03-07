@@ -241,9 +241,10 @@ public class DataStoreUtils implements Constants {
                 Activities.MAX_POSITION, new OrderBy(SQLFunctions.MIN(Activities.TIMESTAMP)));
     }
 
-    public static int getStatusCount(final Context context, final Uri uri, final long accountId) {
-        final String where = Expression.equals(Statuses.ACCOUNT_ID, accountId).getSQL();
-        return queryCount(context, uri, where, null);
+    public static int getStatusCount(final Context context, final Uri uri, final AccountKey accountId) {
+        final String where = Utils.getAccountCompareExpression().getSQL();
+        final String[] whereArgs = {String.valueOf(accountId.getId()), accountId.getHost()};
+        return queryCount(context, uri, where, whereArgs);
     }
 
     public static int getActivitiesCount(final Context context, final Uri uri, final AccountKey accountKey) {

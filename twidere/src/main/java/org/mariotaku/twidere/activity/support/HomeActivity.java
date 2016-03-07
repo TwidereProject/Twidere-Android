@@ -819,7 +819,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         if (mPagerAdapter.getCount() == 0) return;
         final SupportTabSpec tab = mPagerAdapter.getTab(position);
         if (DirectMessagesFragment.class == tab.cls) {
-            Utils.openMessageConversation(this, -1, -1);
+            Utils.openMessageConversation(this, null, -1);
         } else if (TrendsSuggestionsFragment.class == tab.cls) {
             openSearchView(null);
         } else {

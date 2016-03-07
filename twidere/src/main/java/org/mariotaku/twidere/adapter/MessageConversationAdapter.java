@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IDirectMessagesAdapter;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -205,7 +206,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         }
 
         @Override
-        public void onMediaClick(View view, ParcelableMedia media, long accountId, long extraId) {
+        public void onMediaClick(View view, ParcelableMedia media, AccountKey accountKey, long extraId) {
             final MessageConversationAdapter adapter = adapterRef.get();
             IntentUtils.openMedia(adapter.getContext(), adapter.getDirectMessage((int) extraId), media,
                     null, true);

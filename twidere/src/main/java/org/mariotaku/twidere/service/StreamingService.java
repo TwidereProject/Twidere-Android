@@ -34,6 +34,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.Warning;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -61,7 +62,7 @@ public class StreamingService extends Service implements Constants {
 
     private NotificationManager mNotificationManager;
 
-    private long[] mAccountIds;
+    private AccountKey[] mAccountKeys;
 
     private static final Uri[] MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI,
             DirectMessages.Outbox.CONTENT_URI};
@@ -75,7 +76,7 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onChange(final boolean selfChange, final Uri uri) {
-            if (!TwidereArrayUtils.contentMatch(mAccountIds, DataStoreUtils.getActivatedAccountKeys(StreamingService.this))) {
+            if (!TwidereArrayUtils.contentMatch(mAccountKeys, DataStoreUtils.getActivatedAccountKeys(StreamingService.this))) {
                 initStreaming();
             }
         }
@@ -126,19 +127,20 @@ public class StreamingService extends Service implements Constants {
 
     private boolean setTwitterInstances() {
         final List<ParcelableCredentials> accountsList = DataStoreUtils.getCredentialsList(this, true);
-        final long[] accountIds = new long[accountsList.size()];
-        for (int i = 0, j = accountIds.length; i < j; i++) {
-            accountIds[i] = accountsList.get(i).account_id;
+        final AccountKey[] accountKeys = new AccountKey[accountsList.size()];
+        for (int i = 0, j = accountKeys.length; i < j; i++) {
+            final ParcelableCredentials credentials = accountsList.get(i);
+            accountKeys[i] = new AccountKey(credentials.account_id, credentials.account_host);
         }
-        final AccountPreferences[] activitedPreferences = AccountPreferences.getAccountPreferences(this, accountIds);
+        final AccountPreferences[] activatedPreferences = AccountPreferences.getAccountPreferences(this, accountKeys);
         if (BuildConfig.DEBUG) {
             Log.d(Constants.LOGTAG, "Setting up twitter stream instances");
         }
-        mAccountIds = accountIds;
+        mAccountKeys = accountKeys;
         clearTwitterInstances();
         boolean result = false;
         for (int i = 0, j = accountsList.size(); i < j; i++) {
-            final AccountPreferences preferences = activitedPreferences[i];
+            final AccountPreferences preferences = activatedPreferences[i];
             if (!preferences.isStreamingEnabled()) continue;
             final ParcelableCredentials account = accountsList.get(i);
             final Endpoint endpoint = TwitterAPIFactory.getEndpoint(account, TwitterUserStream.class);
@@ -246,14 +248,14 @@ public class StreamingService extends Service implements Constants {
             final User sender = directMessage.getSender(), recipient = directMessage.getRecipient();
             if (sender.getId() == account.account_id) {
                 final ContentValues values = ContentValuesCreator.createDirectMessage(directMessage,
-                        account.account_id, true);
+                        account.account_id, account.account_host, true);
                 if (values != null) {
                     resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
                 }
             }
             if (recipient.getId() == account.account_id) {
                 final ContentValues values = ContentValuesCreator.createDirectMessage(directMessage,
-                        account.account_id, false);
+                        account.account_id, account.account_host, false);
                 final Uri.Builder builder = DirectMessages.Inbox.CONTENT_URI.buildUpon();
                 builder.appendQueryParameter(QUERY_PARAM_NOTIFY, "true");
                 if (values != null) {
@@ -332,8 +334,8 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onStatus(final Status status) {
-            final ContentValues values = ContentValuesCreator.createStatus(status, account.account_id,
-                    account.account_host);
+            final ContentValues values = ContentValuesCreator.createStatus(status,
+                    new AccountKey(account.account_id, account.account_host));
             if (!statusStreamStarted) {
                 statusStreamStarted = true;
                 values.put(Statuses.IS_GAP, true);

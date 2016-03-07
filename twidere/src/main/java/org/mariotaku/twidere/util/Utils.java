@@ -866,7 +866,7 @@ public final class Utils implements Constants {
 
     @NonNull
     public static ParcelableStatus findStatus(final Context context, final AccountKey accountKey,
-                                              final String accountHost, final long statusId)
+                                              final long statusId)
             throws TwitterException {
         if (context == null) throw new NullPointerException();
         final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
@@ -1793,23 +1793,24 @@ public final class Utils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openStatus(final Context context, final long accountId, final long statusId) {
-        if (context == null || accountId <= 0 || statusId <= 0) return;
-        final Uri uri = LinkCreator.getTwidereStatusLink(accountId, statusId);
+    public static void openStatus(final Context context, final AccountKey accountKey, final long statusId) {
+        if (context == null || statusId <= 0) return;
+        final Uri uri = LinkCreator.getTwidereStatusLink(accountKey, statusId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         context.startActivity(intent);
     }
 
     public static void openStatus(final Context context, final ParcelableStatus status, Bundle activityOptions) {
         if (context == null || status == null) return;
-        final long account_id = status.account_id, status_id = status.id;
+        final AccountKey accountKey = new AccountKey(status.account_id, status.account_host);
+        final long statusId = status.id;
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_STATUS, status);
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(status_id));
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setExtrasClassLoader(context.getClassLoader());
         intent.putExtras(extras);
@@ -1921,7 +1922,7 @@ public final class Utils implements Constants {
 
     }
 
-    public static void openUserListDetails(final Context context, final long accountId, final long listId,
+    public static void openUserListDetails(final Context context, final AccountKey accountId, final long listId,
                                            final long userId, final String screenName, final String listName) {
         if (context == null) return;
         final Uri.Builder builder = new Uri.Builder();
@@ -2505,12 +2506,15 @@ public final class Utils implements Constants {
     }
 
     @Nullable
-    public static ParcelableUser getUserForConversation(Context context, long accountId,
+    public static ParcelableUser getUserForConversation(Context context, AccountKey accountKey,
                                                         long conversationId) {
         final ContentResolver cr = context.getContentResolver();
-        final Expression where = Expression.and(Expression.equals(ConversationEntries.ACCOUNT_ID, accountId),
-                Expression.equals(ConversationEntries.CONVERSATION_ID, conversationId));
-        final Cursor c = cr.query(ConversationEntries.CONTENT_URI, null, where.getSQL(), null, null);
+        final Expression where = Expression.and(getAccountCompareExpression(),
+                Expression.equalsArgs(ConversationEntries.CONVERSATION_ID));
+        final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost(),
+                String.valueOf(conversationId)};
+        final Cursor c = cr.query(ConversationEntries.CONTENT_URI, null, where.getSQL(), whereArgs,
+                null);
         if (c == null) return null;
         try {
             if (c.moveToFirst()) return ParcelableUserUtils.fromDirectMessageConversationEntry(c);

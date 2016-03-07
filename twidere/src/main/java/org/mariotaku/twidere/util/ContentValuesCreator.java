@@ -222,12 +222,13 @@ public final class ContentValuesCreator implements TwidereConstants {
         return values;
     }
 
-    public static ContentValues createMessageDraft(final long accountId, final long recipientId,
+    public static ContentValues createMessageDraft(final AccountKey accountKey, final long recipientId,
                                                    final String text, final String imageUri) {
         final ContentValues values = new ContentValues();
         values.put(Drafts.ACTION_TYPE, Draft.Action.SEND_DIRECT_MESSAGE);
         values.put(Drafts.TEXT, text);
-        values.put(Drafts.ACCOUNT_IDS, TwidereArrayUtils.toString(new long[]{accountId}, ',', false));
+        values.put(Drafts.ACCOUNT_IDS, TwidereArrayUtils.toString(new long[]{accountKey.getId()},
+                ',', false));
         values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
         if (imageUri != null) {
             final ParcelableMediaUpdate[] mediaArray = {new ParcelableMediaUpdate(imageUri, 0)};

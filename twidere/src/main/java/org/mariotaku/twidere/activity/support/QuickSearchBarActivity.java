@@ -56,6 +56,8 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.fragment.support.UserFragment;
+import org.mariotaku.twidere.model.AccountKey;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
@@ -142,10 +144,12 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        final long accountId = getAccountId();
+        final AccountKey accountId = getSelectedAccountKey();
         final Uri.Builder builder = Suggestions.Search.CONTENT_URI.buildUpon();
         builder.appendQueryParameter(QUERY_PARAM_QUERY, ParseUtils.parseString(mSearchQuery.getText()));
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, ParseUtils.parseString(accountId));
+        if (accountId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountId.toString());
+        }
         return new CursorLoader(this, builder.build(), Suggestions.Search.COLUMNS, null, null, null);
     }
 
@@ -170,20 +174,20 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         final SuggestionItem item = mUsersSearchAdapter.getSuggestionItem(position);
         switch (mUsersSearchAdapter.getItemViewType(position)) {
             case SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM: {
-                IntentUtils.openUserProfile(this, getAccountId(), item.extra_id, item.summary, null,
+                IntentUtils.openUserProfile(this, getSelectedAccountKey(), item.extra_id, item.summary, null,
                         true, UserFragment.Referral.DIRECT);
                 finish();
                 break;
             }
             case SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME: {
-                IntentUtils.openUserProfile(this, getAccountId(), -1, item.title, null, true,
+                IntentUtils.openUserProfile(this, getSelectedAccountKey(), -1, item.title, null, true,
                         UserFragment.Referral.DIRECT);
                 finish();
                 break;
             }
             case SuggestionsAdapter.VIEW_TYPE_SAVED_SEARCH:
             case SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY: {
-                Utils.openSearch(this, getAccountId(), item.title);
+                Utils.openSearch(this, getSelectedAccountKey(), item.title);
                 finish();
                 break;
             }
@@ -284,13 +288,13 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         if (isFinishing()) return;
         final String query = ParseUtils.parseString(mSearchQuery.getText());
         if (TextUtils.isEmpty(query)) return;
-        final long accountId = mAccountSpinner.getSelectedItemId();
-        Utils.openSearch(this, accountId, query);
+        Utils.openSearch(this, getSelectedAccountKey(), query);
         finish();
     }
 
-    private long getAccountId() {
-        return mAccountSpinner.getSelectedItemId();
+    private AccountKey getSelectedAccountKey() {
+        final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
+        return new AccountKey(account.account_id, account.account_host);
     }
 
     private void updateWindowAttributes() {

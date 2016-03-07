@@ -83,6 +83,7 @@ import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.loader.support.UserSearchLoader;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -137,11 +138,11 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             mUsersSearchList.setVisibility(View.GONE);
             mUsersSearchEmpty.setVisibility(View.GONE);
             mUsersSearchProgress.setVisibility(View.VISIBLE);
-            final long accountId = args.getLong(EXTRA_ACCOUNT_ID);
+            final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
             final String query = args.getString(EXTRA_QUERY);
             final boolean fromCache = args.getBoolean(EXTRA_FROM_CACHE);
             final boolean fromUser = args.getBoolean(EXTRA_FROM_USER, false);
-            return new CacheUserSearchLoader(MessagesConversationFragment.this, accountId, query,
+            return new CacheUserSearchLoader(MessagesConversationFragment.this, accountKey, query,
                     fromCache, fromUser);
         }
 
@@ -304,13 +305,13 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
                     final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                     final long userId = args.getLong(EXTRA_RECIPIENT_ID, -1);
-                    final int accountPos = accountsSpinnerAdapter.findItemPosition(accountId);
+                    final int accountPos = accountsSpinnerAdapter.findItemPosition(accountKey.getId());
                     if (accountPos >= 0) {
                         mAccountSpinner.setSelection(accountPos);
                     }
                     account = accountPos >= 0 ? accountsSpinnerAdapter.getItem(accountPos) :
-                            DataStoreUtils.getCredentials(activity, accountId);
-                    recipient = Utils.getUserForConversation(activity, accountId, userId);
+                            DataStoreUtils.getCredentials(activity, accountKey);
+                    recipient = Utils.getUserForConversation(activity, accountKey, userId);
                 } else {
                     account = null;
                     recipient = null;
@@ -401,8 +402,10 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_all: {
-                if (mAccount == null || mRecipient == null) return true;
-                mTwitterWrapper.destroyMessageConversationAsync(mAccount.account_id, mRecipient.id);
+                final ParcelableCredentials account = mAccount;
+                if (account == null || mRecipient == null) return true;
+                mTwitterWrapper.destroyMessageConversationAsync(new AccountKey(account.account_id,
+                        account.account_host), mRecipient.id);
                 return true;
             }
         }
@@ -489,16 +492,16 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
 
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
-        if (mSelectedDirectMessage != null) {
-            final long message_id = mSelectedDirectMessage.id;
-            final long account_id = mSelectedDirectMessage.account_id;
+        final ParcelableDirectMessage message = mSelectedDirectMessage;
+        if (message != null) {
             switch (item.getItemId()) {
                 case R.id.delete: {
-                    mTwitterWrapper.destroyDirectMessageAsync(account_id, message_id);
+                    mTwitterWrapper.destroyDirectMessageAsync(new AccountKey(message.account_id,
+                            message.account_host), message.id);
                     break;
                 }
                 case R.id.copy: {
-                    if (ClipboardUtils.setText(getActivity(), mSelectedDirectMessage.text_plain)) {
+                    if (ClipboardUtils.setText(getActivity(), message.text_plain)) {
                         Utils.showOkMessage(getActivity(), R.string.text_copied, false);
                     }
                     break;
@@ -659,7 +662,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 if (((BaseAppCompatActivity) activity).getKeyMetaState() != 0) return false;
                 final ParcelableCredentials account = (ParcelableCredentials) mAccountSpinner.getSelectedItem();
                 if (account == null) return false;
-                mEditText.setAccountKey(account.account_id);
+                mEditText.setAccountKey(new AccountKey(account.account_id, account.account_host));
                 searchUsers(account.account_id, ParseUtils.parseString(mEditUserQuery.getText()), false);
                 return true;
             }
@@ -678,7 +681,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             public void afterTextChanged(Editable s) {
                 final ParcelableCredentials account = (ParcelableCredentials) mAccountSpinner.getSelectedItem();
                 if (account == null) return;
-                mEditText.setAccountKey(account.account_id);
+                mEditText.setAccountKey(new AccountKey(account.account_id, account.account_host));
                 searchUsers(account.account_id, ParseUtils.parseString(s), true);
             }
         });
@@ -831,8 +834,9 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         private final boolean mFromCache;
         private final UserColorNameManager mUserColorNameManager;
 
-        public CacheUserSearchLoader(MessagesConversationFragment fragment, long accountId, String query, boolean fromCache, boolean fromUser) {
-            super(fragment.getContext(), accountId, query, 0, null, fromUser);
+        public CacheUserSearchLoader(MessagesConversationFragment fragment, AccountKey accountKey,
+                                     String query, boolean fromCache, boolean fromUser) {
+            super(fragment.getContext(), accountKey, query, 0, null, fromUser);
             mUserColorNameManager = fragment.mUserColorNameManager;
             mFromCache = fromCache;
         }
@@ -896,9 +900,10 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     final Bundle args = getArguments();
                     final ParcelableCredentials account = args.getParcelable(EXTRA_ACCOUNT);
                     final ParcelableUser user = args.getParcelable(EXTRA_USER);
-                    if (account == null || user == null) return;
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
-                    twitter.destroyMessageConversationAsync(account.account_id, user.id);
+                    if (account == null || user == null || twitter == null) return;
+                    twitter.destroyMessageConversationAsync(new AccountKey(account.account_id,
+                            account.account_host), user.id);
                     break;
                 }
             }
