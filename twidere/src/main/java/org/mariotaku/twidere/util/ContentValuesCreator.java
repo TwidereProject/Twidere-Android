@@ -44,6 +44,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
+import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
@@ -202,7 +203,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     @NonNull
     public static ContentValues createActivity(final ParcelableActivity activity) {
         final ContentValues values = new ContentValues();
-        final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
+        final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
         if (status != null) {
             createStatusActivity(status, values);
         }

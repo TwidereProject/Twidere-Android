@@ -222,7 +222,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         switch (getItemViewType(position)) {
             case ITEM_VIEW_TYPE_STATUS: {
                 final ParcelableActivity activity = getActivity(position);
-                final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
+                final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
                 assert status != null;
                 final IStatusViewHolder statusViewHolder = (IStatusViewHolder) holder;
                 statusViewHolder.displayStatus(status, true, true);
@@ -436,7 +436,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
             if (adapter == null) return;
             final Context context = adapter.getContext();
             final ParcelableActivity activity = adapter.getActivity(position);
-            final ParcelableStatus status = ParcelableActivity.getActivityStatus(activity);
+            final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
             assert status != null;
             IntentUtils.openUserProfile(context, status.account_key, status.user_id,
                     status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);

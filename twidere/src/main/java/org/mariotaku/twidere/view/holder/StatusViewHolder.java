@@ -330,7 +330,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         }
 
         if (adapter.shouldShowAccountsColor()) {
-            itemContent.drawEnd(DataStoreUtils.getAccountColor(context, status.account_key));
+            itemContent.drawEnd(status.account_color);
         } else {
             itemContent.drawEnd();
         }

@@ -5,14 +5,15 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.util.List;
 
@@ -53,12 +54,20 @@ public class ParcelableAccountUtils {
         return list.toArray(new ParcelableAccount[list.size()]);
     }
 
+    public static ParcelableAccount[] getAccounts(@NonNull final Context context) {
+        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
+                Accounts.COLUMNS_NO_CREDENTIALS, null, null, null);
+        if (cur == null) return new ParcelableAccount[0];
+        return getAccounts(cur, new ParcelableAccountCursorIndices(cur));
+    }
+
     @NonNull
-    public static ParcelableAccount[] getAccounts(@Nullable final Context context, @Nullable final AccountKey... accountIds) {
-        if (context == null) return new ParcelableAccount[0];
-        final String where = accountIds != null ? Expression.in(new Columns.Column(Accounts.ACCOUNT_KEY),
-                new RawItemArray(AccountKey.getIds(accountIds))).getSQL() : null;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS_NO_CREDENTIALS, where, null, null);
+    public static ParcelableAccount[] getAccounts(@NonNull final Context context, @NonNull final AccountKey... accountIds) {
+        final String where = Expression.in(new Columns.Column(Accounts.ACCOUNT_KEY),
+                new ArgsArray(accountIds.length)).getSQL();
+        final String[] whereArgs = TwidereArrayUtils.toStringArray(accountIds);
+        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
+                Accounts.COLUMNS_NO_CREDENTIALS, where, whereArgs, null);
         if (cur == null) return new ParcelableAccount[0];
         return getAccounts(cur, new ParcelableAccountCursorIndices(cur));
     }

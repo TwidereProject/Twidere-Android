@@ -44,6 +44,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.RefreshTaskParam;
@@ -53,6 +54,7 @@ import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
@@ -122,7 +124,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Activities.COLUMNS;
         return new CursorActivitiesLoader(context, uri, projection, selection, expression.whereArgs,
-                sortOrder, fromUser);
+                sortOrder, fromUser, accountKeys);
     }
 
     @Override
@@ -133,7 +135,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     @Override
     protected AccountKey[] getAccountKeys() {
         final Bundle args = getArguments();
-        AccountKey[] accountKeys = Utils.getAccountKeys(args);
+        final AccountKey[] accountKeys = Utils.getAccountKeys(getContext(), args);
         if (accountKeys != null) {
             return accountKeys;
         }
@@ -323,28 +325,47 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     }
 
     public static class CursorActivitiesLoader extends ExtendedObjectCursorLoader<ParcelableActivity> {
+        private final AccountKey[] mAccountKeys;
+
         public CursorActivitiesLoader(Context context, Uri uri, String[] projection,
                                       String selection, String[] selectionArgs, String sortOrder,
-                                      boolean fromUser) {
+                                      boolean fromUser, AccountKey[] accountKeys) {
             super(context, ParcelableActivityCursorIndices.class, uri, projection, selection, selectionArgs, sortOrder, fromUser);
+            mAccountKeys = accountKeys;
         }
 
         @Override
         protected ObjectCursor<ParcelableActivity> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<ParcelableActivity> indices) {
-            return new ActivityCursor(cursor, indices, DataStoreUtils.getFilteredUserIds(getContext()));
+            final long[] filteredUserIds = DataStoreUtils.getFilteredUserIds(getContext());
+            final ParcelableAccount[] accounts = ParcelableAccountUtils.getAccounts(getContext(), mAccountKeys);
+            return new ActivityCursor(cursor, indices, filteredUserIds, accounts);
         }
 
         public static class ActivityCursor extends ObjectCursor<ParcelableActivity> {
 
             private final long[] filteredUserIds;
+            private final ParcelableAccount[] accounts;
 
-            public ActivityCursor(Cursor cursor, CursorIndices<ParcelableActivity> indies, long[] filteredUserIds) {
+            public ActivityCursor(Cursor cursor, CursorIndices<ParcelableActivity> indies, long[] filteredUserIds, ParcelableAccount[] accounts) {
                 super(cursor, indies);
                 this.filteredUserIds = filteredUserIds;
+                this.accounts = accounts;
             }
 
             public long[] getFilteredUserIds() {
                 return filteredUserIds;
+            }
+
+            @Override
+            protected ParcelableActivity get(Cursor cursor, CursorIndices<ParcelableActivity> indices) {
+                final ParcelableActivity activity = super.get(cursor, indices);
+                for (ParcelableAccount account : accounts) {
+                    if (account.account_key.equals(activity.account_key)) {
+                        activity.account_color = account.color;
+                        break;
+                    }
+                }
+                return activity;
             }
         }
     }

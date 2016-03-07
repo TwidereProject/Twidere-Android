@@ -73,7 +73,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         final Context context = getContext();
         final ContentResolver resolver = context.getContentResolver();
         final AccountKey accountKey = mAccountKey;
-        int accountColor = DataStoreUtils.getAccountColor(context, accountKey);
+        final int accountColor = DataStoreUtils.getAccountColor(context, accountKey);
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
             if (user != null) {

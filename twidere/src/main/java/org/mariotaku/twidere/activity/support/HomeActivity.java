@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.ContentObserver;
+import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -327,6 +328,10 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(Color.TRANSPARENT);
+            }
         }
         super.onCreate(savedInstanceState);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
@@ -691,7 +696,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             for (int i = 0, j = mPagerAdapter.getCount(); i < j; i++) {
                 final SupportTabSpec tab = mPagerAdapter.getTab(i);
                 if (tabType.equals(CustomTabUtils.getTabTypeAlias(tab.type))) {
-                    if (tab.args != null && CustomTabUtils.hasAccountId(tab.args,
+                    if (tab.args != null && CustomTabUtils.hasAccountId(this, tab.args,
                             getActivatedAccountKeys(), accountId)) {
                         initialTab = i;
                         break;
@@ -919,7 +924,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 }
                 switch (spec.type) {
                     case CustomTabType.HOME_TIMELINE: {
-                        final AccountKey[] accountKeys = Utils.getAccountKeys(spec.args);
+                        final AccountKey[] accountKeys = Utils.getAccountKeys(mContext, spec.args);
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext,
                                 true, ReadPositionTag.HOME_TIMELINE, accountKeys);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
@@ -930,7 +935,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                         break;
                     }
                     case CustomTabType.NOTIFICATIONS_TIMELINE: {
-                        final AccountKey[] accountIds = Utils.getAccountKeys(spec.args);
+                        final AccountKey[] accountIds = Utils.getAccountKeys(mContext, spec.args);
                         final String tagWithAccounts = Utils.getReadPositionTagWithAccounts(mContext,
                                 true, ReadPositionTag.ACTIVITIES_ABOUT_ME, accountIds);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);

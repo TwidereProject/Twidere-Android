@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import com.bluelinelabs.logansquare.JsonMapper;
@@ -613,6 +614,7 @@ public class DataStoreUtils implements Constants {
         return filterExpression;
     }
 
+    @WorkerThread
     public static int getAccountColor(final Context context, final AccountKey accountKey) {
         if (context == null) return Color.TRANSPARENT;
         final Integer cached = sAccountColors.get(accountKey);
@@ -819,8 +821,8 @@ public class DataStoreUtils implements Constants {
         if (cur == null) return messageIds;
         try {
             while (cur.moveToNext()) {
-                final long accountId = cur.getLong(0);
-                int idx = ArrayUtils.indexOf(keys, accountId);
+                final AccountKey accountKey = AccountKey.valueOf(cur.getString(0));
+                int idx = ArrayUtils.indexOf(keys, accountKey);
                 if (idx < 0) continue;
                 messageIds[idx] = cur.getLong(1);
             }
@@ -891,6 +893,20 @@ public class DataStoreUtils implements Constants {
             where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).getSQL();
             whereArgs = new String[]{String.valueOf(accountKey.toString())};
         }
+        return cr.query(Accounts.CONTENT_URI, columns, where, whereArgs, null);
+    }
+
+    @Nullable
+    public static Cursor findAccountCursorsById(@NonNull final Context context, final String[] columns,
+                                                final long... ids) {
+        if (ids == null) return null;
+        final ContentResolver cr = context.getContentResolver();
+        Expression[] expressions = new Expression[ids.length];
+        for (int i = 0, j = ids.length; i < j; i++) {
+            expressions[i] = Expression.likeRaw(new Column(Accounts.ACCOUNT_KEY), "?||\'@%\'");
+        }
+        final String where = Expression.or(expressions).getSQL();
+        final String[] whereArgs = TwidereArrayUtils.toStringArray(ids);
         return cr.query(Accounts.CONTENT_URI, columns, where, whereArgs, null);
     }
 

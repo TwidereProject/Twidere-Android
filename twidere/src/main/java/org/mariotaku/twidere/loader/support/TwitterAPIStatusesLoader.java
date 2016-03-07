@@ -39,7 +39,9 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ListResponse;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
@@ -77,7 +79,8 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     @Inject
     SharedPreferencesWrapper mPreferences;
 
-    public TwitterAPIStatusesLoader(final Context context, final AccountKey accountKey,
+    public TwitterAPIStatusesLoader(@NonNull final Context context,
+                                    @Nullable final AccountKey accountKey,
                                     final long sinceId, final long maxId,
                                     final List<ParcelableStatus> data,
                                     @Nullable final String[] savedStatusesArgs,
@@ -93,6 +96,16 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     @SuppressWarnings("unchecked")
     @Override
     public final ListResponse<ParcelableStatus> loadInBackground() {
+        final Context context = getContext();
+        if (mAccountKey == null) {
+            return ListResponse.getListInstance(new TwitterException("No Account"));
+        }
+        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
+                mAccountKey);
+        if (credentials == null) {
+            return ListResponse.getListInstance(new TwitterException("No Account"));
+        }
+
         List<ParcelableStatus> data = getData();
         if (data == null) {
             data = new CopyOnWriteArrayList<>();
@@ -110,10 +123,12 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             }
         }
         if (!isFromUser()) return ListResponse.getListInstance(data);
-        final Twitter twitter = getTwitter();
-        if (twitter == null) return null;
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, credentials, true,
+                true);
+        if (twitter == null) {
+            return ListResponse.getListInstance(new TwitterException("No Account"));
+        }
         final List<Status> statuses;
-        final Context context = getContext();
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final int loadItemLimit = prefs.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         final boolean noItemsBefore = data.isEmpty();
@@ -130,7 +145,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 }
             }
             statuses = getStatuses(twitter, paging);
-            if (!Utils.isOfficialCredentials(getContext(), getAccountKey())) {
+            if (!Utils.isOfficialCredentials(context, getAccountKey())) {
                 InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
             }
         } catch (final TwitterException e) {
@@ -166,7 +181,10 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
                 && statuses.size() >= loadItemLimit;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
-            data.add(ParcelableStatusUtils.fromStatus(status, mAccountKey, insertGap && isGapEnabled() && minIdx == i));
+            final ParcelableStatus item = ParcelableStatusUtils.fromStatus(status, mAccountKey,
+                    insertGap && isGapEnabled() && minIdx == i);
+            item.account_color = credentials.color;
+            data.add(item);
         }
 
         final SQLiteDatabase db = TwidereApplication.getInstance(context).getSQLiteDatabase();
@@ -204,11 +222,6 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
 
     @NonNull
     protected abstract List<Status> getStatuses(@NonNull Twitter twitter, Paging paging) throws TwitterException;
-
-    @Nullable
-    protected final Twitter getTwitter() {
-        return TwitterAPIFactory.getTwitterInstance(getContext(), mAccountKey, true, true);
-    }
 
     @WorkerThread
     protected abstract boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status);

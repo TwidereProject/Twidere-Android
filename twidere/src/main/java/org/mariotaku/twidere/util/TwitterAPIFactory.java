@@ -110,13 +110,30 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     @Nullable
+    public static Twitter getTwitterInstance(@NonNull final Context context,
+                                             @NonNull final ParcelableCredentials credentials,
+                                             final boolean includeEntities, final boolean includeRetweets) {
+        return getTwitterInstance(context, credentials, includeEntities, includeRetweets, Twitter.class);
+    }
+
+
+    @Nullable
     @WorkerThread
     public static <T> T getTwitterInstance(@NonNull final Context context,
                                            @NonNull final AccountKey accountKey,
-                                           final boolean includeEntities, final boolean includeRetweets,
+                                           final boolean includeEntities,
+                                           final boolean includeRetweets,
                                            @NonNull Class<T> cls) {
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context, accountKey);
         if (credentials == null) return null;
+        return getTwitterInstance(context, credentials, includeEntities, includeRetweets, cls);
+    }
+
+    @Nullable
+    public static <T> T getTwitterInstance(@NonNull final Context context,
+                                           @NonNull final ParcelableCredentials credentials,
+                                           final boolean includeEntities, final boolean includeRetweets,
+                                           @NonNull Class<T> cls) {
         final HashMap<String, String> extraParams = new HashMap<>();
         extraParams.put("include_entities", String.valueOf(includeEntities));
         extraParams.put("include_retweets", String.valueOf(includeRetweets));

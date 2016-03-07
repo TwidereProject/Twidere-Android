@@ -123,23 +123,15 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @JsonField(name = "status_user_following")
     @CursorField(value = Activities.STATUS_USER_FOLLOWING, excludeWrite = true)
     public boolean status_user_following;
+
+    @ParcelableThisPlease
+    public int account_color;
+
     public transient long[] after_filtered_source_ids;
     public transient ParcelableUser[] after_filtered_sources;
 
 
     public ParcelableActivity() {
-    }
-
-    @Nullable
-    public static ParcelableStatus getActivityStatus(@NonNull ParcelableActivity activity) {
-        if (Activity.Action.MENTION.equals(activity.action)) {
-            return activity.target_object_statuses[0];
-        } else if (Activity.Action.REPLY.equals(activity.action)) {
-            return activity.target_statuses[0];
-        } else if (Activity.Action.QUOTE.equals(activity.action)) {
-            return activity.target_statuses[0];
-        }
-        return null;
     }
 
     public static int calculateHashCode(AccountKey accountKey, long timestamp, long maxPosition, long minPosition) {

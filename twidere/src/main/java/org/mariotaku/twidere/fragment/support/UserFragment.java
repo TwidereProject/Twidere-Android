@@ -524,11 +524,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mUser = user;
         final int userColor = mUserColorNameManager.getUserColor(user.id, true);
         mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
-        if (user.account_color != 0) {
-            mProfileNameContainer.drawEnd(user.account_color);
-        } else {
-            mProfileNameContainer.drawEnd(DataStoreUtils.getAccountColor(activity, user.account_key));
-        }
+        mProfileNameContainer.drawEnd(user.account_color);
         final String nick = mUserColorNameManager.getUserNickname(user.id, true);
         mNameView.setText(mBidiFormatter.unicodeWrap(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick)));
         final int typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected);

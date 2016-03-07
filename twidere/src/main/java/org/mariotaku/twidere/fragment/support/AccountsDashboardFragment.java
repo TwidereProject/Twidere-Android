@@ -582,7 +582,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     private boolean hasAccountInTab(SupportTabSpec tab, AccountKey accountId, boolean isActivated) {
         if (tab.args == null) return false;
-        final AccountKey[] accountKeys = Utils.getAccountKeys(tab.args);
+        final AccountKey[] accountKeys = Utils.getAccountKeys(getContext(), tab.args);
         if (accountKeys == null) return isActivated;
         return ArrayUtils.contains(accountKeys, accountId);
     }

@@ -300,6 +300,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     @CursorField(value = Statuses._ID, excludeWrite = true)
     long _id;
+
+    @ParcelableThisPlease
+    public int account_color;
+
     public static final Creator<ParcelableStatus> CREATOR = new Creator<ParcelableStatus>() {
         public ParcelableStatus createFromParcel(Parcel source) {
             ParcelableStatus target = new ParcelableStatus();

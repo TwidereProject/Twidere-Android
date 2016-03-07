@@ -291,8 +291,9 @@ public class CustomTabUtils implements Constants {
         return tabType != null && CUSTOM_TABS_CONFIGURATION_MAP.containsKey(getTabTypeAlias(tabType));
     }
 
-    public static boolean hasAccountId(@NonNull Bundle args, AccountKey[] activatedAccountKeys, AccountKey accountKey) {
-        final AccountKey[] accountKeys = Utils.getAccountKeys(args);
+    public static boolean hasAccountId(final Context context, @NonNull final Bundle args,
+                                       final AccountKey[] activatedAccountKeys, AccountKey accountKey) {
+        final AccountKey[] accountKeys = Utils.getAccountKeys(context, args);
         if (accountKeys != null) {
             return ArrayUtils.contains(accountKeys, accountKey);
         }

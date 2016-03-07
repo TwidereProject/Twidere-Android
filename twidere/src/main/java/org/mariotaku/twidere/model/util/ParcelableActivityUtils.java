@@ -1,10 +1,14 @@
 package org.mariotaku.twidere.model.util;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.apache.commons.collections.primitives.ArrayLongList;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 /**
@@ -84,4 +88,21 @@ public class ParcelableActivityUtils {
     }
 
 
+    @Nullable
+    public static ParcelableStatus getActivityStatus(@NonNull ParcelableActivity activity) {
+        if (Activity.Action.MENTION.equals(activity.action)) {
+            final ParcelableStatus status = activity.target_object_statuses[0];
+            status.account_color = activity.account_color;
+            return status;
+        } else if (Activity.Action.REPLY.equals(activity.action)) {
+            final ParcelableStatus status = activity.target_statuses[0];
+            status.account_color = activity.account_color;
+            return status;
+        } else if (Activity.Action.QUOTE.equals(activity.action)) {
+            final ParcelableStatus status = activity.target_statuses[0];
+            status.account_color = activity.account_color;
+            return status;
+        }
+        return null;
+    }
 }

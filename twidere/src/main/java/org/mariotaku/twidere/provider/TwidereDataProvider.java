@@ -482,13 +482,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
                     SQLiteDatabase.CONFLICT_IGNORE);
         } else if (tableId == TABLE_ID_CACHED_RELATIONSHIPS) {
-            final long accountId = values.getAsLong(CachedRelationships.ACCOUNT_KEY);
+            final String accountKey = values.getAsString(CachedRelationships.ACCOUNT_KEY);
             final long userId = values.getAsLong(CachedRelationships.USER_ID);
             final Expression where = Expression.and(
-                    Expression.equals(CachedRelationships.ACCOUNT_KEY, accountId),
-                    Expression.equals(CachedRelationships.USER_ID, userId)
+                    Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
+                    Expression.equalsArgs(CachedRelationships.USER_ID)
             );
-            if (mDatabaseWrapper.update(table, values, where.getSQL(), null) > 0) {
+            final String[] whereArgs = {accountKey, String.valueOf(userId)};
+            if (mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs) > 0) {
                 final String[] projection = {CachedRelationships._ID};
                 final Cursor c = mDatabaseWrapper.query(table, projection, where.getSQL(), null,
                         null, null, null);

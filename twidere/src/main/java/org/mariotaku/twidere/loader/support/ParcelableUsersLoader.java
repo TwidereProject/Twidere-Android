@@ -30,7 +30,8 @@ import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ParcelableUsersLoader extends AsyncTaskLoader<List<ParcelableUser>> implements IExtendedLoader, Constants {
+public abstract class ParcelableUsersLoader extends AsyncTaskLoader<List<ParcelableUser>>
+        implements IExtendedLoader, Constants {
 
     private final List<ParcelableUser> mData = Collections
             .synchronizedList(new NoDuplicatesArrayList<ParcelableUser>());
