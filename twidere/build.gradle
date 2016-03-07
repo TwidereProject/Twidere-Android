@@ -116,7 +116,7 @@ dependencies {
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.12'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.12'
-    compile 'com.github.mariotaku.SQLiteQB:library:0.9.6-SNAPSHOT'
+    compile 'com.github.mariotaku.SQLiteQB:library:0.9.6'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.6'
 
     compile project(':twidere.component.common')
