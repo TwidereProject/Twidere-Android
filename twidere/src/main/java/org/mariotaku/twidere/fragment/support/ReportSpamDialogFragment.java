@@ -29,7 +29,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -45,8 +44,7 @@ public class ReportSpamDialogFragment extends BaseSupportDialogFragment implemen
                 final ParcelableUser user = getUser();
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (user == null || twitter == null) return;
-                twitter.reportSpamAsync(new AccountKey(user.account_id, user.account_host),
-                        user.id);
+                twitter.reportSpamAsync(user.account_key, user.id);
                 break;
             default:
                 break;

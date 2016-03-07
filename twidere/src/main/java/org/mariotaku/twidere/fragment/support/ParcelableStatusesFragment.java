@@ -135,7 +135,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         if (position == 0) return;
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(adapter.getItemCount() - 1);
-        AccountKey[] accountKeys = {new AccountKey(status.account_id, status.account_host)};
+        AccountKey[] accountKeys = {status.account_key};
         final long[] maxIds = {status.id};
         getStatuses(new BaseRefreshTaskParam(accountKeys, maxIds, null));
     }
@@ -187,7 +187,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         if (status == null || status.retweet_id <= 0 || data == null) return;
         for (int i = 0, j = data.size(); i < j; i++) {
             final ParcelableStatus orig = data.get(i);
-            if (orig.account_id == status.account_id && orig.id == status.retweet_id) {
+            if (orig.account_key.equals(status.account_key) && orig.id == status.retweet_id) {
                 orig.my_retweet_id = status.my_retweet_id;
                 orig.retweet_count = status.retweet_count;
             }

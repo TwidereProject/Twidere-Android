@@ -30,6 +30,8 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.AccountKeyConverter;
+import org.mariotaku.twidere.model.util.AccountKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
@@ -44,6 +46,11 @@ public class ParcelableAccount implements Parcelable {
     public long id;
 
     @ParcelableThisPlease
+    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
+    @CursorField(value = Accounts.ACCOUNT_KEY, converter = AccountKeyCursorFieldConverter.class)
+    public AccountKey account_key;
+
+    @ParcelableThisPlease
     @JsonField(name = "screen_name")
     @CursorField(Accounts.SCREEN_NAME)
     public String screen_name;
@@ -52,6 +59,12 @@ public class ParcelableAccount implements Parcelable {
     @JsonField(name = "name")
     @CursorField(Accounts.NAME)
     public String name;
+
+    @Nullable
+    @ParcelableThisPlease
+    @JsonField(name = "account_type")
+    @CursorField(Accounts.ACCOUNT_TYPE)
+    public String account_type;
 
     @ParcelableThisPlease
     @JsonField(name = "profile_image_url")
@@ -64,11 +77,6 @@ public class ParcelableAccount implements Parcelable {
     public String profile_banner_url;
 
     @ParcelableThisPlease
-    @JsonField(name = "account_id")
-    @CursorField(Accounts.ACCOUNT_ID)
-    public long account_id;
-
-    @ParcelableThisPlease
     @JsonField(name = "color")
     @CursorField(Accounts.COLOR)
     public int color;
@@ -77,18 +85,6 @@ public class ParcelableAccount implements Parcelable {
     @JsonField(name = "is_activated")
     @CursorField(Accounts.IS_ACTIVATED)
     public boolean is_activated;
-
-    @Nullable
-    @ParcelableThisPlease
-    @JsonField(name = "account_type")
-    @CursorField(Accounts.ACCOUNT_TYPE)
-    public String account_type;
-
-    @ParcelableThisPlease
-    @JsonField(name = "account_host")
-    @CursorField(Accounts.ACCOUNT_HOST)
-    public String account_host;
-
     @Nullable
     @ParcelableThisPlease
     @JsonField(name = "account_user")
@@ -121,15 +117,15 @@ public class ParcelableAccount implements Parcelable {
     @Override
     public String toString() {
         return "ParcelableAccount{" +
-                "screen_name='" + screen_name + '\'' +
+                "id=" + id +
+                ", account_key=" + account_key +
+                ", screen_name='" + screen_name + '\'' +
                 ", name='" + name + '\'' +
+                ", account_type='" + account_type + '\'' +
                 ", profile_image_url='" + profile_image_url + '\'' +
                 ", profile_banner_url='" + profile_banner_url + '\'' +
-                ", account_id=" + account_id +
                 ", color=" + color +
                 ", is_activated=" + is_activated +
-                ", account_type='" + account_type + '\'' +
-                ", account_host='" + account_host + '\'' +
                 ", account_user=" + account_user +
                 ", is_dummy=" + is_dummy +
                 '}';
@@ -142,16 +138,13 @@ public class ParcelableAccount implements Parcelable {
 
         ParcelableAccount account = (ParcelableAccount) o;
 
-        if (id != account.id) return false;
-        return !(account_host != null ? !account_host.equals(account.account_host) : account.account_host != null);
+        return account_key.equals(account.account_key);
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (account_host != null ? account_host.hashCode() : 0);
-        return result;
+        return account_key.hashCode();
     }
 
     @Override

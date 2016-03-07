@@ -90,7 +90,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
 
         public List<ScrollRecord> mRecords;
-        private long mFirstVisibleTimestamp = -1, mFirstVisibleAccountId = -1;
+        private long mFirstVisibleTimestamp = -1;
+        private AccountKey mFirstVisibleAccountId = null;
         private int mFirstVisiblePosition = -1;
         private int mScrollState;
 
@@ -103,15 +104,16 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 final AbsActivitiesAdapter<Data> adapter = (AbsActivitiesAdapter<Data>) recyclerView.getAdapter();
                 final ParcelableActivity activity = adapter.getActivity(firstVisiblePosition);
                 if (activity != null) {
-                    final long timestamp = activity.timestamp, accountId = activity.account_id;
-                    if (timestamp != mFirstVisibleTimestamp || accountId != mFirstVisibleAccountId) {
+                    final long timestamp = activity.timestamp;
+                    final AccountKey accountKey = activity.account_key;
+                    if (timestamp != mFirstVisibleTimestamp || !accountKey.equals(mFirstVisibleAccountId)) {
                         if (mRecords == null) mRecords = new ArrayList<>();
                         final long time = System.currentTimeMillis();
-                        mRecords.add(ScrollRecord.create(timestamp, accountId, time,
+                        mRecords.add(ScrollRecord.create(timestamp, accountKey, time,
                                 TimeZone.getDefault().getOffset(time), mScrollState));
                     }
                     mFirstVisibleTimestamp = timestamp;
-                    mFirstVisibleAccountId = accountId;
+                    mFirstVisibleAccountId = accountKey;
                 }
             }
             mFirstVisiblePosition = firstVisiblePosition;
@@ -190,8 +192,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 case ACTION_STATUS_FAVORITE: {
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(new AccountKey(activity.account_id,
-                                activity.account_host), status.id);
+                        twitter.destroyFavoriteAsync(status.account_key, status.id);
                     } else {
                         final IStatusViewHolder holder = (IStatusViewHolder)
                                 recyclerView.findViewHolderForLayoutPosition(position);
@@ -339,7 +340,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     public void onGapClick(GapViewHolder holder, int position) {
         final AbsActivitiesAdapter<Data> adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
-        final AccountKey[] accountIds = {new AccountKey(activity.account_id, activity.account_host)};
+        final AccountKey[] accountIds = {activity.account_key};
         final long[] maxIds = {activity.min_position};
         getActivities(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
@@ -353,8 +354,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         // BEGIN HotMobi
         final MediaEvent event = MediaEvent.create(getActivity(), status, media,
                 getTimelineType(), adapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(new AccountKey(status.account_id,
-                status.account_host), event);
+        HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
         // END HotMobi
     }
 
@@ -383,8 +383,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(new AccountKey(status.account_id,
-                            status.account_host), status.id);
+                    twitter.destroyFavoriteAsync(status.account_key, status.id);
                 } else {
                     holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
                 }

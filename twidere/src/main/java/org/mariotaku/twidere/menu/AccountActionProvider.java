@@ -64,7 +64,7 @@ public class AccountActionProvider extends ActionProvider implements TwidereCons
             final MenuItem item = subMenu.getItem(i);
             final Intent intent = item.getIntent();
             final ParcelableAccount account = intent.getParcelableExtra(EXTRA_ACCOUNT);
-            if (ArrayUtils.contains(mAccountIds, account.account_id)) {
+            if (ArrayUtils.contains(mAccountIds, account.account_key)) {
                 item.setChecked(true);
             }
         }

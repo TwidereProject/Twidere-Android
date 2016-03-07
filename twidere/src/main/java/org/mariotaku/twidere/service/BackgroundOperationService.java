@@ -315,7 +315,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         final ContentResolver resolver = getContentResolver();
         if (result.getData() != null && result.getData().id > 0) {
             final ContentValues values = ContentValuesCreator.createDirectMessage(result.getData());
-            final String delete_where = DirectMessages.ACCOUNT_ID + " = " + accountId + " AND "
+            final String delete_where = DirectMessages.ACCOUNT_KEY + " = " + accountId + " AND "
                     + DirectMessages.MESSAGE_ID + " = " + result.getData().id;
             resolver.delete(DirectMessages.Outbox.CONTENT_URI, delete_where, null);
             resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
@@ -584,7 +584,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     shortener.waitForService();
                 }
                 for (final ParcelableAccount account : statusUpdate.accounts) {
-                    final AccountKey accountKey = new AccountKey(account.account_id, account.account_host);
+                    final AccountKey accountKey = new AccountKey(account.account_key, account.account_host);
                     final ParcelableCredentials credentials = DataStoreUtils.getCredentials(this,
                             accountKey);
                     // Get Twitter instance corresponding to account

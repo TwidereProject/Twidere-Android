@@ -43,7 +43,6 @@ import android.widget.EditText;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -108,8 +107,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final IStatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
         assert status != null;
-        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(wrapped,
-                new AccountKey(status.account_id, status.account_host));
+        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(wrapped, status.account_key);
         assert credentials != null;
 
         builder.setView(view);
@@ -134,7 +132,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         view.findViewById(R.id.item_content).setFocusable(false);
         view.findViewById(R.id.comment_container).setVisibility(status.user_is_protected ? View.GONE : View.VISIBLE);
         final ComposeEditText editComment = (ComposeEditText) view.findViewById(R.id.edit_comment);
-        editComment.setAccountKey(new AccountKey(status.account_id, status.account_host));
+        editComment.setAccountKey(status.account_key);
 
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
         final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(editComment, new EditTextEnterHandler.EnterListener() {
@@ -243,19 +241,16 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             final String commentText = editComment.getText() + " " + statusLink;
             ParcelableStatusUpdate update = new ParcelableStatusUpdate();
             update.text = commentText;
-            update.accounts = ParcelableAccountUtils.getAccounts(getContext(), new AccountKey(status.account_id,
-                    status.account_host));
+            update.accounts = ParcelableAccountUtils.getAccounts(getContext(), status.account_key);
             if (linkToQuotedStatus.isChecked()) {
                 update.in_reply_to_status = status;
             }
             update.is_possibly_sensitive = status.is_possibly_sensitive;
             BackgroundOperationService.updateStatusesAsync(getContext(), Draft.Action.QUOTE, update);
         } else if (isMyRetweet(status)) {
-            twitter.cancelRetweetAsync(new AccountKey(status.account_id, status.account_host),
-                    status.id, status.my_retweet_id);
+            twitter.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
         } else {
-            twitter.retweetStatusAsync(new AccountKey(status.account_id, status.account_host),
-                    status.id);
+            twitter.retweetStatusAsync(status.account_key, status.id);
         }
     }
 

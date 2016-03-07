@@ -22,6 +22,7 @@ package org.mariotaku.twidere.extension.shortener.gist;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -34,7 +35,7 @@ import org.mariotaku.twidere.service.StatusShortenerService;
 public class GistStatusShortenerService extends StatusShortenerService {
 
     @Override
-    protected StatusShortenResult shorten(ParcelableStatusUpdate status, long currentAccountId, String overrideStatusText) {
+    protected StatusShortenResult shorten(ParcelableStatusUpdate status, AccountKey currentAccountKey, String overrideStatusText) {
         final Github github = GithubFactory.getInstance(getApiKey());
         final NewGist newGist = new NewGist();
         newGist.setDescription("long tweet");

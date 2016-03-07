@@ -83,8 +83,8 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         final TweetEvent event = new TweetEvent();
         event.markStart(context);
         event.setId(status.id);
-        event.setAccountId(status.account_id);
-        event.setAccountHost(status.account_host);
+        event.setAccountId(status.account_key.getId());
+        event.setAccountHost(status.account_key.getHost());
         event.setUserId(status.user_id);
         event.setTimelineType(timelineType);
         event.setTweetType(TwidereDataUtils.getTweetType(status));

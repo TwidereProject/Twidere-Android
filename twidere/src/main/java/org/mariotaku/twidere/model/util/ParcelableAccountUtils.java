@@ -25,7 +25,7 @@ public class ParcelableAccountUtils {
     public static AccountKey[] getAccountKeys(@NonNull ParcelableAccount[] accounts) {
         AccountKey[] ids = new AccountKey[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {
-            ids[i] = new AccountKey(accounts[i].account_id, accounts[i].account_host);
+            ids[i] = new AccountKey(accounts[i].account_key, accounts[i].account_host);
         }
         return ids;
     }
@@ -34,7 +34,7 @@ public class ParcelableAccountUtils {
     public static ParcelableAccount getAccount(final Context context, final long accountId,
                                                final String accountHost) {
         if (context == null || accountId < 0) return null;
-        final Expression where = Expression.equals(Accounts.ACCOUNT_ID, accountId);
+        final Expression where = Expression.equals(Accounts.ACCOUNT_KEY, accountId);
         Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
                 Accounts.COLUMNS_NO_CREDENTIALS, where.getSQL(), null, null);
         if (cur == null) return null;
@@ -70,7 +70,7 @@ public class ParcelableAccountUtils {
     @NonNull
     public static ParcelableAccount[] getAccounts(@Nullable final Context context, @Nullable final AccountKey... accountIds) {
         if (context == null) return new ParcelableAccount[0];
-        final String where = accountIds != null ? Expression.in(new Columns.Column(Accounts.ACCOUNT_ID),
+        final String where = accountIds != null ? Expression.in(new Columns.Column(Accounts.ACCOUNT_KEY),
                 new RawItemArray(AccountKey.getIds(accountIds))).getSQL() : null;
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS_NO_CREDENTIALS, where, null, null);
         if (cur == null) return new ParcelableAccount[0];

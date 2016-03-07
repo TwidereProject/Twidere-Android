@@ -23,6 +23,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
+import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 
 import org.mariotaku.restfu.http.mime.FileBody;
@@ -88,11 +89,12 @@ public class TwitterWrapper implements Constants {
         return result;
     }
 
-    public static int removeUnreadCounts(final Context context, final int position, final LongSparseArray<Set<Long>> counts) {
+    public static int removeUnreadCounts(final Context context, final int position,
+                                         final SimpleArrayMap<AccountKey, Set<Long>> counts) {
         if (context == null || position < 0 || counts == null) return 0;
         int result = 0;
         for (int i = 0, j = counts.size(); i < j; i++) {
-            final long key = counts.keyAt(i);
+            final AccountKey key = counts.keyAt(i);
             final Set<Long> value = counts.valueAt(i);
             final Uri.Builder builder = UnreadCounts.CONTENT_URI.buildUpon();
             builder.appendPath(String.valueOf(position));

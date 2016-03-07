@@ -104,17 +104,14 @@ public class ParcelableUsersAdapter extends AbsUsersAdapter<List<ParcelableUser>
     }
 
     public int findPosition(AccountKey accountKey, long userId) {
-        return findPosition(accountKey.getId(), accountKey.getHost(), userId);
-    }
-
-    public int findPosition(long accountId, String accountHost, long userId) {
         if (mData == null) return RecyclerView.NO_POSITION;
         for (int i = getUserStartIndex(), j = i + getUserCount(); i < j; i++) {
             final ParcelableUser user = mData.get(i);
-            if (user.account_id == accountId && user.id == userId) {
+            if (user.account_key.equals(accountKey) && user.id == userId) {
                 return i;
             }
         }
         return RecyclerView.NO_POSITION;
     }
+
 }

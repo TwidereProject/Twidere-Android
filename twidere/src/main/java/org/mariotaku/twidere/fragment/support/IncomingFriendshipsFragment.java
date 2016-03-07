@@ -73,8 +73,7 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
         final AbsUsersAdapter<List<ParcelableUser>> adapter = getAdapter();
         final ParcelableUser user = adapter.getUser(position);
         if (user == null) return;
-        mTwitterWrapper.acceptFriendshipAsync(new AccountKey(user.account_id, user.account_host),
-                user.id);
+        mTwitterWrapper.acceptFriendshipAsync(user.account_key, user.id);
     }
 
     @Override
@@ -82,8 +81,7 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
         final AbsUsersAdapter<List<ParcelableUser>> adapter = getAdapter();
         final ParcelableUser user = adapter.getUser(position);
         if (user == null) return;
-        mTwitterWrapper.denyFriendshipAsync(new AccountKey(user.account_id, user.account_host),
-                user.id);
+        mTwitterWrapper.denyFriendshipAsync(user.account_key, user.id);
     }
 
     @Subscribe

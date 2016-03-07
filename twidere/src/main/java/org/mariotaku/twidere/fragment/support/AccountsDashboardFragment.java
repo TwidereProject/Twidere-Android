@@ -76,6 +76,7 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
@@ -247,8 +248,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 final ParcelableAccount account = mAccountsAdapter.getSelectedAccount();
                 if (account == null) return;
                 final FragmentActivity activity = getActivity();
-                IntentUtils.openUserProfile(activity, new AccountKey(account.account_id,
-                                account.account_host), account.account_id, account.screen_name, null, true,
+                IntentUtils.openUserProfile(activity, account.account_key,
+                        account.account_key.getId(), account.screen_name, null, true,
                         UserFragment.Referral.SELF_PROFILE);
                 break;
             }
@@ -280,7 +281,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         AccountKey defaultId = null;
         for (ParcelableAccount account : accounts) {
             if (account.is_activated) {
-                defaultId = new AccountKey(account.account_id, account.account_host);
+                defaultId = account.account_key;
                 break;
             }
         }
@@ -291,7 +292,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         if (accountKey == null) {
             accountKey = defaultId;
         }
-        mAccountsAdapter.setSelectedAccountId(accountKey);
+        mAccountsAdapter.setSelectedAccountKey(accountKey);
 
         mAccountOptionsAdapter.setSelectedAccount(mAccountsAdapter.getSelectedAccount());
 
@@ -316,11 +317,10 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             final ParcelableAccount account = mAccountsAdapter.getSelectedAccount();
             if (account == null || !(item instanceof OptionItem)) return;
             final OptionItem option = (OptionItem) item;
-            final AccountKey accountKey = new AccountKey(account.account_id, account.account_host);
             switch (option.id) {
                 case R.id.search: {
                     final Intent intent = new Intent(getActivity(), QuickSearchBarActivity.class);
-                    intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
+                    intent.putExtra(EXTRA_ACCOUNT_KEY, account.account_key);
                     startActivity(intent);
                     closeAccountsDrawer();
                     break;
@@ -328,28 +328,30 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 case R.id.compose: {
                     final Intent composeIntent = new Intent(INTENT_ACTION_COMPOSE);
                     composeIntent.setClass(getActivity(), ComposeActivity.class);
-                    composeIntent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
+                    composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.account_key);
                     startActivity(composeIntent);
                     break;
                 }
                 case R.id.favorites: {
-                    IntentUtils.openUserFavorites(getActivity(), accountKey, account.account_id, account.screen_name);
+                    IntentUtils.openUserFavorites(getActivity(), account.account_key,
+                            account.account_key.getId(), account.screen_name);
                     break;
                 }
                 case R.id.lists: {
-                    IntentUtils.openUserLists(getActivity(), accountKey, account.account_id, account.screen_name);
+                    IntentUtils.openUserLists(getActivity(), account.account_key,
+                            account.account_key.getId(), account.screen_name);
                     break;
                 }
                 case R.id.messages: {
-                    IntentUtils.openDirectMessages(getActivity(), accountKey);
+                    IntentUtils.openDirectMessages(getActivity(), account.account_key);
                     break;
                 }
                 case R.id.interactions: {
-                    IntentUtils.openInteractions(getActivity(), accountKey);
+                    IntentUtils.openInteractions(getActivity(), account.account_key);
                     break;
                 }
                 case R.id.edit: {
-                    Utils.openProfileEditor(getActivity(), accountKey);
+                    Utils.openProfileEditor(getActivity(), account.account_key);
                     break;
                 }
             }
@@ -463,8 +465,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                             if (account == null) return true;
                             final Intent composeIntent = new Intent(INTENT_ACTION_COMPOSE);
                             composeIntent.setClass(getActivity(), ComposeActivity.class);
-                            composeIntent.putExtra(EXTRA_ACCOUNT_KEY,
-                                    new AccountKey(account.account_id, account.account_host));
+                            composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.account_key);
                             startActivity(composeIntent);
                             return true;
                         }
@@ -475,10 +476,11 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 final ParcelableAccount account = accounts[item.getOrder()];
                 final ContentValues values = new ContentValues();
                 final boolean newActivated = !account.is_activated;
-                mAccountActionProvider.setAccountActivated(account.account_id, newActivated);
+                mAccountActionProvider.setAccountActivated(account.account_key, newActivated);
                 values.put(Accounts.IS_ACTIVATED, newActivated);
-                final String where = Expression.equals(Accounts.ACCOUNT_ID, account.account_id).getSQL();
-                mResolver.update(Accounts.CONTENT_URI, values, where, null);
+                final String where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).getSQL();
+                final String[] whereArgs = {account.account_key.toString()};
+                mResolver.update(Accounts.CONTENT_URI, values, where, whereArgs);
                 return true;
             }
         });
@@ -545,13 +547,13 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             switch (tab.type) {
                 case CustomTabType.DIRECT_MESSAGES: {
                     if (!hasDmTab) {
-                        hasDmTab = hasAccountInTab(tab, account.account_id, account.is_activated);
+                        hasDmTab = hasAccountInTab(tab, account.account_key, account.is_activated);
                     }
                     break;
                 }
                 case CustomTabType.NOTIFICATIONS_TIMELINE: {
                     if (!hasInteractionsTab) {
-                        hasInteractionsTab = hasAccountInTab(tab, account.account_id, account.is_activated);
+                        hasInteractionsTab = hasAccountInTab(tab, account.account_key, account.is_activated);
                     }
                     break;
                 }
@@ -578,14 +580,11 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, R.id.lists));
     }
 
-    private boolean hasAccountInTab(SupportTabSpec tab, long accountId, boolean isActivated) {
+    private boolean hasAccountInTab(SupportTabSpec tab, AccountKey accountId, boolean isActivated) {
         if (tab.args == null) return false;
         final AccountKey[] accountKeys = Utils.getAccountKeys(tab.args);
         if (accountKeys == null) return isActivated;
-        for (AccountKey accountKey : accountKeys) {
-            if (accountId == accountKey.getId()) return true;
-        }
-        return false;
+        return ArrayUtils.contains(accountKeys, accountId);
     }
 
     private void closeAccountsDrawer() {
@@ -683,10 +682,9 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
             private void finishAnimation() {
                 final Editor editor = mPreferences.edit();
-                final AccountKey accountKey = new AccountKey(account.account_id, account.account_host);
-                editor.putString(KEY_DEFAULT_ACCOUNT_KEY, accountKey.toString());
+                editor.putString(KEY_DEFAULT_ACCOUNT_KEY, account.account_key.toString());
                 editor.apply();
-                mAccountsAdapter.setSelectedAccountId(accountKey);
+                mAccountsAdapter.setSelectedAccountKey(account.account_key);
                 mAccountOptionsAdapter.setSelectedAccount(account);
                 updateAccountActions();
                 updateAccountOptionsSeparatorLabel(clickedDrawable);
@@ -800,9 +798,9 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             setHasStableIds(true);
         }
 
-        private static int indexOfAccount(List<ParcelableAccount> accounts, long accountId) {
+        private static int indexOfAccount(List<ParcelableAccount> accounts, AccountKey accountId) {
             for (int i = 0, j = accounts.size(); i < j; i++) {
-                if (accounts.get(i).account_id == accountId) return i;
+                if (accounts.get(i).account_key.equals(accountId)) return i;
             }
             return -1;
         }
@@ -823,16 +821,16 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         }
 
         @Nullable
-        public AccountKey getSelectedAccountId() {
+        public AccountKey getSelectedAccountKey() {
             final ParcelableAccount selectedAccount = getSelectedAccount();
             if (selectedAccount == null) return null;
-            return new AccountKey(selectedAccount.account_id, selectedAccount.account_host);
+            return selectedAccount.account_key;
         }
 
-        public void setSelectedAccountId(@Nullable AccountKey accountKey) {
+        public void setSelectedAccountKey(@Nullable AccountKey accountKey) {
             final ParcelableAccount selectedAccount = getSelectedAccount();
             if (selectedAccount == null || accountKey == null) return;
-            swap(accountKey, new AccountKey(selectedAccount.account_id, selectedAccount.account_host));
+            swap(accountKey, selectedAccount.account_key);
         }
 
         @Override
@@ -850,7 +848,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
         @Override
         public long getItemId(int position) {
-            return getAdapterAccount(position).account_id;
+            return System.identityHashCode(getAdapterAccount(position));
         }
 
         @Override
@@ -868,7 +866,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 Collections.addAll(tempList, accounts);
                 if (previousAccounts != null) {
                     for (ParcelableAccount previousAccount : previousAccounts) {
-                        final int idx = indexOfAccount(tempList, previousAccount.account_id);
+                        final int idx = indexOfAccount(tempList, previousAccount.account_key);
                         if (idx >= 0) {
                             mInternalAccounts[tempIdx++] = tempList.remove(idx);
                         }
@@ -895,10 +893,10 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             int fromIdx = -1, toIdx = -1;
             for (int i = 0, j = mInternalAccounts.length; i < j; i++) {
                 final ParcelableAccount account = mInternalAccounts[i];
-                if (fromId.isAccount(account.account_id, account.account_host)) {
+                if (fromId.equals(account.account_key)) {
                     fromIdx = i;
                 }
-                if (toId.isAccount(account.account_id, account.account_host)) {
+                if (toId.equals(account.account_key)) {
                     toIdx = i;
                 }
             }

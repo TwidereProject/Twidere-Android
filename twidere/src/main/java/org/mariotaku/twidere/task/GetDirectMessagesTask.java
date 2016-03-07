@@ -116,8 +116,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
 
         for (int i = 0, j = messages.size(); i < j; i++) {
             final DirectMessage message = messages.get(i);
-            valuesArray[i] = ContentValuesCreator.createDirectMessage(message, accountKey.getId(),
-                    accountKey.getHost(), isOutgoing);
+            valuesArray[i] = ContentValuesCreator.createDirectMessage(message, accountKey, isOutgoing);
         }
 
         // Delete all rows conflicting before new data inserted.

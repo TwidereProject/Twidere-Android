@@ -34,7 +34,6 @@ import org.mariotaku.twidere.adapter.AbsUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -113,8 +112,8 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
     public void onUserClick(UserViewHolder holder, int position) {
         final ParcelableUser user = getAdapter().getUser(position);
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, new AccountKey(user.account_id, user.account_host),
-                user.id, user.screen_name, null, true, getUserReferral());
+        IntentUtils.openUserProfile(activity, user.account_key, user.id, user.screen_name, null,
+                true, getUserReferral());
     }
 
     @UserFragment.Referral

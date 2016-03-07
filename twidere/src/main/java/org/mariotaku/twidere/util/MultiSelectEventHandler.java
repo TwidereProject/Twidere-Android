@@ -175,10 +175,9 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
             final Intent intent = item.getIntent();
             if (intent == null || !intent.hasExtra(EXTRA_ACCOUNT)) return false;
             final ParcelableAccount account = intent.getParcelableExtra(EXTRA_ACCOUNT);
-            final AccountKey accountKey = new AccountKey(account.account_id, account.account_host);
-            mMultiSelectManager.setAccountKey(accountKey);
+            mMultiSelectManager.setAccountKey(account.account_key);
             if (mAccountActionProvider != null) {
-                mAccountActionProvider.setSelectedAccountIds(accountKey);
+                mAccountActionProvider.setSelectedAccountIds(account.account_key);
             }
             mode.invalidate();
         }

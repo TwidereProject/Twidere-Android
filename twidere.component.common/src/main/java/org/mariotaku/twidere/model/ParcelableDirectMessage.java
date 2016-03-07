@@ -30,6 +30,8 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.AccountKeyConverter;
+import org.mariotaku.twidere.model.util.AccountKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 
@@ -53,13 +55,9 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     };
 
     @ParcelableThisPlease
-    @JsonField(name = "account_id")
-    @CursorField(DirectMessages.ACCOUNT_ID)
-    public long account_id;
-    @ParcelableThisPlease
-    @JsonField(name = "account_host")
-    @CursorField(DirectMessages.ACCOUNT_HOST)
-    public String account_host;
+    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
+    @CursorField(value = DirectMessages.ACCOUNT_KEY, converter = AccountKeyCursorFieldConverter.class)
+    public AccountKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "id")
     @CursorField(DirectMessages.MESSAGE_ID)
@@ -139,29 +137,28 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof ParcelableDirectMessage)) return false;
-        final ParcelableDirectMessage other = (ParcelableDirectMessage) obj;
-        if (account_id != other.account_id) return false;
-        if (id != other.id) return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableDirectMessage that = (ParcelableDirectMessage) o;
+
+        if (id != that.id) return false;
+        return account_key.equals(that.account_key);
+
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (account_id ^ account_id >>> 32);
-        result = prime * result + (int) (id ^ id >>> 32);
+        int result = account_key.hashCode();
+        result = 31 * result + (int) (id ^ (id >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
         return "ParcelableDirectMessage{" +
-                "account_id=" + account_id +
+                "account_key=" + account_key +
                 ", id=" + id +
                 ", timestamp=" + timestamp +
                 ", sender_id=" + sender_id +

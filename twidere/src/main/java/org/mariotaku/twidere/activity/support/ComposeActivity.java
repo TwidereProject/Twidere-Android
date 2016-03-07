@@ -1023,13 +1023,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     private boolean handleMentionIntent(final ParcelableUser user) {
         if (user == null || user.id <= 0) return false;
-        final String accountScreenName = DataStoreUtils.getAccountScreenName(this,
-                new AccountKey(user.account_id, user.account_host));
+        final String accountScreenName = DataStoreUtils.getAccountScreenName(this, user.account_key);
         if (TextUtils.isEmpty(accountScreenName)) return false;
         mEditText.setText(String.format("@%s ", user.screen_name));
         final int selection_end = mEditText.length();
         mEditText.setSelection(selection_end);
-        mAccountsAdapter.setSelectedAccountIds(new AccountKey(user.account_id, user.account_host));
+        mAccountsAdapter.setSelectedAccountIds(user.account_key);
         return true;
     }
 
@@ -1037,7 +1036,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         if (status == null || status.id <= 0) return false;
         mEditText.setText(Utils.getQuoteStatus(this, status.id, status.user_screen_name, status.text_plain));
         mEditText.setSelection(0);
-        mAccountsAdapter.setSelectedAccountIds(new AccountKey(status.account_id, status.account_host));
+        mAccountsAdapter.setSelectedAccountIds(status.account_key);
         showQuoteLabel(status);
         return true;
     }
@@ -1071,13 +1070,12 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     private boolean handleReplyIntent(final ParcelableStatus status) {
         if (status == null || status.id <= 0) return false;
-        final String myScreenName = DataStoreUtils.getAccountScreenName(this,
-                new AccountKey(status.account_id, status.account_host));
+        final String myScreenName = DataStoreUtils.getAccountScreenName(this, status.account_key);
         if (TextUtils.isEmpty(myScreenName)) return false;
         int selectionStart = 0;
         mEditText.append("@" + status.user_screen_name + " ");
         // If replying status from current user, just exclude it's screen name from selection.
-        if (status.account_id != status.user_id) {
+        if (status.account_key.getId() != status.user_id) {
             selectionStart = mEditText.length();
         }
         if (status.is_retweet) {
@@ -1099,7 +1097,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         }
         final int selectionEnd = mEditText.length();
         mEditText.setSelection(selectionStart, selectionEnd);
-        mAccountsAdapter.setSelectedAccountIds(new AccountKey(status.account_id, status.account_host));
+        mAccountsAdapter.setSelectedAccountIds(status.account_key);
         showReplyLabel(status);
         return true;
     }
@@ -1130,8 +1128,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     private boolean isQuotingProtectedStatus() {
-        if (!isQuote() || mInReplyToStatus == null) return false;
-        return mInReplyToStatus.user_is_protected && mInReplyToStatus.account_id != mInReplyToStatus.user_id;
+        final ParcelableStatus status = mInReplyToStatus;
+        if (!isQuote() || status == null) return false;
+        return status.user_is_protected && status.account_key.getId() != status.user_id;
     }
 
     private boolean noReplyContent(final String text) {
@@ -1147,7 +1146,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         if (ArrayUtils.isEmpty(accounts)) {
             mEditText.setAccountKey(Utils.getDefaultAccountKey(this));
         } else {
-            mEditText.setAccountKey(new AccountKey(accounts[0]));
+            mEditText.setAccountKey(accounts[0].account_key);
         }
         mSendTextCountView.setMaxLength(TwidereValidator.getTextLimit(accounts));
         setMenu();
@@ -1501,7 +1500,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         public long getItemId(int position) {
-            return mAccounts[position].account_id;
+            return System.identityHashCode(mAccounts[position]);
         }
 
         @NonNull
@@ -1510,8 +1509,8 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             final AccountKey[] temp = new AccountKey[mAccounts.length];
             int selectedCount = 0;
             for (ParcelableAccount account : mAccounts) {
-                if (Boolean.TRUE.equals(mSelection.get(new AccountKey(account.account_id, account.account_host)))) {
-                    temp[selectedCount++] = new AccountKey(account.account_id, account.account_host);
+                if (Boolean.TRUE.equals(mSelection.get(account.account_key))) {
+                    temp[selectedCount++] = account.account_key;
                 }
             }
             final AccountKey[] result = new AccountKey[selectedCount];
@@ -1535,7 +1534,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             final ParcelableCredentials[] temp = new ParcelableCredentials[mAccounts.length];
             int selectedCount = 0;
             for (ParcelableCredentials account : mAccounts) {
-                if (Boolean.TRUE.equals(mSelection.get(new AccountKey(account.account_id, account.account_host)))) {
+                if (Boolean.TRUE.equals(mSelection.get(account.account_key))) {
                     temp[selectedCount++] = account;
                 }
             }
@@ -1557,7 +1556,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         @Override
         public void onBindViewHolder(AccountIconViewHolder holder, int position) {
             final ParcelableAccount account = mAccounts[position];
-            final boolean isSelected = Boolean.TRUE.equals(mSelection.get(new AccountKey(account.account_id, account.account_host)));
+            final boolean isSelected = Boolean.TRUE.equals(mSelection.get(account.account_key));
             holder.showAccount(this, account, isSelected);
         }
 
@@ -1574,8 +1573,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         private void toggleSelection(int position) {
             if (mAccounts == null) return;
             final ParcelableCredentials account = mAccounts[position];
-            final AccountKey accountKey = new AccountKey(account.account_id, account.account_host);
-            mSelection.put(accountKey, !Boolean.TRUE.equals(mSelection.get(accountKey)));
+            mSelection.put(account.account_key, !Boolean.TRUE.equals(mSelection.get(account.account_key)));
             mActivity.notifyAccountSelectionChanged();
             notifyDataSetChanged();
         }

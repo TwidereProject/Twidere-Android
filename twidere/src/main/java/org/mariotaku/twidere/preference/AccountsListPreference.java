@@ -108,7 +108,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
                                      final boolean switchDefault) {
             super(context);
             GeneralComponentHelper.build(context).inject(this);
-            final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.account_id;
+            final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.account_key;
             mAccount = account;
             mSwitchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE);
             mSwitchPreference.registerOnSharedPreferenceChangeListener(this);

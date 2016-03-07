@@ -295,7 +295,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 displayUser(user);
                 if (user.is_cache) {
                     final Bundle args = new Bundle();
-                    args.putParcelable(EXTRA_ACCOUNT_KEY, new AccountKey(user.account_id,
+                    args.putParcelable(EXTRA_ACCOUNT_KEY, new AccountKey(user.account_key,
                             user.account_host));
                     args.putLong(EXTRA_USER_ID, user.id);
                     args.putString(EXTRA_SCREEN_NAME, user.screen_name);
@@ -340,7 +340,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mRelationship = null;
             return;
         }
-        if (user.account_id == user.id) {
+        if (user.account_key == user.id) {
             mFollowButton.setText(R.string.edit);
             mFollowButton.setVisibility(View.VISIBLE);
             mRelationship = null;
@@ -527,7 +527,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (user.account_color != 0) {
             mProfileNameContainer.drawEnd(user.account_color);
         } else {
-            final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
+            final AccountKey accountKey = new AccountKey(user.account_key, user.account_host);
             mProfileNameContainer.drawEnd(DataStoreUtils.getAccountColor(activity, accountKey));
         }
         final String nick = mUserColorNameManager.getUserNickname(user.id, true);
@@ -543,7 +543,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mScreenNameView.setText(String.format("@%s", user.screen_name));
         mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
         final TwidereLinkify linkify = new TwidereLinkify(this);
-        final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
+        final AccountKey accountKey = new AccountKey(user.account_key, user.account_host);
         mDescriptionView.setText(linkify.applyAllLinks(user.description_html != null ?
                         HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain,
                 accountKey, false, false));
@@ -646,7 +646,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Subscribe
     public void notifyFriendshipUpdated(FriendshipUpdatedEvent event) {
         final ParcelableUser user = getUser();
-        if (user == null || !event.isAccount(user.account_id, user.account_host) ||
+        if (user == null || !event.isAccount(user.account_key, user.account_host) ||
                 !event.isUser(user.id)) return;
         getFriendship();
     }
@@ -691,7 +691,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     final ParcelableUserList list = data.getParcelableExtra(EXTRA_USER_LIST);
                     if (list == null || twitter == null) return;
-                    twitter.addUserListMembersAsync(new AccountKey(user.account_id, user.account_host),
+                    twitter.addUserListMembersAsync(new AccountKey(user.account_key, user.account_host),
                             list.id, user);
                 }
                 break;
@@ -903,7 +903,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (twitter == null || user == null || userRelationship == null) return;
         final Relationship relationship = userRelationship.relationship;
 
-        final boolean isMyself = user.account_id == user.id;
+        final boolean isMyself = user.account_key == user.id;
         final MenuItem mentionItem = menu.findItem(R.id.mention);
         if (mentionItem != null) {
             final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
@@ -913,7 +913,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         MenuUtils.setMenuItemAvailability(menu, R.id.incoming_friendships, isMyself);
         MenuUtils.setMenuItemAvailability(menu, R.id.saved_searches, isMyself);
         MenuUtils.setMenuItemAvailability(menu, R.id.scheduled_statuses, isMyself
-                && TwitterAPIFactory.getOfficialKeyType(getActivity(), user.account_id) == ConsumerKeyType.TWEETDECK);
+                && TwitterAPIFactory.getOfficialKeyType(getActivity(), user.account_key) == ConsumerKeyType.TWEETDECK);
 //        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
 //        followItem.setVisible(!isMyself);
 //        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself
@@ -980,7 +980,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = getUser();
         final UserRelationship userRelationship = mRelationship;
         if (user == null || twitter == null) return false;
-        final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
+        final AccountKey accountKey = new AccountKey(user.account_key, user.account_host);
         switch (item.getItemId()) {
             case R.id.block: {
                 if (userRelationship == null) return true;
@@ -1284,14 +1284,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final FragmentActivity activity = getActivity();
         final ParcelableUser user = getUser();
         if (activity == null || user == null) return;
-        final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
+        final AccountKey accountKey = new AccountKey(user.account_key, user.account_host);
         switch (view.getId()) {
             case R.id.error_container: {
                 getUserInfo(true);
                 break;
             }
             case R.id.follow: {
-                if (user.id == user.account_id) {
+                if (user.id == user.account_key) {
                     Utils.openProfileEditor(getActivity(), accountKey);
                     break;
                 }
@@ -1337,7 +1337,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.name_container: {
-                if (user.account_id != user.id) return;
+                if (user.account_key != user.id) return;
                 Utils.openProfileEditor(getActivity(), accountKey);
                 break;
             }
@@ -1358,12 +1358,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (user == null) return;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(getActivity(), new AccountKey(user.account_id,
+                IntentUtils.openUserProfile(getActivity(), new AccountKey(user.account_key,
                         user.account_host), -1, link, null, true, Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
-                IntentUtils.openTweetSearch(getActivity(), new AccountKey(user.account_id, user.account_host),
+                IntentUtils.openTweetSearch(getActivity(), new AccountKey(user.account_key, user.account_host),
                         "#" + link);
                 break;
             }
@@ -1450,7 +1450,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
-        args.putLong(EXTRA_ACCOUNT_ID, user.account_id);
+        args.putLong(EXTRA_ACCOUNT_ID, user.account_key);
         args.putLong(EXTRA_USER_ID, user.id);
         if (!mGetFriendShipLoaderInitialized) {
             lm.initLoader(LOADER_ID_FRIENDSHIP, args, mFriendshipLoaderCallbacks);
@@ -1463,7 +1463,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private void getUserInfo(final boolean omitIntentExtra) {
         final ParcelableUser user = mUser;
         if (user == null) return;
-        getUserInfo(user.account_id, user.id, user.screen_name, omitIntentExtra);
+        getUserInfo(user.account_key, user.id, user.screen_name, omitIntentExtra);
     }
 
     private void setUiColor(int color) {
@@ -1531,7 +1531,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final long accountId;
         final ParcelableUser user = args.getParcelable(EXTRA_USER);
         if (user != null) {
-            tabArgs.putLong(EXTRA_ACCOUNT_ID, accountId = user.account_id);
+            tabArgs.putLong(EXTRA_ACCOUNT_ID, accountId = user.account_key);
             tabArgs.putLong(EXTRA_USER_ID, user.id);
             tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name);
         } else {
@@ -1563,7 +1563,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         final LoaderManager lm = getLoaderManager();
         final boolean loadingRelationship = lm.getLoader(LOADER_ID_FRIENDSHIP) != null;
-        final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
+        final AccountKey accountKey = new AccountKey(user.account_key, user.account_host);
         final boolean creatingFriendship = twitter.isCreatingFriendship(accountKey, user.id);
         final boolean destroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.id);
         final boolean creatingBlock = twitter.isCreatingFriendship(accountKey, user.id);
@@ -1584,7 +1584,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = getUser();
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         if (user == null || twitter == null) return;
-        final AccountKey accountKey = new AccountKey(user.account_id, user.account_host);
+        final AccountKey accountKey = new AccountKey(user.account_key, user.account_host);
         final boolean isCreatingFriendship = twitter.isCreatingFriendship(accountKey, user.id);
         final boolean destroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.id);
         setProgressBarIndeterminateVisibility(isCreatingFriendship || destroyingFriendship);
@@ -1811,7 +1811,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
         public boolean check(@NonNull ParcelableUser user) {
-            return relationship.getSourceUserId() == user.account_id
+            return relationship.getSourceUserId() == user.account_key
                     && relationship.getTargetUserId() == user.id;
         }
     }
@@ -1829,7 +1829,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             final ParcelableUser user = args.first;
             resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user));
             resolver.insert(CachedRelationships.CONTENT_URI, CachedRelationshipValuesCreator.create(
-                    new CachedRelationship(user.account_id, user.id, args.second)));
+                    new CachedRelationship(user.account_key, user.id, args.second)));
             return null;
         }
     }

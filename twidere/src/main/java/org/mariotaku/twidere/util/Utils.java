@@ -848,15 +848,17 @@ public final class Utils implements Constants {
         return buf.toString();
     }
 
-    public static ParcelableDirectMessage findDirectMessageInDatabases(final Context context, final long account_id,
-                                                                       final long message_id) {
+    public static ParcelableDirectMessage findDirectMessageInDatabases(final Context context,
+                                                                       final AccountKey accountKey,
+                                                                       final long messageId) {
         if (context == null) return null;
         final ContentResolver resolver = context.getContentResolver();
         ParcelableDirectMessage message = null;
-        final String where = DirectMessages.ACCOUNT_ID + " = " + account_id + " AND " + DirectMessages.MESSAGE_ID
-                + " = " + message_id;
+        final String where = Expression.and(Expression.equalsArgs(DirectMessages.ACCOUNT_KEY),
+                Expression.equalsArgs(DirectMessages.MESSAGE_ID)).getSQL();
+        final String[] whereArgs = {accountKey.toString(), String.valueOf(messageId)};
         for (final Uri uri : DIRECT_MESSAGES_URIS) {
-            final Cursor cur = resolver.query(uri, DirectMessages.COLUMNS, where, null, null);
+            final Cursor cur = resolver.query(uri, DirectMessages.COLUMNS, where, whereArgs, null);
             if (cur == null) {
                 continue;
             }
@@ -878,7 +880,7 @@ public final class Utils implements Constants {
         final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
         if (twitter == null) throw new TwitterException("Account does not exist");
         final Status status = twitter.showStatus(statusId);
-        final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountKey.getId()),
+        final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_KEY, accountKey.getId()),
                 Expression.equals(Statuses.STATUS_ID, statusId)).getSQL();
         final ContentResolver resolver = context.getContentResolver();
         resolver.delete(CachedStatuses.CONTENT_URI, where, null);
@@ -892,7 +894,7 @@ public final class Utils implements Constants {
         if (context == null) return null;
         final ContentResolver resolver = context.getContentResolver();
         ParcelableStatus status = null;
-        final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_ID, accountKey.getId()),
+        final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_KEY, accountKey.getId()),
                 Expression.equals(Statuses.STATUS_ID, statusId)).getSQL();
         for (final Uri uri : STATUSES_URIS) {
             final Cursor cur = resolver.query(uri, Statuses.COLUMNS, where, null, null);
@@ -1587,8 +1589,8 @@ public final class Utils implements Constants {
     public static boolean isMyAccount(@NonNull final Context context, final long accountId,
                                       final String accountHost) {
         final ContentResolver resolver = context.getContentResolver();
-        final String where = Expression.equalsArgs(Accounts.ACCOUNT_ID).getSQL();
-        final String[] projection = new String[]{Accounts.ACCOUNT_HOST};
+        final String where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).getSQL();
+        final String[] projection = new String[]{};
         final String[] whereArgs = {String.valueOf(accountId)};
         final Cursor cur = resolver.query(Accounts.CONTENT_URI, projection, where, whereArgs, null);
         if (cur == null) return false;
@@ -1615,7 +1617,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean isMyRetweet(final ParcelableStatus status) {
-        return status != null && isMyRetweet(status.account_id, status.retweeted_by_user_id, status.my_retweet_id);
+        return status != null && isMyRetweet(status.account_key.getId(), status.retweeted_by_user_id, status.my_retweet_id);
     }
 
     public static boolean isMyRetweet(final long accountId, final long retweetedById, final long myRetweetId) {
@@ -1798,7 +1800,7 @@ public final class Utils implements Constants {
 
     static boolean isMyStatus(ParcelableStatus status) {
         if (isMyRetweet(status)) return true;
-        return status.account_id == status.user_id;
+        return status.account_key.getId() == status.user_id;
     }
 
     public static boolean shouldStopAutoRefreshOnBatteryLow(final Context context) {
@@ -2258,9 +2260,7 @@ public final class Utils implements Constants {
     }
 
     public static Expression getAccountCompareExpression() {
-        return Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_ID),
-                Expression.or(Expression.isNull(new Column(Statuses.ACCOUNT_HOST)),
-                        Expression.equalsArgs(Statuses.ACCOUNT_HOST)));
+        return Expression.equalsArgs(Statuses.ACCOUNT_KEY);
     }
 
     static class UtilsL {

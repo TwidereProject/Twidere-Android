@@ -49,7 +49,7 @@ public abstract class BaseAccountPreferenceFragment extends BasePreferenceFragme
         final PreferenceManager pm = getPreferenceManager();
         final ParcelableAccount account = getArguments().getParcelable(EXTRA_ACCOUNT);
         final String preferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX
-                + (account != null ? account.account_id : "unknown");
+                + (account != null ? account.account_key : "unknown");
         pm.setSharedPreferencesName(preferenceName);
         addPreferencesFromResource(getPreferencesResource());
         final SharedPreferences prefs = pm.getSharedPreferences();
@@ -58,8 +58,8 @@ public abstract class BaseAccountPreferenceFragment extends BasePreferenceFragme
         final Intent intent = activity.getIntent();
         if (account != null && intent.hasExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)) {
             final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
-            final String name = mUserColorNameManager.getDisplayName(account.account_id, account.name,
-                    account.screen_name, nameFirst, false);
+            final String name = mUserColorNameManager.getDisplayName(account.account_key.getId(),
+                    account.name, account.screen_name, nameFirst, false);
             activity.setTitle(name);
         }
         updatePreferenceScreen();

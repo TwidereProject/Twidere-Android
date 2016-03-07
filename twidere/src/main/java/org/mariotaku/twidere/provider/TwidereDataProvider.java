@@ -481,10 +481,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
                     SQLiteDatabase.CONFLICT_IGNORE);
         } else if (tableId == TABLE_ID_CACHED_RELATIONSHIPS) {
-            final long accountId = values.getAsLong(CachedRelationships.ACCOUNT_ID);
+            final long accountId = values.getAsLong(CachedRelationships.ACCOUNT_KEY);
             final long userId = values.getAsLong(CachedRelationships.USER_ID);
             final Expression where = Expression.and(
-                    Expression.equals(CachedRelationships.ACCOUNT_ID, accountId),
+                    Expression.equals(CachedRelationships.ACCOUNT_KEY, accountId),
                     Expression.equals(CachedRelationships.USER_ID, userId)
             );
             if (mDatabaseWrapper.update(table, values, where.getSQL(), null) > 0) {
@@ -812,7 +812,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL(),
                     new Column(SavedSearches.QUERY, Suggestions.Search.VALUE).getSQL()
             };
-            final Expression savedSearchesWhere = Expression.equals(SavedSearches.ACCOUNT_ID, accountId);
+            final Expression savedSearchesWhere = Expression.equals(SavedSearches.ACCOUNT_KEY, accountId);
             @SuppressLint("Recycle") final Cursor savedSearchesCursor = mDatabaseWrapper.query(true,
                     SavedSearches.TABLE_NAME, savedSearchesProjection, savedSearchesWhere.getSQL(),
                     null, null, null, SavedSearches.DEFAULT_SORT_ORDER, null);

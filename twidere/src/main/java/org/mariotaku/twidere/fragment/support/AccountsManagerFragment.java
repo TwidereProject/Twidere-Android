@@ -19,7 +19,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.util.LongSparseArray;
+import android.support.v4.util.SimpleArrayMap;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -37,9 +37,9 @@ import android.widget.TextView;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
 
+import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.SignInActivity;
@@ -53,6 +53,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.TwidereCollectionUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
 
@@ -69,7 +70,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
 
     private AccountsAdapter mAdapter;
     private ParcelableAccount mSelectedAccount;
-    private LongSparseArray<Boolean> mActivatedState = new LongSparseArray<>();
+    private SimpleArrayMap<AccountKey, Boolean> mActivatedState = new SimpleArrayMap<>();
 
     private DragSortListView mListView;
     private View mEmptyView;
@@ -104,9 +105,10 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
                     return;
                 final ContentValues values = new ContentValues();
                 values.put(Accounts.COLOR, data.getIntExtra(EXTRA_COLOR, Color.WHITE));
-                final Expression where = Expression.equals(Accounts.ACCOUNT_ID, mSelectedAccount.account_id);
+                final Expression where = Expression.equalsArgs(Accounts.ACCOUNT_KEY);
+                final String[] whereArgs = {mSelectedAccount.account_key.toString()};
                 final ContentResolver cr = getContentResolver();
-                cr.update(Accounts.CONTENT_URI, values, where.getSQL(), null);
+                cr.update(Accounts.CONTENT_URI, values, where.getSQL(), whereArgs);
                 return;
             }
         }
@@ -137,7 +139,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
             case R.id.delete: {
                 final AccountDeletionDialogFragment f = new AccountDeletionDialogFragment();
                 final Bundle args = new Bundle();
-                args.putParcelable(EXTRA_ACCOUNT_KEY, new AccountKey(account.account_id, account.account_host));
+                args.putParcelable(EXTRA_ACCOUNT_KEY, account.account_key);
                 f.setArguments(args);
                 f.show(getChildFragmentManager(), FRAGMENT_TAG_ACCOUNT_DELETION);
                 break;
@@ -149,9 +151,8 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final ParcelableAccount account = mAdapter.getAccount(position);
-        IntentUtils.openUserProfile(getActivity(), new AccountKey(account.account_id,
-                        account.account_host), account.account_id, account.screen_name, null, true,
-                UserFragment.Referral.SELF_PROFILE);
+        IntentUtils.openUserProfile(getActivity(), account.account_key, account.account_key.getId(),
+                account.screen_name, null, true, UserFragment.Referral.SELF_PROFILE);
     }
 
     @Override
@@ -161,7 +162,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     }
 
     private void saveActivatedState() {
-        final Set<Long> trueIds = new CompactHashSet<>(), falseIds = new CompactHashSet<>();
+        final Set<AccountKey> trueIds = new CompactHashSet<>(), falseIds = new CompactHashSet<>();
         for (int i = 0, j = mActivatedState.size(); i < j; i++) {
             if (mActivatedState.valueAt(i)) {
                 trueIds.add(mActivatedState.keyAt(i));
@@ -172,16 +173,18 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         final ContentResolver cr = getContentResolver();
         final ContentValues values = new ContentValues();
         values.put(Accounts.IS_ACTIVATED, true);
-        Expression where = Expression.in(new Columns.Column(Accounts.ACCOUNT_ID), new RawItemArray(trueIds.toArray()));
-        cr.update(Accounts.CONTENT_URI, values, where.getSQL(), null);
+        Expression where = Expression.in(new Columns.Column(Accounts.ACCOUNT_KEY), new ArgsArray(trueIds.size()));
+        String[] whereArgs = TwidereCollectionUtils.toStringArray(trueIds);
+        cr.update(Accounts.CONTENT_URI, values, where.getSQL(), whereArgs);
         values.put(Accounts.IS_ACTIVATED, false);
-        where = Expression.in(new Columns.Column(Accounts.ACCOUNT_ID), new RawItemArray(falseIds.toArray()));
-        cr.update(Accounts.CONTENT_URI, values, where.getSQL(), null);
+        where = Expression.in(new Columns.Column(Accounts.ACCOUNT_KEY), new ArgsArray(falseIds.size()));
+        whereArgs = TwidereCollectionUtils.toStringArray(falseIds);
+        cr.update(Accounts.CONTENT_URI, values, where.getSQL(), whereArgs);
     }
 
     @Override
-    public void onAccountToggle(long accountId, boolean state) {
-        mActivatedState.append(accountId, state);
+    public void onAccountToggle(AccountKey accountId, boolean state) {
+        mActivatedState.put(accountId, state);
     }
 
     @Override

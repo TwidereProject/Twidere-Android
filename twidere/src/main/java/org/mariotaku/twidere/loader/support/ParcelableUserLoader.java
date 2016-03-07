@@ -102,8 +102,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                     if (cur.moveToFirst()) {
                         final ParcelableUserCursorIndices indices = new ParcelableUserCursorIndices(cur);
                         final ParcelableUser user = indices.newObject(cur);
-                        user.account_id = accountKey.getId();
-                        user.account_host = accountKey.getHost();
+                        user.account_key = accountKey;
                         user.account_color = accountColor;
                         return SingleResponse.getInstance(user);
                     }
@@ -126,8 +125,8 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 accountValues.put(Accounts.PROFILE_BANNER_URL, user.profile_banner_url);
                 accountValues.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(user,
                         ParcelableUser.class));
-                accountValues.put(Accounts.ACCOUNT_HOST, ParcelableUserUtils.getUserHost(user));
-                final String accountWhere = Expression.equals(Accounts.ACCOUNT_ID, userId).getSQL();
+                // TODO update account key
+                final String accountWhere = Expression.equals(Accounts.ACCOUNT_KEY, userId).getSQL();
                 resolver.update(Accounts.CONTENT_URI, accountValues, accountWhere, null);
             }
             user.account_color = accountColor;

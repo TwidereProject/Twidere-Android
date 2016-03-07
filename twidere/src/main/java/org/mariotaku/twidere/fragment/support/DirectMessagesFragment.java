@@ -31,7 +31,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.util.LongSparseArray;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -88,7 +88,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     private RecyclerViewNavigationHelper mNavigationHelper;
 
     // Data fields
-    private final LongSparseArray<Set<Long>> mUnreadCountsToRemove = new LongSparseArray<>();
+    private final SimpleArrayMap<AccountKey, Set<Long>> mUnreadCountsToRemove = new SimpleArrayMap<>();
     private final Set<Integer> mReadPositions = Collections.synchronizedSet(new HashSet<Integer>());
     private int mFirstVisibleItem;
 
@@ -120,7 +120,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         return twitter != null && (twitter.isReceivedDirectMessagesRefreshing() || twitter.isSentDirectMessagesRefreshing());
     }
 
-    public final LongSparseArray<Set<Long>> getUnreadCountsToRemove() {
+    public final SimpleArrayMap<AccountKey, Set<Long>> getUnreadCountsToRemove() {
         return mUnreadCountsToRemove;
     }
 
@@ -153,7 +153,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         final Uri uri = DirectMessages.ConversationEntries.CONTENT_URI;
         final AccountKey[] accountIds = getAccountKeys();
-        final Expression account_where = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountIds));
+        final Expression account_where = Expression.in(new Column(Statuses.ACCOUNT_KEY), new RawItemArray(accountIds));
         return new CursorLoader(getActivity(), uri, null, account_where.getSQL(), null, null);
     }
 
@@ -195,14 +195,13 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
     @Override
     public void onEntryClick(int position, DirectMessageEntry entry) {
-        IntentUtils.openMessageConversation(getActivity(), new AccountKey(entry.account_id,
-                entry.account_host), entry.conversation_id);
+        IntentUtils.openMessageConversation(getActivity(), entry.account_key, entry.conversation_id);
     }
 
     @Override
     public void onUserClick(int position, DirectMessageEntry entry) {
-        IntentUtils.openUserProfile(getActivity(), new AccountKey(entry.account_id, entry.account_host),
-                entry.conversation_id, entry.screen_name, null, true, null);
+        IntentUtils.openUserProfile(getActivity(), entry.account_key, entry.conversation_id,
+                entry.screen_name, null, true, null);
     }
 
     @Subscribe
@@ -366,7 +365,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         mFirstVisibleItem = firstVisibleItem;
     }
 
-    private void addUnreadCountsToRemove(final long accountId, final long id) {
+    private void addUnreadCountsToRemove(final AccountKey accountId, final long id) {
         if (mUnreadCountsToRemove.indexOfKey(accountId) < 0) {
             final Set<Long> counts = new HashSet<>();
             counts.add(id);
@@ -429,8 +428,9 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         protected Object doInBackground(final Object... params) {
             for (final int pos : read_positions) {
                 final DirectMessageEntry entry = adapter.getEntry(pos);
-                final long id = entry.conversation_id, account_id = entry.account_id;
-                fragment.addUnreadCountsToRemove(account_id, id);
+                final long id = entry.conversation_id;
+                final AccountKey accountKey = entry.account_key;
+                fragment.addUnreadCountsToRemove(accountKey, id);
             }
             return null;
         }

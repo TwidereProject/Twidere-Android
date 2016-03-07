@@ -402,7 +402,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     public static ConsumerKeyType getOfficialKeyType(final Context context, final long accountId) {
         if (context == null) return ConsumerKeyType.UNKNOWN;
         final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET, Accounts.AUTH_TYPE};
-        final String selection = Expression.equals(Accounts.ACCOUNT_ID, accountId).getSQL();
+        final String selection = Expression.equals(Accounts.ACCOUNT_KEY, accountId).getSQL();
         final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection, selection, null, null);
         if (c == null) return ConsumerKeyType.UNKNOWN;
         //noinspection TryFinallyCanBeTryWithResources

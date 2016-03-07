@@ -130,7 +130,7 @@ public class StreamingService extends Service implements Constants {
         final AccountKey[] accountKeys = new AccountKey[accountsList.size()];
         for (int i = 0, j = accountKeys.length; i < j; i++) {
             final ParcelableCredentials credentials = accountsList.get(i);
-            accountKeys[i] = new AccountKey(credentials.account_id, credentials.account_host);
+            accountKeys[i] = new AccountKey(credentials.account_key, credentials.account_host);
         }
         final AccountPreferences[] activatedPreferences = AccountPreferences.getAccountPreferences(this, accountKeys);
         if (BuildConfig.DEBUG) {
@@ -147,13 +147,13 @@ public class StreamingService extends Service implements Constants {
             final Authorization authorization = TwitterAPIFactory.getAuthorization(account);
             final TwitterUserStream twitter = TwitterAPIFactory.getInstance(this, endpoint, authorization, TwitterUserStream.class);
             final TwidereUserStreamCallback callback = new TwidereUserStreamCallback(this, account);
-            mCallbacks.put(account.account_id, callback);
+            mCallbacks.put(account.account_key, callback);
             new Thread() {
                 @Override
                 public void run() {
                     twitter.getUserStream(callback);
-                    Log.d(Constants.LOGTAG, String.format("Stream %d disconnected", account.account_id));
-                    mCallbacks.remove(account.account_id);
+                    Log.d(Constants.LOGTAG, String.format("Stream %d disconnected", account.account_key));
+                    mCallbacks.remove(account.account_key);
                     updateStreamState();
                 }
             }.start();
@@ -241,21 +241,21 @@ public class StreamingService extends Service implements Constants {
         public void onDirectMessage(final DirectMessage directMessage) {
             if (directMessage == null || directMessage.getId() <= 0) return;
             for (final Uri uri : MESSAGES_URIS) {
-                final String where = DirectMessages.ACCOUNT_ID + " = " + account.account_id + " AND "
+                final String where = DirectMessages.ACCOUNT_KEY + " = " + account.account_key + " AND "
                         + DirectMessages.MESSAGE_ID + " = " + directMessage.getId();
                 resolver.delete(uri, where, null);
             }
             final User sender = directMessage.getSender(), recipient = directMessage.getRecipient();
-            if (sender.getId() == account.account_id) {
+            if (sender.getId() == account.account_key) {
                 final ContentValues values = ContentValuesCreator.createDirectMessage(directMessage,
-                        account.account_id, account.account_host, true);
+                        account.account_key, account.account_host, true);
                 if (values != null) {
                     resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
                 }
             }
-            if (recipient.getId() == account.account_id) {
+            if (recipient.getId() == account.account_key) {
                 final ContentValues values = ContentValuesCreator.createDirectMessage(directMessage,
-                        account.account_id, account.account_host, false);
+                        account.account_key, account.account_host, false);
                 final Uri.Builder builder = DirectMessages.Inbox.CONTENT_URI.buildUpon();
                 builder.appendQueryParameter(QUERY_PARAM_NOTIFY, "true");
                 if (values != null) {
@@ -335,12 +335,12 @@ public class StreamingService extends Service implements Constants {
         @Override
         public void onStatus(final Status status) {
             final ContentValues values = ContentValuesCreator.createStatus(status,
-                    new AccountKey(account.account_id, account.account_host));
+                    new AccountKey(account.account_key, account.account_host));
             if (!statusStreamStarted) {
                 statusStreamStarted = true;
                 values.put(Statuses.IS_GAP, true);
             }
-            final String where = Statuses.ACCOUNT_ID + " = " + account.account_id + " AND " + Statuses.STATUS_ID + " = "
+            final String where = Statuses.ACCOUNT_KEY + " = " + account.account_key + " AND " + Statuses.STATUS_ID + " = "
                     + status.getId();
             resolver.delete(Statuses.CONTENT_URI, where, null);
             resolver.delete(Mentions.CONTENT_URI, where, null);

@@ -294,7 +294,8 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
     private AccountKey getSelectedAccountKey() {
         final ParcelableAccount account = (ParcelableAccount) mAccountSpinner.getSelectedItem();
-        return new AccountKey(account.account_id, account.account_host);
+        if (account == null) return null;
+        return account.account_key;
     }
 
     private void updateWindowAttributes() {

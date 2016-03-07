@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class TwidereListUtils {
@@ -48,13 +49,4 @@ public class TwidereListUtils {
         return builder.toString();
     }
 
-    public static String[] toStringArray(final List<?> list) {
-        if (list == null) return null;
-        final int length = list.size();
-        final String[] stringArray = new String[length];
-        for (int i = 0; i < length; i++) {
-            stringArray[i] = ParseUtils.parseString(list.get(i));
-        }
-        return stringArray;
-    }
 }

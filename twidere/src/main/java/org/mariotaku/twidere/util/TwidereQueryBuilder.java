@@ -63,7 +63,7 @@ public class TwidereQueryBuilder {
             final Column usersUserId = new Column(new Table(CachedUsers.TABLE_NAME),
                     CachedRelationships.USER_ID);
             final Column relationshipsAccountId = new Column(new Table(CachedRelationships.TABLE_NAME),
-                    CachedRelationships.ACCOUNT_ID);
+                    CachedRelationships.ACCOUNT_KEY);
             final Expression on = Expression.and(
                     Expression.equals(relationshipsUserId, usersUserId),
                     Expression.equals(relationshipsAccountId, accountId)
@@ -128,7 +128,7 @@ public class TwidereQueryBuilder {
             final Selectable select = Utils.getColumnsFromProjection(projection);
             final SQLSelectQuery.Builder qb = SQLQueryBuilder.select(select);
             qb.from(new Tables(DirectMessages.TABLE_NAME));
-            final Expression accountIdWhere = Expression.equals(DirectMessages.ACCOUNT_ID, account_id);
+            final Expression accountIdWhere = Expression.equals(DirectMessages.ACCOUNT_KEY, account_id);
             final Expression incomingWhere = Expression.and(Expression.notEquals(DirectMessages.IS_OUTGOING, 1),
                     Expression.equals(DirectMessages.SENDER_ID, conversationId));
             final Expression outgoingWhere = Expression.and(Expression.equals(DirectMessages.IS_OUTGOING, 1),
@@ -149,7 +149,7 @@ public class TwidereQueryBuilder {
             final SQLSelectQuery.Builder qb = SQLQueryBuilder.select(select);
             qb.select(select);
             qb.from(new Tables(DirectMessages.TABLE_NAME));
-            final Expression accountIdWhere = Expression.equals(DirectMessages.ACCOUNT_ID, account_id);
+            final Expression accountIdWhere = Expression.equals(DirectMessages.ACCOUNT_KEY, account_id);
             final Expression incomingWhere = Expression.and(Expression.notEquals(DirectMessages.IS_OUTGOING, 1),
                     Expression.equals(new Column(DirectMessages.SENDER_SCREEN_NAME), screen_name));
             final Expression outgoingWhere = Expression.and(Expression.equals(DirectMessages.IS_OUTGOING, 1),
@@ -176,7 +176,7 @@ public class TwidereQueryBuilder {
             qb.select(new Columns(new Column(ConversationEntries._ID),
                     new Column(ConversationEntries.MESSAGE_TIMESTAMP),
                     new Column(ConversationEntries.MESSAGE_ID),
-                    new Column(ConversationEntries.ACCOUNT_ID),
+                    new Column(ConversationEntries.ACCOUNT_KEY),
                     new Column(ConversationEntries.ACCOUNT_HOST),
                     new Column(ConversationEntries.IS_OUTGOING),
                     new Column(ConversationEntries.NAME),
@@ -188,7 +188,7 @@ public class TwidereQueryBuilder {
             entryIds.select(new Columns(new Column(DirectMessages._ID),
                     new Column(DirectMessages.MESSAGE_TIMESTAMP),
                     new Column(DirectMessages.MESSAGE_ID),
-                    new Column(DirectMessages.ACCOUNT_ID),
+                    new Column(DirectMessages.ACCOUNT_KEY),
                     new Column(DirectMessages.ACCOUNT_HOST),
                     new Column("0", DirectMessages.IS_OUTGOING),
                     new Column(DirectMessages.SENDER_NAME, ConversationEntries.NAME),
@@ -201,7 +201,7 @@ public class TwidereQueryBuilder {
             entryIds.select(new Columns(new Column(DirectMessages._ID),
                     new Column(DirectMessages.MESSAGE_TIMESTAMP),
                     new Column(DirectMessages.MESSAGE_ID),
-                    new Column(DirectMessages.ACCOUNT_ID),
+                    new Column(DirectMessages.ACCOUNT_KEY),
                     new Column(DirectMessages.ACCOUNT_HOST),
                     new Column("1", DirectMessages.IS_OUTGOING),
                     new Column(DirectMessages.RECIPIENT_NAME, ConversationEntries.NAME),
@@ -239,7 +239,7 @@ public class TwidereQueryBuilder {
                 where = groupedWhere;
             }
             qb.where(where);
-            qb.groupBy(Utils.getColumnsFromProjection(ConversationEntries.CONVERSATION_ID, DirectMessages.ACCOUNT_ID));
+            qb.groupBy(Utils.getColumnsFromProjection(ConversationEntries.CONVERSATION_ID, DirectMessages.ACCOUNT_KEY));
             qb.orderBy(new OrderBy(ConversationEntries.MESSAGE_TIMESTAMP, false));
             return qb.build();
         }

@@ -32,6 +32,8 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.twidere.model.util.AccountKeyConverter;
+import org.mariotaku.twidere.model.util.AccountKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LongArrayConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -59,13 +61,9 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @CursorField(value = Activities._ID, excludeWrite = true)
     public long _id;
     @ParcelableThisPlease
-    @JsonField(name = "account_id")
-    @CursorField(value = Activities.ACCOUNT_ID)
-    public long account_id;
-    @ParcelableThisPlease
-    @JsonField(name = "account_host")
-    @CursorField(value = Activities.ACCOUNT_HOST)
-    public String account_host;
+    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
+    @CursorField(value = Activities.ACCOUNT_KEY, converter = AccountKeyCursorFieldConverter.class)
+    public AccountKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "timestamp")
     @CursorField(value = Activities.TIMESTAMP)
@@ -144,22 +142,24 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
         return null;
     }
 
-    public static int calculateHashCode(long account_id, long timestamp, long max_position, long min_position) {
-        int result = (int) (account_id ^ (account_id >>> 32));
+    public static int calculateHashCode(AccountKey accountKey, long timestamp, long maxPosition, long minPosition) {
+        int result = accountKey.hashCode();
         result = 31 * result + (int) (timestamp ^ (timestamp >>> 32));
-        result = 31 * result + (int) (max_position ^ (max_position >>> 32));
-        result = 31 * result + (int) (min_position ^ (min_position >>> 32));
+        result = 31 * result + (int) (maxPosition ^ (maxPosition >>> 32));
+        result = 31 * result + (int) (minPosition ^ (minPosition >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
         return "ParcelableActivity{" +
-                "account_id=" + account_id +
+                "_id=" + _id +
+                ", account_key=" + account_key +
                 ", timestamp=" + timestamp +
                 ", max_position=" + max_position +
                 ", min_position=" + min_position +
-                ", action=" + action +
+                ", action='" + action + '\'' +
+                ", source_ids=" + Arrays.toString(source_ids) +
                 ", sources=" + Arrays.toString(sources) +
                 ", target_users=" + Arrays.toString(target_users) +
                 ", target_statuses=" + Arrays.toString(target_statuses) +
@@ -168,12 +168,15 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
                 ", target_object_statuses=" + Arrays.toString(target_object_statuses) +
                 ", target_object_users=" + Arrays.toString(target_object_users) +
                 ", is_gap=" + is_gap +
+                ", status_user_following=" + status_user_following +
+                ", after_filtered_source_ids=" + Arrays.toString(after_filtered_source_ids) +
+                ", after_filtered_sources=" + Arrays.toString(after_filtered_sources) +
                 '}';
     }
 
     @Override
     public int hashCode() {
-        return calculateHashCode(account_id, timestamp, max_position, min_position);
+        return calculateHashCode(account_key, timestamp, max_position, min_position);
     }
 
     @Override

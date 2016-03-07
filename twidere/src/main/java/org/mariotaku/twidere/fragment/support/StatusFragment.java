@@ -406,8 +406,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.DETAILS,
                 mStatusAdapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(new AccountKey(status.account_id,
-                status.account_host), event);
+        HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
     }
 
     @Override
@@ -431,8 +430,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(new AccountKey(status.account_id,
-                            status.account_host), status.id);
+                    twitter.destroyFavoriteAsync(status.account_key, status.id);
                 } else {
                     holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
                 }
@@ -462,8 +460,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     @Override
     public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, new AccountKey(status.account_id, status.account_host),
-                status.user_id, status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
+        IntentUtils.openUserProfile(activity, status.account_key, status.user_id,
+                status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
 
     @Override
@@ -474,13 +472,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         // BEGIN HotMobi
         MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
                 mStatusAdapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(new AccountKey(status.account_id,
-                status.account_host), event);
+        HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
         // END HotMobi
     }
 
     @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+    public boolean handleKeyboardShortcutSingle(@NonNull final KeyboardShortcutsHandler handler,
+                                                final int keyCode, @NonNull final KeyEvent event,
+                                                final int metaState) {
         if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false;
         final View focusedChild = RecyclerViewUtils.findRecyclerViewChild(mRecyclerView, mLayoutManager.getFocusedChild());
         final int position;
@@ -508,11 +507,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             case ACTION_STATUS_FAVORITE: {
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(new AccountKey(status.account_id,
-                            status.account_host), status.id);
+                    twitter.destroyFavoriteAsync(status.account_key, status.id);
                 } else {
-                    twitter.createFavoriteAsync(new AccountKey(status.account_id,
-                            status.account_host), status.id);
+                    twitter.createFavoriteAsync(status.account_key, status.id);
                 }
                 return true;
             }
@@ -674,7 +671,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private void loadConversation(ParcelableStatus status, long sinceId, long maxId) {
         if (status == null) return;
         final Bundle args = new Bundle();
-        args.putParcelable(EXTRA_ACCOUNT_KEY, new AccountKey(status.account_id, status.account_host));
+        args.putParcelable(EXTRA_ACCOUNT_KEY, status.account_key);
         args.putLong(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
         args.putLong(EXTRA_SINCE_ID, sinceId);
         args.putLong(EXTRA_MAX_ID, maxId);
@@ -691,7 +688,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private void loadActivity(ParcelableStatus status) {
         if (status == null) return;
         final Bundle args = new Bundle();
-        args.putParcelable(EXTRA_ACCOUNT_KEY, new AccountKey(status.account_id, status.account_host));
+        args.putParcelable(EXTRA_ACCOUNT_KEY, status.account_key);
         args.putLong(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
         if (mActivityLoaderInitialized) {
             getLoaderManager().restartLoader(LOADER_ID_STATUS_ACTIVITY, args, mStatusActivityLoaderCallback);
@@ -806,7 +803,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void notifyFavoriteTask(FavoriteTaskEvent event) {
         if (!event.isSucceeded()) return;
         final StatusAdapter adapter = getAdapter();
-        final ParcelableStatus status = adapter.findStatusById(event.getAccountKey().getId(), event.getStatusId());
+        final ParcelableStatus status = adapter.findStatusById(event.getAccountKey(), event.getStatusId());
         if (status != null) {
             switch (event.getAction()) {
                 case FavoriteTaskEvent.Action.CREATE: {
@@ -870,8 +867,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         protected SingleResponse<TranslationResult> doInBackground(ParcelableStatus... params) {
             final ParcelableStatus status = params[0];
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context,
-                    new AccountKey(status.account_id, status.account_host), true);
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, status.account_key,
+                    true);
             final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                     Context.MODE_PRIVATE);
             if (twitter == null) return SingleResponse.getInstance();
@@ -999,8 +996,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 retweetedByView.setVisibility(View.GONE);
             }
 
-            profileContainer.drawEnd(DataStoreUtils.getAccountColor(context,
-                    new AccountKey(status.account_id, status.account_host)));
+            profileContainer.drawEnd(DataStoreUtils.getAccountColor(context, status.account_key));
 
             final int layoutPosition = getLayoutPosition();
             final boolean skipLinksInText = status.extras != null && status.extras.support_entities;
@@ -1017,8 +1013,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final CharSequence quotedText = HtmlSpanBuilder.fromHtml(status.quoted_text_html,
                         status.text_unescaped);
                 if (quotedText instanceof Spanned) {
-                    quotedTextView.setText(linkify.applyAllLinks(quotedText,
-                            new AccountKey(status.account_id, status.account_host),
+                    quotedTextView.setText(linkify.applyAllLinks(quotedText, status.account_key,
                             layoutPosition, status.is_possibly_sensitive, skipLinksInText));
                 }
 
@@ -1072,8 +1067,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final CharSequence text = HtmlSpanBuilder.fromHtml(status.text_html,
                     status.text_unescaped);
             if (text instanceof Spanned) {
-                textView.setText(linkify.applyAllLinks(text, new AccountKey(status.account_id,
-                        status.account_host), layoutPosition, status.is_possibly_sensitive, skipLinksInText));
+                textView.setText(linkify.applyAllLinks(text, status.account_key, layoutPosition,
+                        status.is_possibly_sensitive, skipLinksInText));
             }
 
             final ParcelableLocation location;
@@ -1127,8 +1122,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreview.setVisibility(View.VISIBLE);
                 mediaPreviewLoad.setVisibility(View.GONE);
-                mediaPreview.displayMedia(media, loader, new AccountKey(status.account_id,
-                        status.account_host), -1, adapter.getFragment(), adapter.getMediaLoadingHandler());
+                mediaPreview.displayMedia(media, loader, status.account_key, -1,
+                        adapter.getFragment(), adapter.getMediaLoadingHandler());
             } else {
                 mediaPreviewContainer.setVisibility(View.VISIBLE);
                 mediaPreview.setVisibility(View.GONE);
@@ -1192,7 +1187,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus status = adapter.getStatus(getLayoutPosition());
             final StatusFragment fragment = adapter.getFragment();
             if (status == null || fragment == null) return;
-            final AccountKey accountKey = new AccountKey(status.account_id, status.account_host);
             switch (v.getId()) {
                 case R.id.media_preview_load: {
                     if (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive) {
@@ -1205,13 +1199,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case R.id.profile_container: {
                     final FragmentActivity activity = fragment.getActivity();
-                    IntentUtils.openUserProfile(activity, accountKey, status.user_id,
+                    IntentUtils.openUserProfile(activity, status.account_key, status.user_id,
                             status.user_screen_name, null, true, UserFragment.Referral.STATUS);
                     break;
                 }
                 case R.id.retweeted_by: {
                     if (status.retweet_id > 0) {
-                        IntentUtils.openUserProfile(adapter.getContext(), accountKey,
+                        IntentUtils.openUserProfile(adapter.getContext(), status.account_key,
                                 status.retweeted_by_user_id, status.retweeted_by_user_screen_name,
                                 null, true, UserFragment.Referral.STATUS);
                     }
@@ -1224,13 +1218,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     break;
                 }
                 case R.id.quoted_name_container: {
-                    IntentUtils.openUserProfile(adapter.getContext(), accountKey,
+                    IntentUtils.openUserProfile(adapter.getContext(), status.account_key,
                             status.quoted_user_id, status.quoted_user_screen_name, null, true,
                             UserFragment.Referral.STATUS);
                     break;
                 }
                 case R.id.quote_original_link: {
-                    IntentUtils.openStatus(adapter.getContext(), accountKey, status.quoted_id);
+                    IntentUtils.openStatus(adapter.getContext(), status.account_key, status.quoted_id);
                     break;
                 }
                 case R.id.translate_label: {
@@ -1470,14 +1464,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         final LabeledCount count = getCount(position);
                         final ParcelableStatus status = mStatusAdapter.getStatus();
                         if (count == null || status == null) return;
-                        final AccountKey accountKey = new AccountKey(status.account_id,
-                                status.account_host);
                         switch (count.type) {
                             case KEY_RETWEET_COUNT: {
                                 if (status.is_retweet) {
-                                    IntentUtils.openStatusRetweeters(getContext(), accountKey, status.retweet_id);
+                                    IntentUtils.openStatusRetweeters(getContext(), status.account_key,
+                                            status.retweet_id);
                                 } else {
-                                    IntentUtils.openStatusRetweeters(getContext(), accountKey, status.id);
+                                    IntentUtils.openStatusRetweeters(getContext(), status.account_key,
+                                            status.id);
                                 }
                                 break;
                             }
@@ -1485,9 +1479,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                                 final ParcelableCredentials account = mStatusAdapter.getStatusAccount();
                                 if (!Utils.isOfficialCredentials(getContext(), account)) return;
                                 if (status.is_retweet) {
-                                    IntentUtils.openStatusFavoriters(getContext(), accountKey, status.retweet_id);
+                                    IntentUtils.openStatusFavoriters(getContext(), status.account_key,
+                                            status.retweet_id);
                                 } else {
-                                    IntentUtils.openStatusFavoriters(getContext(), accountKey, status.id);
+                                    IntentUtils.openStatusFavoriters(getContext(), status.account_key,
+                                            status.id);
                                 }
                                 break;
                             }
@@ -1817,17 +1813,18 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public long getAccountId(int position) {
+        public AccountKey getAccountKey(int position) {
             final ParcelableStatus status = getStatus(position);
-            return status != null ? status.account_id : position;
+            return status != null ? status.account_key : null;
         }
 
         @Override
-        public ParcelableStatus findStatusById(long accountId, long statusId) {
-            if (mStatus != null && accountId == mStatus.account_id && statusId == mStatus.id)
+        public ParcelableStatus findStatusById(AccountKey accountId, long statusId) {
+            if (mStatus != null && accountId.equals(mStatus.account_key) && statusId == mStatus.id) {
                 return mStatus;
+            }
             for (ParcelableStatus status : Nullables.list(mData)) {
-                if (accountId == status.account_id && status.id == statusId) return status;
+                if (accountId.equals(status.account_key) && status.id == statusId) return status;
             }
             return null;
         }

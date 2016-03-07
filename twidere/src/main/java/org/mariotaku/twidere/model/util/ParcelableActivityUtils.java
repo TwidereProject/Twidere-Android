@@ -58,7 +58,7 @@ public class ParcelableActivityUtils {
     public static ParcelableActivity fromActivity(final Activity activity, final AccountKey accountKey,
                                                   final boolean isGap) {
         ParcelableActivity result = new ParcelableActivity();
-        result.account_id = accountKey.getId();
+        result.account_key = accountKey.getId();
         result.account_host = accountKey.getHost();
         result.timestamp = activity.getCreatedAt().getTime();
         result.action = activity.getAction();

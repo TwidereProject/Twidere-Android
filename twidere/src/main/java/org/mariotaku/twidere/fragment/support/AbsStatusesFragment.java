@@ -89,7 +89,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
 
         public List<ScrollRecord> mRecords;
-        private long mFirstVisibleId = -1, mFirstVisibleAccountId = -1;
+        private long mFirstVisibleId = -1;
+        private AccountKey mFirstVisibleAccountId = null;
         private int mFirstVisiblePosition = -1;
         private int mScrollState;
 
@@ -102,8 +103,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 final AbsStatusesAdapter<Data> adapter = (AbsStatusesAdapter<Data>) recyclerView.getAdapter();
                 final ParcelableStatus status = adapter.getStatus(firstVisiblePosition);
                 if (status != null) {
-                    final long id = status.id, accountId = status.account_id;
-                    if (id != mFirstVisibleId || accountId != mFirstVisibleAccountId) {
+                    final long id = status.id;
+                    final AccountKey accountId = status.account_key;
+                    if (id != mFirstVisibleId || !accountId.equals(mFirstVisibleAccountId)) {
                         if (mRecords == null) mRecords = new ArrayList<>();
                         final long time = System.currentTimeMillis();
                         mRecords.add(ScrollRecord.create(id, accountId, time,
@@ -187,8 +189,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 case ACTION_STATUS_FAVORITE: {
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(new AccountKey(status.account_id,
-                                status.account_host), status.id);
+                        twitter.destroyFavoriteAsync(status.account_key, status.id);
                     } else {
                         final IStatusViewHolder holder = (IStatusViewHolder)
                                 recyclerView.findViewHolderForLayoutPosition(position);
@@ -320,7 +321,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         final AbsStatusesAdapter<Data> adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
-        final AccountKey[] accountIds = {new AccountKey(status.account_id, status.account_host)};
+        final AccountKey[] accountIds = {status.account_key};
         final long[] maxIds = {status.id};
         getStatuses(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
@@ -334,8 +335,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         // BEGIN HotMobi
         final MediaEvent event = MediaEvent.create(getActivity(), status, media, getTimelineType(),
                 adapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(new AccountKey(status.account_id,
-                status.account_host), event);
+        HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
         // END HotMobi
     }
 
@@ -372,8 +372,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (twitter == null) return;
                 if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(new AccountKey(status.account_id,
-                            status.account_host), status.id);
+                    twitter.destroyFavoriteAsync(status.account_key, status.id);
                 } else {
                     holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
                 }
@@ -406,9 +405,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     @Override
     public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, new AccountKey(status.account_id, status.account_host),
-                status.user_id, status.user_screen_name, null, true,
-                UserFragment.Referral.TIMELINE_STATUS);
+        IntentUtils.openUserProfile(activity, status.account_key, status.user_id,
+                status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
 
     @Override
@@ -597,8 +595,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         public boolean onLiked() {
             final ParcelableStatus status = mStatus;
             if (status.is_favorite) return false;
-            mTwitter.createFavoriteAsync(new AccountKey(status.account_id, status.account_host),
-                    status.id);
+            mTwitter.createFavoriteAsync(status.account_key, status.id);
             return true;
         }
     }

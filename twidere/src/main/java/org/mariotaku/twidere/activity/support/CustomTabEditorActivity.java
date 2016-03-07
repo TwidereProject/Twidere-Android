@@ -396,7 +396,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         final int pos = mAccountSpinner.getSelectedItemPosition();
         if (mAccountSpinner.getCount() > pos && pos >= 0) {
             ParcelableCredentials credentials = mAccountsAdapter.getItem(pos);
-            return new AccountKey(credentials.account_id, credentials.account_host);
+            return credentials.account_key;
         }
         return null;
     }

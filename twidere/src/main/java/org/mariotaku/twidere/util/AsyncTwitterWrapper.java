@@ -29,6 +29,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
+import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
@@ -442,7 +443,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
     }
 
-    public void removeUnreadCountsAsync(final int position, final LongSparseArray<Set<Long>> counts) {
+    public void removeUnreadCountsAsync(final int position, final SimpleArrayMap<AccountKey, Set<Long>> counts) {
         final RemoveUnreadCountsTask task = new RemoveUnreadCountsTask(position, counts);
         AsyncTaskUtils.executeTask(task);
     }
@@ -550,7 +551,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         mProcessingFriendshipRequestIds.removeElement(ParcelableUser.calculateHashCode(accountKey.getId(), userId));
     }
 
-    public boolean isProcessingFollowRequest(long accountId, long userId) {
+    public boolean isProcessingFollowRequest(AccountKey accountId, long userId) {
         return mProcessingFriendshipRequestIds.contains(ParcelableUser.calculateHashCode(accountId, userId));
     }
 
@@ -839,8 +840,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 // I bet you don't want to see this user in your auto complete list.
                 final ContentValues values = new ContentValues();
-                values.put(CachedRelationships.ACCOUNT_ID, mAccountKey.getId());
-                values.put(CachedRelationships.ACCOUNT_HOST, mAccountKey.getHost());
+                values.put(CachedRelationships.ACCOUNT_KEY, mAccountKey.toString());
                 values.put(CachedRelationships.USER_ID, mUserId);
                 values.put(CachedRelationships.BLOCKING, true);
                 mResolver.insert(CachedRelationships.CONTENT_URI, values);
@@ -1025,7 +1025,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             values.put(CachedRelationships.FOLLOWED_BY, false);
             mResolver.update(CachedRelationships.CONTENT_URI, values,
                     Expression.inArgs(CachedRelationships.USER_ID, list.size()).getSQL(),
-                    TwidereListUtils.toStringArray(list));
+                    TwidereCollectionUtils.toStringArray(list));
         }
 
         @Override
@@ -1943,9 +1943,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     final class RemoveUnreadCountsTask extends AsyncTask<Object, Object, Integer> {
         private final int position;
-        private final LongSparseArray<Set<Long>> counts;
+        private final SimpleArrayMap<AccountKey, Set<Long>> counts;
 
-        RemoveUnreadCountsTask(final int position, final LongSparseArray<Set<Long>> counts) {
+        RemoveUnreadCountsTask(final int position, final SimpleArrayMap<AccountKey, Set<Long>> counts) {
             this.position = position;
             this.counts = counts;
         }

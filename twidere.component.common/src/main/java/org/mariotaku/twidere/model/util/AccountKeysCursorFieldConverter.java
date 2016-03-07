@@ -7,7 +7,6 @@ import org.mariotaku.twidere.model.AccountKey;
  */
 public class AccountKeysCursorFieldConverter extends AbsObjectArrayConverter<AccountKey> {
 
-
     @Override
     protected AccountKey[] newArray(int size) {
         return new AccountKey[size];

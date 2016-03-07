@@ -21,7 +21,7 @@ public class ParcelableDirectMessageUtils {
 
     public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, long accountId, String accountHost, boolean isOutgoing) {
         ParcelableDirectMessage result = new ParcelableDirectMessage();
-        result.account_id = accountId;
+        result.account_key = accountId;
         result.account_host = accountHost;
         result.is_outgoing = isOutgoing;
         final User sender = message.getSender(), recipient = message.getRecipient();

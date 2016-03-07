@@ -92,7 +92,6 @@ import org.mariotaku.twidere.model.TwitterAccountExtra;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
@@ -104,6 +103,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.support.ViewSupport;
@@ -115,7 +115,6 @@ import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 import java.lang.ref.WeakReference;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.ContentValuesCreator.createAccount;
 import static org.mariotaku.twidere.util.DataStoreUtils.getActivatedAccountKeys;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 import static org.mariotaku.twidere.util.Utils.isUserLoggedIn;
@@ -452,7 +451,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             if (result.alreadyLoggedIn) {
                 final ContentValues values = result.toContentValues();
                 if (values != null) {
-                    mResolver.update(Accounts.CONTENT_URI, values, Expression.equals(Accounts.ACCOUNT_ID,
+                    mResolver.update(Accounts.CONTENT_URI, values, Expression.equals(Accounts.ACCOUNT_KEY,
                             result.user.getId()).getSQL(), null);
                 }
                 Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show();
@@ -991,7 +990,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         public final User user;
         public final int authType, color;
         public final String apiUrlFormat;
-        public final boolean sameOauthSigningUrl, noVersionSuffix;
+        public final boolean sameOAuthSigningUrl, noVersionSuffix;
         public final Pair<String, String> accountType;
 
         public SignInResponse(final boolean alreadyLoggedIn, final boolean succeed,
@@ -1004,7 +1003,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                               final Exception exception, final String basicUsername,
                               final String basicPassword, final OAuthAuthorization oauth,
                               final User user, final int authType, final int color,
-                              final String apiUrlFormat, final boolean sameOauthSigningUrl,
+                              final String apiUrlFormat, final boolean sameOAuthSigningUrl,
                               final boolean noVersionSuffix, final Pair<String, String> accountType) {
             this.alreadyLoggedIn = alreadyLoggedIn;
             this.succeed = succeed;
@@ -1016,17 +1015,17 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             this.authType = authType;
             this.color = color;
             this.apiUrlFormat = apiUrlFormat;
-            this.sameOauthSigningUrl = sameOauthSigningUrl;
+            this.sameOAuthSigningUrl = sameOAuthSigningUrl;
             this.noVersionSuffix = noVersionSuffix;
             this.accountType = accountType;
         }
 
         public SignInResponse(final boolean alreadyLoggedIn, final OAuthAuthorization oauth,
                               final User user, final int authType, final int color,
-                              final String apiUrlFormat, final boolean sameOauthSigningUrl,
+                              final String apiUrlFormat, final boolean sameOAuthSigningUrl,
                               final boolean noVersionSuffix, final Pair<String, String> accountType) {
             this(alreadyLoggedIn, true, null, null, null, oauth, user, authType, color, apiUrlFormat,
-                    sameOauthSigningUrl, noVersionSuffix, accountType);
+                    sameOAuthSigningUrl, noVersionSuffix, accountType);
         }
 
         public SignInResponse(final boolean alreadyLoggedIn, final String basicUsername,
@@ -1047,34 +1046,57 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         }
 
         private ContentValues toContentValues() {
+            if (user == null || user.getId() <= 0) return null;
             final ContentValues values;
             switch (authType) {
                 case ParcelableCredentials.AUTH_TYPE_BASIC: {
-                    values = createAccount(basicUsername, basicPassword, user, color, apiUrlFormat,
-                            noVersionSuffix);
+                    values = new ContentValues();
+                    values.put(Accounts.BASIC_AUTH_USERNAME, basicUsername);
+                    values.put(Accounts.BASIC_AUTH_PASSWORD, basicPassword);
+                    values.put(Accounts.AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_BASIC);
                     break;
                 }
                 case ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE: {
-                    values = ContentValuesCreator.createAccount(user, color, apiUrlFormat, noVersionSuffix);
+                    values = new ContentValues();
+                    values.put(Accounts.AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
                     break;
                 }
                 case ParcelableCredentials.AUTH_TYPE_OAUTH:
                 case ParcelableCredentials.AUTH_TYPE_XAUTH: {
-                    values = ContentValuesCreator.createAccount(oauth, user, authType, color, apiUrlFormat,
-                            sameOauthSigningUrl, noVersionSuffix);
+                    values = new ContentValues();
+                    final OAuthToken accessToken = oauth.getOauthToken();
+                    values.put(Accounts.OAUTH_TOKEN, accessToken.getOauthToken());
+                    values.put(Accounts.OAUTH_TOKEN_SECRET, accessToken.getOauthTokenSecret());
+                    values.put(Accounts.CONSUMER_KEY, oauth.getConsumerKey());
+                    values.put(Accounts.CONSUMER_SECRET, oauth.getConsumerSecret());
+                    values.put(Accounts.AUTH_TYPE, authType);
                     break;
                 }
                 default: {
-                    values = null;
+                    return null;
                 }
             }
-            if (values != null && accountType != null) {
+
+            values.put(Accounts.ACCOUNT_KEY, user.getId());
+            values.put(Accounts.SCREEN_NAME, user.getScreenName());
+            values.put(Accounts.NAME, user.getName());
+            values.put(Accounts.PROFILE_IMAGE_URL, TwitterContentUtils.getProfileImageUrl(user));
+            values.put(Accounts.PROFILE_BANNER_URL, user.getProfileBannerImageUrl());
+
+            values.put(Accounts.COLOR, color);
+            values.put(Accounts.IS_ACTIVATED, 1);
+
+
+            values.put(Accounts.API_URL_FORMAT, apiUrlFormat);
+            values.put(Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl);
+            values.put(Accounts.NO_VERSION_SUFFIX, noVersionSuffix);
+
+            if (accountType != null) {
                 values.put(Accounts.ACCOUNT_TYPE, accountType.first);
                 values.put(Accounts.ACCOUNT_EXTRAS, accountType.second);
                 final AccountKey accountKey = new AccountKey(user.getId(),
                         ParcelableUserUtils.getUserHost(user.getOstatusUri()));
                 final ParcelableUser parcelableUser = ParcelableUserUtils.fromUser(user, accountKey);
-                values.put(Accounts.ACCOUNT_HOST, ParcelableUserUtils.getUserHost(parcelableUser));
                 values.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(parcelableUser, ParcelableUser.class));
             }
             return values;

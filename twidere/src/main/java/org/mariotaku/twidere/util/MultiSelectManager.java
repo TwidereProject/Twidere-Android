@@ -117,10 +117,10 @@ public class MultiSelectManager implements Constants {
         final Object obj = selectedItems.get(0);
         if (obj instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) obj;
-            return new AccountKey(user.account_id, user.account_host);
+            return user.account_key;
         } else if (obj instanceof ParcelableStatus) {
             final ParcelableStatus status = (ParcelableStatus) obj;
-            return new AccountKey(status.account_id, status.account_host);
+            return status.account_key;
         }
         return null;
     }

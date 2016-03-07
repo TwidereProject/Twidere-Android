@@ -34,6 +34,8 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.AccountKeyConverter;
+import org.mariotaku.twidere.model.util.AccountKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
@@ -60,13 +62,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         }
     };
     @ParcelableThisPlease
-    @JsonField(name = "account_id")
-    @CursorField(Statuses.ACCOUNT_ID)
-    public long account_id;
-    @ParcelableThisPlease
-    @JsonField(name = "account_host")
-    @CursorField(Statuses.ACCOUNT_HOST)
-    public String account_host;
+    @JsonField(name = "account_id", typeConverter = AccountKeyConverter.class)
+    @CursorField(value = Statuses.ACCOUNT_KEY, converter = AccountKeyCursorFieldConverter.class)
+    public AccountKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "timestamp")
     @CursorField(Statuses.STATUS_TIMESTAMP)
@@ -340,20 +338,18 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         ParcelableStatus status = (ParcelableStatus) o;
 
         if (id != status.id) return false;
-        if (account_id != status.account_id) return false;
-        return !(account_host != null ? !account_host.equals(status.account_host) : status.account_host != null);
+        return account_key.equals(status.account_key);
 
     }
 
     @Override
     public int hashCode() {
-        return calculateHashCode(account_id, account_host, id);
+        return calculateHashCode(account_key, id);
     }
 
-    public static int calculateHashCode(long accountId, String accountHost, long id) {
+    public static int calculateHashCode(AccountKey account_key, long id) {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (accountId ^ (accountId >>> 32));
-        result = 31 * result + (accountHost != null ? accountHost.hashCode() : 0);
+        result = 31 * result + account_key.hashCode();
         return result;
     }
 
@@ -361,7 +357,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public String toString() {
         return "ParcelableStatus{" +
                 "id=" + id +
-                ", account_id=" + account_id +
+                ", account_key=" + account_key +
                 ", timestamp=" + timestamp +
                 ", user_id=" + user_id +
                 ", retweet_id=" + retweet_id +
@@ -416,6 +412,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", media=" + Arrays.toString(media) +
                 ", quoted_media=" + Arrays.toString(quoted_media) +
                 ", card=" + card +
+                ", extras=" + extras +
                 ", _id=" + _id +
                 '}';
     }

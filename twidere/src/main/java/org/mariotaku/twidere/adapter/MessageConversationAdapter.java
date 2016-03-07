@@ -168,9 +168,9 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         final Cursor c = mCursor;
         if (c == null || c.isClosed()) return null;
         c.moveToPosition(position);
-        final long account_id = c.getLong(mIndices.account_id);
-        final long message_id = c.getLong(mIndices.id);
-        return Utils.findDirectMessageInDatabases(getContext(), account_id, message_id);
+        final AccountKey accountKey = AccountKey.valueOf(c.getString(mIndices.account_key));
+        final long messageId = c.getLong(mIndices.id);
+        return Utils.findDirectMessageInDatabases(getContext(), accountKey, messageId);
     }
 
     @Override

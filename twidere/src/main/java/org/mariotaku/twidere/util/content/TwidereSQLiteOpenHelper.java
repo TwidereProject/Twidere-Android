@@ -86,7 +86,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         db.execSQL(createTable(CachedStatuses.TABLE_NAME, CachedStatuses.COLUMNS, CachedStatuses.TYPES, true));
         db.execSQL(createTable(CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, CachedHashtags.TYPES, true));
         db.execSQL(createTable(CachedRelationships.TABLE_NAME, CachedRelationships.COLUMNS, CachedRelationships.TYPES, true,
-                createConflictReplaceConstraint(CachedRelationships.ACCOUNT_ID, CachedRelationships.USER_ID)));
+                createConflictReplaceConstraint(CachedRelationships.ACCOUNT_KEY, CachedRelationships.USER_ID)));
         db.execSQL(createTable(Filters.Users.TABLE_NAME, Filters.Users.COLUMNS, Filters.Users.TYPES, true));
         db.execSQL(createTable(Filters.Keywords.TABLE_NAME, Filters.Keywords.COLUMNS, Filters.Keywords.TYPES, true));
         db.execSQL(createTable(Filters.Sources.TABLE_NAME, Filters.Sources.COLUMNS, Filters.Sources.TYPES, true));
@@ -115,9 +115,9 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
 
     private void createIndices(SQLiteDatabase db) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        db.execSQL(createIndex("statuses_index", Statuses.TABLE_NAME, new String[]{Statuses.ACCOUNT_ID}, true));
-        db.execSQL(createIndex("messages_inbox_index", DirectMessages.Inbox.TABLE_NAME, new String[]{DirectMessages.ACCOUNT_ID}, true));
-        db.execSQL(createIndex("messages_outbox_index", DirectMessages.Outbox.TABLE_NAME, new String[]{DirectMessages.ACCOUNT_ID}, true));
+        db.execSQL(createIndex("statuses_index", Statuses.TABLE_NAME, new String[]{Statuses.ACCOUNT_KEY}, true));
+        db.execSQL(createIndex("messages_inbox_index", DirectMessages.Inbox.TABLE_NAME, new String[]{DirectMessages.ACCOUNT_KEY}, true));
+        db.execSQL(createIndex("messages_outbox_index", DirectMessages.Outbox.TABLE_NAME, new String[]{DirectMessages.ACCOUNT_KEY}, true));
     }
 
     private void createViews(SQLiteDatabase db) {
@@ -171,7 +171,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
     private SQLQuery createDeleteDuplicateStatusTrigger(String triggerName, String tableName) {
         final Table table = new Table(tableName);
         final SQLDeleteQuery deleteOld = SQLQueryBuilder.deleteFrom(table).where(Expression.and(
-                Expression.equals(new Column(Statuses.ACCOUNT_ID), new Column(Table.NEW, Statuses.ACCOUNT_ID)),
+                Expression.equals(new Column(Statuses.ACCOUNT_KEY), new Column(Table.NEW, Statuses.ACCOUNT_KEY)),
                 Expression.equals(new Column(Statuses.STATUS_ID), new Column(Table.NEW, Statuses.STATUS_ID))
         )).build();
         return SQLQueryBuilder.createTrigger(false, true, triggerName)
@@ -183,7 +183,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
     private SQLQuery createDeleteDuplicateMessageTrigger(String triggerName, String tableName) {
         final Table table = new Table(tableName);
         final SQLDeleteQuery deleteOld = SQLQueryBuilder.deleteFrom(table).where(Expression.and(
-                Expression.equals(new Column(DirectMessages.ACCOUNT_ID), new Column(Table.NEW, DirectMessages.ACCOUNT_ID)),
+                Expression.equals(new Column(DirectMessages.ACCOUNT_KEY), new Column(Table.NEW, DirectMessages.ACCOUNT_KEY)),
                 Expression.equals(new Column(DirectMessages.MESSAGE_ID), new Column(Table.NEW, DirectMessages.MESSAGE_ID))
         )).build();
         return SQLQueryBuilder.createTrigger(false, true, triggerName)
@@ -220,7 +220,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         final HashMap<String, String> draftsAlias = new HashMap<>();
         accountsAlias.put(Accounts.SCREEN_NAME, "username");
         accountsAlias.put(Accounts.NAME, "username");
-        accountsAlias.put(Accounts.ACCOUNT_ID, "user_id");
+        accountsAlias.put(Accounts.ACCOUNT_KEY, "user_id");
         accountsAlias.put(Accounts.COLOR, "user_color");
         accountsAlias.put(Accounts.OAUTH_TOKEN_SECRET, "token_secret");
         accountsAlias.put(Accounts.API_URL_FORMAT, "rest_base_url");
@@ -237,7 +237,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         safeUpgrade(db, CachedStatuses.TABLE_NAME, CachedStatuses.COLUMNS, CachedStatuses.TYPES, true, null);
         safeUpgrade(db, CachedHashtags.TABLE_NAME, CachedHashtags.COLUMNS, CachedHashtags.TYPES, true, null);
         safeUpgrade(db, CachedRelationships.TABLE_NAME, CachedRelationships.COLUMNS, CachedRelationships.TYPES, true, null,
-                createConflictReplaceConstraint(CachedRelationships.ACCOUNT_ID, CachedRelationships.USER_ID));
+                createConflictReplaceConstraint(CachedRelationships.ACCOUNT_KEY, CachedRelationships.USER_ID));
         safeUpgrade(db, Filters.Users.TABLE_NAME, Filters.Users.COLUMNS, Filters.Users.TYPES,
                 oldVersion < 49, null);
         safeUpgrade(db, Filters.Keywords.TABLE_NAME, Filters.Keywords.COLUMNS, Filters.Keywords.TYPES,

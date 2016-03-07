@@ -102,7 +102,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
         final String table = getTableNameByUri(uri);
         final String sortOrder = Statuses.DEFAULT_SORT_ORDER;
         final AccountKey[] accountKeys = getAccountKeys();
-        final Expression accountWhere = Expression.in(new Column(Statuses.ACCOUNT_ID), new RawItemArray(accountKeys));
+        final Expression accountWhere = Expression.in(new Column(Statuses.ACCOUNT_KEY), new RawItemArray(accountKeys));
         final Expression filterWhere = getFiltersWhere(table), where;
         if (filterWhere != null) {
             where = Expression.and(accountWhere, filterWhere);
@@ -147,7 +147,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
                 final int lastVisiblePosition = getLayoutManager().findLastVisibleItemPosition();
                 final int startIndex = adapter.getStatusStartIndex();
                 for (int i = firstVisiblePosition, j = lastVisiblePosition + 1; i < j; i++) {
-                    if (adapter.getAccountId(i) == status.account_id &&
+                    if (status.account_key.equals(adapter.getAccountKey(i)) &&
                             adapter.getStatusId(i) == status.id) {
                         data.set(i - startIndex, status);
                         return;

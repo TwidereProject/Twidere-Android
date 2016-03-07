@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import org.mariotaku.twidere.IStatusShortener;
+import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
@@ -28,7 +29,7 @@ public abstract class StatusShortenerService extends Service {
     }
 
     protected abstract StatusShortenResult shorten(ParcelableStatusUpdate status,
-                                                   long currentAccountId,
+                                                   AccountKey currentAccountKey,
                                                    String overrideStatusText);
 
     protected abstract boolean callback(StatusShortenResult result, ParcelableStatus status);
@@ -47,13 +48,15 @@ public abstract class StatusShortenerService extends Service {
         }
 
         @Override
-        public String shorten(final String statusJson, final long currentAccountId,
+        public String shorten(final String statusJson, final String currentAccountIdStr,
                               final String overrideStatusText)
                 throws RemoteException {
             try {
                 final ParcelableStatusUpdate statusUpdate = LoganSquareMapperFinder.mapperFor(ParcelableStatusUpdate.class)
                         .parse(statusJson);
-                final StatusShortenResult shorten = mService.get().shorten(statusUpdate, currentAccountId, overrideStatusText);
+                final AccountKey currentAccountId = AccountKey.valueOf(currentAccountIdStr);
+                final StatusShortenResult shorten = mService.get().shorten(statusUpdate, currentAccountId,
+                        overrideStatusText);
                 return LoganSquareMapperFinder.mapperFor(StatusShortenResult.class).serialize(shorten);
             } catch (IOException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
