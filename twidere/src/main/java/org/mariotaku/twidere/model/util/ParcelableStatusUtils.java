@@ -36,8 +36,7 @@ public class ParcelableStatusUtils {
                                               final boolean isGap) {
         final ParcelableStatus result = new ParcelableStatus();
         result.is_gap = isGap;
-        result.account_id = accountKey.getId();
-        result.account_host = accountKey.getHost();
+        result.account_key = accountKey;
         result.id = orig.getId();
         result.timestamp = getTime(orig.getCreatedAt());
         result.extras = new ParcelableStatus.Extras();
@@ -119,7 +118,7 @@ public class ParcelableStatusUtils {
         result.location = ParcelableLocation.fromGeoLocation(status.getGeoLocation());
         result.is_favorite = status.isFavorited();
         result.text_unescaped = HtmlEscapeHelper.toPlainText(result.text_html);
-        if (result.retweeted_by_user_id == result.account_id) {
+        if (result.retweeted_by_user_id == result.account_key.getId()) {
             result.my_retweet_id = result.id;
         } else {
             result.my_retweet_id = status.getCurrentUserRetweet();

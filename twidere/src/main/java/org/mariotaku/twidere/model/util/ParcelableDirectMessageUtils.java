@@ -15,14 +15,10 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
  * Created by mariotaku on 16/2/13.
  */
 public class ParcelableDirectMessageUtils {
-    public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, AccountKey accountKey, boolean isOutgoing) {
-        return fromDirectMessage(message, accountKey.getId(), accountKey.getHost(), isOutgoing);
-    }
 
-    public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, long accountId, String accountHost, boolean isOutgoing) {
+    public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, AccountKey accountKey, boolean isOutgoing) {
         ParcelableDirectMessage result = new ParcelableDirectMessage();
-        result.account_key = accountId;
-        result.account_host = accountHost;
+        result.account_key = accountKey;
         result.is_outgoing = isOutgoing;
         final User sender = message.getSender(), recipient = message.getRecipient();
         assert sender != null && recipient != null;

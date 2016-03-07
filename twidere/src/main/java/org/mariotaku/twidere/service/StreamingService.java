@@ -12,7 +12,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.util.LongSparseArray;
+import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 
 import org.mariotaku.restfu.http.Authorization;
@@ -57,7 +57,7 @@ public class StreamingService extends Service implements Constants {
 
     private static final int NOTIFICATION_SERVICE_STARTED = 1;
 
-    private final LongSparseArray<UserStreamCallback> mCallbacks = new LongSparseArray<>();
+    private final SimpleArrayMap<AccountKey, UserStreamCallback> mCallbacks = new SimpleArrayMap<>();
     private ContentResolver mResolver;
 
     private NotificationManager mNotificationManager;
@@ -130,7 +130,7 @@ public class StreamingService extends Service implements Constants {
         final AccountKey[] accountKeys = new AccountKey[accountsList.size()];
         for (int i = 0, j = accountKeys.length; i < j; i++) {
             final ParcelableCredentials credentials = accountsList.get(i);
-            accountKeys[i] = new AccountKey(credentials.account_key, credentials.account_host);
+            accountKeys[i] = credentials.account_key;
         }
         final AccountPreferences[] activatedPreferences = AccountPreferences.getAccountPreferences(this, accountKeys);
         if (BuildConfig.DEBUG) {
@@ -152,7 +152,7 @@ public class StreamingService extends Service implements Constants {
                 @Override
                 public void run() {
                     twitter.getUserStream(callback);
-                    Log.d(Constants.LOGTAG, String.format("Stream %d disconnected", account.account_key));
+                    Log.d(Constants.LOGTAG, String.format("Stream %s disconnected", account.account_key));
                     mCallbacks.remove(account.account_key);
                     updateStreamState();
                 }
@@ -246,16 +246,16 @@ public class StreamingService extends Service implements Constants {
                 resolver.delete(uri, where, null);
             }
             final User sender = directMessage.getSender(), recipient = directMessage.getRecipient();
-            if (sender.getId() == account.account_key) {
+            if (sender.getId() == account.account_key.getId()) {
                 final ContentValues values = ContentValuesCreator.createDirectMessage(directMessage,
-                        account.account_key, account.account_host, true);
+                        account.account_key, true);
                 if (values != null) {
                     resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
                 }
             }
-            if (recipient.getId() == account.account_key) {
+            if (recipient.getId() == account.account_key.getId()) {
                 final ContentValues values = ContentValuesCreator.createDirectMessage(directMessage,
-                        account.account_key, account.account_host, false);
+                        account.account_key, false);
                 final Uri.Builder builder = DirectMessages.Inbox.CONTENT_URI.buildUpon();
                 builder.appendQueryParameter(QUERY_PARAM_NOTIFY, "true");
                 if (values != null) {
@@ -334,16 +334,16 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onStatus(final Status status) {
-            final ContentValues values = ContentValuesCreator.createStatus(status,
-                    new AccountKey(account.account_key, account.account_host));
+            final ContentValues values = ContentValuesCreator.createStatus(status, account.account_key);
             if (!statusStreamStarted) {
                 statusStreamStarted = true;
                 values.put(Statuses.IS_GAP, true);
             }
-            final String where = Statuses.ACCOUNT_KEY + " = " + account.account_key + " AND " + Statuses.STATUS_ID + " = "
-                    + status.getId();
-            resolver.delete(Statuses.CONTENT_URI, where, null);
-            resolver.delete(Mentions.CONTENT_URI, where, null);
+            final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                    Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
+            final String[] whereArgs = {account.account_key.toString(), String.valueOf(status.getId())};
+            resolver.delete(Statuses.CONTENT_URI, where, whereArgs);
+            resolver.delete(Mentions.CONTENT_URI, where, whereArgs);
             resolver.insert(Statuses.CONTENT_URI, values);
             final Status rt = status.getRetweetedStatus();
             if (rt != null && rt.getText().contains("@" + account.screen_name) || rt == null

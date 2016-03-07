@@ -59,8 +59,8 @@ public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
         if (args == null) return null;
-        final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
-        return new String[]{AUTHORITY_RETWEETS_OF_ME, "account" + account_id};
+        final AccountKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        return new String[]{AUTHORITY_RETWEETS_OF_ME, "account" + accountKey};
     }
 
 

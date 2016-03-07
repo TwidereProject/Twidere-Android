@@ -399,11 +399,13 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     @NonNull
-    public static ConsumerKeyType getOfficialKeyType(final Context context, final long accountId) {
+    public static ConsumerKeyType getOfficialKeyType(final Context context, final AccountKey accountKey) {
         if (context == null) return ConsumerKeyType.UNKNOWN;
         final String[] projection = {Accounts.CONSUMER_KEY, Accounts.CONSUMER_SECRET, Accounts.AUTH_TYPE};
-        final String selection = Expression.equals(Accounts.ACCOUNT_KEY, accountId).getSQL();
-        final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection, selection, null, null);
+        final String selection = Expression.equalsArgs(Accounts.ACCOUNT_KEY).getSQL();
+        final String[] selectionArgs = {accountKey.toString()};
+        final Cursor c = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
+                selection, selectionArgs, null);
         if (c == null) return ConsumerKeyType.UNKNOWN;
         //noinspection TryFinallyCanBeTryWithResources
         try {

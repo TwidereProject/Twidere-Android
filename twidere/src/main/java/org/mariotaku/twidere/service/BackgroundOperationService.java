@@ -387,13 +387,12 @@ public class BackgroundOperationService extends IntentService implements Constan
                     if (exception == null) {
                         exception = response.getException();
                     }
-                } else if (data.account_id > 0) {
-                    failedAccountIds.remove(new AccountKey(data.account_id, data.account_host));
+                } else if (data.account_key != null) {
+                    failedAccountIds.remove(data.account_key);
                     // BEGIN HotMobi
                     final TweetEvent event = TweetEvent.create(this, data, TimelineType.OTHER);
                     event.setAction(TweetEvent.Action.TWEET);
-                    HotMobiLogger.getInstance(this).log(new AccountKey(data.account_id,
-                            data.account_host), event);
+                    HotMobiLogger.getInstance(this).log(data.account_key, event);
                     // END HotMobi
                 }
             }
@@ -584,14 +583,13 @@ public class BackgroundOperationService extends IntentService implements Constan
                     shortener.waitForService();
                 }
                 for (final ParcelableAccount account : statusUpdate.accounts) {
-                    final AccountKey accountKey = new AccountKey(account.account_key, account.account_host);
                     final ParcelableCredentials credentials = DataStoreUtils.getCredentials(this,
-                            accountKey);
+                            account.account_key);
                     // Get Twitter instance corresponding to account
-                    final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, accountKey,
-                            true, true);
+                    final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this,
+                            account.account_key, true, true);
                     final TwitterUpload upload = TwitterAPIFactory.getTwitterInstance(this,
-                            accountKey, true, true, TwitterUpload.class);
+                            account.account_key, true, true, TwitterUpload.class);
 
                     // Shouldn't happen
                     if (twitter == null || upload == null || credentials == null) {
@@ -626,7 +624,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     StatusShortenResult shortenedResult = null;
                     if (shouldShorten && shortener != null) {
                         try {
-                            shortenedResult = shortener.shorten(statusUpdate, accountKey.getId(),
+                            shortenedResult = shortener.shorten(statusUpdate, account.account_key,
                                     statusText);
                         } catch (final Exception e) {
                             throw new ShortenException(getString(R.string.error_message_tweet_shorten_failed), e);
@@ -707,7 +705,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                             }
                         }
                         final ParcelableStatus result = ParcelableStatusUtils.fromStatus(resultStatus,
-                                accountKey, false);
+                                account.account_key, false);
                         if (shouldShorten && shortener != null && shortenedResult != null) {
                             shortener.callback(shortenedResult, result);
                         }

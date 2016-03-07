@@ -62,4 +62,8 @@ public class FriendshipUpdatedEvent {
     public boolean isUser(long id) {
         return userId == id;
     }
+
+    public boolean isAccount(AccountKey accountKey) {
+        return this.accountKey.equals(accountKey);
+    }
 }

@@ -14,7 +14,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 public class CachedRelationship {
 
     @CursorField(CachedRelationships.ACCOUNT_KEY)
-    public long account_id;
+    public AccountKey account_key;
 
     @CursorField(CachedRelationships.USER_ID)
     public long user_id;
@@ -41,8 +41,8 @@ public class CachedRelationship {
 
     }
 
-    public CachedRelationship(long accountId, long userId, @NonNull Relationship relationship) {
-        account_id = accountId;
+    public CachedRelationship(AccountKey accountId, long userId, @NonNull Relationship relationship) {
+        account_key = accountId;
         user_id = userId;
         following = relationship.isSourceFollowingTarget();
         following = relationship.isSourceFollowedByTarget();

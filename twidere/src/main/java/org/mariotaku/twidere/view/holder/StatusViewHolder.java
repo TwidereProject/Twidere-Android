@@ -202,9 +202,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         final BidiFormatter formatter = adapter.getBidiFormatter();
         final Context context = adapter.getContext();
         final boolean nameFirst = adapter.isNameFirst();
-        final AccountKey accountKey = new AccountKey(status.account_id, status.account_host);
-
-
         final boolean showCardActions = isCardActionsShown();
 
         actionButtons.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
@@ -273,7 +270,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                 final CharSequence text = HtmlSpanBuilder.fromHtml(status.quoted_text_html,
                         status.quoted_text_unescaped);
                 if (text instanceof Spanned) {
-                    quotedTextView.setText(linkify.applyAllLinks(text, accountKey,
+                    quotedTextView.setText(linkify.applyAllLinks(text, status.account_key,
                             getLayoutPosition(), status.is_possibly_sensitive,
                             adapter.getLinkHighlightingStyle(), skipLinksInText));
                 }
@@ -333,7 +330,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         }
 
         if (adapter.shouldShowAccountsColor()) {
-            itemContent.drawEnd(DataStoreUtils.getAccountColor(context, accountKey));
+            itemContent.drawEnd(DataStoreUtils.getAccountColor(context, status.account_key));
         } else {
             itemContent.drawEnd();
         }
@@ -356,9 +353,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                         View.GONE : View.VISIBLE);
             }
 
-            mediaPreview.displayMedia(status.media, loader, accountKey, -1, this,
+            mediaPreview.displayMedia(status.media, loader, status.account_key, -1, this,
                     adapter.getMediaLoadingHandler());
-            quoteMediaPreview.displayMedia(status.quoted_media, loader, accountKey, -1, this,
+            quoteMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1, this,
                     adapter.getMediaLoadingHandler());
         } else {
             mediaPreview.setVisibility(View.GONE);
@@ -375,7 +372,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         } else {
             final CharSequence text = HtmlSpanBuilder.fromHtml(status.text_html, status.text_unescaped);
             if (text instanceof Spanned) {
-                textView.setText(linkify.applyAllLinks(text, accountKey, getLayoutPosition(),
+                textView.setText(linkify.applyAllLinks(text, status.account_key, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(), skipLinksInText));
             }
         }
@@ -388,13 +385,14 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             replyCountView.setVisibility(View.GONE);
         }
 
-        if (twitter.isDestroyingStatus(accountKey, status.my_retweet_id)) {
+        if (twitter.isDestroyingStatus(status.account_key, status.my_retweet_id)) {
             retweetIconView.setActivated(false);
             retweetCount = Math.max(0, status.retweet_count - 1);
         } else {
-            final boolean creatingRetweet = twitter.isCreatingRetweet(accountKey, status.id);
+            final boolean creatingRetweet = twitter.isCreatingRetweet(status.account_key, status.id);
             retweetIconView.setActivated(creatingRetweet || status.retweeted ||
-                    Utils.isMyRetweet(status.account_id, status.retweeted_by_user_id, status.my_retweet_id));
+                    Utils.isMyRetweet(status.account_key.getId(), status.retweeted_by_user_id,
+                            status.my_retweet_id));
             retweetCount = status.retweet_count + (creatingRetweet ? 1 : 0);
         }
         if (retweetCount > 0) {
@@ -404,11 +402,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             retweetCountView.setText(null);
             retweetCountView.setVisibility(View.GONE);
         }
-        if (twitter.isDestroyingFavorite(accountKey, status.id)) {
+        if (twitter.isDestroyingFavorite(status.account_key, status.id)) {
             favoriteIconView.setActivated(false);
             favoriteCount = Math.max(0, status.favorite_count - 1);
         } else {
-            final boolean creatingFavorite = twitter.isCreatingFavorite(accountKey, status.id);
+            final boolean creatingFavorite = twitter.isCreatingFavorite(status.account_key, status.id);
             favoriteIconView.setActivated(creatingFavorite || status.is_favorite);
             favoriteCount = status.favorite_count + (creatingFavorite ? 1 : 0);
         }

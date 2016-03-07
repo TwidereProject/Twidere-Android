@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -25,7 +24,7 @@ public class ParcelableAccountUtils {
     public static AccountKey[] getAccountKeys(@NonNull ParcelableAccount[] accounts) {
         AccountKey[] ids = new AccountKey[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {
-            ids[i] = new AccountKey(accounts[i].account_key, accounts[i].account_host);
+            ids[i] = accounts[i].account_key;
         }
         return ids;
     }
@@ -42,7 +41,9 @@ public class ParcelableAccountUtils {
             ParcelableAccountCursorIndices i = new ParcelableAccountCursorIndices(cur);
             cur.moveToFirst();
             while (!cur.isAfterLast()) {
-                if (TextUtils.equals(cur.getString(i.account_host), accountHost)) {
+                final AccountKey accountKey = AccountKey.valueOf(cur.getString(i.account_key));
+                if (accountKey == null) continue;
+                if (accountKey.isAccount(accountId, accountHost)) {
                     return i.newObject(cur);
                 }
                 cur.moveToNext();

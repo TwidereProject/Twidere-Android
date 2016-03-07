@@ -40,10 +40,9 @@ public class GetSavedSearchesTask extends AbstractTask<AccountKey[], SingleRespo
             try {
                 final ResponseList<SavedSearch> searches = twitter.getSavedSearches();
                 final ContentValues[] values = ContentValuesCreator.createSavedSearches(searches,
-                        accountKey.getId(), accountKey.getHost());
-                final Expression where = Expression.and(Expression.equalsArgs(SavedSearches.ACCOUNT_KEY),
-                        Expression.equalsArgs(SavedSearches.ACCOUNT_HOST));
-                final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+                        accountKey);
+                final Expression where = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY);
+                final String[] whereArgs = {accountKey.toString()};
                 cr.delete(SavedSearches.CONTENT_URI, where.getSQL(), whereArgs);
                 ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values);
             } catch (TwitterException e) {

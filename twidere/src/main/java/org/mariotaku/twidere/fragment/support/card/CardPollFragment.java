@@ -138,7 +138,7 @@ public class CardPollFragment extends BaseSupportFragment implements
         final int selectedChoice = ParcelableCardEntityUtils.getAsInteger(card, "selected_choice", -1);
         final Date endDatetimeUtc = ParcelableCardEntityUtils.getAsDate(card, "end_datetime_utc", new Date());
         final boolean hasChoice = selectedChoice != -1;
-        final boolean isMyPoll = status.account_id == status.user_id;
+        final boolean isMyPoll = status.account_key.getId() == status.user_id;
         final boolean showResult = countsAreFinal || isMyPoll || hasChoice;
         for (int i = 0; i < choicesCount; i++) {
             final int choiceIndex = i + 1;
@@ -355,9 +355,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                 if (card == null || card.getName() == null) {
                     return null;
                 }
-                final ParcelableCardEntity parcelableCard = ParcelableCardEntityUtils.fromCardEntity(card, mAccountKey);
-
-                return parcelableCard;
+                return ParcelableCardEntityUtils.fromCardEntity(card, mAccountKey);
             } catch (TwitterException e) {
                 return null;
             }

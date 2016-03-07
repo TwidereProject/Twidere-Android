@@ -78,8 +78,7 @@ public class MessageViewHolder extends ViewHolder {
         final TwidereLinkify linkify = adapter.getLinkify();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
 
-        final AccountKey accountKey = new AccountKey(cursor.getLong(indices.account_id),
-                cursor.getString(indices.account_host));
+        final AccountKey accountKey = AccountKey.valueOf(cursor.getString(indices.account_key));
         final long timestamp = cursor.getLong(indices.timestamp);
         final ParcelableMedia[] media = JsonSerializer.parseArray(cursor.getString(indices.media),
                 ParcelableMedia.class);

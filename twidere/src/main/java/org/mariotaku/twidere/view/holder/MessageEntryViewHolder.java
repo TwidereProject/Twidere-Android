@@ -69,8 +69,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final UserColorNameManager manager = adapter.getUserColorNameManager();
 
-        final AccountKey accountKey = new AccountKey(cursor.getLong(ConversationEntries.IDX_ACCOUNT_KEY),
-                cursor.getString(ConversationEntries.IDX_ACCOUNT_HOST));
+        final AccountKey accountKey = AccountKey.valueOf(cursor.getString(ConversationEntries.IDX_ACCOUNT_KEY));
         final long conversationId = cursor.getLong(ConversationEntries.IDX_CONVERSATION_ID);
         final long timestamp = cursor.getLong(ConversationEntries.IDX_MESSAGE_TIMESTAMP);
         final boolean isOutgoing = cursor.getInt(ConversationEntries.IDX_IS_OUTGOING) == 1;

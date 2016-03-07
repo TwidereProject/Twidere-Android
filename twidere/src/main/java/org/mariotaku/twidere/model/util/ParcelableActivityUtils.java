@@ -8,6 +8,8 @@ import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 /**
+ * Processing ParcelableActivity
+ * <p/>
  * Created by mariotaku on 16/1/2.
  */
 public class ParcelableActivityUtils {
@@ -55,11 +57,11 @@ public class ParcelableActivityUtils {
         return activity.after_filtered_sources = result;
     }
 
-    public static ParcelableActivity fromActivity(final Activity activity, final AccountKey accountKey,
+    public static ParcelableActivity fromActivity(final Activity activity,
+                                                  final AccountKey accountKey,
                                                   final boolean isGap) {
         ParcelableActivity result = new ParcelableActivity();
-        result.account_key = accountKey.getId();
-        result.account_host = accountKey.getHost();
+        result.account_key = accountKey;
         result.timestamp = activity.getCreatedAt().getTime();
         result.action = activity.getAction();
         result.max_position = activity.getMaxPosition();

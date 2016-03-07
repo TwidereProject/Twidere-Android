@@ -9,6 +9,7 @@ import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
@@ -17,6 +18,8 @@ import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 /**
+ * Processing ParcelableUser
+ *
  * Created by mariotaku on 16/2/24.
  */
 public class ParcelableUserUtils implements TwidereConstants {
@@ -29,10 +32,7 @@ public class ParcelableUserUtils implements TwidereConstants {
         final UrlEntity[] urlEntities = user.getUrlEntities();
         final ParcelableUser obj = new ParcelableUser();
         obj.position = position;
-        if (accountKey != null) {
-            obj.account_key = accountKey.getId();
-            obj.account_host = accountKey.getHost();
-        }
+        obj.account_key = accountKey;
         obj.id = user.getId();
         obj.created_at = user.getCreatedAt().getTime();
         obj.is_protected = user.isProtected();
@@ -88,7 +88,7 @@ public class ParcelableUserUtils implements TwidereConstants {
     }
 
     public static ParcelableUser fromDirectMessageConversationEntry(final Cursor cursor) {
-        final long accountId = cursor.getLong(DirectMessages.ConversationEntries.IDX_ACCOUNT_KEY);
+        final AccountKey accountId = AccountKey.valueOf(cursor.getString(DirectMessages.ConversationEntries.IDX_ACCOUNT_KEY));
         final long id = cursor.getLong(DirectMessages.ConversationEntries.IDX_CONVERSATION_ID);
         final String name = cursor.getString(DirectMessages.ConversationEntries.IDX_NAME);
         final String screenName = cursor.getString(DirectMessages.ConversationEntries.IDX_SCREEN_NAME);
