@@ -55,9 +55,9 @@ import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.menu.SupportStatusShareProvider;
 import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
-import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 
 import java.util.List;
@@ -138,7 +138,7 @@ public class MenuUtils implements Constants {
                                       @NonNull final ParcelableStatus status,
                                       @NonNull UserColorNameManager manager,
                                       @NonNull final AsyncTwitterWrapper twitter) {
-        final ParcelableCredentials account = DataStoreUtils.getCredentials(context,
+        final ParcelableCredentials account = ParcelableCredentialsUtils.getCredentials(context,
                 status.account_key);
         if (account == null) return;
         setupForStatus(context, preferences, menu, status, account, manager, twitter);

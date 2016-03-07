@@ -125,6 +125,8 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 accountValues.put(Accounts.PROFILE_BANNER_URL, user.profile_banner_url);
                 accountValues.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(user,
                         ParcelableUser.class));
+                accountValues.put(Accounts.ACCOUNT_KEY,
+                        String.valueOf(new AccountKey(user.id, user.user_host)));
                 // TODO update account key
                 final String accountWhere = Expression.equals(Accounts.ACCOUNT_KEY, userId).getSQL();
                 resolver.update(Accounts.CONTENT_URI, accountValues, accountWhere, null);

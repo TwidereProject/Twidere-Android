@@ -62,7 +62,7 @@ public class IntentUtils implements Constants {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(TwidereConstants.SCHEME_TWIDERE);
         builder.authority(TwidereConstants.AUTHORITY_USER);
-        builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_ID, String.valueOf(user.account_key));
+        builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString());
         if (user.id > 0) {
             builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_USER_ID, String.valueOf(user.id));
         }
@@ -118,7 +118,7 @@ public class IntentUtils implements Constants {
         builder.scheme(TwidereConstants.SCHEME_TWIDERE);
         builder.authority(TwidereConstants.AUTHORITY_USER_MENTIONS);
         if (accountKey != null) {
-            builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         if (screenName != null) {
             builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_SCREEN_NAME, screenName);
@@ -265,7 +265,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_INCOMING_FRIENDSHIPS);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);
@@ -290,7 +290,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_MUTES_USERS);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);
@@ -303,7 +303,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_SCHEDULED_STATUSES);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);
@@ -315,7 +315,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_SAVED_SEARCHES);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);
@@ -396,7 +396,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS_FAVORITERS);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
@@ -410,7 +410,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS_RETWEETERS);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
@@ -427,7 +427,7 @@ public class IntentUtils implements Constants {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_BLOCKS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         activity.startActivity(intent);
     }
@@ -439,7 +439,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_FAVORITES);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         if (userId > 0) {
             builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
@@ -459,7 +459,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_FOLLOWERS);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         if (userId > 0) {
             builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
@@ -478,7 +478,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_FRIENDS);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         if (userId > 0) {
             builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
@@ -498,7 +498,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_LIST);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         if (listId > 0) {
             builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
@@ -540,7 +540,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_LISTS);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         if (user_id > 0) {
             builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
@@ -557,7 +557,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_DIRECT_MESSAGES);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         context.startActivity(intent);
@@ -568,7 +568,7 @@ public class IntentUtils implements Constants {
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_INTERACTIONS);
         if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         context.startActivity(intent);

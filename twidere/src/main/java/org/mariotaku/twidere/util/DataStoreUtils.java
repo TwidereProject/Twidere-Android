@@ -54,6 +54,7 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
 import org.mariotaku.twidere.model.UserFollowState;
 import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CacheFiles;
@@ -620,9 +621,9 @@ public class DataStoreUtils implements Constants {
         final Integer cached = sAccountColors.get(accountKey);
         if (cached != null) return cached;
         final String[] projection = {Accounts.COLOR};
-        String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+        String[] whereArgs = {accountKey.toString()};
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
-                Utils.getAccountCompareExpression().getSQL(), whereArgs, null);
+                Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).getSQL(), whereArgs, null);
         if (cur == null) return Color.TRANSPARENT;
         try {
             if (cur.getCount() > 0 && cur.moveToFirst()) {
@@ -718,7 +719,7 @@ public class DataStoreUtils implements Constants {
                     continue;
                 }
                 final String table = getTableNameByUri(uri);
-                final Expression accountWhere = Expression.equalsArgs(Statuses.ACCOUNT_KEY);
+                final Expression accountWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(Statuses._ID))
                         .from(new Tables(table))
@@ -878,39 +879,27 @@ public class DataStoreUtils implements Constants {
     }
 
     @Nullable
-    public static ParcelableCredentials getCredentials(@NonNull final Context context, final AccountKey accountKey) {
-        return getCredentials(context, accountKey.getId(), accountKey.getHost());
-    }
-
-    @Nullable
-    public static ParcelableCredentials getCredentials(@NonNull final Context context, final long accountId,
-                                                       final String accountHost) {
-        Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS,
-                Expression.equals(Accounts.ACCOUNT_KEY, accountId).getSQL(), null, null);
-        if (cur == null) return null;
-        try {
-            ParcelableCredentialsCursorIndices i = new ParcelableCredentialsCursorIndices(cur);
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                if (TextUtils.equals(cur.getString(i.account_key), accountHost)) {
-                    return i.newObject(cur);
-                }
-                cur.moveToNext();
-            }
-            if (cur.moveToFirst()) {
-                return i.newObject(cur);
-            }
-        } finally {
-            cur.close();
+    public static Cursor getAccountCursor(@NonNull final Context context, final String[] columns,
+                                          @NonNull final AccountKey accountKey) {
+        final ContentResolver cr = context.getContentResolver();
+        final long accountId = accountKey.getId();
+        final String accountHost = accountKey.getHost();
+        final String where;
+        final String[] whereArgs;
+        if (TextUtils.isEmpty(accountHost)) {
+            where = Expression.or(Expression.equalsArgs(Accounts.ACCOUNT_KEY),
+                    Expression.likeRaw(new Column(Accounts.ACCOUNT_KEY), "?||\'@%\'")).getSQL();
+            whereArgs = new String[]{String.valueOf(accountId), String.valueOf(accountId)};
+        } else {
+            where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).getSQL();
+            whereArgs = new String[]{String.valueOf(accountKey.toString())};
         }
-        return null;
+        return cr.query(Accounts.CONTENT_URI, columns, where, whereArgs, null);
     }
 
     public static String getAccountType(@NonNull final Context context, @NonNull final AccountKey accountKey) {
         final String[] projection = {Accounts.ACCOUNT_TYPE};
-        String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
-        Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
-                Utils.getAccountCompareExpression().getSQL(), whereArgs, null);
+        final Cursor cur = getAccountCursor(context, projection, accountKey);
         if (cur == null) return null;
         try {
             if (cur.moveToFirst()) {

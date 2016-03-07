@@ -116,6 +116,7 @@ import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.model.message.FriendshipUserUpdatedEvent;
 import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -1025,7 +1026,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(user.account_key));
                 builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user.id));
                 final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-                intent.putExtra(EXTRA_ACCOUNT, DataStoreUtils.getCredentials(getActivity(), user.account_key));
+                intent.putExtra(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(getActivity(), user.account_key));
                 intent.putExtra(EXTRA_USER, user);
                 startActivity(intent);
                 break;

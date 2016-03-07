@@ -248,7 +248,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mStatusAdapter.setLoadMoreSupportedPosition(supportedPositions);
             setConversation(data);
             final ParcelableCredentials account = mStatusAdapter.getStatusAccount();
-            if (Utils.hasOfficialAPIAccess(loader.getContext(), mPreferences, account)) {
+            if (Utils.hasOfficialAPIAccess(loader.getContext(), account)) {
                 mStatusAdapter.setReplyError(null);
             } else {
                 final SpannableStringBuilder error = SpannableStringBuilder.valueOf(

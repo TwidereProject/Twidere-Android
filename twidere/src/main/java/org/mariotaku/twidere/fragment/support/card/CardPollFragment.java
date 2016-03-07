@@ -176,13 +176,12 @@ public class CardPollFragment extends BaseSupportFragment implements
                             @Override
                             public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) {
                                 final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(),
-                                        new AccountKey(card.account_id, card.account_host),
-                                        true, true, TwitterCaps.class);
+                                        card.account_key, true, true, TwitterCaps.class);
                                 if (caps == null) return null;
                                 try {
                                     final CardEntity cardEntity = caps.sendPassThrough(cardDataMap).getCard();
                                     return ParcelableCardEntityUtils.fromCardEntity(cardEntity,
-                                            new AccountKey(card.account_id, card.account_host));
+                                            card.account_key);
                                 } catch (TwitterException e) {
                                     Log.w(LOGTAG, e);
                                 }
@@ -270,8 +269,7 @@ public class CardPollFragment extends BaseSupportFragment implements
     @Override
     public Loader<ParcelableCardEntity> onCreateLoader(int id, Bundle args) {
         final ParcelableCardEntity card = getCard();
-        return new ParcelableCardEntityLoader(getContext(), new AccountKey(card.account_id,
-                card.account_host), card.url, card.name);
+        return new ParcelableCardEntityLoader(getContext(), card.account_key, card.url, card.name);
     }
 
     @Override

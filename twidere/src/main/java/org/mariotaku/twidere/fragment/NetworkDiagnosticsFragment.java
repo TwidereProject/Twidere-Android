@@ -35,6 +35,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -155,7 +156,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
 
             for (AccountKey accountKey : DataStoreUtils.getAccountKeys(mContext)) {
-                final ParcelableCredentials credentials = DataStoreUtils.getCredentials(mContext, accountKey);
+                final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mContext, accountKey);
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountKey, false);
                 if (credentials == null || twitter == null) continue;
                 publishProgress(new LogText("Testing connection for account " + accountKey));

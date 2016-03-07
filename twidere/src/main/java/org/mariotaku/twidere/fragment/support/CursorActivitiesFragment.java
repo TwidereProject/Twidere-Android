@@ -34,9 +34,9 @@ import android.support.v4.content.Loader;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.library.objectcursor.ObjectCursor;
+import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
@@ -60,6 +60,7 @@ import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
@@ -104,19 +105,21 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
         final String sortOrder = getSortOrder();
-        final AccountKey[] accountIds = getAccountKeys();
+        final AccountKey[] accountKeys = getAccountKeys();
         final Expression accountWhere = Expression.in(new Column(Activities.ACCOUNT_KEY),
-                new RawItemArray(accountIds));
+                new ArgsArray(accountKeys.length));
         final Expression filterWhere = getFiltersWhere(table), where;
         if (filterWhere != null) {
             where = Expression.and(accountWhere, filterWhere);
         } else {
             where = accountWhere;
         }
-        final Where expression = processWhere(where, new String[0]);
+        final String[] accountSelectionArgs = TwidereArrayUtils.toStringArray(accountKeys, 0,
+                accountKeys.length);
+        final Where expression = processWhere(where, accountSelectionArgs);
         final String selection = expression.getSQL();
         final AbsActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
-        adapter.setShowAccountsColor(accountIds.length > 1);
+        adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Activities.COLUMNS;
         return new CursorActivitiesLoader(context, uri, projection, selection, expression.whereArgs,
                 sortOrder, fromUser);

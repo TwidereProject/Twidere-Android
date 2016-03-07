@@ -38,6 +38,8 @@ import org.mariotaku.twidere.model.AccountKey;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -339,7 +341,7 @@ public class StreamingService extends Service implements Constants {
                 statusStreamStarted = true;
                 values.put(Statuses.IS_GAP, true);
             }
-            final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+            final String where = Expression.and(Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
                     Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
             final String[] whereArgs = {account.account_key.toString(), String.valueOf(status.getId())};
             resolver.delete(Statuses.CONTENT_URI, where, whereArgs);

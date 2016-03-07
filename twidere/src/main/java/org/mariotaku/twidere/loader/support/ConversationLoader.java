@@ -31,8 +31,8 @@ import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
-import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.Nullables;
 import org.mariotaku.twidere.util.ParcelUtils;
@@ -59,7 +59,7 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
         final ParcelableStatus status = mStatus;
-        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(getContext(), getAccountKey());
+        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), getAccountKey());
         if (credentials == null) throw new TwitterException("Null credentials");
         if (Utils.isOfficialCredentials(getContext(), credentials)) {
             return twitter.showConversation(status.id, paging);

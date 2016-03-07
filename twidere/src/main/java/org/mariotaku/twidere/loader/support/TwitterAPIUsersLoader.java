@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -36,15 +37,18 @@ import java.util.List;
 
 public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
+    @Nullable
     private final AccountKey mAccountKey;
 
-    public TwitterAPIUsersLoader(final Context context, final AccountKey accountKey, final List<ParcelableUser> data, boolean fromUser) {
+    public TwitterAPIUsersLoader(final Context context, @Nullable final AccountKey accountKey,
+                                 final List<ParcelableUser> data, boolean fromUser) {
         super(context, data, fromUser);
         mAccountKey = accountKey;
     }
 
     @Override
     public List<ParcelableUser> loadInBackground() {
+        if (mAccountKey == null) return null;
         final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountKey, true);
         if (twitter == null) return null;
         final List<ParcelableUser> data = getData();
@@ -67,6 +71,7 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         return data;
     }
 
+    @Nullable
     public final AccountKey getAccountId() {
         return mAccountKey;
     }

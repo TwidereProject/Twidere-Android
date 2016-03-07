@@ -93,6 +93,7 @@ import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.model.UnreadItem;
 import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
+import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
@@ -1348,10 +1349,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (context == null) return;
         final AccountKey accountKey = pref.getAccountKey();
         final String where = Expression.and(
-                Utils.getAccountCompareExpression(),
-                Expression.greaterThan(Activities.TIMESTAMP, position)
+                Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
+                Expression.greaterThanArgs(Activities.TIMESTAMP)
         ).getSQL();
-        final String[] whereArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+        final String[] whereArgs = {accountKey.toString(), String.valueOf(position)};
         Cursor c = query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, whereArgs,
                 new OrderBy(Activities.TIMESTAMP, false).getSQL());
         if (c == null) return;
@@ -1526,12 +1527,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
         orExpressions.add(Expression.notIn(new Column(DirectMessages.SENDER_ID), new RawItemArray(senderIds.toArray())));
         final Expression selection = Expression.and(
-                Utils.getAccountCompareExpression(),
+                Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
                 Expression.greaterThan(DirectMessages.MESSAGE_ID, prevOldestId),
                 Expression.or(orExpressions.toArray(new Expression[orExpressions.size()]))
         );
         final String filteredSelection = selection.getSQL();
-        final String[] selectionArgs = {String.valueOf(accountKey.getId()), accountKey.getHost()};
+        final String[] selectionArgs = {accountKey.toString()};
         final String[] userProjection = {DirectMessages.SENDER_ID, DirectMessages.SENDER_NAME,
                 DirectMessages.SENDER_SCREEN_NAME};
         final String[] messageProjection = {DirectMessages.MESSAGE_ID, DirectMessages.SENDER_ID,

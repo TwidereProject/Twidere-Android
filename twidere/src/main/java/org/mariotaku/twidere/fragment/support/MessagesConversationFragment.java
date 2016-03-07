@@ -89,6 +89,7 @@ import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -310,7 +311,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                         mAccountSpinner.setSelection(accountPos);
                     }
                     account = accountPos >= 0 ? accountsSpinnerAdapter.getItem(accountPos) :
-                            DataStoreUtils.getCredentials(activity, accountKey);
+                            ParcelableCredentialsUtils.getCredentials(activity, accountKey);
                     recipient = Utils.getUserForConversation(activity, accountKey, userId);
                 } else {
                     account = null;

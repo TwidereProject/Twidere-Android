@@ -30,7 +30,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 
 import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT;
 import static org.mariotaku.twidere.util.Utils.findStatus;
@@ -61,13 +61,13 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
             if (cache != null) {
                 final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(cache);
                 final Bundle extras = response.getExtras();
-                extras.putParcelable(EXTRA_ACCOUNT, DataStoreUtils.getCredentials(getContext(), mAccountId));
+                extras.putParcelable(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(getContext(), mAccountId));
                 return response;
             }
         }
         try {
             final ParcelableStatus status = findStatus(getContext(), mAccountId, mStatusId);
-            final ParcelableCredentials credentials = DataStoreUtils.getCredentials(getContext(), mAccountId);
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), mAccountId);
             final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(status);
             final Bundle extras = response.getExtras();
             extras.putParcelable(EXTRA_ACCOUNT, credentials);

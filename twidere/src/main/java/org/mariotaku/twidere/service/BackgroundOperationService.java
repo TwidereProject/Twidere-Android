@@ -81,6 +81,7 @@ import org.mariotaku.twidere.model.UploaderMediaItem;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
@@ -92,7 +93,6 @@ import org.mariotaku.twidere.util.AbsServiceInterface;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -583,7 +583,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     shortener.waitForService();
                 }
                 for (final ParcelableAccount account : statusUpdate.accounts) {
-                    final ParcelableCredentials credentials = DataStoreUtils.getCredentials(this,
+                    final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(this,
                             account.account_key);
                     // Get Twitter instance corresponding to account
                     final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this,

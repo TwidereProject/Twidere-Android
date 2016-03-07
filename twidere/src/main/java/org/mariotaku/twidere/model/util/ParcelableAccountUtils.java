@@ -30,35 +30,20 @@ public class ParcelableAccountUtils {
     }
 
     @Nullable
-    public static ParcelableAccount getAccount(final Context context, final long accountId,
-                                               final String accountHost) {
-        if (context == null || accountId < 0) return null;
-        final Expression where = Expression.equals(Accounts.ACCOUNT_KEY, accountId);
-        Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
-                Accounts.COLUMNS_NO_CREDENTIALS, where.getSQL(), null, null);
-        if (cur == null) return null;
+    public static ParcelableAccount getAccount(@NonNull final Context context,
+                                               @NonNull final AccountKey accountKey) {
+        final Cursor c = DataStoreUtils.getAccountCursor(context,
+                Accounts.COLUMNS_NO_CREDENTIALS, accountKey);
+        if (c == null) return null;
         try {
-            ParcelableAccountCursorIndices i = new ParcelableAccountCursorIndices(cur);
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                final AccountKey accountKey = AccountKey.valueOf(cur.getString(i.account_key));
-                if (accountKey == null) continue;
-                if (accountKey.isAccount(accountId, accountHost)) {
-                    return i.newObject(cur);
-                }
-                cur.moveToNext();
-            }
-            if (cur.moveToFirst()) {
-                return i.newObject(cur);
+            final ParcelableAccountCursorIndices i = new ParcelableAccountCursorIndices(c);
+            if (c.moveToFirst()) {
+                return i.newObject(c);
             }
         } finally {
-            cur.close();
+            c.close();
         }
         return null;
-    }
-
-    public static ParcelableAccount getAccount(final Context context, final AccountKey accountKey) {
-        return getAccount(context, accountKey.getId(), accountKey.getHost());
     }
 
     @NonNull

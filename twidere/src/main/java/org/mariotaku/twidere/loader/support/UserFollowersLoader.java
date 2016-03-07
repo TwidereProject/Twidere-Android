@@ -51,7 +51,9 @@ public class UserFollowersLoader extends CursorSupportUsersLoader {
     @Override
     protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
             throws TwitterException {
-        final String accountType = DataStoreUtils.getAccountType(getContext(), getAccountId());
+        final AccountKey accountId = getAccountId();
+        if (accountId == null) throw new TwitterException("No account");
+        final String accountType = DataStoreUtils.getAccountType(getContext(), accountId);
         if (mUserId > 0) {
             if (ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(accountType)) {
                 return twitter.getStatusesFollowersList(mUserId, paging);

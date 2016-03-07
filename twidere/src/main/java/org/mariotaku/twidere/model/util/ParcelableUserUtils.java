@@ -79,7 +79,7 @@ public class ParcelableUserUtils implements TwidereConstants {
         if (uri == null) return USER_TYPE_TWITTER_COM;
         final String authority = PreviewMediaExtractor.getAuthority(uri);
         if (authority == null) return null;
-        return authority.replaceAll("[^\\w\\d]", "-");
+        return authority.replaceAll("[^\\w\\d\\.]", "-");
     }
 
     public static String getUserHost(ParcelableUser user) {

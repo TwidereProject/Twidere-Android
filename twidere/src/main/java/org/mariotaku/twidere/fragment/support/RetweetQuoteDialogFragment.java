@@ -48,9 +48,9 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
@@ -107,7 +107,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final IStatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
         assert status != null;
-        final ParcelableCredentials credentials = DataStoreUtils.getCredentials(wrapped, status.account_key);
+        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(wrapped, status.account_key);
         assert credentials != null;
 
         builder.setView(view);
