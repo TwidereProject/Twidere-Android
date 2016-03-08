@@ -153,10 +153,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             final TwidereLinkify linkify = adapter.getTwidereLinkify();
             final CharSequence text = HtmlSpanBuilder.fromHtml(TWIDERE_PREVIEW_TEXT_HTML,
                     TWIDERE_PREVIEW_TEXT_UNESCAPED);
-            if (text instanceof Spanned) {
-                textView.setText(linkify.applyAllLinks(text, null, -1, false,
-                        adapter.getLinkHighlightingStyle(), true));
-            }
+            textView.setText(linkify.applyAllLinks(text, null, -1, false,
+                    adapter.getLinkHighlightingStyle(), true));
         } else {
             textView.setText(toPlainText(TWIDERE_PREVIEW_TEXT_HTML));
         }
@@ -371,10 +369,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             textView.setText(status.text_unescaped);
         } else {
             final CharSequence text = HtmlSpanBuilder.fromHtml(status.text_html, status.text_unescaped);
-            if (text instanceof Spanned) {
-                textView.setText(linkify.applyAllLinks(text, status.account_key, getLayoutPosition(),
-                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(), skipLinksInText));
-            }
+            textView.setText(linkify.applyAllLinks(text, status.account_key, getLayoutPosition(),
+                    status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(), skipLinksInText));
         }
 
         if (replyCount > 0) {

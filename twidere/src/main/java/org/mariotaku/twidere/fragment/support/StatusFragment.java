@@ -1015,10 +1015,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
                 final CharSequence quotedText = HtmlSpanBuilder.fromHtml(status.quoted_text_html,
                         status.text_unescaped);
-                if (quotedText instanceof Spanned) {
-                    quotedTextView.setText(linkify.applyAllLinks(quotedText, status.account_key,
-                            layoutPosition, status.is_possibly_sensitive, skipLinksInText));
-                }
+                quotedTextView.setText(linkify.applyAllLinks(quotedText, status.account_key,
+                        layoutPosition, status.is_possibly_sensitive, skipLinksInText));
 
                 quoteIndicator.setColor(manager.getUserColor(status.user_key, false));
                 profileContainer.drawStart(manager.getUserColor(status.quoted_user_id, false));
@@ -1069,10 +1067,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             final CharSequence text = HtmlSpanBuilder.fromHtml(status.text_html,
                     status.text_unescaped);
-            if (text instanceof Spanned) {
-                textView.setText(linkify.applyAllLinks(text, status.account_key, layoutPosition,
-                        status.is_possibly_sensitive, skipLinksInText));
-            }
+            textView.setText(linkify.applyAllLinks(text, status.account_key, layoutPosition,
+                    status.is_possibly_sensitive, skipLinksInText));
 
             final ParcelableLocation location;
             final String placeFullName;
