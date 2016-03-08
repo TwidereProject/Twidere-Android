@@ -3,9 +3,9 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1456662374000)
+--- twidere/build.gradle	(revision e38aef1080b30bdd8c4cb306d8a66d2ced601268)
 +++ twidere/build.gradle	(revision )
-@@ -1,17 +1,17 @@
+@@ -1,13 +1,13 @@
  import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
  
  apply plugin: 'com.android.application'
@@ -21,30 +21,25 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      }
  
      dependencies {
--        classpath 'io.fabric.tools:gradle:1.21.2'
-+//        classpath 'io.fabric.tools:gradle:1.21.2'
+@@ -41,7 +41,7 @@
      }
- }
  
-@@ -34,7 +34,7 @@
-         targetCompatibility JavaVersion.VERSION_1_7
-     }
      productFlavors {
 -        google {}
 +//        google {}
          fdroid {}
      }
      buildTypes {
-@@ -61,7 +61,7 @@
+@@ -68,7 +68,7 @@
  
  repositories {
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
 -    maven { url 'https://maven.fabric.io/public' }
 +//    maven { url 'https://maven.fabric.io/public' }
-     maven { url 'https://github.com/suckgamony/RapidDecoder/raw/master/repository' }
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -120,10 +120,10 @@
+ 
+@@ -122,10 +122,10 @@
      compile project(':twidere.component.common')
      compile project(':twidere.component.nyan')
  
