@@ -49,11 +49,13 @@ import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
 import org.mariotaku.twidere.model.UserFollowState;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
+import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -654,13 +656,26 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static UserKey getAccountKey(final Context context, final String screenName) {
-        if (context == null || isEmpty(screenName)) return null;
+    public static UserKey findAccountKey(@NonNull final Context context, @NonNull final String screenName) {
         final String[] projection = {Accounts.ACCOUNT_KEY};
         final String where = Expression.equalsArgs(Accounts.SCREEN_NAME).getSQL();
         final String[] whereArgs = {screenName};
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
                 where, whereArgs, null);
+        if (cur == null) return null;
+        try {
+            if (cur.moveToFirst()) {
+                return UserKey.valueOf(cur.getString(0));
+            }
+            return null;
+        } finally {
+            cur.close();
+        }
+    }
+
+    public static UserKey findAccountKey(@NonNull final Context context, final long accountId) {
+        final String[] projection = {Accounts.ACCOUNT_KEY};
+        final Cursor cur = findAccountCursorsById(context, projection, accountId);
         if (cur == null) return null;
         try {
             if (cur.moveToFirst()) {
@@ -965,14 +980,15 @@ public class DataStoreUtils implements Constants {
         String[] extraWhereArgs = null;
         boolean followingOnly = false;
         if (extraArgs != null) {
-            Bundle extras = extraArgs.getBundle(EXTRA_EXTRAS);
-            if (extras != null) {
-                if (extras.getBoolean(EXTRA_MENTIONS_ONLY)) {
+            final TabExtras extras = extraArgs.getParcelable(EXTRA_EXTRAS);
+            if (extras instanceof InteractionsTabExtras) {
+                InteractionsTabExtras ite = ((InteractionsTabExtras) extras);
+                if (ite.isMentionsOnly()) {
                     extraWhere = Expression.inArgs(Activities.ACTION, 3);
                     extraWhereArgs = new String[]{Activity.Action.MENTION,
                             Activity.Action.REPLY, Activity.Action.QUOTE};
                 }
-                if (extras.getBoolean(EXTRA_MY_FOLLOWING_ONLY)) {
+                if (ite.isMyFollowingOnly()) {
                     followingOnly = true;
                 }
             }

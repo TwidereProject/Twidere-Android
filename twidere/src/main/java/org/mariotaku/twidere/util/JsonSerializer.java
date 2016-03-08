@@ -20,8 +20,12 @@
 package org.mariotaku.twidere.util;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.bluelinelabs.logansquare.JsonMapper;
+
+import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.twidere.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +46,9 @@ public class JsonSerializer {
         try {
             return LoganSquareMapperFinder.mapperFor(cls).serialize(list);
         } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(Constants.LOGTAG, e);
+            }
             return null;
         }
     }
@@ -52,6 +59,9 @@ public class JsonSerializer {
         try {
             return LoganSquareMapperFinder.mapperFor(cls).serialize(list);
         } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(Constants.LOGTAG, e);
+            }
             return null;
         }
     }
@@ -62,6 +72,9 @@ public class JsonSerializer {
         try {
             return LoganSquareMapperFinder.mapperFor(cls).serialize(Arrays.asList(array));
         } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(Constants.LOGTAG, e);
+            }
             return null;
         }
     }
@@ -72,6 +85,9 @@ public class JsonSerializer {
         try {
             return LoganSquareMapperFinder.mapperFor(cls).serialize(object);
         } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(Constants.LOGTAG, e);
+            }
             return null;
         }
     }
@@ -85,6 +101,9 @@ public class JsonSerializer {
                     LoganSquareMapperFinder.mapperFor(object.getClass());
             return mapper.serialize(object);
         } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(Constants.LOGTAG, e);
+            }
             return null;
         }
     }
@@ -97,6 +116,9 @@ public class JsonSerializer {
             //noinspection unchecked
             return list.toArray((T[]) Array.newInstance(cls, list.size()));
         } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(Constants.LOGTAG, e);
+            }
             return null;
         }
     }
@@ -107,6 +129,9 @@ public class JsonSerializer {
         try {
             return LoganSquareMapperFinder.mapperFor(cls).parse(string);
         } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(Constants.LOGTAG, e);
+            }
             return null;
         }
     }
@@ -118,6 +143,9 @@ public class JsonSerializer {
             is = new FileInputStream(file);
             return LoganSquareMapperFinder.mapperFor(cls).parseList(is);
         } catch (IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(Constants.LOGTAG, e);
+            }
             return null;
         } finally {
             Utils.closeSilently(is);

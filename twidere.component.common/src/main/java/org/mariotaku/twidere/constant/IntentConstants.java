@@ -100,8 +100,6 @@ public interface IntentConstants {
     String EXTRA_MENTIONS = "mentions";
     String EXTRA_ACCOUNT_KEY = "account_key";
     String EXTRA_ACCOUNT_KEYS = "account_keys";
-    String EXTRA_ACCOUNT_ID = "account_id";
-    String EXTRA_ACCOUNT_IDS = "account_ids";
     String EXTRA_PAGE = "page";
     String EXTRA_DATA = "data";
     String EXTRA_QUERY = "query";

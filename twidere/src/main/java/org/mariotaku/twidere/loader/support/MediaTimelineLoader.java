@@ -71,6 +71,8 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
                 return twitter.getMediaTimeline(mUserId, paging);
             if (mUserScreenName != null)
                 return twitter.getMediaTimeline(mUserScreenName, paging);
+        } else if (TwitterAPIFactory.isStatusNetCredentials(credentials)) {
+            throw new TwitterException("Not implemented");
         } else {
             final String screenName;
             if (mUserScreenName != null) {

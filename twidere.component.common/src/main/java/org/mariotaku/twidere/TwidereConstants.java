@@ -21,6 +21,7 @@ package org.mariotaku.twidere;
 
 import android.content.ContentResolver;
 
+import org.mariotaku.twidere.constant.CompatibilityConstants;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 
@@ -29,7 +30,7 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants;
  *
  * @author mariotaku
  */
-public interface TwidereConstants extends SharedPreferenceConstants, IntentConstants {
+public interface TwidereConstants extends SharedPreferenceConstants, IntentConstants, CompatibilityConstants {
 
     String TWIDERE_APP_NAME = "Twidere";
     String TWIDERE_PROJECT_URL = "https://github.com/mariotaku/twidere";
@@ -109,8 +110,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_PROFILE_EDITOR = "profile_editor";
 
     String QUERY_PARAM_ACCOUNT_KEY = "account_key";
-    String QUERY_PARAM_ACCOUNT_ID = "account_id";
-    String QUERY_PARAM_ACCOUNT_IDS = "account_ids";
     String QUERY_PARAM_ACCOUNT_NAME = "account_name";
     String QUERY_PARAM_STATUS_ID = "status_id";
     String QUERY_PARAM_USER_ID = "user_id";

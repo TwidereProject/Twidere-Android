@@ -31,6 +31,7 @@ import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 
@@ -81,8 +82,8 @@ public class InteractionsTimelineFragment extends CursorActivitiesFragment {
     protected Where processWhere(@NonNull Expression where, @NonNull String[] whereArgs) {
         final Bundle arguments = getArguments();
         if (arguments != null) {
-            final Bundle extras = arguments.getBundle(EXTRA_EXTRAS);
-            if (extras != null && extras.getBoolean(EXTRA_MENTIONS_ONLY)) {
+            final InteractionsTabExtras extras = arguments.getParcelable(EXTRA_EXTRAS);
+            if (extras != null && extras.isMentionsOnly()) {
                 final Expression expression = Expression.and(where, Expression.inArgs(Activities.ACTION, 3));
                 return new Where(expression, ArrayUtils.addAll(whereArgs, Activity.Action.MENTION,
                         Activity.Action.REPLY, Activity.Action.QUOTE));
@@ -97,10 +98,10 @@ public class InteractionsTimelineFragment extends CursorActivitiesFragment {
         final ParcelableActivitiesAdapter adapter = new ParcelableActivitiesAdapter(context, compact, false);
         final Bundle arguments = getArguments();
         if (arguments != null) {
-            final Bundle extras = arguments.getBundle(EXTRA_EXTRAS);
+            final InteractionsTabExtras extras = arguments.getParcelable(EXTRA_EXTRAS);
             if (extras != null) {
-                adapter.setFollowingOnly(extras.getBoolean(EXTRA_MY_FOLLOWING_ONLY));
-                adapter.setMentionsOnly(extras.getBoolean(EXTRA_MENTIONS_ONLY));
+                adapter.setFollowingOnly(extras.isMyFollowingOnly());
+                adapter.setMentionsOnly(extras.isMentionsOnly());
             }
         }
         return adapter;

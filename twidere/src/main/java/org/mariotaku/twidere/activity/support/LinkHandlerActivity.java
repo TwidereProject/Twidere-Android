@@ -224,7 +224,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            setActionBarTheme(actionBar, linkId, data);
+            setActionBarTheme(linkId);
         }
         mMainContent.setOnFitSystemWindowsListener(this);
         setStatusBarColor(linkId, data);
@@ -332,10 +332,9 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
     }
 
     @SuppressLint("AppCompatMethod")
-    private void setActionBarTheme(ActionBar actionBar, int linkId, Uri data) {
+    private void setActionBarTheme(int linkId) {
         final int themeColor = getCurrentThemeColor();
         final String option = getThemeBackgroundOption();
-        int actionBarItemsColor = ThemeUtils.getContrastForegroundColor(this, themeColor);
         final ActionBarContainer actionBarContainer = (ActionBarContainer) findViewById(R.id.twidere_action_bar_container);
         switch (linkId) {
             case LINK_ID_SEARCH:

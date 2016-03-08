@@ -144,7 +144,7 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
                 return null;
             }
         }
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(mAccountKey.getId()));
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, String.valueOf(mAccountKey));
         return mContext.getContentResolver().query(builder.build(), Suggestions.AutoComplete.COLUMNS,
                 null, null, null);
     }

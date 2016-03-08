@@ -3,8 +3,8 @@ package org.mariotaku.twidere.model;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.model.tab.Arguments;
-import org.mariotaku.twidere.model.tab.Extras;
+import org.mariotaku.twidere.model.tab.argument.TabArguments;
+import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.model.util.TabArgumentsFieldConverter;
 import org.mariotaku.twidere.model.util.TabExtrasFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
@@ -28,10 +28,10 @@ public class Tab {
     int position;
 
     @CursorField(value = Tabs.ARGUMENTS, converter = TabArgumentsFieldConverter.class)
-    Arguments arguments;
+    TabArguments arguments;
 
     @CursorField(value = Tabs.EXTRAS, converter = TabExtrasFieldConverter.class)
-    Extras extras;
+    TabExtras extras;
 
     public String getName() {
         return name;
@@ -66,19 +66,19 @@ public class Tab {
         this.position = position;
     }
 
-    public Arguments getArguments() {
+    public TabArguments getArguments() {
         return arguments;
     }
 
-    public void setArguments(Arguments arguments) {
+    public void setArguments(TabArguments arguments) {
         this.arguments = arguments;
     }
 
-    public Extras getExtras() {
+    public TabExtras getExtras() {
         return extras;
     }
 
-    public void setExtras(Extras extras) {
+    public void setExtras(TabExtras extras) {
         this.extras = extras;
     }
 }

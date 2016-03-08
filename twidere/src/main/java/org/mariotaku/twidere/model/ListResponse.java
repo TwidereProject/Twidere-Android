@@ -62,7 +62,7 @@ public class ListResponse<Data> extends AbstractList<Data> implements Response<L
 
     @Override
     public int size() {
-        if (list == null) throw new NullPointerException();
+        if (list == null) return 0;
         return list.size();
     }
 
@@ -73,25 +73,25 @@ public class ListResponse<Data> extends AbstractList<Data> implements Response<L
 
     @Override
     public Data remove(int location) {
-        if (list == null) throw new NullPointerException();
+        if (list == null) return null;
         return list.remove(location);
     }
 
     @Override
     public Data set(int location, Data object) {
-        if (list == null) throw new NullPointerException();
+        if (list == null) return null;
         return list.set(location, object);
     }
 
     @Override
     public void add(int location, Data object) {
-        if (list == null) throw new NullPointerException();
+        if (list == null) return;
         list.add(location, object);
     }
 
     @Override
     public Data get(int location) {
-        if (list == null) throw new NullPointerException();
+        if (list == null) return null;
         return list.get(location);
     }
 

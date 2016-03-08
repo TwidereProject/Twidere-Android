@@ -160,4 +160,13 @@ public class NameView extends ThemedTextView {
             setSingleLine(true);
         }
     }
+
+    @Override
+    public int getBaseline() {
+        try {
+            return super.getBaseline();
+        } catch (IndexOutOfBoundsException e) {
+            return -1;
+        }
+    }
 }

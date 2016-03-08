@@ -466,9 +466,6 @@ public final class Utils implements Constants {
                 break;
             }
             case LINK_ID_PROFILE_EDITOR: {
-                if (noAccount(uri, args)) {
-                    return null;
-                }
                 fragment = new UserProfileEditorFragment();
                 break;
             }
@@ -745,28 +742,26 @@ public final class Utils implements Constants {
             }
         }
         if (isAccountIdRequired) {
-            final String paramAccountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY);
-            if (paramAccountKey != null) {
-                args.putParcelable(EXTRA_ACCOUNT_KEY, UserKey.valueOf(paramAccountKey));
-            } else {
+            UserKey accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
+            if (accountKey == null) {
+                final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
                 final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
-                if (paramAccountName != null) {
-                    args.putParcelable(EXTRA_ACCOUNT_KEY, DataStoreUtils.getAccountKey(context,
-                            paramAccountName));
+                if (accountId != -1) {
+                    accountKey = DataStoreUtils.findAccountKey(context,
+                            accountId);
+                    args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
+                } else if (paramAccountName != null) {
+                    accountKey = DataStoreUtils.findAccountKey(context,
+                            paramAccountName);
                 } else {
-                    final UserKey accountKey = getDefaultAccountKey(context);
-                    if (isMyAccount(context, accountKey)) {
-                        args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
-                    }
+                    accountKey = getDefaultAccountKey(context);
                 }
             }
+            if (accountKey == null) return null;
+            args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
         }
         fragment.setArguments(args);
         return fragment;
-    }
-
-    protected static boolean noAccount(Uri uri, Bundle args) {
-        return TextUtils.isEmpty(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID)) && !args.containsKey(EXTRA_ACCOUNT_ID);
     }
 
     public static Intent createStatusShareIntent(@NonNull final Context context, @NonNull final ParcelableStatus status) {
@@ -1704,18 +1699,20 @@ public final class Utils implements Constants {
         return top - actionBarHeight;
     }
 
-    public static void openUserMediaTimeline(final Activity activity, final long account_id, final long user_id,
-                                             final String screen_name) {
+    public static void openUserMediaTimeline(final Activity activity, final UserKey accountKey,
+                                             final long userId, final String screenName) {
         if (activity == null) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER_MEDIA_TIMELINE);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(account_id));
-        if (user_id > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user_id));
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, String.valueOf(accountKey));
         }
-        if (screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screen_name);
+        if (userId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        }
+        if (screenName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         activity.startActivity(intent);

@@ -1022,7 +1022,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final Uri.Builder builder = new Uri.Builder();
                 builder.scheme(SCHEME_TWIDERE);
                 builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
-                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_ID, String.valueOf(user.account_key));
+                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, String.valueOf(user.account_key));
                 builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user.key));
                 final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
                 intent.putExtra(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(getActivity(), user.account_key));

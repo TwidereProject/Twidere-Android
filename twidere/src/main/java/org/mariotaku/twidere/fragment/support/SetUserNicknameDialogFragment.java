@@ -47,7 +47,7 @@ public class SetUserNicknameDialogFragment extends BaseSupportDialogFragment imp
         final Bundle args = getArguments();
         assert args != null;
         final String text = ParseUtils.parseString(mEditText.getText());
-        final UserKey userId = args.getParcelable(EXTRA_USER_ID);
+        final UserKey userId = args.getParcelable(EXTRA_USER_KEY);
         assert userId != null;
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE: {

@@ -78,7 +78,7 @@ public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragmen
         super.onActivityCreated(savedInstanceState);
         final Bundle args = getArguments();
         final Bundle loaderArgs = new Bundle();
-        loaderArgs.putLong(EXTRA_ACCOUNT_ID, args.getLong(EXTRA_ACCOUNT_ID));
+        loaderArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
         getLoaderManager().initLoader(0, loaderArgs, this);
         showProgress();
     }

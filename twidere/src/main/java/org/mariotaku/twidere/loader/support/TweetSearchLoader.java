@@ -22,6 +22,7 @@ package org.mariotaku.twidere.loader.support;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -29,8 +30,8 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
@@ -38,11 +39,11 @@ import java.util.List;
 
 public class TweetSearchLoader extends TwitterAPIStatusesLoader {
 
-    @NonNull
+    @Nullable
     private final String mQuery;
     private final boolean mGapEnabled;
 
-    public TweetSearchLoader(final Context context, final UserKey accountKey, @NonNull final String query,
+    public TweetSearchLoader(final Context context, final UserKey accountKey, @Nullable final String query,
                              final long sinceId, final long maxId, final List<ParcelableStatus> data,
                              final String[] savedStatusesArgs, final int tabPosition, boolean fromUser,
                              boolean makeGap) {
@@ -54,6 +55,7 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
     @NonNull
     @Override
     public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
+        if (mQuery == null) throw new TwitterException("Empty query");
         final String processedQuery = processQuery(mQuery);
         if (TwitterAPIFactory.isTwitterCredentials(getContext(), getAccountKey())) {
             final SearchQuery query = new SearchQuery(processedQuery);

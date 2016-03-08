@@ -26,8 +26,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.TweetSearchLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -58,7 +58,6 @@ public class StatusesSearchFragment extends ParcelableStatusesFragment {
         final String query = args.getString(EXTRA_QUERY);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean makeGap = args.getBoolean(EXTRA_MAKE_GAP, true);
-        if (query == null) throw new NullPointerException();
         return new TweetSearchLoader(getActivity(), accountKey, query, sinceId, maxId, getAdapterData(),
                 getSavedStatusesFileArgs(), tabPosition, fromUser, makeGap);
     }
@@ -72,9 +71,9 @@ public class StatusesSearchFragment extends ParcelableStatusesFragment {
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
         if (args == null) return null;
-        final long account_id = args.getLong(EXTRA_ACCOUNT_ID, -1);
+        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final String query = args.getString(EXTRA_QUERY);
-        return new String[]{AUTHORITY_SEARCH_TWEETS, "account" + account_id, "query" + query};
+        return new String[]{AUTHORITY_SEARCH_TWEETS, "account" + accountKey, "query" + query};
     }
 
 
