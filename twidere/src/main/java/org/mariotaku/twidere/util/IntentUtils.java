@@ -25,12 +25,12 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.support.SensitiveContentWarningDialogFragment;
 import org.mariotaku.twidere.fragment.support.UserFragment;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
-import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -273,7 +273,7 @@ public class IntentUtils implements Constants {
     }
 
     public static void openMap(@NonNull final Context context, final double latitude, final double longitude) {
-        if (!ParcelableLocation.isValidLocation(latitude, longitude)) return;
+        if (!ParcelableLocationUtils.isValidLocation(latitude, longitude)) return;
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_MAP);

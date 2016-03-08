@@ -14,6 +14,7 @@ import org.mariotaku.twidere.constant.IntentConstants;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -98,5 +99,16 @@ public class InternalParseUtils {
     private static boolean shouldPutLong(final String key) {
         return CompatibilityConstants.EXTRA_ACCOUNT_ID.equals(key) || IntentConstants.EXTRA_USER_ID.equals(key) || IntentConstants.EXTRA_STATUS_ID.equals(key)
                 || IntentConstants.EXTRA_LIST_ID.equals(key);
+    }
+
+    public static String parsePrettyDecimal(double num, int decimalDigits) {
+        String result = String.format(Locale.US, "%." + decimalDigits + "f", num);
+        int dotIdx = result.lastIndexOf('.');
+        if (dotIdx == -1) return result;
+        int i;
+        for (i = result.length() - 1; i >= 0; i--) {
+            if (result.charAt(i) != '0') break;
+        }
+        return result.substring(0, i == dotIdx ? dotIdx : i + 1);
     }
 }

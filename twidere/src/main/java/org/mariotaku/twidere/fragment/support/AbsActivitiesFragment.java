@@ -243,7 +243,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     public final Loader<Data> onCreateLoader(int id, Bundle args) {
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
         args.remove(EXTRA_FROM_USER);
-        return onCreateStatusesLoader(getActivity(), args, fromUser);
+        return onCreateActivitiesLoader(getActivity(), args, fromUser);
     }
 
     @Override
@@ -527,8 +527,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     protected abstract boolean hasMoreData(Data data);
 
-    protected abstract Loader<Data> onCreateStatusesLoader(final Context context, final Bundle args,
-                                                           final boolean fromUser);
+    protected abstract Loader<Data> onCreateActivitiesLoader(final Context context, final Bundle args,
+                                                             final boolean fromUser);
 
     protected abstract void onLoadingFinished();
 

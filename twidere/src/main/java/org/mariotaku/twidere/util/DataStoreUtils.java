@@ -905,8 +905,10 @@ public class DataStoreUtils implements Constants {
                     Expression.likeRaw(new Column(Accounts.ACCOUNT_KEY), "?||\'@%\'")).getSQL();
             whereArgs = new String[]{String.valueOf(accountId), String.valueOf(accountId)};
         } else {
-            where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).getSQL();
-            whereArgs = new String[]{String.valueOf(accountKey.toString())};
+            where = Expression.or(Expression.equalsArgs(Accounts.ACCOUNT_KEY),
+                    Expression.equalsArgs(Accounts.ACCOUNT_KEY)).getSQL();
+            whereArgs = new String[]{String.valueOf(accountKey.toString()),
+                    String.valueOf(accountId)};
         }
         return cr.query(Accounts.CONTENT_URI, columns, where, whereArgs, null);
     }
@@ -916,12 +918,15 @@ public class DataStoreUtils implements Constants {
                                                 final long... ids) {
         if (ids == null) return null;
         final ContentResolver cr = context.getContentResolver();
-        Expression[] expressions = new Expression[ids.length];
+        Expression[] expressions = new Expression[ids.length + 1];
         for (int i = 0, j = ids.length; i < j; i++) {
             expressions[i] = Expression.likeRaw(new Column(Accounts.ACCOUNT_KEY), "?||\'@%\'");
         }
+        expressions[ids.length] = Expression.inArgs(new Column(Accounts.ACCOUNT_KEY), ids.length);
         final String where = Expression.or(expressions).getSQL();
-        final String[] whereArgs = TwidereArrayUtils.toStringArray(ids);
+        final String[] whereArgs = new String[ids.length * 2];
+        System.arraycopy(TwidereArrayUtils.toStringArray(ids), 0, whereArgs, 0, ids.length);
+        System.arraycopy(whereArgs, 0, whereArgs, ids.length, ids.length);
         return cr.query(Accounts.CONTENT_URI, columns, where, whereArgs, null);
     }
 

@@ -32,7 +32,7 @@ public class UpdateAccountInfoTask extends AbstractTask<Pair<UserKey, Parcelable
         final ContentResolver resolver = context.getContentResolver();
         final UserKey accountKey = params.first;
         final ParcelableUser user = params.second;
-        if (!Utils.isMyAccount(context, user.key)) {
+        if (!Utils.isMyAccount(context, user.key) || user.is_cache) {
             return null;
         }
 

@@ -114,10 +114,8 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         try {
             final User twitterUser = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName);
             final ContentValues cachedUserValues = createCachedUser(twitterUser);
-            final long userId = twitterUser.getId();
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
             final ParcelableUser user = ParcelableUserUtils.fromUser(twitterUser, accountKey);
-
             user.account_color = accountColor;
             return SingleResponse.getInstance(user);
         } catch (final TwitterException e) {

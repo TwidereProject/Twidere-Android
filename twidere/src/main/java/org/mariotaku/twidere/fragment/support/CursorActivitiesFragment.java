@@ -101,9 +101,9 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
     public abstract Uri getContentUri();
 
     @Override
-    protected Loader<List<ParcelableActivity>> onCreateStatusesLoader(final Context context,
-                                                                      final Bundle args,
-                                                                      final boolean fromUser) {
+    protected Loader<List<ParcelableActivity>> onCreateActivitiesLoader(final Context context,
+                                                                        final Bundle args,
+                                                                        final boolean fromUser) {
         final Uri uri = getContentUri();
         final String table = getTableNameByUri(uri);
         final String sortOrder = getSortOrder();

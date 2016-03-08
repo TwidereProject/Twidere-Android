@@ -68,7 +68,7 @@ public class ListResponse<Data> extends AbstractList<Data> implements Response<L
 
     @Override
     public boolean isEmpty() {
-        return list != null && list.isEmpty();
+        return list == null || list.isEmpty();
     }
 
     @Override

@@ -8,7 +8,6 @@ import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
-import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
@@ -68,7 +67,7 @@ public class ParcelableStatusUtils {
             result.quoted_timestamp = quoted.getCreatedAt().getTime();
             result.quoted_source = quoted.getSource();
             result.quoted_media = ParcelableMediaUtils.fromStatus(quoted);
-            result.quoted_location = ParcelableLocation.fromGeoLocation(quoted.getGeoLocation());
+            result.quoted_location = ParcelableLocationUtils.fromGeoLocation(quoted.getGeoLocation());
             result.quoted_place_full_name = getPlaceFullName(quoted.getPlace());
 
             result.quoted_user_id = UserKeyUtils.fromUser(quoted_user);
@@ -116,7 +115,7 @@ public class ParcelableStatusUtils {
         result.media = ParcelableMediaUtils.fromStatus(status);
         result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(status.getText());
         result.source = status.getSource();
-        result.location = ParcelableLocation.fromGeoLocation(status.getGeoLocation());
+        result.location = ParcelableLocationUtils.fromGeoLocation(status.getGeoLocation());
         result.is_favorite = status.isFavorited();
         result.text_unescaped = HtmlEscapeHelper.toPlainText(result.text_html);
         if (result.account_key.maybeEquals(result.retweeted_by_user_id)) {

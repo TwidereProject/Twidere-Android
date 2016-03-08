@@ -117,6 +117,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.service.BackgroundOperationService;
@@ -1244,7 +1245,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
     private void setRecentLocation(ParcelableLocation location) {
         if (location != null) {
-            mLocationText.setText(location.getHumanReadableString(3));
+            mLocationText.setText(ParcelableLocationUtils.getHumanReadableString(location, 3));
         } else {
             mLocationText.setText(R.string.unknown_location);
         }
@@ -1397,7 +1398,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         public void onLocationChanged(final Location location) {
             final ComposeActivity activity = mActivityRef.get();
             if (activity == null) return;
-            activity.setRecentLocation(ParcelableLocation.fromLocation(location));
+            activity.setRecentLocation(ParcelableLocationUtils.fromLocation(location));
         }
 
         @Override

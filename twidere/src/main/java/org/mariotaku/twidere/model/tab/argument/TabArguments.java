@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.model.UserKey;
 
@@ -16,7 +17,7 @@ import java.util.Arrays;
  * Created by mariotaku on 16/3/6.
  */
 @JsonObject
-public class TabArguments implements IntentConstants {
+public class TabArguments implements TwidereConstants {
     @JsonField(name = "account_id")
     long accountId = -1;
 

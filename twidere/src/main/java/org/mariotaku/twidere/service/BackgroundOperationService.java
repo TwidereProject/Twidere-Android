@@ -61,7 +61,6 @@ import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
-import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftCursorIndices;
@@ -70,7 +69,6 @@ import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
-import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -84,6 +82,7 @@ import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils;
+import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserMentionUtils;
@@ -646,7 +645,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                         status.inReplyToStatusId(statusUpdate.in_reply_to_status.id);
                     }
                     if (statusUpdate.location != null) {
-                        status.location(ParcelableLocation.toGeoLocation(statusUpdate.location));
+                        status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location));
                     }
                     if (uploader == null && hasMedia) {
                         final long[] mediaIds = new long[statusUpdate.media.length];
