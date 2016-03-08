@@ -3,17 +3,25 @@ package org.mariotaku.twidere.task;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.v4.util.LongSparseArray;
 import android.util.Pair;
 
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.Tab;
+import org.mariotaku.twidere.model.TabCursorIndices;
+import org.mariotaku.twidere.model.TabValuesCreator;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.tab.argument.TabArguments;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
 
@@ -59,6 +67,39 @@ public class UpdateAccountInfoTask extends AbstractTask<Pair<UserKey, Parcelable
         resolver.update(DirectMessages.Outbox.CONTENT_URI, accountKeyValues, accountWhere, accountWhereArgs);
         resolver.update(CachedRelationships.CONTENT_URI, accountKeyValues, accountWhere, accountWhereArgs);
 
+        updateTabs(context, resolver, user.key);
+
+
         return null;
+    }
+
+    private void updateTabs(@NonNull Context context, @NonNull ContentResolver resolver, UserKey accountKey) {
+        Cursor tabsCursor = resolver.query(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, null);
+        if (tabsCursor == null) return;
+        try {
+            TabCursorIndices indices = new TabCursorIndices(tabsCursor);
+            tabsCursor.moveToFirst();
+            LongSparseArray<ContentValues> values = new LongSparseArray<>();
+            while (!tabsCursor.isAfterLast()) {
+                Tab tab = indices.newObject(tabsCursor);
+                TabArguments arguments = tab.getArguments();
+                if (arguments != null) {
+                    final long accountId = arguments.getAccountId();
+                    final UserKey[] keys = arguments.getAccountKeys();
+                    if (accountKey.getId() == accountId && keys == null) {
+                        arguments.setAccountKeys(new UserKey[]{accountKey});
+                        values.put(tab.getId(), TabValuesCreator.create(tab));
+                    }
+                }
+                tabsCursor.moveToNext();
+            }
+            final String where = Expression.equalsArgs(Tabs._ID).getSQL();
+            for (int i = 0, j = values.size(); i < j; i++) {
+                final String[] whereArgs = {String.valueOf(values.keyAt(i))};
+                resolver.update(Tabs.CONTENT_URI, values.valueAt(i), where, whereArgs);
+            }
+        } finally {
+            tabsCursor.close();
+        }
     }
 }

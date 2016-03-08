@@ -12,8 +12,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 /**
  * Created by mariotaku on 16/3/6.
  */
-@CursorObject
+@CursorObject(valuesCreator = true)
 public class Tab {
+    @CursorField(value = Tabs._ID, excludeWrite = true)
+    long id;
+
     @CursorField(Tabs.NAME)
     String name;
 
@@ -32,6 +35,10 @@ public class Tab {
 
     @CursorField(value = Tabs.EXTRAS, converter = TabExtrasFieldConverter.class)
     TabExtras extras;
+
+    public long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
