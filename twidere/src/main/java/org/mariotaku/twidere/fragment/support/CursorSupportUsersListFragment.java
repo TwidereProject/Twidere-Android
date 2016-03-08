@@ -32,16 +32,15 @@ import java.util.List;
 
 public abstract class CursorSupportUsersListFragment extends ParcelableUsersFragment {
 
-    private long mNextCursor, mPrevCursor;
+    private long mNextCursor = -1, mPrevCursor = -1;
+    private int mNextPage = 1;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mNextCursor = savedInstanceState.getLong(EXTRA_NEXT_CURSOR, -1);
             mPrevCursor = savedInstanceState.getLong(EXTRA_PREV_CURSOR, -1);
-        } else {
-            mNextCursor = -1;
-            mPrevCursor = -1;
+            mNextPage = savedInstanceState.getInt(EXTRA_NEXT_PAGE, -1);
         }
         super.onActivityCreated(savedInstanceState);
     }
@@ -49,15 +48,11 @@ public abstract class CursorSupportUsersListFragment extends ParcelableUsersFrag
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mNextCursor = -1;
-        mPrevCursor = -1;
     }
 
     @Override
     public void onLoaderReset(final Loader<List<ParcelableUser>> loader) {
         super.onLoaderReset(loader);
-        mNextCursor = -1;
-        mPrevCursor = -1;
     }
 
     @Override
@@ -66,6 +61,7 @@ public abstract class CursorSupportUsersListFragment extends ParcelableUsersFrag
         final BaseCursorSupportUsersLoader cursorLoader = (BaseCursorSupportUsersLoader) loader;
         mNextCursor = cursorLoader.getNextCursor();
         mPrevCursor = cursorLoader.getPrevCursor();
+        mNextPage = cursorLoader.getNextPage();
     }
 
     @Override
@@ -77,6 +73,7 @@ public abstract class CursorSupportUsersListFragment extends ParcelableUsersFrag
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         loaderArgs.putLong(EXTRA_NEXT_CURSOR, mNextCursor);
+        loaderArgs.putLong(EXTRA_PAGE, mNextPage);
         getLoaderManager().restartLoader(0, loaderArgs, this);
     }
 
@@ -85,10 +82,15 @@ public abstract class CursorSupportUsersListFragment extends ParcelableUsersFrag
         super.onSaveInstanceState(outState);
         outState.putLong(EXTRA_NEXT_CURSOR, mNextCursor);
         outState.putLong(EXTRA_PREV_CURSOR, mPrevCursor);
+        outState.putLong(EXTRA_NEXT_PAGE, mNextPage);
     }
 
     protected final long getNextCursor() {
         return mNextCursor;
+    }
+
+    protected final int getNextPage() {
+        return mNextPage;
     }
 
     protected final long getPrevCursor() {

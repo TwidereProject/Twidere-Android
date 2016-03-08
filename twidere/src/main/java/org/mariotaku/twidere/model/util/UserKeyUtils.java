@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.User;
@@ -64,5 +65,11 @@ public class UserKeyUtils {
         final String authority = PreviewMediaExtractor.getAuthority(uri);
         if (authority == null) return TwidereConstants.USER_TYPE_TWITTER_COM;
         return authority.replaceAll("[^\\w\\d\\.]", "-");
+    }
+
+    public static boolean isSameHost(UserKey accountKey, UserKey userKey) {
+        final String a = accountKey.getHost(), b = userKey.getHost();
+        if (TextUtils.isEmpty(a) || TextUtils.isEmpty(b)) return true;
+        return a.equals(b);
     }
 }

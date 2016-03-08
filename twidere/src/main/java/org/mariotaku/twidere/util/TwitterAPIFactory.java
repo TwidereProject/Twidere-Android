@@ -39,9 +39,11 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.util.TwitterConverterFactory;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ConsumerKeyType;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
@@ -197,15 +199,15 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     public static boolean isTwitterCredentials(Context context, UserKey accountId) {
-        return isTwitterCredentials(ParcelableCredentialsUtils.getCredentials(context, accountId));
+        return isTwitterCredentials(ParcelableAccountUtils.getAccount(context, accountId));
     }
 
-    public static boolean isTwitterCredentials(ParcelableCredentials credentials) {
+    public static boolean isTwitterCredentials(ParcelableAccount credentials) {
         return credentials.account_type == null ||
                 ParcelableCredentials.ACCOUNT_TYPE_TWITTER.equals(credentials.account_type);
     }
 
-    public static boolean isStatusNetCredentials(ParcelableCredentials credentials) {
+    public static boolean isStatusNetCredentials(ParcelableAccount credentials) {
         return ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(credentials.account_type);
     }
 

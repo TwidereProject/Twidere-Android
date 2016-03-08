@@ -103,6 +103,7 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TransitionUtils;
+import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver;
@@ -577,7 +578,10 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             mAccountOptionsAdapter.add(new OptionItem(R.string.likes, R.drawable.ic_action_heart,
                     R.id.favorites));
         }
-        mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list, R.id.lists));
+        if (TwitterAPIFactory.isTwitterCredentials(account)) {
+            mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list,
+                    R.id.lists));
+        }
     }
 
     private boolean hasAccountInTab(SupportTabSpec tab, UserKey accountId, boolean isActivated) {

@@ -24,8 +24,8 @@ import android.content.SharedPreferences;
 
 import org.mariotaku.twidere.api.twitter.model.CursorSupport;
 import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
@@ -37,6 +37,7 @@ public abstract class BaseCursorSupportUsersLoader extends TwitterAPIUsersLoader
     private final int mLoadItemLimit;
 
     private long mNextCursor, mPrevCursor;
+    private int mNextPage;
 
     public BaseCursorSupportUsersLoader(final Context context, final UserKey accountKey,
                                         final List<ParcelableUser> data, boolean fromUser) {
@@ -81,6 +82,10 @@ public abstract class BaseCursorSupportUsersLoader extends TwitterAPIUsersLoader
         if (cursor == null) return;
         mNextCursor = cursor.getNextCursor();
         mPrevCursor = cursor.getPreviousCursor();
+        mNextPage = mPage + 1;
     }
 
+    public int getNextPage() {
+        return mNextPage;
+    }
 }

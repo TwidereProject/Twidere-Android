@@ -20,6 +20,8 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,9 +37,11 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
+import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
 
@@ -112,8 +116,18 @@ abstract class AbsUsersFragment<Data> extends AbsContentListRecyclerViewFragment
     public void onUserClick(UserViewHolder holder, int position) {
         final ParcelableUser user = getAdapter().getUser(position);
         final FragmentActivity activity = getActivity();
-        IntentUtils.openUserProfile(activity, user.account_key, user.key.getId(),
-                user.screen_name, null, true, getUserReferral());
+        if (UserKeyUtils.isSameHost(user.account_key, user.key)) {
+            IntentUtils.openUserProfile(activity, user.account_key, user.key.getId(),
+                    user.screen_name, null, true, getUserReferral());
+        } else if (user.extras != null && user.extras.statusnet_profile_url != null) {
+            final Uri uri = Uri.parse(user.extras.statusnet_profile_url);
+            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else {
+            final Uri uri = LinkCreator.getTwitterUserLink(user.screen_name);
+            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
     }
 
     @UserFragment.Referral
