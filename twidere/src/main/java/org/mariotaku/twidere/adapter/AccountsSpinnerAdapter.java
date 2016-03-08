@@ -28,6 +28,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -123,6 +124,15 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableCredentials> 
     public void setDummyItemText(String text) {
         mDummyItemText = text;
         notifyDataSetChanged();
+    }
+
+    public int findPositionByKey(UserKey key) {
+        for (int i = 0, j = getCount(); i < j; i++) {
+            if (getItem(i).account_key.equals(key)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

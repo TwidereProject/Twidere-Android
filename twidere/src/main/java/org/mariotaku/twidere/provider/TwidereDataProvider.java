@@ -705,11 +705,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case TABLE_ID_DIRECT_MESSAGES_CONVERSATION: {
                     final List<String> segments = uri.getPathSegments();
                     if (segments.size() != 4) return null;
-                    final long accountId = NumberUtils.toLong(segments.get(2), -1);
+                    final UserKey accountId = UserKey.valueOf(segments.get(2));
                     final long conversationId = NumberUtils.toLong(segments.get(3), -1);
-                    final SQLSelectQuery query = ConversationQueryBuilder.buildByConversationId(projection,
-                            accountId, conversationId, selection, sortOrder);
-                    final Cursor c = mDatabaseWrapper.rawQuery(query.getSQL(), selectionArgs);
+                    final Pair<SQLSelectQuery, String[]> query = ConversationQueryBuilder
+                            .buildByConversationId(projection, accountId, conversationId, selection,
+                                    sortOrder);
+                    final Cursor c = mDatabaseWrapper.rawQuery(query.first.getSQL(), query.second);
                     setNotificationUri(c, DirectMessages.CONTENT_URI);
                     return c;
                 }

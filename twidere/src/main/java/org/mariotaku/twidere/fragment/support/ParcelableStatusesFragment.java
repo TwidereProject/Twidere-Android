@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 
 import com.squareup.otto.Subscribe;
@@ -30,10 +31,10 @@ import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
@@ -50,6 +51,7 @@ import java.util.Set;
 public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
 
     private long mLastId;
+    private int mPage = 1, mPageDelta;
 
     public final void deleteStatus(final long statusId) {
         final List<ParcelableStatus> list = getAdapterData();
@@ -69,6 +71,14 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPage = savedInstanceState.getInt(EXTRA_PAGE);
+        }
+    }
+
+    @Override
     public boolean getStatuses(RefreshTaskParam param) {
         final Bundle args = new Bundle(getArguments());
         long[] maxIds = param.getMaxIds();
@@ -79,6 +89,9 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         long[] sinceIds = param.getSinceIds();
         if (sinceIds != null) {
             args.putLong(EXTRA_SINCE_ID, sinceIds[0]);
+        }
+        if (mPage > 0) {
+            args.putInt(EXTRA_PAGE, mPage);
         }
         args.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().restartLoader(0, args, this);
@@ -139,6 +152,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
                 adapter.getStatusCount() - 1);
         UserKey[] accountKeys = {status.account_key};
         final long[] maxIds = {status.id};
+        mPage += mPageDelta;
         getStatuses(new BaseRefreshTaskParam(accountKeys, maxIds, null));
     }
 
@@ -174,8 +188,19 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         return lm.hasRunningLoaders();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(EXTRA_PAGE, mPage);
+    }
+
     protected String[] getSavedStatusesFileArgs() {
         return null;
+    }
+
+    @Override
+    protected void onHasMoreDataChanged(boolean hasMoreData) {
+        mPageDelta = hasMoreData ? 1 : 0;
     }
 
     private void updateFavoritedStatus(ParcelableStatus status) {

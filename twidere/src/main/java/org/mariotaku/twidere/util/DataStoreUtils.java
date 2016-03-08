@@ -131,9 +131,9 @@ public class DataStoreUtils implements Constants {
                 TABLE_ID_DIRECT_MESSAGES_INBOX);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Outbox.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES_OUTBOX);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH + "/#/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH + "/*/*",
                 TABLE_ID_DIRECT_MESSAGES_CONVERSATION);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH_SCREEN_NAME + "/#/*",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Conversation.CONTENT_PATH_SCREEN_NAME + "/*/*",
                 TABLE_ID_DIRECT_MESSAGES_CONVERSATION_SCREEN_NAME);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.ConversationEntries.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES);
@@ -156,7 +156,7 @@ public class DataStoreUtils implements Constants {
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH + "/#",
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH + "/#/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH + "/#/*",
                 VIRTUAL_TABLE_ID_NOTIFICATIONS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Permissions.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_PERMISSIONS);
@@ -180,9 +180,9 @@ public class DataStoreUtils implements Constants {
                 VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_DATABASE_READY,
                 VIRTUAL_TABLE_ID_DATABASE_READY);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP + "/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP + "/*",
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/#",
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/*",
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH_UNSENT,
                 VIRTUAL_TABLE_ID_DRAFTS_UNSENT);

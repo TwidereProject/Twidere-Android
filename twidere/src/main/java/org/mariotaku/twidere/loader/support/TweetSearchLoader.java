@@ -30,6 +30,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
@@ -41,33 +42,39 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
 
     @Nullable
     private final String mQuery;
+    private final int mPage;
     private final boolean mGapEnabled;
 
     public TweetSearchLoader(final Context context, final UserKey accountKey, @Nullable final String query,
-                             final long sinceId, final long maxId, final List<ParcelableStatus> data,
-                             final String[] savedStatusesArgs, final int tabPosition, boolean fromUser,
-                             boolean makeGap) {
+                             final long sinceId, final long maxId, final int page,
+                             final List<ParcelableStatus> data, final String[] savedStatusesArgs,
+                             final int tabPosition, final boolean fromUser, final boolean makeGap) {
         super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+        mPage = page;
         mQuery = query;
         mGapEnabled = makeGap;
     }
 
     @NonNull
     @Override
-    public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
+    public List<Status> getStatuses(@NonNull final Twitter twitter,
+                                    @NonNull final ParcelableCredentials credentials,
+                                    @NonNull final Paging paging) throws TwitterException {
         if (mQuery == null) throw new TwitterException("Empty query");
-        final String processedQuery = processQuery(mQuery);
-        if (TwitterAPIFactory.isTwitterCredentials(getContext(), getAccountKey())) {
+        final String processedQuery = processQuery(credentials, mQuery);
+        if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
             final SearchQuery query = new SearchQuery(processedQuery);
             query.paging(paging);
             return twitter.search(query);
+        } else if (TwitterAPIFactory.isStatusNetCredentials(credentials)) {
+            return twitter.searchStatuses(processedQuery, paging);
         }
-        return twitter.searchStatuses(processedQuery, paging);
+        throw new TwitterException("Not implemented");
     }
 
     @NonNull
-    protected String processQuery(@NonNull final String query) {
-        if (TwitterAPIFactory.isTwitterCredentials(getContext(), getAccountKey())) {
+    protected String processQuery(ParcelableCredentials credentials, @NonNull final String query) {
+        if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
             return String.format("%s exclude:retweets", query);
         }
         return query;
@@ -77,6 +84,18 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
         return InternalTwitterContentUtils.isFiltered(database, status, true);
+    }
+
+    @Override
+    protected void processPaging(@NonNull ParcelableCredentials credentials, int loadItemLimit, @NonNull Paging paging) {
+        if (TwitterAPIFactory.isStatusNetCredentials(credentials)) {
+            paging.setRpp(loadItemLimit);
+            if (mPage > 0) {
+                paging.setPage(mPage);
+            }
+        } else {
+            super.processPaging(credentials, loadItemLimit, paging);
+        }
     }
 
     @Override

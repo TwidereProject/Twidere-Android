@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,10 +36,10 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
@@ -129,23 +128,13 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             return ListResponse.getListInstance(new TwitterException("No Account"));
         }
         final List<Status> statuses;
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final int loadItemLimit = prefs.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         final boolean noItemsBefore = data.isEmpty();
+        final int loadItemLimit = mPreferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         try {
             final Paging paging = new Paging();
-            paging.setCount(loadItemLimit);
-            if (mMaxId > 0) {
-                paging.setMaxId(mMaxId);
-            }
-            if (mSinceId > 0) {
-                paging.setSinceId(mSinceId);
-                if (mMaxId <= 0) {
-                    paging.setLatestResults(true);
-                }
-            }
-            statuses = getStatuses(twitter, paging);
-            if (!Utils.isOfficialCredentials(context, getAccountKey())) {
+            processPaging(credentials, loadItemLimit, paging);
+            statuses = getStatuses(twitter, credentials, paging);
+            if (!Utils.isOfficialCredentials(context, credentials)) {
                 InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
             }
         } catch (final TwitterException e) {
@@ -221,10 +210,27 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     }
 
     @NonNull
-    protected abstract List<Status> getStatuses(@NonNull Twitter twitter, Paging paging) throws TwitterException;
+    protected abstract List<Status> getStatuses(@NonNull Twitter twitter,
+                                                @NonNull ParcelableCredentials credentials,
+                                                @NonNull Paging paging) throws TwitterException;
 
     @WorkerThread
     protected abstract boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status);
+
+    protected void processPaging(@NonNull ParcelableCredentials credentials, int loadItemLimit, @NonNull final Paging paging) {
+
+
+        paging.setCount(loadItemLimit);
+        if (mMaxId > 0) {
+            paging.setMaxId(mMaxId);
+        }
+        if (mSinceId > 0) {
+            paging.setSinceId(mSinceId);
+            if (mMaxId <= 0) {
+                paging.setLatestResults(true);
+            }
+        }
+    }
 
     protected boolean isGapEnabled() {
         return true;

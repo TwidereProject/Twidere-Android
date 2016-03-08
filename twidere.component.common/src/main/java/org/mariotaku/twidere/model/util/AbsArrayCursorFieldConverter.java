@@ -30,7 +30,7 @@ import java.lang.reflect.ParameterizedType;
 /**
  * Created by mariotaku on 15/11/27.
  */
-public abstract class AbsObjectArrayConverter<T> implements CursorFieldConverter<T[]> {
+public abstract class AbsArrayCursorFieldConverter<T> implements CursorFieldConverter<T[]> {
     @Override
     public final T[] parseField(Cursor cursor, int columnIndex, ParameterizedType fieldType) {
         final String string = cursor.getString(columnIndex);
@@ -85,4 +85,5 @@ public abstract class AbsObjectArrayConverter<T> implements CursorFieldConverter
         out[index] = element;
         return out;
     }
+
 }

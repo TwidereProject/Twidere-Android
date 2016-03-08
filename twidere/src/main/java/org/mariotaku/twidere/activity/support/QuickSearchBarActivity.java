@@ -230,7 +230,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         if (savedInstanceState == null) {
             final Intent intent = getIntent();
             final UserKey accountKey = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY);
-            final int index = accountsSpinnerAdapter.findItemPosition(System.identityHashCode(accountKey));
+            final int index = accountsSpinnerAdapter.findPositionByKey(accountKey);
             if (index != -1) {
                 mAccountSpinner.setSelection(index);
             }

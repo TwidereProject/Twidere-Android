@@ -62,6 +62,10 @@ public class Paging extends SimpleValueMap {
         put("latest_results", latestResults);
     }
 
+    public void setRpp(int rpp) {
+        put("rpp", rpp);
+    }
+
     public Paging sinceId(long sinceId) {
         setSinceId(sinceId);
         return this;
@@ -99,6 +103,11 @@ public class Paging extends SimpleValueMap {
 
     public Paging cursor(long cursor) {
         setCursor(cursor);
+        return this;
+    }
+
+    public Paging rpp(int rpp) {
+        setRpp(rpp);
         return this;
     }
 }

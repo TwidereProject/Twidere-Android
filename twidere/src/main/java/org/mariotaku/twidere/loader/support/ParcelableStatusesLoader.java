@@ -66,11 +66,11 @@ public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<Parc
         return false;
     }
 
-    protected boolean deleteStatus(final List<ParcelableStatus> statuses, final long status_id) {
+    protected boolean deleteStatus(final List<ParcelableStatus> statuses, final long statusId) {
         if (statuses == null || statuses.isEmpty()) return false;
         boolean result = false;
         for (int i = statuses.size() - 1; i >= 0; i--) {
-            if (statuses.get(i).id == status_id) {
+            if (statuses.get(i).id == statusId) {
                 statuses.remove(i);
                 result = true;
             }

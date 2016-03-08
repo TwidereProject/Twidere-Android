@@ -55,11 +55,12 @@ public class StatusesSearchFragment extends ParcelableStatusesFragment {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final long maxId = args.getLong(EXTRA_MAX_ID, -1);
         final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
+        final int page = args.getInt(EXTRA_PAGE, -1);
         final String query = args.getString(EXTRA_QUERY);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean makeGap = args.getBoolean(EXTRA_MAKE_GAP, true);
-        return new TweetSearchLoader(getActivity(), accountKey, query, sinceId, maxId, getAdapterData(),
-                getSavedStatusesFileArgs(), tabPosition, fromUser, makeGap);
+        return new TweetSearchLoader(getActivity(), accountKey, query, sinceId, maxId, page,
+                getAdapterData(), getSavedStatusesFileArgs(), tabPosition, fromUser, makeGap);
     }
 
     @Override

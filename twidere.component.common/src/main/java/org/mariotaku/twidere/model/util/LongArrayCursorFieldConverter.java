@@ -30,7 +30,7 @@ import java.lang.reflect.ParameterizedType;
 /**
  * Created by mariotaku on 15/11/27.
  */
-public class LongArrayConverter implements CursorFieldConverter<long[]> {
+public class LongArrayCursorFieldConverter implements CursorFieldConverter<long[]> {
     @Override
     public long[] parseField(Cursor cursor, int columnIndex, ParameterizedType fieldType) {
         final String string = cursor.getString(columnIndex);

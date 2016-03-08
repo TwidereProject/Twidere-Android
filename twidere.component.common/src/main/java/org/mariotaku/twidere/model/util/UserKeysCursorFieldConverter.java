@@ -5,7 +5,7 @@ import org.mariotaku.twidere.model.UserKey;
 /**
  * Created by mariotaku on 16/3/7.
  */
-public class UserKeysCursorFieldConverter extends AbsObjectArrayConverter<UserKey> {
+public class UserKeysCursorFieldConverter extends AbsArrayCursorFieldConverter<UserKey> {
 
     @Override
     protected UserKey[] newArray(int size) {

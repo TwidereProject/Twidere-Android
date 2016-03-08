@@ -352,13 +352,21 @@ public final class Utils implements Constants {
         accessibilityManager.sendAccessibilityEvent(event);
     }
 
-    public static Uri buildDirectMessageConversationUri(final long account_id, final long conversation_id,
-                                                        final String screen_name) {
-        if (conversation_id <= 0 && screen_name == null) return TwidereDataStore.CONTENT_URI_NULL;
-        final Uri.Builder builder = conversation_id > 0 ? DirectMessages.Conversation.CONTENT_URI.buildUpon()
-                : DirectMessages.Conversation.CONTENT_URI_SCREEN_NAME.buildUpon();
-        builder.appendPath(String.valueOf(account_id));
-        builder.appendPath(conversation_id > 0 ? String.valueOf(conversation_id) : screen_name);
+    public static Uri buildDirectMessageConversationUri(final UserKey accountKey, final String conversationId,
+                                                        final String screenName) {
+        if (conversationId == null && screenName == null) return TwidereDataStore.CONTENT_URI_NULL;
+        final Uri.Builder builder;
+        if (conversationId != null) {
+            builder = DirectMessages.Conversation.CONTENT_URI.buildUpon();
+        } else {
+            builder = DirectMessages.Conversation.CONTENT_URI_SCREEN_NAME.buildUpon();
+        }
+        builder.appendPath(String.valueOf(accountKey));
+        if (conversationId != null) {
+            builder.appendPath(String.valueOf(conversationId));
+        } else {
+            builder.appendPath(screenName);
+        }
         return builder.build();
     }
 
@@ -741,25 +749,26 @@ public final class Utils implements Constants {
                 return null;
             }
         }
-        if (isAccountIdRequired) {
-            UserKey accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
-            if (accountKey == null) {
-                final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
-                final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
-                if (accountId != -1) {
-                    accountKey = DataStoreUtils.findAccountKey(context,
-                            accountId);
-                    args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
-                } else if (paramAccountName != null) {
-                    accountKey = DataStoreUtils.findAccountKey(context,
-                            paramAccountName);
-                } else {
-                    accountKey = getDefaultAccountKey(context);
-                }
+        UserKey accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
+        if (accountKey == null) {
+            final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
+            final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
+            if (accountId != -1) {
+                accountKey = DataStoreUtils.findAccountKey(context,
+                        accountId);
+                args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
+            } else if (paramAccountName != null) {
+                accountKey = DataStoreUtils.findAccountKey(context,
+                        paramAccountName);
+            } else {
+                accountKey = getDefaultAccountKey(context);
             }
-            if (accountKey == null) return null;
-            args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
         }
+
+        if (isAccountIdRequired && accountKey == null) {
+            return null;
+        }
+        args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
         fragment.setArguments(args);
         return fragment;
     }

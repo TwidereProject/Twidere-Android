@@ -58,11 +58,9 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
 
     @NonNull
     @Override
-    public List<Status> getStatuses(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
+    public List<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
         mCanLoadAllReplies = false;
         final ParcelableStatus status = mStatus;
-        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), getAccountKey());
-        if (credentials == null) throw new TwitterException("Null credentials");
         if (Utils.isOfficialCredentials(getContext(), credentials)) {
             mCanLoadAllReplies = true;
             return twitter.showConversation(status.id, paging);

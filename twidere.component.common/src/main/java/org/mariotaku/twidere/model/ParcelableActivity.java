@@ -33,7 +33,8 @@ import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
-import org.mariotaku.twidere.model.util.LongArrayConverter;
+import org.mariotaku.twidere.model.util.UserKeysConverter;
+import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 
 import java.util.Arrays;
@@ -80,9 +81,9 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     public String action;
 
     @ParcelableThisPlease
-    @JsonField(name = "source_ids")
-    @CursorField(value = Activities.SOURCE_IDS, converter = LongArrayConverter.class)
-    public long[] source_ids;
+    @JsonField(name = "source_ids", typeConverter = UserKeysConverter.class)
+    @CursorField(value = Activities.SOURCE_IDS, converter = UserKeysCursorFieldConverter.class)
+    public UserKey[] source_ids;
 
     @ParcelableThisPlease
     @JsonField(name = "sources")
@@ -125,7 +126,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @ParcelableThisPlease
     public int account_color;
 
-    public transient long[] after_filtered_source_ids;
+    public transient UserKey[] after_filtered_source_ids;
     public transient ParcelableUser[] after_filtered_sources;
 
 
