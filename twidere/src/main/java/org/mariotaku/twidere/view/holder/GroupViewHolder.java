@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.view.holder;
 
 import android.content.Context;
+import android.support.v4.text.BidiFormatter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.view.View;
@@ -69,14 +70,18 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
     public void displayGroup(ParcelableGroup group) {
         final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
+        final BidiFormatter formatter = adapter.getBidiFormatter();
+
         nameView.setName(group.fullname);
         nameView.setScreenName("!" + group.nickname);
+
+        nameView.updateText(formatter);
         final String groupHost = UserKeyUtils.getUserHost(group.url);
         if (UserKeyUtils.isSameHost(group.account_key.getHost(), groupHost)) {
             externalIndicator.setVisibility(View.GONE);
         } else {
             externalIndicator.setVisibility(View.VISIBLE);
-            externalIndicator.setText(context.getString(R.string.external_user_host_format,
+            externalIndicator.setText(context.getString(R.string.external_group_host_format,
                     groupHost));
         }
         if (adapter.isProfileImageEnabled()) {
@@ -87,7 +92,7 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
             loader.cancelDisplayTask(profileImageView);
         }
         descriptionView.setVisibility(TextUtils.isEmpty(group.description) ? View.GONE : View.VISIBLE);
-        descriptionView.setText(group.description);
+        descriptionView.setText(formatter.unicodeWrap(group.description));
         membersCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), group.member_count));
         adminsCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), group.admin_count));
     }

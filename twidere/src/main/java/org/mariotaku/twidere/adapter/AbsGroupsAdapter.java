@@ -98,7 +98,7 @@ public abstract class AbsGroupsAdapter<D> extends LoadMoreSupportAdapter<ViewHol
         switch (viewType) {
             case ITEM_VIEW_TYPE_USER_LIST: {
                 final View view;
-                view = mInflater.inflate(R.layout.card_item_user_list_compact, parent, false);
+                view = mInflater.inflate(R.layout.card_item_group_compact, parent, false);
                 final View itemContent = view.findViewById(R.id.item_content);
                 itemContent.setBackgroundColor(mCardBackgroundColor);
                 final GroupViewHolder holder = new GroupViewHolder(this, view);

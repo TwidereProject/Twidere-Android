@@ -113,6 +113,25 @@ public class ParcelableGroup implements Parcelable, Comparable<ParcelableGroup> 
         ParcelableGroupParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableGroup that = (ParcelableGroup) o;
+
+        if (id != that.id) return false;
+        return account_key.equals(that.account_key);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = account_key.hashCode();
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        return result;
+    }
+
     public static final Creator<ParcelableGroup> CREATOR = new Creator<ParcelableGroup>() {
         public ParcelableGroup createFromParcel(Parcel source) {
             ParcelableGroup target = new ParcelableGroup();
