@@ -28,6 +28,7 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
 import org.mariotaku.twidere.model.CacheMetadata;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -113,17 +114,16 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
     protected CacheDownloadLoader.DownloadResult getInternal(@NonNull String url,
                                                              @Nullable Object extra) throws IOException {
         final Uri uri = Uri.parse(url);
-        final Authorization auth;
-        final ParcelableCredentials account;
-        final boolean useThumbor;
+        Authorization auth = null;
+        ParcelableCredentials account = null;
+        boolean useThumbor = true;
         if (extra instanceof MediaExtra) {
             useThumbor = ((MediaExtra) extra).isUseThumbor();
-            account = ParcelableCredentialsUtils.getCredentials(mContext, ((MediaExtra) extra).getAccountKey());
-            auth = TwitterAPIFactory.getAuthorization(account);
-        } else {
-            useThumbor = true;
-            account = null;
-            auth = null;
+            UserKey accountKey = ((MediaExtra) extra).getAccountKey();
+            if (accountKey != null) {
+                account = ParcelableCredentialsUtils.getCredentials(mContext, accountKey);
+                auth = TwitterAPIFactory.getAuthorization(account);
+            }
         }
         final Uri modifiedUri = getReplacedUri(uri, account != null ? account.api_url_format : null);
         final MultiValueMap<String> additionalHeaders = new MultiValueMap<>();
