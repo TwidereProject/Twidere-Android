@@ -29,9 +29,10 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IGroupsAdapter;
 import org.mariotaku.twidere.model.ParcelableGroup;
+import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.NameView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
 import java.util.Locale;
@@ -45,11 +46,11 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
 
     private final IColorLabelView itemContent;
     private final ImageView profileImageView;
-    private final TextView nameView;
-    private final TextView createdByView;
+    private final NameView nameView;
+    private final TextView externalIndicator;
     private final TextView descriptionView;
     private final TextView membersCountView;
-    private final TextView subscribersCountView;
+    private final TextView adminsCountView;
 
     private IGroupsAdapter.GroupAdapterListener groupClickListener;
 
@@ -58,22 +59,26 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
         this.adapter = adapter;
         profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
-        nameView = (TextView) itemView.findViewById(R.id.name);
-        createdByView = (TextView) itemView.findViewById(R.id.created_by);
+        nameView = (NameView) itemView.findViewById(R.id.name);
+        externalIndicator = (TextView) itemView.findViewById(R.id.external_indicator);
         descriptionView = (TextView) itemView.findViewById(R.id.description);
         membersCountView = (TextView) itemView.findViewById(R.id.members_count);
-        subscribersCountView = (TextView) itemView.findViewById(R.id.subscribers_count);
+        adminsCountView = (TextView) itemView.findViewById(R.id.admins_count);
     }
 
     public void displayGroup(ParcelableGroup group) {
-
         final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
-        final UserColorNameManager manager = adapter.getUserColorNameManager();
-
-        nameView.setText(group.fullname);
-        final boolean nameFirst = adapter.isNameFirst();
-
+        nameView.setName(group.fullname);
+        nameView.setScreenName("!" + group.nickname);
+        final String groupHost = UserKeyUtils.getUserHost(group.url);
+        if (UserKeyUtils.isSameHost(group.account_key.getHost(), groupHost)) {
+            externalIndicator.setVisibility(View.GONE);
+        } else {
+            externalIndicator.setVisibility(View.VISIBLE);
+            externalIndicator.setText(context.getString(R.string.external_user_host_format,
+                    groupHost));
+        }
         if (adapter.isProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
             loader.displayProfileImage(profileImageView, group.homepage_logo);
@@ -84,7 +89,7 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
         descriptionView.setVisibility(TextUtils.isEmpty(group.description) ? View.GONE : View.VISIBLE);
         descriptionView.setText(group.description);
         membersCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), group.member_count));
-        subscribersCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), group.admin_count));
+        adminsCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), group.admin_count));
     }
 
     public void setOnClickListeners() {
@@ -124,8 +129,12 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
     }
 
     public void setTextSize(final float textSize) {
-        nameView.setTextSize(textSize);
-        createdByView.setTextSize(textSize * 0.75f);
+        descriptionView.setTextSize(textSize);
+        externalIndicator.setTextSize(textSize);
+        nameView.setPrimaryTextSize(textSize);
+        nameView.setSecondaryTextSize(textSize * 0.75f);
+        membersCountView.setTextSize(textSize);
+        adminsCountView.setTextSize(textSize);
     }
 
 }

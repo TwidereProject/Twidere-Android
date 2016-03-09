@@ -2,22 +2,19 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
-
-import java.util.Date;
-
 /**
  * Created by mariotaku on 16/3/9.
  */
 @ParcelablePlease
 @JsonObject
-public class ParcelableGroup implements Parcelable {
+public class ParcelableGroup implements Parcelable, Comparable<ParcelableGroup> {
 
     @ParcelableThisPlease
     @JsonField(name = "account_key")
@@ -44,6 +41,10 @@ public class ParcelableGroup implements Parcelable {
     @ParcelableThisPlease
     @JsonField(name = "location")
     public String location;
+
+    @ParcelableThisPlease
+    @JsonField(name = "position")
+    public long position;
 
     @ParcelableThisPlease
     @JsonField(name = "created")
@@ -123,4 +124,9 @@ public class ParcelableGroup implements Parcelable {
             return new ParcelableGroup[size];
         }
     };
+
+    @Override
+    public int compareTo(@NonNull ParcelableGroup another) {
+        return (int) (this.position - another.position);
+    }
 }

@@ -20,17 +20,37 @@
 package org.mariotaku.twidere.fragment.support;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
+import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.util.UserKeyUtils;
+import org.mariotaku.twidere.util.IntentUtils;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.LinkCreator;
+import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
+import org.mariotaku.twidere.view.holder.UserViewHolder;
 
 import java.util.List;
 
-public abstract class ParcelableUsersFragment extends AbsUsersFragment<List<ParcelableUser>> {
+public abstract class ParcelableUsersFragment extends AbsContentListRecyclerViewFragment<ParcelableUsersAdapter>
+        implements LoaderManager.LoaderCallbacks<List<ParcelableUser>>, IUsersAdapter.UserAdapterListener,
+        KeyboardShortcutsHandler.KeyboardShortcutCallback {
+
+    private RecyclerViewNavigationHelper mNavigationHelper;
 
     @Override
     public boolean isRefreshing() {
@@ -48,17 +68,24 @@ public abstract class ParcelableUsersFragment extends AbsUsersFragment<List<Parc
     @NonNull
     @Override
     public ParcelableUsersAdapter getAdapter() {
-        return (ParcelableUsersAdapter) super.getAdapter();
+        return super.getAdapter();
     }
 
-    @Override
     protected boolean hasMoreData(List<ParcelableUser> data) {
         return data == null || !data.isEmpty();
     }
 
-    @Override
     public void onLoadFinished(Loader<List<ParcelableUser>> loader, List<ParcelableUser> data) {
-        super.onLoadFinished(loader, data);
+        final ParcelableUsersAdapter adapter = getAdapter();
+        adapter.setData(data);
+        if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
+            adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
+            setRefreshEnabled(true);
+        }
+        if (loader instanceof IExtendedLoader) {
+            ((IExtendedLoader) loader).setFromUser(false);
+        }
+        showContent();
         setRefreshEnabled(true);
         setRefreshing(false);
         setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
@@ -68,4 +95,88 @@ public abstract class ParcelableUsersFragment extends AbsUsersFragment<List<Parc
         //TODO remove from adapter
     }
 
+    public final List<ParcelableUser> getData() {
+        return getAdapter().getData();
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        return mNavigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState);
+    }
+
+    @Override
+    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
+        return mNavigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
+    }
+
+    @Override
+    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
+        return mNavigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final ParcelableUsersAdapter adapter = getAdapter();
+        final RecyclerView recyclerView = getRecyclerView();
+        final LinearLayoutManager layoutManager = getLayoutManager();
+        adapter.setUserAdapterListener(this);
+
+        mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
+                this);
+        final Bundle loaderArgs = new Bundle(getArguments());
+        loaderArgs.putBoolean(EXTRA_FROM_USER, true);
+        getLoaderManager().initLoader(0, loaderArgs, this);
+    }
+
+    @Override
+    public final Loader<List<ParcelableUser>> onCreateLoader(int id, Bundle args) {
+        final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
+        args.remove(EXTRA_FROM_USER);
+        return onCreateUsersLoader(getActivity(), args, fromUser);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<ParcelableUser>> loader) {
+        if (loader instanceof IExtendedLoader) {
+            ((IExtendedLoader) loader).setFromUser(false);
+        }
+    }
+
+    @Override
+    public void onUserClick(UserViewHolder holder, int position) {
+        final ParcelableUser user = getAdapter().getUser(position);
+        final FragmentActivity activity = getActivity();
+        if (UserKeyUtils.isSameHost(user.account_key, user.key)) {
+            IntentUtils.openUserProfile(activity, user.account_key, user.key.getId(),
+                    user.screen_name, null, true, getUserReferral());
+        } else if (user.extras != null && user.extras.statusnet_profile_url != null) {
+            final Uri uri = Uri.parse(user.extras.statusnet_profile_url);
+            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else {
+            final Uri uri = LinkCreator.getTwitterUserLink(user.screen_name);
+            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
+    }
+
+    @UserFragment.Referral
+    protected String getUserReferral() {
+        return null;
+    }
+
+    @Override
+    public boolean onUserLongClick(UserViewHolder holder, int position) {
+        return true;
+    }
+
+    protected abstract Loader<List<ParcelableUser>> onCreateUsersLoader(final Context context,
+                                                                        @NonNull final Bundle args,
+                                                                        final boolean fromUser);
+
+    @Override
+    protected void setupRecyclerView(Context context, boolean compact) {
+        super.setupRecyclerView(context, true);
+    }
 }

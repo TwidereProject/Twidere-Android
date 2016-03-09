@@ -429,6 +429,10 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 setTitle(R.string.user_lists);
                 break;
             }
+            case LINK_ID_USER_GROUPS: {
+                setTitle(R.string.groups);
+                break;
+            }
             case LINK_ID_USER_LIST_TIMELINE: {
                 setTitle(R.string.list_timeline);
                 break;

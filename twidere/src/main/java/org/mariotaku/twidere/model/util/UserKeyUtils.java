@@ -68,8 +68,11 @@ public class UserKeyUtils {
     }
 
     public static boolean isSameHost(UserKey accountKey, UserKey userKey) {
-        final String a = accountKey.getHost(), b = userKey.getHost();
+        return isSameHost(accountKey.getHost(), userKey.getHost());
+    }
+
+    public static boolean isSameHost(String a, String b) {
         if (TextUtils.isEmpty(a) || TextUtils.isEmpty(b)) return true;
-        return a.equals(b);
+        return TextUtils.equals(a, b);
     }
 }
