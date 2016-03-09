@@ -41,7 +41,7 @@ import android.view.View;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
@@ -83,8 +83,8 @@ import edu.tsinghua.hotmobi.model.MediaEvent;
 import edu.tsinghua.hotmobi.model.ScrollRecord;
 import edu.tsinghua.hotmobi.model.TimelineType;
 
-public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecyclerViewFragment<AbsActivitiesAdapter<Data>>
-        implements LoaderCallbacks<Data>, AbsActivitiesAdapter.ActivityAdapterListener, KeyboardShortcutCallback {
+public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFragment<ParcelableActivitiesAdapter>
+        implements LoaderCallbacks<List<ParcelableActivity>>, ParcelableActivitiesAdapter.ActivityAdapterListener, KeyboardShortcutCallback {
 
     private final Object mStatusesBusCallback;
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
@@ -101,7 +101,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             final int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
             if (firstVisiblePosition != mFirstVisiblePosition && firstVisiblePosition >= 0) {
                 //noinspection unchecked
-                final AbsActivitiesAdapter<Data> adapter = (AbsActivitiesAdapter<Data>) recyclerView.getAdapter();
+                final ParcelableActivitiesAdapter adapter = (ParcelableActivitiesAdapter) recyclerView.getAdapter();
                 final ParcelableActivity activity = adapter.getActivity(firstVisiblePosition);
                 if (activity != null) {
                     final long timestamp = activity.timestamp;
@@ -240,7 +240,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     }
 
     @Override
-    public final Loader<Data> onCreateLoader(int id, Bundle args) {
+    public final Loader<List<ParcelableActivity>> onCreateLoader(int id, Bundle args) {
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
         args.remove(EXTRA_FROM_USER);
         return onCreateActivitiesLoader(getActivity(), args, fromUser);
@@ -263,8 +263,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     }
 
     @Override
-    public final void onLoadFinished(Loader<Data> loader, Data data) {
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+    public final void onLoadFinished(Loader<List<ParcelableActivity>> loader, List<ParcelableActivity> data) {
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         final boolean rememberPosition = mPreferences.getBoolean(KEY_REMEMBER_POSITION, false);
         final boolean readFromBottom = mPreferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
         long lastReadId;
@@ -330,7 +330,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     }
 
     @Override
-    public void onLoaderReset(Loader<Data> loader) {
+    public void onLoaderReset(Loader<List<ParcelableActivity>> loader) {
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);
         }
@@ -338,7 +338,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     @Override
     public void onGapClick(GapViewHolder holder, int position) {
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
         final UserKey[] accountIds = {activity.account_key};
         final long[] maxIds = {activity.min_position};
@@ -347,7 +347,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     @Override
     public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(adapter.getActivity(position));
         if (status == null) return;
         IntentUtils.openMedia(getActivity(), status, media, null, true);
@@ -404,7 +404,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         if (getActivity() == null) return;
         final LinearLayoutManager lm = getLayoutManager();
         final View view = lm.findViewByPosition(position);
-        if (view == null || lm.getItemViewType(view) != AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
+        if (view == null || lm.getItemViewType(view) != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
             return;
         }
         getRecyclerView().showContextMenuForChild(view);
@@ -419,7 +419,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     @Nullable
     private ParcelableStatus getActivityStatus(int position) {
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
         if (activity == null) return null;
         return ParcelableActivityUtils.getActivityStatus(activity);
@@ -488,7 +488,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
         adapter.setListener(this);
@@ -509,13 +509,13 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
     protected abstract UserKey[] getAccountKeys();
 
-    protected Data getAdapterData() {
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+    protected List<ParcelableActivity> getAdapterData() {
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         return adapter.getData();
     }
 
-    protected void setAdapterData(Data data) {
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+    protected void setAdapterData(List<ParcelableActivity> data) {
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         adapter.setData(data);
     }
 
@@ -525,9 +525,9 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         return null;
     }
 
-    protected abstract boolean hasMoreData(Data data);
+    protected abstract boolean hasMoreData(List<ParcelableActivity> data);
 
-    protected abstract Loader<Data> onCreateActivitiesLoader(final Context context, final Bundle args,
+    protected abstract Loader<List<ParcelableActivity>> onCreateActivitiesLoader(final Context context, final Bundle args,
                                                              final boolean fromUser);
 
     protected abstract void onLoadingFinished();
@@ -536,7 +536,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
         final String readPositionTag = getReadPositionTagWithAccounts();
         if (readPositionTag == null) return;
         if (position == RecyclerView.NO_POSITION) return;
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
         if (activity == null) return;
         if (mReadStateManager.setPosition(readPositionTag, activity.timestamp)) {
@@ -559,7 +559,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
             return;
         }
         final RecyclerView recyclerView = getRecyclerView();
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         // Dividers are drawn on bottom of view
         recyclerView.addItemDecoration(new DividerItemDecoration(context, getLayoutManager().getOrientation()) {
 
@@ -581,8 +581,8 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
             private boolean shouldUseDividerFor(int itemViewType) {
                 switch (itemViewType) {
-                    case AbsActivitiesAdapter.ITEM_VIEW_TYPE_TITLE_SUMMARY:
-                    case AbsActivitiesAdapter.ITEM_VIEW_TYPE_GAP:
+                    case ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_TITLE_SUMMARY:
+                    case ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_GAP:
                         return true;
                     default:
                         return false;
@@ -594,13 +594,13 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (!getUserVisibleHint()) return;
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
         final int position = contextMenuInfo.getPosition();
         switch (adapter.getItemViewType(position)) {
-            case AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS: {
+            case ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS: {
                 final ParcelableStatus status = getActivityStatus(position);
                 if (status == null) return;
                 inflater.inflate(R.menu.action_status, menu);
@@ -614,13 +614,13 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if (!getUserVisibleHint()) return false;
-        final AbsActivitiesAdapter<Data> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) item.getMenuInfo();
         final int position = contextMenuInfo.getPosition();
 
         switch (adapter.getItemViewType(position)) {
-            case AbsActivitiesAdapter.ITEM_VIEW_TYPE_STATUS: {
+            case ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS: {
                 final ParcelableStatus status = getActivityStatus(position);
                 if (status == null) return false;
                 if (item.getItemId() == R.id.share) {
@@ -654,7 +654,7 @@ public abstract class AbsActivitiesFragment<Data> extends AbsContentListRecycler
 
         @Subscribe
         public void notifyStatusListChanged(StatusListChangedEvent event) {
-            final AbsActivitiesAdapter<Data> adapter = getAdapter();
+            final ParcelableActivitiesAdapter adapter = getAdapter();
             adapter.notifyDataSetChanged();
         }
 

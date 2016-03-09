@@ -43,24 +43,24 @@ import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
         @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
 public interface TweetResources {
     @POST("/statuses/destroy/{id}.json")
-    Status destroyStatus(@Path("id") long statusId) throws TwitterException;
+    Status destroyStatus(@Path("id") String statusId) throws TwitterException;
 
     @GET("/statuses/retweeters/ids.json")
-    IDs getRetweetersIDs(@Query("id") long statusId, @Query Paging paging) throws TwitterException;
+    IDs getRetweetersIDs(@Query("id") String statusId, @Query Paging paging) throws TwitterException;
 
     @GET("/statuses/retweets/{id}.json")
-    ResponseList<Status> getRetweets(@Path("id") long statusId, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getRetweets(@Path("id") String statusId, @Query Paging paging) throws TwitterException;
 
     @POST("/statuses/retweet/{id}.json")
-    Status retweetStatus(@Path("id") long statusId) throws TwitterException;
+    Status retweetStatus(@Path("id") String statusId) throws TwitterException;
 
     @GET("/statuses/show.json")
-    Status showStatus(@Query("id") long id) throws TwitterException;
+    Status showStatus(@Query("id") String id) throws TwitterException;
 
     @POST("/statuses/update.json")
     Status updateStatus(@Param StatusUpdate latestStatus) throws TwitterException;
 
     @POST("/statuses/lookup.json")
-    ResponseList<Status> lookupStatuses(@Param(value = "id", arrayDelimiter = ',') long[] ids) throws TwitterException;
+    ResponseList<Status> lookupStatuses(@Param(value = "id", arrayDelimiter = ',') String[] ids) throws TwitterException;
 
 }

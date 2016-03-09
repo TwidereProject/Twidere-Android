@@ -308,7 +308,7 @@ public interface TwidereDataStore {
 
         String[] BASIC_COLUMNS = {_ID, USER_KEY, NAME, SCREEN_NAME, PROFILE_IMAGE_URL};
 
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
@@ -758,10 +758,14 @@ public interface TwidereDataStore {
         String USER_PROFILE_IMAGE_URL = "profile_image_url";
 
         /**
-         * Unique id of the status.<br>
-         * Type: INTEGER UNIQUE(long)
+         * Id of the status.<br>
          */
         String STATUS_ID = "status_id";
+
+        /**
+         * Sort ID of the status.<br>
+         */
+        String SORT_ID = "sort_id";
 
         /**
          * Retweet count of the status.<br>
@@ -870,7 +874,7 @@ public interface TwidereDataStore {
 
         String EXTRAS = "extras";
 
-        String[] COLUMNS = {_ID, ACCOUNT_KEY, STATUS_ID, USER_ID, STATUS_TIMESTAMP,
+        String[] COLUMNS = {_ID, ACCOUNT_KEY, STATUS_ID, SORT_ID, USER_ID, STATUS_TIMESTAMP,
                 TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED, USER_NAME, USER_SCREEN_NAME,
                 USER_PROFILE_IMAGE_URL, IN_REPLY_TO_STATUS_ID, IN_REPLY_TO_USER_ID, IN_REPLY_TO_USER_NAME,
                 IN_REPLY_TO_USER_SCREEN_NAME, SOURCE, LOCATION, RETWEET_COUNT, FAVORITE_COUNT, REPLY_COUNT,
@@ -884,8 +888,8 @@ public interface TwidereDataStore {
                 PLACE_FULL_NAME, LANG, RETWEETED, QUOTED_LOCATION, QUOTED_PLACE_FULL_NAME, INSERTED_DATE,
                 EXTRAS};
 
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT,
+                TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_TEXT, TYPE_INT,
@@ -1007,9 +1011,9 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, ACCOUNT_KEY, USER_ID, FOLLOWING, FOLLOWED_BY, BLOCKING,
                 BLOCKED_BY, MUTING, RETWEET_ENABLED};
 
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN_DEFAULT_FALSE,
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL,
                 TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE,
-                TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_TRUE};
+                TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_TRUE};
     }
 
 

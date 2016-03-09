@@ -23,6 +23,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.mariotaku.restfu.http.mime.FileBody;
@@ -34,9 +35,9 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
@@ -44,6 +45,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class TwitterWrapper implements Constants {
@@ -105,36 +107,36 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User showUser(final Twitter twitter, final long id, final String screenName) throws TwitterException {
-        if (id != -1) {
+    public static User showUser(final Twitter twitter, final String id, final String screenName) throws TwitterException {
+        if (id != null) {
             return twitter.showUser(id);
         } else if (screenName != null) {
-            return twitter.showUser(screenName);
+            return twitter.showUserByScreenName(screenName);
         }
         throw new TwitterException("Invalid user id or screen name");
     }
 
     @NonNull
-    public static User showUserAlternative(final Twitter twitter, final long id, final String screenName)
+    public static User showUserAlternative(final Twitter twitter, final String id, final String screenName)
             throws TwitterException {
         final String searchScreenName;
         if (screenName != null) {
             searchScreenName = screenName;
-        } else if (id != -1) {
+        } else if (id != null) {
             searchScreenName = twitter.showFriendship(id).getTargetUserScreenName();
         } else
             throw new IllegalArgumentException();
         final Paging paging = new Paging();
         paging.count(1);
         for (final User user : twitter.searchUsers(searchScreenName, paging)) {
-            if (user.getId() == id || searchScreenName.equalsIgnoreCase(user.getScreenName()))
+            if (TextUtils.equals(user.getId(), id) || searchScreenName.equalsIgnoreCase(user.getScreenName()))
                 return user;
         }
-        if (id != -1) {
+        if (id != null) {
             final ResponseList<Status> timeline = twitter.getUserTimeline(id, paging);
             for (final Status status : timeline) {
                 final User user = status.getUser();
-                if (user.getId() == id) return user;
+                if (TextUtils.equals(user.getId(), id)) return user;
             }
         } else {
             final ResponseList<Status> timeline = twitter.getUserTimeline(screenName, paging);
@@ -148,7 +150,7 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User tryShowUser(final Twitter twitter, final long id, final String screenName)
+    public static User tryShowUser(final Twitter twitter, final String id, final String screenName)
             throws TwitterException {
         try {
             return showUser(twitter, id, screenName);

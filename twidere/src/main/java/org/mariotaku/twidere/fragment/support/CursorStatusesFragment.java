@@ -39,8 +39,8 @@ import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
-import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.UserKey;
@@ -71,12 +71,12 @@ import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 /**
  * Created by mariotaku on 14/12/3.
  */
-public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
+public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     @Override
     protected void onLoadingFinished() {
         final UserKey[] accountKeys = getAccountKeys();
-        final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         if (adapter.getItemCount() > 0) {
             showContent();
         } else if (accountKeys.length > 0) {
@@ -116,7 +116,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
             where = accountWhere;
         }
         final String selection = processWhere(where).getSQL();
-        final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Statuses.COLUMNS;
         final String[] selectionArgs = TwidereArrayUtils.toStringArray(accountKeys, 0,
@@ -150,7 +150,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment<List<Pa
                 final ParcelableStatus status = event.getStatus();
                 final List<ParcelableStatus> data = getAdapterData();
                 if (status == null || data == null || data.isEmpty()) return;
-                final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+                final ParcelableStatusesAdapter adapter = getAdapter();
                 final int firstVisiblePosition = getLayoutManager().findFirstVisibleItemPosition();
                 final int lastVisiblePosition = getLayoutManager().findLastVisibleItemPosition();
                 final int startIndex = adapter.getStatusStartIndex();

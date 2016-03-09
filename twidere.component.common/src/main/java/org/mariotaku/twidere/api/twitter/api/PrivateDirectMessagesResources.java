@@ -47,7 +47,7 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @POST("/dm/conversation/{account_id}-{user_id}/delete.json")
     @BodyType(BodyType.FORM)
-    ResponseCode destroyDirectMessagesConversation(@Path("account_id") long accountId, @Path("user_id") long userId) throws TwitterException;
+    ResponseCode destroyDirectMessagesConversation(@Path("account_id") String accountId, @Path("user_id") String userId) throws TwitterException;
 
     @GET("/dm/user_inbox.json")
     UserInbox getUserInbox(@Query Paging paging) throws TwitterException;

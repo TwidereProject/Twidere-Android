@@ -42,63 +42,59 @@ public interface FriendsFollowersResources {
 
     @POST("/friendships/create.json")
     @BodyType(BodyType.FORM)
-    User createFriendship(@Param("user_id") long userId) throws TwitterException;
+    User createFriendship(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/friendships/create.json")
     @BodyType(BodyType.FORM)
-    User createFriendship(@Param("user_id") long userId, @Param("follow") boolean follow) throws TwitterException;
+    User createFriendship(@Param("user_id") String userId, @Param("follow") boolean follow) throws TwitterException;
 
     @POST("/friendships/create.json")
     @BodyType(BodyType.FORM)
-    User createFriendship(@Param("screen_name") String screenName) throws TwitterException;
+    User createFriendshipByScreenName(@Param("screen_name") String screenName) throws TwitterException;
 
     @POST("/friendships/create.json")
     @BodyType(BodyType.FORM)
-    User createFriendship(@Param("screen_name") String screenName, @Param("follow") boolean follow) throws TwitterException;
+    User createFriendshipByScreenName(@Param("screen_name") String screenName, @Param("follow") boolean follow) throws TwitterException;
 
     @POST("/friendships/destroy.json")
     @BodyType(BodyType.FORM)
-    User destroyFriendship(@Param("user_id") long userId) throws TwitterException;
+    User destroyFriendship(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/friendships/destroy.json")
     @BodyType(BodyType.FORM)
-    User destroyFriendship(@Param("screen_name") String screenName) throws TwitterException;
+    User destroyFriendshipByScreenName(@Param("screen_name") String screenName) throws TwitterException;
 
     @GET("/followers/ids.json")
     IDs getFollowersIDs(@Query Paging paging) throws TwitterException;
 
     @GET("/followers/ids.json")
-    IDs getFollowersIDs(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
+    IDs getFollowersIDs(@Query("user_id") String userId, @Query Paging paging) throws TwitterException;
 
     @GET("/followers/ids.json")
-    IDs getFollowersIDs(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
+    IDs getFollowersIDsByScreenName(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 
     @GET("/followers/list.json")
     PageableResponseList<User> getFollowersList(@Query Paging paging) throws TwitterException;
 
     @GET("/followers/list.json")
-    PageableResponseList<User> getFollowersList(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getFollowersList(@Query("user_id") String userId, @Query Paging paging) throws TwitterException;
 
     @GET("/followers/list.json")
-    PageableResponseList<User> getFollowersList(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getFollowersListByScreenName(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 
     @GET("/friends/ids.json")
-    IDs getFriendsIDs(Paging paging) throws TwitterException;
+    IDs getFriendsIDs(String userId, Paging paging) throws TwitterException;
 
     @GET("/friends/ids.json")
-    IDs getFriendsIDs(long userId, Paging paging) throws TwitterException;
-
-    @GET("/friends/ids.json")
-    IDs getFriendsIDs(String screenName, Paging paging) throws TwitterException;
+    IDs getFriendsIDsByScreenName(String screenName, Paging paging) throws TwitterException;
 
     @GET("/friends/list.json")
-    PageableResponseList<User> getFriendsList(@Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getFriendsList(@Query("user_id") String userId, @Query Paging paging)
+            throws TwitterException;
 
     @GET("/friends/list.json")
-    PageableResponseList<User> getFriendsList(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
-
-    @GET("/friends/list.json")
-    PageableResponseList<User> getFriendsList(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getFriendsListByScreenName(@Query("screen_name") String screenName,
+                                                          @Query Paging paging) throws TwitterException;
 
     @GET("/friendships/incoming.json")
     IDs getIncomingFriendships(@Query Paging paging) throws TwitterException;
@@ -107,25 +103,32 @@ public interface FriendsFollowersResources {
     IDs getOutgoingFriendships(@Query Paging paging) throws TwitterException;
 
     @POST("/friendships/lookup.json")
-    ResponseList<Friendship> lookupFriendships(@Param(value = "id",arrayDelimiter = ',')long[] ids) throws TwitterException;
+    ResponseList<Friendship> lookupFriendships(@Param(value = "id", arrayDelimiter = ',') String[] ids)
+            throws TwitterException;
+
     @POST("/friendships/lookup.json")
-    ResponseList<Friendship> lookupFriendships(@Param(value = "id",arrayDelimiter = ',')String[] screenNames) throws TwitterException;
+    ResponseList<Friendship> lookupFriendshipsByScreenName(@Param(value = "id", arrayDelimiter = ',') String[] screenNames)
+            throws TwitterException;
 
     @GET("/friendships/show.json")
-    Relationship showFriendship(@Query("source_id") long sourceId, @Query("target_id") long targetId) throws TwitterException;
+    Relationship showFriendship(@Query("source_id") String sourceId,
+                                @Query("target_id") String targetId) throws TwitterException;
 
     @GET("/friendships/show.json")
-    Relationship showFriendship(@Query("target_id") long targetId) throws TwitterException;
+    Relationship showFriendship(@Query("target_id") String targetId) throws TwitterException;
 
     @GET("/friendships/show.json")
-    Relationship showFriendship(@Query("source_screen_name") String sourceScreenName,
-                                @Query("target_screen_name") String targetScreenName) throws TwitterException;
+    Relationship showFriendshipByScreenName(@Query("source_screen_name") String sourceScreenName,
+                                            @Query("target_screen_name") String targetScreenName)
+            throws TwitterException;
 
     @POST("/friendships/update.json")
     @BodyType(BodyType.FORM)
-    Relationship updateFriendship(@Param("user_id") long userId, @Param FriendshipUpdate update) throws TwitterException;
+    Relationship updateFriendship(@Param("user_id") String userId, @Param FriendshipUpdate update)
+            throws TwitterException;
 
     @POST("/friendships/update.json")
     @BodyType(BodyType.FORM)
-    Relationship updateFriendship(@Param("screen_name") String screenName, @Param FriendshipUpdate update) throws TwitterException;
+    Relationship updateFriendshipByScreenName(@Param("screen_name") String screenName,
+                                              @Param FriendshipUpdate update) throws TwitterException;
 }

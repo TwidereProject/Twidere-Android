@@ -20,22 +20,53 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.adapter.iface.IUserListsAdapter;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.UserListViewHolder;
 
 import java.util.List;
 
-public class ParcelableUserListsAdapter extends AbsUserListsAdapter<List<ParcelableUserList>> {
+public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerView.ViewHolder>
+        implements Constants, IUserListsAdapter<List<ParcelableUserList>> {
 
+    public static final int ITEM_VIEW_TYPE_USER_LIST = 2;
+    private final LayoutInflater mInflater;
+    private final int mCardBackgroundColor;
+    private final int mProfileImageStyle;
+    private final int mTextSize;
+    private final boolean mDisplayProfileImage;
+    private final boolean mShowAbsoluteTime;
+    private final boolean mNameFirst;
+    private final EventListener mEventListener;
     private List<ParcelableUserList> mData;
+    private UserListAdapterListener mUserListAdapterListener;
 
 
     public ParcelableUserListsAdapter(Context context) {
         super(context);
+        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
+                ThemeUtils.getThemeBackgroundOption(context),
+                ThemeUtils.getUserThemeBackgroundAlpha(context));
+        mEventListener = new EventListener(this);
+        mInflater = LayoutInflater.from(context);
+        mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
+        mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+        mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST, true);
+        mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME, false);
     }
 
-    @Override
     public List<ParcelableUserList> getData() {
         return mData;
     }
@@ -47,7 +78,6 @@ public class ParcelableUserListsAdapter extends AbsUserListsAdapter<List<Parcela
         notifyDataSetChanged();
     }
 
-    @Override
     protected void bindUserList(UserListViewHolder holder, int position) {
         holder.displayUserList(getUserList(position));
     }
@@ -81,5 +111,117 @@ public class ParcelableUserListsAdapter extends AbsUserListsAdapter<List<Parcela
     public int getUserListsCount() {
         if (mData == null) return 0;
         return mData.size();
+    }
+
+    @Override
+    public int getProfileImageStyle() {
+        return mProfileImageStyle;
+    }
+
+    @Override
+    public float getTextSize() {
+        return mTextSize;
+    }
+
+    @Override
+    public boolean isProfileImageEnabled() {
+        return mDisplayProfileImage;
+    }
+
+    @Override
+    public boolean isNameFirst() {
+        return mNameFirst;
+    }
+
+    @Override
+    public boolean isShowAbsoluteTime() {
+        return mShowAbsoluteTime;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case ITEM_VIEW_TYPE_USER_LIST: {
+                final View view;
+                view = mInflater.inflate(R.layout.card_item_user_list_compact, parent, false);
+                final View itemContent = view.findViewById(R.id.item_content);
+                itemContent.setBackgroundColor(mCardBackgroundColor);
+                final UserListViewHolder holder = new UserListViewHolder(this, view);
+                holder.setOnClickListeners();
+                holder.setupViewOptions();
+                return holder;
+            }
+            case ITEM_VIEW_TYPE_LOAD_INDICATOR: {
+                final View view = mInflater.inflate(R.layout.card_item_load_indicator, parent, false);
+                return new LoadIndicatorViewHolder(view);
+            }
+        }
+        throw new IllegalStateException("Unknown view type " + viewType);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case ITEM_VIEW_TYPE_USER_LIST: {
+                bindUserList(((UserListViewHolder) holder), position);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
+        }
+        if (position == getUserListsCount()) {
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR;
+        }
+        return ITEM_VIEW_TYPE_USER_LIST;
+    }
+
+    public void setListener(UserListAdapterListener userListAdapterListener) {
+        mUserListAdapterListener = userListAdapterListener;
+    }
+
+    @Override
+    public boolean shouldShowAccountsColor() {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public IUserListsAdapter.UserListAdapterListener getUserListAdapterListener() {
+        return mEventListener;
+    }
+
+    public interface UserListAdapterListener {
+
+        void onUserListClick(UserListViewHolder holder, int position);
+
+        boolean onUserListLongClick(UserListViewHolder holder, int position);
+
+    }
+
+    static class EventListener implements IUserListsAdapter.UserListAdapterListener {
+
+        private final ParcelableUserListsAdapter mAdapter;
+
+        public EventListener(ParcelableUserListsAdapter adapter) {
+            mAdapter = adapter;
+        }
+
+        @Override
+        public void onUserListClick(UserListViewHolder holder, int position) {
+            final UserListAdapterListener listener = mAdapter.mUserListAdapterListener;
+            if (listener == null) return;
+            listener.onUserListClick(holder, position);
+        }
+
+        @Override
+        public boolean onUserListLongClick(UserListViewHolder holder, int position) {
+            final UserListAdapterListener listener = mAdapter.mUserListAdapterListener;
+            return listener != null && listener.onUserListLongClick(holder, position);
+        }
     }
 }

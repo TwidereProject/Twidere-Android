@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
 import org.mariotaku.twidere.model.ParcelableActivity;
@@ -49,7 +49,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
 
     private final IColorLabelView itemContent;
 
-    private final AbsActivitiesAdapter adapter;
+    private final ParcelableActivitiesAdapter adapter;
     private final ActionIconView activityTypeView;
     private final TextView titleView;
     private final TextView summaryView;
@@ -59,9 +59,9 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     private final ImageView[] profileImageViews;
     private final View profileImageSpace;
 
-    private IActivitiesAdapter.ActivityAdapterListener mActivityAdapterListener;
+    private IActivitiesAdapter.ActivityEventListener mActivityEventListener;
 
-    public ActivityTitleSummaryViewHolder(AbsActivitiesAdapter adapter, View itemView, boolean isCompact) {
+    public ActivityTitleSummaryViewHolder(ParcelableActivitiesAdapter adapter, View itemView, boolean isCompact) {
         super(itemView);
         this.adapter = adapter;
 
@@ -155,11 +155,11 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     }
 
     public void setOnClickListeners() {
-        setActivityAdapterListener(adapter.getActivityClickListener());
+        setActivityEventListener(adapter.getActivityEventListener());
     }
 
-    public void setActivityAdapterListener(IActivitiesAdapter.ActivityAdapterListener listener) {
-        mActivityAdapterListener = listener;
+    public void setActivityEventListener(IActivitiesAdapter.ActivityEventListener listener) {
+        mActivityEventListener = listener;
         ((View) itemContent).setOnClickListener(this);
 //        ((View) itemContent).setOnLongClickListener(this);
 
@@ -167,11 +167,11 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
 
     @Override
     public void onClick(View v) {
-        if (mActivityAdapterListener == null) return;
+        if (mActivityEventListener == null) return;
         final int position = getLayoutPosition();
         switch (v.getId()) {
             case R.id.item_content: {
-                mActivityAdapterListener.onActivityClick(this, position);
+                mActivityEventListener.onActivityClick(this, position);
                 break;
             }
         }

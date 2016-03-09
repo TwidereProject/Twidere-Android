@@ -6,10 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
+import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
@@ -21,7 +21,6 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.twidere.util.collection.LongSparseMap;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 import java.util.ArrayList;
@@ -34,12 +33,14 @@ import java.util.regex.Pattern;
  * Created by mariotaku on 16/2/24.
  */
 public class InternalTwitterContentUtils {
+
+    public static final int TWITTER_BULK_QUERY_COUNT = 100;
     private static final Pattern PATTERN_TWITTER_STATUS_LINK = Pattern.compile("https?://twitter\\.com/(?:#!/)?(\\w+)/status(es)?/(\\d+)");
     private static final CharSequenceTranslator UNESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_UNESCAPE());
     private static final CharSequenceTranslator ESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
     public static <T extends List<Status>> T getStatusesWithQuoteData(Twitter twitter, @NonNull T list) throws TwitterException {
-        LongSparseMap<Status> quotes = new LongSparseMap<>();
+        MultiValueMap<Status> quotes = new MultiValueMap<>();
         // Phase 1: collect all statuses contains a status link, and put it in the map
         for (Status status : list) {
             if (status.isQuote()) continue;
@@ -49,24 +50,25 @@ public class InternalTwitterContentUtils {
             for (int i = entities.length - 1; i >= 0; i--) {
                 final Matcher m = PATTERN_TWITTER_STATUS_LINK.matcher(entities[i].getExpandedUrl());
                 if (!m.matches()) continue;
-                final long def = -1;
-                final long quoteId = NumberUtils.toLong(m.group(3), def);
-                if (quoteId > 0) {
-                    quotes.put(quoteId, status);
+                final String quoteId = m.group(3);
+                if (!TextUtils.isEmpty(quoteId)) {
+                    quotes.add(quoteId, status);
                 }
                 break;
             }
         }
         // Phase 2: look up quoted tweets. Each lookup can fetch up to 100 tweets, so we split quote
         // ids into batches
-        final long[] quoteIds = quotes.keys();
-        for (int currentBulkIdx = 0, totalLength = quoteIds.length; currentBulkIdx < totalLength; currentBulkIdx += TwitterContentUtils.TWITTER_BULK_QUERY_COUNT) {
-            final int currentBulkCount = Math.min(totalLength, currentBulkIdx + TwitterContentUtils.TWITTER_BULK_QUERY_COUNT) - currentBulkIdx;
-            final long[] ids = new long[currentBulkCount];
+        final Set<String> keySet = quotes.keySet();
+        final String[] quoteIds = keySet.toArray(new String[keySet.size()]);
+        for (int currentBulkIdx = 0, totalLength = quoteIds.length; currentBulkIdx < totalLength;
+             currentBulkIdx += TWITTER_BULK_QUERY_COUNT) {
+            final int currentBulkCount = Math.min(totalLength, currentBulkIdx + TWITTER_BULK_QUERY_COUNT) - currentBulkIdx;
+            final String[] ids = new String[currentBulkCount];
             System.arraycopy(quoteIds, currentBulkIdx, ids, 0, currentBulkCount);
             // Lookup quoted statuses, then set each status into original status
             for (Status quoted : twitter.lookupStatuses(ids)) {
-                final Set<Status> orig = quotes.get(quoted.getId());
+                final List<Status> orig = quotes.get(quoted.getId());
                 // This set shouldn't be null here, add null check to make inspector happy.
                 if (orig == null) continue;
                 for (Status status : orig) {
@@ -263,7 +265,7 @@ public class InternalTwitterContentUtils {
         }
     }
 
-    public static long getOriginalId(@NonNull ParcelableStatus status) {
+    public static String getOriginalId(@NonNull ParcelableStatus status) {
         return status.is_retweet ? status.retweet_id : status.id;
     }
 }

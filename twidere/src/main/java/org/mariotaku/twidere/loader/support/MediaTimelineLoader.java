@@ -45,12 +45,12 @@ import java.util.List;
 
 public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
 
-    private final long mUserId;
+    private final String mUserId;
     private final String mUserScreenName;
 
     private User mUser;
 
-    public MediaTimelineLoader(final Context context, final UserKey accountKey, final long userId,
+    public MediaTimelineLoader(final Context context, final UserKey accountKey, final String userId,
                                final String screenName, final long sinceId, final long maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, final boolean fromUser) {
@@ -61,10 +61,12 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
 
     @NonNull
     @Override
-    protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
+    protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter,
+                                               @NonNull final ParcelableCredentials credentials,
+                                               @NonNull final Paging paging) throws TwitterException {
         final Context context = getContext();
         if (Utils.isOfficialCredentials(context, credentials)) {
-            if (mUserId != -1)
+            if (mUserId != null)
                 return twitter.getMediaTimeline(mUserId, paging);
             if (mUserScreenName != null)
                 return twitter.getMediaTimeline(mUserScreenName, paging);
@@ -108,8 +110,8 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
     }
 
     private boolean isMyTimeline() {
-        if (mUserId > 0) {
-            return getAccountKey().getId() == mUserId;
+        if (mUserId != null) {
+            return getAccountKey().check(mUserId, null);
         } else {
             final String accountScreenName = DataStoreUtils.getAccountScreenName(getContext(), getAccountKey());
             return accountScreenName != null && accountScreenName.equalsIgnoreCase(mUserScreenName);

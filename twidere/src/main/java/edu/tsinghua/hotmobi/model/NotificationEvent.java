@@ -54,7 +54,7 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
 
     @JsonField(name = "account_id")
     @ParcelableThisPlease
-    long accountId;
+    String accountId;
 
     @JsonField(name = "type")
     @ParcelableThisPlease
@@ -76,7 +76,7 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
     }
 
     public static NotificationEvent create(Context context, @Action String action, long postTime,
-                                           long respondTime, String type, long accountId, long itemId,
+                                           long respondTime, String type, String accountId, long itemId,
                                            long itemUserId, boolean itemUserFollowing) {
         final NotificationEvent event = new NotificationEvent();
         event.setAction(action);
@@ -100,7 +100,7 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
                 itemId, itemUserId, itemUserFollowing);
     }
 
-    public static NotificationEvent open(Context context, long postTime, String type, long accountId,
+    public static NotificationEvent open(Context context, long postTime, String type, String accountId,
                                          long itemId, long itemUserId, boolean itemUserFollowing) {
         return create(context, Action.OPEN, System.currentTimeMillis(), postTime, type, accountId,
                 itemId, itemUserId, itemUserFollowing);
@@ -139,11 +139,11 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         this.itemId = itemId;
     }
 
-    public long getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(long accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 

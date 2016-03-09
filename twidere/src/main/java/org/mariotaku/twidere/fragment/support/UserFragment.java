@@ -237,7 +237,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mFollowProgress.setVisibility(View.VISIBLE);
                     mFollowingYouIndicator.setVisibility(View.GONE);
                     final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-                    final long userId = args.getLong(EXTRA_USER_ID, -1);
+                    final String userId = args.getString(EXTRA_USER_ID);
                     return new UserRelationshipLoader(getActivity(), accountKey, userId);
                 }
 
@@ -262,7 +262,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
             final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
             final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            final long userId = args.getLong(EXTRA_USER_ID, -1);
+            final String userId = args.getString(EXTRA_USER_ID);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
             if (mUser == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
                 mCardContent.setVisibility(View.GONE);
@@ -298,7 +298,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (user.is_cache) {
                     final Bundle args = new Bundle();
                     args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
-                    args.putLong(EXTRA_USER_ID, user.key.getId());
+                    args.putString(EXTRA_USER_ID, user.key.getId());
                     args.putString(EXTRA_SCREEN_NAME, user.screen_name);
                     args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
                     getLoaderManager().restartLoader(LOADER_ID_USER, args, this);
@@ -616,14 +616,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return mUser;
     }
 
-    public void getUserInfo(final UserKey accountId, final long userId, final String screenName,
+    public void getUserInfo(final UserKey accountId, final String userId, final String screenName,
                             final boolean omitIntentExtra) {
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, accountId);
-        args.putLong(EXTRA_USER_ID, userId);
+        args.putString(EXTRA_USER_ID, userId);
         args.putString(EXTRA_SCREEN_NAME, screenName);
         args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra);
         if (!mGetUserInfoLoaderInitialized) {
@@ -632,7 +632,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         } else {
             lm.restartLoader(LOADER_ID_USER, args, mUserInfoLoaderCallbacks);
         }
-        if (accountId == null || userId == -1 && screenName == null) {
+        if (accountId == null || userId == null && screenName == null) {
             mCardContent.setVisibility(View.GONE);
             mHeaderErrorContainer.setVisibility(View.GONE);
         }
@@ -735,13 +735,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mActionBarShadowColor = 0xA0000000;
         final Bundle args = getArguments();
         UserKey accountId = null;
-        long userId = -1;
+        String userId = null;
         String screenName = null;
         if (savedInstanceState != null) {
             args.putAll(savedInstanceState);
         } else {
             accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            userId = args.getLong(EXTRA_USER_ID, -1);
+            userId = args.getString(EXTRA_USER_ID);
             screenName = args.getString(EXTRA_SCREEN_NAME);
         }
 
@@ -1355,13 +1355,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final UserKey accountKey, long extraId, final int type,
-                            final boolean sensitive, int start, int end) {
+    public void onLinkClick(final String link, final String orig, final UserKey accountKey,
+                            final long extraId, final int type, final boolean sensitive,
+                            int start, int end) {
         final ParcelableUser user = getUser();
         if (user == null) return;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(getActivity(), user.account_key, -1, link, null, true,
+                IntentUtils.openUserProfile(getActivity(), user.account_key, null, link, null, true,
                         Referral.USER_MENTION);
                 break;
             }
@@ -1453,7 +1454,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
-        args.putLong(EXTRA_USER_ID, user.key.getId());
+        args.putString(EXTRA_USER_ID, user.key.getId());
         if (!mGetFriendShipLoaderInitialized) {
             lm.initLoader(LOADER_ID_FRIENDSHIP, args, mFriendshipLoaderCallbacks);
             mGetFriendShipLoaderInitialized = true;
@@ -1533,7 +1534,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = args.getParcelable(EXTRA_USER);
         if (user != null) {
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
-            tabArgs.putLong(EXTRA_USER_ID, user.key.getId());
+            tabArgs.putString(EXTRA_USER_ID, user.key.getId());
             tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name);
         } else {
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
@@ -1763,10 +1764,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         private final Context context;
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
 
         public UserRelationshipLoader(final Context context, @Nullable final UserKey accountKey,
-                                      final long userId) {
+                                      final String userId) {
             super(context);
             this.context = context;
             this.mAccountKey = accountKey;
@@ -1817,7 +1818,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
         public boolean check(@NonNull ParcelableUser user) {
-            return relationship.getSourceUserId() == user.account_key.getId()
+            return TextUtils.equals(relationship.getSourceUserId(), user.account_key.getId())
                     && user.key.check(relationship.getTargetUserId(), null);
         }
     }

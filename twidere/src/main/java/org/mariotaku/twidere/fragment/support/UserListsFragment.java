@@ -30,7 +30,7 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.AbsUserListsAdapter;
+import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
 import org.mariotaku.twidere.loader.support.UserListsLoader;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
@@ -116,7 +116,7 @@ public class UserListsFragment extends ParcelableUserListsFragment {
     }
 
     private void removeUserList(final long id) {
-        final AbsUserListsAdapter<List<ParcelableUserList>> adapter = getAdapter();
+        final ParcelableUserListsAdapter adapter = getAdapter();
 //        final int listsIdx = adapter.findItemPosition(id);
 //        if (listsIdx >= 0) {
 //            adapter.removeAt(listsIdx);

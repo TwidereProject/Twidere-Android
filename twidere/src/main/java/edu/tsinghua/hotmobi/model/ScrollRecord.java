@@ -34,7 +34,7 @@ public class ScrollRecord implements LogModel {
     @JsonField(name = "id")
     long id;
     @JsonField(name = "account_id")
-    long accountId;
+    String accountId;
     @JsonField(name = "account_host")
     String accountHost;
     @JsonField(name = "timestamp")
@@ -55,7 +55,7 @@ public class ScrollRecord implements LogModel {
         return record;
     }
 
-    public void setAccountId(long accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 

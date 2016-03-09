@@ -41,7 +41,7 @@ import android.view.View;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
@@ -82,8 +82,8 @@ import edu.tsinghua.hotmobi.model.TimelineType;
 /**
  * Created by mariotaku on 14/11/5.
  */
-public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerViewFragment<AbsStatusesAdapter<Data>>
-        implements LoaderCallbacks<Data>, StatusAdapterListener, KeyboardShortcutCallback {
+public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFragment<ParcelableStatusesAdapter>
+        implements LoaderCallbacks<List<ParcelableStatus>>, StatusAdapterListener, KeyboardShortcutCallback {
 
     private final Object mStatusesBusCallback;
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
@@ -100,7 +100,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
             final int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
             if (firstVisiblePosition != mFirstVisiblePosition && firstVisiblePosition >= 0) {
                 //noinspection unchecked
-                final AbsStatusesAdapter<Data> adapter = (AbsStatusesAdapter<Data>) recyclerView.getAdapter();
+                final ParcelableStatusesAdapter adapter = (ParcelableStatusesAdapter) recyclerView.getAdapter();
                 final ParcelableStatus status = adapter.getStatus(firstVisiblePosition);
                 if (status != null) {
                     final long id = status.id;
@@ -228,7 +228,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     }
 
     @Override
-    public final Loader<Data> onCreateLoader(int id, Bundle args) {
+    public final Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
         args.remove(EXTRA_FROM_USER);
         return onCreateStatusesLoader(getActivity(), args, fromUser);
@@ -244,8 +244,8 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     }
 
     @Override
-    public final void onLoadFinished(Loader<Data> loader, Data data) {
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+    public final void onLoadFinished(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final boolean rememberPosition = mPreferences.getBoolean(KEY_REMEMBER_POSITION, false);
         final boolean readFromBottom = mPreferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
         long lastReadId;
@@ -318,7 +318,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     }
 
     @Override
-    public void onLoaderReset(Loader<Data> loader) {
+    public void onLoaderReset(Loader<List<ParcelableStatus>> loader) {
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);
         }
@@ -326,7 +326,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     @Override
     public void onGapClick(GapViewHolder holder, int position) {
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
         final UserKey[] accountIds = {status.account_key};
@@ -336,7 +336,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     @Override
     public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(statusPosition);
         if (status == null) return;
         IntentUtils.openMedia(getActivity(), status, media, null, true);
@@ -362,7 +362,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     @Override
     public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
         final FragmentActivity activity = getActivity();
@@ -393,7 +393,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     @Override
     public void onStatusClick(IStatusViewHolder holder, int position) {
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         IntentUtils.openStatus(getActivity(), adapter.getStatus(position), null);
     }
 
@@ -467,7 +467,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     @Override
     public void onDestroy() {
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         adapter.setListener(null);
         super.onDestroy();
     }
@@ -484,7 +484,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
         adapter.setListener(this);
@@ -505,13 +505,13 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
     protected abstract UserKey[] getAccountKeys();
 
-    protected Data getAdapterData() {
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+    protected List<ParcelableStatus> getAdapterData() {
+        final ParcelableStatusesAdapter adapter = getAdapter();
         return adapter.getData();
     }
 
-    protected void setAdapterData(Data data) {
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+    protected void setAdapterData(List<ParcelableStatus> data) {
+        final ParcelableStatusesAdapter adapter = getAdapter();
         adapter.setData(data);
     }
 
@@ -526,9 +526,9 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         return getReadPositionTag();
     }
 
-    protected abstract boolean hasMoreData(Data data);
+    protected abstract boolean hasMoreData(List<ParcelableStatus> data);
 
-    protected abstract Loader<Data> onCreateStatusesLoader(final Context context, final Bundle args,
+    protected abstract Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context, final Bundle args,
                                                            final boolean fromUser);
 
     protected abstract void onLoadingFinished();
@@ -537,7 +537,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
         final String readPositionTag = getReadPositionTagWithAccounts();
         if (readPositionTag == null) return;
         if (position == RecyclerView.NO_POSITION) return;
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
         mReadStateManager.setPosition(readPositionTag, status.id);
@@ -554,7 +554,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (!getUserVisibleHint()) return;
-        final AbsStatusesAdapter<Data> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
@@ -617,7 +617,7 @@ public abstract class AbsStatusesFragment<Data> extends AbsContentListRecyclerVi
 
         @Subscribe
         public void notifyStatusListChanged(StatusListChangedEvent event) {
-            final AbsStatusesAdapter<Data> adapter = getAdapter();
+            final ParcelableStatusesAdapter adapter = getAdapter();
             adapter.notifyDataSetChanged();
         }
 

@@ -38,7 +38,13 @@ import java.util.Date;
 public class User extends TwitterResponseObject implements Comparable<User> {
 
     @JsonField(name = "id")
-    long id;
+    String id;
+
+    /**
+     * Fanfou uses this ID
+     */
+    @JsonField(name = "unique_id")
+    String uniqueId;
 
     @JsonField(name = "name")
     String name;
@@ -278,7 +284,7 @@ public class User extends TwitterResponseObject implements Comparable<User> {
     }
 
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -478,6 +484,10 @@ public class User extends TwitterResponseObject implements Comparable<User> {
         return profileImageUrlOriginal;
     }
 
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -540,11 +550,11 @@ public class User extends TwitterResponseObject implements Comparable<User> {
 
     @Override
     public int compareTo(@NonNull final User that) {
-        return (int) (id - that.getId());
+        return id.compareTo(that.getId());
     }
 
     @OnJsonParseComplete
     void onJsonParseComplete() throws IOException {
-        if (id <= 0 || screenName == null) throw new IOException("Malformed User object");
+        if (id == null || screenName == null) throw new IOException("Malformed User object");
     }
 }

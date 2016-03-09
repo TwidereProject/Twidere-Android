@@ -43,27 +43,18 @@ public interface FavoritesResources {
 
     @POST("/favorites/create.json")
     @BodyType(BodyType.FORM)
-    Status createFavorite(@Param("id") long id) throws TwitterException;
+    Status createFavorite(@Param("id") String id) throws TwitterException;
 
     @POST("/favorites/destroy.json")
     @BodyType(BodyType.FORM)
-    Status destroyFavorite(@Param("id") long id) throws TwitterException;
+    Status destroyFavorite(@Param("id") String id) throws TwitterException;
 
     @GET("/favorites/list.json")
     ResponseList<Status> getFavorites() throws TwitterException;
 
     @GET("/favorites/list.json")
-    ResponseList<Status> getFavorites(@Query("user_id") long userId) throws TwitterException;
+    ResponseList<Status> getFavorites(@Query("user_id") String userId, @Query({"since_id", "max_id", "count"}) Paging paging) throws TwitterException;
 
     @GET("/favorites/list.json")
-    ResponseList<Status> getFavorites(@Query("user_id") long userId, @Query({"since_id", "max_id", "count"}) Paging paging) throws TwitterException;
-
-    @GET("/favorites/list.json")
-    ResponseList<Status> getFavorites(@Query({"since_id", "max_id", "count"}) Paging paging) throws TwitterException;
-
-    @GET("/favorites/list.json")
-    ResponseList<Status> getFavorites(@Query("screen_name") String screenName) throws TwitterException;
-
-    @GET("/favorites/list.json")
-    ResponseList<Status> getFavorites(@Query("screen_name") String screenName, @Query({"since_id", "max_id", "count"}) Paging paging) throws TwitterException;
+    ResponseList<Status> getFavoritesByScreenName(@Query("screen_name") String screenName, @Query({"since_id", "max_id", "count"}) Paging paging) throws TwitterException;
 }

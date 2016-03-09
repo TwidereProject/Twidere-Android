@@ -58,6 +58,7 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
 
     public static final String ACCOUNT_TYPE_TWITTER = "twitter";
     public static final String ACCOUNT_TYPE_STATUSNET = "statusnet";
+    public static final String ACCOUNT_TYPE_FANFOU = "fanfou";
 
     @ParcelableThisPlease
     @JsonField(name = "auth_type")

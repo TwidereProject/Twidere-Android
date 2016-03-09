@@ -24,13 +24,13 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupport
 
     ParcelableStatus getStatus(int position);
 
-    long getStatusId(int position);
+    String getStatusId(int position);
 
     @Nullable
     UserKey getAccountKey(int position);
 
     @Nullable
-    ParcelableStatus findStatusById(UserKey accountKey, long statusId);
+    ParcelableStatus findStatusById(UserKey accountKey, String statusId);
 
     int getStatusCount();
 

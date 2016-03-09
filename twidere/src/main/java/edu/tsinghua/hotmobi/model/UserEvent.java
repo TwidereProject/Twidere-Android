@@ -23,13 +23,13 @@ public class UserEvent extends BaseEvent implements Parcelable {
 
     @ParcelableThisPlease
     @JsonField(name = "account_id")
-    long accountId;
+    String accountId;
     @ParcelableThisPlease
     @JsonField(name = "account_host")
     String accountHost;
     @ParcelableThisPlease
     @JsonField(name = "user_id")
-    long userId;
+    String userId;
     @ParcelableThisPlease
     @JsonField(name = "user_host")
     String userHost;

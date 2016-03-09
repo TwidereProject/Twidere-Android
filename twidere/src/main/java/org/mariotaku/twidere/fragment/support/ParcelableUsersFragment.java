@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,12 +35,13 @@ import android.view.KeyEvent;
 
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
-import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
@@ -47,8 +49,7 @@ import org.mariotaku.twidere.view.holder.UserViewHolder;
 import java.util.List;
 
 public abstract class ParcelableUsersFragment extends AbsContentListRecyclerViewFragment<ParcelableUsersAdapter>
-        implements LoaderManager.LoaderCallbacks<List<ParcelableUser>>, IUsersAdapter.UserAdapterListener,
-        KeyboardShortcutsHandler.KeyboardShortcutCallback {
+        implements LoaderCallbacks<List<ParcelableUser>>, UserAdapterListener, KeyboardShortcutCallback {
 
     private RecyclerViewNavigationHelper mNavigationHelper;
 
@@ -148,8 +149,7 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
         final ParcelableUser user = getAdapter().getUser(position);
         final FragmentActivity activity = getActivity();
         if (UserKeyUtils.isSameHost(user.account_key, user.key)) {
-            IntentUtils.openUserProfile(activity, user.account_key, user.key.getId(),
-                    user.screen_name, null, true, getUserReferral());
+            IntentUtils.openUserProfile(activity, user, null, true, getUserReferral());
         } else if (user.extras != null && user.extras.statusnet_profile_url != null) {
             final Uri uri = Uri.parse(user.extras.statusnet_profile_url);
             final Intent intent = new Intent(Intent.ACTION_VIEW, uri);

@@ -7,9 +7,9 @@ import org.mariotaku.twidere.model.UserKey;
  */
 public class UsersBlockedEvent {
     private UserKey accountKey;
-    private long[] userIds;
+    private String[] userIds;
 
-    public UsersBlockedEvent(UserKey accountKey, long[] userIds) {
+    public UsersBlockedEvent(UserKey accountKey, String[] userIds) {
         this.accountKey = accountKey;
         this.userIds = userIds;
     }
@@ -18,7 +18,7 @@ public class UsersBlockedEvent {
         return accountKey;
     }
 
-    public long[] getUserIds() {
+    public String[] getUserIds() {
         return userIds;
     }
 }

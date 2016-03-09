@@ -61,7 +61,7 @@ public class UserFriendsLoader extends CursorSupportUsersLoader {
             if (ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(accountType)) {
                 return twitter.getStatusesFriendsList(mScreenName, paging);
             }
-            return twitter.getFriendsList(mScreenName, paging);
+            return twitter.getFriendsListByScreenName(mScreenName, paging);
         }
         throw new TwitterException("user_id or screen_name required");
     }

@@ -43,11 +43,11 @@ public class MediaEvent extends BaseEvent implements Parcelable {
 
     @JsonField(name = "id")
     @ParcelableThisPlease
-    long id;
+    String id;
 
     @JsonField(name = "user_id")
     @ParcelableThisPlease
-    long userId;
+    String userId;
 
     @JsonField(name = "tweet_type")
     @TweetType
@@ -97,11 +97,11 @@ public class MediaEvent extends BaseEvent implements Parcelable {
         this.previewUrl = previewUrl;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

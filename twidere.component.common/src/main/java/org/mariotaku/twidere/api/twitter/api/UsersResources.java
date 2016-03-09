@@ -47,35 +47,35 @@ public interface UsersResources {
 
     @POST("/blocks/create.json")
     @BodyType(BodyType.FORM)
-    User createBlock(@Param("user_id") long userId) throws TwitterException;
+    User createBlock(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/blocks/create.json")
     @BodyType(BodyType.FORM)
-    User createBlock(@Query("screen_name") String screenName) throws TwitterException;
+    User createBlockByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/mutes/users/create.json")
     @BodyType(BodyType.FORM)
-    User createMute(@Param("user_id") long userId) throws TwitterException;
+    User createMute(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/mutes/users/create.json")
     @BodyType(BodyType.FORM)
-    User createMute(@Query("screen_name") String screenName) throws TwitterException;
+    User createMuteByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/blocks/destroy.json")
     @BodyType(BodyType.FORM)
-    User destroyBlock(@Param("user_id") long userId) throws TwitterException;
+    User destroyBlock(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/blocks/destroy.json")
     @BodyType(BodyType.FORM)
-    User destroyBlock(@Query("screen_name") String screenName) throws TwitterException;
+    User destroyBlockByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/mutes/users/destroy.json")
     @BodyType(BodyType.FORM)
-    User destroyMute(@Param("user_id") long userId) throws TwitterException;
+    User destroyMute(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/mutes/users/destroy.json")
     @BodyType(BodyType.FORM)
-    User destroyMute(@Query("screen_name") String screenName) throws TwitterException;
+    User destroyMuteByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @GET("/account/settings.json")
     AccountSettings getAccountSettings() throws TwitterException;
@@ -100,10 +100,10 @@ public interface UsersResources {
 
     @POST("/users/lookup.json")
     @BodyType(BodyType.FORM)
-    ResponseList<User> lookupUsers(@Param(value = "user_id", arrayDelimiter = ',') long[] ids) throws TwitterException;
+    ResponseList<User> lookupUsers(@Param(value = "user_id", arrayDelimiter = ',') String[] ids) throws TwitterException;
 
     @GET("/users/lookup.json")
-    ResponseList<User> lookupUsers(@Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
+    ResponseList<User> lookupUsersByScreenName(@Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
 
     @POST("/account/remove_profile_banner.json")
     @BodyType(BodyType.FORM)
@@ -113,10 +113,10 @@ public interface UsersResources {
     ResponseList<User> searchUsers(@Query("q") String query, @Query Paging paging) throws TwitterException;
 
     @GET("/users/show.json")
-    User showUser(@Query("user_id") long userId) throws TwitterException;
+    User showUser(@Query("user_id") String userId) throws TwitterException;
 
     @GET("/users/show.json")
-    User showUser(@Query("screen_name") String screenName) throws TwitterException;
+    User showUserByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/account/settings.json")
     @BodyType(BodyType.FORM)

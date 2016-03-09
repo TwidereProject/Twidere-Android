@@ -10,8 +10,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
@@ -177,8 +177,8 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     }
 
     @Override
-    public long getStatusId(int position) {
-        return 0;
+    public String getStatusId(int position) {
+        return null;
     }
 
     @Override
@@ -189,7 +189,7 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
 
     @Nullable
     @Override
-    public ParcelableStatus findStatusById(UserKey accountId, long statusId) {
+    public ParcelableStatus findStatusById(UserKey accountId, String statusId) {
         return null;
     }
 

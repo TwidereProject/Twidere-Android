@@ -33,14 +33,16 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         }
     };
 
+    @NonNull
     @JsonField(name = "id")
     @ParcelableThisPlease
-    long id;
+    String id = "";
+    @Nullable
     @JsonField(name = "host")
     @ParcelableThisPlease
     String host;
 
-    public UserKey(long id, String host) {
+    public UserKey(@NonNull String id, @Nullable String host) {
         this.id = id;
         this.host = host;
     }
@@ -49,23 +51,25 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
 
     }
 
-    public long getId() {
+    @NonNull
+    public String getId() {
         return id;
     }
 
+    @Nullable
     public String getHost() {
         return host;
     }
 
     @Override
     public String toString() {
-        if (host != null) return id + "@" + host;
-        return String.valueOf(id);
+        if (host != null) return escapeText(id) + "@" + escapeText(host);
+        return id;
     }
 
     @Override
     public int compareTo(@NonNull UserKey another) {
-        if (this.id == another.id) {
+        if (this.id.equals(another.id)) {
             if (this.host != null && another.host != null) {
                 return this.host.compareTo(another.host);
             } else if (this.host != null) {
@@ -75,7 +79,7 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
             }
             return 0;
         }
-        return (int) (this.id - another.id);
+        return this.id.compareTo(another.id);
     }
 
     @Override
@@ -83,15 +87,18 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserKey accountKey = (UserKey) o;
+        UserKey userKey = (UserKey) o;
 
-        return id == accountKey.id;
+        if (!id.equals(userKey.id)) return false;
+        return !(host != null ? !host.equals(userKey.host) : userKey.host != null);
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int result = id.hashCode();
+        result = 31 * result + (host != null ? host.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -104,25 +111,38 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         UserKeyParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public boolean check(long accountId, String accountHost) {
-        return this.id == accountId;
+    public boolean check(String accountId, String accountHost) {
+        return this.id.equals(accountId);
     }
 
     @Nullable
     public static UserKey valueOf(@Nullable String str) {
         if (str == null) return null;
-        int idxOfAt = str.indexOf("@");
-        try {
-            if (idxOfAt != -1) {
-                final String idStr = str.substring(0, idxOfAt);
-                return new UserKey(Long.parseLong(idStr),
-                        str.substring(idxOfAt + 1, str.length()));
-
-            } else {
-                return new UserKey(Long.parseLong(str), null);
+        boolean escaping = false, idFinished = false;
+        StringBuilder idBuilder = new StringBuilder(), hostBuilder = new StringBuilder();
+        for (int i = 0, j = str.length(); i < j; i++) {
+            final char ch = str.charAt(i);
+            // accept all characters if is escaping
+            if (!escaping) {
+                if (ch == '\\') {
+                    escaping = true;
+                } else if (ch == '@') {
+                    idFinished = true;
+                }
             }
-        } catch (NumberFormatException e) {
-            return null;
+            if (!isSpecialChar(ch) || !escaping) {
+                if (idFinished) {
+                    hostBuilder.append(ch);
+                } else {
+                    idBuilder.append(ch);
+                }
+                escaping = false;
+            }
+        }
+        if (hostBuilder.length() != 0) {
+            return new UserKey(idBuilder.toString(), hostBuilder.toString());
+        } else {
+            return new UserKey(idBuilder.toString(), null);
         }
     }
 
@@ -138,15 +158,32 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         return keys;
     }
 
-    public static long[] getIds(UserKey[] ids) {
-        long[] result = new long[ids.length];
+    public static String[] getIds(UserKey[] ids) {
+        String[] result = new String[ids.length];
         for (int i = 0, idsLength = ids.length; i < idsLength; i++) {
             result[i] = ids[i].getId();
         }
         return result;
     }
 
+
+    public static String escapeText(String host) {
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0, j = host.length(); i < j; i++) {
+            final char ch = host.charAt(i);
+            if (isSpecialChar(ch)) {
+                sb.append('\\');
+            }
+            sb.append(ch);
+        }
+        return sb.toString();
+    }
+
+    private static boolean isSpecialChar(char ch) {
+        return ch == '\\' || ch == '@';
+    }
+
     public boolean maybeEquals(@Nullable UserKey another) {
-        return another != null && another.getId() == id;
+        return another != null && another.getId().equals(id);
     }
 }

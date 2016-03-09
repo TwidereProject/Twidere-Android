@@ -53,10 +53,9 @@ public class IntentUtils implements Constants {
                 status.user_name, status.user_screen_name, timeString);
     }
 
-    public static void openUserProfile(@NonNull final Context context, final ParcelableUser user,
+    public static void openUserProfile(@NonNull final Context context, @NonNull final ParcelableUser user,
                                        final Bundle activityOptions, final boolean newDocument,
                                        @UserFragment.Referral final String referral) {
-        if (user == null) return;
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_USER, user);
         final Uri.Builder builder = new Uri.Builder();
@@ -84,10 +83,10 @@ public class IntentUtils implements Constants {
     }
 
     public static void openUserProfile(@NonNull final Context context, @Nullable final UserKey accountKey,
-                                       final long userId, final String screenName,
+                                       final String userId, final String screenName,
                                        final Bundle activityOptions, final boolean newDocument,
                                        @UserFragment.Referral final String referral) {
-        if (userId <= 0 && isEmpty(screenName)) return;
+        if (userId == null && isEmpty(screenName)) return;
         final Uri uri = LinkCreator.getTwidereUserLink(accountKey, userId, screenName);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(EXTRA_REFERRAL, referral);
@@ -113,16 +112,15 @@ public class IntentUtils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openUserMentions(@NonNull final Context context, @Nullable final UserKey accountKey, final String screenName) {
+    public static void openUserMentions(@NonNull final Context context, @Nullable final UserKey accountKey,
+                                        @NonNull final String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(TwidereConstants.SCHEME_TWIDERE);
         builder.authority(TwidereConstants.AUTHORITY_USER_MENTIONS);
         if (accountKey != null) {
             builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        if (screenName != null) {
-            builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_SCREEN_NAME, screenName);
-        }
+        builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_SCREEN_NAME, screenName);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         context.startActivity(intent);
     }
@@ -217,7 +215,7 @@ public class IntentUtils implements Constants {
         }
         if (message != null) {
             intent.putExtra(EXTRA_MESSAGE, message);
-            intent.setData(getMediaViewerUri("message", message.id, accountKey));
+            intent.setData(getMediaViewerUri("message", String.valueOf(message.id), accountKey));
         }
         if (newDocument && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
@@ -229,13 +227,13 @@ public class IntentUtils implements Constants {
         }
     }
 
-    public static Uri getMediaViewerUri(@NonNull final String type, final long id,
+    public static Uri getMediaViewerUri(@NonNull final String type, final String id,
                                         @Nullable final UserKey accountKey) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority("media");
         builder.appendPath(type);
-        builder.appendPath(String.valueOf(id));
+        builder.appendPath(id);
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
@@ -350,23 +348,21 @@ public class IntentUtils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openStatus(@NonNull final Context context, @Nullable final UserKey accountKey, final long statusId) {
-        if (statusId <= 0) return;
+    public static void openStatus(@NonNull final Context context, @Nullable final UserKey accountKey,
+                                  @NonNull final String statusId) {
         final Uri uri = LinkCreator.getTwidereStatusLink(accountKey, statusId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         context.startActivity(intent);
     }
 
     public static void openStatus(@NonNull final Context context, @NonNull final ParcelableStatus status, Bundle activityOptions) {
-        final UserKey accountKey = status.account_key;
-        final long statusId = status.id;
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_STATUS, status);
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, status.account_key.toString());
+        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, status.id);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setExtrasClassLoader(context.getClassLoader());
         intent.putExtras(extras);
@@ -389,36 +385,34 @@ public class IntentUtils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openStatusFavoriters(final Context context, @Nullable final UserKey accountKey,
-                                            final long statusId) {
-        if (context == null) return;
+    public static void openStatusFavoriters(@NonNull final Context context, @Nullable final UserKey accountKey,
+                                            @NonNull final String statusId) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS_FAVORITERS);
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
+        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, statusId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         context.startActivity(intent);
     }
 
-    public static void openStatusRetweeters(final Context context, @Nullable final UserKey accountKey,
-                                            final long statusId) {
-        if (context == null) return;
+    public static void openStatusRetweeters(@NonNull final Context context, @Nullable final UserKey accountKey,
+                                            @NonNull final String statusId) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_STATUS_RETWEETERS);
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, String.valueOf(statusId));
+        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, statusId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         context.startActivity(intent);
     }
 
-    public static void openTweetSearch(final Context context, @Nullable final UserKey accountKey,
-                                       final String query) {
+    public static void openTweetSearch(@NonNull final Context context, @Nullable final UserKey accountKey,
+                                       @NonNull final String query) {
         openSearch(context, accountKey, query, QUERY_PARAM_VALUE_TWEETS);
     }
 
@@ -453,7 +447,7 @@ public class IntentUtils implements Constants {
     }
 
     public static void openUserFollowers(@NonNull final Context context,
-                                         @Nullable final UserKey accountKey, final long userId,
+                                         @Nullable final UserKey accountKey, final String userId,
                                          final String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
@@ -461,8 +455,8 @@ public class IntentUtils implements Constants {
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        if (userId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, userId);
         }
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
@@ -472,7 +466,7 @@ public class IntentUtils implements Constants {
     }
 
     public static void openUserFriends(@NonNull final Context context,
-                                       @Nullable final UserKey accountKey, final long userId,
+                                       @Nullable final UserKey accountKey, final String userId,
                                        final String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
@@ -480,8 +474,8 @@ public class IntentUtils implements Constants {
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        if (userId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, userId);
         }
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
@@ -533,7 +527,7 @@ public class IntentUtils implements Constants {
         context.startActivity(intent);
     }
 
-    public static void openUserLists(@NonNull final Context context, @Nullable final UserKey accountKey, final long userId,
+    public static void openUserLists(@NonNull final Context context, @Nullable final UserKey accountKey, final String userId,
                                      final String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
@@ -541,8 +535,8 @@ public class IntentUtils implements Constants {
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        if (userId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, userId);
         }
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
@@ -552,7 +546,7 @@ public class IntentUtils implements Constants {
     }
 
 
-    public static void openUserGroups(@NonNull final Context context, @Nullable final UserKey accountKey, final long userId,
+    public static void openUserGroups(@NonNull final Context context, @Nullable final UserKey accountKey, final String userId,
                                       final String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
@@ -560,8 +554,8 @@ public class IntentUtils implements Constants {
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        if (userId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        if (userId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, userId);
         }
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);

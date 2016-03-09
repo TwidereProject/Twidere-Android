@@ -83,13 +83,12 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
-import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
@@ -219,12 +218,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mStatusAdapter.setConversationsLoading(true);
             mStatusAdapter.updateItemDecoration();
             final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
-            final long maxId = args.getLong(EXTRA_MAX_ID, -1);
-            final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
+            final String maxId = args.getLong(EXTRA_MAX_ID, -1);
+            final String sinceId = args.getLong(EXTRA_SINCE_ID, -1);
             assert status != null;
             final ConversationLoader loader = new ConversationLoader(getActivity(), status, sinceId,
                     maxId, mStatusAdapter.getData(), true);
-            loader.setComparator(ParcelableStatus.REVERSE_TIMESTAMP_COMPARATOR);
+            loader.setComparator(ParcelableStatus.REVERSE_COMPARATOR);
             return loader;
         }
 
@@ -237,13 +236,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (conversationLoader.getSinceId() < data.get(data.size() - 1).id) {
                     supportedPositions |= IndicatorPosition.END;
                 }
-                if (data.get(0).in_reply_to_status_id > 0) {
+                if (data.get(0).in_reply_to_status_id != null) {
                     supportedPositions |= IndicatorPosition.START;
                 }
             } else {
                 supportedPositions |= IndicatorPosition.END;
                 final ParcelableStatus status = getStatus();
-                if (status != null && status.in_reply_to_status_id > 0) {
+                if (status != null && status.in_reply_to_status_id != null) {
                     supportedPositions |= IndicatorPosition.START;
                 }
             }
@@ -291,7 +290,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public Loader<StatusActivity> onCreateLoader(int id, Bundle args) {
             final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
+            final String statusId = args.getString(EXTRA_STATUS_ID);
             return new StatusActivitySummaryLoader(getActivity(), accountKey, statusId);
         }
 
@@ -560,7 +559,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (mStatusAdapter.setStatus(status, credentials)) {
                 mStatusAdapter.setLoadMoreSupportedPosition(IndicatorPosition.BOTH);
                 mStatusAdapter.setData(null);
-                loadConversation(status, -1, -1);
+                loadConversation(status, null, null);
                 loadActivity(status);
 
                 final int position = mStatusAdapter.getFirstPositionOfItem(StatusAdapter.ITEM_IDX_STATUS);
@@ -640,13 +639,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if ((position & IndicatorPosition.START) != 0) {
             final int start = mStatusAdapter.getIndexStart(StatusAdapter.ITEM_IDX_CONVERSATION);
             final ParcelableStatus status = mStatusAdapter.getStatus(start);
-            if (status == null || status.in_reply_to_status_id <= 0) return;
-            loadConversation(getStatus(), -1, status.id);
+            if (status == null || status.in_reply_to_status_id == null) return;
+            loadConversation(getStatus(), null, status.id);
         } else if ((position & IndicatorPosition.END) != 0) {
             final int start = mStatusAdapter.getIndexStart(StatusAdapter.ITEM_IDX_CONVERSATION);
             final ParcelableStatus status = mStatusAdapter.getStatus(start + mStatusAdapter.getStatusCount() - 1);
             if (status == null) return;
-            loadConversation(getStatus(), status.id, -1);
+            loadConversation(getStatus(), status.id, null);
         }
         mStatusAdapter.setLoadMoreIndicatorPosition(position);
     }
@@ -670,13 +669,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         return mStatusAdapter.getStatus();
     }
 
-    private void loadConversation(ParcelableStatus status, long sinceId, long maxId) {
+    private void loadConversation(ParcelableStatus status, String sinceId, String maxId) {
         if (status == null) return;
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, status.account_key);
-        args.putLong(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
-        args.putLong(EXTRA_SINCE_ID, sinceId);
-        args.putLong(EXTRA_MAX_ID, maxId);
+        args.putString(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
+        args.putString(EXTRA_SINCE_ID, sinceId);
+        args.putString(EXTRA_MAX_ID, maxId);
         args.putParcelable(EXTRA_STATUS, status);
         if (mConversationLoaderInitialized) {
             getLoaderManager().restartLoader(LOADER_ID_STATUS_CONVERSATIONS, args, mConversationsLoaderCallback);
@@ -691,7 +690,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (status == null) return;
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, status.account_key);
-        args.putLong(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
+        args.putString(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);
         if (mActivityLoaderInitialized) {
             getLoaderManager().restartLoader(LOADER_ID_STATUS_ACTIVITY, args, mStatusActivityLoaderCallback);
             return;
@@ -885,7 +884,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 } else {
                     dest = prefDest;
                 }
-                final long statusId = status.is_retweet ? status.retweet_id : status.id;
+                final String statusId = status.is_retweet ? status.retweet_id : status.id;
                 return SingleResponse.getInstance(twitter.showTranslation(statusId, dest));
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
@@ -988,7 +987,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             linkClickHandler.setStatus(status);
 
-            if (status.retweet_id > 0) {
+            if (status.retweet_id != null) {
                 final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_id,
                         status.retweeted_by_user_name, status.retweeted_by_user_screen_name,
                         nameFirst, false);
@@ -1203,7 +1202,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     break;
                 }
                 case R.id.retweeted_by: {
-                    if (status.retweet_id > 0) {
+                    if (status.retweet_id != null) {
                         IntentUtils.openUserProfile(adapter.getContext(), status.account_key,
                                 status.retweeted_by_user_id.getId(), status.retweeted_by_user_screen_name,
                                 null, true, UserFragment.Referral.STATUS);
@@ -1604,7 +1603,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     expandOrOpenMedia(current);
                     return;
                 }
-                if (type == TwidereLinkify.LINK_TYPE_STATUS && status.id == NumberUtils.toLong(link)) {
+                if (type == TwidereLinkify.LINK_TYPE_STATUS && TextUtils.equals(status.id, link)) {
                     expandOrOpenMedia(null);
                     return;
                 }
@@ -1692,7 +1691,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final boolean mShowCardActions;
         private final boolean mUseStarsForLikes;
         private final boolean mShowAbsoluteTime;
-        private final AbsStatusesAdapter.EventListener mEventListener;
+        private final ParcelableStatusesAdapter.EventListener mEventListener;
         private boolean mDetailMediaExpanded;
 
         private ParcelableStatus mStatus;
@@ -1740,7 +1739,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mCardLayoutResource = R.layout.card_item_status;
             }
             mTwidereLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this));
-            mEventListener = new AbsStatusesAdapter.EventListener(this);
+            mEventListener = new ParcelableStatusesAdapter.EventListener(this);
         }
 
         public int findPositionById(long itemId) {
@@ -1806,9 +1805,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public long getStatusId(int position) {
+        public String getStatusId(int position) {
             final ParcelableStatus status = getStatus(position);
-            return status != null ? status.id : position;
+            return status != null ? status.id : null;
         }
 
         @Override
@@ -1818,12 +1817,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public ParcelableStatus findStatusById(UserKey accountId, long statusId) {
-            if (mStatus != null && accountId.equals(mStatus.account_key) && statusId == mStatus.id) {
+        public ParcelableStatus findStatusById(UserKey accountId, String statusId) {
+            if (mStatus != null && accountId.equals(mStatus.account_key) && TextUtils.equals(statusId, mStatus.id)) {
                 return mStatus;
             }
             for (ParcelableStatus status : Nullables.list(mData)) {
-                if (accountId.equals(status.account_key) && status.id == statusId) return status;
+                if (accountId.equals(status.account_key) && TextUtils.equals(status.id, statusId))
+                    return status;
             }
             return null;
         }
@@ -1888,7 +1888,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             } else {
                 int conversationCount = 0, replyCount = 0;
                 int replyStart = -1;
-                final long statusId = status.is_retweet ? status.retweet_id : status.id;
+                final String statusId = status.is_retweet ? status.retweet_id : status.id;
                 for (int i = 0, j = data.size(); i < j; i++) {
                     ParcelableStatus item = data.get(i);
                     if (item.id < statusId) {
@@ -2145,7 +2145,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public long getItemId(int position) {
             final ParcelableStatus status = getStatus(position);
-            if (status != null) return status.id;
+            if (status != null) return System.identityHashCode(status);
             return getItemType(position);
         }
 
@@ -2425,9 +2425,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     public static class StatusActivitySummaryLoader extends AsyncTaskLoader<StatusActivity> {
         private final UserKey mAccountKey;
-        private final long mStatusId;
+        private final String mStatusId;
 
-        public StatusActivitySummaryLoader(Context context, UserKey accountKey, long statusId) {
+        public StatusActivitySummaryLoader(Context context, UserKey accountKey, String statusId) {
             super(context);
             mAccountKey = accountKey;
             mStatusId = statusId;
@@ -2462,13 +2462,16 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
                 final ContentResolver cr = context.getContentResolver();
                 final Expression statusWhere = Expression.or(
-                        Expression.equals(Statuses.STATUS_ID, mStatusId),
-                        Expression.equals(Statuses.RETWEET_ID, mStatusId)
+                        Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                        Expression.equalsArgs(Statuses.STATUS_ID),
+                        Expression.equalsArgs(Statuses.RETWEET_ID)
                 );
-                cr.update(Statuses.CONTENT_URI, countValues, statusWhere.getSQL(), null);
+                final String[] statusWhereArgs = {mAccountKey.toString(), mStatusId, mStatusId};
+                cr.update(Statuses.CONTENT_URI, countValues, statusWhere.getSQL(), statusWhereArgs);
                 final Expression activityWhere = Expression.or(
-                        Expression.equals(Activities.STATUS_ID, mStatusId),
-                        Expression.equals(Activities.STATUS_RETWEET_ID, mStatusId)
+                        Expression.equalsArgs(Activities.ACCOUNT_KEY),
+                        Expression.equalsArgs(Activities.STATUS_ID),
+                        Expression.equalsArgs(Activities.STATUS_RETWEET_ID)
                 );
 
                 final ParcelableStatus pStatus = ParcelableStatusUtils.fromStatus(status,
@@ -2476,7 +2479,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 cr.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(pStatus));
 
                 final Cursor activityCursor = cr.query(Activities.AboutMe.CONTENT_URI,
-                        Activities.COLUMNS, activityWhere.getSQL(), null, null);
+                        Activities.COLUMNS, activityWhere.getSQL(), statusWhereArgs, null);
                 assert activityCursor != null;
                 try {
                     activityCursor.moveToFirst();
@@ -2512,13 +2515,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         List<ParcelableUser> retweeters;
 
-        long statusId;
+        String statusId;
 
         long favoriteCount;
         long replyCount = -1;
         long retweetCount;
 
-        public StatusActivity(long statusId) {
+        public StatusActivity(String statusId) {
             this.statusId = statusId;
         }
 

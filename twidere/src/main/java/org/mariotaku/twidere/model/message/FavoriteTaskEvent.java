@@ -32,14 +32,14 @@ public class FavoriteTaskEvent {
 
     private int action;
     private UserKey mAccountKey;
-    private long statusId;
+    private String statusId;
 
     @Nullable
     private ParcelableStatus status;
     private boolean finished;
     private boolean succeeded;
 
-    public FavoriteTaskEvent(@Action final int action, final UserKey accountKey, final long statusId) {
+    public FavoriteTaskEvent(@Action final int action, final UserKey accountKey, final String statusId) {
         this.action = action;
         this.mAccountKey = accountKey;
         this.statusId = statusId;
@@ -53,7 +53,7 @@ public class FavoriteTaskEvent {
         return mAccountKey;
     }
 
-    public long getStatusId() {
+    public String getStatusId() {
         return statusId;
     }
 

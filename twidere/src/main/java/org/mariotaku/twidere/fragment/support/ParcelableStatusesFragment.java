@@ -27,8 +27,8 @@ import android.support.v4.app.LoaderManager;
 
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.twidere.adapter.AbsStatusesAdapter;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
@@ -48,7 +48,7 @@ import java.util.Set;
 /**
  * Created by mariotaku on 14/12/3.
  */
-public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<List<ParcelableStatus>> {
+public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
 
     private long mLastId;
     private int mPage = 1, mPageDelta;
@@ -147,7 +147,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment<Lis
         if ((position & IndicatorPosition.START) != 0) return;
         super.onLoadMoreContents(position);
         if (position == 0) return;
-        final AbsStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(adapter.getStatusStartIndex() +
                 adapter.getStatusCount() - 1);
         UserKey[] accountKeys = {status.account_key};

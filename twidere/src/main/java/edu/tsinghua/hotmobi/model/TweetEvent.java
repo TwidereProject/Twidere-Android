@@ -42,16 +42,16 @@ public class TweetEvent extends BaseEvent implements Parcelable {
 
     @ParcelableThisPlease
     @JsonField(name = "id")
-    long id;
+    String id;
     @ParcelableThisPlease
     @JsonField(name = "account_id")
-    long accountId;
+    String accountId;
     @ParcelableThisPlease
     @JsonField(name = "account_host")
     String accountHost;
     @ParcelableThisPlease
     @JsonField(name = "user_id")
-    long userId;
+    String userId;
     @ParcelableThisPlease
     @JsonField(name = "tweet_type")
     @TweetType
@@ -100,11 +100,11 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         this.action = action;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -116,11 +116,11 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         this.timelineType = timelineType;
     }
 
-    public long getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(long accountKey) {
+    public void setAccountId(String accountKey) {
         this.accountId = accountKey;
     }
 

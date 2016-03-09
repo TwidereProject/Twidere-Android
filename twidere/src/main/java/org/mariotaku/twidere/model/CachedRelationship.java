@@ -17,7 +17,7 @@ public class CachedRelationship {
     public UserKey account_key;
 
     @CursorField(CachedRelationships.USER_ID)
-    public long user_id;
+    public String user_id;
 
     @CursorField(CachedRelationships.FOLLOWING)
     public boolean following;
@@ -41,7 +41,7 @@ public class CachedRelationship {
 
     }
 
-    public CachedRelationship(UserKey accountId, long userId, @NonNull Relationship relationship) {
+    public CachedRelationship(UserKey accountId, String userId, @NonNull Relationship relationship) {
         account_key = accountId;
         user_id = userId;
         following = relationship.isSourceFollowingTarget();

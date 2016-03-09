@@ -812,11 +812,11 @@ public class DataStoreUtils implements Constants {
         sAccountScreenNames.clear();
     }
 
-    public static boolean isFilteringUser(Context context, long userId) {
+    public static boolean isFilteringUser(Context context, String userId) {
         final ContentResolver cr = context.getContentResolver();
-        final Expression where = Expression.equals(Filters.Users.USER_ID, userId);
+        final Expression where = Expression.equalsArgs(Filters.Users.USER_ID);
         final Cursor c = cr.query(Filters.Users.CONTENT_URI, new String[]{SQLFunctions.COUNT()},
-                where.getSQL(), null, null);
+                where.getSQL(), new String[]{userId}, null);
         if (c == null) return false;
         try {
             if (c.moveToFirst()) {
@@ -908,19 +908,19 @@ public class DataStoreUtils implements Constants {
     public static Cursor getAccountCursor(@NonNull final Context context, final String[] columns,
                                           @NonNull final UserKey accountKey) {
         final ContentResolver cr = context.getContentResolver();
-        final long accountId = accountKey.getId();
+        final String accountId = accountKey.getId();
         final String accountHost = accountKey.getHost();
         final String where;
         final String[] whereArgs;
         if (TextUtils.isEmpty(accountHost)) {
             where = Expression.or(Expression.equalsArgs(Accounts.ACCOUNT_KEY),
                     Expression.likeRaw(new Column(Accounts.ACCOUNT_KEY), "?||\'@%\'")).getSQL();
-            whereArgs = new String[]{String.valueOf(accountId), String.valueOf(accountId)};
+            whereArgs = new String[]{accountId, accountId};
         } else {
             where = Expression.or(Expression.equalsArgs(Accounts.ACCOUNT_KEY),
                     Expression.equalsArgs(Accounts.ACCOUNT_KEY)).getSQL();
             whereArgs = new String[]{String.valueOf(accountKey.toString()),
-                    String.valueOf(accountId)};
+                    accountId};
         }
         return cr.query(Accounts.CONTENT_URI, columns, where, whereArgs, null);
     }

@@ -33,9 +33,9 @@ public interface SpamReportingResources {
 
     @POST("/users/report_spam.json")
     @BodyType(BodyType.FORM)
-    User reportSpam(@Param("user_id") long userId) throws TwitterException;
+    User reportSpam(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/users/report_spam.json")
     @BodyType(BodyType.FORM)
-    User reportSpam(@Param("screen_name") String screenName) throws TwitterException;
+    User reportSpamByScreenName(@Param("screen_name") String screenName) throws TwitterException;
 }

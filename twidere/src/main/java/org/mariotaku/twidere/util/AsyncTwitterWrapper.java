@@ -30,6 +30,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
+import android.util.Pair;
 
 import com.squareup.otto.Bus;
 
@@ -98,7 +99,7 @@ import org.mariotaku.twidere.task.GetSavedSearchesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
-import org.mariotaku.twidere.util.collection.LongSparseMap;
+import org.mariotaku.twidere.util.collection.CompactHashSet;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -118,10 +119,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private final SharedPreferencesWrapper mPreferences;
     private final Bus mBus;
 
-    private LongSparseMap<Long> mCreatingFavoriteIds = new LongSparseMap<>();
-    private LongSparseMap<Long> mDestroyingFavoriteIds = new LongSparseMap<>();
-    private LongSparseMap<Long> mCreatingRetweetIds = new LongSparseMap<>();
-    private LongSparseMap<Long> mDestroyingStatusIds = new LongSparseMap<>();
+    private Set<Pair<UserKey, String>> mCreatingFavoriteIds = new CompactHashSet<>();
+    private Set<Pair<UserKey, String>> mDestroyingFavoriteIds = new CompactHashSet<>();
+    private Set<Pair<UserKey, String>> mCreatingRetweetIds = new CompactHashSet<>();
+    private Set<Pair<UserKey, String>> mDestroyingStatusIds = new CompactHashSet<>();
     private IntList mProcessingFriendshipRequestIds = new ArrayIntList();
 
     private final LongList mSendingDraftIds = new ArrayLongList();
@@ -152,10 +153,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int cancelRetweetAsync(UserKey accountKey, long statusId, long myRetweetId) {
-        if (myRetweetId > 0)
+    public int cancelRetweetAsync(UserKey accountKey, String statusId, String myRetweetId) {
+        if (myRetweetId != null)
             return destroyStatusAsync(accountKey, myRetweetId);
-        else if (statusId > 0)
+        else if (statusId != null)
             return destroyStatusAsync(accountKey, statusId);
         return -1;
     }
@@ -174,28 +175,28 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         AsyncTaskUtils.executeTask(task);
     }
 
-    public int createBlockAsync(final UserKey accountKey, final long user_id) {
-        final CreateBlockTask task = new CreateBlockTask(accountKey, user_id);
+    public int createBlockAsync(final UserKey accountKey, final String userId) {
+        final CreateBlockTask task = new CreateBlockTask(accountKey, userId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int createFavoriteAsync(final UserKey accountKey, final long statusId) {
+    public int createFavoriteAsync(final UserKey accountKey, final String statusId) {
         final CreateFavoriteTask task = new CreateFavoriteTask(accountKey, statusId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int createFriendshipAsync(final UserKey accountKey, final long userId) {
+    public int createFriendshipAsync(final UserKey accountKey, final String userId) {
         final CreateFriendshipTask task = new CreateFriendshipTask(accountKey, userId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int createMultiBlockAsync(final UserKey accountKey, final long[] userIds) {
+    public int createMultiBlockAsync(final UserKey accountKey, final String[] userIds) {
         final CreateMultiBlockTask task = new CreateMultiBlockTask(accountKey, userIds);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int createMuteAsync(final UserKey accountKey, final long user_id) {
-        final CreateMuteTask task = new CreateMuteTask(accountKey, user_id);
+    public int createMuteAsync(final UserKey accountKey, final String userId) {
+        final CreateMuteTask task = new CreateMuteTask(accountKey, userId);
         return mAsyncTaskManager.add(task, true);
     }
 
@@ -226,7 +227,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyBlockAsync(final UserKey accountKey, final long userId) {
+    public int destroyBlockAsync(final UserKey accountKey, final String userId) {
         final DestroyBlockTask task = new DestroyBlockTask(accountKey, userId);
         return mAsyncTaskManager.add(task, true);
     }
@@ -236,22 +237,22 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyMessageConversationAsync(final UserKey accountKey, final long userId) {
+    public int destroyMessageConversationAsync(final UserKey accountKey, final String userId) {
         final DestroyMessageConversationTask task = new DestroyMessageConversationTask(accountKey, userId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyFavoriteAsync(final UserKey accountKey, final long statusId) {
+    public int destroyFavoriteAsync(final UserKey accountKey, final String statusId) {
         final DestroyFavoriteTask task = new DestroyFavoriteTask(accountKey, statusId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyFriendshipAsync(final UserKey accountKey, final long userId) {
+    public int destroyFriendshipAsync(final UserKey accountKey, final String userId) {
         final DestroyFriendshipTask task = new DestroyFriendshipTask(accountKey, userId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyMuteAsync(final UserKey accountKey, final long userId) {
+    public int destroyMuteAsync(final UserKey accountKey, final String userId) {
         final DestroyMuteTask task = new DestroyMuteTask(accountKey, userId);
         return mAsyncTaskManager.add(task, true);
     }
@@ -261,7 +262,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyStatusAsync(final UserKey accountKey, final long statusId) {
+    public int destroyStatusAsync(final UserKey accountKey, final String statusId) {
         final DestroyStatusTask task = new DestroyStatusTask(accountKey, statusId);
         return mAsyncTaskManager.add(task, true);
     }
@@ -278,10 +279,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     public Context getContext() {
         return mContext;
-    }
-
-    public boolean getHomeTimelineAsync(final UserKey[] accountKeys, final long[] maxIds, final long[] sinceIds) {
-        return getHomeTimelineAsync(new BaseRefreshTaskParam(accountKeys, maxIds, sinceIds));
     }
 
     public boolean getHomeTimelineAsync(RefreshTaskParam param) {
@@ -320,38 +317,38 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mSendingDraftIds.toArray();
     }
 
-    public boolean isCreatingFavorite(final UserKey accountId, final long statusId) {
-        return mCreatingFavoriteIds.has(accountId.getId(), statusId);
+    public boolean isCreatingFavorite(final UserKey accountId, final String statusId) {
+        return mCreatingFavoriteIds.contains(Pair.create(accountId, statusId));
     }
 
-    public boolean isCreatingFriendship(final UserKey accountKey, final long userId) {
+    public boolean isCreatingFriendship(final UserKey accountKey, final String userId) {
         // TODO implementation
         return false;
     }
 
-    public boolean isCreatingRetweet(final UserKey accountKey, final long statusId) {
-        return mCreatingRetweetIds.has(accountKey.getId(), statusId);
+    public boolean isCreatingRetweet(final UserKey accountKey, final String statusId) {
+        return mCreatingRetweetIds.contains(Pair.create(accountKey, statusId));
     }
 
-    public boolean isDestroyingFavorite(final UserKey accountKey, final long statusId) {
-        return mDestroyingFavoriteIds.has(accountKey.getId(), statusId);
+    public boolean isDestroyingFavorite(final UserKey accountKey, final String statusId) {
+        return mDestroyingFavoriteIds.contains(Pair.create(accountKey, statusId));
     }
 
-    public boolean isDestroyingFriendship(final UserKey accountKey, final long userId) {
+    public boolean isDestroyingFriendship(final UserKey accountKey, final String userId) {
         for (final ManagedAsyncTask<?, ?, ?> task : mAsyncTaskManager.getTaskSpecList()) {
             if (task instanceof DestroyFriendshipTask) {
                 final DestroyFriendshipTask destroyFriendshipTask = (DestroyFriendshipTask) task;
                 if (destroyFriendshipTask.getStatus() == AsyncTask.Status.RUNNING
-                        && destroyFriendshipTask.getAccountKey() == accountKey
-                        && destroyFriendshipTask.getUserId() == userId)
+                        && destroyFriendshipTask.getAccountKey().equals(accountKey)
+                        && destroyFriendshipTask.getUserId().equals(userId))
                     return true;
             }
         }
         return false;
     }
 
-    public boolean isDestroyingStatus(final UserKey accountId, final long statusId) {
-        return mDestroyingStatusIds.has(accountId.getId(), statusId);
+    public boolean isDestroyingStatus(final UserKey accountId, final String statusId) {
+        return mDestroyingStatusIds.contains(Pair.create(accountId, statusId));
     }
 
     public boolean isHomeTimelineRefreshing() {
@@ -449,16 +446,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         AsyncTaskUtils.executeTask(task);
     }
 
-    public void reportMultiSpam(final UserKey accountKey, final long[] userIds) {
+    public void reportMultiSpam(final UserKey accountKey, final String[] userIds) {
         // TODO implementation
     }
 
-    public int reportSpamAsync(final UserKey accountKey, final long userId) {
+    public int reportSpamAsync(final UserKey accountKey, final String userId) {
         final ReportSpamTask task = new ReportSpamTask(accountKey, userId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int retweetStatusAsync(final UserKey accountKey, final long statusId) {
+    public int retweetStatusAsync(final UserKey accountKey, final String statusId) {
         final RetweetStatusTask task = new RetweetStatusTask(accountKey, statusId);
         return mAsyncTaskManager.add(task, true);
     }
@@ -489,7 +486,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return null;
     }
 
-    public void updateFriendship(final UserKey accountKey, final long userId, final FriendshipUpdate update) {
+    public void updateFriendship(final UserKey accountKey, final String userId, final FriendshipUpdate update) {
         final Bus bus = mBus;
         if (bus == null) return;
         TaskStarter.execute(new AbstractTask<Object, SingleResponse<Relationship>, Bus>() {
@@ -815,9 +812,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @NonNull
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
 
-        public CreateBlockTask(@NonNull final UserKey accountKey, final long userId) {
+        public CreateBlockTask(@NonNull final UserKey accountKey, final String userId) {
             super(mContext);
             this.mAccountKey = accountKey;
             this.mUserId = userId;
@@ -872,9 +869,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class CreateFavoriteTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableStatus>> {
 
         private final UserKey mAccountKey;
-        private final long mStatusId;
+        private final String mStatusId;
 
-        public CreateFavoriteTask(final UserKey accountKey, final long statusId) {
+        public CreateFavoriteTask(final UserKey accountKey, final String statusId) {
             super(mContext);
             this.mAccountKey = accountKey;
             this.mStatusId = statusId;
@@ -917,13 +914,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mCreatingFavoriteIds.put(mAccountKey.getId(), mStatusId);
+            mCreatingFavoriteIds.add(Pair.create(mAccountKey, mStatusId));
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mCreatingFavoriteIds.remove(mAccountKey.getId(), mStatusId);
+            mCreatingFavoriteIds.remove(Pair.create(mAccountKey, mStatusId));
             final FavoriteTaskEvent taskEvent = new FavoriteTaskEvent(FavoriteTaskEvent.Action.CREATE,
                     mAccountKey, mStatusId);
             taskEvent.setFinished(true);
@@ -950,20 +947,20 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class CreateFriendshipTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
 
         private final UserKey mAccountKey;
-        private final long user_id;
+        private final String mUserId;
 
-        public CreateFriendshipTask(final UserKey accountKey, final long userId) {
+        public CreateFriendshipTask(final UserKey accountKey, final String userId) {
             super(mContext);
             this.mAccountKey = accountKey;
-            this.user_id = userId;
+            this.mUserId = userId;
         }
 
         public UserKey getAccountKey() {
             return mAccountKey;
         }
 
-        public long getUserId() {
-            return user_id;
+        public String getUserId() {
+            return mUserId;
         }
 
         @Override
@@ -972,7 +969,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final User user = twitter.createFriendship(user_id);
+                final User user = twitter.createFriendship(mUserId);
                 Utils.setLastSeen(mContext, UserKeyUtils.fromUser(user), System.currentTimeMillis());
                 return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey), null);
             } catch (final TwitterException e) {
@@ -1005,18 +1002,18 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     }
 
-    class CreateMultiBlockTask extends ManagedAsyncTask<Object, Object, ListResponse<Long>> {
+    class CreateMultiBlockTask extends ManagedAsyncTask<Object, Object, ListResponse<String>> {
 
         private final UserKey mAccountKey;
-        private final long[] mUserIds;
+        private final String[] mUserIds;
 
-        public CreateMultiBlockTask(final UserKey accountKey, final long[] userIds) {
+        public CreateMultiBlockTask(final UserKey accountKey, final String[] userIds) {
             super(mContext);
             this.mAccountKey = accountKey;
             this.mUserIds = userIds;
         }
 
-        private void deleteCaches(final List<Long> list) {
+        private void deleteCaches(final List<String> list) {
             for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                 // TODO delete caches
                 // ContentResolverUtils.bulkDelete(mResolver, uri, Statuses.USER_ID, list,
@@ -1028,35 +1025,32 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             values.put(CachedRelationships.BLOCKING, true);
             values.put(CachedRelationships.FOLLOWING, false);
             values.put(CachedRelationships.FOLLOWED_BY, false);
-            mResolver.update(CachedRelationships.CONTENT_URI, values,
-                    Expression.inArgs(CachedRelationships.USER_ID, list.size()).getSQL(),
-                    TwidereCollectionUtils.toStringArray(list));
+            final String where = Expression.inArgs(CachedRelationships.USER_ID, list.size()).getSQL();
+            final String[] selectionArgs = list.toArray(new String[list.size()]);
+            mResolver.update(CachedRelationships.CONTENT_URI, values, where, selectionArgs);
         }
 
         @Override
-        protected ListResponse<Long> doInBackground(final Object... params) {
-            final List<Long> blocked_users = new ArrayList<>();
+        protected ListResponse<String> doInBackground(final Object... params) {
+            final List<String> blockedUsers = new ArrayList<>();
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, false);
             if (twitter != null) {
-                for (final long user_id : mUserIds) {
+                for (final String userId : mUserIds) {
                     try {
-                        final User user = twitter.createBlock(user_id);
-                        if (user == null || user.getId() <= 0) {
-                            continue;
-                        }
-                        blocked_users.add(user.getId());
+                        final User user = twitter.createBlock(userId);
+                        blockedUsers.add(user.getId());
                     } catch (final TwitterException e) {
-                        deleteCaches(blocked_users);
+                        deleteCaches(blockedUsers);
                         return ListResponse.getListInstance(e);
                     }
                 }
             }
-            deleteCaches(blocked_users);
-            return ListResponse.getListInstance(blocked_users);
+            deleteCaches(blockedUsers);
+            return ListResponse.getListInstance(blockedUsers);
         }
 
         @Override
-        protected void onPostExecute(final ListResponse<Long> result) {
+        protected void onPostExecute(final ListResponse<String> result) {
             if (result.hasData()) {
                 Utils.showInfoMessage(mContext, R.string.users_blocked, false);
             } else {
@@ -1072,9 +1066,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class CreateMuteTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
 
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
 
-        public CreateMuteTask(final UserKey accountKey, final long userId) {
+        public CreateMuteTask(final UserKey accountKey, final String userId) {
             super(mContext);
             this.mAccountKey = accountKey;
             this.mUserId = userId;
@@ -1087,10 +1081,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             try {
                 final User user = twitter.createMute(mUserId);
                 Utils.setLastSeen(mContext, UserKeyUtils.fromUser(user), -1);
-                final Expression where = Expression.and(Utils.getAccountCompareExpression(),
-                        Expression.equals(Statuses.USER_ID, mUserId));
-                final String[] whereArgs = {String.valueOf(mAccountKey.getId()),
-                        mAccountKey.getHost(), String.valueOf(mUserId)};
+                final Expression where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                        Expression.equalsArgs(Statuses.USER_ID));
+                final String[] whereArgs = {mAccountKey.toString(), mUserId};
                 mResolver.delete(Statuses.CONTENT_URI, where.getSQL(), whereArgs);
 
                 return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey), null);
@@ -1369,9 +1362,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class DestroyBlockTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
 
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
 
-        public DestroyBlockTask(final UserKey accountKey, final long userId) {
+        public DestroyBlockTask(final UserKey accountKey, final String userId) {
             super(mContext);
             mAccountKey = accountKey;
             mUserId = userId;
@@ -1467,17 +1460,17 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     class DestroyMessageConversationTask extends ManagedAsyncTask<Object, Object, SingleResponse<Void>> {
 
-        private final long mUserId;
+        private final String mUserId;
         private final UserKey mAccountKey;
 
-        public DestroyMessageConversationTask(final UserKey accountKey, final long userId) {
+        public DestroyMessageConversationTask(final UserKey accountKey, final String userId) {
             super(mContext);
             mAccountKey = accountKey;
             mUserId = userId;
         }
 
-        private void deleteMessages(final UserKey accountKey, final long userId) {
-            final String[] whereArgs = {accountKey.toString(), String.valueOf(userId)};
+        private void deleteMessages(final UserKey accountKey, final String userId) {
+            final String[] whereArgs = {accountKey.toString(), userId};
             mResolver.delete(DirectMessages.Inbox.CONTENT_URI, Expression.and(
                     Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
                     Expression.equalsArgs(Inbox.SENDER_ID)
@@ -1531,9 +1524,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @NonNull
         private final UserKey mAccountKey;
-        private final long mStatusId;
+        private final String mStatusId;
 
-        public DestroyFavoriteTask(@NonNull final UserKey accountKey, final long statusId) {
+        public DestroyFavoriteTask(@NonNull final UserKey accountKey, final String statusId) {
             super(mContext);
             this.mAccountKey = accountKey;
             this.mStatusId = statusId;
@@ -1552,11 +1545,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, false);
                 values.put(Statuses.FAVORITE_COUNT, status.favorite_count - 1);
-                final Expression where = Expression.and(Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
-                        Expression.or(Expression.equals(Statuses.STATUS_ID, mStatusId),
-                                Expression.equals(Statuses.RETWEET_ID, mStatusId)));
-                final String[] whereArgs = {mAccountKey.toString(), String.valueOf(mStatusId),
-                        String.valueOf(mStatusId)};
+                final Expression where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                        Expression.or(Expression.equalsArgs(Statuses.STATUS_ID),
+                                Expression.equalsArgs(Statuses.RETWEET_ID)));
+                final String[] whereArgs = {mAccountKey.toString(), mStatusId, mStatusId};
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), whereArgs);
                 }
@@ -1569,13 +1561,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mDestroyingFavoriteIds.put(mAccountKey.getId(), mStatusId);
+            mDestroyingFavoriteIds.add(Pair.create(mAccountKey, mStatusId));
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mDestroyingFavoriteIds.remove(mAccountKey.getId(), mStatusId);
+            mDestroyingFavoriteIds.remove(Pair.create(mAccountKey, mStatusId));
             final FavoriteTaskEvent taskEvent = new FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY,
                     mAccountKey, mStatusId);
             taskEvent.setFinished(true);
@@ -1603,9 +1595,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class DestroyFriendshipTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
 
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
 
-        public DestroyFriendshipTask(final UserKey accountKey, final long userId) {
+        public DestroyFriendshipTask(final UserKey accountKey, final String userId) {
             super(mContext);
             mAccountKey = accountKey;
             mUserId = userId;
@@ -1615,7 +1607,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             return mAccountKey;
         }
 
-        public long getUserId() {
+        public String getUserId() {
             return mUserId;
         }
 
@@ -1665,9 +1657,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class DestroyMuteTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
 
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
 
-        public DestroyMuteTask(final UserKey accountKey, final long userId) {
+        public DestroyMuteTask(final UserKey accountKey, final String userId) {
             super(mContext);
             mAccountKey = accountKey;
             mUserId = userId;
@@ -1744,9 +1736,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class DestroyStatusTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableStatus>> {
 
         private final UserKey mAccountKey;
-        private final long mStatusId;
+        private final String mStatusId;
 
-        public DestroyStatusTask(final UserKey accountKey, final long statusId) {
+        public DestroyStatusTask(final UserKey accountKey, final String statusId) {
             super(mContext);
             this.mAccountKey = accountKey;
             this.mStatusId = statusId;
@@ -1781,13 +1773,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mDestroyingStatusIds.put(mAccountKey.getId(), mStatusId);
+            mDestroyingStatusIds.add(Pair.create(mAccountKey, mStatusId));
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mDestroyingStatusIds.remove(mAccountKey.getId(), mStatusId);
+            mDestroyingStatusIds.remove(Pair.create(mAccountKey, mStatusId));
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
                 if (status.retweet_id > 0) {
@@ -1965,9 +1957,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class ReportSpamTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
 
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
 
-        public ReportSpamTask(final UserKey accountKey, final long userId) {
+        public ReportSpamTask(final UserKey accountKey, final String userId) {
             super(mContext);
             this.mAccountKey = accountKey;
             this.mUserId = userId;
@@ -2006,12 +1998,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class RetweetStatusTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableStatus>> {
 
         private final UserKey mAccountKey;
-        private final long statusId;
+        private final String mStatusId;
 
-        public RetweetStatusTask(@NonNull final UserKey accountKey, final long statusId) {
+        public RetweetStatusTask(@NonNull final UserKey accountKey, final String statusId) {
             super(mContext);
             this.mAccountKey = accountKey;
-            this.statusId = statusId;
+            this.mStatusId = statusId;
         }
 
         @Override
@@ -2021,7 +2013,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return SingleResponse.getInstance();
             }
             try {
-                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.retweetStatus(statusId),
+                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.retweetStatus(mStatusId),
                         mAccountKey, false);
                 Utils.setLastSeen(mContext, status.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
@@ -2030,11 +2022,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 values.put(Statuses.RETWEET_COUNT, status.retweet_count);
                 values.put(Statuses.FAVORITE_COUNT, status.favorite_count);
                 final Expression where = Expression.or(
-                        Expression.equals(Statuses.STATUS_ID, statusId),
-                        Expression.equals(Statuses.RETWEET_ID, statusId)
+                        Expression.equalsArgs(Statuses.STATUS_ID),
+                        Expression.equalsArgs(Statuses.RETWEET_ID)
                 );
+                final String[] whereArgs = {mStatusId, mStatusId};
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
-                    mResolver.update(uri, values, where.getSQL(), null);
+                    mResolver.update(uri, values, where.getSQL(), whereArgs);
                 }
                 return SingleResponse.getInstance(status);
             } catch (final TwitterException e) {
@@ -2045,13 +2038,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mCreatingRetweetIds.put(mAccountKey.getId(), statusId);
+            mCreatingRetweetIds.add(Pair.create(mAccountKey, mStatusId));
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mCreatingRetweetIds.remove(mAccountKey.getId(), statusId);
+            mCreatingRetweetIds.remove(Pair.create(mAccountKey, mStatusId));
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
                 // BEGIN HotMobi

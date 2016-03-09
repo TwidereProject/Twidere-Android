@@ -49,9 +49,9 @@ public interface IActivitiesAdapter<Data> extends IContentCardAdapter, IGapSuppo
     boolean shouldShowAccountsColor();
 
     @Nullable
-    ActivityAdapterListener getActivityClickListener();
+    ActivityEventListener getActivityEventListener();
 
-    interface ActivityAdapterListener {
+    interface ActivityEventListener {
 
         void onActivityClick(ActivityTitleSummaryViewHolder holder, int position);
     }

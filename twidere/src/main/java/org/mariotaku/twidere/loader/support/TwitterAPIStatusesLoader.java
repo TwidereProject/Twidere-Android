@@ -69,7 +69,7 @@ import javax.inject.Inject;
 public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader {
 
     private final UserKey mAccountKey;
-    private final long mMaxId, mSinceId;
+    private final String mMaxId, mSinceId;
     @Nullable
     private final Object[] mSavedStatusesFileArgs;
     private Comparator<ParcelableStatus> mComparator;
@@ -80,7 +80,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
 
     public TwitterAPIStatusesLoader(@NonNull final Context context,
                                     @Nullable final UserKey accountKey,
-                                    final long sinceId, final long maxId,
+                                    final String sinceId, final String maxId,
                                     final List<ParcelableStatus> data,
                                     @Nullable final String[] savedStatusesArgs,
                                     final int tabPosition, final boolean fromUser) {
@@ -145,14 +145,14 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             return ListResponse.getListInstance(new CopyOnWriteArrayList<>(data), e);
         }
 
-        final long[] statusIds = new long[statuses.size()];
-        long minId = -1;
+        final String[] statusIds = new String[statuses.size()];
+        String minId = null;
         int minIdx = -1;
         int rowsDeleted = 0;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
-            final long id = status.getId();
-            if (minId == -1 || id < minId) {
+            final String id = status.getId();
+            if (minId == null || id < minId) {
                 minId = id;
                 minIdx = i;
             }
@@ -166,7 +166,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         // Insert a gap.
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, mMaxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
-        final boolean insertGap = minId > 0 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
+        final boolean insertGap = minId != null && (noRowsDeleted || deletedOldGap) && !noItemsBefore
                 && statuses.size() >= loadItemLimit;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
@@ -197,11 +197,11 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         mComparator = comparator;
     }
 
-    public long getSinceId() {
+    public String getSinceId() {
         return mSinceId;
     }
 
-    public long getMaxId() {
+    public String getMaxId() {
         return mMaxId;
     }
 
@@ -221,12 +221,12 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
 
 
         paging.setCount(loadItemLimit);
-        if (mMaxId > 0) {
+        if (mMaxId != null) {
             paging.setMaxId(mMaxId);
         }
-        if (mSinceId > 0) {
+        if (mSinceId != null) {
             paging.setSinceId(mSinceId);
-            if (mMaxId <= 0) {
+            if (mMaxId == null) {
                 paging.setLatestResults(true);
             }
         }

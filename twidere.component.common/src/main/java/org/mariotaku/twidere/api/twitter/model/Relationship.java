@@ -71,7 +71,7 @@ public class Relationship extends TwitterResponseObject implements TwitterRespon
         return object.target.screenName;
     }
 
-    public long getTargetUserId() {
+    public String getTargetUserId() {
         return object.target.id;
     }
 
@@ -79,7 +79,7 @@ public class Relationship extends TwitterResponseObject implements TwitterRespon
         return object.source.screenName;
     }
 
-    public long getSourceUserId() {
+    public String getSourceUserId() {
         return object.source.id;
     }
 
@@ -119,9 +119,9 @@ public class Relationship extends TwitterResponseObject implements TwitterRespon
         @JsonObject
         public static class Target {
             @JsonField(name = "id")
-            long id;
+            String id;
             @JsonField(name = "screen_name")
-            public String screenName;
+            String screenName;
             @JsonField(name = "following")
             boolean following;
             @JsonField(name = "followed_by")
@@ -133,9 +133,9 @@ public class Relationship extends TwitterResponseObject implements TwitterRespon
         @JsonObject
         public static class Source {
             @JsonField(name = "id")
-            long id;
+            String id;
             @JsonField(name = "screen_name")
-            public String screenName;
+            String screenName;
             @JsonField(name = "blocked_by")
             boolean blockedBy;
             @JsonField(name = "blocking")

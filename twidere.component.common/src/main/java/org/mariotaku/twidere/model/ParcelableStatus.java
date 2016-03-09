@@ -48,21 +48,22 @@ import java.util.Comparator;
 @ParcelablePlease
 public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus>, Cloneable {
 
-    public static final Comparator<ParcelableStatus> REVERSE_TIMESTAMP_COMPARATOR = new Comparator<ParcelableStatus>() {
+    public static final Comparator<ParcelableStatus> REVERSE_COMPARATOR = new Comparator<ParcelableStatus>() {
 
         @Override
         public int compare(final ParcelableStatus object1, final ParcelableStatus object2) {
-            final long diff = object1.timestamp - object2.timestamp;
-            if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-            if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
-            return (int) diff;
+            return object2.compareTo(object1);
         }
     };
 
     @ParcelableThisPlease
     @JsonField(name = "id")
     @CursorField(Statuses.STATUS_ID)
-    public long id;
+    public String id;
+    @ParcelableThisPlease
+    @JsonField(name = "sort_id")
+    @CursorField(Statuses.SORT_ID)
+    public long sort_id = -1;
     @ParcelableThisPlease
     @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
@@ -78,7 +79,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     @JsonField(name = "retweet_id")
     @CursorField(Statuses.RETWEET_ID)
-    public long retweet_id = -1;
+    public String retweet_id ;
     @ParcelableThisPlease
     @JsonField(name = "retweeted_by_user_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.RETWEETED_BY_USER_ID, converter = UserKeyCursorFieldConverter.class)
@@ -102,7 +103,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     @JsonField(name = "in_reply_to_status_id")
     @CursorField(Statuses.IN_REPLY_TO_STATUS_ID)
-    public long in_reply_to_status_id;
+    public String in_reply_to_status_id;
     @ParcelableThisPlease
     @JsonField(name = "in_reply_to_user_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.IN_REPLY_TO_USER_ID, converter = UserKeyCursorFieldConverter.class)
@@ -110,11 +111,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     @JsonField(name = "my_retweet_id")
     @CursorField(Statuses.MY_RETWEET_ID)
-    public long my_retweet_id;
+    public String my_retweet_id;
     @ParcelableThisPlease
     @JsonField(name = "quoted_id")
     @CursorField(Statuses.QUOTED_ID)
-    public long quoted_id;
+    public String quoted_id;
     @ParcelableThisPlease
     @JsonField(name = "quoted_timestamp")
     @CursorField(Statuses.QUOTED_TIMESTAMP)
@@ -320,10 +321,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     @Override
     public int compareTo(@NonNull final ParcelableStatus another) {
-        final long diff = another.id - id;
-        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
-        return (int) diff;
+        long timeDelta = timestamp - another.timestamp;
+        if (timeDelta == 0) {
+            return (int) (sort_id - another.sort_id);
+        }
+        return (int) timeDelta;
     }
 
     @Override
@@ -343,8 +345,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         return calculateHashCode(account_key, id);
     }
 
-    public static int calculateHashCode(UserKey account_key, long id) {
-        int result = (int) (id ^ (id >>> 32));
+    public static int calculateHashCode(UserKey account_key, String id) {
+        int result = id.hashCode();
         result = 31 * result + account_key.hashCode();
         return result;
     }

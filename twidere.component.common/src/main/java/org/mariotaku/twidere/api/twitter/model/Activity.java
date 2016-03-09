@@ -21,6 +21,7 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
+import android.text.TextUtils;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -128,13 +129,14 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
                 '}';
     }
 
-    public static Activity fromMention(long twitterId, Status status) {
+    public static Activity fromMention(String twitterId, Status status) {
         final Activity activity = new Activity();
 
-        activity.maxPosition = activity.minPosition = status.getId();
+        // TODO handle this -1 position case
+        activity.maxPosition = activity.minPosition = -1;
         activity.createdAt = status.getCreatedAt();
 
-        if (status.getInReplyToUserId() == twitterId) {
+        if (TextUtils.equals(status.getInReplyToUserId(), twitterId)) {
             activity.action = Action.REPLY;
             activity.rawAction = "reply";
             activity.targetStatuses = new Status[]{status};

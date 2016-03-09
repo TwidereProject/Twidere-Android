@@ -42,11 +42,11 @@ import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 public interface PrivateTweetResources extends PrivateResources {
 
     @GET("/statuses/{id}/activity/summary.json")
-    StatusActivitySummary getStatusActivitySummary(@Path("id") long statusId) throws TwitterException;
+    StatusActivitySummary getStatusActivitySummary(@Path("id") String statusId) throws TwitterException;
 
     @GET("/conversation/show.json")
-    ResponseList<Status> showConversation(@Query("id") long statusId, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> showConversation(@Query("id") String statusId, @Query Paging paging) throws TwitterException;
 
     @GET("/translations/show.json")
-    TranslationResult showTranslation(@Query("id") long statusId, @Query("dest") String dest) throws TwitterException;
+    TranslationResult showTranslation(@Query("id") String statusId, @Query("dest") String dest) throws TwitterException;
 }

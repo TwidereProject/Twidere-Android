@@ -179,7 +179,6 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
-import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
@@ -894,7 +893,7 @@ public final class Utils implements Constants {
 
     @NonNull
     public static ParcelableStatus findStatus(final Context context, final UserKey accountKey,
-                                              final long statusId)
+                                              final String statusId)
             throws TwitterException {
         if (context == null) throw new NullPointerException();
         final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
@@ -902,24 +901,26 @@ public final class Utils implements Constants {
         final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
         if (twitter == null) throw new TwitterException("Account does not exist");
         final Status status = twitter.showStatus(statusId);
-        final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_KEY, accountKey.getId()),
-                Expression.equals(Statuses.STATUS_ID, statusId)).getSQL();
+        final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
+        final String[] whereArgs = {accountKey.toString(), statusId};
         final ContentResolver resolver = context.getContentResolver();
-        resolver.delete(CachedStatuses.CONTENT_URI, where, null);
+        resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs);
         resolver.insert(CachedStatuses.CONTENT_URI, ContentValuesCreator.createStatus(status, accountKey));
         return ParcelableStatusUtils.fromStatus(status, accountKey, false);
     }
 
     @Nullable
     public static ParcelableStatus findStatusInDatabases(final Context context, final UserKey accountKey,
-                                                         final long statusId) {
+                                                         final String statusId) {
         if (context == null) return null;
         final ContentResolver resolver = context.getContentResolver();
         ParcelableStatus status = null;
-        final String where = Expression.and(Expression.equals(Statuses.ACCOUNT_KEY, accountKey.getId()),
-                Expression.equals(Statuses.STATUS_ID, statusId)).getSQL();
+        final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
+        final String[] whereArgs = {accountKey.toString(), statusId};
         for (final Uri uri : STATUSES_URIS) {
-            final Cursor cur = resolver.query(uri, Statuses.COLUMNS, where, null, null);
+            final Cursor cur = resolver.query(uri, Statuses.COLUMNS, where, whereArgs, null);
             if (cur == null) {
                 continue;
             }
@@ -1628,8 +1629,8 @@ public final class Utils implements Constants {
                 status.my_retweet_id);
     }
 
-    public static boolean isMyRetweet(final UserKey accountId, final UserKey retweetedById, final long myRetweetId) {
-        return accountId.equals(retweetedById) || myRetweetId > 0;
+    public static boolean isMyRetweet(final UserKey accountId, final UserKey retweetedById, final String myRetweetId) {
+        return accountId.equals(retweetedById) || myRetweetId != null;
     }
 
     public static boolean isNetworkAvailable(final Context context) {
@@ -1638,11 +1639,12 @@ public final class Utils implements Constants {
         return info != null && info.isConnected();
     }
 
-    public static boolean isUserLoggedIn(final Context context, final long accountId) {
+    @Deprecated
+    public static boolean isUserLoggedIn(final Context context, final String accountId) {
         if (context == null) return false;
         final UserKey[] ids = DataStoreUtils.getAccountKeys(context);
         for (final UserKey id : ids) {
-            if (id.getId() == accountId) return true;
+            if (TextUtils.equals(id.getId(), accountId)) return true;
         }
         return false;
     }
@@ -2263,10 +2265,6 @@ public final class Utils implements Constants {
         if (!preferences.getBoolean(KEY_MEDIA_PREVIEW)) return false;
         final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return !ConnectivityManagerCompat.isActiveNetworkMetered(cm) || !preferences.getBoolean(KEY_BANDWIDTH_SAVING_MODE);
-    }
-
-    public static Expression getAccountCompareExpression() {
-        return Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY);
     }
 
     static class UtilsL {

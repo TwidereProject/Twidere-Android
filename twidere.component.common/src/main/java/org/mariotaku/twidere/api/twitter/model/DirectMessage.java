@@ -90,7 +90,7 @@ public class DirectMessage extends TwitterResponseObject implements TwitterRespo
         return sender;
     }
 
-    public long getSenderId() {
+    public String getSenderId() {
         return sender.id;
     }
 
@@ -102,7 +102,7 @@ public class DirectMessage extends TwitterResponseObject implements TwitterRespo
         return recipient;
     }
 
-    public long getRecipientId() {
+    public String getRecipientId() {
         return recipient.id;
     }
 

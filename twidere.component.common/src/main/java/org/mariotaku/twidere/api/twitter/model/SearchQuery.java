@@ -114,7 +114,7 @@ public final class SearchQuery extends SimpleValueMap {
      * @return this instance
      * @since Twitter4J 2.1.1
      */
-    public SearchQuery maxId(final long maxId) {
+    public SearchQuery maxId(final String maxId) {
         setMaxId(maxId);
         return this;
     }
@@ -216,7 +216,7 @@ public final class SearchQuery extends SimpleValueMap {
      * @param maxId maxId
      * @since Twitter4J 2.1.1
      */
-    public void setMaxId(final long maxId) {
+    public void setMaxId(final String maxId) {
         put("max_id", maxId);
     }
 
@@ -278,7 +278,7 @@ public final class SearchQuery extends SimpleValueMap {
      *
      * @param sinceId returns tweets with status ids greater than the given id
      */
-    public void setSinceId(final long sinceId) {
+    public void setSinceId(final String sinceId) {
         put("since_id", sinceId);
     }
 
@@ -313,7 +313,7 @@ public final class SearchQuery extends SimpleValueMap {
      * @return the instance
      * @since Twitter4J 2.1.0
      */
-    public SearchQuery sinceId(final long sinceId) {
+    public SearchQuery sinceId(final String sinceId) {
         setSinceId(sinceId);
         return this;
     }

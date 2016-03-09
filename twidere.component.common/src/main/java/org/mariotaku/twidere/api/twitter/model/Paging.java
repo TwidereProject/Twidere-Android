@@ -26,11 +26,11 @@ import org.mariotaku.restfu.http.SimpleValueMap;
  */
 public class Paging extends SimpleValueMap {
 
-    public void setSinceId(long sinceId) {
+    public void setSinceId(String sinceId) {
         put("since_id", sinceId);
     }
 
-    public void setMaxId(long maxId) {
+    public void setMaxId(String maxId) {
         put("max_id", maxId);
     }
 
@@ -66,7 +66,7 @@ public class Paging extends SimpleValueMap {
         put("rpp", rpp);
     }
 
-    public Paging sinceId(long sinceId) {
+    public Paging sinceId(String sinceId) {
         setSinceId(sinceId);
         return this;
     }
@@ -76,7 +76,7 @@ public class Paging extends SimpleValueMap {
         return this;
     }
 
-    public Paging maxId(long maxId) {
+    public Paging maxId(String maxId) {
         setMaxId(maxId);
         return this;
     }

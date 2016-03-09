@@ -38,8 +38,6 @@ import java.util.zip.CRC32;
  */
 public class TwitterContentUtils {
 
-    public static final int TWITTER_BULK_QUERY_COUNT = 100;
-
     public static boolean isOfficialKey(final Context context, final String consumerKey,
                                         final String consumerSecret) {
         if (context == null || consumerKey == null || consumerSecret == null) return false;

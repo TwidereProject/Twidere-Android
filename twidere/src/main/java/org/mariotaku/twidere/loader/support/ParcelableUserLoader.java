@@ -53,10 +53,10 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
     private final boolean mOmitIntentExtra, mLoadFromCache;
     private final Bundle mExtras;
     private final UserKey mAccountKey;
-    private final long mUserId;
+    private final String mUserId;
     private final String mScreenName;
 
-    public ParcelableUserLoader(final Context context, final UserKey accountKey, final long userId,
+    public ParcelableUserLoader(final Context context, final UserKey accountKey, final String userId,
                                 final String screenName, final Bundle extras, final boolean omitIntentExtra,
                                 final boolean loadFromCache) {
         super(context);
@@ -88,9 +88,9 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         if (mLoadFromCache) {
             final Expression where;
             final String[] whereArgs;
-            if (mUserId > 0) {
-                where = Expression.equals(CachedUsers.USER_KEY, mUserId);
-                whereArgs = null;
+            if (mUserId != null) {
+                where = Expression.equalsArgs(CachedUsers.USER_KEY);
+                whereArgs = new String[]{mUserId};
             } else {
                 where = Expression.equalsArgs(CachedUsers.SCREEN_NAME);
                 whereArgs = new String[]{mScreenName};
@@ -126,6 +126,12 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
 
     @Override
     protected void onStartLoading() {
+        if (!mOmitIntentExtra && mExtras != null) {
+            final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
+            if (user != null) {
+                deliverResult(SingleResponse.getInstance(user));
+            }
+        }
         forceLoad();
     }
 
@@ -133,8 +139,10 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
     public void deliverResult(SingleResponse<ParcelableUser> data) {
         super.deliverResult(data);
         if (data.hasData()) {
+            final ParcelableUser user = data.getData();
+            if (user.is_cache) return;
             final UpdateAccountInfoTask task = new UpdateAccountInfoTask(getContext());
-            task.setParams(Pair.create(mAccountKey, data.getData()));
+            task.setParams(Pair.create(mAccountKey, user));
             TaskStarter.execute(task);
         }
     }

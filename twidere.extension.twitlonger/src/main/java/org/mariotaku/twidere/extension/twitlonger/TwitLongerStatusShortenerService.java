@@ -9,11 +9,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.mariotaku.twidere.Twidere;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.service.StatusShortenerService;
 
 /**
@@ -64,7 +64,7 @@ public class TwitLongerStatusShortenerService extends StatusShortenerService imp
             }
             return StatusShortenResult.error(-1, getString(R.string.permission_not_granted));
         }
-        if (credentials == null) {
+        if (credentials == null || !isTwitter(credentials)) {
             return StatusShortenResult.error(-1, "No valid Twitter account found");
         }
         final TwitLonger tl = TwitLongerFactory.getInstance(TWITLONGER_API_KEY, credentials);
@@ -77,7 +77,9 @@ public class TwitLongerStatusShortenerService extends StatusShortenerService imp
             }
             NewPost newPost = new NewPost(text);
             if (status.in_reply_to_status != null) {
-                newPost.setInReplyTo(status.in_reply_to_status.id, status.in_reply_to_status.user_screen_name);
+                final long inReplyToId = Long.parseLong(status.in_reply_to_status.id);
+                final String inReplyToScreenName = status.in_reply_to_status.user_screen_name;
+                newPost.setInReplyTo(inReplyToId, inReplyToScreenName);
             }
             final Post response = tl.createPost(newPost);
             if (response != null) {
@@ -94,6 +96,10 @@ public class TwitLongerStatusShortenerService extends StatusShortenerService imp
         return StatusShortenResult.error(-1, "Unknown error");
     }
 
+    private boolean isTwitter(ParcelableCredentials credentials) {
+        return credentials.account_type == null || ParcelableCredentials.ACCOUNT_TYPE_TWITTER.equals(credentials.account_type);
+    }
+
     @Override
     protected boolean callback(StatusShortenResult result, ParcelableStatus status) {
         if (result.extra == null) return false;
@@ -108,7 +114,7 @@ public class TwitLongerStatusShortenerService extends StatusShortenerService imp
         }
         final TwitLonger tl = TwitLongerFactory.getInstance(TWITLONGER_API_KEY, credentials);
         try {
-            tl.updatePost(result.extra, status.id);
+            tl.updatePost(result.extra, Long.parseLong(status.id));
         } catch (TwitLongerException e) {
             if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);

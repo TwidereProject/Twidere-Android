@@ -39,7 +39,7 @@ import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
-import org.mariotaku.twidere.adapter.AbsActivitiesAdapter;
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.UserKey;
@@ -72,12 +72,12 @@ import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 /**
  * Created by mariotaku on 14/12/3.
  */
-public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<List<ParcelableActivity>> {
+public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
 
     @Override
     protected void onLoadingFinished() {
         final UserKey[] accountIds = getAccountKeys();
-        final AbsActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         if (adapter.getItemCount() > 0) {
             showContent();
         } else if (accountIds.length > 0) {
@@ -120,7 +120,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment<Lis
                 accountKeys.length);
         final Where expression = processWhere(where, accountSelectionArgs);
         final String selection = expression.getSQL();
-        final AbsActivitiesAdapter<List<ParcelableActivity>> adapter = getAdapter();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
         adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Activities.COLUMNS;
         return new CursorActivitiesLoader(context, uri, projection, selection, expression.whereArgs,
