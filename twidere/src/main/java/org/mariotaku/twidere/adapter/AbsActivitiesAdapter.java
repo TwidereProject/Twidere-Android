@@ -66,17 +66,17 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     public static final int ITEM_VIEW_TYPE_STATUS = 4;
     public static final int ITEM_VIEW_TYPE_EMPTY = 5;
 
-    final LayoutInflater mInflater;
-    final MediaLoadingHandler mLoadingHandler;
-    final int mCardBackgroundColor;
-    final boolean mCompactCards;
-    final DummyStatusHolderAdapter mStatusAdapterDelegate;
-    final EventListener mEventListener;
-    ActivityAdapterListener mActivityAdapterListener;
+    private final LayoutInflater mInflater;
+    private final MediaLoadingHandler mLoadingHandler;
+    private final int mCardBackgroundColor;
+    private final boolean mCompactCards;
+    private final DummyStatusHolderAdapter mStatusAdapterDelegate;
+    private final EventListener mEventListener;
+    private ActivityAdapterListener mActivityAdapterListener;
 
-    long[] mFilteredUserIds;
-    boolean mFollowingOnly;
-    boolean mMentionsOnly;
+    private long[] mFilteredUserIds;
+    private boolean mFollowingOnly;
+    private boolean mMentionsOnly;
 
 
     protected AbsActivitiesAdapter(final Context context, boolean compact) {
@@ -116,8 +116,9 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
         return mLoadingHandler;
     }
 
+    @Nullable
     @Override
-    public ActivityClickListener getActivityClickListener() {
+    public IActivitiesAdapter.ActivityAdapterListener getActivityClickListener() {
         return mEventListener;
     }
 
@@ -399,7 +400,7 @@ public abstract class AbsActivitiesAdapter<Data> extends LoadMoreSupportAdapter<
     }
 
     static class EventListener implements IStatusViewHolder.StatusClickListener, GapClickListener,
-            ActivityClickListener {
+            IActivitiesAdapter.ActivityAdapterListener {
 
         final WeakReference<AbsActivitiesAdapter<?>> adapterRef;
 

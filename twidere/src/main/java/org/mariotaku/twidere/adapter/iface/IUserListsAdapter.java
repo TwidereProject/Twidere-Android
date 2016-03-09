@@ -20,15 +20,16 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.view.holder.UserListViewHolder.UserListClickListener;
+import org.mariotaku.twidere.view.holder.UserListViewHolder;
 
 /**
  * Created by mariotaku on 15/4/16.
  */
-public interface IUserListsAdapter<Data> extends IContentCardAdapter, UserListClickListener {
+public interface IUserListsAdapter<Data> extends IContentCardAdapter {
 
     ParcelableUserList getUserList(int position);
 
@@ -46,4 +47,14 @@ public interface IUserListsAdapter<Data> extends IContentCardAdapter, UserListCl
     @Override
     MediaLoaderWrapper getMediaLoader();
 
+    @Nullable
+    UserListAdapterListener getUserListAdapterListener();
+
+    interface UserListAdapterListener {
+
+        void onUserListClick(UserListViewHolder holder, int position);
+
+        boolean onUserListLongClick(UserListViewHolder holder, int position);
+
+    }
 }

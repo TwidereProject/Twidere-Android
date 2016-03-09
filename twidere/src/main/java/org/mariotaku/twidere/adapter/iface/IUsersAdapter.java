@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -38,6 +39,7 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter {
 
     void setData(Data data);
 
+    @Nullable
     UserAdapterListener getUserAdapterListener();
 
     RequestClickListener getRequestClickListener();

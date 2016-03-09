@@ -14,7 +14,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 /**
  * Created by mariotaku on 14/11/19.
  */
-public class ListParcelableStatusesAdapter extends AbsParcelableStatusesAdapter {
+public class ListParcelableStatusesAdapter extends ParcelableStatusesAdapter {
 
     public ListParcelableStatusesAdapter(Context context, boolean compact) {
         super(context, compact);

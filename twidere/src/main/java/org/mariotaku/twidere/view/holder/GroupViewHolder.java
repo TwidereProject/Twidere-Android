@@ -27,8 +27,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.iface.IUserListsAdapter;
-import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.adapter.iface.IGroupsAdapter;
+import org.mariotaku.twidere.model.ParcelableGroup;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
@@ -39,9 +39,9 @@ import java.util.Locale;
 /**
  * Created by mariotaku on 15/4/29.
  */
-public class UserListViewHolder extends ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+public class GroupViewHolder extends ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    private final IUserListsAdapter<?> adapter;
+    private final IGroupsAdapter<?> adapter;
 
     private final IColorLabelView itemContent;
     private final ImageView profileImageView;
@@ -51,9 +51,9 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
     private final TextView membersCountView;
     private final TextView subscribersCountView;
 
-    private IUserListsAdapter.UserListAdapterListener userListClickListener;
+    private IGroupsAdapter.GroupAdapterListener groupClickListener;
 
-    public UserListViewHolder(IUserListsAdapter<?> adapter, View itemView) {
+    public GroupViewHolder(IGroupsAdapter<?> adapter, View itemView) {
         super(itemView);
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
         this.adapter = adapter;
@@ -65,41 +65,38 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
         subscribersCountView = (TextView) itemView.findViewById(R.id.subscribers_count);
     }
 
-    public void displayUserList(ParcelableUserList userList) {
+    public void displayGroup(ParcelableGroup group) {
 
         final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final UserColorNameManager manager = adapter.getUserColorNameManager();
 
-        itemContent.drawStart(manager.getUserColor(userList.user_key, false));
-        nameView.setText(userList.name);
+        nameView.setText(group.fullname);
         final boolean nameFirst = adapter.isNameFirst();
-        final String createdByDisplayName = manager.getDisplayName(userList, nameFirst, false);
-        createdByView.setText(context.getString(R.string.created_by, createdByDisplayName));
 
         if (adapter.isProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
-            loader.displayProfileImage(profileImageView, userList.user_profile_image_url);
+            loader.displayProfileImage(profileImageView, group.homepage_logo);
         } else {
             profileImageView.setVisibility(View.GONE);
             loader.cancelDisplayTask(profileImageView);
         }
-        descriptionView.setVisibility(TextUtils.isEmpty(userList.description) ? View.GONE : View.VISIBLE);
-        descriptionView.setText(userList.description);
-        membersCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), userList.members_count));
-        subscribersCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), userList.subscribers_count));
+        descriptionView.setVisibility(TextUtils.isEmpty(group.description) ? View.GONE : View.VISIBLE);
+        descriptionView.setText(group.description);
+        membersCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), group.member_count));
+        subscribersCountView.setText(Utils.getLocalizedNumber(Locale.getDefault(), group.admin_count));
     }
 
     public void setOnClickListeners() {
-        setUserListClickListener(adapter.getUserListAdapterListener());
+        setGroupClickListener(adapter.getGroupAdapterListener());
     }
 
     @Override
     public void onClick(View v) {
-        if (userListClickListener == null) return;
+        if (groupClickListener == null) return;
         switch (v.getId()) {
             case R.id.item_content: {
-                userListClickListener.onUserListClick(this, getLayoutPosition());
+                groupClickListener.onGroupClick(this, getLayoutPosition());
                 break;
             }
         }
@@ -107,17 +104,17 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
 
     @Override
     public boolean onLongClick(View v) {
-        if (userListClickListener == null) return false;
+        if (groupClickListener == null) return false;
         switch (v.getId()) {
             case R.id.item_content: {
-                return userListClickListener.onUserListLongClick(this, getLayoutPosition());
+                return groupClickListener.onGroupLongClick(this, getLayoutPosition());
             }
         }
         return false;
     }
 
-    public void setUserListClickListener(IUserListsAdapter.UserListAdapterListener listener) {
-        userListClickListener = listener;
+    public void setGroupClickListener(IGroupsAdapter.GroupAdapterListener listener) {
+        groupClickListener = listener;
         ((View) itemContent).setOnClickListener(this);
         ((View) itemContent).setOnLongClickListener(this);
     }

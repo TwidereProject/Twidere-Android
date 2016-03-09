@@ -44,7 +44,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 /**
  * Created by mariotaku on 14/11/19.
  */
-public class StaggeredGridParcelableStatusesAdapter extends AbsParcelableStatusesAdapter {
+public class StaggeredGridParcelableStatusesAdapter extends ParcelableStatusesAdapter {
 
     public StaggeredGridParcelableStatusesAdapter(Context context, boolean compact) {
         super(context, compact);

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
-import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
@@ -60,7 +59,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     private final ImageView[] profileImageViews;
     private final View profileImageSpace;
 
-    private IActivitiesAdapter.ActivityClickListener activityClickListener;
+    private IActivitiesAdapter.ActivityAdapterListener mActivityAdapterListener;
 
     public ActivityTitleSummaryViewHolder(AbsActivitiesAdapter adapter, View itemView, boolean isCompact) {
         super(itemView);
@@ -156,11 +155,11 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
     }
 
     public void setOnClickListeners() {
-        setActivityClickListener(adapter.getActivityClickListener());
+        setActivityAdapterListener(adapter.getActivityClickListener());
     }
 
-    public void setActivityClickListener(IActivitiesAdapter.ActivityClickListener listener) {
-        activityClickListener = listener;
+    public void setActivityAdapterListener(IActivitiesAdapter.ActivityAdapterListener listener) {
+        mActivityAdapterListener = listener;
         ((View) itemContent).setOnClickListener(this);
 //        ((View) itemContent).setOnLongClickListener(this);
 
@@ -168,11 +167,11 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
 
     @Override
     public void onClick(View v) {
-        if (activityClickListener == null) return;
+        if (mActivityAdapterListener == null) return;
         final int position = getLayoutPosition();
         switch (v.getId()) {
             case R.id.item_content: {
-                activityClickListener.onActivityClick(this, position);
+                mActivityAdapterListener.onActivityClick(this, position);
                 break;
             }
         }

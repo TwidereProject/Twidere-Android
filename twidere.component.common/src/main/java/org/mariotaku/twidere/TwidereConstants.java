@@ -92,6 +92,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_USER_LIST_SUBSCRIBERS = "user_list_subscribers";
     String AUTHORITY_USER_LIST_MEMBERSHIPS = "user_list_memberships";
     String AUTHORITY_USER_LISTS = "user_lists";
+    String AUTHORITY_USER_GROUPS = "user_groups";
     String AUTHORITY_USERS_RETWEETED_STATUS = "users_retweeted_status";
     String AUTHORITY_SAVED_SEARCHES = "saved_searches";
     String AUTHORITY_SEARCH_USERS = "search_users";

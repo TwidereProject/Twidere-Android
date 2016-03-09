@@ -1323,6 +1323,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                         user.screen_name);
                 break;
             }
+            case R.id.groups_container: {
+                IntentUtils.openUserGroups(getActivity(), user.account_key, user.key.getId(),
+                        user.screen_name);
+                break;
+            }
             case R.id.followers_container: {
                 IntentUtils.openUserFollowers(getActivity(), user.account_key, user.key.getId(),
                         user.screen_name);

@@ -33,10 +33,10 @@ import java.util.List;
 /**
  * Created by mariotaku on 15/10/26.
  */
-public abstract class AbsParcelableStatusesAdapter extends AbsStatusesAdapter<List<ParcelableStatus>> {
+public abstract class ParcelableStatusesAdapter extends AbsStatusesAdapter<List<ParcelableStatus>> {
     private List<ParcelableStatus> mData;
 
-    public AbsParcelableStatusesAdapter(Context context, boolean compact) {
+    public ParcelableStatusesAdapter(Context context, boolean compact) {
         super(context, compact);
         setHasStableIds(true);
     }

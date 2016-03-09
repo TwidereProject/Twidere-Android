@@ -551,6 +551,25 @@ public class IntentUtils implements Constants {
         context.startActivity(intent);
     }
 
+
+    public static void openUserGroups(@NonNull final Context context, @Nullable final UserKey accountKey, final long userId,
+                                      final String screenName) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_GROUPS);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+        }
+        if (userId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        }
+        if (screenName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
     public static void openDirectMessages(@NonNull final Context context, @Nullable final UserKey accountKey) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);

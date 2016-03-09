@@ -28,14 +28,14 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.iface.IUserListsAdapter;
+import org.mariotaku.twidere.adapter.iface.IGroupsAdapter;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.holder.GroupViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
-import org.mariotaku.twidere.view.holder.UserListViewHolder;
 
-public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
-        IUserListsAdapter<D> {
+public abstract class AbsGroupsAdapter<D> extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
+        IGroupsAdapter<D> {
 
     public static final int ITEM_VIEW_TYPE_USER_LIST = 2;
 
@@ -50,9 +50,9 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
     private final boolean mNameFirst;
     private final EventListener mEventListener;
 
-    private UserListAdapterListener mUserListAdapterListener;
+    private GroupAdapterListener mGroupAdapterListener;
 
-    public AbsUserListsAdapter(final Context context) {
+    public AbsGroupsAdapter(final Context context) {
         super(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
@@ -101,7 +101,7 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
                 view = mInflater.inflate(R.layout.card_item_user_list_compact, parent, false);
                 final View itemContent = view.findViewById(R.id.item_content);
                 itemContent.setBackgroundColor(mCardBackgroundColor);
-                final UserListViewHolder holder = new UserListViewHolder(this, view);
+                final GroupViewHolder holder = new GroupViewHolder(this, view);
                 holder.setOnClickListeners();
                 holder.setupViewOptions();
                 return holder;
@@ -118,7 +118,7 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
     public void onBindViewHolder(ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case ITEM_VIEW_TYPE_USER_LIST: {
-                bindUserList(((UserListViewHolder) holder), position);
+                bindGroup(((GroupViewHolder) holder), position);
                 break;
             }
         }
@@ -129,14 +129,14 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
         if ((getLoadMoreIndicatorPosition() & IndicatorPosition.START) != 0 && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
-        if (position == getUserListsCount()) {
+        if (position == getGroupsCount()) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR;
         }
         return ITEM_VIEW_TYPE_USER_LIST;
     }
 
-    public void setListener(UserListAdapterListener userListAdapterListener) {
-        mUserListAdapterListener = userListAdapterListener;
+    public void setListener(GroupAdapterListener groupAdapterListener) {
+        mGroupAdapterListener = groupAdapterListener;
     }
 
     @Override
@@ -144,41 +144,41 @@ public abstract class AbsUserListsAdapter<D> extends LoadMoreSupportAdapter<View
         return false;
     }
 
-    protected abstract void bindUserList(UserListViewHolder holder, int position);
+    protected abstract void bindGroup(GroupViewHolder holder, int position);
 
     @Nullable
     @Override
-    public IUserListsAdapter.UserListAdapterListener getUserListAdapterListener() {
+    public IGroupsAdapter.GroupAdapterListener getGroupAdapterListener() {
         return mEventListener;
     }
 
-    public interface UserListAdapterListener {
+    public interface GroupAdapterListener {
 
-        void onUserListClick(UserListViewHolder holder, int position);
+        void onGroupClick(GroupViewHolder holder, int position);
 
-        boolean onUserListLongClick(UserListViewHolder holder, int position);
+        boolean onGroupLongClick(GroupViewHolder holder, int position);
 
     }
 
-    static class EventListener implements IUserListsAdapter.UserListAdapterListener {
+    static class EventListener implements IGroupsAdapter.GroupAdapterListener {
 
-        private final AbsUserListsAdapter<?> mAdapter;
+        private final AbsGroupsAdapter<?> mAdapter;
 
-        public EventListener(AbsUserListsAdapter<?> adapter) {
+        public EventListener(AbsGroupsAdapter<?> adapter) {
             mAdapter = adapter;
         }
 
         @Override
-        public void onUserListClick(UserListViewHolder holder, int position) {
-            final UserListAdapterListener listener = mAdapter.mUserListAdapterListener;
+        public void onGroupClick(GroupViewHolder holder, int position) {
+            final GroupAdapterListener listener = mAdapter.mGroupAdapterListener;
             if (listener == null) return;
-            listener.onUserListClick(holder, position);
+            listener.onGroupClick(holder, position);
         }
 
         @Override
-        public boolean onUserListLongClick(UserListViewHolder holder, int position) {
-            final UserListAdapterListener listener = mAdapter.mUserListAdapterListener;
-            return listener != null && listener.onUserListLongClick(holder, position);
+        public boolean onGroupLongClick(GroupViewHolder holder, int position) {
+            final GroupAdapterListener listener = mAdapter.mGroupAdapterListener;
+            return listener != null && listener.onGroupLongClick(holder, position);
         }
     }
 }

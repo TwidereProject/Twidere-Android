@@ -286,8 +286,15 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             quoteIndicator.setVisibility(View.GONE);
 
             if (status.is_retweet) {
-                itemContent.drawStart(manager.getUserColor(status.retweeted_by_user_id, false),
-                        manager.getUserColor(status.user_key, false));
+                final int retweetUserColor = manager.getUserColor(status.retweeted_by_user_id, false);
+                final int userColor = manager.getUserColor(status.user_key, false);
+                if (retweetUserColor == 0) {
+                    itemContent.drawStart(userColor);
+                } else if (userColor == 0) {
+                    itemContent.drawStart(retweetUserColor);
+                } else {
+                    itemContent.drawStart(retweetUserColor, userColor);
+                }
             } else {
                 itemContent.drawStart(manager.getUserColor(status.user_key, false));
             }

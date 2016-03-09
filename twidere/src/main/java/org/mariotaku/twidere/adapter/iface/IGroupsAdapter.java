@@ -19,40 +19,42 @@
 
 package org.mariotaku.twidere.adapter.iface;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.twidere.model.ParcelableActivity;
-import org.mariotaku.twidere.util.MediaLoadingHandler;
-import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
-import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
+import org.mariotaku.twidere.model.ParcelableGroup;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.view.holder.GroupViewHolder;
 
 /**
- * Created by mariotaku on 14/11/18.
+ * Created by mariotaku on 15/4/16.
  */
-public interface IActivitiesAdapter<Data> extends IContentCardAdapter, IGapSupportedAdapter {
+public interface IGroupsAdapter<Data> extends IContentCardAdapter {
 
-    ParcelableActivity getActivity(int position);
+    ParcelableGroup getGroup(int position);
 
-    int getActivityCount();
+    long getGroupId(int position);
+
+    int getGroupsCount();
 
     void setData(Data data);
 
-    @PreviewStyle
-    int getMediaPreviewStyle();
-
-    boolean shouldUseStarsForLikes();
-
-    MediaLoadingHandler getMediaLoadingHandler();
-
-    boolean isMediaPreviewEnabled();
-
     boolean shouldShowAccountsColor();
 
+    boolean isNameFirst();
+
+    @NonNull
+    @Override
+    MediaLoaderWrapper getMediaLoader();
+
     @Nullable
-    ActivityAdapterListener getActivityClickListener();
+    GroupAdapterListener getGroupAdapterListener();
 
-    interface ActivityAdapterListener {
+    interface GroupAdapterListener {
 
-        void onActivityClick(ActivityTitleSummaryViewHolder holder, int position);
+        void onGroupClick(GroupViewHolder holder, int position);
+
+        boolean onGroupLongClick(GroupViewHolder holder, int position);
+
     }
 }

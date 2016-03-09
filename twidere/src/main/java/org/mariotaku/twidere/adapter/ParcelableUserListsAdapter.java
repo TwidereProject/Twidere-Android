@@ -31,8 +31,8 @@ public class ParcelableUserListsAdapter extends AbsUserListsAdapter<List<Parcela
     private List<ParcelableUserList> mData;
 
 
-    public ParcelableUserListsAdapter(Context context, boolean compact) {
-        super(context, compact);
+    public ParcelableUserListsAdapter(Context context) {
+        super(context);
     }
 
     @Override

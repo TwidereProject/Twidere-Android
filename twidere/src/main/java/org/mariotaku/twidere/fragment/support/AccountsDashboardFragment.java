@@ -343,6 +343,11 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                             account.account_key.getId(), account.screen_name);
                     break;
                 }
+                case R.id.groups: {
+                    IntentUtils.openUserGroups(getActivity(), account.account_key,
+                            account.account_key.getId(), account.screen_name);
+                    break;
+                }
                 case R.id.messages: {
                     IntentUtils.openDirectMessages(getActivity(), account.account_key);
                     break;
@@ -581,6 +586,9 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         if (TwitterAPIFactory.isTwitterCredentials(account)) {
             mAccountOptionsAdapter.add(new OptionItem(R.string.lists, R.drawable.ic_action_list,
                     R.id.lists));
+        } else if (TwitterAPIFactory.isStatusNetCredentials(account)) {
+            mAccountOptionsAdapter.add(new OptionItem(R.string.groups, R.drawable.ic_action_list,
+                    R.id.groups));
         }
     }
 

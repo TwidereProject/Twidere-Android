@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.view.holder;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,6 +33,7 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.RequestClickListener;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
@@ -51,6 +53,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     private final ImageView profileImageView;
     private final ImageView profileTypeView;
     private final NameView nameView;
+    private final TextView externalIndicator;
     private final TextView descriptionView, locationView, urlView,
             statusesCountView, followersCountView, friendsCountView;
 
@@ -68,6 +71,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
         profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
         nameView = (NameView) itemView.findViewById(R.id.name);
+        externalIndicator = (TextView) itemView.findViewById(R.id.external_indicator);
         descriptionView = (TextView) itemView.findViewById(R.id.description);
         locationView = (TextView) itemView.findViewById(R.id.location);
         urlView = (TextView) itemView.findViewById(R.id.url);
@@ -82,6 +86,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
 
     public void displayUser(ParcelableUser user) {
 
+        final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final UserColorNameManager manager = adapter.getUserColorNameManager();
         final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
@@ -124,6 +129,13 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
             processingRequestProgress.setVisibility(View.GONE);
             acceptRequestButton.setVisibility(View.VISIBLE);
             denyRequestButton.setVisibility(View.VISIBLE);
+        }
+        if (UserKeyUtils.isSameHost(user.account_key, user.key)) {
+            externalIndicator.setVisibility(View.GONE);
+        } else {
+            externalIndicator.setVisibility(View.VISIBLE);
+            externalIndicator.setText(context.getString(R.string.external_user_host_format, user
+                    .key.getHost()));
         }
     }
 
@@ -188,6 +200,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
 
     public void setTextSize(final float textSize) {
         descriptionView.setTextSize(textSize);
+        externalIndicator.setTextSize(textSize);
         nameView.setPrimaryTextSize(textSize);
         nameView.setSecondaryTextSize(textSize * 0.75f);
         locationView.setTextSize(textSize);

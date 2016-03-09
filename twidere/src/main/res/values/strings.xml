@@ -756,4 +756,5 @@
     <string name="shortener_version_incompatible">Incompatible tweet shortener</string>
     <string name="uploader_version_incompatible">Incompatible media uploader</string>
     <string name="groups">Groups</string>
+    <string name="external_user_host_format">External user at <xliff:g id="host">%s</xliff:g></string>
 </resources>

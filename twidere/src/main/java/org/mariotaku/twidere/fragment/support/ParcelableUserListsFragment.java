@@ -28,8 +28,8 @@ import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
@@ -45,7 +45,12 @@ public abstract class ParcelableUserListsFragment extends AbsUserListsFragment<L
     @NonNull
     @Override
     protected final ParcelableUserListsAdapter onCreateAdapter(Context context, boolean compact) {
-        return new ParcelableUserListsAdapter(context, compact);
+        return new ParcelableUserListsAdapter(context);
+    }
+
+    @Override
+    protected void setupRecyclerView(Context context, boolean compact) {
+        super.setupRecyclerView(context, true);
     }
 
     @Nullable

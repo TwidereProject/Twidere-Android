@@ -18,7 +18,7 @@ public class Group {
     @JsonField(name = "nickname")
     String nickname;
     @JsonField(name = "admin_count")
-    int adminCount;
+    long adminCount;
     @JsonField(name = "created", typeConverter = TwitterDateConverter.class)
     Date created;
     @JsonField(name = "id")
@@ -34,7 +34,7 @@ public class Group {
     @JsonField(name = "url")
     String url;
     @JsonField(name = "member_count")
-    int memberCount;
+    long memberCount;
     @JsonField(name = "blocked")
     boolean blocked;
     @JsonField(name = "stream_logo")
@@ -56,7 +56,7 @@ public class Group {
         return nickname;
     }
 
-    public int getAdminCount() {
+    public long getAdminCount() {
         return adminCount;
     }
 
@@ -88,7 +88,7 @@ public class Group {
         return url;
     }
 
-    public int getMemberCount() {
+    public long getMemberCount() {
         return memberCount;
     }
 
@@ -114,5 +114,28 @@ public class Group {
 
     public String getLocation() {
         return location;
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "modified=" + modified +
+                ", nickname='" + nickname + '\'' +
+                ", adminCount=" + adminCount +
+                ", created=" + created +
+                ", id=" + id +
+                ", homepage='" + homepage + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", homepageLogo='" + homepageLogo + '\'' +
+                ", miniLogo='" + miniLogo + '\'' +
+                ", url='" + url + '\'' +
+                ", memberCount=" + memberCount +
+                ", blocked=" + blocked +
+                ", streamLogo='" + streamLogo + '\'' +
+                ", member=" + member +
+                ", description='" + description + '\'' +
+                ", originalLogo='" + originalLogo + '\'' +
+                ", location='" + location + '\'' +
+                '}';
     }
 }
