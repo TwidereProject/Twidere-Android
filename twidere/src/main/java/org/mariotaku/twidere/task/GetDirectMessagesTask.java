@@ -64,7 +64,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
     @Override
     public List<TwitterWrapper.MessageListResponse> doLongOperation(final RefreshTaskParam param) {
         final UserKey[] accountKeys = param.getAccountKeys();
-        final long[] sinceIds = param.getSinceIds(), maxIds = param.getMaxIds();
+        final String[] sinceIds = param.getSinceIds(), maxIds = param.getMaxIds();
         final List<TwitterWrapper.MessageListResponse> result = new ArrayList<>();
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
@@ -74,7 +74,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
             try {
                 final Paging paging = new Paging();
                 paging.setCount(loadItemLimit);
-                long max_id = -1, sinceId = -1;
+                String max_id = null, sinceId = null;
                 if (maxIds != null && maxIds[idx] > 0) {
                     max_id = maxIds[idx];
                     paging.setMaxId(max_id);

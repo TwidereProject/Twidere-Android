@@ -121,7 +121,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                 final Object firstObj = selectedItems.get(0);
                 if (firstObj instanceof ParcelableStatus) {
                     final ParcelableStatus first_status = (ParcelableStatus) firstObj;
-                    bundle.putLong(EXTRA_IN_REPLY_TO_ID, first_status.id);
+                    bundle.putString(EXTRA_IN_REPLY_TO_ID, first_status.id);
                 }
                 bundle.putParcelable(EXTRA_ACCOUNT_KEY, mMultiSelectManager.getAccountKey());
                 bundle.putStringArray(EXTRA_SCREEN_NAMES, allMentions.toArray(new String[allMentions.size()]));
@@ -155,7 +155,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
             }
             case R.id.block: {
                 final UserKey accountKey = mMultiSelectManager.getAccountKey();
-                final long[] userIds = UserKey.getIds(MultiSelectManager.getSelectedUserIds(selectedItems));
+                final String[] userIds = UserKey.getIds(MultiSelectManager.getSelectedUserIds(selectedItems));
                 if (accountKey != null && userIds != null) {
                     mTwitterWrapper.createMultiBlockAsync(accountKey, userIds);
                 }
@@ -164,7 +164,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
             }
             case R.id.report_spam: {
                 final UserKey accountKey = mMultiSelectManager.getAccountKey();
-                final long[] userIds = UserKey.getIds(MultiSelectManager.getSelectedUserIds(selectedItems));
+                final String[] userIds = UserKey.getIds(MultiSelectManager.getSelectedUserIds(selectedItems));
                 if (accountKey != null && userIds != null) {
                     mTwitterWrapper.reportMultiSpam(accountKey, userIds);
                 }

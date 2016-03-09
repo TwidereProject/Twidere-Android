@@ -41,7 +41,7 @@ public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
     private final String mUserScreenName;
 
     public UserFavoritesLoader(final Context context, final UserKey accountKey, final String userId,
-                               final String screenName, final long sinceId, final long maxId,
+                               final String screenName, final String sinceId, final String maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, boolean fromUser) {
         super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);

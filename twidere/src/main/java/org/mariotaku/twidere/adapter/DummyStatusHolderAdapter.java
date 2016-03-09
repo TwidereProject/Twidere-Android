@@ -176,6 +176,7 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
         return 0;
     }
 
+    @Nullable
     @Override
     public String getStatusId(int position) {
         return null;

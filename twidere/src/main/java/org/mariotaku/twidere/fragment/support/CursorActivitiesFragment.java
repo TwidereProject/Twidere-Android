@@ -199,7 +199,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
             @Override
             public RefreshTaskParam doLongOperation(Object o) {
                 final UserKey[] accountKeys = getAccountKeys();
-                final long[] maxIds = getOldestActivityIds(accountKeys);
+                final String[] maxIds = getOldestActivityIds(accountKeys);
                 return new BaseRefreshTaskParam(accountKeys, maxIds, null);
             }
 
@@ -220,7 +220,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
                     return null;
                 }
                 final UserKey[] accountKeys = getAccountKeys();
-                final long[] sinceIds = getNewestActivityIds(accountKeys);
+                final String[] sinceIds = getNewestActivityIds(accountKeys);
                 return new BaseRefreshTaskParam(accountKeys, sinceIds, null);
             }
 
@@ -238,7 +238,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         return DataStoreUtils.buildActivityFilterWhereClause(table, null);
     }
 
-    protected long[] getNewestActivityIds(UserKey[] accountKeys) {
+    protected String[] getNewestActivityIds(UserKey[] accountKeys) {
         return DataStoreUtils.getNewestActivityMaxPositions(getActivity(), getContentUri(), accountKeys);
     }
 
@@ -254,7 +254,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         }
     }
 
-    protected long[] getOldestActivityIds(UserKey[] accountKeys) {
+    protected String[] getOldestActivityIds(UserKey[] accountKeys) {
         return DataStoreUtils.getOldestActivityMaxPositions(getActivity(), getContentUri(), accountKeys);
     }
 
@@ -336,23 +336,23 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
 
         @Override
         protected ObjectCursor<ParcelableActivity> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<ParcelableActivity> indices) {
-            final long[] filteredUserIds = DataStoreUtils.getFilteredUserIds(getContext());
+            final String[] filteredUserIds = DataStoreUtils.getFilteredUserIds(getContext());
             final ParcelableAccount[] accounts = ParcelableAccountUtils.getAccounts(getContext(), mAccountKeys);
             return new ActivityCursor(cursor, indices, filteredUserIds, accounts);
         }
 
         public static class ActivityCursor extends ObjectCursor<ParcelableActivity> {
 
-            private final long[] filteredUserIds;
+            private final String[] filteredUserIds;
             private final ParcelableAccount[] accounts;
 
-            public ActivityCursor(Cursor cursor, CursorIndices<ParcelableActivity> indies, long[] filteredUserIds, ParcelableAccount[] accounts) {
+            public ActivityCursor(Cursor cursor, CursorIndices<ParcelableActivity> indies, String[] filteredUserIds, ParcelableAccount[] accounts) {
                 super(cursor, indies);
                 this.filteredUserIds = filteredUserIds;
                 this.accounts = accounts;
             }
 
-            public long[] getFilteredUserIds() {
+            public String[] getFilteredUserIds() {
                 return filteredUserIds;
             }
 

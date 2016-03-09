@@ -201,45 +201,45 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    public static long[] getNewestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
-                                             @NonNull final UserKey[] accountKeys) {
+    public static String[] getNewestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
+                                               @NonNull final UserKey[] accountKeys) {
         return getLongFieldArray(context, uri, accountKeys, DirectMessages.ACCOUNT_KEY,
                 DirectMessages.MESSAGE_ID, new OrderBy(SQLFunctions.MAX(DirectMessages.MESSAGE_TIMESTAMP)));
     }
 
     @NonNull
-    public static long[] getNewestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
-                                            @NonNull final UserKey[] accountKeys) {
+    public static String[] getNewestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
+                                              @NonNull final UserKey[] accountKeys) {
         return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
                 Statuses.STATUS_ID, new OrderBy(SQLFunctions.MAX(Statuses.STATUS_TIMESTAMP)));
     }
 
 
     @NonNull
-    public static long[] getOldestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
-                                             @NonNull final UserKey[] accountKeys) {
+    public static String[] getOldestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
+                                               @NonNull final UserKey[] accountKeys) {
         return getLongFieldArray(context, uri, accountKeys, DirectMessages.ACCOUNT_KEY,
                 DirectMessages.MESSAGE_ID, new OrderBy(SQLFunctions.MIN(DirectMessages.MESSAGE_TIMESTAMP)));
     }
 
     @NonNull
-    public static long[] getOldestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
-                                            @NonNull final UserKey[] accountKeys) {
+    public static String[] getOldestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
+                                              @NonNull final UserKey[] accountKeys) {
         return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
                 Statuses.STATUS_ID, new OrderBy(SQLFunctions.MIN(Statuses.STATUS_TIMESTAMP)));
     }
 
     @NonNull
-    public static long[] getNewestActivityMaxPositions(final Context context, final Uri uri,
-                                                       final UserKey[] accountKeys) {
+    public static String[] getNewestActivityMaxPositions(final Context context, final Uri uri,
+                                                         final UserKey[] accountKeys) {
         return getLongFieldArray(context, uri, accountKeys, Activities.ACCOUNT_KEY,
                 Activities.MAX_POSITION, new OrderBy(SQLFunctions.MAX(Activities.TIMESTAMP)));
     }
 
     @NonNull
-    public static long[] getOldestActivityMaxPositions(@NonNull final Context context,
-                                                       @NonNull final Uri uri,
-                                                       @NonNull final UserKey[] accountKeys) {
+    public static String[] getOldestActivityMaxPositions(@NonNull final Context context,
+                                                         @NonNull final Uri uri,
+                                                         @NonNull final UserKey[] accountKeys) {
         return getLongFieldArray(context, uri, accountKeys, Activities.ACCOUNT_KEY,
                 Activities.MAX_POSITION, new OrderBy(SQLFunctions.MIN(Activities.TIMESTAMP)));
     }
@@ -258,18 +258,18 @@ public class DataStoreUtils implements Constants {
 
 
     @NonNull
-    public static long[] getFilteredUserIds(Context context) {
-        if (context == null) return new long[0];
+    public static String[] getFilteredUserIds(Context context) {
+        if (context == null) return new String[0];
         final ContentResolver resolver = context.getContentResolver();
         final String[] projection = {Filters.Users.USER_ID};
         final Cursor cur = resolver.query(Filters.Users.CONTENT_URI, projection, null, null, null);
-        if (cur == null) return new long[0];
+        if (cur == null) return new String[0];
         try {
-            final long[] ids = new long[cur.getCount()];
+            final String[] ids = new String[cur.getCount()];
             cur.moveToFirst();
             int i = 0;
             while (!cur.isAfterLast()) {
-                ids[i] = cur.getLong(0);
+                ids[i] = cur.getString(0);
                 cur.moveToNext();
                 i++;
             }
@@ -829,11 +829,11 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    static long[] getLongFieldArray(@NonNull Context context, @NonNull Uri uri,
-                                    @NonNull UserKey[] keys, @NonNull String keyField,
-                                    @NonNull String valueField, @Nullable OrderBy sortExpression) {
+    static String[] getLongFieldArray(@NonNull Context context, @NonNull Uri uri,
+                                      @NonNull UserKey[] keys, @NonNull String keyField,
+                                      @NonNull String valueField, @Nullable OrderBy sortExpression) {
         final ContentResolver resolver = context.getContentResolver();
-        final long[] messageIds = new long[keys.length];
+        final String[] messageIds = new String[keys.length];
         Arrays.fill(messageIds, -1);
         final String[] selectionArgs = TwidereArrayUtils.toStringArray(keys);
         final SQLSelectQuery.Builder builder = SQLQueryBuilder.select(new Columns(keyField, valueField))
@@ -851,7 +851,7 @@ public class DataStoreUtils implements Constants {
                 final UserKey accountKey = UserKey.valueOf(cur.getString(0));
                 int idx = ArrayUtils.indexOf(keys, accountKey);
                 if (idx < 0) continue;
-                messageIds[idx] = cur.getLong(1);
+                messageIds[idx] = cur.getString(1);
             }
             return messageIds;
         } finally {

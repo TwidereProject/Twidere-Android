@@ -46,7 +46,7 @@ public class TweetSearchLoader extends TwitterAPIStatusesLoader {
     private final boolean mGapEnabled;
 
     public TweetSearchLoader(final Context context, final UserKey accountKey, @Nullable final String query,
-                             final long sinceId, final long maxId, final int page,
+                             final String sinceId, final String maxId, final int page,
                              final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                              final int tabPosition, final boolean fromUser, final boolean makeGap) {
         super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);

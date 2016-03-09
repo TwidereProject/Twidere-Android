@@ -1804,6 +1804,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return TwidereMathUtils.sum(mItemCounts, 0, index - 1);
         }
 
+        @Nullable
         @Override
         public String getStatusId(int position) {
             final ParcelableStatus status = getStatus(position);

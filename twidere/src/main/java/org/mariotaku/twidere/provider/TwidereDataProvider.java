@@ -1390,7 +1390,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         activity.action)) {
                     continue;
                 }
-                final long[] filteredUserIds = DataStoreUtils.getFilteredUserIds(context);
+                final String[] filteredUserIds = DataStoreUtils.getFilteredUserIds(context);
                 if (timestamp == -1) {
                     timestamp = activity.timestamp;
                 }

@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -38,24 +39,24 @@ import java.util.List;
 
 public class UserTimelineLoader extends TwitterAPIStatusesLoader {
 
-    private final long mUserId;
+    private final String mUserId;
     private final String mUserScreenName;
     private final boolean mIsMyTimeline;
 
-    public UserTimelineLoader(final Context context, final UserKey accountId, final long userId,
-                              final String screenName, final long sinceId, final long maxId,
+    public UserTimelineLoader(final Context context, final UserKey accountId, final String userId,
+                              final String screenName, final String sinceId, final String maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                               final int tabPosition, boolean fromUser) {
         super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
         mUserId = userId;
         mUserScreenName = screenName;
-        mIsMyTimeline = accountId.getId() == userId;
+        mIsMyTimeline = TextUtils.equals(accountId.getId(), userId);
     }
 
     @NonNull
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
-        if (mUserId != -1)
+        if (mUserId != null)
             return twitter.getUserTimeline(mUserId, paging);
         else if (mUserScreenName != null)
             return twitter.getUserTimeline(mUserScreenName, paging);

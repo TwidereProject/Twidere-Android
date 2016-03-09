@@ -133,20 +133,21 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
             final UserKey accountKey = UserKey.valueOf(cursor.getString(indices.account_key));
-            final long id = cursor.getLong(indices.id);
+            final String id = cursor.getString(indices.id);
             return ParcelableStatus.calculateHashCode(accountKey, id);
         }
         return System.identityHashCode(mData.get(dataPosition));
     }
 
+    @Nullable
     @Override
-    public long getStatusId(int adapterPosition) {
+    public String getStatusId(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
-        if (dataPosition < 0 || dataPosition >= getStatusCount()) return RecyclerView.NO_ID;
+        if (dataPosition < 0 || dataPosition >= getStatusCount()) return null;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
-            return cursor.getLong(indices.id);
+            return cursor.getString(indices.id);
         }
         return mData.get(dataPosition).id;
     }

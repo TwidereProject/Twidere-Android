@@ -11,10 +11,10 @@ public interface RefreshTaskParam {
     UserKey[] getAccountKeys();
 
     @Nullable
-    long[] getMaxIds();
+    String[] getMaxIds();
 
     @Nullable
-    long[] getSinceIds();
+    String[] getSinceIds();
 
     boolean hasMaxIds();
 

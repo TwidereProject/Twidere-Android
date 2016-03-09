@@ -37,12 +37,12 @@ import java.util.List;
 public class ScheduledStatusesLoader extends AsyncTaskLoader<List<ScheduledStatus>> {
 
     private final UserKey mAccountId;
-    private final long mSinceId;
-    private final long mMaxId;
+    private final String mSinceId;
+    private final String mMaxId;
     @ScheduledStatus.State
     private final String[] mStates;
 
-    public ScheduledStatusesLoader(Context context, UserKey accountId, long sinceId, long maxId,
+    public ScheduledStatusesLoader(Context context, UserKey accountId, String sinceId, String maxId,
                                    @ScheduledStatus.State String[] states, List<ScheduledStatus> data) {
         super(context);
         mAccountId = accountId;
@@ -57,10 +57,10 @@ public class ScheduledStatusesLoader extends AsyncTaskLoader<List<ScheduledStatu
         final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
         if (twitter == null) return null;
         final Paging paging = new Paging();
-        if (mSinceId > 0) {
+        if (mSinceId != null) {
             paging.setSinceId(mSinceId);
         }
-        if (mMaxId > 0) {
+        if (mMaxId != null) {
             paging.setMaxId(mMaxId);
         }
         try {

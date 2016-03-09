@@ -26,17 +26,18 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
 public class StatusRetweetersLoader extends IDsUsersLoader {
 
-    private final long mStatusId;
+    private final String mStatusId;
 
-    public StatusRetweetersLoader(final Context context, final UserKey accountKey, final long statusId,
-                                  final List<ParcelableUser> data, boolean fromUser) {
+    public StatusRetweetersLoader(final Context context, final UserKey accountKey,
+                                  final String statusId, final List<ParcelableUser> data,
+                                  final boolean fromUser) {
         super(context, accountKey, data, fromUser);
         mStatusId = statusId;
     }

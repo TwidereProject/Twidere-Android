@@ -46,7 +46,12 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
 
     @Override
     public long getItemId(final int position) {
-        return getItem(position) != null ? getItem(position).key.getId() : -1;
+        final ParcelableUser item = getItem(position);
+        if (item != null) {
+            return System.identityHashCode(item);
+        } else {
+            return -1;
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupport
 
     ParcelableStatus getStatus(int position);
 
+    @Nullable
     String getStatusId(int position);
 
     @Nullable

@@ -9,13 +9,13 @@ public abstract class SimpleRefreshTaskParam implements RefreshTaskParam {
 
     @Nullable
     @Override
-    public long[] getMaxIds() {
+    public String[] getMaxIds() {
         return null;
     }
 
     @Nullable
     @Override
-    public long[] getSinceIds() {
+    public String[] getSinceIds() {
         return null;
     }
 
