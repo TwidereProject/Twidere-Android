@@ -426,31 +426,31 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static int getStatusesCount(final Context context, final Uri uri, final long sinceId, final UserKey... accountKeys) {
+    public static int getStatusesCount(final Context context, final Uri uri, final long sinceId,
+                                       UserKey... accountKeys) {
         if (context == null) return 0;
-        final RawItemArray idsIn;
-        if (ArrayUtils.isEmpty(accountKeys)) {
-            idsIn = new RawItemArray(UserKey.getIds(getActivatedAccountKeys(context)));
-        } else {
-            idsIn = new RawItemArray(UserKey.getIds(accountKeys));
+        if (accountKeys == null) {
+            accountKeys = getActivatedAccountKeys(context);
         }
         final Expression selection = Expression.and(
-                Expression.in(new Column(Statuses.ACCOUNT_KEY), idsIn),
-                Expression.greaterThan(Statuses.STATUS_ID, sinceId),
+                Expression.inArgs(new Column(Statuses.ACCOUNT_KEY), accountKeys.length),
+                Expression.greaterThanArgs(Statuses.STATUS_ID),
                 buildStatusFilterWhereClause(getTableNameByUri(uri), null)
         );
-        return queryCount(context, uri, selection.getSQL(), null);
+        final String[] whereArgs = new String[accountKeys.length + 1];
+        for (int i = 0; i < accountKeys.length; i++) {
+            whereArgs[i] = accountKeys[i].toString();
+        }
+        whereArgs[accountKeys.length] = String.valueOf(sinceId);
+        return queryCount(context, uri, selection.getSQL(), whereArgs);
     }
 
-    public static int getActivitiesCount(final Context context, final Uri uri,
+    public static int getActivitiesCount(@NonNull final Context context, final Uri uri,
                                          final Expression extraWhere, final String[] extraWhereArgs,
-                                         final long sinceTimestamp, boolean followingOnly, final UserKey... accountKeys) {
-        if (context == null) return 0;
-        final RawItemArray idsIn;
-        if (ArrayUtils.isEmpty(accountKeys)) {
-            idsIn = new RawItemArray(UserKey.getIds(getActivatedAccountKeys(context)));
-        } else {
-            idsIn = new RawItemArray(UserKey.getIds(accountKeys));
+                                         final long sinceTimestamp, boolean followingOnly,
+                                         @Nullable UserKey[] accountKeys) {
+        if (accountKeys == null) {
+            accountKeys = getActivatedAccountKeys(context);
         }
         Expression[] expressions;
         if (extraWhere != null) {
@@ -459,15 +459,27 @@ public class DataStoreUtils implements Constants {
         } else {
             expressions = new Expression[3];
         }
-        expressions[0] = Expression.in(new Column(Activities.ACCOUNT_KEY), idsIn);
-        expressions[1] = Expression.greaterThan(Activities.TIMESTAMP, sinceTimestamp);
+        expressions[0] = Expression.inArgs(new Column(Activities.ACCOUNT_KEY), accountKeys.length);
+        expressions[1] = Expression.greaterThanArgs(Activities.TIMESTAMP);
         expressions[2] = buildActivityFilterWhereClause(getTableNameByUri(uri), null);
         final Expression selection = Expression.and(expressions);
+        String[] selectionArgs;
+        if (extraWhereArgs != null) {
+            selectionArgs = new String[accountKeys.length + 1 + extraWhereArgs.length];
+            System.arraycopy(extraWhereArgs, 0, selectionArgs, accountKeys.length + 1,
+                    extraWhereArgs.length);
+        } else {
+            selectionArgs = new String[accountKeys.length + 1];
+        }
+        for (int i = 0; i < accountKeys.length; i++) {
+            selectionArgs[i] = accountKeys[i].toString();
+        }
+        selectionArgs[accountKeys.length] = String.valueOf(sinceTimestamp);
         // If followingOnly option is on, we have to iterate over items
         if (followingOnly) {
             final ContentResolver resolver = context.getContentResolver();
             final String[] projection = new String[]{Activities.SOURCES};
-            final Cursor cur = resolver.query(uri, projection, selection.getSQL(), extraWhereArgs, null);
+            final Cursor cur = resolver.query(uri, projection, selection.getSQL(), selectionArgs, null);
             if (cur == null) return -1;
             try {
                 final JsonMapper<UserFollowState> mapper;
@@ -502,7 +514,7 @@ public class DataStoreUtils implements Constants {
                 cur.close();
             }
         }
-        return queryCount(context, uri, selection.getSQL(), extraWhereArgs);
+        return queryCount(context, uri, selection.getSQL(), selectionArgs);
     }
 
     public static int getTableId(final Uri uri) {
@@ -979,7 +991,7 @@ public class DataStoreUtils implements Constants {
         return accounts;
     }
 
-    public static int getInteractionsCount(final Context context, @Nullable final Bundle extraArgs,
+    public static int getInteractionsCount(@NonNull final Context context, @Nullable final Bundle extraArgs,
                                            final UserKey[] accountIds, final long position) {
         Expression extraWhere = null;
         String[] extraWhereArgs = null;

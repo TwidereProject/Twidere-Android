@@ -350,9 +350,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             mDatabaseWrapper.beginTransaction();
             if (tableId == TABLE_ID_CACHED_USERS) {
                 for (final ContentValues values : valuesArray) {
-                    final Expression where = Expression.equals(CachedUsers.USER_KEY,
-                            values.getAsLong(CachedUsers.USER_KEY));
-                    mDatabaseWrapper.update(table, values, where.getSQL(), null);
+                    final Expression where = Expression.equalsArgs(CachedUsers.USER_KEY);
+                    mDatabaseWrapper.update(table, values, where.getSQL(), new String[]{
+                            values.getAsString(CachedUsers.USER_KEY)});
                     newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
                             values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
