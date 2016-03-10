@@ -39,7 +39,7 @@ public class InternalTwitterContentUtils {
     private static final CharSequenceTranslator UNESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_UNESCAPE());
     private static final CharSequenceTranslator ESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
-    public static <T extends List<Status>> T getStatusesWithQuoteData(Twitter twitter, @NonNull T list) throws TwitterException {
+    public static <T extends List<? extends Status>> T getStatusesWithQuoteData(Twitter twitter, @NonNull T list) throws TwitterException {
         MultiValueMap<Status> quotes = new MultiValueMap<>();
         // Phase 1: collect all statuses contains a status link, and put it in the map
         for (Status status : list) {

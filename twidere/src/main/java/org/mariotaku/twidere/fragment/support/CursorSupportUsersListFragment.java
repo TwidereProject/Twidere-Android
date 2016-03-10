@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
-import org.mariotaku.twidere.loader.support.BaseCursorSupportUsersLoader;
+import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public abstract class CursorSupportUsersListFragment extends ParcelableUsersFrag
     @Override
     public void onLoadFinished(final Loader<List<ParcelableUser>> loader, final List<ParcelableUser> data) {
         super.onLoadFinished(loader, data);
-        final BaseCursorSupportUsersLoader cursorLoader = (BaseCursorSupportUsersLoader) loader;
+        final CursorSupportUsersLoader cursorLoader = (CursorSupportUsersLoader) loader;
         mNextCursor = cursorLoader.getNextCursor();
         mPrevCursor = cursorLoader.getPrevCursor();
         mNextPage = cursorLoader.getNextPage();
@@ -98,5 +98,5 @@ public abstract class CursorSupportUsersListFragment extends ParcelableUsersFrag
     }
 
     @Override
-    protected abstract BaseCursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser);
+    protected abstract CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser);
 }

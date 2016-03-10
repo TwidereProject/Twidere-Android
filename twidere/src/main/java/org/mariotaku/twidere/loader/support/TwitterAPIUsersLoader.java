@@ -27,9 +27,11 @@ import android.util.Log;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
@@ -52,13 +54,19 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         if (mAccountKey == null) {
             return ListResponse.getListInstance(new TwitterException("No Account"));
         }
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountKey, true);
+        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(),
+                mAccountKey);
+        if (credentials == null) {
+            return ListResponse.getListInstance(new TwitterException("No Account"));
+        }
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), credentials, true,
+                true);
         if (twitter == null)
             return ListResponse.getListInstance(new TwitterException("No Account"));
         final List<ParcelableUser> data = getData();
         final List<User> users;
         try {
-            users = getUsers(twitter);
+            users = getUsers(twitter, credentials);
         } catch (final TwitterException e) {
             Log.w(LOGTAG, e);
             return ListResponse.getListInstance(data);
@@ -81,5 +89,6 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
     }
 
     @NonNull
-    protected abstract List<User> getUsers(@NonNull Twitter twitter) throws TwitterException;
+    protected abstract List<User> getUsers(@NonNull Twitter twitter,
+                                           @NonNull ParcelableCredentials credentials) throws TwitterException;
 }

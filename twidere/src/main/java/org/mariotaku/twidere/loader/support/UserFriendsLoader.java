@@ -24,13 +24,15 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 
 import java.util.List;
 
@@ -49,21 +51,31 @@ public class UserFriendsLoader extends CursorSupportUsersLoader {
 
     @NonNull
     @Override
-    protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
+    protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging)
             throws TwitterException {
-        final String accountType = DataStoreUtils.getAccountType(getContext(), getAccountId());
-        if (mUserId != null) {
-            if (ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(accountType)) {
-                return twitter.getStatusesFriendsList(mUserId, paging);
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.STATUSNET: {
+                if (mUserId != null) {
+                    return twitter.getStatusesFriendsList(mUserId, paging);
+                } else if (mScreenName != null) {
+                    return twitter.getStatusesFriendsListByScreenName(mScreenName, paging);
+                }
             }
-            return twitter.getFriendsList(mUserId, paging);
-        } else if (mScreenName != null) {
-            if (ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(accountType)) {
-                return twitter.getStatusesFriendsList(mScreenName, paging);
+            case ParcelableAccount.Type.FANFOU: {
+                if (mUserId != null) {
+                    return twitter.getUsersFriends(mUserId, paging);
+                } else if (mScreenName != null) {
+                    return twitter.getUsersFriends(mScreenName, paging);
+                }
             }
-            return twitter.getFriendsListByScreenName(mScreenName, paging);
+            default: {
+                if (mUserId != null) {
+                    return twitter.getFriendsList(mUserId, paging);
+                } else if (mScreenName != null) {
+                    return twitter.getFriendsListByScreenName(mScreenName, paging);
+                }
+            }
         }
         throw new TwitterException("user_id or screen_name required");
     }
-
 }

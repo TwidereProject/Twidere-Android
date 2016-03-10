@@ -74,18 +74,21 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
             if (isOfficial) {
                 return twitter.showConversation(status.id, paging);
             } else {
-                return showConversationCompat(twitter, credentials, status);
+                return showConversationCompat(twitter, credentials, status, true);
             }
         } else if (TwitterAPIFactory.isStatusNetCredentials(credentials)) {
             mCanLoadAllReplies = true;
             return twitter.getStatusNetConversation(status.id, paging);
         }
-        throw new TwitterException("Not supported");
+        // Set to true because there's no conversation support on this platform
+        mCanLoadAllReplies = true;
+        return showConversationCompat(twitter, credentials, status, false);
     }
 
-    protected List<Status> showConversationCompat(@NonNull Twitter twitter,
-                                                  @NonNull ParcelableCredentials credentials,
-                                                  @NonNull ParcelableStatus status) throws TwitterException {
+    protected List<Status> showConversationCompat(@NonNull final Twitter twitter,
+                                                  @NonNull final ParcelableCredentials credentials,
+                                                  @NonNull final ParcelableStatus status,
+                                                  final boolean loadReplies) throws TwitterException {
         final List<Status> statuses = new ArrayList<>();
         final String maxId = getMaxId(), sinceId = getSinceId();
         final long maxSortId = getMaxSortId(), sinceSortId = getSinceSortId();
@@ -101,23 +104,25 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
                 count++;
             }
         }
-        // Load replies
-        if ((sinceId != null && sinceSortId > status.sort_id) || noSinceMaxId) {
-            SearchQuery query = new SearchQuery();
-            if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
-                query.query("to:" + status.user_screen_name);
-            } else {
-                query.query("@" + status.user_screen_name);
-            }
-            query.sinceId(sinceId != null ? sinceId : status.id);
-            try {
-                for (Status item : twitter.search(query)) {
-                    if (TextUtils.equals(item.getInReplyToStatusId(), status.id)) {
-                        statuses.add(item);
-                    }
+        if (loadReplies) {
+            // Load replies
+            if ((sinceId != null && sinceSortId > status.sort_id) || noSinceMaxId) {
+                SearchQuery query = new SearchQuery();
+                if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
+                    query.query("to:" + status.user_screen_name);
+                } else {
+                    query.query("@" + status.user_screen_name);
                 }
-            } catch (TwitterException e) {
-                // Ignore for now
+                query.sinceId(sinceId != null ? sinceId : status.id);
+                try {
+                    for (Status item : twitter.search(query)) {
+                        if (TextUtils.equals(item.getInReplyToStatusId(), status.id)) {
+                            statuses.add(item);
+                        }
+                    }
+                } catch (TwitterException e) {
+                    // Ignore for now
+                }
             }
         }
         return statuses;

@@ -39,11 +39,8 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 public interface PrivateTimelinesResources extends PrivateResources {
 
     @GET("/statuses/media_timeline.json")
-    ResponseList<Status> getMediaTimeline(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getMediaTimeline(@Query("user_id") String userId, @Query Paging paging) throws TwitterException;
 
     @GET("/statuses/media_timeline.json")
-    ResponseList<Status> getMediaTimeline(@Query Paging paging) throws TwitterException;
-
-    @GET("/statuses/media_timeline.json")
-    ResponseList<Status> getMediaTimeline(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getMediaTimelineByScreenName(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 }

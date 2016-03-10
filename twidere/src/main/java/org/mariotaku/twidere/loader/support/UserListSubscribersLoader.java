@@ -27,6 +27,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 
@@ -50,7 +51,7 @@ public class UserListSubscribersLoader extends CursorSupportUsersLoader {
 
     @NonNull
     @Override
-    public PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
+    public PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging)
             throws TwitterException {
         if (mListId > 0)
             return twitter.getUserListSubscribers(mListId, paging);

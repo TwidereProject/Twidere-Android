@@ -66,6 +66,7 @@ import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.OrderBy;
@@ -1494,27 +1495,33 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final ArrayList<Expression> orExpressions = new ArrayList<>();
         final String prefix = accountKey + "-";
         final int prefixLength = prefix.length();
-        final Set<Long> senderIds = new CompactHashSet<>();
+        final Set<String> senderIds = new CompactHashSet<>();
+        final List<String> whereArgs = new ArrayList<>();
         for (StringLongPair pair : pairs) {
             final String key = pair.getKey();
             if (key.startsWith(prefix)) {
-                final long senderId = Long.parseLong(key.substring(prefixLength));
+                final String senderId = key.substring(prefixLength);
                 senderIds.add(senderId);
                 final Expression expression = Expression.and(
-                        Expression.equals(DirectMessages.SENDER_ID, senderId),
-                        Expression.greaterThan(DirectMessages.MESSAGE_ID, pair.getValue())
+                        Expression.equalsArgs(DirectMessages.SENDER_ID),
+                        Expression.greaterThanArgs(DirectMessages.MESSAGE_ID)
                 );
+                whereArgs.add(senderId);
+                whereArgs.add(String.valueOf(pair.getValue()));
                 orExpressions.add(expression);
             }
         }
-        orExpressions.add(Expression.notIn(new Column(DirectMessages.SENDER_ID), new RawItemArray(senderIds.toArray())));
+        orExpressions.add(Expression.notIn(new Column(DirectMessages.SENDER_ID), new ArgsArray(senderIds.size())));
+        whereArgs.addAll(senderIds);
         final Expression selection = Expression.and(
                 Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
-                Expression.greaterThan(DirectMessages.MESSAGE_ID, prevOldestId),
+                Expression.greaterThanArgs(DirectMessages.MESSAGE_ID),
                 Expression.or(orExpressions.toArray(new Expression[orExpressions.size()]))
         );
+        whereArgs.add(accountKey.toString());
+        whereArgs.add(String.valueOf(prevOldestId));
         final String filteredSelection = selection.getSQL();
-        final String[] selectionArgs = {accountKey.toString()};
+        final String[] selectionArgs = whereArgs.toArray(new String[whereArgs.size()]);
         final String[] userProjection = {DirectMessages.SENDER_ID, DirectMessages.SENDER_NAME,
                 DirectMessages.SENDER_SCREEN_NAME};
         final String[] messageProjection = {DirectMessages.MESSAGE_ID, DirectMessages.SENDER_ID,

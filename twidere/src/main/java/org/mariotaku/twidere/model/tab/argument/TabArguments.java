@@ -8,7 +8,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.model.UserKey;
 
 import java.util.Arrays;
@@ -42,7 +41,9 @@ public class TabArguments implements TwidereConstants {
 
     @CallSuper
     public void copyToBundle(@NonNull Bundle bundle) {
-        if (accountId != null) {
+        if (accountKeys != null) {
+            bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountKeys);
+        } else if (accountId != null) {
             bundle.putString(EXTRA_ACCOUNT_ID, accountId);
         }
     }

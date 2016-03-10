@@ -145,8 +145,7 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
     public static Activity fromMention(String twitterId, Status status) {
         final Activity activity = new Activity();
 
-        // TODO handle this -1 position case
-        activity.maxPosition = activity.minPosition = null;
+        activity.maxPosition = activity.minPosition = status.getId();
         activity.maxSortPosition = activity.minSortPosition = status.getSortId();
         activity.createdAt = status.getCreatedAt();
 

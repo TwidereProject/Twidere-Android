@@ -19,10 +19,12 @@ import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.model.ParcelableActivity;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.task.AbstractTask;
@@ -73,7 +75,11 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final UserKey accountKey = accountIds[i];
             final boolean noItemsBefore = DataStoreUtils.getActivitiesCount(context, getContentUri(),
                     accountKey) <= 0;
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
+                    accountKey);
+            if (credentials == null) continue;
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, credentials, true,
+                    true);
             if (twitter == null) continue;
             final Paging paging = new Paging();
             paging.count(loadItemLimit);
@@ -89,7 +95,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             }
             // We should delete old activities has intersection with new items
             try {
-                final ResponseList<Activity> activities = getActivities(twitter, accountKey, paging);
+                final ResponseList<Activity> activities = getActivities(twitter, credentials, paging);
                 storeActivities(cr, loadItemLimit, accountKey, noItemsBefore, activities);
                 if (saveReadPosition) {
                     saveReadPosition(accountKey, twitter);
@@ -158,7 +164,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                                              @NonNull final Twitter twitter);
 
     protected abstract ResponseList<Activity> getActivities(@NonNull final Twitter twitter,
-                                                            @NonNull final UserKey accountId,
+                                                            @NonNull final ParcelableCredentials credentials,
                                                             @NonNull final Paging paging)
             throws TwitterException;
 

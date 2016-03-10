@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.mariotaku.twidere.Twidere;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -97,7 +98,7 @@ public class TwitLongerStatusShortenerService extends StatusShortenerService imp
     }
 
     private boolean isTwitter(ParcelableCredentials credentials) {
-        return credentials.account_type == null || ParcelableCredentials.ACCOUNT_TYPE_TWITTER.equals(credentials.account_type);
+        return credentials.account_type == null || ParcelableAccount.Type.TWITTER.equals(credentials.account_type);
     }
 
     @Override

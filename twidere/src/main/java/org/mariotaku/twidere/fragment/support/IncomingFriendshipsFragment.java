@@ -27,14 +27,13 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
-import org.mariotaku.twidere.loader.support.IDsUsersLoader;
+import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.IncomingFriendshipsLoader;
+import org.mariotaku.twidere.loader.support.UserFriendsLoader;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FollowRequestTaskEvent;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
-
-import java.util.List;
 
 public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment implements IUsersAdapter.RequestClickListener {
     @Override
@@ -50,8 +49,8 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
     }
 
     @Override
-    public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args,
-                                              final boolean fromUser) {
+    public CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args,
+                                                 final boolean fromUser) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final IncomingFriendshipsLoader loader = new IncomingFriendshipsLoader(context, accountKey,
                 getData(), fromUser);

@@ -13,15 +13,15 @@ import org.mariotaku.twidere.api.twitter.model.User;
 public interface UserResources {
 
     @GET("/statuses/friends.json")
-    PageableResponseList<User> getStatusesFriendsList(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getStatusesFriendsList(@Query("user_id") String userId, @Query Paging paging) throws TwitterException;
 
     @GET("/statuses/friends.json")
-    PageableResponseList<User> getStatusesFriendsList(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getStatusesFriendsListByScreenName(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 
     @GET("/statuses/followers.json")
-    PageableResponseList<User> getStatusesFollowersList(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getStatusesFollowersList(@Query("user_id") String userId, @Query Paging paging) throws TwitterException;
 
     @GET("/statuses/followers.json")
-    PageableResponseList<User> getStatusesFollowersList(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getStatusesFollowersListByScreenName(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 
 }

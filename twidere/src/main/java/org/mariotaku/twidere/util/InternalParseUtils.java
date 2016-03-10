@@ -74,15 +74,14 @@ public class InternalParseUtils {
                 }
                 final String key = key_obj.toString();
                 final Object value = json.get(key);
-                if (value instanceof Boolean) {
+                if (shouldUseString(key)) {
+                    bundle.putString(key, json.optString(key));
+                } else if (shouldPutLong(key)) {
+                    bundle.putLong(key, json.optLong(key));
+                } else if (value instanceof Boolean) {
                     bundle.putBoolean(key, json.optBoolean(key));
                 } else if (value instanceof Integer) {
-                    // Simple workaround for account_id
-                    if (shouldPutLong(key)) {
-                        bundle.putLong(key, json.optLong(key));
-                    } else {
-                        bundle.putInt(key, json.optInt(key));
-                    }
+                    bundle.putInt(key, json.optInt(key));
                 } else if (value instanceof Long) {
                     bundle.putLong(key, json.optLong(key));
                 } else if (value instanceof String) {
@@ -97,9 +96,17 @@ public class InternalParseUtils {
         return bundle;
     }
 
+    private static boolean shouldUseString(final String key) {
+        switch (key) {
+            case CompatibilityConstants.EXTRA_ACCOUNT_ID:
+            case IntentConstants.EXTRA_USER_ID:
+                return true;
+        }
+        return IntentConstants.EXTRA_LIST_ID.equals(key);
+    }
+
     private static boolean shouldPutLong(final String key) {
-        return CompatibilityConstants.EXTRA_ACCOUNT_ID.equals(key) || IntentConstants.EXTRA_USER_ID.equals(key) || IntentConstants.EXTRA_STATUS_ID.equals(key)
-                || IntentConstants.EXTRA_LIST_ID.equals(key);
+        return IntentConstants.EXTRA_LIST_ID.equals(key);
     }
 
     public static String parsePrettyDecimal(double num, int decimalDigits) {

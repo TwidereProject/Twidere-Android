@@ -130,7 +130,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         if (twitter == null) {
             return ListResponse.getListInstance(new TwitterException("No Account"));
         }
-        final List<Status> statuses;
+        final List<? extends Status> statuses;
         final boolean noItemsBefore = data.isEmpty();
         final int loadItemLimit = mPreferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         try {
@@ -209,7 +209,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     }
 
     @NonNull
-    protected abstract List<Status> getStatuses(@NonNull Twitter twitter,
+    protected abstract List<? extends Status> getStatuses(@NonNull Twitter twitter,
                                                 @NonNull ParcelableCredentials credentials,
                                                 @NonNull Paging paging) throws TwitterException;
 

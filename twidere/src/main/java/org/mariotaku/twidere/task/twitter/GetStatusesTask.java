@@ -15,7 +15,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.sqliteqb.library.SQLFunctions;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
@@ -194,10 +193,12 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         }
         // Delete all rows conflicting before new data inserted.
         final Expression accountWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY);
-        final Expression statusWhere = Expression.in(new Columns.Column(Statuses.STATUS_ID),
-                new RawItemArray(statusIds));
+        final Expression statusWhere = Expression.inArgs(new Columns.Column(Statuses.STATUS_ID),
+                statusIds.length);
         final String countWhere = Expression.and(accountWhere, statusWhere).getSQL();
-        final String[] whereArgs = {accountKey.toString()};
+        final String[] whereArgs = new String[statusIds.length + 1];
+        System.arraycopy(statusIds, 0, whereArgs, 1, statusIds.length);
+        whereArgs[0] = accountKey.toString();
         final String[] projection = {SQLFunctions.COUNT()};
         final int rowsDeleted;
         final Cursor countCur = resolver.query(uri, projection, countWhere, whereArgs, null);

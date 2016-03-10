@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter;
 
+import org.mariotaku.twidere.api.fanfou.Fanfou;
 import org.mariotaku.twidere.api.statusnet.StatusNet;
 import org.mariotaku.twidere.api.twitter.api.DirectMessagesResources;
 import org.mariotaku.twidere.api.twitter.api.FavoritesResources;
@@ -34,8 +35,8 @@ import org.mariotaku.twidere.api.twitter.api.TrendsResources;
 import org.mariotaku.twidere.api.twitter.api.TweetResources;
 import org.mariotaku.twidere.api.twitter.api.UsersResources;
 
-public interface Twitter extends SearchResource, TimelineResources,
-        TweetResources, UsersResources, ListResources, DirectMessagesResources, FriendsFollowersResources,
-        FavoritesResources, SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
-        HelpResources, TwitterPrivate, StatusNet {
+public interface Twitter extends SearchResource, TimelineResources, TweetResources, UsersResources,
+        ListResources, DirectMessagesResources, FriendsFollowersResources, FavoritesResources,
+        SpamReportingResources, SavedSearchesResources, TrendsResources, PlacesGeoResources,
+        HelpResources, TwitterPrivate, StatusNet, Fanfou {
 }

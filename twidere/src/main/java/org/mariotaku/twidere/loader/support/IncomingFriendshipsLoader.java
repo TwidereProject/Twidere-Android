@@ -26,12 +26,13 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 import java.util.List;
 
-public class IncomingFriendshipsLoader extends IDsUsersLoader {
+public class IncomingFriendshipsLoader extends CursorSupportUsersLoader {
 
     public IncomingFriendshipsLoader(final Context context, final UserKey accountKey,
                                      final List<ParcelableUser> data, boolean fromUser) {
@@ -40,8 +41,12 @@ public class IncomingFriendshipsLoader extends IDsUsersLoader {
 
     @NonNull
     @Override
-    protected IDs getIDs(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
+    protected IDs getIDs(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
         return twitter.getIncomingFriendships(paging);
     }
 
+    @Override
+    protected boolean useIDs(@NonNull ParcelableCredentials credentials) {
+        return true;
+    }
 }

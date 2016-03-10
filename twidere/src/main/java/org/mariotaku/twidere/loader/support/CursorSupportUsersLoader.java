@@ -20,33 +20,101 @@
 package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.CursorSupport;
+import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.loader.support.iface.ICursorSupportLoader;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
-public abstract class CursorSupportUsersLoader extends BaseCursorSupportUsersLoader {
+public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
+        implements ICursorSupportLoader {
+
+    private int mPage = -1;
+    private long mCursor;
+    private final int mLoadItemLimit;
+
+    private long mNextCursor, mPrevCursor;
+    private int mNextPage;
 
     public CursorSupportUsersLoader(final Context context, final UserKey accountKey,
                                     final List<ParcelableUser> data, boolean fromUser) {
         super(context, accountKey, data, fromUser);
+        final SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
+        mLoadItemLimit = Math.min(100, loadItemLimit);
+    }
+
+    public final int getCount() {
+        return mLoadItemLimit;
+    }
+
+    public final void setCursor(long cursor) {
+        mCursor = cursor;
+    }
+
+    public final int getPage() {
+        return mPage;
+    }
+
+    public final void setPage(int page) {
+        mPage = page;
+    }
+
+    @Override
+    public final long getCursor() {
+        return mCursor;
+    }
+
+    @Override
+    public final long getNextCursor() {
+        return mNextCursor;
+    }
+
+    @Override
+    public final long getPrevCursor() {
+        return mPrevCursor;
+    }
+
+    protected final void setCursors(final CursorSupport cursor) {
+        if (cursor == null) return;
+        mNextCursor = cursor.getNextCursor();
+        mPrevCursor = cursor.getPreviousCursor();
+        mNextPage = mPage + 1;
+    }
+
+    public int getNextPage() {
+        return mNextPage;
+    }
+
+
+    @NonNull
+    protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter,
+                                                  @NonNull final ParcelableCredentials credentials,
+                                                  @NonNull final Paging paging)
+            throws TwitterException {
+        throw new UnsupportedOperationException();
     }
 
     @NonNull
-    protected abstract ResponseList<User> getCursoredUsers(@NonNull Twitter twitter, Paging paging)
-            throws TwitterException;
+    protected IDs getIDs(@NonNull final Twitter twitter, @NonNull final ParcelableCredentials credentials,
+                         @NonNull final Paging paging) throws TwitterException {
+        throw new UnsupportedOperationException();
+    }
 
     @NonNull
     @Override
-    protected final List<User> getUsers(@NonNull final Twitter twitter) throws TwitterException {
+    protected final List<User> getUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials) throws TwitterException {
         final Paging paging = new Paging();
         paging.count(getCount());
         if (getCursor() > 0) {
@@ -54,11 +122,20 @@ public abstract class CursorSupportUsersLoader extends BaseCursorSupportUsersLoa
         } else if (getPage() > 1) {
             paging.setPage(getPage());
         }
-        final ResponseList<User> users = getCursoredUsers(twitter, paging);
-        if (users instanceof CursorSupport) {
-            setCursorIds(((CursorSupport) users));
+        if (useIDs(credentials)) {
+            final IDs ids = getIDs(twitter, credentials, paging);
+            setCursors(ids);
+            return twitter.lookupUsers(ids.getIDs());
+        } else {
+            final List<User> users = getCursoredUsers(twitter, credentials, paging);
+            if (users instanceof CursorSupport) {
+                setCursors(((CursorSupport) users));
+            }
+            return users;
         }
-        return users;
     }
 
+    protected boolean useIDs(@NonNull ParcelableCredentials credentials) {
+        return false;
+    }
 }

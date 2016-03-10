@@ -26,12 +26,13 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
-public class StatusRetweetersLoader extends IDsUsersLoader {
+public class StatusRetweetersLoader extends CursorSupportUsersLoader {
 
     private final String mStatusId;
 
@@ -44,8 +45,12 @@ public class StatusRetweetersLoader extends IDsUsersLoader {
 
     @NonNull
     @Override
-    protected IDs getIDs(@NonNull final Twitter twitter, final Paging paging) throws TwitterException {
+    protected IDs getIDs(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
         return twitter.getRetweetersIDs(mStatusId, paging);
     }
 
+    @Override
+    protected boolean useIDs(@NonNull ParcelableCredentials credentials) {
+        return true;
+    }
 }

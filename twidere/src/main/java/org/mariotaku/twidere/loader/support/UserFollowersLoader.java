@@ -27,10 +27,11 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 
 import java.util.List;
 
@@ -49,21 +50,30 @@ public class UserFollowersLoader extends CursorSupportUsersLoader {
 
     @NonNull
     @Override
-    protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, final Paging paging)
+    protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging)
             throws TwitterException {
-        final UserKey accountId = getAccountId();
-        if (accountId == null) throw new TwitterException("No account");
-        final String accountType = DataStoreUtils.getAccountType(getContext(), accountId);
-        if (mUserId != null) {
-            if (ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(accountType)) {
-                return twitter.getStatusesFollowersList(mUserId, paging);
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.STATUSNET: {
+                if (mUserId != null) {
+                    return twitter.getStatusesFollowersList(mUserId, paging);
+                } else if (mScreenName != null) {
+                    return twitter.getStatusesFollowersListByScreenName(mScreenName, paging);
+                }
             }
-            return twitter.getFollowersList(mUserId, paging);
-        } else if (mScreenName != null) {
-            if (ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(accountType)) {
-                return twitter.getStatusesFollowersList(mScreenName, paging);
+            case ParcelableAccount.Type.FANFOU: {
+                if (mUserId != null) {
+                    return twitter.getUsersFollowers(mUserId, paging);
+                } else if (mScreenName != null) {
+                    return twitter.getUsersFollowers(mScreenName, paging);
+                }
             }
-            return twitter.getFollowersList(mScreenName, paging);
+            default: {
+                if (mUserId != null) {
+                    return twitter.getFollowersList(mUserId, paging);
+                } else if (mScreenName != null) {
+                    return twitter.getFollowersListByScreenName(mScreenName, paging);
+                }
+            }
         }
         throw new TwitterException("user_id or screen_name required");
     }

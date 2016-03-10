@@ -84,6 +84,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.StatusNetAccountExtra;
@@ -576,7 +577,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             if (site != null) {
                 extra.setTextLimit(site.getTextLimit());
             }
-            return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_STATUSNET,
+            return Pair.create(ParcelableAccount.Type.STATUSNET,
                     JsonSerializer.serialize(extra, StatusNetAccountExtra.class));
         } catch (TwitterException e) {
             // Ignore
@@ -588,15 +589,15 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             twitter.getActivitiesAboutMe(paging);
             TwitterAccountExtra extra = new TwitterAccountExtra();
             extra.setIsOfficialCredentials(true);
-            return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_TWITTER,
+            return Pair.create(ParcelableAccount.Type.TWITTER,
                     JsonSerializer.serialize(extra, TwitterAccountExtra.class));
         } catch (TwitterException e) {
             // Ignore
         }
         if (UserKeyUtils.isFanfouUser(user)) {
-            return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_FANFOU, null);
+            return Pair.create(ParcelableAccount.Type.FANFOU, null);
         }
-        return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_TWITTER, null);
+        return Pair.create(ParcelableAccount.Type.TWITTER, null);
     }
 
     public static abstract class AbstractSignInTask extends AsyncTask<Object, Runnable, SignInResponse> {

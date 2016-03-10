@@ -204,11 +204,11 @@ public class TwitterAPIFactory implements TwidereConstants {
 
     public static boolean isTwitterCredentials(ParcelableAccount credentials) {
         return credentials.account_type == null ||
-                ParcelableCredentials.ACCOUNT_TYPE_TWITTER.equals(credentials.account_type);
+                ParcelableAccount.Type.TWITTER.equals(credentials.account_type);
     }
 
     public static boolean isStatusNetCredentials(ParcelableAccount credentials) {
-        return ParcelableCredentials.ACCOUNT_TYPE_STATUSNET.equals(credentials.account_type);
+        return ParcelableAccount.Type.STATUSNET.equals(credentials.account_type);
     }
 
     @WorkerThread

@@ -26,8 +26,11 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 
 import java.util.List;
 
@@ -53,9 +56,14 @@ public class UserSearchLoader extends TwitterAPIUsersLoader {
 
     @NonNull
     @Override
-    public List<User> getUsers(@NonNull final Twitter twitter) throws TwitterException {
+    public List<User> getUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials) throws TwitterException {
         final Paging paging = new Paging();
         paging.page(mPage);
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.FANFOU: {
+                return twitter.searchFanfouUsers(mQuery, paging);
+            }
+        }
         return twitter.searchUsers(mQuery, paging);
     }
 

@@ -22,6 +22,7 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -63,6 +64,7 @@ public class ParcelableAccount implements Parcelable {
     public String name;
 
     @Nullable
+    @Type
     @ParcelableThisPlease
     @JsonField(name = "account_type")
     @CursorField(Accounts.ACCOUNT_TYPE)
@@ -166,5 +168,13 @@ public class ParcelableAccount implements Parcelable {
             account_user.is_cache = true;
             account_user.account_color = color;
         }
+    }
+
+    @StringDef({Type.TWITTER, Type.STATUSNET, Type.FANFOU})
+    public @interface Type {
+
+        String TWITTER = "twitter";
+        String STATUSNET = "statusnet";
+        String FANFOU = "fanfou";
     }
 }

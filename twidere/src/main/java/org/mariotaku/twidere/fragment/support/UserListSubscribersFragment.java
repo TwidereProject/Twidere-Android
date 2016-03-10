@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
+import org.mariotaku.twidere.loader.support.UserFriendsLoader;
 import org.mariotaku.twidere.loader.support.UserListSubscribersLoader;
 import org.mariotaku.twidere.model.UserKey;
 

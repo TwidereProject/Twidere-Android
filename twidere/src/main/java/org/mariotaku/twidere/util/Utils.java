@@ -764,15 +764,13 @@ public final class Utils implements Constants {
         }
         UserKey accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
         if (accountKey == null) {
-            final long accountId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID), -1);
+            final String accountId = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID);
             final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
-            if (accountId != -1) {
-                accountKey = DataStoreUtils.findAccountKey(context,
-                        accountId);
+            if (accountId != null) {
+                accountKey = DataStoreUtils.findAccountKey(context, accountId);
                 args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
             } else if (paramAccountName != null) {
-                accountKey = DataStoreUtils.findAccountKey(context,
-                        paramAccountName);
+                accountKey = DataStoreUtils.findAccountKeyByScreenName(context, paramAccountName);
             } else {
                 accountKey = getDefaultAccountKey(context);
             }
@@ -804,15 +802,13 @@ public final class Utils implements Constants {
             final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
             if (accountKey == null) return new UserKey[0];
             return new UserKey[]{accountKey};
-        } else if (args.containsKey(EXTRA_ACCOUNT_IDS)) {
-            final long[] accountIds = args.getLongArray(EXTRA_ACCOUNT_IDS);
-            if (accountIds == null) return null;
-            final UserKey[] accountKeys = UserKeyUtils.findByIds(context, accountIds);
-            args.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountKeys);
-            return accountKeys;
         } else if (args.containsKey(EXTRA_ACCOUNT_ID)) {
-            final long accountId = args.getLong(EXTRA_ACCOUNT_ID, -1);
-            if (accountId <= 0) return null;
+            final String accountId = String.valueOf(args.get(EXTRA_ACCOUNT_ID));
+            try {
+                if (Long.parseLong(accountId) <= 0) return null;
+            } catch (NumberFormatException e) {
+                // Ignore
+            }
             final UserKey accountKey = UserKeyUtils.findById(context, accountId);
             args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
             if (accountKey == null) return new UserKey[0];
@@ -1001,7 +997,7 @@ public final class Utils implements Constants {
 
     public static boolean isOfficialCredentials(@NonNull final Context context,
                                                 @NonNull final ParcelableCredentials account) {
-        if (ParcelableCredentials.ACCOUNT_TYPE_TWITTER.equals(account.account_type)) {
+        if (ParcelableAccount.Type.TWITTER.equals(account.account_type)) {
             final TwitterAccountExtra extra = JsonSerializer.parse(account.account_extras,
                     TwitterAccountExtra.class);
             if (extra != null) {
@@ -2207,7 +2203,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean hasOfficialAPIAccess(@NonNull Context context, @NonNull ParcelableCredentials account) {
-        if (ParcelableCredentials.ACCOUNT_TYPE_TWITTER.equals(account.account_type)) {
+        if (ParcelableAccount.Type.TWITTER.equals(account.account_type)) {
             final TwitterAccountExtra extra = JsonSerializer.parse(account.account_extras,
                     TwitterAccountExtra.class);
             if (extra != null) {

@@ -33,9 +33,11 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -68,41 +70,55 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
                                                @NonNull final ParcelableCredentials credentials,
                                                @NonNull final Paging paging) throws TwitterException {
         final Context context = getContext();
-        if (Utils.isOfficialCredentials(context, credentials)) {
-            if (mUserId != null)
-                return twitter.getMediaTimeline(mUserId, paging);
-            if (mUserScreenName != null)
-                return twitter.getMediaTimeline(mUserScreenName, paging);
-        } else if (TwitterAPIFactory.isStatusNetCredentials(credentials)) {
-            throw new TwitterException("Not implemented");
-        } else {
-            final String screenName;
-            if (mUserScreenName != null) {
-                screenName = mUserScreenName;
-            } else {
-                if (mUser == null) {
-                    mUser = TwitterWrapper.tryShowUser(twitter, mUserId, null);
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.TWITTER: {
+                if (Utils.isOfficialCredentials(context, credentials)) {
+                    if (mUserId != null) {
+                        return twitter.getMediaTimeline(mUserId, paging);
+                    }
+                    if (mUserScreenName != null) {
+                        return twitter.getMediaTimelineByScreenName(mUserScreenName, paging);
+                    }
+                } else {
+                    final String screenName;
+                    if (mUserScreenName != null) {
+                        screenName = mUserScreenName;
+                    } else {
+                        if (mUser == null) {
+                            mUser = TwitterWrapper.tryShowUser(twitter, mUserId, null);
+                        }
+                        screenName = mUser.getScreenName();
+                    }
+                    final SearchQuery query;
+                    if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
+                        query = new SearchQuery("from:" + screenName + " filter:media exclude:retweets");
+                    } else {
+                        query = new SearchQuery("@" + screenName + " pic.twitter.com -RT");
+                    }
+                    query.paging(paging);
+                    final ResponseList<Status> result = new ResponseList<>();
+                    for (Status status : twitter.search(query)) {
+                        final User user = status.getUser();
+                        if (TextUtils.equals(user.getId(), mUserId) ||
+                                StringUtils.endsWithIgnoreCase(user.getScreenName(), mUserScreenName)) {
+                            result.add(status);
+                        }
+                    }
+                    return result;
                 }
-                screenName = mUser.getScreenName();
+                throw new TwitterException("Wrong user");
             }
-            final SearchQuery query;
-            if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
-                query = new SearchQuery("from:" + screenName + " filter:media exclude:retweets");
-            } else {
-                query = new SearchQuery("@" + screenName + " pic.twitter.com -RT");
-            }
-            query.paging(paging);
-            final ResponseList<Status> result = new ResponseList<>();
-            for (Status status : twitter.search(query)) {
-                final User user = status.getUser();
-                if (TextUtils.equals(user.getId(), mUserId) ||
-                        StringUtils.endsWithIgnoreCase(user.getScreenName(), mUserScreenName)) {
-                    result.add(status);
+            case ParcelableAccount.Type.FANFOU: {
+                if (mUserId != null) {
+                    return twitter.getPhotosUserTimeline(mUserId, paging);
                 }
+                if (mUserScreenName != null) {
+                    return twitter.getPhotosUserTimeline(mUserScreenName, paging);
+                }
+                throw new TwitterException("Wrong user");
             }
-            return result;
         }
-        throw new TwitterException("Wrong user");
+        throw new TwitterException("Not implemented");
     }
 
     @WorkerThread

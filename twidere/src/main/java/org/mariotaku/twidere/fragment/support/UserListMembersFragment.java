@@ -60,7 +60,8 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
     };
 
     @Override
-    public CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
+    public CursorSupportUsersLoader onCreateUsersLoader(final Context context,
+                                                        @NonNull final Bundle args, boolean fromUser) {
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final UserKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final String userId = args.getString(EXTRA_USER_ID);
