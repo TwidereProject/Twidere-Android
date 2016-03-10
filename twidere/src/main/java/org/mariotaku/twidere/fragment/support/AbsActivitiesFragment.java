@@ -47,12 +47,12 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.task.AbstractTask;
@@ -341,7 +341,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         final ParcelableActivitiesAdapter adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
         final UserKey[] accountIds = {activity.account_key};
-        final String[] maxIds = {activity.min_position};
+        final String[] maxIds = {String.valueOf(activity.min_position)};
         getActivities(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
 
@@ -528,7 +528,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     protected abstract boolean hasMoreData(List<ParcelableActivity> data);
 
     protected abstract Loader<List<ParcelableActivity>> onCreateActivitiesLoader(final Context context, final Bundle args,
-                                                             final boolean fromUser);
+                                                                                 final boolean fromUser);
 
     protected abstract void onLoadingFinished();
 

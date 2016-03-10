@@ -122,7 +122,6 @@ import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
@@ -492,20 +491,20 @@ public final class Utils implements Constants {
             case LINK_ID_STATUS: {
                 fragment = new StatusFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
-                    final String param_status_id = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, NumberUtils.toLong(param_status_id, -1));
+                    final String paramStatusId = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
+                    args.putString(EXTRA_STATUS_ID, paramStatusId);
                 }
                 break;
             }
             case LINK_ID_USER: {
                 fragment = new UserFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(param_user_id, -1));
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
                 args.putString(EXTRA_REFERRAL, intent.getStringExtra(EXTRA_REFERRAL));
                 break;
@@ -518,7 +517,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
                 break;
             }
@@ -530,7 +529,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
                 if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
@@ -543,7 +542,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
                 if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
@@ -556,7 +555,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
                 if (!args.containsKey(EXTRA_SCREEN_NAME) && !args.containsKey(EXTRA_USER_ID))
                     return null;
@@ -570,7 +569,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
                 if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
@@ -578,14 +577,14 @@ public final class Utils implements Constants {
             case LINK_ID_USER_FRIENDS: {
                 fragment = new UserFriendsFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final String param_user_id = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(param_user_id, -1));
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
-                if (isEmpty(paramScreenName) && isEmpty(param_user_id)) return null;
+                if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
             }
             case LINK_ID_USER_BLOCKS: {
@@ -631,7 +630,7 @@ public final class Utils implements Constants {
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
                 args.putLong(EXTRA_LIST_ID, NumberUtils.toLong(paramListId, -1));
-                args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                args.putString(EXTRA_USER_ID, paramUserId);
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -644,7 +643,7 @@ public final class Utils implements Constants {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
                 if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
@@ -652,14 +651,14 @@ public final class Utils implements Constants {
             case LINK_ID_USER_GROUPS: {
                 fragment = new UserGroupsFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final long paramUserId = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_USER_ID), -1);
+                final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
-                    args.putLong(EXTRA_USER_ID, paramUserId);
+                    args.putString(EXTRA_USER_ID, paramUserId);
                 }
-                if (isEmpty(paramScreenName) && paramUserId <= 0) return null;
+                if (isEmpty(paramScreenName) && isEmpty(paramUserId)) return null;
                 break;
             }
             case LINK_ID_USER_LIST_TIMELINE: {
@@ -672,7 +671,7 @@ public final class Utils implements Constants {
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
                 args.putLong(EXTRA_LIST_ID, NumberUtils.toLong(paramListId, -1));
-                args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                args.putString(EXTRA_USER_ID, paramUserId);
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -687,7 +686,7 @@ public final class Utils implements Constants {
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
                 args.putLong(EXTRA_LIST_ID, NumberUtils.toLong(paramListId, -1));
-                args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                args.putString(EXTRA_USER_ID, paramUserId);
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -702,7 +701,7 @@ public final class Utils implements Constants {
                         && (isEmpty(paramListName) || isEmpty(paramScreenName) && isEmpty(paramUserId)))
                     return null;
                 args.putLong(EXTRA_LIST_ID, NumberUtils.toLong(paramListId, -1));
-                args.putLong(EXTRA_USER_ID, NumberUtils.toLong(paramUserId, -1));
+                args.putString(EXTRA_USER_ID, paramUserId);
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
                 break;
@@ -736,7 +735,7 @@ public final class Utils implements Constants {
                 fragment = new StatusRetweetersListFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
                     final String paramStatusId = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, NumberUtils.toLong(paramStatusId, -1));
+                    args.putString(EXTRA_STATUS_ID, paramStatusId);
                 }
                 break;
             }
@@ -744,7 +743,7 @@ public final class Utils implements Constants {
                 fragment = new StatusFavoritersListFragment();
                 if (!args.containsKey(EXTRA_STATUS_ID)) {
                     final String paramStatusId = uri.getQueryParameter(QUERY_PARAM_STATUS_ID);
-                    args.putLong(EXTRA_STATUS_ID, NumberUtils.toLong(paramStatusId, -1));
+                    args.putString(EXTRA_STATUS_ID, paramStatusId);
                 }
                 break;
             }
@@ -1998,30 +1997,6 @@ public final class Utils implements Constants {
     public static String trimLineBreak(final String orig) {
         if (orig == null) return null;
         return orig.replaceAll("\\n+", "\n");
-    }
-
-    public static boolean truncateMessages(final List<DirectMessage> in, final List<DirectMessage> out,
-                                           final String sinceId) {
-        if (in == null) return false;
-        for (final DirectMessage message : in) {
-            if (sinceId != null && message.getId() <= sinceId) {
-                continue;
-            }
-            out.add(message);
-        }
-        return in.size() != out.size();
-    }
-
-    public static boolean truncateStatuses(final List<Status> in, final List<Status> out,
-                                           final String sinceId) {
-        if (in == null) return false;
-        for (final Status status : in) {
-            if (sinceId != null && status.getId() <= sinceId) {
-                continue;
-            }
-            out.add(status);
-        }
-        return in.size() != out.size();
     }
 
     public static void updateRelationship(Context context, Relationship relationship, UserKey accountId) {

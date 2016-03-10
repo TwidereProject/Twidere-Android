@@ -27,7 +27,6 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.UriUtils;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -89,12 +88,12 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
                     } else {
                         paging.sinceId(sinceId);
                     }
+                    if (maxIds == null || sinceIds[idx] == null) {
+                        paging.setLatestResults(true);
+                    }
                 }
-                final List<DirectMessage> messages = new ArrayList<>();
-                final boolean truncated = Utils.truncateMessages(getDirectMessages(twitter, paging), messages,
-                        sinceId);
-                result.add(new TwitterWrapper.MessageListResponse(accountKey, maxId, sinceId, messages,
-                        truncated));
+                final List<DirectMessage> messages = getDirectMessages(twitter, paging);
+                result.add(new TwitterWrapper.MessageListResponse(accountKey, maxId, sinceId, messages));
                 storeMessages(accountKey, messages, isOutgoing(), true);
                 errorInfoStore.remove(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey);
             } catch (final TwitterException e) {

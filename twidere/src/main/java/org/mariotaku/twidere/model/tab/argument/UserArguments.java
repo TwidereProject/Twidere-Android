@@ -12,12 +12,12 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class UserArguments extends TabArguments {
     @JsonField(name = "user_id")
-    long userId;
+    String userId;
 
     @Override
     public void copyToBundle(@NonNull Bundle bundle) {
         super.copyToBundle(bundle);
-        bundle.putLong(EXTRA_USER_ID, userId);
+        bundle.putString(EXTRA_USER_ID, userId);
     }
 
     @Override

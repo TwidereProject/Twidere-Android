@@ -65,7 +65,7 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
         final Bundle args = getArguments();
         if (args == null) return null;
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         return new String[]{AUTHORITY_USER_TIMELINE, "account" + accountKey, "user" + userId + "name" + screenName};
     }

@@ -852,7 +852,8 @@ public interface TwidereDataStore {
 
         String CARD_NAME = "card_type";
 
-        String DEFAULT_SORT_ORDER = STATUS_TIMESTAMP + " DESC, " + STATUS_ID + " DESC";
+        String DEFAULT_SORT_ORDER = STATUS_TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + STATUS_ID
+                + " DESC";
 
         String QUOTED_ID = "quoted_id";
         String QUOTED_TEXT_HTML = "quoted_text_html";

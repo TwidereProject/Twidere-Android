@@ -34,10 +34,10 @@ public interface GroupResources {
     ResponseList<User> getGroupMembers(@Query("group_name") String groupName) throws TwitterException;
 
     @GET("/statusnet/groups/list.json")
-    ResponseList<Group> getGroups(@Query("screen_name") String screenName) throws TwitterException;
+    ResponseList<Group> getGroupsByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @GET("/statusnet/groups/list.json")
-    ResponseList<Group> getGroups(@Query("id") long userId) throws TwitterException;
+    ResponseList<Group> getGroups(@Query("id") String userId) throws TwitterException;
 
     @GET("/statusnet/groups/list_all.json")
     ResponseList<Group> getAllGroups(@Query Paging paging) throws TwitterException;

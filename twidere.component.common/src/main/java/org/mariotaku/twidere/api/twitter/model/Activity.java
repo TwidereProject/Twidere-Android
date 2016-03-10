@@ -39,7 +39,7 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
     User[] targetObjectUsers;
     Status[] targetObjectStatuses, targetStatuses;
     UserList[] targetUserLists, targetObjectUserLists;
-    long maxPosition, minPosition;
+    long maxPosition, minPosition = -1;
     int targetObjectsSize, targetsSize, sourcesSize;
 
     Activity() {

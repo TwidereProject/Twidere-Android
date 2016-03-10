@@ -63,7 +63,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
     public CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final UserKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final UserListMembersLoader loader = new UserListMembersLoader(context, accountId, listId,
@@ -84,10 +84,11 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
         if (mUserList == null && args != null) {
             final long listId = args.getLong(EXTRA_LIST_ID, -1);
             final UserKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            final long userId = args.getLong(EXTRA_USER_ID, -1);
+            final String userId = args.getString(EXTRA_USER_ID);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
             final String listName = args.getString(EXTRA_LIST_NAME);
-            AsyncTaskUtils.executeTask(new GetUserListTask(accountId, listId, listName, userId, screenName));
+            AsyncTaskUtils.executeTask(new GetUserListTask(accountId, listId, listName, userId,
+                    screenName));
         }
     }
 
@@ -114,12 +115,12 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
 
         @Nullable
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
         private final long mListId;
         private final String mScreenName, mListName;
 
         private GetUserListTask(@Nullable final UserKey accountKey, final long listId,
-                                final String listName, final long userId, final String screenName) {
+                                final String listName, final String userId, final String screenName) {
             this.mAccountKey = accountKey;
             this.mUserId = userId;
             this.mListId = listId;
@@ -138,7 +139,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
                 final UserList list;
                 if (mListId > 0) {
                     list = twitter.showUserList(mListId);
-                } else if (mUserId > 0) {
+                } else if (mUserId != null) {
                     list = twitter.showUserList(mListName, mUserId);
                 } else if (mScreenName != null) {
                     list = twitter.showUserList(mListName, mScreenName);

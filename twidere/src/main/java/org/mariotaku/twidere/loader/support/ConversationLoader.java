@@ -41,39 +41,56 @@ import org.mariotaku.twidere.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ConversationLoader extends TwitterAPIStatusesLoader {
 
     @NonNull
     private final ParcelableStatus mStatus;
+    private final long mSinceSortId, mMaxSortId;
     private boolean mCanLoadAllReplies;
 
     public ConversationLoader(final Context context, @NonNull final ParcelableStatus status,
-                              final String sinceId, final String maxId, final List<ParcelableStatus> data,
-                              final boolean fromUser) {
+                              final String sinceId, final String maxId,
+                              final long sinceSortId, final long maxSortId,
+                              final List<ParcelableStatus> data, final boolean fromUser) {
         super(context, status.account_key, sinceId, maxId, data, null, -1, fromUser);
         mStatus = Nullables.assertNonNull(ParcelUtils.clone(status));
+        mSinceSortId = sinceSortId;
+        mMaxSortId = maxSortId;
         ParcelableStatusUtils.makeOriginalStatus(mStatus);
     }
 
     @NonNull
     @Override
-    public List<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
+    public List<Status> getStatuses(@NonNull final Twitter twitter,
+                                    @NonNull final ParcelableCredentials credentials,
+                                    @NonNull final Paging paging) throws TwitterException {
         mCanLoadAllReplies = false;
         final ParcelableStatus status = mStatus;
-        if (Utils.isOfficialCredentials(getContext(), credentials)) {
-            mCanLoadAllReplies = true;
-            return twitter.showConversation(status.id, paging);
+        if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
+            final boolean isOfficial = Utils.isOfficialCredentials(getContext(), credentials);
+            mCanLoadAllReplies = isOfficial;
+            if (isOfficial) {
+                return twitter.showConversation(status.id, paging);
+            } else {
+                return showConversationCompat(twitter, credentials, status);
+            }
         } else if (TwitterAPIFactory.isStatusNetCredentials(credentials)) {
             mCanLoadAllReplies = true;
             return twitter.getStatusNetConversation(status.id, paging);
         }
+        throw new TwitterException("Not supported");
+    }
+
+    protected List<Status> showConversationCompat(@NonNull Twitter twitter,
+                                                  @NonNull ParcelableCredentials credentials,
+                                                  @NonNull ParcelableStatus status) throws TwitterException {
         final List<Status> statuses = new ArrayList<>();
         final String maxId = getMaxId(), sinceId = getSinceId();
+        final long maxSortId = getMaxSortId(), sinceSortId = getSinceSortId();
         final boolean noSinceMaxId = maxId == null && sinceId == null;
         // Load conversations
-        if ((maxId != null && maxId < status.id) || noSinceMaxId) {
+        if ((maxId != null && maxSortId < status.sort_id) || noSinceMaxId) {
             String inReplyToId = maxId != null ? maxId : status.in_reply_to_status_id;
             int count = 0;
             while (inReplyToId != null && count < 10) {
@@ -84,7 +101,7 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
             }
         }
         // Load replies
-        if ((sinceId != null && sinceId > status.id) || noSinceMaxId) {
+        if ((sinceId != null && sinceSortId > status.sort_id) || noSinceMaxId) {
             SearchQuery query = new SearchQuery();
             if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
                 query.query("to:" + status.user_screen_name);
@@ -107,6 +124,14 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
 
     public boolean canLoadAllReplies() {
         return mCanLoadAllReplies;
+    }
+
+    public long getSinceSortId() {
+        return mSinceSortId;
+    }
+
+    public long getMaxSortId() {
+        return mMaxSortId;
     }
 
     @WorkerThread

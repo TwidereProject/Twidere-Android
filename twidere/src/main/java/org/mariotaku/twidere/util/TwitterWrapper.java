@@ -200,25 +200,22 @@ public class TwitterWrapper implements Constants {
 
     public static final class MessageListResponse extends TwitterListResponse<DirectMessage> {
 
-        public final boolean truncated;
-
         public MessageListResponse(final UserKey accountKey, final Exception exception) {
-            this(accountKey, null, null, null, false, exception);
+            this(accountKey, null, null, null, exception);
         }
 
         public MessageListResponse(final UserKey accountKey, final List<DirectMessage> list) {
-            this(accountKey, null, null, list, false, null);
+            this(accountKey, null, null, list, null);
         }
 
         public MessageListResponse(final UserKey accountKey, final String maxId, final String sinceId,
-                                   final List<DirectMessage> list, final boolean truncated) {
-            this(accountKey, maxId, sinceId, list, truncated, null);
+                                   final List<DirectMessage> list) {
+            this(accountKey, maxId, sinceId, list, null);
         }
 
         MessageListResponse(final UserKey accountKey, final String maxId, final String sinceId,
-                            final List<DirectMessage> list, final boolean truncated, final Exception exception) {
+                            final List<DirectMessage> list, final Exception exception) {
             super(accountKey, maxId, sinceId, list, exception);
-            this.truncated = truncated;
         }
 
     }

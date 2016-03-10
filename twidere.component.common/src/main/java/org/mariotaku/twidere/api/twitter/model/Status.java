@@ -131,6 +131,8 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "attentions")
     Attention[] attentions;
 
+    private transient long sortId = -1;
+
 
     public User getUser() {
         return user;
@@ -401,6 +403,20 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     public static void setQuotedStatus(Status status, Status quoted) {
         if (status == null) return;
         status.quotedStatus = quoted;
+    }
+
+    public long getSortId() {
+        if (sortId != -1) return sortId;
+        sortId = rawId;
+        if (sortId == -1) {
+            // Try use long id
+            sortId = Long.parseLong(id);
+        }
+        if (sortId == -1 && createdAt != null) {
+            // Try use timestamp
+            sortId = createdAt.getTime();
+        }
+        return sortId;
     }
 
 

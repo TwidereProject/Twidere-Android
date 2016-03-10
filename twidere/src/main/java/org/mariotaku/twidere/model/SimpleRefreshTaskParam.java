@@ -28,4 +28,16 @@ public abstract class SimpleRefreshTaskParam implements RefreshTaskParam {
     public boolean hasSinceIds() {
         return getSinceIds() != null;
     }
+
+    @Nullable
+    @Override
+    public long[] getSinceSortIds() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public long[] getMaxSortIds() {
+        return null;
+    }
 }

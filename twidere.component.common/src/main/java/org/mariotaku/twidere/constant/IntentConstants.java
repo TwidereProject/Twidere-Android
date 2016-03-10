@@ -108,9 +108,9 @@ public interface IntentConstants {
     String EXTRA_USER_IDS = "user_ids";
     String EXTRA_LIST_ID = "list_id";
     String EXTRA_MAX_ID = "max_id";
-    String EXTRA_MAX_IDS = "max_ids";
     String EXTRA_SINCE_ID = "since_id";
-    String EXTRA_SINCE_IDS = "since_ids";
+    String EXTRA_MAX_SORT_ID = "max_sort_id";
+    String EXTRA_SINCE_SORT_ID = "since_sort_id";
     String EXTRA_STATUS_ID = "status_id";
     String EXTRA_SCREEN_NAME = "screen_name";
     String EXTRA_SCREEN_NAMES = "screen_names";

@@ -57,7 +57,7 @@ public class UserFavoritesFragment extends ParcelableStatusesFragment {
         final Bundle args = getArguments();
         if (args == null) return null;
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         return new String[]{AUTHORITY_USER_FAVORITES, "account" + accountKey, "user" + userId, "name" + screenName};
     }
@@ -71,9 +71,9 @@ public class UserFavoritesFragment extends ParcelableStatusesFragment {
         StringBuilder sb = new StringBuilder("user_favorites_");
         if (tabPosition < 0) return null;
 
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        if (userId > 0) {
+        if (userId != null) {
             sb.append(userId);
         } else if (screenName != null) {
             sb.append(screenName);

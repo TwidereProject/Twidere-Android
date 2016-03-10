@@ -34,10 +34,10 @@ import java.util.List;
 
 public class UserGroupsLoader extends BaseGroupsLoader {
 
-    private final long mUserId;
+    private final String mUserId;
     private final String mScreenName;
 
-    public UserGroupsLoader(final Context context, final UserKey accountKey, final long userId,
+    public UserGroupsLoader(final Context context, final UserKey accountKey, final String userId,
                             final String screenName, final List<ParcelableGroup> data) {
         super(context, accountKey, 0, data);
         mUserId = userId;
@@ -47,7 +47,7 @@ public class UserGroupsLoader extends BaseGroupsLoader {
     @Override
     public ResponseList<Group> getGroups(final Twitter twitter) throws TwitterException {
         if (twitter == null) return null;
-        if (mUserId > 0)
+        if (mUserId != null)
             return twitter.getGroups(mUserId);
         else if (mScreenName != null) return twitter.getGroups(mScreenName);
         return null;

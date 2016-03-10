@@ -77,9 +77,9 @@ public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
                 throw new IOException(e);
             }
         } else if ("min_position".equals(fieldName)) {
-            instance.minPosition = jsonParser.getValueAsLong();
+            instance.minPosition = jsonParser.getValueAsLong(-1);
         } else if ("max_position".equals(fieldName)) {
-            instance.maxPosition = jsonParser.getValueAsLong();
+            instance.maxPosition = jsonParser.getValueAsLong(-1);
         } else if ("sources_size".equals(fieldName)) {
             instance.sourcesSize = jsonParser.getValueAsInt();
         } else if ("targets_size".equals(fieldName)) {

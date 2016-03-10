@@ -365,7 +365,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     public Loader<SingleResponse<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
         setProgressBarIndeterminateVisibility(true);
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
@@ -412,7 +412,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             tabArgs.putString(EXTRA_LIST_NAME, userList.name);
         } else {
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
-            tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
+            tabArgs.getString(EXTRA_USER_ID, args.getString(EXTRA_USER_ID));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
             tabArgs.putLong(EXTRA_LIST_ID, args.getLong(EXTRA_LIST_ID, -1));
             tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME));
@@ -521,13 +521,14 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         private final boolean mOmitIntentExtra;
         private final Bundle mExtras;
         private final UserKey mAccountKey;
-        private final long mUserId;
+        private final String mUserId;
         private final long mListId;
         private final String mScreenName, mListName;
 
-        private ParcelableUserListLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                         final UserKey accountKey, final long listId, final String listName, final long userId,
-                                         final String screenName) {
+        private ParcelableUserListLoader(final Context context, final boolean omitIntentExtra,
+                                         final Bundle extras, final UserKey accountKey,
+                                         final long listId, final String listName,
+                                         final String userId, final String screenName) {
             super(context);
             mOmitIntentExtra = omitIntentExtra;
             mExtras = extras;
@@ -551,10 +552,10 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
                 final UserList list;
                 if (mListId > 0) {
                     list = twitter.showUserList(mListId);
-                } else if (mUserId > 0) {
+                } else if (mUserId != null) {
                     list = twitter.showUserList(mListName, mUserId);
                 } else if (mScreenName != null) {
-                    list = twitter.showUserList(mListName, mScreenName);
+                    list = twitter.showUserListByScrenName(mListName, mScreenName);
                 } else
                     return SingleResponse.getInstance();
                 return SingleResponse.getInstance(ParcelableUserListUtils.from(list, mAccountKey));

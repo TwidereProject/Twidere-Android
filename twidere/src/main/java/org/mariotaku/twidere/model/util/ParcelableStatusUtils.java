@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.api.statusnet.model.Attention;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
@@ -40,6 +41,16 @@ public class ParcelableStatusUtils {
         result.account_key = accountKey;
         result.id = orig.getId();
         result.timestamp = getTime(orig.getCreatedAt());
+        result.sort_id = orig.getRawId();
+        if (result.sort_id == -1) {
+            // Try use long id
+            result.sort_id = NumberUtils.toLong(result.id, -1);
+        }
+        if (result.sort_id == -1) {
+            // Try use timestamp
+            result.sort_id = result.timestamp;
+        }
+
         result.extras = new ParcelableStatus.Extras();
         result.extras.external_url = orig.getExternalUrl();
         result.extras.support_entities = orig.getEntities() != null;

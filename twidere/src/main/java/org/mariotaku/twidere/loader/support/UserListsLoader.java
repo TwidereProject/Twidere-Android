@@ -21,23 +21,22 @@ package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 
-import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-
 public class UserListsLoader extends BaseUserListsLoader {
 
-    private final long mUserId;
+    private final String mUserId;
     private final String mScreenName;
     private final boolean mReverse;
 
-    public UserListsLoader(final Context context, final UserKey accountKey, final long userId,
+    public UserListsLoader(final Context context, final UserKey accountKey, final String userId,
                            final String screenName, final boolean reverse, final List<ParcelableUserList> data) {
         super(context, accountKey, 0, data);
         mUserId = userId;
@@ -48,9 +47,11 @@ public class UserListsLoader extends BaseUserListsLoader {
     @Override
     public ResponseList<UserList> getUserLists(final Twitter twitter) throws TwitterException {
         if (twitter == null) return null;
-        if (mUserId > 0)
+        if (mUserId != null) {
             return twitter.getUserLists(mUserId, mReverse);
-        else if (mScreenName != null) return twitter.getUserLists(mScreenName, mReverse);
+        } else if (mScreenName != null) {
+            return twitter.getUserListsByScreenName(mScreenName, mReverse);
+        }
         return null;
     }
 

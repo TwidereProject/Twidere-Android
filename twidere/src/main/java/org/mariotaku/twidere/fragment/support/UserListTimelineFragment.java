@@ -68,7 +68,7 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         assert args != null;
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final String listName = args.getString(EXTRA_LIST_NAME);
         return new String[]{AUTHORITY_USER_LIST_TIMELINE, "account" + accountKey, "list_id" + listId,
@@ -87,9 +87,9 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         if (listId > 0) {
             sb.append(listId);
         } else if (listName != null) {
-            final long userId = args.getLong(EXTRA_USER_ID, -1);
+            final String userId = args.getString(EXTRA_USER_ID);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
-            if (userId > 0) {
+            if (userId != null) {
                 sb.append(userId);
             } else if (screenName != null) {
                 sb.append(screenName);

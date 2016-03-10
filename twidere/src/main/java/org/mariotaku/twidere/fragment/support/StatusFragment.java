@@ -220,9 +220,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
             final String maxId = args.getString(EXTRA_MAX_ID);
             final String sinceId = args.getString(EXTRA_SINCE_ID);
+            final long maxSortId = args.getLong(EXTRA_MAX_SORT_ID);
+            final long sinceSortId = args.getLong(EXTRA_SINCE_SORT_ID);
             assert status != null;
             final ConversationLoader loader = new ConversationLoader(getActivity(), status, sinceId,
-                    maxId, mStatusAdapter.getData(), true);
+                    maxId, sinceSortId, maxSortId, mStatusAdapter.getData(), true);
             loader.setComparator(ParcelableStatus.REVERSE_COMPARATOR);
             return loader;
         }
@@ -233,7 +235,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             ConversationLoader conversationLoader = (ConversationLoader) loader;
             int supportedPositions = 0;
             if (data != null && !data.isEmpty()) {
-                if (conversationLoader.getSinceId() < data.get(data.size() - 1).id) {
+                if (conversationLoader.getSinceSortId() < data.get(data.size() - 1).sort_id) {
                     supportedPositions |= IndicatorPosition.END;
                 }
                 if (data.get(0).in_reply_to_status_id != null) {
@@ -1812,6 +1814,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
+        public long getStatusTimestamp(int position) {
+            final ParcelableStatus status = getStatus(position);
+            return status != null ? status.timestamp : -1;
+        }
+
+        @Override
         public UserKey getAccountKey(int position) {
             final ParcelableStatus status = getStatus(position);
             return status != null ? status.account_key : null;
@@ -1889,12 +1897,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             } else {
                 int conversationCount = 0, replyCount = 0;
                 int replyStart = -1;
-                final String statusId = status.is_retweet ? status.retweet_id : status.id;
+                final long sortId = status.sort_id;
                 for (int i = 0, j = data.size(); i < j; i++) {
                     ParcelableStatus item = data.get(i);
-                    if (item.id < statusId) {
+                    if (item.sort_id < sortId) {
                         conversationCount++;
-                    } else if (item.id > statusId) {
+                    } else if (item.sort_id > sortId) {
                         if (replyStart < 0) {
                             replyStart = i;
                         }

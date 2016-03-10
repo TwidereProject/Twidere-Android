@@ -1537,7 +1537,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name);
         } else {
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
-            tabArgs.putLong(EXTRA_USER_ID, args.getLong(EXTRA_USER_ID, -1));
+            tabArgs.putString(EXTRA_USER_ID, args.getString(EXTRA_USER_ID));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
         }
         mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses),
