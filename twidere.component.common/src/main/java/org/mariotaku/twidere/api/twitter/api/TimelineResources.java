@@ -49,11 +49,11 @@ public interface TimelineResources {
     ResponseList<Status> getRetweetsOfMe(@Query Paging paging) throws TwitterException;
 
     @GET("/statuses/user_timeline.json")
-    ResponseList<Status> getUserTimeline(@Query("user_id") long userId, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getUserTimeline(@Query("user_id") String userId, @Query Paging paging) throws TwitterException;
 
     @GET("/statuses/user_timeline.json")
     ResponseList<Status> getUserTimeline(@Query Paging paging) throws TwitterException;
 
     @GET("/statuses/user_timeline.json")
-    ResponseList<Status> getUserTimeline(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getUserTimelineByScreenName(@Query("screen_name") String screenName, @Query Paging paging) throws TwitterException;
 }

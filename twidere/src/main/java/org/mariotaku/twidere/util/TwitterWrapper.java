@@ -138,7 +138,7 @@ public class TwitterWrapper implements Constants {
                 if (TextUtils.equals(user.getId(), id)) return user;
             }
         } else {
-            final ResponseList<Status> timeline = twitter.getUserTimeline(screenName, paging);
+            final ResponseList<Status> timeline = twitter.getUserTimelineByScreenName(screenName, paging);
             for (final Status status : timeline) {
                 final User user = status.getUser();
                 if (searchScreenName.equalsIgnoreCase(user.getScreenName()))

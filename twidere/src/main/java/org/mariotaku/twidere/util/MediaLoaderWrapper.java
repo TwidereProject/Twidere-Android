@@ -33,10 +33,10 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.imageloader.OvalBitmapDisplayer;
 import org.mariotaku.twidere.util.media.MediaExtra;
 
@@ -141,6 +141,8 @@ public class MediaLoaderWrapper implements Constants {
     public void displayOriginalProfileImage(final ImageView view, final ParcelableUser user) {
         if (user.extras != null && !TextUtils.isEmpty(user.extras.profile_image_url_original)) {
             displayProfileImage(view, user.extras.profile_image_url_original);
+        } else if (user.extras != null && !TextUtils.isEmpty(user.extras.profile_image_url_profile_size)) {
+            displayProfileImage(view, user.extras.profile_image_url_profile_size);
         } else {
             displayProfileImage(view, Utils.getOriginalTwitterProfileImage(user.profile_image_url));
         }

@@ -73,7 +73,6 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -333,7 +332,8 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         if (status == null) return;
         final UserKey[] accountIds = {status.account_key};
         final String[] maxIds = {status.id};
-        getStatuses(new BaseRefreshTaskParam(accountIds, maxIds, null));
+        final long[] maxSortIds = {status.sort_id};
+        getStatuses(new BaseRefreshTaskParam(accountIds, maxIds, null, maxSortIds, null));
     }
 
     @Override
@@ -356,7 +356,8 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         }
     }
 
-    protected void onHasMoreDataChanged(boolean hasMoreData) {}
+    protected void onHasMoreDataChanged(boolean hasMoreData) {
+    }
 
     @NonNull
     @TimelineType
@@ -531,7 +532,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     protected abstract boolean hasMoreData(List<ParcelableStatus> data);
 
     protected abstract Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context, final Bundle args,
-                                                           final boolean fromUser);
+                                                                             final boolean fromUser);
 
     protected abstract void onLoadingFinished();
 
@@ -555,7 +556,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (!getUserVisibleHint()) return;
+        if (!getUserVisibleHint() || menuInfo == null) return;
         final ParcelableStatusesAdapter adapter = getAdapter();
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =

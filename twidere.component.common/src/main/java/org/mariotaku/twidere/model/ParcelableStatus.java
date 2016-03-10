@@ -316,11 +316,13 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     @Override
     public int compareTo(@NonNull final ParcelableStatus another) {
-        long timeDelta = timestamp - another.timestamp;
-        if (timeDelta == 0) {
-            return (int) (sort_id - another.sort_id);
+        long diff = timestamp - another.timestamp;
+        if (diff == 0) {
+            diff = sort_id - another.sort_id;
         }
-        return (int) timeDelta;
+        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        return (int) diff;
     }
 
     @Override

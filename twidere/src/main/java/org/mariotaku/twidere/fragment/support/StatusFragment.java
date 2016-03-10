@@ -222,10 +222,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final String sinceId = args.getString(EXTRA_SINCE_ID);
             final long maxSortId = args.getLong(EXTRA_MAX_SORT_ID);
             final long sinceSortId = args.getLong(EXTRA_SINCE_SORT_ID);
+            final boolean loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false);
             assert status != null;
             final ConversationLoader loader = new ConversationLoader(getActivity(), status, sinceId,
-                    maxId, sinceSortId, maxSortId, mStatusAdapter.getData(), true);
-            loader.setComparator(ParcelableStatus.REVERSE_COMPARATOR);
+                    maxId, sinceSortId, maxSortId, mStatusAdapter.getData(), true, loadingMore);
+            // Setting comparator to null lets statuses sort ascending
+            loader.setComparator(null);
             return loader;
         }
 

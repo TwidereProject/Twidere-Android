@@ -30,10 +30,12 @@ import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
+import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.holder.AccountViewHolder;
@@ -80,7 +82,14 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         holder.screenName.setText(String.format("@%s", cursor.getString(mIndices.screen_name)));
         holder.setAccountColor(color);
         if (mDisplayProfileImage) {
-            mImageLoader.displayProfileImage(holder.profileImage, cursor.getString(mIndices.profile_image_url));
+            final ParcelableUser user = JsonSerializer.parse(cursor.getString(mIndices.account_user),
+                    ParcelableUser.class);
+            if (user != null) {
+                mImageLoader.displayProfileImage(holder.profileImage, user);
+            } else {
+                mImageLoader.displayProfileImage(holder.profileImage,
+                        cursor.getString(mIndices.profile_image_url));
+            }
         } else {
             mImageLoader.cancelDisplayTask(holder.profileImage);
         }

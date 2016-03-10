@@ -82,7 +82,10 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
 
     @Override
     public int compareTo(@NonNull final ParcelableUserList another) {
-        return (int) (position - another.position);
+        final long diff = position - another.position;
+        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        return (int) diff;
     }
 
     @Override

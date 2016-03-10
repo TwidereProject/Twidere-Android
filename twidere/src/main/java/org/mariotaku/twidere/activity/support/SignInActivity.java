@@ -567,7 +567,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
     }
 
     @Nullable
-    private static Pair<String, String> detectAccountType(Twitter twitter) {
+    private static Pair<String, String> detectAccountType(Twitter twitter, User user) {
         try {
             // Get StatusNet specific resource
             StatusNetConfig config = twitter.getStatusNetConfig();
@@ -592,6 +592,9 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                     JsonSerializer.serialize(extra, TwitterAccountExtra.class));
         } catch (TwitterException e) {
             // Ignore
+        }
+        if (UserKeyUtils.isFanfouUser(user)) {
+            return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_FANFOU, null);
         }
         return Pair.create(ParcelableCredentials.ACCOUNT_TYPE_TWITTER, null);
     }
@@ -680,7 +683,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 final int color = analyseUserProfileColor(user);
                 return new SignInResponse(isUserLoggedIn(context, userId), auth, user,
                         ParcelableCredentials.AUTH_TYPE_OAUTH, color, apiUrlFormat, sameOauthSigningUrl,
-                        noVersionSuffix, detectAccountType(twitter));
+                        noVersionSuffix, detectAccountType(twitter, user));
             } catch (final TwitterException e) {
                 return new SignInResponse(false, false, e);
             }
@@ -802,7 +805,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             if (userId == null) return new SignInResponse(false, false, null);
             final int color = analyseUserProfileColor(user);
             return new SignInResponse(isUserLoggedIn(activity, userId), username, password, user,
-                    color, apiUrlFormat, noVersionSuffix, detectAccountType(twitter));
+                    color, apiUrlFormat, noVersionSuffix, detectAccountType(twitter, user));
         }
 
 
@@ -818,7 +821,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             if (userId == null) return new SignInResponse(false, false, null);
             final int color = analyseUserProfileColor(user);
             return new SignInResponse(isUserLoggedIn(activity, userId), user, color, apiUrlFormat,
-                    noVersionSuffix, detectAccountType(twitter));
+                    noVersionSuffix, detectAccountType(twitter, user));
         }
 
         private SignInResponse getOAuthSignInResponse(SignInActivity activity, OAuthToken accessToken,
@@ -829,7 +832,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             final User user = twitter.verifyCredentials();
             final int color = analyseUserProfileColor(user);
             return new SignInResponse(isUserLoggedIn(activity, userId), auth, user, authType, color,
-                    apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix, detectAccountType(twitter));
+                    apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix, detectAccountType(twitter, user));
         }
 
         static class WrongBasicCredentialException extends AuthenticationException {

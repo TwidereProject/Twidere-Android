@@ -390,7 +390,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
             @NonNull
             @Override
-            public UserKey[] getAccountKeys() {
+            public UserKey[] getAccountKeysWorker() {
                 return closure.getAccountKeys();
             }
 
@@ -404,7 +404,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         getActivitiesAboutMeAsync(new SimpleRefreshTaskParam() {
             @NonNull
             @Override
-            public UserKey[] getAccountKeys() {
+            public UserKey[] getAccountKeysWorker() {
                 return closure.getAccountKeys();
             }
 
@@ -418,14 +418,14 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         getReceivedDirectMessagesAsync(new SimpleRefreshTaskParam() {
             @NonNull
             @Override
-            public UserKey[] getAccountKeys() {
+            public UserKey[] getAccountKeysWorker() {
                 return closure.getAccountKeys();
             }
         });
         getSentDirectMessagesAsync(new SimpleRefreshTaskParam() {
             @NonNull
             @Override
-            public UserKey[] getAccountKeys() {
+            public UserKey[] getAccountKeysWorker() {
                 return closure.getAccountKeys();
             }
         });

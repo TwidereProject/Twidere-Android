@@ -26,4 +26,6 @@ public interface RefreshTaskParam {
 
     boolean hasSinceIds();
 
+    boolean isLoadingMore();
+
 }

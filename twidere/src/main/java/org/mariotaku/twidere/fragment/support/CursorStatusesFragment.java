@@ -43,11 +43,11 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.SimpleRefreshTaskParam;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.AccountChangedEvent;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
@@ -253,11 +253,12 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
         // Only supports load from end, skip START flag
         if ((position & IndicatorPosition.START) != 0) return;
         super.onLoadMoreContents(position);
+        final Context context = getContext();
         if (position == 0) return;
         getStatuses(new SimpleRefreshTaskParam() {
             @NonNull
             @Override
-            public UserKey[] getAccountKeys() {
+            public UserKey[] getAccountKeysWorker() {
                 return CursorStatusesFragment.this.getAccountKeys();
             }
 
@@ -265,6 +266,13 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
             @Override
             public String[] getMaxIds() {
                 return getOldestStatusIds(getAccountKeys());
+            }
+
+            @Nullable
+            @Override
+            public long[] getMaxSortIds() {
+                return DataStoreUtils.getOldestStatusSortIds(context, getContentUri(),
+                        getAccountKeys());
             }
 
             @Override
@@ -277,10 +285,11 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
     @Override
     public boolean triggerRefresh() {
         super.triggerRefresh();
+        final Context context = getContext();
         getStatuses(new SimpleRefreshTaskParam() {
             @NonNull
             @Override
-            public UserKey[] getAccountKeys() {
+            public UserKey[] getAccountKeysWorker() {
                 return CursorStatusesFragment.this.getAccountKeys();
             }
 
@@ -293,6 +302,13 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
             @Override
             public String[] getSinceIds() {
                 return getNewestStatusIds(getAccountKeys());
+            }
+
+            @Nullable
+            @Override
+            public long[] getSinceSortIds() {
+                return DataStoreUtils.getNewestStatusSortIds(context, getContentUri(),
+                        getAccountKeys());
             }
         });
         return true;

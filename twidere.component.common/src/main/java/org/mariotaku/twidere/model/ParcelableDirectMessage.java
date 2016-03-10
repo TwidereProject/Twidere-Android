@@ -118,7 +118,9 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
 
     @Override
     public int compareTo(@NonNull final ParcelableDirectMessage another) {
-        final long diff = another.timestamp - timestamp;
+        final long diff = timestamp - another.timestamp;
+        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
         return (int) diff;
     }
 

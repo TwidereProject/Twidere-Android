@@ -95,7 +95,7 @@ public class RefreshService extends Service implements Constants {
 
                             @NonNull
                             @Override
-                            public UserKey[] getAccountKeys() {
+                            public UserKey[] getAccountKeysWorker() {
                                 if (accountIds != null) return accountIds;
                                 final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
                                         DataStoreUtils.getAccountKeys(context));
@@ -116,7 +116,7 @@ public class RefreshService extends Service implements Constants {
 
                         @NonNull
                         @Override
-                        public UserKey[] getAccountKeys() {
+                        public UserKey[] getAccountKeysWorker() {
                             if (accountIds != null) return accountIds;
                             final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
                                     DataStoreUtils.getAccountKeys(context));
@@ -137,7 +137,7 @@ public class RefreshService extends Service implements Constants {
 
                             @NonNull
                             @Override
-                            public UserKey[] getAccountKeys() {
+                            public UserKey[] getAccountKeysWorker() {
                                 if (accountIds != null) return accountIds;
                                 final AccountPreferences[] prefs = AccountPreferences.getAccountPreferences(context,
                                         DataStoreUtils.getAccountKeys(context));

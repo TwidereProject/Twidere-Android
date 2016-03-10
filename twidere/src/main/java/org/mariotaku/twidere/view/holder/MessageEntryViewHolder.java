@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,7 +33,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
-import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.view.NameView;
@@ -64,6 +64,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         profileImageView.setOnClickListener(this);
     }
 
+    @UiThread
     public void displayMessage(Cursor cursor, boolean isUnread) {
         final Context context = adapter.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
@@ -90,7 +91,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         nameView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
         textView.setTypeface(null, isUnread && !isOutgoing ? Typeface.BOLD : Typeface.NORMAL);
         if (adapter.shouldShowAccountsColor()) {
-            content.drawEnd(DataStoreUtils.getAccountColor(context, accountKey));
+            // FIXME draw account color
         } else {
             content.drawEnd();
         }

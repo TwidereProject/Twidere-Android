@@ -254,4 +254,5 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int TWITTER_MAX_IMAGE_HEIGHT = 2048;
 
     String USER_TYPE_TWITTER_COM = "twitter.com";
+    String USER_TYPE_FANFOU_COM = "fanfou.com";
 }

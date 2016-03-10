@@ -42,8 +42,9 @@ public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
         final String maxId = args.getString(EXTRA_MAX_ID);
         final String sinceId = args.getString(EXTRA_SINCE_ID);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
+        final boolean loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false);
         return new RetweetsOfMeLoader(context, accountKey, sinceId, maxId, getAdapterData(),
-                getSavedStatusesFileArgs(), tabPosition, fromUser);
+                getSavedStatusesFileArgs(), tabPosition, fromUser, loadingMore);
     }
 
     @Override

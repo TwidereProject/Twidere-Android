@@ -341,8 +341,9 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         final ParcelableActivitiesAdapter adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
         final UserKey[] accountIds = {activity.account_key};
-        final String[] maxIds = {String.valueOf(activity.min_position)};
-        getActivities(new BaseRefreshTaskParam(accountIds, maxIds, null));
+        final String[] maxIds = {activity.min_position};
+        final long[] maxSortIds = {activity.min_sort_position};
+        getActivities(new BaseRefreshTaskParam(accountIds, maxIds, null, maxSortIds, null));
     }
 
     @Override

@@ -44,8 +44,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.support.SignInActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
@@ -151,9 +151,16 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final Context context = getContext();
+        if (context == null) return;
         final ParcelableAccount account = mAdapter.getAccount(position);
-        IntentUtils.openUserProfile(getActivity(), account.account_key, account.account_key.getId(),
-                account.screen_name, null, true, UserFragment.Referral.SELF_PROFILE);
+        if (account.account_user != null) {
+            IntentUtils.openUserProfile(context, account.account_user, null, true,
+                    UserFragment.Referral.SELF_PROFILE);
+        } else {
+            IntentUtils.openUserProfile(context, account.account_key, account.account_key.getId(),
+                    account.screen_name, null, true, UserFragment.Referral.SELF_PROFILE);
+        }
     }
 
     @Override

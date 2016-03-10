@@ -91,7 +91,6 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             try {
                 final ResponseList<Activity> activities = getActivities(twitter, accountKey, paging);
                 storeActivities(cr, loadItemLimit, accountKey, noItemsBefore, activities);
-//                if (saveReadPosition && TwitterAPIFactory.isOfficialTwitterInstance(context, twitter)) {
                 if (saveReadPosition) {
                     saveReadPosition(accountKey, twitter);
                 }
@@ -124,14 +123,14 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final ParcelableActivity parcelableActivity = ParcelableActivityUtils.fromActivity(activity,
                     accountKey, false);
             if (deleteBound[0] < 0) {
-                deleteBound[0] = parcelableActivity.min_position;
+                deleteBound[0] = parcelableActivity.min_sort_position;
             } else {
-                deleteBound[0] = Math.min(deleteBound[0], parcelableActivity.min_position);
+                deleteBound[0] = Math.min(deleteBound[0], parcelableActivity.min_sort_position);
             }
             if (deleteBound[1] < 0) {
-                deleteBound[1] = parcelableActivity.max_position;
+                deleteBound[1] = parcelableActivity.max_sort_position;
             } else {
-                deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_position);
+                deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_sort_position);
             }
             final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity);
             values.put(Statuses.INSERTED_DATE, System.currentTimeMillis());
@@ -140,8 +139,8 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
         if (deleteBound[0] > 0 && deleteBound[1] > 0) {
             final Expression where = Expression.and(
                     Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                    Expression.greaterEqualsArgs(Activities.MIN_POSITION),
-                    Expression.lesserEqualsArgs(Activities.MAX_POSITION)
+                    Expression.greaterEqualsArgs(Activities.MIN_SORT_POSITION),
+                    Expression.lesserEqualsArgs(Activities.MAX_SORT_POSITION)
             );
             final String[] whereArgs = {accountKey.toString(), String.valueOf(deleteBound[0]),
                     String.valueOf(deleteBound[1])};

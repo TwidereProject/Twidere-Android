@@ -122,24 +122,27 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         StringBuilder idBuilder = new StringBuilder(), hostBuilder = new StringBuilder();
         for (int i = 0, j = str.length(); i < j; i++) {
             final char ch = str.charAt(i);
-            // accept all characters if is escaping
-            if (!escaping) {
-                if (ch == '\\') {
-                    escaping = true;
-                } else if (ch == '@') {
-                    idFinished = true;
-                } else if (ch == ',') {
-                    // end of item
-                    break;
-                }
+            boolean append = false;
+            if (escaping) {
+                // accept all characters if is escaping
+                append = true;
+                escaping = false;
+            } else if (ch == '\\') {
+                escaping = true;
+            } else if (ch == '@') {
+                idFinished = true;
+            } else if (ch == ',') {
+                // end of item, just jump out
+                break;
+            } else {
+                append = true;
             }
-            if (!isSpecialChar(ch) || !escaping) {
+            if (append) {
                 if (idFinished) {
                     hostBuilder.append(ch);
                 } else {
                     idBuilder.append(ch);
                 }
-                escaping = false;
             }
         }
         if (hostBuilder.length() != 0) {

@@ -88,4 +88,17 @@ public class Tab {
     public void setExtras(TabExtras extras) {
         this.extras = extras;
     }
+
+    @Override
+    public String toString() {
+        return "Tab{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", icon='" + icon + '\'' +
+                ", type='" + type + '\'' +
+                ", position=" + position +
+                ", arguments=" + arguments +
+                ", extras=" + extras +
+                '}';
+    }
 }

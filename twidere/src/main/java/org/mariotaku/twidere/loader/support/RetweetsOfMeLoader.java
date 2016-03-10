@@ -42,8 +42,9 @@ public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
     public RetweetsOfMeLoader(final Context context, final UserKey accountKey,
                               final String sinceId, final String maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
-                              final int tabPosition, boolean fromUser) {
-        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+                              final int tabPosition, boolean fromUser, boolean loadingMore) {
+        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser,
+                loadingMore);
     }
 
     @NonNull

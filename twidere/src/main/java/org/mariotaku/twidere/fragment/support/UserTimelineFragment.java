@@ -56,8 +56,9 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
         final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
+        final boolean loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false);
         return new UserTimelineLoader(context, accountKey, userId, screenName, sinceId, maxId, data,
-                getSavedStatusesFileArgs(), tabPosition, fromUser);
+                getSavedStatusesFileArgs(), tabPosition, fromUser, loadingMore);
     }
 
     @Override

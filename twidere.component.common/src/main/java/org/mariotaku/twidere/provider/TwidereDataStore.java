@@ -919,8 +919,11 @@ public interface TwidereDataStore {
         String STATUS_QUOTE_TEXT_HTML = "status_quote_text_html";
         String STATUS_USER_FOLLOWING = "status_user_following";
         String IS_GAP = "status_is_gap";
-        String MIN_POSITION = "min_position";
-        String MAX_POSITION = "max_position";
+        String MIN_SORT_POSITION = "min_position";
+        String MAX_SORT_POSITION = "max_position";
+        ;
+        String MIN_REQUEST_POSITION = "min_request_position";
+        String MAX_REQUEST_POSITION = "max_request_position";
         String SOURCES = "sources";
         String SOURCE_IDS = "source_ids";
         String TARGET_STATUSES = "target_statuses";
@@ -933,13 +936,15 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, ACCOUNT_KEY, ACTION, TIMESTAMP, STATUS_ID, STATUS_USER_ID,
                 STATUS_RETWEETED_BY_USER_ID, STATUS_QUOTED_USER_ID, STATUS_SOURCE, STATUS_QUOTE_SOURCE,
                 STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_TEXT_HTML, STATUS_QUOTE_TEXT_HTML,
-                IS_GAP, MIN_POSITION, MAX_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
+                IS_GAP, MIN_SORT_POSITION, MAX_SORT_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
                 TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS,
-                STATUS_RETWEET_ID, STATUS_USER_FOLLOWING, INSERTED_DATE};
+                STATUS_RETWEET_ID, STATUS_USER_FOLLOWING, INSERTED_DATE, MIN_REQUEST_POSITION,
+                MAX_REQUEST_POSITION};
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, INSERTED_DATE_TYPE};
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, INSERTED_DATE_TYPE, TYPE_TEXT,
+                TYPE_TEXT};
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC";
 

@@ -69,12 +69,19 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     public long timestamp;
     @ParcelableThisPlease
     @JsonField(name = "max_position")
-    @CursorField(value = Activities.MAX_POSITION)
-    public long max_position;
+    @CursorField(value = Activities.MAX_SORT_POSITION)
+    public long max_sort_position;
     @ParcelableThisPlease
     @JsonField(name = "min_position")
-    @CursorField(value = Activities.MIN_POSITION)
-    public long min_position;
+    @CursorField(value = Activities.MIN_SORT_POSITION)
+    public long min_sort_position;
+    @JsonField(name = "max_request_position")
+    @CursorField(value = Activities.MAX_REQUEST_POSITION)
+    public String max_position;
+    @ParcelableThisPlease
+    @JsonField(name = "min_request_position")
+    @CursorField(value = Activities.MIN_REQUEST_POSITION)
+    public String min_position;
     @ParcelableThisPlease
     @JsonField(name = "action")
     @CursorField(value = Activities.ACTION)
@@ -147,8 +154,10 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
                 "_id=" + _id +
                 ", account_key=" + account_key +
                 ", timestamp=" + timestamp +
-                ", max_position=" + max_position +
-                ", min_position=" + min_position +
+                ", max_sort_position=" + max_sort_position +
+                ", min_sort_position=" + min_sort_position +
+                ", max_position='" + max_position + '\'' +
+                ", min_position='" + min_position + '\'' +
                 ", action='" + action + '\'' +
                 ", source_ids=" + Arrays.toString(source_ids) +
                 ", sources=" + Arrays.toString(sources) +
@@ -160,6 +169,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
                 ", target_object_users=" + Arrays.toString(target_object_users) +
                 ", is_gap=" + is_gap +
                 ", status_user_following=" + status_user_following +
+                ", account_color=" + account_color +
                 ", after_filtered_source_ids=" + Arrays.toString(after_filtered_source_ids) +
                 ", after_filtered_sources=" + Arrays.toString(after_filtered_sources) +
                 '}';
@@ -167,7 +177,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
 
     @Override
     public int hashCode() {
-        return calculateHashCode(account_key, timestamp, max_position, min_position);
+        return calculateHashCode(account_key, timestamp, max_sort_position, min_sort_position);
     }
 
     @Override
@@ -182,7 +192,7 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     public boolean equals(final Object that) {
         if (!(that instanceof ParcelableActivity)) return false;
         final ParcelableActivity activity = (ParcelableActivity) that;
-        return max_position == activity.max_position && min_position == activity.min_position;
+        return max_sort_position == activity.max_sort_position && min_sort_position == activity.min_sort_position;
     }
 
     @Override

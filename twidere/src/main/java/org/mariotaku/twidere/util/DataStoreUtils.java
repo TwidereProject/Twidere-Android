@@ -83,7 +83,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -203,45 +202,76 @@ public class DataStoreUtils implements Constants {
     @NonNull
     public static String[] getNewestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
                                                @NonNull final UserKey[] accountKeys) {
-        return getLongFieldArray(context, uri, accountKeys, DirectMessages.ACCOUNT_KEY,
+        return getStringFieldArray(context, uri, accountKeys, DirectMessages.ACCOUNT_KEY,
                 DirectMessages.MESSAGE_ID, new OrderBy(SQLFunctions.MAX(DirectMessages.MESSAGE_TIMESTAMP)));
     }
 
     @NonNull
     public static String[] getNewestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
                                               @NonNull final UserKey[] accountKeys) {
-        return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
+        return getStringFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
                 Statuses.STATUS_ID, new OrderBy(SQLFunctions.MAX(Statuses.STATUS_TIMESTAMP)));
+    }
+
+
+    @NonNull
+    public static long[] getNewestStatusSortIds(@NonNull final Context context, @NonNull final Uri uri,
+                                                @NonNull final UserKey[] accountKeys) {
+        return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
+                Statuses.SORT_ID, new OrderBy(SQLFunctions.MAX(Statuses.STATUS_TIMESTAMP)));
     }
 
 
     @NonNull
     public static String[] getOldestMessageIds(@NonNull final Context context, @NonNull final Uri uri,
                                                @NonNull final UserKey[] accountKeys) {
-        return getLongFieldArray(context, uri, accountKeys, DirectMessages.ACCOUNT_KEY,
+        return getStringFieldArray(context, uri, accountKeys, DirectMessages.ACCOUNT_KEY,
                 DirectMessages.MESSAGE_ID, new OrderBy(SQLFunctions.MIN(DirectMessages.MESSAGE_TIMESTAMP)));
     }
 
     @NonNull
     public static String[] getOldestStatusIds(@NonNull final Context context, @NonNull final Uri uri,
                                               @NonNull final UserKey[] accountKeys) {
-        return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
+        return getStringFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
                 Statuses.STATUS_ID, new OrderBy(SQLFunctions.MIN(Statuses.STATUS_TIMESTAMP)));
+    }
+
+
+    @NonNull
+    public static long[] getOldestStatusSortIds(@NonNull final Context context, @NonNull final Uri uri,
+                                                @NonNull final UserKey[] accountKeys) {
+        return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
+                Statuses.SORT_ID, new OrderBy(SQLFunctions.MIN(Statuses.STATUS_TIMESTAMP)));
     }
 
     @NonNull
     public static String[] getNewestActivityMaxPositions(final Context context, final Uri uri,
                                                          final UserKey[] accountKeys) {
-        return getLongFieldArray(context, uri, accountKeys, Activities.ACCOUNT_KEY,
-                Activities.MAX_POSITION, new OrderBy(SQLFunctions.MAX(Activities.TIMESTAMP)));
+        return getStringFieldArray(context, uri, accountKeys, Activities.ACCOUNT_KEY,
+                Activities.MAX_REQUEST_POSITION, new OrderBy(SQLFunctions.MAX(Activities.TIMESTAMP)));
     }
 
     @NonNull
     public static String[] getOldestActivityMaxPositions(@NonNull final Context context,
                                                          @NonNull final Uri uri,
                                                          @NonNull final UserKey[] accountKeys) {
+        return getStringFieldArray(context, uri, accountKeys, Activities.ACCOUNT_KEY,
+                Activities.MAX_REQUEST_POSITION, new OrderBy(SQLFunctions.MIN(Activities.TIMESTAMP)));
+    }
+
+    @NonNull
+    public static long[] getNewestActivityMaxSortPositions(final Context context, final Uri uri,
+                                                         final UserKey[] accountKeys) {
         return getLongFieldArray(context, uri, accountKeys, Activities.ACCOUNT_KEY,
-                Activities.MAX_POSITION, new OrderBy(SQLFunctions.MIN(Activities.TIMESTAMP)));
+                Activities.MAX_SORT_POSITION, new OrderBy(SQLFunctions.MAX(Activities.TIMESTAMP)));
+    }
+
+    @NonNull
+    public static long[] getOldestActivityMaxSortPositions(@NonNull final Context context,
+                                                         @NonNull final Uri uri,
+                                                         @NonNull final UserKey[] accountKeys) {
+        return getLongFieldArray(context, uri, accountKeys, Activities.ACCOUNT_KEY,
+                Activities.MAX_SORT_POSITION, new OrderBy(SQLFunctions.MIN(Activities.TIMESTAMP)));
     }
 
     public static int getStatusCount(final Context context, final Uri uri, final UserKey accountId) {
@@ -829,12 +859,46 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    static String[] getLongFieldArray(@NonNull Context context, @NonNull Uri uri,
-                                      @NonNull UserKey[] keys, @NonNull String keyField,
-                                      @NonNull String valueField, @Nullable OrderBy sortExpression) {
+    static String[] getStringFieldArray(@NonNull Context context, @NonNull Uri uri,
+                                        @NonNull UserKey[] keys, @NonNull String keyField,
+                                        @NonNull String valueField, @Nullable OrderBy sortExpression) {
+        return getFieldArray(context, uri, keys, keyField, valueField, sortExpression, new FieldArrayCreator<String[]>() {
+            @Override
+            public String[] newArray(int size) {
+                return new String[size];
+            }
+
+            @Override
+            public void assign(String[] array, int arrayIdx, Cursor cur, int colIdx) {
+                array[arrayIdx] = cur.getString(colIdx);
+            }
+        });
+    }
+
+    @NonNull
+    static long[] getLongFieldArray(@NonNull Context context, @NonNull Uri uri,
+                                    @NonNull UserKey[] keys, @NonNull String keyField,
+                                    @NonNull String valueField, @Nullable OrderBy sortExpression) {
+        return getFieldArray(context, uri, keys, keyField, valueField, sortExpression, new FieldArrayCreator<long[]>() {
+            @Override
+            public long[] newArray(int size) {
+                return new long[size];
+            }
+
+            @Override
+            public void assign(long[] array, int arrayIdx, Cursor cur, int colIdx) {
+                array[arrayIdx] = cur.getLong(colIdx);
+            }
+        });
+    }
+
+    @NonNull
+    static <T> T getFieldArray(@NonNull Context context, @NonNull Uri uri,
+                               @NonNull UserKey[] keys, @NonNull String keyField,
+                               @NonNull String valueField, @Nullable OrderBy sortExpression,
+                               @NonNull FieldArrayCreator<T> creator) {
         final ContentResolver resolver = context.getContentResolver();
-        final String[] messageIds = new String[keys.length];
-        Arrays.fill(messageIds, -1);
+        final T messageIds = creator.newArray(keys.length);
         final String[] selectionArgs = TwidereArrayUtils.toStringArray(keys);
         final SQLSelectQuery.Builder builder = SQLQueryBuilder.select(new Columns(keyField, valueField))
                 .from(new Table(getTableNameByUri(uri)))
@@ -851,12 +915,18 @@ public class DataStoreUtils implements Constants {
                 final UserKey accountKey = UserKey.valueOf(cur.getString(0));
                 int idx = ArrayUtils.indexOf(keys, accountKey);
                 if (idx < 0) continue;
-                messageIds[idx] = cur.getString(1);
+                creator.assign(messageIds, idx, cur, 1);
             }
             return messageIds;
         } finally {
             cur.close();
         }
+    }
+
+    interface FieldArrayCreator<T> {
+        T newArray(int size);
+
+        void assign(T array, int arrayIdx, Cursor cur, int colIdx);
     }
 
     static int queryCount(@NonNull final Context context, @NonNull final Uri uri,
@@ -1014,18 +1084,4 @@ public class DataStoreUtils implements Constants {
                 position, followingOnly, accountIds);
     }
 
-    public static void initAccountColor(final Context context) {
-        if (context == null) return;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, new String[]{
-                Accounts.ACCOUNT_KEY, Accounts.COLOR}, null, null, null);
-        if (cur == null) return;
-        final int id_idx = cur.getColumnIndex(Accounts.ACCOUNT_KEY), color_idx = cur.getColumnIndex(Accounts.COLOR);
-        cur.moveToFirst();
-        while (!cur.isAfterLast()) {
-//            sAccountColors.put(cur.getLong(id_idx), cur.getInt(color_idx));
-            // TODO
-            cur.moveToNext();
-        }
-        cur.close();
-    }
 }

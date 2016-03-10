@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.api.statusnet.model.Attention;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
@@ -40,26 +39,18 @@ public class ParcelableStatusUtils {
         result.is_gap = isGap;
         result.account_key = accountKey;
         result.id = orig.getId();
+        result.sort_id = orig.getSortId();
         result.timestamp = getTime(orig.getCreatedAt());
-        result.sort_id = orig.getRawId();
-        if (result.sort_id == -1) {
-            // Try use long id
-            result.sort_id = NumberUtils.toLong(result.id, -1);
-        }
-        if (result.sort_id == -1) {
-            // Try use timestamp
-            result.sort_id = result.timestamp;
-        }
 
         result.extras = new ParcelableStatus.Extras();
         result.extras.external_url = orig.getExternalUrl();
         result.extras.support_entities = orig.getEntities() != null;
 
         final Status retweetedStatus = orig.getRetweetedStatus();
-        final User retweetUser = retweetedStatus != null ? orig.getUser() : null;
         result.is_retweet = orig.isRetweet();
         result.retweeted = orig.wasRetweeted();
         if (retweetedStatus != null) {
+            final User retweetUser = orig.getUser();
             result.retweet_id = retweetedStatus.getId();
             result.retweet_timestamp = getTime(retweetedStatus.getCreatedAt());
             result.retweeted_by_user_id = UserKeyUtils.fromUser(retweetUser);
@@ -123,6 +114,9 @@ public class ParcelableStatusUtils {
         result.user_is_verified = user.isVerified();
         result.user_is_following = user.isFollowing();
         result.extras.user_profile_image_url_profile_size = user.getProfileImageUrlProfileSize();
+        if (result.extras.user_profile_image_url_profile_size == null) {
+            result.extras.user_profile_image_url_profile_size = user.getProfileImageUrlLarge();
+        }
         result.text_html = InternalTwitterContentUtils.formatStatusText(status);
         result.media = ParcelableMediaUtils.fromStatus(status);
         result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(status.getText());
@@ -145,8 +139,10 @@ public class ParcelableStatusUtils {
         return result;
     }
 
+    @Nullable
     private static UserKey getInReplyToUserId(Status status, UserKey accountKey) {
         final String inReplyToUserId = status.getInReplyToUserId();
+        if (inReplyToUserId == null) return null;
         final UserMentionEntity[] entities = status.getUserMentionEntities();
         if (entities != null) {
             for (final UserMentionEntity entity : entities) {

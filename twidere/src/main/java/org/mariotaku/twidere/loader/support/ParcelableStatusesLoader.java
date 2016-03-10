@@ -30,6 +30,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<ParcelableStatus>>
         implements Constants, IExtendedLoader {
@@ -39,7 +40,7 @@ public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<Parc
     private final int mTabPosition;
     private boolean mFromUser;
 
-    public ParcelableStatusesLoader(final Context context, final List<ParcelableStatus> data,
+    public ParcelableStatusesLoader(final Context context, @Nullable final List<ParcelableStatus> data,
                                     final int tabPosition, final boolean fromUser) {
         super(context);
         mFirstLoad = data == null;
@@ -71,7 +72,7 @@ public abstract class ParcelableStatusesLoader extends AsyncTaskLoader<List<Parc
         if (statuses == null || statuses.isEmpty()) return false;
         boolean result = false;
         for (int i = statuses.size() - 1; i >= 0; i--) {
-            if (statuses.get(i).id == statusId) {
+            if (TextUtils.equals(statuses.get(i).id, statusId)) {
                 statuses.remove(i);
                 result = true;
             }

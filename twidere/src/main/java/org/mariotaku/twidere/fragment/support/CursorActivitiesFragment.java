@@ -42,12 +42,11 @@ import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
-import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
-import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.SimpleRefreshTaskParam;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.AccountChangedEvent;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
@@ -58,8 +57,6 @@ import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.twidere.task.AbstractTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
@@ -195,41 +192,61 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         if ((position & IndicatorPosition.START) != 0) return;
         super.onLoadMoreContents(position);
         if (position == 0) return;
-        TaskStarter.execute(new AbstractTask<Object, RefreshTaskParam, CursorActivitiesFragment>() {
+        getActivities(new SimpleRefreshTaskParam() {
+            @NonNull
             @Override
-            public RefreshTaskParam doLongOperation(Object o) {
-                final UserKey[] accountKeys = getAccountKeys();
-                final String[] maxIds = getOldestActivityIds(accountKeys);
-                return new BaseRefreshTaskParam(accountKeys, maxIds, null);
+            public UserKey[] getAccountKeysWorker() {
+                return CursorActivitiesFragment.this.getAccountKeys();
+            }
+
+            @Nullable
+            @Override
+            public String[] getMaxIds() {
+                return getOldestActivityIds(getAccountKeys());
+            }
+
+            @Nullable
+            @Override
+            public long[] getMaxSortIds() {
+                return DataStoreUtils.getOldestActivityMaxSortPositions(getActivity(),
+                        getContentUri(), getAccountKeys());
             }
 
             @Override
-            public void afterExecute(CursorActivitiesFragment fragment, RefreshTaskParam result) {
-                fragment.getActivities(result);
+            public boolean hasMaxIds() {
+                return true;
             }
-        }.setResultHandler(this));
+        });
     }
 
     @Override
     public boolean triggerRefresh() {
         super.triggerRefresh();
-        TaskStarter.execute(new AbstractTask<Object, RefreshTaskParam, CursorActivitiesFragment>() {
+        getActivities(new SimpleRefreshTaskParam() {
+            @NonNull
             @Override
-            public RefreshTaskParam doLongOperation(Object o) {
-                if (getActivity() == null) {
-                    return null;
-                }
-                final UserKey[] accountKeys = getAccountKeys();
-                final String[] sinceIds = getNewestActivityIds(accountKeys);
-                return new BaseRefreshTaskParam(accountKeys, sinceIds, null);
+            public UserKey[] getAccountKeysWorker() {
+                return CursorActivitiesFragment.this.getAccountKeys();
+            }
+
+            @Nullable
+            @Override
+            public String[] getSinceIds() {
+                return getNewestActivityIds(getAccountKeys());
+            }
+
+            @Nullable
+            @Override
+            public long[] getSinceSortIds() {
+                return DataStoreUtils.getNewestActivityMaxSortPositions(getActivity(),
+                        getContentUri(), getAccountKeys());
             }
 
             @Override
-            public void afterExecute(CursorActivitiesFragment fragment, RefreshTaskParam result) {
-                if (result == null) return;
-                fragment.getActivities(result);
+            public boolean hasSinceIds() {
+                return true;
             }
-        }.setResultHandler(this));
+        });
         return true;
     }
 

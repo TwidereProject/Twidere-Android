@@ -72,7 +72,9 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     private final String mMaxId, mSinceId;
     @Nullable
     private final Object[] mSavedStatusesFileArgs;
-    private Comparator<ParcelableStatus> mComparator;
+    private final boolean mLoadingMore;
+    // Statuses sorted descending by default
+    private Comparator<ParcelableStatus> mComparator = ParcelableStatus.REVERSE_COMPARATOR;
     @Inject
     DiskCache mFileCache;
     @Inject
@@ -81,15 +83,16 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     public TwitterAPIStatusesLoader(@NonNull final Context context,
                                     @Nullable final UserKey accountKey,
                                     final String sinceId, final String maxId,
-                                    final List<ParcelableStatus> data,
+                                    @Nullable final List<ParcelableStatus> data,
                                     @Nullable final String[] savedStatusesArgs,
-                                    final int tabPosition, final boolean fromUser) {
+                                    final int tabPosition, final boolean fromUser, boolean loadingMore) {
         super(context, data, tabPosition, fromUser);
         GeneralComponentHelper.build(context).inject(this);
         mAccountKey = accountKey;
         mMaxId = maxId;
         mSinceId = sinceId;
         mSavedStatusesFileArgs = savedStatusesArgs;
+        mLoadingMore = loadingMore;
     }
 
     @SuppressWarnings("unchecked")
@@ -163,7 +166,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, mMaxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
         final boolean insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
-                && statuses.size() >= loadItemLimit;
+                && statuses.size() >= loadItemLimit && !mLoadingMore;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
             final ParcelableStatus item = ParcelableStatusUtils.fromStatus(status, mAccountKey,

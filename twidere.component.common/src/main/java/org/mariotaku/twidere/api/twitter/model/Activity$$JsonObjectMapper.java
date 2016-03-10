@@ -58,6 +58,14 @@ public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
             parseField(instance, fieldName, jsonParser);
             jsonParser.skipChildren();
         }
+        try {
+            instance.maxSortPosition = Long.parseLong(instance.maxPosition);
+            instance.minSortPosition = Long.parseLong(instance.minPosition);
+        } catch (NumberFormatException e) {
+            final long time = instance.createdAt != null ? instance.createdAt.getTime() : -1;
+            instance.maxSortPosition = time;
+            instance.minSortPosition = time;
+        }
         return instance;
     }
 
@@ -77,9 +85,9 @@ public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
                 throw new IOException(e);
             }
         } else if ("min_position".equals(fieldName)) {
-            instance.minPosition = jsonParser.getValueAsLong(-1);
+            instance.minPosition = jsonParser.getValueAsString();
         } else if ("max_position".equals(fieldName)) {
-            instance.maxPosition = jsonParser.getValueAsLong(-1);
+            instance.maxPosition = jsonParser.getValueAsString();
         } else if ("sources_size".equals(fieldName)) {
             instance.sourcesSize = jsonParser.getValueAsInt();
         } else if ("targets_size".equals(fieldName)) {

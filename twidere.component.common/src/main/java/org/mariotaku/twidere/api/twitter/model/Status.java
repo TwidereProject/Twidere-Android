@@ -21,6 +21,7 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -47,7 +48,8 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "id")
     String id;
 
-    @JsonField(name = "raw_id")
+    // Fanfou uses this key
+    @JsonField(name = "rawid")
     long rawId = -1;
 
     @JsonField(name = "text")
@@ -65,12 +67,15 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "extended_entities")
     Entities extendedEntities;
 
+    @Nullable
     @JsonField(name = "in_reply_to_status_id")
     String inReplyToStatusId;
 
+    @Nullable
     @JsonField(name = "in_reply_to_user_id")
     String inReplyToUserId;
 
+    @Nullable
     @JsonField(name = "in_reply_to_screen_name")
     String inReplyToScreenName;
 
@@ -115,6 +120,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "quoted_status")
     Status quotedStatus;
 
+    @JsonField(name = "repost_status")
+    Status repostStatus;
+
     @JsonField(name = "card")
     CardEntity card;
 
@@ -138,17 +146,18 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return user;
     }
 
-
+    @Nullable
     public String getInReplyToScreenName() {
         return inReplyToScreenName;
     }
 
 
+    @Nullable
     public String getInReplyToUserId() {
         return inReplyToUserId;
     }
 
-
+    @Nullable
     public String getInReplyToStatusId() {
         return inReplyToStatusId;
     }
@@ -325,18 +334,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     @Override
     public int compareTo(@NonNull final Status that) {
-        final int delta = createdAt.compareTo(that.createdAt);
-        if (delta == 0) {
-            if (rawId != -1) {
-                return (int) (rawId - that.rawId);
-            }
-            try {
-                return (int) (Long.parseLong(id) - Long.parseLong(that.id));
-            } catch (NumberFormatException e) {
-                // Ignore
-            }
-        }
-        return delta;
+        final long diff = getSortId() - that.getSortId();
+        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        return (int) diff;
     }
 
     @Override
@@ -394,6 +395,15 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @OnJsonParseComplete
     void onJsonParseComplete() throws IOException {
         if (id == null || text == null) throw new IOException("Malformed Status object");
+        // Fix for fanfou
+        if (TextUtils.isEmpty(inReplyToStatusId)) {
+            inReplyToStatusId = null;
+            inReplyToUserId = null;
+            inReplyToScreenName = null;
+        }
+        if (quotedStatus == null && repostStatus != null) {
+            quotedStatus = repostStatus;
+        }
     }
 
     public String getLang() {
@@ -410,7 +420,11 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         sortId = rawId;
         if (sortId == -1) {
             // Try use long id
-            sortId = Long.parseLong(id);
+            try {
+                sortId = Long.parseLong(id);
+            } catch (NumberFormatException e) {
+                // Ignore
+            }
         }
         if (sortId == -1 && createdAt != null) {
             // Try use timestamp

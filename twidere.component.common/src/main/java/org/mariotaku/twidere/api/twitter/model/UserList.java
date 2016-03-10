@@ -123,7 +123,10 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
 
     @Override
     public int compareTo(@NonNull UserList another) {
-        return (int) (id - another.id);
+        final long diff = id - another.id;
+        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        return (int) diff;
     }
 
     @Override

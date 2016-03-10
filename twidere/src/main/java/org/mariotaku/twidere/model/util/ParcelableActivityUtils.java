@@ -70,6 +70,8 @@ public class ParcelableActivityUtils {
         result.account_key = accountKey;
         result.timestamp = activity.getCreatedAt().getTime();
         result.action = activity.getAction();
+        result.max_sort_position = activity.getMaxSortPosition();
+        result.min_sort_position = activity.getMinSortPosition();
         result.max_position = activity.getMaxPosition();
         result.min_position = activity.getMinPosition();
         result.sources = ParcelableUserUtils.fromUsers(activity.getSources(), accountKey);

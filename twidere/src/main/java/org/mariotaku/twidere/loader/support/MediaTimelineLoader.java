@@ -55,8 +55,9 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
     public MediaTimelineLoader(final Context context, final UserKey accountKey, final String userId,
                                final String screenName, final String sinceId, final String maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
-                               final int tabPosition, final boolean fromUser) {
-        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+                               final int tabPosition, final boolean fromUser, boolean loadingMore) {
+        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser,
+                loadingMore);
         mUserId = userId;
         mUserScreenName = screenName;
     }

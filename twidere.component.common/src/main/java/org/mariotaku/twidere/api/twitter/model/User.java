@@ -144,6 +144,12 @@ public class User extends TwitterResponseObject implements Comparable<User> {
     @JsonField(name = "profile_image_url_https")
     String profileImageUrlHttps;
 
+    /**
+     * Fanfou has this field
+     */
+    @JsonField(name = "profile_image_url_large")
+    String profileImageUrlLarge;
+
     @JsonField(name = "profile_banner_url")
     String profileBannerUrl;
 
@@ -363,11 +369,13 @@ public class User extends TwitterResponseObject implements Comparable<User> {
         return profileImageUrl;
     }
 
-
     public String getProfileImageUrlHttps() {
         return profileImageUrlHttps;
     }
 
+    public String getProfileImageUrlLarge() {
+        return profileImageUrlLarge;
+    }
 
     public String getProfileLinkColor() {
         if (profileLinkColor != null) return profileLinkColor;

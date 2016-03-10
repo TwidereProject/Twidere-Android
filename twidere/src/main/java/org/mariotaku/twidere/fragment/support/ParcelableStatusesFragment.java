@@ -94,6 +94,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
         if (mPage > 0) {
             args.putInt(EXTRA_PAGE, mPage);
         }
+        args.putBoolean(EXTRA_LOADING_MORE, param.isLoadingMore());
         args.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().restartLoader(0, args, this);
         return true;
@@ -149,12 +150,16 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
         super.onLoadMoreContents(position);
         if (position == 0) return;
         final ParcelableStatusesAdapter adapter = getAdapter();
-        final ParcelableStatus status = adapter.getStatus(adapter.getStatusStartIndex() +
-                adapter.getStatusCount() - 1);
+        // Load the last item
+        final int idx = adapter.getStatusStartIndex() + adapter.getStatusCount() - 1;
+        if (idx < 0) return;
+        final ParcelableStatus status = adapter.getStatus(idx);
         UserKey[] accountKeys = {status.account_key};
         final String[] maxIds = {status.id};
         mPage += mPageDelta;
-        getStatuses(new BaseRefreshTaskParam(accountKeys, maxIds, null));
+        final BaseRefreshTaskParam param = new BaseRefreshTaskParam(accountKeys, maxIds, null);
+        param.setIsLoadingMore(true);
+        getStatuses(param);
     }
 
     public final void replaceStatus(final ParcelableStatus status) {

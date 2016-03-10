@@ -35,9 +35,9 @@ public class UserMentionsLoader extends TweetSearchLoader {
     public UserMentionsLoader(final Context context, final UserKey accountId, final String screenName,
                               final String maxId, final String sinceId, int page, final List<ParcelableStatus> data,
                               final String[] savedStatusesArgs, final int tabPosition, boolean fromUser,
-                              boolean makeGap) {
+                              boolean makeGap, boolean loadingMore) {
         super(context, accountId, screenName, sinceId, maxId, page, data, savedStatusesArgs, tabPosition,
-                fromUser, makeGap);
+                fromUser, makeGap, loadingMore);
     }
 
     @NonNull

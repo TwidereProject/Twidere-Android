@@ -45,8 +45,8 @@ public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
     public UserListTimelineLoader(final Context context, final UserKey accountKey, final long listId,
                                   final String userId, final String screenName, final String listName,
                                   final String sinceId, final String maxId, final List<ParcelableStatus> data,
-                                  final String[] savedStatusesArgs, final int tabPosition, boolean fromUser) {
-        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
+                                  final String[] savedStatusesArgs, final int tabPosition, boolean fromUser, boolean loadingMore) {
+        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser, loadingMore);
         mListId = listId;
         mUserId = userId;
         mScreenName = screenName;

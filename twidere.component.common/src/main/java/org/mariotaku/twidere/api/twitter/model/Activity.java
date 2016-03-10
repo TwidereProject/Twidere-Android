@@ -39,7 +39,8 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
     User[] targetObjectUsers;
     Status[] targetObjectStatuses, targetStatuses;
     UserList[] targetUserLists, targetObjectUserLists;
-    long maxPosition, minPosition = -1;
+    String maxPosition = null, minPosition = null;
+    long maxSortPosition =-1, minSortPosition = -1;
     int targetObjectsSize, targetsSize, sourcesSize;
 
     Activity() {
@@ -66,12 +67,20 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         return createdAt;
     }
 
-    public long getMaxPosition() {
+    public String getMaxPosition() {
         return maxPosition;
     }
 
-    public long getMinPosition() {
+    public String getMinPosition() {
         return minPosition;
+    }
+
+    public long getMaxSortPosition() {
+        return maxSortPosition;
+    }
+
+    public long getMinSortPosition() {
+        return minSortPosition;
     }
 
     public User[] getSources() {
@@ -112,28 +121,33 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
 
     @Override
     public String toString() {
-        return "ActivityJSONImpl{" +
-                "action=" + action +
+        return "Activity{" +
+                "action='" + action + '\'' +
+                ", rawAction='" + rawAction + '\'' +
                 ", createdAt=" + createdAt +
                 ", sources=" + Arrays.toString(sources) +
                 ", targetUsers=" + Arrays.toString(targetUsers) +
+                ", targetObjectUsers=" + Arrays.toString(targetObjectUsers) +
                 ", targetObjectStatuses=" + Arrays.toString(targetObjectStatuses) +
                 ", targetStatuses=" + Arrays.toString(targetStatuses) +
                 ", targetUserLists=" + Arrays.toString(targetUserLists) +
                 ", targetObjectUserLists=" + Arrays.toString(targetObjectUserLists) +
-                ", maxPosition=" + maxPosition +
-                ", minPosition=" + minPosition +
+                ", maxPosition='" + maxPosition + '\'' +
+                ", minPosition='" + minPosition + '\'' +
+                ", maxSortPosition=" + maxSortPosition +
+                ", minSortPosition=" + minSortPosition +
                 ", targetObjectsSize=" + targetObjectsSize +
                 ", targetsSize=" + targetsSize +
                 ", sourcesSize=" + sourcesSize +
-                '}';
+                "} " + super.toString();
     }
 
     public static Activity fromMention(String twitterId, Status status) {
         final Activity activity = new Activity();
 
         // TODO handle this -1 position case
-        activity.maxPosition = activity.minPosition = -1;
+        activity.maxPosition = activity.minPosition = null;
+        activity.maxSortPosition = activity.minSortPosition = status.getSortId();
         activity.createdAt = status.getCreatedAt();
 
         if (TextUtils.equals(status.getInReplyToUserId(), twitterId)) {
