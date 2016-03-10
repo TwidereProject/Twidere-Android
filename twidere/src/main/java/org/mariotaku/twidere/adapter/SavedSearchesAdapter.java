@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 15/4/29.
@@ -77,7 +78,7 @@ public class SavedSearchesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public boolean removeItem(long accountId, long searchId) {
+    public boolean removeItem(UserKey accountId, long searchId) {
         if (mData == null) return false;
         for (int i = 0, mDataSize = mData.size(); i < mDataSize; i++) {
             SavedSearch search = mData.get(i);

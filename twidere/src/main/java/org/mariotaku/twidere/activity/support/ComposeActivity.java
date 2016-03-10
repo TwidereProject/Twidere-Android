@@ -1034,7 +1034,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     private boolean handleQuoteIntent(final ParcelableStatus status) {
-        if (status == null || status.id <= 0) return false;
+        if (status == null) return false;
         mEditText.setText(Utils.getQuoteStatus(this, status.id, status.user_screen_name, status.text_plain));
         mEditText.setSelection(0);
         mAccountsAdapter.setSelectedAccountIds(status.account_key);
@@ -1070,7 +1070,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
     }
 
     private boolean handleReplyIntent(final ParcelableStatus status) {
-        if (status == null || status.id <= 0) return false;
+        if (status == null || status.id == null) return false;
         final String myScreenName = DataStoreUtils.getAccountScreenName(this, status.account_key);
         if (TextUtils.isEmpty(myScreenName)) return false;
         int selectionStart = 0;

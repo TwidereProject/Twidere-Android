@@ -181,7 +181,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         mPopupMenu.inflate(R.menu.menu_dialog_comment);
         final Menu menu = mPopupMenu.getMenu();
         MenuUtils.setMenuItemAvailability(menu, R.id.quote_original_status,
-                status.retweet_id > 0 || status.quoted_id > 0);
+                status.retweet_id != null || status.quoted_id != null);
         mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

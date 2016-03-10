@@ -30,7 +30,6 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.Trend;
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
@@ -43,6 +42,7 @@ import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
@@ -155,13 +155,12 @@ public final class ContentValuesCreator implements TwidereConstants {
         return values;
     }
 
-    public static ContentValues createMessageDraft(final UserKey accountKey, final long recipientId,
+    public static ContentValues createMessageDraft(final UserKey accountKey, final String recipientId,
                                                    final String text, final String imageUri) {
         final ContentValues values = new ContentValues();
         values.put(Drafts.ACTION_TYPE, Draft.Action.SEND_DIRECT_MESSAGE);
         values.put(Drafts.TEXT, text);
-        values.put(Drafts.ACCOUNT_IDS, TwidereArrayUtils.toString(new long[]{accountKey.getId()},
-                ',', false));
+        values.put(Drafts.ACCOUNT_IDS, accountKey.toString());
         values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
         if (imageUri != null) {
             final ParcelableMediaUpdate[] mediaArray = {new ParcelableMediaUpdate(imageUri, 0)};
@@ -244,32 +243,4 @@ public final class ContentValuesCreator implements TwidereConstants {
         return resultList.toArray(new ContentValues[resultList.size()]);
     }
 
-    public static ContentValues makeCachedUserContentValues(final ParcelableUser user) {
-        if (user == null) return null;
-        final ContentValues values = new ContentValues();
-        values.put(CachedUsers.USER_KEY, String.valueOf(user.key));
-        values.put(CachedUsers.NAME, user.name);
-        values.put(CachedUsers.SCREEN_NAME, user.screen_name);
-        values.put(CachedUsers.PROFILE_IMAGE_URL, user.profile_image_url);
-        values.put(CachedUsers.CREATED_AT, user.created_at);
-        values.put(CachedUsers.IS_PROTECTED, user.is_protected);
-        values.put(CachedUsers.IS_VERIFIED, user.is_verified);
-        values.put(CachedUsers.LISTED_COUNT, user.listed_count);
-        values.put(CachedUsers.FAVORITES_COUNT, user.favorites_count);
-        values.put(CachedUsers.FOLLOWERS_COUNT, user.followers_count);
-        values.put(CachedUsers.FRIENDS_COUNT, user.friends_count);
-        values.put(CachedUsers.STATUSES_COUNT, user.statuses_count);
-        values.put(CachedUsers.LOCATION, user.location);
-        values.put(CachedUsers.DESCRIPTION_PLAIN, user.description_plain);
-        values.put(CachedUsers.DESCRIPTION_HTML, user.description_html);
-        values.put(CachedUsers.DESCRIPTION_EXPANDED, user.description_expanded);
-        values.put(CachedUsers.URL, user.url);
-        values.put(CachedUsers.URL_EXPANDED, user.url_expanded);
-        values.put(CachedUsers.PROFILE_BANNER_URL, user.profile_banner_url);
-        values.put(CachedUsers.IS_FOLLOWING, user.is_following);
-        values.put(CachedUsers.BACKGROUND_COLOR, user.background_color);
-        values.put(CachedUsers.LINK_COLOR, user.link_color);
-        values.put(CachedUsers.TEXT_COLOR, user.text_color);
-        return values;
-    }
 }

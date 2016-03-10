@@ -82,7 +82,6 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
@@ -1390,7 +1389,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {
-                IntentUtils.openStatus(getActivity(), accountKey, NumberUtils.toLong(link, -1));
+                IntentUtils.openStatus(getActivity(), accountKey, link);
                 break;
             }
         }

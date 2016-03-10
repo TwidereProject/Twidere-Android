@@ -18,5 +18,5 @@ public interface StatusNetResources {
     StatusNetConfig getStatusNetConfig() throws TwitterException;
 
     @GET("/statusnet/conversation/{id}.json")
-    ResponseList<Status> getStatusNetConversation(@Path("id") long statusId, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getStatusNetConversation(@Path("id") String statusId, @Query Paging paging) throws TwitterException;
 }

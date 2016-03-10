@@ -12,6 +12,7 @@ import android.util.Log;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
@@ -23,8 +24,8 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
@@ -80,7 +81,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     protected abstract Uri getContentUri();
 
     private void storeStatus(final UserKey accountKey, final List<Status> statuses,
-                             final long sinceId, final long maxId, final boolean notify) {
+                             final String sinceId, final String maxId, final boolean notify) {
         if (statuses == null || statuses.isEmpty() || accountKey == null) {
             return;
         }
@@ -88,19 +89,19 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         final ContentResolver resolver = context.getContentResolver();
         final boolean noItemsBefore = DataStoreUtils.getStatusCount(context, uri, accountKey) <= 0;
         final ContentValues[] values = new ContentValues[statuses.size()];
-        final long[] statusIds = new long[statuses.size()];
-        long minId = -1;
+        final String[] statusIds = new String[statuses.size()];
+        String minId = null;
         int minIdx = -1;
         boolean hasIntersection = false;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
             values[i] = ContentValuesCreator.createStatus(status, accountKey);
             values[i].put(Statuses.INSERTED_DATE, System.currentTimeMillis());
-            final long id = status.getId();
-            if (sinceId > 0 && id <= sinceId) {
+            final String id = status.getId();
+            if (sinceId != null && id <= sinceId) {
                 hasIntersection = true;
             }
-            if (minId == -1 || id < minId) {
+            if (minId == null || id < minId) {
                 minId = id;
                 minIdx = i;
             }
@@ -133,7 +134,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         // Insert a gap.
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
-        final boolean insertGap = minId > 0 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
+        final boolean insertGap = minId != null && (noRowsDeleted || deletedOldGap) && !noItemsBefore
                 && !hasIntersection;
         if (insertGap && minIdx != -1) {
             values[minIdx].put(Statuses.IS_GAP, true);
@@ -161,8 +162,8 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     @Override
     public List<TwitterWrapper.StatusListResponse> doLongOperation(final RefreshTaskParam param) {
         final UserKey[] accountKeys = param.getAccountKeys();
-        final long[] maxIds = param.getMaxIds();
-        final long[] sinceIds = param.getSinceIds();
+        final String[] maxIds = param.getMaxIds();
+        final String[] sinceIds = param.getSinceIds();
         final List<TwitterWrapper.StatusListResponse> result = new ArrayList<>();
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
@@ -172,21 +173,27 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             try {
                 final Paging paging = new Paging();
                 paging.count(loadItemLimit);
-                final long maxId, sinceId;
-                if (maxIds != null && maxIds[idx] > 0) {
+                final String maxId, sinceId;
+                if (maxIds != null && maxIds[idx] != null) {
                     maxId = maxIds[idx];
                     paging.maxId(maxId);
                 } else {
-                    maxId = -1;
+                    maxId = null;
                 }
-                if (sinceIds != null && sinceIds[idx] > 0) {
+                if (sinceIds != null && sinceIds[idx] != null) {
                     sinceId = sinceIds[idx];
-                    paging.sinceId(sinceId - 1);
-                    if (maxIds == null || sinceIds[idx] <= 0) {
+                    long sinceIdLong = NumberUtils.toLong(sinceId, -1);
+                    //TODO handle non-twitter case
+                    if (sinceIdLong != -1) {
+                        paging.sinceId(String.valueOf(sinceIdLong - 1));
+                    } else {
+                        paging.sinceId(sinceId);
+                    }
+                    if (maxIds == null || sinceIds[idx] == null) {
                         paging.setLatestResults(true);
                     }
                 } else {
-                    sinceId = -1;
+                    sinceId = null;
                 }
                 final List<Status> statuses = getStatuses(twitter, paging);
                 InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);

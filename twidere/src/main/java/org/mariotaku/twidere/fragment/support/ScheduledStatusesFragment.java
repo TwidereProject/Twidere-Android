@@ -61,8 +61,8 @@ public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragmen
     @Override
     public Loader<List<ScheduledStatus>> onCreateLoader(int id, Bundle args) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
-        final long maxId = args.getLong(EXTRA_MAX_ID, -1);
+        final String sinceId = args.getString(EXTRA_SINCE_ID);
+        final String maxId = args.getString(EXTRA_MAX_ID);
         final String[] states = {ScheduledStatus.State.SCHEDULED, ScheduledStatus.State.FAILED};
         return new ScheduledStatusesLoader(getActivity(), accountKey, sinceId, maxId, states, null);
     }
@@ -91,13 +91,11 @@ public class ScheduledStatusesFragment extends AbsContentListRecyclerViewFragmen
     public static class ScheduledStatusesAdapter extends LoadMoreSupportAdapter<RecyclerView.ViewHolder> {
         public static final int ITEM_VIEW_TYPE_SCHEDULED_STATUS = 2;
 
-        private final Context mContext;
         private final LayoutInflater mInflater;
         private List<ScheduledStatus> mData;
 
         public ScheduledStatusesAdapter(Context context) {
             super(context);
-            mContext = context;
             mInflater = LayoutInflater.from(context);
             setLoadMoreSupportedPosition(IndicatorPosition.NONE);
         }

@@ -288,11 +288,11 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
                 }
                 case Draft.Action.SEND_DIRECT_MESSAGE_COMPAT:
                 case Draft.Action.SEND_DIRECT_MESSAGE: {
-                    long recipientId = -1;
+                    String recipientId = null;
                     if (item.action_extras instanceof SendDirectMessageActionExtra) {
                         recipientId = ((SendDirectMessageActionExtra) item.action_extras).getRecipientId();
                     }
-                    if (ArrayUtils.isEmpty(item.account_ids) || recipientId <= 0) {
+                    if (ArrayUtils.isEmpty(item.account_ids) || recipientId == null) {
                         continue;
                     }
                     final UserKey accountId = item.account_ids[0];

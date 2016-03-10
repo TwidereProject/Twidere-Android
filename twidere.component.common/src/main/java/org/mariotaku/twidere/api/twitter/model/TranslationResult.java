@@ -29,7 +29,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class TranslationResult extends TwitterResponseObject implements TwitterResponse {
 
     @JsonField(name = "id")
-    long id;
+    String id;
     @JsonField(name = "lang")
     String lang;
     @JsonField(name = "translated_lang")
@@ -39,7 +39,7 @@ public class TranslationResult extends TwitterResponseObject implements TwitterR
     @JsonField(name = "text")
     String text;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -57,5 +57,16 @@ public class TranslationResult extends TwitterResponseObject implements TwitterR
 
     public String getTranslationType() {
         return translationType;
+    }
+
+    @Override
+    public String toString() {
+        return "TranslationResult{" +
+                "id='" + id + '\'' +
+                ", lang='" + lang + '\'' +
+                ", translatedLang='" + translatedLang + '\'' +
+                ", translationType='" + translationType + '\'' +
+                ", text='" + text + '\'' +
+                "} " + super.toString();
     }
 }

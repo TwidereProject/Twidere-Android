@@ -30,7 +30,7 @@ public class UserMentionEntity {
     @JsonField(name = "indices", typeConverter = IndicesConverter.class)
     Indices indices;
     @JsonField(name = "id")
-    long id;
+    String id;
     @JsonField(name = "name")
     String name;
     @JsonField(name = "screen_name")
@@ -50,7 +50,7 @@ public class UserMentionEntity {
         return indices.getEnd();
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 

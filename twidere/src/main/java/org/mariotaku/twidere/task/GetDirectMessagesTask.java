@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.squareup.otto.Bus;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
@@ -16,8 +17,8 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
@@ -74,19 +75,25 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
             try {
                 final Paging paging = new Paging();
                 paging.setCount(loadItemLimit);
-                String max_id = null, sinceId = null;
-                if (maxIds != null && maxIds[idx] > 0) {
-                    max_id = maxIds[idx];
-                    paging.setMaxId(max_id);
+                String maxId = null, sinceId = null;
+                if (maxIds != null && maxIds[idx] != null) {
+                    maxId = maxIds[idx];
+                    paging.setMaxId(maxId);
                 }
-                if (sinceIds != null && sinceIds[idx] > 0) {
+                if (sinceIds != null && sinceIds[idx] != null) {
                     sinceId = sinceIds[idx];
-                    paging.setSinceId(sinceId - 1);
+                    long sinceIdLong = NumberUtils.toLong(sinceId, -1);
+                    //TODO handle non-twitter case
+                    if (sinceIdLong != -1) {
+                        paging.sinceId(String.valueOf(sinceIdLong - 1));
+                    } else {
+                        paging.sinceId(sinceId);
+                    }
                 }
                 final List<DirectMessage> messages = new ArrayList<>();
                 final boolean truncated = Utils.truncateMessages(getDirectMessages(twitter, paging), messages,
                         sinceId);
-                result.add(new TwitterWrapper.MessageListResponse(accountKey, max_id, sinceId, messages,
+                result.add(new TwitterWrapper.MessageListResponse(accountKey, maxId, sinceId, messages,
                         truncated));
                 storeMessages(accountKey, messages, isOutgoing(), true);
                 errorInfoStore.remove(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey);

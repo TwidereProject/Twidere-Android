@@ -231,7 +231,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyDirectMessageAsync(final UserKey accountKey, final long messageId) {
+    public int destroyDirectMessageAsync(final UserKey accountKey, final String messageId) {
         final DestroyDirectMessageTask task = new DestroyDirectMessageTask(accountKey, messageId);
         return mAsyncTaskManager.add(task, true);
     }
@@ -396,7 +396,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
             @Nullable
             @Override
-            public long[] getSinceIds() {
+            public String[] getSinceIds() {
                 return DataStoreUtils.getNewestStatusIds(mContext, Statuses.CONTENT_URI,
                         getAccountKeys());
             }
@@ -410,7 +410,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
             @Nullable
             @Override
-            public long[] getSinceIds() {
+            public String[] getSinceIds() {
                 return DataStoreUtils.getNewestActivityMaxPositions(mContext,
                         Activities.AboutMe.CONTENT_URI, getAccountKeys());
             }
@@ -440,7 +440,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
     }
 
-    public void removeUnreadCountsAsync(final int position, final SimpleArrayMap<UserKey, Set<Long>> counts) {
+    public void removeUnreadCountsAsync(final int position, final SimpleArrayMap<UserKey, Set<String>> counts) {
         final RemoveUnreadCountsTask task = new RemoveUnreadCountsTask(position, counts);
         AsyncTaskUtils.executeTask(task);
     }
@@ -459,7 +459,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int sendDirectMessageAsync(final UserKey accountKey, final long recipientId, final String text,
+    public int sendDirectMessageAsync(final UserKey accountKey, final String recipientId, final String text,
                                       final String imageUri) {
         final Intent intent = new Intent(mContext, BackgroundOperationService.class);
         intent.setAction(INTENT_ACTION_SEND_DIRECT_MESSAGE);
@@ -1404,18 +1404,20 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class DestroyDirectMessageTask extends ManagedAsyncTask<Object, Object, SingleResponse<DirectMessage>> {
 
         private final UserKey mAccountKey;
-        private final long mMessageId;
+        private final String mMessageId;
 
-        public DestroyDirectMessageTask(final UserKey accountKey, final long messageId) {
+        public DestroyDirectMessageTask(final UserKey accountKey, final String messageId) {
             super(mContext);
             mAccountKey = accountKey;
             mMessageId = messageId;
         }
 
-        private void deleteMessages(final long message_id) {
-            final String where = DirectMessages.MESSAGE_ID + " = " + message_id;
-            mResolver.delete(DirectMessages.Inbox.CONTENT_URI, where, null);
-            mResolver.delete(DirectMessages.Outbox.CONTENT_URI, where, null);
+        private void deleteMessages() {
+            final String where = Expression.and(Expression.equalsArgs(DirectMessages.ACCOUNT_KEY),
+                    Expression.equalsArgs(DirectMessages.MESSAGE_ID)).getSQL();
+            final String[] whereArgs = new String[]{mAccountKey.toString(), mMessageId};
+            mResolver.delete(DirectMessages.Inbox.CONTENT_URI, where, whereArgs);
+            mResolver.delete(DirectMessages.Outbox.CONTENT_URI, where, whereArgs);
         }
 
         private boolean isMessageNotFound(final Exception e) {
@@ -1431,11 +1433,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final DirectMessage message = twitter.destroyDirectMessage(mMessageId);
-                deleteMessages(mMessageId);
+                deleteMessages();
                 return SingleResponse.getInstance(message, null);
             } catch (final TwitterException e) {
                 if (isMessageNotFound(e)) {
-                    deleteMessages(mMessageId);
+                    deleteMessages();
                 }
                 return SingleResponse.getInstance(null, e);
             }
@@ -1939,9 +1941,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
     final class RemoveUnreadCountsTask extends AsyncTask<Object, Object, Integer> {
         private final int position;
-        private final SimpleArrayMap<UserKey, Set<Long>> counts;
+        private final SimpleArrayMap<UserKey, Set<String>> counts;
 
-        RemoveUnreadCountsTask(final int position, final SimpleArrayMap<UserKey, Set<Long>> counts) {
+        RemoveUnreadCountsTask(final int position, final SimpleArrayMap<UserKey, Set<String>> counts) {
             this.position = position;
             this.counts = counts;
         }

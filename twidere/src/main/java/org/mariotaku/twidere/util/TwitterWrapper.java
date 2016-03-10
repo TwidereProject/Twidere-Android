@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public class TwitterWrapper implements Constants {
@@ -91,12 +90,12 @@ public class TwitterWrapper implements Constants {
     }
 
     public static int removeUnreadCounts(final Context context, final int position,
-                                         final SimpleArrayMap<UserKey, Set<Long>> counts) {
+                                         final SimpleArrayMap<UserKey, Set<String>> counts) {
         if (context == null || position < 0 || counts == null) return 0;
         int result = 0;
         for (int i = 0, j = counts.size(); i < j; i++) {
             final UserKey key = counts.keyAt(i);
-            final Set<Long> value = counts.valueAt(i);
+            final Set<String> value = counts.valueAt(i);
             final Uri.Builder builder = UnreadCounts.CONTENT_URI.buildUpon();
             builder.appendPath(String.valueOf(position));
             builder.appendPath(String.valueOf(key));
@@ -204,19 +203,19 @@ public class TwitterWrapper implements Constants {
         public final boolean truncated;
 
         public MessageListResponse(final UserKey accountKey, final Exception exception) {
-            this(accountKey, -1, -1, null, false, exception);
+            this(accountKey, null, null, null, false, exception);
         }
 
         public MessageListResponse(final UserKey accountKey, final List<DirectMessage> list) {
-            this(accountKey, -1, -1, list, false, null);
+            this(accountKey, null, null, list, false, null);
         }
 
-        public MessageListResponse(final UserKey accountKey, final long maxId, final long sinceId,
+        public MessageListResponse(final UserKey accountKey, final String maxId, final String sinceId,
                                    final List<DirectMessage> list, final boolean truncated) {
             this(accountKey, maxId, sinceId, list, truncated, null);
         }
 
-        MessageListResponse(final UserKey accountKey, final long maxId, final long sinceId,
+        MessageListResponse(final UserKey accountKey, final String maxId, final String sinceId,
                             final List<DirectMessage> list, final boolean truncated, final Exception exception) {
             super(accountKey, maxId, sinceId, list, exception);
             this.truncated = truncated;
@@ -229,19 +228,19 @@ public class TwitterWrapper implements Constants {
         public final boolean truncated;
 
         public StatusListResponse(final UserKey accountKey, final Exception exception) {
-            this(accountKey, -1, -1, null, false, exception);
+            this(accountKey, null, null, null, false, exception);
         }
 
         public StatusListResponse(final UserKey accountKey, final List<Status> list) {
-            this(accountKey, -1, -1, list, false, null);
+            this(accountKey, null, null, list, false, null);
         }
 
-        public StatusListResponse(final UserKey accountKey, final long maxId, final long sinceId,
+        public StatusListResponse(final UserKey accountKey, final String maxId, final String sinceId,
                                   final List<Status> list, final boolean truncated) {
             this(accountKey, maxId, sinceId, list, truncated, null);
         }
 
-        StatusListResponse(final UserKey accountKey, final long maxId, final long sinceId, final List<Status> list,
+        StatusListResponse(final UserKey accountKey, final String maxId, final String sinceId, final List<Status> list,
                            final boolean truncated, final Exception exception) {
             super(accountKey, maxId, sinceId, list, exception);
             this.truncated = truncated;
@@ -251,24 +250,24 @@ public class TwitterWrapper implements Constants {
 
     public static class TwitterListResponse<Data> extends ListResponse<Data> {
 
-        public final UserKey mAccountKey;
-        public final long maxId;
-        public final long sinceId;
+        public final UserKey accountKey;
+        public final String maxId;
+        public final String sinceId;
 
         public TwitterListResponse(final UserKey accountKey,
                                    final Exception exception) {
-            this(accountKey, -1, -1, null, exception);
+            this(accountKey, null, null, null, exception);
         }
 
-        public TwitterListResponse(final UserKey accountKey, final long maxId,
-                                   final long sinceId, final List<Data> list) {
+        public TwitterListResponse(final UserKey accountKey, final String maxId,
+                                   final String sinceId, final List<Data> list) {
             this(accountKey, maxId, sinceId, list, null);
         }
 
-        TwitterListResponse(final UserKey accountKey, final long maxId,
-                            final long sinceId, final List<Data> list, final Exception exception) {
+        TwitterListResponse(final UserKey accountKey, final String maxId, final String sinceId,
+                            final List<Data> list, final Exception exception) {
             super(list, exception);
-            this.mAccountKey = accountKey;
+            this.accountKey = accountKey;
             this.maxId = maxId;
             this.sinceId = sinceId;
         }

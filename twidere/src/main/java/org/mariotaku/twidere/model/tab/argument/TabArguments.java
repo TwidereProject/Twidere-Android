@@ -19,16 +19,16 @@ import java.util.Arrays;
 @JsonObject
 public class TabArguments implements TwidereConstants {
     @JsonField(name = "account_id")
-    long accountId = -1;
+    String accountId = null;
 
     @JsonField(name = "account_keys")
     UserKey[] accountKeys;
 
-    public long getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(long accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 
@@ -42,8 +42,8 @@ public class TabArguments implements TwidereConstants {
 
     @CallSuper
     public void copyToBundle(@NonNull Bundle bundle) {
-        if (accountId > 0) {
-            bundle.putLong(EXTRA_ACCOUNT_ID, accountId);
+        if (accountId != null) {
+            bundle.putString(EXTRA_ACCOUNT_ID, accountId);
         }
     }
 

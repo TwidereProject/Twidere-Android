@@ -33,7 +33,7 @@ public class StatusUpdate extends SimpleValueMap {
         return this;
     }
 
-    public void setInReplyToStatusId(final long inReplyToStatusId) {
+    public void setInReplyToStatusId(final String inReplyToStatusId) {
         put("in_reply_to_status_id", inReplyToStatusId);
     }
 
@@ -55,7 +55,7 @@ public class StatusUpdate extends SimpleValueMap {
         put("place_id", placeId);
     }
 
-    public StatusUpdate inReplyToStatusId(final long inReplyToStatusId) {
+    public StatusUpdate inReplyToStatusId(final String inReplyToStatusId) {
         setInReplyToStatusId(inReplyToStatusId);
         return this;
     }

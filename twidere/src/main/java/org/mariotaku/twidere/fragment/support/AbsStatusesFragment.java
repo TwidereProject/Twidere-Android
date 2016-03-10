@@ -32,6 +32,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
@@ -72,6 +73,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -89,7 +91,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
 
         public List<ScrollRecord> mRecords;
-        private long mFirstVisibleId = -1;
+        private String mFirstVisibleId;
         private UserKey mFirstVisibleAccountId = null;
         private int mFirstVisiblePosition = -1;
         private int mScrollState;
@@ -103,9 +105,9 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
                 final ParcelableStatusesAdapter adapter = (ParcelableStatusesAdapter) recyclerView.getAdapter();
                 final ParcelableStatus status = adapter.getStatus(firstVisiblePosition);
                 if (status != null) {
-                    final long id = status.id;
+                    final String id = status.id;
                     final UserKey accountId = status.account_key;
-                    if (id != mFirstVisibleId || !accountId.equals(mFirstVisibleAccountId)) {
+                    if (!TextUtils.equals(id, mFirstVisibleId) || !accountId.equals(mFirstVisibleAccountId)) {
                         if (mRecords == null) mRecords = new ArrayList<>();
                         final long time = System.currentTimeMillis();
                         mRecords.add(ScrollRecord.create(id, accountId, time,
@@ -248,7 +250,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         final ParcelableStatusesAdapter adapter = getAdapter();
         final boolean rememberPosition = mPreferences.getBoolean(KEY_REMEMBER_POSITION, false);
         final boolean readFromBottom = mPreferences.getBoolean(KEY_READ_FROM_BOTTOM, false);
-        long lastReadId;
+        long lastReadTimestamp;
         final int lastVisiblePos, lastVisibleTop;
         final String tag = getCurrentReadPositionTag();
         final LinearLayoutManager layoutManager = getLayoutManager();
@@ -261,14 +263,14 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
             final int statusStartIndex = adapter.getStatusStartIndex();
             final int statusEndIndex = statusStartIndex + adapter.getStatusCount();
             final int lastItemIndex = Math.min(statusEndIndex, lastVisiblePos);
-            lastReadId = adapter.getStatusId(lastItemIndex);
+            lastReadTimestamp = adapter.getStatusTimestamp(lastItemIndex);
             final View positionView = layoutManager.findViewByPosition(lastItemIndex);
             lastVisibleTop = positionView != null ? positionView.getTop() : 0;
         } else if (rememberPosition && tag != null) {
-            lastReadId = mReadStateManager.getPosition(tag);
+            lastReadTimestamp = mReadStateManager.getPosition(tag);
             lastVisibleTop = 0;
         } else {
-            lastReadId = -1;
+            lastReadTimestamp = -1;
             lastVisibleTop = 0;
         }
         adapter.setData(data);
@@ -276,10 +278,10 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         // The last status is statusEndExclusiveIndex - 1
         final int statusEndExclusiveIndex = statusStartIndex + adapter.getStatusCount();
         if (statusEndExclusiveIndex >= 0 && rememberPosition && tag != null) {
-            final long lastItemId = adapter.getStatusId(statusEndExclusiveIndex - 1);
+            final long lastItemId = adapter.getStatusTimestamp(statusEndExclusiveIndex - 1);
             // Status corresponds to last read id was deleted, use last item id instead
-            if (lastItemId > 0 && lastReadId > 0 && lastReadId < lastItemId) {
-                lastReadId = lastItemId;
+            if (lastItemId != -1 && lastReadTimestamp > 0 && lastReadTimestamp < lastItemId) {
+                lastReadTimestamp = lastItemId;
             }
         }
         setRefreshEnabled(true);
@@ -295,7 +297,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
             for (int i = statusStartIndex; i < statusEndExclusiveIndex; i++) {
                 // Assume statuses are descend sorted by id, so break at first status with id
                 // lesser equals than read position
-                if (lastReadId != -1 && adapter.getStatusId(i) <= lastReadId) {
+                if (lastReadTimestamp != -1 && adapter.getStatusTimestamp(i) <= lastReadTimestamp) {
                     pos = i;
                     break;
                 }
@@ -330,7 +332,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
         final UserKey[] accountIds = {status.account_key};
-        final long[] maxIds = {status.id};
+        final String[] maxIds = {status.id};
         getStatuses(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
 
@@ -540,8 +542,8 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
-        mReadStateManager.setPosition(readPositionTag, status.id);
-        mReadStateManager.setPosition(getCurrentReadPositionTag(), status.id, true);
+        mReadStateManager.setPosition(readPositionTag, status.timestamp);
+        mReadStateManager.setPosition(getCurrentReadPositionTag(), status.timestamp, true);
     }
 
     @NonNull

@@ -135,6 +135,6 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
     @Subscribe
     public void onSavedSearchDestroyed(SavedSearchDestroyedEvent event) {
         SavedSearchesAdapter adapter = getAdapter();
-        adapter.removeItem(event.getAccountKey().getId(), event.getSearchId());
+        adapter.removeItem(event.getAccountKey(), event.getSearchId());
     }
 }

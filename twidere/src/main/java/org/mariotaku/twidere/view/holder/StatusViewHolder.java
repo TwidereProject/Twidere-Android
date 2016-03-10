@@ -221,7 +221,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             if (statusContentUpperSpace != null) {
                 statusContentUpperSpace.setVisibility(View.GONE);
             }
-        } else if (status.retweet_id > 0) {
+        } else if (status.retweet_id != null) {
             final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_id,
                     status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst, false);
             statusInfoLabel.setText(context.getString(R.string.name_retweeted, formatter.unicodeWrap(retweetedBy)));
@@ -232,7 +232,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             if (statusContentUpperSpace != null) {
                 statusContentUpperSpace.setVisibility(View.GONE);
             }
-        } else if (status.in_reply_to_status_id > 0 && status.in_reply_to_user_id != null && displayInReplyTo) {
+        } else if (status.in_reply_to_status_id != null && status.in_reply_to_user_id != null && displayInReplyTo) {
             final String inReplyTo = manager.getDisplayName(status.in_reply_to_user_id,
                     status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst, false);
             statusInfoLabel.setText(context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo)));

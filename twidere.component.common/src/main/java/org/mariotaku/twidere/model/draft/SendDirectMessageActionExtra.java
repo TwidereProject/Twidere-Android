@@ -15,13 +15,13 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 public class SendDirectMessageActionExtra implements ActionExtra {
     @ParcelableThisPlease
     @JsonField(name = "recipient_id")
-    long recipientId;
+    String recipientId;
 
-    public long getRecipientId() {
+    public String getRecipientId() {
         return recipientId;
     }
 
-    public void setRecipientId(long recipientId) {
+    public void setRecipientId(String recipientId) {
         this.recipientId = recipientId;
     }
 

@@ -2,6 +2,7 @@ package org.mariotaku.twidere.model.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.api.statusnet.model.Attention;
 import org.mariotaku.twidere.api.twitter.model.Place;
@@ -29,7 +30,7 @@ public class ParcelableStatusUtils {
         status.retweeted_by_user_screen_name = null;
         status.retweeted_by_user_profile_image = null;
         status.retweet_timestamp = -1;
-        status.retweet_id = -1;
+        status.retweet_id = null;
     }
 
     public static ParcelableStatus fromStatus(final Status orig, final UserKey accountKey,
@@ -134,11 +135,11 @@ public class ParcelableStatusUtils {
     }
 
     private static UserKey getInReplyToUserId(Status status, UserKey accountKey) {
-        final long inReplyToUserId = status.getInReplyToUserId();
+        final String inReplyToUserId = status.getInReplyToUserId();
         final UserMentionEntity[] entities = status.getUserMentionEntities();
         if (entities != null) {
             for (final UserMentionEntity entity : entities) {
-                if (inReplyToUserId == entity.getId()) {
+                if (TextUtils.equals(inReplyToUserId, entity.getId())) {
                     return new UserKey(inReplyToUserId, accountKey.getHost());
                 }
             }
@@ -146,11 +147,10 @@ public class ParcelableStatusUtils {
         final Attention[] attentions = status.getAttentions();
         if (attentions != null) {
             for (Attention attention : attentions) {
-                if (inReplyToUserId == attention.getId()) {
-                    final String host = UserKeyUtils.getUserHost(attention.getOstatusUri());
-                    if (host != null) {
-                        return new UserKey(inReplyToUserId, host);
-                    }
+                if (TextUtils.equals(inReplyToUserId, attention.getId())) {
+                    final String host = UserKeyUtils.getUserHost(attention.getOstatusUri(),
+                            accountKey.getHost());
+                    return new UserKey(inReplyToUserId, host);
                 }
             }
         }
@@ -179,17 +179,19 @@ public class ParcelableStatusUtils {
 
     @NonNull
     public static String getInReplyToName(@NonNull final Status status) {
-        final long inReplyToUserId = status.getInReplyToUserId();
+        final String inReplyToUserId = status.getInReplyToUserId();
         final UserMentionEntity[] entities = status.getUserMentionEntities();
         if (entities != null) {
             for (final UserMentionEntity entity : entities) {
-                if (inReplyToUserId == entity.getId()) return entity.getName();
+                if (TextUtils.equals(inReplyToUserId, entity.getId())) return entity.getName();
             }
         }
         final Attention[] attentions = status.getAttentions();
         if (attentions != null) {
             for (Attention attention : attentions) {
-                if (inReplyToUserId == attention.getId()) return attention.getFullName();
+                if (TextUtils.equals(inReplyToUserId, attention.getId())) {
+                    return attention.getFullName();
+                }
             }
         }
         return status.getInReplyToScreenName();

@@ -27,6 +27,8 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupport
     @Nullable
     String getStatusId(int position);
 
+    long getStatusTimestamp(int adapterPosition);
+
     @Nullable
     UserKey getAccountKey(int position);
 

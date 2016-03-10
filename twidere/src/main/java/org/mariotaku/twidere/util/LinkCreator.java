@@ -35,13 +35,13 @@ public class LinkCreator implements Constants {
 
     private static final String AUTHORITY_TWITTER = "twitter.com";
 
-    public static Uri getTwitterStatusLink(String screenName, long statusId) {
+    public static Uri getTwitterStatusLink(String screenName, String statusId) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_HTTPS);
         builder.authority(AUTHORITY_TWITTER);
         builder.appendPath(screenName);
         builder.appendPath("status");
-        builder.appendPath(String.valueOf(statusId));
+        builder.appendPath(statusId);
         return builder.build();
     }
 

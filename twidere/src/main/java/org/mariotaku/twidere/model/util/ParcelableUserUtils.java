@@ -72,11 +72,6 @@ public class ParcelableUserUtils implements TwidereConstants {
         return obj;
     }
 
-    public static String getUserHost(ParcelableUser user) {
-        if (user.extras == null) return USER_TYPE_TWITTER_COM;
-        return UserKeyUtils.getUserHost(user.extras.ostatus_uri);
-    }
-
     public static ParcelableUser fromDirectMessageConversationEntry(final Cursor cursor) {
         final UserKey accountId = UserKey.valueOf(cursor.getString(DirectMessages.ConversationEntries.IDX_ACCOUNT_KEY));
         final UserKey id = UserKey.valueOf(cursor.getString(DirectMessages.ConversationEntries.IDX_CONVERSATION_ID));

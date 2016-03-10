@@ -1095,8 +1095,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             if (accountType != null) {
                 values.put(Accounts.ACCOUNT_TYPE, accountType.first);
                 values.put(Accounts.ACCOUNT_EXTRAS, accountType.second);
-                final UserKey accountKey = new UserKey(user.getId(),
-                        UserKeyUtils.getUserHost(user.getOstatusUri()));
+                final UserKey accountKey = UserKeyUtils.fromUser(user);
                 final ParcelableUser parcelableUser = ParcelableUserUtils.fromUser(user, accountKey);
                 values.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(parcelableUser, ParcelableUser.class));
             }

@@ -218,8 +218,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mStatusAdapter.setConversationsLoading(true);
             mStatusAdapter.updateItemDecoration();
             final ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
-            final String maxId = args.getLong(EXTRA_MAX_ID, -1);
-            final String sinceId = args.getLong(EXTRA_SINCE_ID, -1);
+            final String maxId = args.getString(EXTRA_MAX_ID);
+            final String sinceId = args.getString(EXTRA_SINCE_ID);
             assert status != null;
             final ConversationLoader loader = new ConversationLoader(getActivity(), status, sinceId,
                     maxId, mStatusAdapter.getData(), true);
@@ -544,7 +544,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public Loader<SingleResponse<ParcelableStatus>> onCreateLoader(final int id, final Bundle args) {
         final Bundle fragmentArgs = getArguments();
         final UserKey accountKey = fragmentArgs.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long statusId = fragmentArgs.getLong(EXTRA_STATUS_ID, -1);
+        final String statusId = fragmentArgs.getString(EXTRA_STATUS_ID);
         return new ParcelableStatusLoader(getActivity(), false, fragmentArgs, accountKey, statusId);
     }
 
@@ -2086,8 +2086,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         public void setTranslationResult(@Nullable TranslationResult translation) {
-            if (mStatus == null || translation == null || InternalTwitterContentUtils.getOriginalId(mStatus)
-                    != translation.getId()) {
+            if (mStatus == null || translation == null || !TextUtils.equals(InternalTwitterContentUtils
+                    .getOriginalId(mStatus), translation.getId())) {
                 mTranslationResult = null;
             } else {
                 mTranslationResult = translation;

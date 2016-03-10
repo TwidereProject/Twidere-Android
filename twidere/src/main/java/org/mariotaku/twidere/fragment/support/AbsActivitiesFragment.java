@@ -109,7 +109,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
                     if (timestamp != mFirstVisibleTimestamp || !accountKey.equals(mFirstVisibleAccountId)) {
                         if (mRecords == null) mRecords = new ArrayList<>();
                         final long time = System.currentTimeMillis();
-                        mRecords.add(ScrollRecord.create(timestamp, accountKey, time,
+                        mRecords.add(ScrollRecord.create(String.valueOf(timestamp), accountKey, time,
                                 TimeZone.getDefault().getOffset(time), mScrollState));
                     }
                     mFirstVisibleTimestamp = timestamp;
@@ -341,7 +341,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         final ParcelableActivitiesAdapter adapter = getAdapter();
         final ParcelableActivity activity = adapter.getActivity(position);
         final UserKey[] accountIds = {activity.account_key};
-        final long[] maxIds = {activity.min_position};
+        final String[] maxIds = {activity.min_position};
         getActivities(new BaseRefreshTaskParam(accountIds, maxIds, null));
     }
 

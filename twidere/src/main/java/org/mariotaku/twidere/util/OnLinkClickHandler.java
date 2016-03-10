@@ -26,11 +26,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.fragment.support.UserFragment;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
@@ -64,7 +64,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(context, accountKey, -1, link, null, true,
+                IntentUtils.openUserProfile(context, accountKey, null, link, null, true,
                         UserFragment.Referral.USER_MENTION);
                 break;
             }
@@ -81,11 +81,12 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_LIST: {
-                final String[] mentionList = link.split("/");
+                final String[] mentionList = StringUtils.split(link, "/");
                 if (mentionList.length != 2) {
                     break;
                 }
-                IntentUtils.openUserListDetails(context, accountKey, -1, -1, mentionList[0], mentionList[1]);
+                IntentUtils.openUserListDetails(context, accountKey, -1, null, mentionList[0],
+                        mentionList[1]);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_CASHTAG: {
@@ -93,12 +94,12 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
-                IntentUtils.openUserProfile(context, accountKey, NumberUtils.toLong(link, -1), null,
-                        null, true, UserFragment.Referral.USER_MENTION);
+                IntentUtils.openUserProfile(context, accountKey, link, null, null, true,
+                        UserFragment.Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {
-                IntentUtils.openStatus(context, accountKey, NumberUtils.toLong(link, -1));
+                IntentUtils.openStatus(context, accountKey, link);
                 break;
             }
         }

@@ -183,6 +183,11 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     }
 
     @Override
+    public long getStatusTimestamp(int adapterPosition) {
+        return -1;
+    }
+
+    @Override
     @Nullable
     public UserKey getAccountKey(int position) {
         return null;

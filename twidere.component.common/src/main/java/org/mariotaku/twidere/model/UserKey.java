@@ -128,6 +128,9 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
                     escaping = true;
                 } else if (ch == '@') {
                     idFinished = true;
+                } else if (ch == ',') {
+                    // end of item
+                    break;
                 }
             }
             if (!isSpecialChar(ch) || !escaping) {
@@ -180,7 +183,7 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
     }
 
     private static boolean isSpecialChar(char ch) {
-        return ch == '\\' || ch == '@';
+        return ch == '\\' || ch == '@' || ch == ',';
     }
 
     public boolean maybeEquals(@Nullable UserKey another) {

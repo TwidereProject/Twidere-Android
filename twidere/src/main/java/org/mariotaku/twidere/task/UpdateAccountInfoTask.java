@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
+import android.text.TextUtils;
 import android.util.Pair;
 
 import org.mariotaku.sqliteqb.library.Expression;
@@ -84,9 +85,9 @@ public class UpdateAccountInfoTask extends AbstractTask<Pair<UserKey, Parcelable
                 Tab tab = indices.newObject(tabsCursor);
                 TabArguments arguments = tab.getArguments();
                 if (arguments != null) {
-                    final long accountId = arguments.getAccountId();
+                    final String accountId = arguments.getAccountId();
                     final UserKey[] keys = arguments.getAccountKeys();
-                    if (accountKey.getId() == accountId && keys == null) {
+                    if (TextUtils.equals(accountKey.getId(), accountId) && keys == null) {
                         arguments.setAccountKeys(new UserKey[]{accountKey});
                         values.put(tab.getId(), TabValuesCreator.create(tab));
                     }

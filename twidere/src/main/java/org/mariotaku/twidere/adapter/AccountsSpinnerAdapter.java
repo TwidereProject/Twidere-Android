@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -126,9 +127,9 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableCredentials> 
         notifyDataSetChanged();
     }
 
-    public int findPositionByKey(UserKey key) {
+    public int findPositionByKey(@NonNull UserKey key) {
         for (int i = 0, j = getCount(); i < j; i++) {
-            if (getItem(i).account_key.equals(key)) {
+            if (key.equals(getItem(i).account_key)) {
                 return i;
             }
         }

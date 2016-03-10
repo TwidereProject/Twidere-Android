@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,9 +110,10 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
         return start;
     }
 
+    @Nullable
     @Override
-    public long getUserId(int position) {
-        if (position == getUserCount()) return -1;
+    public String getUserId(int position) {
+        if (position == getUserCount()) return null;
         return mData.get(position).key.getId();
     }
 
@@ -129,11 +131,11 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
         return true;
     }
 
-    public int findPosition(UserKey accountKey, long userId) {
+    public int findPosition(UserKey accountKey, String userId) {
         if (mData == null) return RecyclerView.NO_POSITION;
         for (int i = getUserStartIndex(), j = i + getUserCount(); i < j; i++) {
             final ParcelableUser user = mData.get(i);
-            if (user.account_key.equals(accountKey) && user.key.getId() == userId) {
+            if (user.account_key.equals(accountKey) && TextUtils.equals(user.key.getId(), userId)) {
                 return i;
             }
         }

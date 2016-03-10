@@ -406,7 +406,7 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             final ParcelableUserList userList = args.getParcelable(EXTRA_USER_LIST);
             assert userList != null;
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userList.account_key);
-            tabArgs.putLong(EXTRA_USER_ID, userList.user_key.getId());
+            tabArgs.putString(EXTRA_USER_ID, userList.user_key.getId());
             tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name);
             tabArgs.putLong(EXTRA_LIST_ID, userList.id);
             tabArgs.putString(EXTRA_LIST_NAME, userList.name);

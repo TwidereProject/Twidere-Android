@@ -305,11 +305,15 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     recipient = args.getParcelable(EXTRA_USER);
                 } else if (args.containsKey(EXTRA_ACCOUNT_KEY)) {
                     final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-                    final long userId = args.getLong(EXTRA_RECIPIENT_ID, -1);
-                    final int accountPos = accountsSpinnerAdapter.findItemPosition(accountKey.getId());
+                    if (accountKey == null) {
+                        getActivity().finish();
+                        return;
+                    }
+                    final int accountPos = accountsSpinnerAdapter.findPositionByKey(accountKey);
                     if (accountPos >= 0) {
                         mAccountSpinner.setSelection(accountPos);
                     }
+                    final String userId = args.getString(EXTRA_RECIPIENT_ID);
                     account = accountPos >= 0 ? accountsSpinnerAdapter.getItem(accountPos) :
                             ParcelableCredentialsUtils.getCredentials(activity, accountKey);
                     recipient = Utils.getUserForConversation(activity, accountKey, userId);
@@ -319,7 +323,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 }
                 showConversation(account, recipient);
                 if (account != null && recipient != null) {
-                    final String key = getDraftsTextKey(account.account_key, recipient.key.getId());
+                    final String key = getDraftsTextKey(account.account_key, recipient.key);
                     mEditText.setText(mMessageDrafts.getString(key, null));
                 }
             }
@@ -373,7 +377,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final ParcelableCredentials account = mAccount;
         final ParcelableUser recipient = mRecipient;
         if (account != null && recipient != null) {
-            final String key = getDraftsTextKey(account.account_key, recipient.key.getId());
+            final String key = getDraftsTextKey(account.account_key, recipient.key);
             final SharedPreferences.Editor editor = mMessageDrafts.edit();
             final String text = ParseUtils.parseString(mEditText.getText());
             if (TextUtils.isEmpty(text)) {
@@ -568,7 +572,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final LoaderManager lm = getLoaderManager();
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, account.account_key);
-        args.putLong(EXTRA_RECIPIENT_ID, recipient.key.getId());
+        args.putString(EXTRA_RECIPIENT_ID, recipient.key.getId());
         if (mLoaderInitialized) {
             lm.restartLoader(0, args, this);
         } else {
@@ -585,8 +589,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         return mConversationContainer.getVisibility() == View.VISIBLE;
     }
 
-    private String getDraftsTextKey(UserKey accountKey, long userId) {
-        return String.format(Locale.ROOT, "text_%s_to_%d", accountKey, userId);
+    private String getDraftsTextKey(UserKey accountKey, UserKey userId) {
+        return String.format(Locale.ROOT, "text_%s_to_%s", accountKey, userId);
     }
 
     private void searchUsers(UserKey accountKey, String query, boolean fromCache) {
@@ -748,7 +752,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final Menu menu = mPopupMenu.getMenu();
         final MenuItem view_profile_item = menu.findItem(R.id.view_profile);
         if (view_profile_item != null && dm != null) {
-            view_profile_item.setVisible(dm.account_key.getId() != dm.sender_id);
+            view_profile_item.setVisible(!TextUtils.equals(dm.account_key.getId(), dm.sender_id));
         }
         mPopupMenu.setOnMenuItemClickListener(this);
         mPopupMenu.show();

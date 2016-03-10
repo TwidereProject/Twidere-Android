@@ -42,18 +42,6 @@ import java.util.Arrays;
 @CursorObject(valuesCreator = true)
 public class ParcelableDirectMessage implements Parcelable, Comparable<ParcelableDirectMessage> {
 
-    public static final Creator<ParcelableDirectMessage> CREATOR = new Creator<ParcelableDirectMessage>() {
-        public ParcelableDirectMessage createFromParcel(Parcel source) {
-            ParcelableDirectMessage target = new ParcelableDirectMessage();
-            ParcelableDirectMessageParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        public ParcelableDirectMessage[] newArray(int size) {
-            return new ParcelableDirectMessage[size];
-        }
-    };
-
     @ParcelableThisPlease
     @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = DirectMessages.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
@@ -61,7 +49,7 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     @ParcelableThisPlease
     @JsonField(name = "id")
     @CursorField(DirectMessages.MESSAGE_ID)
-    public long id;
+    public String id;
     @ParcelableThisPlease
     @JsonField(name = "timestamp")
     @CursorField(DirectMessages.MESSAGE_TIMESTAMP)
@@ -70,11 +58,11 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     @ParcelableThisPlease
     @JsonField(name = "sender_id")
     @CursorField(DirectMessages.SENDER_ID)
-    public long sender_id;
+    public String sender_id;
     @ParcelableThisPlease
     @JsonField(name = "recipient_id")
     @CursorField(DirectMessages.RECIPIENT_ID)
-    public long recipient_id;
+    public String recipient_id;
 
     @ParcelableThisPlease
     @JsonField(name = "is_outgoing")
@@ -130,9 +118,7 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
 
     @Override
     public int compareTo(@NonNull final ParcelableDirectMessage another) {
-        final long diff = another.id - id;
-        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        final long diff = another.timestamp - timestamp;
         return (int) diff;
     }
 
@@ -143,15 +129,15 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
 
         ParcelableDirectMessage that = (ParcelableDirectMessage) o;
 
-        if (id != that.id) return false;
-        return account_key.equals(that.account_key);
+        if (!account_key.equals(that.account_key)) return false;
+        return id.equals(that.id);
 
     }
 
     @Override
     public int hashCode() {
         int result = account_key.hashCode();
-        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + id.hashCode();
         return result;
     }
 
@@ -186,4 +172,16 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableDirectMessageParcelablePlease.writeToParcel(this, dest, flags);
     }
+
+    public static final Creator<ParcelableDirectMessage> CREATOR = new Creator<ParcelableDirectMessage>() {
+        public ParcelableDirectMessage createFromParcel(Parcel source) {
+            ParcelableDirectMessage target = new ParcelableDirectMessage();
+            ParcelableDirectMessageParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ParcelableDirectMessage[] newArray(int size) {
+            return new ParcelableDirectMessage[size];
+        }
+    };
 }

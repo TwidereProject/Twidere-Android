@@ -65,7 +65,7 @@ public class CacheUsersStatusesTask extends AbstractTask<TwitterListResponse<Sta
                 final Set<ContentValues> statusesValues = new HashSet<>();
                 final Set<ContentValues> hashTagValues = new HashSet<>();
 
-                final UserKey accountKey = params.mAccountKey;
+                final UserKey accountKey = params.accountKey;
                 statusesValues.add(ContentValuesCreator.createStatus(status, accountKey));
                 final String text = InternalTwitterContentUtils.unescapeTwitterStatusText(status.getText());
                 for (final String hashtag : extractor.extractHashtags(text)) {

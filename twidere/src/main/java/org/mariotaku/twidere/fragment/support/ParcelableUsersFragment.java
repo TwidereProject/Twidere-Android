@@ -92,7 +92,7 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
         setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
     }
 
-    protected void removeUsers(long... ids) {
+    protected void removeUsers(String... ids) {
         //TODO remove from adapter
     }
 

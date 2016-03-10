@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment.support;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.squareup.otto.Subscribe;
 
@@ -36,9 +37,10 @@ public class UserFollowersFragment extends CursorSupportUsersListFragment {
 
     @Override
     public CursorSupportUsersLoader onCreateUsersLoader(final Context context,
-                                                        @NonNull final Bundle args, boolean fromUser) {
+                                                        @NonNull final Bundle args,
+                                                        final boolean fromUser) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final UserFollowersLoader loader = new UserFollowersLoader(context, accountKey, userId,
                 screenName, getData(), fromUser);
@@ -62,11 +64,11 @@ public class UserFollowersFragment extends CursorSupportUsersListFragment {
     @Subscribe
     public void onUsersBlocked(UsersBlockedEvent event) {
         final UserKey accountKey = event.getAccountKey();
-        final String screen_name = getAccountScreenName(getActivity(), accountKey);
+        final String screenName = getAccountScreenName(getActivity(), accountKey);
         final Bundle args = getArguments();
         if (args == null) return;
-        if (accountKey != null && accountKey.getId() == args.getLong(EXTRA_USER_ID, -1) || screen_name != null
-                && screen_name.equalsIgnoreCase(args.getString(EXTRA_SCREEN_NAME))) {
+        if (accountKey != null && TextUtils.equals(accountKey.getId(), args.getString(EXTRA_USER_ID))
+                || screenName != null && screenName.equalsIgnoreCase(args.getString(EXTRA_SCREEN_NAME))) {
             removeUsers(event.getUserIds());
         }
     }

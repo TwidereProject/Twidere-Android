@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -40,6 +41,7 @@ import org.mariotaku.twidere.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ConversationLoader extends TwitterAPIStatusesLoader {
 
@@ -92,7 +94,7 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
             query.sinceId(sinceId != null ? sinceId : status.id);
             try {
                 for (Status item : twitter.search(query)) {
-                    if (item.getInReplyToStatusId() == status.id) {
+                    if (TextUtils.equals(item.getInReplyToStatusId(), status.id)) {
                         statuses.add(item);
                     }
                 }

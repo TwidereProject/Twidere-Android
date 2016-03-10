@@ -23,6 +23,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,8 +33,8 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
 import org.mariotaku.twidere.loader.support.UserListsLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -82,8 +83,8 @@ public class UserListsFragment extends ParcelableUserListsFragment {
         final MenuItem item = menu.findItem(R.id.new_user_list);
         final UserKey accountId = getAccountKey();
         if (accountId == null || item == null) return;
-        final long userId = getUserId();
-        if (accountId.getId() == userId) {
+        final String userId = getUserId();
+        if (TextUtils.equals(accountId.getId(), userId)) {
             MenuUtils.setMenuItemAvailability(menu, R.id.new_user_list, true);
         } else {
             MenuUtils.setMenuItemAvailability(menu, R.id.new_user_list, Utils.isMyAccount(getActivity(), getScreenName()));
@@ -94,8 +95,8 @@ public class UserListsFragment extends ParcelableUserListsFragment {
         return getArguments().getString(EXTRA_SCREEN_NAME);
     }
 
-    private long getUserId() {
-        return getArguments().getLong(EXTRA_USER_ID);
+    private String getUserId() {
+        return getArguments().getString(EXTRA_USER_ID);
     }
 
     @Override

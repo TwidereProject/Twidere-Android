@@ -32,7 +32,7 @@ import org.mariotaku.twidere.model.UserKey;
 @JsonObject
 public class ScrollRecord implements LogModel {
     @JsonField(name = "id")
-    long id;
+    String id;
     @JsonField(name = "account_id")
     String accountId;
     @JsonField(name = "account_host")
@@ -44,7 +44,7 @@ public class ScrollRecord implements LogModel {
     @JsonField(name = "scroll_state")
     int scrollState;
 
-    public static ScrollRecord create(long id, UserKey accountKey, long timestamp, long timeOffset, int scrollState) {
+    public static ScrollRecord create(String id, UserKey accountKey, long timestamp, long timeOffset, int scrollState) {
         final ScrollRecord record = new ScrollRecord();
         record.setId(id);
         record.setAccountId(accountKey.getId());
@@ -67,7 +67,7 @@ public class ScrollRecord implements LogModel {
         this.timeOffset = timeOffset;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

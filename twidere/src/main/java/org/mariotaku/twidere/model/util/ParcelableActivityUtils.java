@@ -26,7 +26,7 @@ public class ParcelableActivityUtils {
      * @param followingOnly   Limit following users in sources
      * @return true if source ids changed, false otherwise
      */
-    public static boolean initAfterFilteredSourceIds(ParcelableActivity activity, long[] filteredUserIds,
+    public static boolean initAfterFilteredSourceIds(ParcelableActivity activity, String[] filteredUserIds,
                                                      boolean followingOnly) {
         if (activity.after_filtered_source_ids != null) return false;
         if (followingOnly || !ArrayUtils.isEmpty(filteredUserIds)) {

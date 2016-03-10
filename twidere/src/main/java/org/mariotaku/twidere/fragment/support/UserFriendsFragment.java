@@ -33,7 +33,7 @@ public class UserFriendsFragment extends CursorSupportUsersListFragment {
     public CursorSupportUsersLoader onCreateUsersLoader(final Context context,
                                                         @NonNull final Bundle args, boolean fromUser) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final UserFriendsLoader loader = new UserFriendsLoader(context, accountKey, userId,
                 screenName, getData(), fromUser);

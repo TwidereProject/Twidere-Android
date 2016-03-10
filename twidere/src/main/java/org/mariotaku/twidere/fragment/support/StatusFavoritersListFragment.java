@@ -29,14 +29,14 @@ import org.mariotaku.twidere.model.UserKey;
 
 public class StatusFavoritersListFragment extends CursorSupportUsersListFragment {
 
-	@Override
-	public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
-		final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-		final long statusId = args.getLong(EXTRA_STATUS_ID, -1);
-		final StatusFavoritersLoader loader = new StatusFavoritersLoader(context, accountKey,
-				statusId, getData(), false);
-		loader.setCursor(getNextCursor());
-		return loader;
-	}
+    @Override
+    public IDsUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
+        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final String statusId = args.getString(EXTRA_STATUS_ID);
+        final StatusFavoritersLoader loader = new StatusFavoritersLoader(context, accountKey,
+                statusId, getData(), false);
+        loader.setCursor(getNextCursor());
+        return loader;
+    }
 
 }

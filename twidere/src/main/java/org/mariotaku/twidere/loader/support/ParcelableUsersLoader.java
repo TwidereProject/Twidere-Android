@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader.support;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
@@ -64,9 +65,9 @@ public abstract class ParcelableUsersLoader extends AsyncTaskLoader<List<Parcela
         return mData;
     }
 
-    protected boolean hasId(final long id) {
+    protected boolean hasId(final String id) {
         for (final ParcelableUser user : mData) {
-            if (user.key.getId() == id) return true;
+            if (TextUtils.equals(user.key.getId(), id)) return true;
         }
         return false;
     }

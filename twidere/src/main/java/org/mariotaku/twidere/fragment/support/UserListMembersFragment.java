@@ -33,9 +33,9 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserListMembersLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
@@ -53,7 +53,7 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
             if (BROADCAST_USER_LIST_MEMBERS_DELETED.equals(action)) {
                 final ParcelableUserList list = intent.getParcelableExtra(EXTRA_USER_LIST);
                 if (mUserList != null && list != null && list.id == mUserList.id) {
-                    removeUsers(intent.getLongArrayExtra(EXTRA_USER_IDS));
+                    removeUsers(intent.getStringExtra(EXTRA_USER_IDS));
                 }
             }
         }

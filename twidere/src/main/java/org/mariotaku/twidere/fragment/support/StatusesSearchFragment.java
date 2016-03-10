@@ -53,8 +53,8 @@ public class StatusesSearchFragment extends ParcelableStatusesFragment {
                                                                     final boolean fromUser) {
         setRefreshing(true);
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long maxId = args.getLong(EXTRA_MAX_ID, -1);
-        final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
+        final String maxId = args.getString(EXTRA_MAX_ID);
+        final String sinceId = args.getString(EXTRA_SINCE_ID);
         final int page = args.getInt(EXTRA_PAGE, -1);
         final String query = args.getString(EXTRA_QUERY);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);

@@ -25,8 +25,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.UserTimelineLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
@@ -51,9 +51,9 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
         setRefreshing(true);
         final List<ParcelableStatus> data = getAdapterData();
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long maxId = args.getLong(EXTRA_MAX_ID, -1);
-        final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String maxId = args.getString(EXTRA_MAX_ID);
+        final String sinceId = args.getString(EXTRA_SINCE_ID);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         return new UserTimelineLoader(context, accountKey, userId, screenName, sinceId, maxId, data,
@@ -78,9 +78,9 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
         StringBuilder sb = new StringBuilder("user_timeline_");
         if (tabPosition < 0) return null;
 
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        if (userId > 0) {
+        if (userId != null) {
             sb.append(userId);
         } else if (screenName != null) {
             sb.append(screenName);

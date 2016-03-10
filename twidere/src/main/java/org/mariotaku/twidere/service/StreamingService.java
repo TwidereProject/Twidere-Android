@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.SimpleArrayMap;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.mariotaku.restfu.http.Authorization;
@@ -34,10 +35,10 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.Warning;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -240,21 +241,22 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onDirectMessage(final DirectMessage directMessage) {
-            if (directMessage == null || directMessage.getId() <= 0) return;
+            if (directMessage == null || directMessage.getId() == null) return;
+            final String where = Expression.and(Expression.equalsArgs(DirectMessages.ACCOUNT_KEY),
+                    Expression.equalsArgs(DirectMessages.MESSAGE_ID)).getSQL();
+            final String[] whereArgs = {account.account_key.toString(), directMessage.getId()};
             for (final Uri uri : MESSAGES_URIS) {
-                final String where = DirectMessages.ACCOUNT_KEY + " = " + account.account_key + " AND "
-                        + DirectMessages.MESSAGE_ID + " = " + directMessage.getId();
-                resolver.delete(uri, where, null);
+                resolver.delete(uri, where, whereArgs);
             }
             final User sender = directMessage.getSender(), recipient = directMessage.getRecipient();
-            if (sender.getId() == account.account_key.getId()) {
+            if (TextUtils.equals(sender.getId(), account.account_key.getId())) {
                 final ContentValues values = ContentValuesCreator.createDirectMessage(directMessage,
                         account.account_key, true);
                 if (values != null) {
                     resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
                 }
             }
-            if (recipient.getId() == account.account_key.getId()) {
+            if (TextUtils.equals(recipient.getId(), account.account_key.getId())) {
                 final ContentValues values = ContentValuesCreator.createDirectMessage(directMessage,
                         account.account_key, false);
                 final Uri.Builder builder = DirectMessages.Inbox.CONTENT_URI.buildUpon();

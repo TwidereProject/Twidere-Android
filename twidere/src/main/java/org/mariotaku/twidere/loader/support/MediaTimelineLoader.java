@@ -23,7 +23,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import android.text.TextUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -51,7 +53,7 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
     private User mUser;
 
     public MediaTimelineLoader(final Context context, final UserKey accountKey, final String userId,
-                               final String screenName, final long sinceId, final long maxId,
+                               final String screenName, final String sinceId, final String maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, final boolean fromUser) {
         super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser);
@@ -92,7 +94,8 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
             final ResponseList<Status> result = new ResponseList<>();
             for (Status status : twitter.search(query)) {
                 final User user = status.getUser();
-                if (user.getId() == mUserId || user.getScreenName().equalsIgnoreCase(mUserScreenName)) {
+                if (TextUtils.equals(user.getId(), mUserId) ||
+                        StringUtils.endsWithIgnoreCase(user.getScreenName(), mUserScreenName)) {
                     result.add(status);
                 }
             }

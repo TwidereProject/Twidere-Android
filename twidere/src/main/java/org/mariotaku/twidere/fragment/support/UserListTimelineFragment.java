@@ -25,8 +25,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.loader.support.UserListTimelineLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
@@ -52,9 +52,9 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         if (args == null) return null;
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long maxId = args.getLong(EXTRA_MAX_ID, -1);
-        final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String maxId = args.getString(EXTRA_MAX_ID);
+        final String sinceId = args.getString(EXTRA_SINCE_ID);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);

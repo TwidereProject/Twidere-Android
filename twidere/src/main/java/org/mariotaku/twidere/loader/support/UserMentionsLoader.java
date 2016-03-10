@@ -33,7 +33,7 @@ import java.util.Locale;
 public class UserMentionsLoader extends TweetSearchLoader {
 
     public UserMentionsLoader(final Context context, final UserKey accountId, final String screenName,
-                              final long maxId, final long sinceId, int page, final List<ParcelableStatus> data,
+                              final String maxId, final String sinceId, int page, final List<ParcelableStatus> data,
                               final String[] savedStatusesArgs, final int tabPosition, boolean fromUser,
                               boolean makeGap) {
         super(context, accountId, screenName, sinceId, maxId, page, data, savedStatusesArgs, tabPosition,

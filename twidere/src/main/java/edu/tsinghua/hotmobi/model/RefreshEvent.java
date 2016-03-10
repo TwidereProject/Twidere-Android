@@ -39,14 +39,14 @@ import java.util.Arrays;
 public class RefreshEvent extends BaseEvent implements Parcelable {
     @JsonField(name = "ids")
     @ParcelableThisPlease
-    long[] ids;
+    String[] ids;
 
     @JsonField(name = "timeline_type")
     @ParcelableThisPlease
     @TimelineType
     String timelineType;
 
-    public static RefreshEvent create(final Context context, long[] ids, @TimelineType String timelineType) {
+    public static RefreshEvent create(final Context context, String[] ids, @TimelineType String timelineType) {
         final RefreshEvent event = new RefreshEvent();
         event.markStart(context);
         event.setIds(ids);
@@ -54,7 +54,7 @@ public class RefreshEvent extends BaseEvent implements Parcelable {
         return event;
     }
 
-    public void setIds(long[] ids) {
+    public void setIds(String[] ids) {
         this.ids = ids;
     }
 

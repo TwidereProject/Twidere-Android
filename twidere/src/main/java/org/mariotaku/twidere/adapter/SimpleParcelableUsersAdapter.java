@@ -20,12 +20,14 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder;
 
 import java.util.List;
@@ -91,10 +93,17 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
         }
         if (data == null) return;
         for (final ParcelableUser user : data) {
-            if (clearOld || findItemPosition(user.key.getId()) < 0) {
+            if (clearOld || findUserPosition(user.key) < 0) {
                 add(user);
             }
         }
+    }
+
+    public int findUserPosition(@NonNull UserKey userKey) {
+        for (int i = 0, j = getCount(); i < j; i++) {
+            if (userKey.equals(getItem(i).key)) return i;
+        }
+        return -1;
     }
 
 }

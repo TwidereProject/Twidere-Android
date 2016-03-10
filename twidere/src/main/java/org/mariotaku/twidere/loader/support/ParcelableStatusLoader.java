@@ -42,10 +42,10 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
     private final boolean mOmitIntentExtra;
     private final Bundle mExtras;
     private final UserKey mAccountId;
-    private final long mStatusId;
+    private final String mStatusId;
 
     public ParcelableStatusLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                  final UserKey accountId, final long statusId) {
+                                  final UserKey accountId, final String statusId) {
         super(context);
         mOmitIntentExtra = omitIntentExtra;
         mExtras = extras;

@@ -19,9 +19,9 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.loader.support.MediaTimelineLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
@@ -72,12 +72,12 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
     }
 
 
-    public int getStatuses(final long maxId, final long sinceId) {
+    public int getStatuses(final String maxId, final String sinceId) {
         if (getContext() == null) return -1;
         final Bundle args = new Bundle(getArguments());
         args.putBoolean(EXTRA_MAKE_GAP, false);
-        args.putLong(EXTRA_MAX_ID, maxId);
-        args.putLong(EXTRA_SINCE_ID, sinceId);
+        args.putString(EXTRA_MAX_ID, maxId);
+        args.putString(EXTRA_SINCE_ID, sinceId);
         args.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().restartLoader(0, args, this);
         return 0;
@@ -99,9 +99,9 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
     public Loader<List<ParcelableStatus>> onCreateLoader(int id, Bundle args) {
         final Context context = getActivity();
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final long maxId = args.getLong(EXTRA_MAX_ID, -1);
-        final long sinceId = args.getLong(EXTRA_SINCE_ID, -1);
-        final long userId = args.getLong(EXTRA_USER_ID, -1);
+        final String maxId = args.getString(EXTRA_MAX_ID);
+        final String sinceId = args.getString(EXTRA_SINCE_ID);
+        final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
@@ -151,8 +151,8 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
         super.onLoadMoreContents(position);
         if (position == 0) return;
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
-        final long maxId = adapter.getStatusId(adapter.getStatusCount() - 1);
-        getStatuses(maxId, -1);
+        final String maxId = adapter.getStatusId(adapter.getStatusCount() - 1);
+        getStatuses(maxId, null);
     }
 
     @Override

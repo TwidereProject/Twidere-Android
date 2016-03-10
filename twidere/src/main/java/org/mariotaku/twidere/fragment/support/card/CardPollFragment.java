@@ -160,7 +160,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                     choiceRadioButton.setChecked(checked);
                     if (checked) {
                         final CardDataMap cardData = new CardDataMap();
-                        cardData.putLong("original_tweet_id", status.id);
+                        cardData.putLong("original_tweet_id", NumberUtils.toLong(status.id));
                         cardData.putString("card_uri", card.url);
                         cardData.putString("cards_platform", TwitterAPIFactory.CARDS_PLATFORM_ANDROID_12);
                         cardData.putString("response_card_name", card.name);

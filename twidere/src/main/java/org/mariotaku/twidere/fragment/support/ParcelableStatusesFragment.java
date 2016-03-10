@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.text.TextUtils;
 
 import com.squareup.otto.Subscribe;
 
@@ -50,19 +51,19 @@ import java.util.Set;
  */
 public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
 
-    private long mLastId;
+    private String mLastId;
     private int mPage = 1, mPageDelta;
 
-    public final void deleteStatus(final long statusId) {
+    public final void deleteStatus(@NonNull final String statusId) {
         final List<ParcelableStatus> list = getAdapterData();
-        if (statusId <= 0 || list == null) return;
+        if (list == null) return;
         final Set<ParcelableStatus> dataToRemove = new HashSet<>();
         for (int i = 0, j = list.size(); i < j; i++) {
             final ParcelableStatus status = list.get(i);
-            if (status.id == statusId || status.retweet_id > 0 && status.retweet_id == statusId) {
+            if (TextUtils.equals(status.id, statusId) || TextUtils.equals(status.retweet_id, statusId)) {
                 dataToRemove.add(status);
-            } else if (status.my_retweet_id == statusId) {
-                status.my_retweet_id = -1;
+            } else if (TextUtils.equals(status.my_retweet_id, statusId)) {
+                status.my_retweet_id = null;
                 status.retweet_count = status.retweet_count - 1;
             }
         }
@@ -81,14 +82,14 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
     @Override
     public boolean getStatuses(RefreshTaskParam param) {
         final Bundle args = new Bundle(getArguments());
-        long[] maxIds = param.getMaxIds();
+        String[] maxIds = param.getMaxIds();
         if (maxIds != null) {
-            args.putLong(EXTRA_MAX_ID, maxIds[0]);
+            args.putString(EXTRA_MAX_ID, maxIds[0]);
             args.putBoolean(EXTRA_MAKE_GAP, false);
         }
-        long[] sinceIds = param.getSinceIds();
+        String[] sinceIds = param.getSinceIds();
         if (sinceIds != null) {
-            args.putLong(EXTRA_SINCE_ID, sinceIds[0]);
+            args.putString(EXTRA_SINCE_ID, sinceIds[0]);
         }
         if (mPage > 0) {
             args.putInt(EXTRA_PAGE, mPage);
@@ -113,7 +114,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
     @Override
     protected boolean hasMoreData(List<ParcelableStatus> list) {
         if (list == null || list.isEmpty()) return false;
-        return (mLastId != (mLastId = list.get(list.size() - 1).id));
+        return (!TextUtils.equals(mLastId, mLastId = list.get(list.size() - 1).id));
     }
 
     @Override
@@ -151,7 +152,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
         final ParcelableStatus status = adapter.getStatus(adapter.getStatusStartIndex() +
                 adapter.getStatusCount() - 1);
         UserKey[] accountKeys = {status.account_key};
-        final long[] maxIds = {status.id};
+        final String[] maxIds = {status.id};
         mPage += mPageDelta;
         getStatuses(new BaseRefreshTaskParam(accountKeys, maxIds, null));
     }
@@ -173,7 +174,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
         final IStatusesAdapter<List<ParcelableStatus>> adapter = getAdapter();
         final UserKey[] accountIds = getAccountKeys();
         if (adapter.getStatusCount() > 0) {
-            final long[] sinceIds = new long[]{adapter.getStatus(0).id};
+            final String[] sinceIds = new String[]{adapter.getStatus(0).id};
             getStatuses(new BaseRefreshTaskParam(accountIds, null, sinceIds));
         } else {
             getStatuses(new BaseRefreshTaskParam(accountIds, null, null));
@@ -211,10 +212,10 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
 
     private void updateRetweetedStatuses(ParcelableStatus status) {
         final List<ParcelableStatus> data = getAdapterData();
-        if (status == null || status.retweet_id <= 0 || data == null) return;
+        if (status == null || status.retweet_id == null || data == null) return;
         for (int i = 0, j = data.size(); i < j; i++) {
             final ParcelableStatus orig = data.get(i);
-            if (orig.account_key.equals(status.account_key) && orig.id == status.retweet_id) {
+            if (orig.account_key.equals(status.account_key) && TextUtils.equals(orig.id, status.retweet_id)) {
                 orig.my_retweet_id = status.my_retweet_id;
                 orig.retweet_count = status.retweet_count;
             }

@@ -76,7 +76,7 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
         nameView.setScreenName("!" + group.nickname);
 
         nameView.updateText(formatter);
-        final String groupHost = UserKeyUtils.getUserHost(group.url);
+        final String groupHost = UserKeyUtils.getUserHost(group.url, group.account_key.getHost());
         if (UserKeyUtils.isSameHost(group.account_key.getHost(), groupHost)) {
             externalIndicator.setVisibility(View.GONE);
         } else {

@@ -33,7 +33,8 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter {
 
     ParcelableUser getUser(int position);
 
-    long getUserId(int position);
+    @Nullable
+    String getUserId(int position);
 
     int getUserCount();
 

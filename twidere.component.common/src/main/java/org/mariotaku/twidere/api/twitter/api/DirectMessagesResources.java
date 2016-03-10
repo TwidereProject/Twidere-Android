@@ -40,7 +40,7 @@ public interface DirectMessagesResources {
 
     @POST("/direct_messages/destroy.json")
     @BodyType(BodyType.FORM)
-    DirectMessage destroyDirectMessage(@Param("id") long id) throws TwitterException;
+    DirectMessage destroyDirectMessage(@Param("id") String id) throws TwitterException;
 
     @GET("/direct_messages.json")
     ResponseList<DirectMessage> getDirectMessages(@Query Paging paging) throws TwitterException;
@@ -50,24 +50,24 @@ public interface DirectMessagesResources {
 
     @POST("/direct_messages/new.json")
     @BodyType(BodyType.FORM)
-    DirectMessage sendDirectMessage(@Param("user_id") long userId, @Param("text") String text)
+    DirectMessage sendDirectMessage(@Param("user_id") String userId, @Param("text") String text)
             throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @BodyType(BodyType.FORM)
-    DirectMessage sendDirectMessage(@Param("user_id") long userId, @Param("text") String text,
+    DirectMessage sendDirectMessage(@Param("user_id") String userId, @Param("text") String text,
                                     @Param("media_id") long mediaId) throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @BodyType(BodyType.FORM)
-    DirectMessage sendDirectMessage(@Param("screen_name") String screenName, @Param("text") String text)
+    DirectMessage sendDirectMessageForScreenName(@Param("screen_name") String screenName, @Param("text") String text)
             throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @BodyType(BodyType.FORM)
-    DirectMessage sendDirectMessage(@Param("screen_name") String screenName, @Param("text") String text,
-                                    @Param("media_id") long mediaId) throws TwitterException;
+    DirectMessage sendDirectMessageForScreenName(@Param("screen_name") String screenName, @Param("text") String text,
+                                                 @Param("media_id") long mediaId) throws TwitterException;
 
     @GET("/direct_messages/show.json")
-    DirectMessage showDirectMessage(@Query("id") long id) throws TwitterException;
+    DirectMessage showDirectMessage(@Query("id") String id) throws TwitterException;
 }

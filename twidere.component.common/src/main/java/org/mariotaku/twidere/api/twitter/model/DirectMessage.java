@@ -21,9 +21,11 @@ package org.mariotaku.twidere.api.twitter.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -48,9 +50,9 @@ public class DirectMessage extends TwitterResponseObject implements TwitterRespo
     String text;
 
     @JsonField(name = "id")
-    long id;
+    String id;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -108,5 +110,10 @@ public class DirectMessage extends TwitterResponseObject implements TwitterRespo
 
     public String getRecipientScreenName() {
         return recipient.screenName;
+    }
+
+    @OnJsonParseComplete
+    void onJsonParseComplete() throws IOException {
+        if (id == null || recipient == null || sender == null) throw new IOException("Malformed DirectMessage object");
     }
 }

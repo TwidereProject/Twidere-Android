@@ -12,7 +12,7 @@ public class Attention {
     @JsonField(name = "fullname")
     String fullName;
     @JsonField(name = "id")
-    long id;
+    String id;
     @JsonField(name = "ostatus_uri")
     String ostatusUri;
     @JsonField(name = "profileurl")
@@ -24,7 +24,7 @@ public class Attention {
         return fullName;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 

@@ -179,7 +179,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                 break;
             }
             case SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME: {
-                IntentUtils.openUserProfile(this, getSelectedAccountKey(), -1, item.title, null, true,
+                IntentUtils.openUserProfile(this, getSelectedAccountKey(), null, item.title, null, true,
                         UserFragment.Referral.DIRECT);
                 finish();
                 break;
@@ -316,13 +316,14 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
 
 
         public final String title, summary;
-        public final long _id, extra_id;
+        public final long _id;
+        public final String extra_id;
 
         public SuggestionItem(Cursor cursor, SuggestionsAdapter.Indices indices) {
             _id = cursor.getLong(indices._id);
             title = cursor.getString(indices.title);
             summary = cursor.getString(indices.summary);
-            extra_id = cursor.getLong(indices.extra_id);
+            extra_id = cursor.getString(indices.extra_id);
         }
     }
 

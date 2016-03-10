@@ -20,6 +20,7 @@
 package org.mariotaku.twidere;
 
 import org.mariotaku.twidere.annotation.Preference;
+import org.mariotaku.twidere.model.UserKey;
 
 import static org.mariotaku.twidere.annotation.PreferenceType.BOOLEAN;
 import static org.mariotaku.twidere.annotation.PreferenceType.STRING;
@@ -83,7 +84,7 @@ public interface Constants extends TwidereConstants {
     String TWIDERE_PREVIEW_TEXT_UNESCAPED = "Twidere is an open source twitter client for Android, see github.com/mariotak&#8230;";
     String TWIDERE_PREVIEW_SOURCE = "Twidere for Android";
 
-    long HONDAJOJO_ID = 514378421;
+    UserKey HONDAJOJO_ID = new UserKey("514378421", USER_TYPE_TWITTER_COM);
     String HONDAJOJO_SCREEN_NAME = "HondaJOJO";
     String EASTER_EGG_TRIGGER_TEXT = "\u718A\u5B69\u5B50";
     String EASTER_EGG_RESTORE_TEXT_PART1 = "\u5927\u738B";
