@@ -146,18 +146,14 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         }
 
         final String[] statusIds = new String[statuses.size()];
-        String minId = null;
         int minIdx = -1;
         int rowsDeleted = 0;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
-            final String id = status.getId();
-            if (minId == null || id < minId) {
-                minId = id;
+            if (minIdx == -1 || status.compareTo(statuses.get(minIdx)) < 0) {
                 minIdx = i;
             }
-            statusIds[i] = id;
-
+            statusIds[i] = status.getId();
             if (deleteStatus(data, status.getId())) {
                 rowsDeleted++;
             }
@@ -166,7 +162,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         // Insert a gap.
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, mMaxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
-        final boolean insertGap = minId != null && (noRowsDeleted || deletedOldGap) && !noItemsBefore
+        final boolean insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
                 && statuses.size() >= loadItemLimit;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);

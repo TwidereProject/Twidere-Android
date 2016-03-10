@@ -48,7 +48,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     String id;
 
     @JsonField(name = "raw_id")
-    long rawId;
+    long rawId = -1;
 
     @JsonField(name = "text")
     String text;
@@ -325,7 +325,14 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     public int compareTo(@NonNull final Status that) {
         final int delta = createdAt.compareTo(that.createdAt);
         if (delta == 0) {
-            // TODO compare with raw id
+            if (rawId != -1) {
+                return (int) (rawId - that.rawId);
+            }
+            try {
+                return (int) (Long.parseLong(id) - Long.parseLong(that.id));
+            } catch (NumberFormatException e) {
+                // Ignore
+            }
         }
         return delta;
     }

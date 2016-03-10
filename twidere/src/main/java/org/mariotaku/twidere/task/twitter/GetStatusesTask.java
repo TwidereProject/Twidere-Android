@@ -90,20 +90,18 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         final boolean noItemsBefore = DataStoreUtils.getStatusCount(context, uri, accountKey) <= 0;
         final ContentValues[] values = new ContentValues[statuses.size()];
         final String[] statusIds = new String[statuses.size()];
-        String minId = null;
         int minIdx = -1;
         boolean hasIntersection = false;
         for (int i = 0, j = statuses.size(); i < j; i++) {
             final Status status = statuses.get(i);
             values[i] = ContentValuesCreator.createStatus(status, accountKey);
             values[i].put(Statuses.INSERTED_DATE, System.currentTimeMillis());
+            if (minIdx == -1 || status.compareTo(statuses.get(minIdx)) < 0) {
+                minIdx = i;
+            }
             final String id = status.getId();
             if (sinceId != null && id <= sinceId) {
                 hasIntersection = true;
-            }
-            if (minId == null || id < minId) {
-                minId = id;
-                minIdx = i;
             }
             statusIds[i] = id;
         }
@@ -134,9 +132,9 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         // Insert a gap.
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
-        final boolean insertGap = minId != null && (noRowsDeleted || deletedOldGap) && !noItemsBefore
+        final boolean insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
                 && !hasIntersection;
-        if (insertGap && minIdx != -1) {
+        if (insertGap) {
             values[minIdx].put(Statuses.IS_GAP, true);
         }
         // Insert previously fetched items.
