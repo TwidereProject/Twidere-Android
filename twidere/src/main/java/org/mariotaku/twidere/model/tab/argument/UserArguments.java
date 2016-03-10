@@ -14,6 +14,10 @@ public class UserArguments extends TabArguments {
     @JsonField(name = "user_id")
     String userId;
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     @Override
     public void copyToBundle(@NonNull Bundle bundle) {
         super.copyToBundle(bundle);

@@ -190,6 +190,11 @@ public class CustomTabUtils implements Constants {
     }
 
     @Nullable
+    public static TabArguments newTabArguments(@NonNull @CustomTabType String type) {
+        return parseTabArguments(type, "{}");
+    }
+
+    @Nullable
     public static TabArguments parseTabArguments(@NonNull @CustomTabType String type, String json) {
         switch (type) {
             case CustomTabType.HOME_TIMELINE:

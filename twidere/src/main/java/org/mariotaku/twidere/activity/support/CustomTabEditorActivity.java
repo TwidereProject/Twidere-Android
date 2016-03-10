@@ -30,7 +30,6 @@ import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,16 +48,23 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.tab.argument.TabArguments;
+import org.mariotaku.twidere.model.tab.argument.TextQueryArguments;
+import org.mariotaku.twidere.model.tab.argument.UserArguments;
+import org.mariotaku.twidere.model.tab.argument.UserListArguments;
+import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.InternalParseUtils;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -87,7 +93,6 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
     private LinearLayout mExtraConfigurationsContent;
 
     private long mTabId;
-    private String mTabType;
     private CustomTabConfiguration mTabConfiguration;
     private Object mSecondaryFieldValue;
     private final Bundle mExtrasBundle = new Bundle();
@@ -146,7 +151,16 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
                 break;
             }
             case R.id.save: {
-                if (!isEditMode()) {
+                if (isEditMode()) {
+                    if (mTabId < 0) return;
+                    final Intent data = new Intent();
+                    data.putExtra(EXTRA_NAME, getTabName());
+                    data.putExtra(EXTRA_ICON, getTabIconKey());
+                    data.putExtra(EXTRA_ID, mTabId);
+                    data.putExtra(EXTRA_EXTRAS, InternalParseUtils.bundleToJSON(mExtrasBundle));
+                    setResult(RESULT_OK, data);
+                    finish();
+                } else {
                     if (conf == null) return;
                     final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
                     final boolean noAccountId = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_NONE;
@@ -161,26 +175,19 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
                         return;
                     }
                     final Intent data = new Intent();
-                    final Bundle args = new Bundle();
-                    if (!noAccountId) {
-                        args.putParcelable(EXTRA_ACCOUNT_KEY, getAccountKey());
+                    final TabArguments args = CustomTabUtils.newTabArguments(getTabType());
+                    if (args != null) {
+                        if (!noAccountId) {
+                            args.setAccountKeys(new UserKey[]{getAccountKey()});
+                        }
+                        if (secondaryFieldRequired) {
+                            addSecondaryFieldValueToArguments(args);
+                        }
                     }
-                    if (secondaryFieldRequired) {
-                        addSecondaryFieldValueToArguments(args);
-                    }
-                    data.putExtra(EXTRA_TYPE, mTabType);
-                    data.putExtra(EXTRA_NAME, ParseUtils.parseString(mEditTabName.getText()));
-                    data.putExtra(EXTRA_ICON, getIconKey());
-                    data.putExtra(EXTRA_ARGUMENTS, InternalParseUtils.bundleToJSON(args));
-                    data.putExtra(EXTRA_EXTRAS, InternalParseUtils.bundleToJSON(mExtrasBundle));
-                    setResult(RESULT_OK, data);
-                    finish();
-                } else {
-                    if (mTabId < 0) return;
-                    final Intent data = new Intent();
-                    data.putExtra(EXTRA_NAME, ParseUtils.parseString(mEditTabName.getText()));
-                    data.putExtra(EXTRA_ICON, getIconKey());
-                    data.putExtra(EXTRA_ID, mTabId);
+                    data.putExtra(EXTRA_TYPE, getTabType());
+                    data.putExtra(EXTRA_NAME, getTabName());
+                    data.putExtra(EXTRA_ICON, getTabIconKey());
+                    data.putExtra(EXTRA_ARGUMENTS, JsonSerializer.serialize(args));
                     data.putExtra(EXTRA_EXTRAS, InternalParseUtils.bundleToJSON(mExtrasBundle));
                     setResult(RESULT_OK, data);
                     finish();
@@ -188,6 +195,10 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
                 break;
             }
         }
+    }
+
+    protected String getTabName() {
+        return ParseUtils.parseString(mEditTabName.getText());
     }
 
     @Override
@@ -269,7 +280,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         super.onCreate(savedInstanceState);
         mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         final Intent intent = getIntent();
-        final String type = mTabType = intent.getStringExtra(EXTRA_TYPE);
+        final String type = getTabType();
         final CustomTabConfiguration conf = getTabConfiguration(type);
         if (type == null || conf == null) {
             finish();
@@ -368,27 +379,29 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         outState.putBundle(EXTRA_EXTRAS, mExtrasBundle);
     }
 
-    private void addFieldValueToArguments(final Object value, final Bundle args) {
+    @CustomTabType
+    public String getTabType() {
+        //noinspection ResourceType
+        return getIntent().getStringExtra(EXTRA_TYPE);
+    }
+
+    private void addFieldValueToArguments(final Object value, final TabArguments args) {
         final CustomTabConfiguration conf = mTabConfiguration;
         if (value == null || args == null || conf == null) return;
-        if (value instanceof ParcelableUser) {
+        if (value instanceof ParcelableUser && args instanceof UserArguments) {
             final ParcelableUser user = (ParcelableUser) value;
-            args.putString(EXTRA_USER_ID, user.key.getId());
-            args.putString(EXTRA_SCREEN_NAME, user.screen_name);
-            args.putString(EXTRA_NAME, user.name);
-        } else if (value instanceof ParcelableUserList) {
-            final ParcelableUserList user_list = (ParcelableUserList) value;
-            args.putLong(EXTRA_LIST_ID, user_list.id);
-            args.putString(EXTRA_LIST_NAME, user_list.name);
-            args.putString(EXTRA_USER_ID, user_list.user_key.getId());
-            args.putString(EXTRA_SCREEN_NAME, user_list.user_screen_name);
+            ((UserArguments) args).setUserId(user.key.getId());
+        } else if (value instanceof ParcelableUserList && args instanceof UserListArguments) {
+            final ParcelableUserList userList = (ParcelableUserList) value;
+            ((UserListArguments) args).setListId(userList.id);
         } else if (value instanceof CharSequence) {
-            final String key = conf.getSecondaryFieldTextKey();
-            args.putString(TextUtils.isEmpty(key) ? EXTRA_TEXT : key, value.toString());
+            if (args instanceof TextQueryArguments) {
+                ((TextQueryArguments) args).setQuery(value.toString());
+            }
         }
     }
 
-    private void addSecondaryFieldValueToArguments(final Bundle args) {
+    private void addSecondaryFieldValueToArguments(final TabArguments args) {
         final Object value = mSecondaryFieldValue;
         addFieldValueToArguments(value, args);
     }
@@ -402,7 +415,7 @@ public class CustomTabEditorActivity extends BaseSupportDialogActivity implement
         return null;
     }
 
-    private String getIconKey() {
+    private String getTabIconKey() {
         final int pos = mTabIconSpinner.getSelectedItemPosition();
         if (mTabIconsAdapter.getCount() > pos && pos >= 0)
             return mTabIconsAdapter.getItem(pos).getKey();

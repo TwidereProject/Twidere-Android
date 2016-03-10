@@ -14,6 +14,14 @@ public class UserListArguments extends TabArguments {
     @JsonField(name = "list_id")
     long listId;
 
+    public long getListId() {
+        return listId;
+    }
+
+    public void setListId(long listId) {
+        this.listId = listId;
+    }
+
     @Override
     public void copyToBundle(@NonNull Bundle bundle) {
         super.copyToBundle(bundle);

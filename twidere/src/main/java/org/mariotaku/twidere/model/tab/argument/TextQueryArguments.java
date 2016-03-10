@@ -14,6 +14,14 @@ public class TextQueryArguments extends TabArguments {
     @JsonField(name = "query")
     String query;
 
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
     @Override
     public void copyToBundle(@NonNull Bundle bundle) {
         super.copyToBundle(bundle);
