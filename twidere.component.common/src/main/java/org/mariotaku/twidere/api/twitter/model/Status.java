@@ -439,7 +439,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     }
 
     @OnJsonParseComplete
-    void onJsonParseComplete() throws IOException {
+    void afterStatusParsed() throws IOException {
         if (id == null || text == null) throw new IOException("Malformed Status object");
         fixStatus();
     }

@@ -83,20 +83,28 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             if (twitter == null) continue;
             final Paging paging = new Paging();
             paging.count(loadItemLimit);
-            if (maxIds != null && maxIds[i] != null) {
-                paging.maxId(maxIds[i]);
+            String maxId = null;
+            if (maxIds != null) {
+                maxId = maxIds[i];
+                if (maxId != null) {
+                    paging.maxId(maxId);
+                }
             }
-            if (sinceIds != null && sinceIds[i] != null) {
-                paging.sinceId(sinceIds[i]);
-                if (maxIds == null || maxIds[i] == null) {
-                    paging.setLatestResults(true);
-                    saveReadPosition = true;
+            String sinceId = null;
+            if (sinceIds != null) {
+                sinceId = sinceIds[i];
+                if (sinceId != null) {
+                    paging.sinceId(sinceId);
+                    if (maxIds == null || maxId == null) {
+                        paging.setLatestResults(true);
+                        saveReadPosition = true;
+                    }
                 }
             }
             // We should delete old activities has intersection with new items
             try {
                 final ResponseList<Activity> activities = getActivities(twitter, credentials, paging);
-                storeActivities(cr, loadItemLimit, accountKey, noItemsBefore, activities);
+                storeActivities(cr, loadItemLimit, accountKey, noItemsBefore, activities, sinceId, maxId);
                 if (saveReadPosition) {
                     saveReadPosition(accountKey, twitter);
                 }
@@ -121,7 +129,8 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     protected abstract String getErrorInfoKey();
 
     private void storeActivities(ContentResolver cr, int loadItemLimit, UserKey accountKey,
-                                 boolean noItemsBefore, ResponseList<Activity> activities) {
+                                 boolean noItemsBefore, ResponseList<Activity> activities,
+                                 final String sinceId, final String maxId) {
         long[] deleteBound = new long[2];
         Arrays.fill(deleteBound, -1);
         List<ContentValues> valuesList = new ArrayList<>();
@@ -158,6 +167,16 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             }
         }
         ContentResolverUtils.bulkInsert(cr, getContentUri(), valuesList);
+
+        if (maxId != null && sinceId == null) {
+            final ContentValues noGapValues = new ContentValues();
+            noGapValues.put(Activities.IS_GAP, false);
+            final String noGapWhere = Expression.and(Expression.equalsArgs(Activities.ACCOUNT_KEY),
+                    Expression.equalsArgs(Activities.MIN_REQUEST_POSITION),
+                    Expression.equalsArgs(Activities.MAX_REQUEST_POSITION)).getSQL();
+            final String[] noGapWhereArgs = {accountKey.toString(), maxId, maxId};
+            cr.update(getContentUri(), noGapValues, noGapWhere, noGapWhereArgs);
+        }
     }
 
     protected abstract void saveReadPosition(@NonNull final UserKey accountId,

@@ -14,7 +14,7 @@ import java.io.IOException;
 public class FanfouSearchStatus extends Status {
 
     @OnJsonParseComplete
-    void onJsonParseComplete() throws IOException {
+    void afterFanfouSearchStatusParsed() throws IOException {
         if (getId() == null || getText() == null) throw new IOException("Malformed Status object");
         fixStatus();
     }
