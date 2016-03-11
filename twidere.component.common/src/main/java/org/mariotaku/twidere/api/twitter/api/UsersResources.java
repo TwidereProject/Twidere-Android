@@ -46,35 +46,27 @@ import org.mariotaku.twidere.api.twitter.model.User;
 public interface UsersResources {
 
     @POST("/blocks/create.json")
-    @BodyType(BodyType.FORM)
     User createBlock(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/blocks/create.json")
-    @BodyType(BodyType.FORM)
     User createBlockByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/mutes/users/create.json")
-    @BodyType(BodyType.FORM)
     User createMute(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/mutes/users/create.json")
-    @BodyType(BodyType.FORM)
     User createMuteByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/blocks/destroy.json")
-    @BodyType(BodyType.FORM)
     User destroyBlock(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/blocks/destroy.json")
-    @BodyType(BodyType.FORM)
     User destroyBlockByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/mutes/users/destroy.json")
-    @BodyType(BodyType.FORM)
     User destroyMute(@Param("user_id") String userId) throws TwitterException;
 
     @POST("/mutes/users/destroy.json")
-    @BodyType(BodyType.FORM)
     User destroyMuteByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @GET("/account/settings.json")

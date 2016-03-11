@@ -102,6 +102,10 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @CursorField(CachedUsers.PROFILE_BANNER_URL)
     public String profile_banner_url;
     @ParcelableThisPlease
+    @JsonField(name = "profile_background_url")
+    @CursorField(CachedUsers.PROFILE_BACKGROUND_URL)
+    public String profile_background_url;
+    @ParcelableThisPlease
     @JsonField(name = "url")
     @CursorField(CachedUsers.URL)
     public String url;

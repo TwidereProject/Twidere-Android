@@ -44,7 +44,7 @@ public class ReportSpamDialogFragment extends BaseSupportDialogFragment implemen
                 final ParcelableUser user = getUser();
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (user == null || twitter == null) return;
-                twitter.reportSpamAsync(user.account_key, user.key.getId());
+                twitter.reportSpamAsync(user.account_key, user.key);
                 break;
             default:
                 break;

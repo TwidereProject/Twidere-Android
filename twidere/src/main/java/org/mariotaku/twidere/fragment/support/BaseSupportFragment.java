@@ -40,7 +40,6 @@ import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -84,7 +83,7 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     @Inject
     protected ErrorInfoStore mErrorInfoStore;
     @Inject
-    TwidereValidator mValidator;
+    protected TwidereValidator mValidator;
 
     private final ActionHelper mActionHelper = new ActionHelper(this);
 
@@ -121,13 +120,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
         final Activity activity = getActivity();
         if (activity == null) return;
         activity.registerReceiver(receiver, filter);
-    }
-
-    public void setProgressBarIndeterminateVisibility(final boolean visible) {
-        final Activity activity = getActivity();
-        if (activity instanceof BaseAppCompatActivity) {
-            activity.setProgressBarIndeterminateVisibility(visible);
-        }
     }
 
     public void unregisterReceiver(final BroadcastReceiver receiver) {

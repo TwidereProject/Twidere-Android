@@ -463,28 +463,28 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static int getStatusesCount(final Context context, final Uri uri, final long sinceId,
-                                       UserKey... accountKeys) {
+    public static int getStatusesCount(final Context context, final Uri uri, final long since,
+                                       String sinceColumn, UserKey... accountKeys) {
         if (context == null) return 0;
         if (accountKeys == null) {
             accountKeys = getActivatedAccountKeys(context);
         }
         final Expression selection = Expression.and(
                 Expression.inArgs(new Column(Statuses.ACCOUNT_KEY), accountKeys.length),
-                Expression.greaterThanArgs(Statuses.STATUS_ID),
+                Expression.greaterThanArgs(sinceColumn),
                 buildStatusFilterWhereClause(getTableNameByUri(uri), null)
         );
         final String[] whereArgs = new String[accountKeys.length + 1];
         for (int i = 0; i < accountKeys.length; i++) {
             whereArgs[i] = accountKeys[i].toString();
         }
-        whereArgs[accountKeys.length] = String.valueOf(sinceId);
+        whereArgs[accountKeys.length] = String.valueOf(since);
         return queryCount(context, uri, selection.getSQL(), whereArgs);
     }
 
     public static int getActivitiesCount(@NonNull final Context context, final Uri uri,
                                          final Expression extraWhere, final String[] extraWhereArgs,
-                                         final long sinceTimestamp, boolean followingOnly,
+                                         final long since, String sinceColumn, boolean followingOnly,
                                          @Nullable UserKey[] accountKeys) {
         if (accountKeys == null) {
             accountKeys = getActivatedAccountKeys(context);
@@ -497,7 +497,7 @@ public class DataStoreUtils implements Constants {
             expressions = new Expression[3];
         }
         expressions[0] = Expression.inArgs(new Column(Activities.ACCOUNT_KEY), accountKeys.length);
-        expressions[1] = Expression.greaterThanArgs(Activities.TIMESTAMP);
+        expressions[1] = Expression.greaterThanArgs(sinceColumn);
         expressions[2] = buildActivityFilterWhereClause(getTableNameByUri(uri), null);
         final Expression selection = Expression.and(expressions);
         String[] selectionArgs;
@@ -511,7 +511,7 @@ public class DataStoreUtils implements Constants {
         for (int i = 0; i < accountKeys.length; i++) {
             selectionArgs[i] = accountKeys[i].toString();
         }
-        selectionArgs[accountKeys.length] = String.valueOf(sinceTimestamp);
+        selectionArgs[accountKeys.length] = String.valueOf(since);
         // If followingOnly option is on, we have to iterate over items
         if (followingOnly) {
             final ContentResolver resolver = context.getContentResolver();
@@ -1069,7 +1069,7 @@ public class DataStoreUtils implements Constants {
     }
 
     public static int getInteractionsCount(@NonNull final Context context, @Nullable final Bundle extraArgs,
-                                           final UserKey[] accountIds, final long position) {
+                                           final UserKey[] accountIds, final long since,final String sinceColumn) {
         Expression extraWhere = null;
         String[] extraWhereArgs = null;
         boolean followingOnly = false;
@@ -1088,7 +1088,7 @@ public class DataStoreUtils implements Constants {
             }
         }
         return getActivitiesCount(context, Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
-                position, followingOnly, accountIds);
+                since, sinceColumn, followingOnly, accountIds);
     }
 
 }

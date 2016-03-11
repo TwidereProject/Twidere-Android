@@ -20,9 +20,9 @@
 package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +52,7 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
     private List<ParcelableUser> mData;
     private UserAdapterListener mUserAdapterListener;
     private RequestClickListener mRequestClickListener;
+    private FollowClickListener mFollowClickListener;
 
 
     public ParcelableUsersAdapter(Context context) {
@@ -131,11 +132,11 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
         return true;
     }
 
-    public int findPosition(UserKey accountKey, String userId) {
+    public int findPosition(@NonNull final UserKey accountKey, @NonNull final UserKey userKey) {
         if (mData == null) return RecyclerView.NO_POSITION;
         for (int i = getUserStartIndex(), j = i + getUserCount(); i < j; i++) {
             final ParcelableUser user = mData.get(i);
-            if (user.account_key.equals(accountKey) && TextUtils.equals(user.key.getId(), userId)) {
+            if (accountKey.equals(user.account_key) && userKey.equals(user.key)) {
                 return i;
             }
         }
@@ -221,6 +222,15 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
 
     public void setRequestClickListener(RequestClickListener requestClickListener) {
         mRequestClickListener = requestClickListener;
+    }
+
+    @Override
+    public FollowClickListener getFollowClickListener() {
+        return mFollowClickListener;
+    }
+
+    public void setFollowClickListener(FollowClickListener followClickListener) {
+        mFollowClickListener = followClickListener;
     }
 
     @Override

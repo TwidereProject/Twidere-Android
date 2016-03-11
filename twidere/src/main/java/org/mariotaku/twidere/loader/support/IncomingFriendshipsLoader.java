@@ -26,9 +26,13 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 
 import java.util.List;
 
@@ -45,8 +49,19 @@ public class IncomingFriendshipsLoader extends CursorSupportUsersLoader {
         return twitter.getIncomingFriendships(paging);
     }
 
+    @NonNull
+    @Override
+    protected ResponseList<User> getCursoredUsers(@NonNull Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull Paging paging) throws TwitterException {
+        return twitter.getFriendshipsRequests(paging);
+    }
+
     @Override
     protected boolean useIDs(@NonNull ParcelableCredentials credentials) {
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.FANFOU: {
+                return false;
+            }
+        }
         return true;
     }
 }

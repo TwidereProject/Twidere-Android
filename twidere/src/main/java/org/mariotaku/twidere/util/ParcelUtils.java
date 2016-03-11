@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.lang.reflect.Field;
@@ -11,9 +12,7 @@ import java.lang.reflect.Field;
  */
 public class ParcelUtils {
 
-    @Nullable
-    public static <T extends Parcelable> T clone(@Nullable T object) {
-        if (object == null) return null;
+    public static <T extends Parcelable> T clone(@NonNull T object) {
         final Parcel parcel = Parcel.obtain();
         try {
             object.writeToParcel(parcel, 0);

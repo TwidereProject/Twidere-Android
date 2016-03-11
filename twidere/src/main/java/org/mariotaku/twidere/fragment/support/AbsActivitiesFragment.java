@@ -445,7 +445,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
             }
 
             @Override
-            public void afterExecute(RecyclerView recyclerView, Boolean result) {
+            public void afterExecute(RecyclerView recyclerView, Object params, Boolean result) {
                 if (result) {
                     recyclerView.addOnScrollListener(mActiveHotMobiScrollTracker = mHotMobiScrollTracker);
                 }

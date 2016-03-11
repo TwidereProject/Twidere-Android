@@ -314,6 +314,16 @@ public class ThemeUtils implements Constants {
         return colors[0];
     }
 
+
+    public static int getContrastColor(int color, int darkColor, int lightColor) {
+        if (TwidereColorUtils.getYIQLuminance(color) <= ACCENT_COLOR_THRESHOLD) {
+            //return light text color
+            return lightColor;
+        }
+        //return dark text color
+        return darkColor;
+    }
+
     public static int getContrastActionBarItemColor(Context context) {
         return getColorFromAttribute(context, android.R.attr.colorForeground, 0);
     }

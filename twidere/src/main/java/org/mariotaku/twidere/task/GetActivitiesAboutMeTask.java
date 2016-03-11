@@ -37,13 +37,18 @@ public class GetActivitiesAboutMeTask extends GetActivitiesTask {
     }
 
     @Override
-    protected void saveReadPosition(@NonNull UserKey accountId, @NonNull Twitter twitter) {
-        try {
-            CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
-            final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME, accountId);
-            readStateManager.setPosition(tag, response.getCursor(), false);
-        } catch (TwitterException e) {
-            // Ignore
+    protected void saveReadPosition(@NonNull UserKey accountId, ParcelableCredentials credentials, @NonNull Twitter twitter) {
+        if (ParcelableAccount.Type.TWITTER.equals(ParcelableAccountUtils.getAccountType(credentials))) {
+            if (Utils.isOfficialCredentials(context, credentials)) {
+                try {
+                    CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
+                    final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME,
+                            accountId);
+                    readStateManager.setPosition(tag, response.getCursor(), false);
+                } catch (TwitterException e) {
+                    // Ignore
+                }
+            }
         }
     }
 

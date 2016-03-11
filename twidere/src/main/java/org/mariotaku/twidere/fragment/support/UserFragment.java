@@ -111,12 +111,13 @@ import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
-import org.mariotaku.twidere.model.message.FriendshipUserUpdatedEvent;
 import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
@@ -127,6 +128,7 @@ import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.IntentUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
@@ -271,9 +273,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mHeaderErrorTextView.setVisibility(View.GONE);
                 setListShown(false);
             }
-            setProgressBarIndeterminateVisibility(true);
             final ParcelableUser user = mUser;
-            final boolean loadFromCache = user == null || !user.is_cache && userId != user.key.getId();
+            final boolean loadFromCache = user == null || !user.is_cache && user.key.check(userId, null);
             return new ParcelableUserLoader(getActivity(), accountKey, userId, screenName, getArguments(),
                     omitIntentExtra, loadFromCache);
         }
@@ -317,7 +318,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mHeaderErrorContainer.setVisibility(View.VISIBLE);
                 mProgressContainer.setVisibility(View.GONE);
             }
-            setProgressBarIndeterminateVisibility(false);
         }
 
     };
@@ -569,10 +569,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
         final int defWidth = resources.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
-        if (ObjectUtils.notEqual(mProfileBannerView.getTag(), user.profile_banner_url) ||
+        final String bannerUrl = ParcelableUserUtils.getProfileBannerUrl(user);
+        if (ObjectUtils.notEqual(mProfileBannerView.getTag(), bannerUrl) ||
                 mProfileBannerView.getDrawable() == null) {
-            mProfileBannerView.setTag(user.profile_banner_url);
-            mMediaLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, width);
+            mProfileBannerView.setTag(bannerUrl);
+            mMediaLoader.displayProfileBanner(mProfileBannerView, bannerUrl, width);
         }
         final UserRelationship relationship = mRelationship;
         if (relationship == null) {
@@ -646,9 +647,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Subscribe
-    public void notifyFriendshipUserUpdated(FriendshipUserUpdatedEvent event) {
+    public void notifyFriendshipUserUpdated(FriendshipTaskEvent event) {
         final ParcelableUser user = getUser();
-        if (user == null || !event.user.equals(user)) return;
+        if (user == null || !event.isSucceeded() || !event.isUser(user)) return;
         getFriendship();
     }
 
@@ -661,7 +662,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Subscribe
     public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-        updateRefreshState();
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -977,7 +978,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.block: {
                 if (userRelationship == null) return true;
                 if (userRelationship.relationship.isSourceBlockingTarget()) {
-                    twitter.destroyBlockAsync(user.account_key, user.key.getId());
+                    twitter.destroyBlockAsync(user.account_key, user.key);
                 } else {
                     CreateUserBlockDialogFragment.show(getFragmentManager(), user);
                 }
@@ -1004,7 +1005,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.mute_user: {
                 if (userRelationship == null) return true;
                 if (userRelationship.relationship.isSourceMutingTarget()) {
-                    twitter.destroyMuteAsync(user.account_key, user.key.getId());
+                    twitter.destroyMuteAsync(user.account_key, user.key);
                 } else {
                     CreateUserMuteDialogFragment.show(getFragmentManager(), user);
                 }
@@ -1066,15 +1067,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.follow: {
                 if (userRelationship == null) return true;
                 final boolean isFollowing = userRelationship.relationship.isSourceFollowingTarget();
-                final boolean isCreatingFriendship = twitter.isCreatingFriendship(user.account_key,
-                        user.key.getId());
-                final boolean isDestroyingFriendship = twitter.isDestroyingFriendship(user.account_key,
-                        user.key.getId());
-                if (!isCreatingFriendship && !isDestroyingFriendship) {
+                final boolean updatingRelationship = twitter.isUpdatingRelationship(user.account_key,
+                        user.key);
+                if (!updatingRelationship) {
                     if (isFollowing) {
                         DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
                     } else {
-                        twitter.createFriendshipAsync(user.account_key, user.key.getId());
+                        twitter.createFriendshipAsync(user.account_key, user.key);
                     }
                 }
                 return true;
@@ -1293,11 +1292,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (userRelationship == null || twitter == null) return;
                 if (userRelationship.relationship.isSourceBlockingTarget()) {
-                    twitter.destroyBlockAsync(user.account_key, user.key.getId());
+                    twitter.destroyBlockAsync(user.account_key, user.key);
                 } else if (userRelationship.relationship.isSourceFollowingTarget()) {
                     DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
                 } else {
-                    twitter.createFriendshipAsync(user.account_key, user.key.getId());
+                    twitter.createFriendshipAsync(user.account_key, user.key);
                 }
                 break;
             }
@@ -1310,8 +1309,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.profile_banner: {
-                if (user.profile_banner_url == null) return;
-                final String url = user.profile_banner_url + "/ipad_retina";
+                final String bannerUrl = ParcelableUserUtils.getProfileBannerUrl(user);
+                if (bannerUrl == null) return;
+                final String url = InternalTwitterContentUtils.getBestBannerUrl(bannerUrl,
+                        Integer.MAX_VALUE);
                 ParcelableMedia profileBanner = ParcelableMediaUtils.image(url);
                 profileBanner.type = ParcelableMedia.Type.IMAGE;
                 final ParcelableMedia[] media = {profileBanner};
@@ -1564,11 +1565,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final LoaderManager lm = getLoaderManager();
         final boolean loadingRelationship = lm.getLoader(LOADER_ID_FRIENDSHIP) != null;
         final UserKey accountKey = user.account_key;
-        final boolean creatingFriendship = twitter.isCreatingFriendship(accountKey, user.key.getId());
-        final boolean destroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.key.getId());
-        final boolean creatingBlock = twitter.isCreatingFriendship(accountKey, user.key.getId());
-        final boolean destroyingBlock = twitter.isDestroyingFriendship(accountKey, user.key.getId());
-        if (loadingRelationship || creatingFriendship || destroyingFriendship || creatingBlock || destroyingBlock) {
+        final boolean updatingRelationship = twitter.isUpdatingRelationship(accountKey, user.key);
+        if (loadingRelationship || updatingRelationship) {
             mFollowButton.setVisibility(View.GONE);
             mFollowProgress.setVisibility(View.VISIBLE);
         } else if (mRelationship != null) {
@@ -1578,17 +1576,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mFollowButton.setVisibility(View.GONE);
             mFollowProgress.setVisibility(View.GONE);
         }
-    }
-
-    private void updateRefreshState() {
-        final ParcelableUser user = getUser();
-        final AsyncTwitterWrapper twitter = mTwitterWrapper;
-        if (user == null || twitter == null) return;
-        final UserKey accountKey = user.account_key;
-        final boolean isCreatingFriendship = twitter.isCreatingFriendship(accountKey, user.key.getId());
-        final boolean destroyingFriendship = twitter.isDestroyingFriendship(accountKey, user.key.getId());
-        setProgressBarIndeterminateVisibility(isCreatingFriendship || destroyingFriendship);
-        invalidateOptionsMenu();
     }
 
     private void updateScrollOffset(int offset) {

@@ -130,6 +130,12 @@ public class MediaLoaderWrapper implements Constants {
         mImageLoader.displayImage(url, view, mBannerDisplayOptions, listener);
     }
 
+    public void displayProfileBanner(final ImageView view, final String url, final int width,
+                                     final ImageLoadingListener listener) {
+        mImageLoader.displayImage(getBestBannerUrl(url, width), view, mBannerDisplayOptions,
+                listener);
+    }
+
     public void displayProfileBanner(final ImageView view, final String url) {
         displayProfileBanner(view, url, null);
     }

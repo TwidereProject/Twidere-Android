@@ -169,7 +169,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                                 = new AbstractTask<CardDataMap, ParcelableCardEntity, CardPollFragment>() {
 
                             @Override
-                            public void afterExecute(CardPollFragment handler, ParcelableCardEntity result) {
+                            public void afterExecute(CardPollFragment handler, CardDataMap params, ParcelableCardEntity result) {
                                 handler.displayAndReloadPoll(result, status);
                             }
 

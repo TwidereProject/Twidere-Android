@@ -45,6 +45,8 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter {
 
     RequestClickListener getRequestClickListener();
 
+    FollowClickListener getFollowClickListener();
+
     boolean shouldShowAccountsColor();
 
     @NonNull
@@ -64,5 +66,9 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter {
         void onAcceptClicked(UserViewHolder holder, int position);
 
         void onDenyClicked(UserViewHolder holder, int position);
+    }
+
+    interface FollowClickListener {
+        void onFollowClicked(UserViewHolder holder, int position);
     }
 }

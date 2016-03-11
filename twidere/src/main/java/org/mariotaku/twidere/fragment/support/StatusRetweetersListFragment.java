@@ -39,6 +39,7 @@ public class StatusRetweetersListFragment extends CursorSupportUsersListFragment
         final StatusRetweetersLoader loader = new StatusRetweetersLoader(context, accountKey, statusId,
                 getData(), fromUser);
         loader.setCursor(getNextCursor());
+        loader.setPage(getNextPage());
         return loader;
     }
 

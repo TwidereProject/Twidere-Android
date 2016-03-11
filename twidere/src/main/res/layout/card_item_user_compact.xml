@@ -34,14 +34,14 @@
         android:id="@+id/profile_image_container"
         android:layout_width="@dimen/icon_size_card_list_item"
         android:layout_height="@dimen/icon_size_card_list_item"
-        android:layout_alignBottom="@+id/actions_container"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignTop="@+id/actions_container"
+        android:layout_alignTop="@+id/actions_progress_container"
         android:layout_marginEnd="@dimen/element_spacing_normal"
         android:layout_marginRight="@dimen/element_spacing_normal"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        tools:visibility="visible">
 
         <org.mariotaku.twidere.view.ProfileImageView
             android:id="@+id/profile_image"
@@ -73,56 +73,78 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/actions_container"
-        android:layout_alignTop="@+id/actions_container"
+        android:layout_alignBottom="@+id/actions_progress_container"
+        android:layout_alignTop="@+id/actions_progress_container"
         android:layout_toEndOf="@id/profile_image_container"
-        android:layout_toLeftOf="@+id/actions_container"
+        android:layout_toLeftOf="@+id/actions_progress_container"
         android:layout_toRightOf="@id/profile_image_container"
-        android:layout_toStartOf="@+id/actions_container"
+        android:layout_toStartOf="@+id/actions_progress_container"
         android:gravity="center_vertical"
         app:nv_primaryTextColor="?android:textColorPrimary"
         app:nv_primaryTextStyle="bold"
         app:nv_secondaryTextColor="?android:textColorSecondary"
         app:nv_twoLine="true"/>
 
-    <LinearLayout
-        android:id="@+id/actions_container"
+    <FrameLayout
+        android:id="@+id/actions_progress_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:clipChildren="false"
-        android:gravity="center"
-        android:minHeight="@dimen/element_size_normal"
-        android:minWidth="@dimen/element_size_normal"
-        android:orientation="horizontal"
-        tools:visibility="gone">
+        android:minHeight="@dimen/button_size_content_card"
+        android:minWidth="@dimen/button_size_content_card">
 
-        <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/accept_request"
-            style="?buttonStyleSmall"
+        <LinearLayout
+            android:id="@+id/actions_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/accept"
-            android:src="@drawable/ic_action_confirm"
-            app:backgroundTint="@color/material_light_green"/>
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:orientation="horizontal"
+            tools:visibility="visible">
 
-        <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/deny_request"
-            style="?buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/deny"
-            android:src="@drawable/ic_action_cancel"
-            app:backgroundTint="@color/material_red"/>
+            <org.mariotaku.twidere.view.ActionIconButton
+                android:id="@+id/follow"
+                style="?buttonStyleSmall"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:contentDescription="@string/follow"
+                android:src="@drawable/ic_action_add"
+                app:backgroundTint="@color/color_stateful_follow"
+                app:iabColor="@android:color/transparent"/>
+
+            <org.mariotaku.twidere.view.ActionIconButton
+                android:id="@+id/accept_request"
+                style="?buttonStyleSmall"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:contentDescription="@string/accept"
+                android:src="@drawable/ic_action_confirm"
+                app:backgroundTint="@color/material_light_green"
+                app:iabColor="@android:color/transparent"/>
+
+            <org.mariotaku.twidere.view.ActionIconButton
+                android:id="@+id/deny_request"
+                style="?buttonStyleSmall"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:contentDescription="@string/deny"
+                android:src="@drawable/ic_action_cancel"
+                app:backgroundTint="@color/material_red"
+                app:iabColor="@android:color/transparent"/>
+
+
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/processing_request"
             style="?android:progressBarStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
     <org.mariotaku.twidere.view.ActionIconThemedTextView
         android:id="@+id/external_indicator"

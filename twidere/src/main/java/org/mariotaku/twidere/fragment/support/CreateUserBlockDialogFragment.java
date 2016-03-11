@@ -44,7 +44,7 @@ public class CreateUserBlockDialogFragment extends BaseSupportDialogFragment imp
                 final ParcelableUser user = getUser();
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (user == null || twitter == null) return;
-                twitter.createBlockAsync(user.account_key, user.key.getId());
+                twitter.createBlockAsync(user.account_key, user.key);
                 break;
             default:
                 break;

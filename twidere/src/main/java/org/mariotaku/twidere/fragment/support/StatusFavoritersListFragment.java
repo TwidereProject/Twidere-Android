@@ -37,6 +37,7 @@ public class StatusFavoritersListFragment extends CursorSupportUsersListFragment
         final StatusFavoritersLoader loader = new StatusFavoritersLoader(context, accountKey,
                 statusId, getData(), false);
         loader.setCursor(getNextCursor());
+        loader.setPage(getNextPage());
         return loader;
     }
 

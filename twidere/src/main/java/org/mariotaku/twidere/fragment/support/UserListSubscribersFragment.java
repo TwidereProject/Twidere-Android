@@ -40,6 +40,7 @@ public class UserListSubscribersFragment extends CursorSupportUsersListFragment 
         final UserListSubscribersLoader loader = new UserListSubscribersLoader(context, accountKey,
                 listId, userId, screenName, listName, getData(), fromUser);
         loader.setCursor(getNextCursor());
+        loader.setPage(getNextPage());
         return loader;
     }
 

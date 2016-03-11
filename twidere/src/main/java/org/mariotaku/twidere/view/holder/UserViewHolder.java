@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter.FollowClickListener;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.RequestClickListener;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -57,12 +58,14 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     private final TextView descriptionView, locationView, urlView,
             statusesCountView, followersCountView, friendsCountView;
 
-    private final View acceptRequestButton, denyRequestButton;
-    private final View followRequestContainer;
+    private final View acceptRequestButton, denyRequestButton, followButton;
+    private final View actionsProgressContainer;
+    private final View actionsContainer;
     private final View processingRequestProgress;
 
     private UserAdapterListener userClickListener;
     private RequestClickListener requestClickListener;
+    private FollowClickListener followClickListener;
 
     public UserViewHolder(final IUsersAdapter<?> adapter, final View itemView) {
         super(itemView);
@@ -78,9 +81,11 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         statusesCountView = (TextView) itemView.findViewById(R.id.statuses_count);
         followersCountView = (TextView) itemView.findViewById(R.id.followers_count);
         friendsCountView = (TextView) itemView.findViewById(R.id.friends_count);
-        followRequestContainer = itemView.findViewById(R.id.actions_container);
+        actionsProgressContainer = itemView.findViewById(R.id.actions_progress_container);
+        actionsContainer = itemView.findViewById(R.id.actions_container);
         acceptRequestButton = itemView.findViewById(R.id.accept_request);
         denyRequestButton = itemView.findViewById(R.id.deny_request);
+        followButton = itemView.findViewById(R.id.follow);
         processingRequestProgress = itemView.findViewById(R.id.processing_request);
     }
 
@@ -121,14 +126,12 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
             loader.cancelDisplayTask(profileImageView);
         }
 
-        if (twitter.isProcessingFollowRequest(user.account_key, user.key)) {
+        if (twitter.isUpdatingRelationship(user.account_key, user.key)) {
             processingRequestProgress.setVisibility(View.VISIBLE);
-            acceptRequestButton.setVisibility(View.GONE);
-            denyRequestButton.setVisibility(View.GONE);
+            actionsContainer.setVisibility(View.GONE);
         } else {
             processingRequestProgress.setVisibility(View.GONE);
-            acceptRequestButton.setVisibility(View.VISIBLE);
-            denyRequestButton.setVisibility(View.VISIBLE);
+            actionsContainer.setVisibility(View.VISIBLE);
         }
         if (UserKeyUtils.isSameHost(user.account_key, user.key)) {
             externalIndicator.setVisibility(View.GONE);
@@ -136,6 +139,23 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
             externalIndicator.setVisibility(View.VISIBLE);
             externalIndicator.setText(context.getString(R.string.external_user_host_format, user
                     .key.getHost()));
+        }
+
+        followButton.setActivated(user.is_following);
+
+        final boolean isMySelf = user.account_key.equals(user.key);
+
+        if (requestClickListener != null && !isMySelf) {
+            acceptRequestButton.setVisibility(View.VISIBLE);
+            denyRequestButton.setVisibility(View.VISIBLE);
+        } else {
+            acceptRequestButton.setVisibility(View.GONE);
+            denyRequestButton.setVisibility(View.GONE);
+        }
+        if (followClickListener != null && !isMySelf) {
+            followButton.setVisibility(View.VISIBLE);
+        } else {
+            followButton.setVisibility(View.GONE);
         }
     }
 
@@ -165,6 +185,11 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
                 requestClickListener.onDenyClicked(this, getLayoutPosition());
                 break;
             }
+            case R.id.follow: {
+                if (followClickListener == null) return;
+                followClickListener.onFollowClicked(this, getLayoutPosition());
+                break;
+            }
         }
     }
 
@@ -181,21 +206,24 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
 
     public void setOnClickListeners() {
         setUserClickListener(adapter.getUserAdapterListener());
-        setRequestClickListener(adapter.getRequestClickListener());
+        setActionClickListeners(adapter.getRequestClickListener(), adapter.getFollowClickListener());
     }
 
-    private void setRequestClickListener(RequestClickListener listener) {
-        requestClickListener = listener;
-        if (listener != null) {
+    private void setActionClickListeners(RequestClickListener requestClickListener,
+                                         FollowClickListener followClickListener) {
+        this.requestClickListener = requestClickListener;
+        this.followClickListener = followClickListener;
+        if (requestClickListener != null || followClickListener != null) {
             nameView.setTwoLine(true);
-            followRequestContainer.setVisibility(View.VISIBLE);
+            actionsProgressContainer.setVisibility(View.VISIBLE);
         } else {
             nameView.setTwoLine(false);
-            followRequestContainer.setVisibility(View.GONE);
+            actionsProgressContainer.setVisibility(View.GONE);
         }
         nameView.updateText();
         acceptRequestButton.setOnClickListener(this);
         denyRequestButton.setOnClickListener(this);
+        followButton.setOnClickListener(this);
     }
 
     public void setTextSize(final float textSize) {

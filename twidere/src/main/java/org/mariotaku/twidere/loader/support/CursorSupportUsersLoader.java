@@ -90,6 +90,13 @@ public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
         if (cursor == null) return;
         mNextCursor = cursor.getNextCursor();
         mPrevCursor = cursor.getPreviousCursor();
+    }
+
+    protected final void incrementPage(ResponseList<User> users) {
+        if (users.isEmpty()) return;
+        if (mPage == -1) {
+            mPage = 1;
+        }
         mNextPage = mPage + 1;
     }
 
@@ -122,17 +129,19 @@ public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
         } else if (getPage() > 1) {
             paging.setPage(getPage());
         }
+        final ResponseList<User> users;
         if (useIDs(credentials)) {
             final IDs ids = getIDs(twitter, credentials, paging);
             setCursors(ids);
-            return twitter.lookupUsers(ids.getIDs());
+            users = twitter.lookupUsers(ids.getIDs());
         } else {
-            final List<User> users = getCursoredUsers(twitter, credentials, paging);
+            users = getCursoredUsers(twitter, credentials, paging);
             if (users instanceof CursorSupport) {
                 setCursors(((CursorSupport) users));
             }
-            return users;
         }
+        incrementPage(users);
+        return users;
     }
 
     protected boolean useIDs(@NonNull ParcelableCredentials credentials) {

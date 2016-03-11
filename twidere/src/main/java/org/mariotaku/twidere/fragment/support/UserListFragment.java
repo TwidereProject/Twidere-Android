@@ -363,7 +363,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
 
     @Override
     public Loader<SingleResponse<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
-        setProgressBarIndeterminateVisibility(true);
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final String userId = args.getString(EXTRA_USER_ID);
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
@@ -384,7 +383,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
             displayUserList(list);
         } else if (data.hasException()) {
         }
-        setProgressBarIndeterminateVisibility(false);
     }
 
     @Override

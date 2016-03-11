@@ -23,38 +23,26 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.squareup.otto.Subscribe;
-
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.IncomingFriendshipsLoader;
-import org.mariotaku.twidere.loader.support.UserFriendsLoader;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.model.message.FollowRequestTaskEvent;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
 
-public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment implements IUsersAdapter.RequestClickListener {
-    @Override
-    public void onStart() {
-        super.onStart();
-        mBus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mBus.unregister(this);
-        super.onStop();
-    }
+public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment implements
+        IUsersAdapter.RequestClickListener {
 
     @Override
     public CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args,
-                                                 final boolean fromUser) {
+                                                        final boolean fromUser) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final IncomingFriendshipsLoader loader = new IncomingFriendshipsLoader(context, accountKey,
                 getData(), fromUser);
         loader.setCursor(getNextCursor());
+        loader.setPage(getNextPage());
         return loader;
     }
 
@@ -82,14 +70,16 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
         mTwitterWrapper.denyFriendshipAsync(user.account_key, user.key);
     }
 
-    @Subscribe
-    public void onFollowRequestTaskEvent(FollowRequestTaskEvent event) {
-        final ParcelableUsersAdapter adapter = getAdapter();
-        final int position = adapter.findPosition(event.getAccountKey(), event.getUserId());
-        if (event.isFinished() && event.isSucceeded()) {
-            adapter.removeUserAt(position);
-        } else {
-            adapter.notifyItemChanged(position);
+    @Override
+    protected boolean shouldRemoveUser(int position, FriendshipTaskEvent event) {
+        if (!event.isSucceeded()) return false;
+        switch (event.getAction()) {
+            case FriendshipTaskEvent.Action.BLOCK:
+            case FriendshipTaskEvent.Action.ACCEPT:
+            case FriendshipTaskEvent.Action.DENY: {
+                return true;
+            }
         }
+        return false;
     }
 }

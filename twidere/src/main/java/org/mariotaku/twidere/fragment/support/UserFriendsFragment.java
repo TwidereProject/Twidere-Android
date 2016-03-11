@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.support.UserFriendsLoader;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 
 public class UserFriendsFragment extends CursorSupportUsersListFragment {
 
@@ -38,7 +39,19 @@ public class UserFriendsFragment extends CursorSupportUsersListFragment {
         final UserFriendsLoader loader = new UserFriendsLoader(context, accountKey, userId,
                 screenName, getData(), fromUser);
         loader.setCursor(getNextCursor());
+        loader.setPage(getNextPage());
         return loader;
     }
 
+    @Override
+    protected boolean shouldRemoveUser(int position, FriendshipTaskEvent event) {
+        if (!event.isSucceeded()) return false;
+        switch (event.getAction()) {
+            case FriendshipTaskEvent.Action.UNFOLLOW:
+            case FriendshipTaskEvent.Action.BLOCK: {
+                return true;
+            }
+        }
+        return false;
+    }
 }

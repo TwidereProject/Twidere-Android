@@ -75,12 +75,13 @@ import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.StreamingService;
 import org.mariotaku.twidere.task.AbstractTask;
@@ -929,7 +930,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                                 true, ReadPositionTag.HOME_TIMELINE, accountKeys);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
                         final int count = DataStoreUtils.getStatusesCount(mContext, Statuses.CONTENT_URI,
-                                position, accountKeys);
+                                position, Statuses.STATUS_TIMESTAMP, accountKeys);
                         result.put(i, count);
                         publishProgress(new TabBadge(i, count));
                         break;
@@ -940,7 +941,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                                 true, ReadPositionTag.ACTIVITIES_ABOUT_ME, accountIds);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
                         final int count = DataStoreUtils.getInteractionsCount(mContext, spec.args,
-                                accountIds, position);
+                                accountIds, position, Activities.TIMESTAMP);
                         publishProgress(new TabBadge(i, count));
                         result.put(i, count);
                         break;

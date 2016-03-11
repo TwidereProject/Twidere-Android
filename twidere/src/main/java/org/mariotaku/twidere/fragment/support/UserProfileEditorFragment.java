@@ -63,7 +63,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileBannerImageTask;
+import org.mariotaku.twidere.task.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;

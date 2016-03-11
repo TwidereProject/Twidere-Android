@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
@@ -96,7 +96,7 @@ public class ParcelableAccountUtils {
 
     @NonNull
     @ParcelableAccount.Type
-    public static String getAccountType(ParcelableAccount account) {
+    public static String getAccountType(@NonNull ParcelableAccount account) {
         if (account.account_type == null) return ParcelableAccount.Type.TWITTER;
         return account.account_type;
     }

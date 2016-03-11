@@ -91,11 +91,11 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.CompareUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.IntentUtils;
-import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ListViewUtils;
@@ -734,10 +734,15 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         final Resources res = getResources();
         final int defWidth = res.getDisplayMetrics().widthPixels;
         final int width = bannerWidth > 0 ? bannerWidth : defWidth;
-        final String bannerUrl = InternalTwitterContentUtils.getBestBannerUrl(account.profile_banner_url, width);
+        String bannerUrl = account.profile_banner_url;
+        if (bannerUrl == null && ParcelableAccount.Type.FANFOU.equals(account.account_type)) {
+            if (account.account_user != null) {
+                bannerUrl = ParcelableUserUtils.getProfileBannerUrl(account.account_user);
+            }
+        }
         final ImageView bannerView = mAccountProfileBannerView;
         if (bannerView.getDrawable() == null || !CompareUtils.objectEquals(bannerUrl, bannerView.getTag())) {
-            mMediaLoader.displayProfileBanner(mAccountProfileBannerView, bannerUrl, this);
+            mMediaLoader.displayProfileBanner(mAccountProfileBannerView, bannerUrl, width, this);
         } else {
             mMediaLoader.cancelDisplayTask(mAccountProfileBannerView);
         }

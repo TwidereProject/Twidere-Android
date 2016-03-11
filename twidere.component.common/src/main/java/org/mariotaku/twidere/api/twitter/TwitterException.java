@@ -258,6 +258,9 @@ public class TwitterException extends Exception implements TwitterResponse, Http
         return getMessage();
     }
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
     void setNested() {
         nested = true;

@@ -16,17 +16,17 @@ public abstract class AbstractTask<Params, Result, Callback> {
     protected abstract Result doLongOperation(Params params);
 
     @MainThread
-    protected void beforeExecute() {
+    protected void beforeExecute(Params params) {
 
     }
 
     @MainThread
-    protected void afterExecute(Result result) {
+    protected void afterExecute(Params params, Result result) {
 
     }
 
     @MainThread
-    protected void afterExecute(Callback callback, Result result) {
+    protected void afterExecute(Callback callback, Params params, Result result) {
 
     }
 
@@ -42,9 +42,9 @@ public abstract class AbstractTask<Params, Result, Callback> {
     @MainThread
     public void invokeAfterExecute(Result result) {
         if (mCallback != null) {
-            afterExecute(mCallback, result);
+            afterExecute(mCallback, mParams, result);
         } else {
-            afterExecute(result);
+            afterExecute(mParams, result);
         }
     }
 
@@ -53,6 +53,6 @@ public abstract class AbstractTask<Params, Result, Callback> {
     }
 
     public void invokeBeforeExecute() {
-        beforeExecute();
+        beforeExecute(mParams);
     }
 }
