@@ -221,8 +221,9 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         // Insert a gap.
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
+        // Why loadItemLimit / 2? because it will not acting strange in most cases
         final boolean insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
-                && !hasIntersection && statuses.size() > 1;
+                && !hasIntersection && statuses.size() > loadItemLimit / 2;
         if (insertGap) {
             values[minIdx].put(Statuses.IS_GAP, true);
         }
