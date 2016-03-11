@@ -577,7 +577,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         if (item.getItemId() == R.id.share) {
             final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), status);
             final Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_status));
-            Utils.addCopyLinkIntent(getContext(), chooser, LinkCreator.getTwitterStatusLink(status));
+            Utils.addCopyLinkIntent(getContext(), chooser, LinkCreator.getStatusWebLink(status));
             startActivity(chooser);
             return true;
         }

@@ -360,7 +360,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 final ParcelableStatus status = getStatus();
                 if (status == null) return null;
                 return new NdefMessage(new NdefRecord[]{
-                        NdefRecord.createUri(LinkCreator.getTwitterStatusLink(status)),
+                        NdefRecord.createUri(LinkCreator.getStatusWebLink(status)),
                 });
             }
         });
@@ -790,7 +790,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (item.getItemId() == R.id.share) {
             final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), status);
             final Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_status));
-            Utils.addCopyLinkIntent(getContext(), chooser, LinkCreator.getTwitterStatusLink(status));
+            Utils.addCopyLinkIntent(getContext(), chooser, LinkCreator.getStatusWebLink(status));
             startActivity(chooser);
             return true;
         }

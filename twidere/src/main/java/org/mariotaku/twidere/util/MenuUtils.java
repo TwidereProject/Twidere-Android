@@ -235,7 +235,7 @@ public class MenuUtils implements Constants {
         } else {
             final Intent shareIntent = Utils.createStatusShareIntent(context, status);
             final Intent chooserIntent = Intent.createChooser(shareIntent, context.getString(R.string.share_status));
-            Utils.addCopyLinkIntent(context, chooserIntent, LinkCreator.getTwitterStatusLink(status));
+            Utils.addCopyLinkIntent(context, chooserIntent, LinkCreator.getStatusWebLink(status));
             shareItem.setIntent(chooserIntent);
         }
 
@@ -335,7 +335,7 @@ public class MenuUtils implements Constants {
                 break;
             }
             case R.id.open_in_browser: {
-                final Intent intent = new Intent(Intent.ACTION_VIEW, LinkCreator.getTwitterStatusLink(status));
+                final Intent intent = new Intent(Intent.ACTION_VIEW, LinkCreator.getStatusWebLink(status));
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
 //                IntentSupport.setSelector(intent, new Intent(Intent.ACTION_VIEW).addCategory(IntentSupport.CATEGORY_APP_BROWSER));
                 context.startActivity(intent);

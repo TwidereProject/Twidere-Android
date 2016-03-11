@@ -30,8 +30,10 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.Nullables;
@@ -68,17 +70,24 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
                                     @NonNull final Paging paging) throws TwitterException {
         mCanLoadAllReplies = false;
         final ParcelableStatus status = mStatus;
-        if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
-            final boolean isOfficial = Utils.isOfficialCredentials(getContext(), credentials);
-            mCanLoadAllReplies = isOfficial;
-            if (isOfficial) {
-                return twitter.showConversation(status.id, paging);
-            } else {
-                return showConversationCompat(twitter, credentials, status, true);
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.TWITTER: {
+                final boolean isOfficial = Utils.isOfficialCredentials(getContext(), credentials);
+                mCanLoadAllReplies = isOfficial;
+                if (isOfficial) {
+                    return twitter.showConversation(status.id, paging);
+                } else {
+                    return showConversationCompat(twitter, credentials, status, true);
+                }
             }
-        } else if (TwitterAPIFactory.isStatusNetCredentials(credentials)) {
-            mCanLoadAllReplies = true;
-            return twitter.getStatusNetConversation(status.id, paging);
+            case ParcelableAccount.Type.STATUSNET: {
+                mCanLoadAllReplies = true;
+                return twitter.getStatusNetConversation(status.id, paging);
+            }
+            case ParcelableAccount.Type.FANFOU: {
+                mCanLoadAllReplies = true;
+                return twitter.getContextTimeline(status.id, paging);
+            }
         }
         // Set to true because there's no conversation support on this platform
         mCanLoadAllReplies = true;

@@ -34,6 +34,7 @@ import org.mariotaku.twidere.model.UserKey;
 public class LinkCreator implements Constants {
 
     private static final String AUTHORITY_TWITTER = "twitter.com";
+    private static final String AUTHORITY_FANFOU = "fanfou.com";
 
     public static Uri getTwitterStatusLink(String screenName, String statusId) {
         Uri.Builder builder = new Uri.Builder();
@@ -89,10 +90,22 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
-    public static Uri getTwitterStatusLink(ParcelableStatus status) {
+    public static Uri getStatusWebLink(ParcelableStatus status) {
         if (status.extras != null && !TextUtils.isEmpty(status.extras.external_url)) {
             return Uri.parse(status.extras.external_url);
         }
+        if (USER_TYPE_FANFOU_COM.equals(status.account_key.getHost())) {
+            return getFanfouStatusLink(status.id);
+        }
         return getTwitterStatusLink(status.user_screen_name, status.id);
+    }
+
+    private static Uri getFanfouStatusLink(String id) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_HTTP);
+        builder.authority(AUTHORITY_FANFOU);
+        builder.appendPath("statuses");
+        builder.appendPath(id);
+        return builder.build();
     }
 }
