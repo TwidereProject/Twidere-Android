@@ -71,32 +71,4 @@ public class PreviewMediaExtractor {
         return links;
     }
 
-    @Nullable
-    public static String getAuthority(@NonNull String link) {
-        int start = link.indexOf("://");
-        if (start < 0) return null;
-        int end = link.indexOf('/', start + 3);
-        if (end < 0) {
-            end = link.length();
-        }
-        return link.substring(start + 3, end);
-    }
-
-    @Nullable
-    public static String getPath(@NonNull String link) {
-        int start = link.indexOf("://");
-        if (start < 0) return null;
-        start = link.indexOf('/', start + 3);
-        if (start < 0) {
-            return "";
-        }
-        int end = link.indexOf('?', start);
-        if (end < 0) {
-            end = link.indexOf('#', start);
-            if (end < 0) {
-                end = link.length();
-            }
-        }
-        return link.substring(start, end);
-    }
 }

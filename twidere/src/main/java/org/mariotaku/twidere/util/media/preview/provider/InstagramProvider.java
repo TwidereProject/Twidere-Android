@@ -6,7 +6,7 @@ import android.support.annotation.WorkerThread;
 
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
+import org.mariotaku.twidere.util.UriUtils;
 
 import java.util.Locale;
 
@@ -16,14 +16,14 @@ import java.util.Locale;
 public class InstagramProvider implements Provider {
     @Override
     public boolean supports(@NonNull String link) {
-        final String authority = PreviewMediaExtractor.getAuthority(link);
+        final String authority = UriUtils.getAuthority(link);
         if (authority == null) return false;
         switch (authority) {
             //noinspection SpellCheckingInspection
             case "instagr.am":
             case "instagram.com":
             case "www.instagram.com": {
-                final String path = PreviewMediaExtractor.getPath(link);
+                final String path = UriUtils.getPath(link);
                 return path != null && path.startsWith("/p/");
             }
         }
@@ -33,7 +33,7 @@ public class InstagramProvider implements Provider {
     @Override
     @Nullable
     public ParcelableMedia from(@NonNull String link) {
-        final String path = PreviewMediaExtractor.getPath(link);
+        final String path = UriUtils.getPath(link);
         final String prefix = "/p/";
         if (path == null || !path.startsWith(prefix)) {
             return null;

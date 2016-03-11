@@ -21,7 +21,6 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +159,7 @@ public class InternalTwitterContentUtils {
     public static String getBestBannerUrl(@Nullable final String baseUrl, final int width) {
         if (baseUrl == null) return null;
         final String type = getBestBannerType(width);
-        final String authority = PreviewMediaExtractor.getAuthority(baseUrl);
+        final String authority = UriUtils.getAuthority(baseUrl);
         return authority != null && authority.endsWith(".twimg.com") ? baseUrl + "/" + type : baseUrl;
     }
 

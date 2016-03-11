@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
+import org.mariotaku.twidere.util.UriUtils;
 
 import java.util.Locale;
 
@@ -21,7 +21,7 @@ public class TwitterMediaProvider implements Provider {
     @Nullable
     @Override
     public ParcelableMedia from(@NonNull String link) {
-        final String path = PreviewMediaExtractor.getPath(link);
+        final String path = UriUtils.getPath(link);
         if (path == null) return null;
         final ParcelableMedia media = new ParcelableMedia();
         media.url = link;
@@ -47,11 +47,11 @@ public class TwitterMediaProvider implements Provider {
     }
 
     public static boolean isSupported(@NonNull String link) {
-        final String authority = PreviewMediaExtractor.getAuthority(link);
+        final String authority = UriUtils.getAuthority(link);
         if (authority == null || !authority.endsWith(".twimg.com")) {
             return false;
         }
-        final String path = PreviewMediaExtractor.getPath(link);
+        final String path = UriUtils.getPath(link);
         if (path == null) return false;
         if (path.startsWith("/media/")) {
             return true;

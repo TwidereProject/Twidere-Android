@@ -45,4 +45,8 @@ public interface TwitterOAuth {
     OAuthToken getAccessToken(@Extra({"oauth_token", "oauth_token_secret"}) OAuthToken requestToken,
                               @Param("oauth_verifier") String oauthVerifier) throws TwitterException;
 
+    @POST("/oauth/access_token")
+    OAuthToken getAccessToken(@Extra({"oauth_token", "oauth_token_secret"}) OAuthToken requestToken)
+            throws TwitterException;
+
 }

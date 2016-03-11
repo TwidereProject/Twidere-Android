@@ -267,6 +267,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 final Intent intent = new Intent(this, BrowserSignInActivity.class);
                 intent.putExtra(Accounts.CONSUMER_KEY, mConsumerKey);
                 intent.putExtra(Accounts.CONSUMER_SECRET, mConsumerSecret);
+                intent.putExtra(Accounts.API_URL_FORMAT, mAPIUrlFormat);
                 startActivityForResult(intent, REQUEST_BROWSER_SIGN_IN);
                 break;
             }
@@ -640,17 +641,20 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
 
     public static class BrowserSignInTask extends AbstractSignInTask {
 
-        private final String oauthVerifier;
-
         private final Context context;
+
         @NonNull
         private final String apiUrlFormat;
-        private final boolean sameOauthSigningUrl, noVersionSuffix;
+        @Nullable
+        private final String oauthVerifier;
         private final OAuthToken consumerKey, requestToken;
+        private final boolean sameOauthSigningUrl, noVersionSuffix;
 
-        public BrowserSignInTask(final SignInActivity context, OAuthToken consumerKey,
-                                 final OAuthToken requestToken,
-                                 final String oauthVerifier, @NonNull final String apiUrlFormat,
+        public BrowserSignInTask(@NonNull final SignInActivity context,
+                                 @NonNull final OAuthToken consumerKey,
+                                 @NonNull final OAuthToken requestToken,
+                                 @Nullable final String oauthVerifier,
+                                 @NonNull final String apiUrlFormat,
                                  final boolean sameOauthSigningUrl, final boolean noVersionSuffix) {
             super(context);
             this.context = context;
@@ -666,23 +670,26 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         protected SignInResponse doInBackground(final Object... params) {
             try {
                 final String versionSuffix = noVersionSuffix ? null : "1.1";
-                Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null,
+                Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
                         sameOauthSigningUrl);
                 final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint,
                         new OAuthAuthorization(consumerKey.getOauthToken(),
                                 consumerKey.getOauthTokenSecret()), TwitterOAuth.class);
-                final OAuthToken accessToken = oauth.getAccessToken(requestToken, oauthVerifier);
-                final String userId = accessToken.getUserId();
-                if (userId == null) return new SignInResponse(false, false, null);
+                final OAuthToken accessToken;
+                if (oauthVerifier != null) {
+                    accessToken = oauth.getAccessToken(requestToken, oauthVerifier);
+                } else {
+                    accessToken = oauth.getAccessToken(requestToken);
+                }
                 final OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(),
                         consumerKey.getOauthTokenSecret(), accessToken);
                 endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", versionSuffix,
                         sameOauthSigningUrl);
-                final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint,
-                        auth, Twitter.class);
+                final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint, auth,
+                        Twitter.class);
                 final User user = twitter.verifyCredentials();
                 final int color = analyseUserProfileColor(user);
-                return new SignInResponse(isUserLoggedIn(context, userId), auth, user,
+                return new SignInResponse(isUserLoggedIn(context, user.getId()), auth, user,
                         ParcelableCredentials.AUTH_TYPE_OAUTH, color, apiUrlFormat, sameOauthSigningUrl,
                         noVersionSuffix, detectAccountType(twitter, user));
             } catch (final TwitterException e) {
@@ -759,7 +766,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
-            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
+            Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
+                    sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
             final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth, verificationCallback, userAgent);
@@ -773,7 +781,8 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         private SignInResponse authxAuth() throws TwitterException {
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
-            Endpoint endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl);
+            Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
+                    sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
             final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password);
@@ -963,6 +972,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             final AlertDialog alertDialog = (AlertDialog) dialog;
             final TextView verificationHint = (TextView) alertDialog.findViewById(R.id.verification_hint);
             final EditText editVerification = (EditText) alertDialog.findViewById(R.id.edit_verification_code);
+            if (verificationHint == null || editVerification == null) return;
             if ("Push".equalsIgnoreCase(challengeType)) {
                 verificationHint.setText(R.string.login_verification_push_hint);
                 editVerification.setVisibility(View.GONE);

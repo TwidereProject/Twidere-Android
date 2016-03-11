@@ -335,7 +335,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     @NonNull
-    public static String getApiUrl(final String pattern, final String domain, String appendPath) {
+    public static String getApiUrl(@NonNull final String pattern, final String domain, String appendPath) {
         String urlBase = getApiBaseUrl(pattern, domain);
         if (urlBase.endsWith("/")) {
             urlBase = urlBase.substring(0, urlBase.length() - 1);
@@ -390,14 +390,33 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
     }
 
-    public static Endpoint getOAuthRestEndpoint(String apiUrlFormat, boolean sameOAuthSigningUrl, boolean noVersionSuffix) {
+    public static Endpoint getOAuthRestEndpoint(@NonNull String apiUrlFormat, boolean sameOAuthSigningUrl, boolean noVersionSuffix) {
         return getOAuthEndpoint(apiUrlFormat, "api", noVersionSuffix ? null : "1.1", sameOAuthSigningUrl);
     }
 
+    public static Endpoint getOAuthSignInEndpoint(@NonNull String apiUrlFormat, boolean sameOAuthSigningUrl) {
+        return getOAuthEndpoint(apiUrlFormat, "api", null, sameOAuthSigningUrl, true);
+    }
+
     public static Endpoint getOAuthEndpoint(String apiUrlFormat, @Nullable String domain,
-                                            @Nullable String versionSuffix, boolean sameOAuthSigningUrl) {
+                                            @Nullable String versionSuffix,
+                                            boolean sameOAuthSigningUrl) {
+        return getOAuthEndpoint(apiUrlFormat, domain, versionSuffix, sameOAuthSigningUrl, false);
+    }
+
+    public static Endpoint getOAuthEndpoint(@NonNull String apiUrlFormat, @Nullable String domain,
+                                            @Nullable String versionSuffix,
+                                            boolean sameOAuthSigningUrl, boolean fixUrl) {
         String endpointUrl, signEndpointUrl;
         endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
+        if (fixUrl) {
+            int[] authorityRange = UriUtils.getAuthorityRange(endpointUrl);
+            if (authorityRange != null && endpointUrl.regionMatches(authorityRange[0],
+                    "api.fanfou.com", 0, authorityRange[1] - authorityRange[0])) {
+                endpointUrl = endpointUrl.substring(0, authorityRange[0]) + "fanfou.com" +
+                        endpointUrl.substring(authorityRange[1]);
+            }
+        }
         if (!sameOAuthSigningUrl) {
             signEndpointUrl = getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix);
         } else {

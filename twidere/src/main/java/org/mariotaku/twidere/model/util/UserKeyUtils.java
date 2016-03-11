@@ -11,7 +11,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
+import org.mariotaku.twidere.util.UriUtils;
 
 import java.util.ArrayList;
 
@@ -86,7 +86,7 @@ public class UserKeyUtils {
             def = TwidereConstants.USER_TYPE_TWITTER_COM;
         }
         if (uri == null) return def;
-        final String authority = PreviewMediaExtractor.getAuthority(uri);
+        final String authority = UriUtils.getAuthority(uri);
         if (authority == null) return def;
         return authority.replaceAll("[^\\w\\d\\.]", "-");
     }

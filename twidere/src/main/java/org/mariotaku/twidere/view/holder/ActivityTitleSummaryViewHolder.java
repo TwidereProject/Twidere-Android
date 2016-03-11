@@ -107,6 +107,11 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
         summaryView.setText(message.getSummary());
         summaryView.setVisibility(summaryView.length() > 0 ? View.VISIBLE : View.GONE);
         timeView.setTime(activity.timestamp);
+        if (adapter.shouldShowAccountsColor()) {
+            itemContent.drawEnd(activity.account_color);
+        } else {
+            itemContent.drawEnd();
+        }
         displayUserProfileImages(sources);
     }
 
