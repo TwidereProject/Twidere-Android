@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
@@ -81,9 +82,9 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.task.SaveFileTask;
 import org.mariotaku.twidere.task.SaveImageToGalleryTask;
@@ -101,6 +102,9 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.MediaDownloadEvent;
 
 public final class MediaViewerActivity extends AbsMediaViewerActivity implements Constants,
         AppCompatCallback, TaskStackBuilder.SupportParentable, ActionBarDrawerToggle.DelegateProvider,
@@ -225,31 +229,28 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     @Override
     protected MediaViewerFragment instantiateMediaFragment(int position) {
         final ParcelableMedia media = getMedia()[position];
+        final Bundle args = new Bundle();
+        final Intent intent = getIntent();
+        args.putParcelable(EXTRA_ACCOUNT_KEY, intent.getParcelableExtra(EXTRA_ACCOUNT_KEY));
+        args.putParcelable(EXTRA_MEDIA, media);
+        args.putParcelable(EXTRA_STATUS, intent.getParcelableExtra(EXTRA_STATUS));
         switch (media.type) {
             case ParcelableMedia.Type.IMAGE: {
-                final Bundle args = new Bundle();
-                args.putParcelable(EXTRA_ACCOUNT_KEY, getIntent().getParcelableExtra(EXTRA_ACCOUNT_KEY));
                 args.putParcelable(ImagePageFragment.EXTRA_MEDIA_URI, Uri.parse(media.media_url));
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         ImagePageFragment.class.getName(), args);
             }
             case ParcelableMedia.Type.ANIMATED_GIF:
             case ParcelableMedia.Type.CARD_ANIMATED_GIF: {
-                final Bundle args = new Bundle();
                 args.putBoolean(VideoPageFragment.EXTRA_LOOP, true);
-                args.putParcelable(EXTRA_MEDIA, media);
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         VideoPageFragment.class.getName(), args);
             }
             case ParcelableMedia.Type.VIDEO: {
-                final Bundle args = new Bundle();
-                args.putParcelable(EXTRA_MEDIA, media);
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         VideoPageFragment.class.getName(), args);
             }
             case ParcelableMedia.Type.EXTERNAL_PLAYER: {
-                final Bundle args = new Bundle();
-                args.putParcelable(EXTRA_MEDIA, media);
                 return (MediaViewerFragment) Fragment.instantiate(this,
                         ExternalBrowserPageFragment.class.getName(), args);
             }
@@ -821,11 +822,12 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
 
     public static class ImagePageFragment extends SubsampleImageViewerFragment {
         private int mMediaLoadState;
+        private MediaDownloadEvent mMediaDownloadEvent;
 
         @Override
         protected Object getDownloadExtra() {
             final MediaExtra mediaExtra = new MediaExtra();
-            mediaExtra.setAccountKey(getArguments().<UserKey>getParcelable(EXTRA_ACCOUNT_KEY));
+            mediaExtra.setAccountKey(getAccountKey());
             final Uri origDownloadUri = super.getDownloadUri();
             final Uri downloadUri = getDownloadUri();
             if (origDownloadUri != null && downloadUri != null) {
@@ -899,6 +901,33 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         protected void setupImageView(SubsamplingScaleImageView imageView) {
             imageView.setMaxScale(getResources().getDisplayMetrics().density);
         }
+
+        private ParcelableMedia getMedia() {
+            return getArguments().getParcelable(EXTRA_MEDIA);
+        }
+
+        private UserKey getAccountKey() {
+            return getArguments().getParcelable(EXTRA_ACCOUNT_KEY);
+        }
+
+        @Override
+        public void onDownloadStart(long total) {
+            super.onDownloadStart(total);
+            final Context context = getContext();
+            if (context != null) {
+                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), total);
+            } else {
+                mMediaDownloadEvent = null;
+            }
+        }
+
+        @Override
+        public void onDownloadFinished() {
+            super.onDownloadFinished();
+            if (mMediaDownloadEvent != null) {
+                HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
+            }
+        }
     }
 
     public static class VideoPageFragment extends CacheDownloadMediaViewerFragment
@@ -928,6 +957,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         private VideoPlayProgressRunnable mVideoProgressRunnable;
         private MediaPlayer mMediaPlayer;
         private int mMediaPlayerError;
+        private MediaDownloadEvent mMediaDownloadEvent;
 
         @Override
         protected Object getDownloadExtra() {
@@ -958,9 +988,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             return Uri.parse(bestVideoUrlAndType.first);
         }
 
-        private ParcelableMedia getMedia() {
-            return getArguments().getParcelable(EXTRA_MEDIA);
-        }
 
         @Override
         protected void displayMedia(CacheDownloadLoader.Result result) {
@@ -1160,6 +1187,33 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         @Override
         public View onCreateMediaView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             return inflater.inflate(R.layout.layout_media_viewer_texture_video_view, container, false);
+        }
+
+        @Override
+        public void onDownloadStart(long total) {
+            super.onDownloadStart(total);
+            final Context context = getContext();
+            if (context != null) {
+                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), total);
+            } else {
+                mMediaDownloadEvent = null;
+            }
+        }
+
+        @Override
+        public void onDownloadFinished() {
+            super.onDownloadFinished();
+            if (mMediaDownloadEvent != null) {
+                HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
+            }
+        }
+
+        private ParcelableMedia getMedia() {
+            return getArguments().getParcelable(EXTRA_MEDIA);
+        }
+
+        private UserKey getAccountKey() {
+            return getArguments().getParcelable(EXTRA_ACCOUNT_KEY);
         }
 
         private static class VideoPlayProgressRunnable implements Runnable {

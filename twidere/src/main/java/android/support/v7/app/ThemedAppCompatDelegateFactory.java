@@ -46,14 +46,14 @@ public class ThemedAppCompatDelegateFactory implements Constants {
     public static ThemedAppCompatDelegate create(@NonNull final IThemedActivity themed,
                                                  @NonNull final AppCompatCallback callback) {
         final Activity activity = (Activity) themed;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return new ThemedAppCompatDelegate(themed, activity, activity.getWindow(), callback);
         } else {
             throw new UnsupportedOperationException();
         }
     }
 
-    public static final class ThemedAppCompatDelegate extends AppCompatDelegateImplV11 {
+    public static final class ThemedAppCompatDelegate extends AppCompatDelegateImplV14 {
 
         private final IThemedActivity themed;
         private KeyListener keyListener;

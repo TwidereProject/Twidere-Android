@@ -55,6 +55,8 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.model.ListResponse;
+import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
@@ -73,6 +75,8 @@ import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
 import org.mariotaku.twidere.model.message.UserListCreatedEvent;
 import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
 import org.mariotaku.twidere.model.message.UsersBlockedEvent;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
@@ -699,11 +703,23 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, true);
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mContext, mAccountKey);
+            if (credentials == null) return SingleResponse.getInstance();
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, credentials, true, true);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final ParcelableStatus result = ParcelableStatusUtils.fromStatus(twitter.createFavorite(mStatusId),
-                        mAccountKey, false);
+                final ParcelableStatus result;
+                switch (ParcelableAccountUtils.getAccountType(credentials)) {
+                    case ParcelableAccount.Type.FANFOU: {
+                        result = ParcelableStatusUtils.fromStatus(twitter.createFanfouFavorite(mStatusId),
+                                mAccountKey, false);
+                        break;
+                    }
+                    default: {
+                        result = ParcelableStatusUtils.fromStatus(twitter.createFavorite(mStatusId),
+                                mAccountKey, false);
+                    }
+                }
                 Utils.setLastSeen(mContext, result.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
@@ -1151,17 +1167,26 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, true);
-
-            if (twitter == null) {
-                return SingleResponse.getInstance();
-            }
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mContext, mAccountKey);
+            if (credentials == null) return SingleResponse.getInstance();
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, credentials, true, true);
+            if (twitter == null) return SingleResponse.getInstance();
             try {
-                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.destroyFavorite(mStatusId),
-                        mAccountKey, false);
+                final ParcelableStatus result;
+                switch (ParcelableAccountUtils.getAccountType(credentials)) {
+                    case ParcelableAccount.Type.FANFOU: {
+                        result = ParcelableStatusUtils.fromStatus(twitter.destroyFanfouFavorite(mStatusId),
+                                mAccountKey, false);
+                        break;
+                    }
+                    default: {
+                        result = ParcelableStatusUtils.fromStatus(twitter.destroyFavorite(mStatusId),
+                                mAccountKey, false);
+                    }
+                }
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, false);
-                values.put(Statuses.FAVORITE_COUNT, status.favorite_count - 1);
+                values.put(Statuses.FAVORITE_COUNT, result.favorite_count - 1);
                 final Expression where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                         Expression.or(Expression.equalsArgs(Statuses.STATUS_ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)));
@@ -1169,7 +1194,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), whereArgs);
                 }
-                return SingleResponse.getInstance(status);
+                return SingleResponse.getInstance(result);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
             }

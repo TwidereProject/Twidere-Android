@@ -139,7 +139,8 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mCurrentThemeFontFamily = getThemeFontFamily();
         super.onApplyThemeResource(theme, resId, first);
-        ThemeUtils.applyToolbarItemColor(this, getActionBarToolbar(), mCurrentThemeColor);
+        final Toolbar actionBarToolbar = getActionBarToolbar();
+        ThemeUtils.applyToolbarItemColor(this, actionBarToolbar, mCurrentThemeColor);
     }
 
     @Override

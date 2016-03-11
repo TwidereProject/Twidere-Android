@@ -74,17 +74,17 @@ repositories {
 
 dependencies {
 //    wearApp project(':twidere.wear')
-    apt 'com.bluelinelabs:logansquare-compiler:1.3.4'
-    androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.4'
+    apt 'com.bluelinelabs:logansquare-compiler:1.3.7'
+    androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     apt "com.github.mariotaku.ObjectCursor:processor:0.9.6"
 
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v13:23.2.0'
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:cardview-v7:23.2.0'
-    compile 'com.android.support:recyclerview-v7:23.2.0'
+    compile 'com.android.support:support-v13:23.2.1'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:cardview-v7:23.2.1'
+    compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.twitter:twitter-text:1.13.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.squareup:otto:1.3.8'
@@ -103,7 +103,7 @@ dependencies {
     compile 'com.squareup:tape:1.2.3'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'commons-primitives:commons-primitives:1.0'
-    compile 'com.bluelinelabs:logansquare:1.3.4'
+    compile 'com.bluelinelabs:logansquare:1.3.7'
     compile 'org.jraf:android-switch-backport:2.0.1'
     compile 'com.makeramen:roundedimageview:2.1.1'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
@@ -114,8 +114,8 @@ dependencies {
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.0.2'
     compile 'org.attoparser:attoparser:1.4.0.RELEASE'
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.12'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.12'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.13'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.13'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.6'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.6'
 
@@ -137,7 +137,7 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 
-    androidTestCompile 'com.android.support:support-annotations:23.2.0'
+    androidTestCompile 'com.android.support:support-annotations:23.2.1'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
 }
