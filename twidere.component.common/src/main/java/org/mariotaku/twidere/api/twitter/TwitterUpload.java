@@ -40,7 +40,7 @@ public interface TwitterUpload {
 
     @POST("/media/upload.json")
     @BodyType(BodyType.MULTIPART)
-    MediaUploadResponse uploadMedia(@Param("media") FileBody data) throws TwitterException;
+    MediaUploadResponse uploadMedia(@Param("media") Body data) throws TwitterException;
 
 
     @POST("/media/upload.json")

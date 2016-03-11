@@ -42,7 +42,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -96,6 +95,7 @@ import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
+import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereListUtils;
@@ -591,11 +591,9 @@ public class BackgroundOperationService extends IntentService implements Constan
                     // Get Twitter instance corresponding to account
                     final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this,
                             account.account_key, true, true);
-                    final TwitterUpload upload = TwitterAPIFactory.getTwitterInstance(this,
-                            account.account_key, true, true, TwitterUpload.class);
 
                     // Shouldn't happen
-                    if (twitter == null || upload == null || credentials == null) {
+                    if (twitter == null || credentials == null) {
                         throw new UpdateStatusException("No account found");
                     }
 
@@ -650,43 +648,11 @@ public class BackgroundOperationService extends IntentService implements Constan
                         status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location));
                     }
                     if (uploader == null && hasMedia) {
-                        final long[] mediaIds = new long[statusUpdate.media.length];
-                        ContentLengthInputStream cis = null;
-                        try {
-                            for (int i = 0, j = mediaIds.length; i < j; i++) {
-                                final ParcelableMediaUpdate media = statusUpdate.media[i];
-                                final Uri mediaUri = Uri.parse(media.uri);
-                                final String mediaType = resolver.getType(mediaUri);
-                                final InputStream is = resolver.openInputStream(mediaUri);
-                                final long length = is.available();
-                                cis = new ContentLengthInputStream(is, length);
-                                cis.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,
-                                        statusUpdate));
-                                final ContentType contentType;
-                                if (TextUtils.isEmpty(mediaType)) {
-                                    contentType = ContentType.parse("application/octet-stream");
-                                } else {
-                                    contentType = ContentType.parse(mediaType);
-                                }
-                                final FileBody body = new FileBody(cis, "attachment", length, contentType);
-                                final MediaUploadResponse uploadResp = upload.uploadMedia(body);
-                                mediaIds[i] = uploadResp.getId();
-                            }
-                        } catch (final IOException e) {
-                            if (BuildConfig.DEBUG) {
-                                Log.w(LOGTAG, e);
-                            }
-                        } catch (final TwitterException e) {
-                            if (BuildConfig.DEBUG) {
-                                Log.w(LOGTAG, e);
-                            }
-                            final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
-                            results.add(response);
+                        if (uploadOnSocialPlatform(resolver, builder, shortener, uploader,
+                                credentials, twitter, statusUpdate, status, statusText,
+                                shouldShorten, shortenedResult, uploadResult, results)) {
                             continue;
-                        } finally {
-                            IoUtils.closeSilently(cis);
                         }
-                        status.mediaIds(mediaIds);
                     }
                     status.possiblySensitive(statusUpdate.is_possibly_sensitive);
 
@@ -740,6 +706,97 @@ public class BackgroundOperationService extends IntentService implements Constan
             triggerEasterEgg(notReplyToOther, hasEasterEggTriggerText, hasEasterEggRestoreText);
         }
         return results;
+    }
+
+    private boolean uploadOnSocialPlatform(ContentResolver resolver, Builder builder,
+                                           StatusShortenerInterface shortener,
+                                           MediaUploaderInterface uploader,
+                                           ParcelableCredentials credentials, Twitter twitter,
+                                           ParcelableStatusUpdate statusUpdate,
+                                           StatusUpdate status, String statusText,
+                                           boolean shouldShorten, StatusShortenResult shortenedResult,
+                                           MediaUploadResult uploadResult,
+                                           List<SingleResponse<ParcelableStatus>> results) throws UpdateStatusException {
+        try {
+            if (ParcelableAccount.Type.FANFOU.equals(credentials.account_type)) {
+                if (statusUpdate.media.length > 1) {
+                    throw new UpdateStatusException(getString(R.string.error_too_many_photos_fanfou));
+                }
+                ParcelableMediaUpdate media = statusUpdate.media[0];
+                FileBody body = null;
+                try {
+                    body = getBodyFromMedia(resolver, builder, media, statusUpdate);
+                    final String location = ParseUtils.parseString(statusUpdate.location.toString());
+                    final ParcelableStatus result = ParcelableStatusUtils.fromStatus(twitter.uploadPhoto(body,
+                            statusText, location), credentials.account_key, false);
+                    if (shouldShorten && shortener != null && shortenedResult != null) {
+                        shortener.callback(shortenedResult, result);
+                    }
+                    if (uploader != null && uploadResult != null) {
+                        uploader.callback(uploadResult, result);
+                    }
+                    results.add(SingleResponse.getInstance(result));
+                } finally {
+                    Utils.closeSilently(body);
+                }
+                return true;
+            } else {
+                final TwitterUpload upload = TwitterAPIFactory.getTwitterInstance(this, credentials,
+                        true, true, TwitterUpload.class);
+                if (upload == null) {
+                    throw new UpdateStatusException("Twitter instance is null");
+                }
+                final long[] mediaIds = new long[statusUpdate.media.length];
+
+                for (int i = 0, j = mediaIds.length; i < j; i++) {
+                    final ParcelableMediaUpdate media = statusUpdate.media[i];
+                    FileBody body = null;
+                    final MediaUploadResponse uploadResp;
+                    try {
+                        body = getBodyFromMedia(resolver, builder, media, statusUpdate);
+                        uploadResp = upload.uploadMedia(body);
+                    } finally {
+                        Utils.closeSilently(body);
+                    }
+                    mediaIds[i] = uploadResp.getId();
+                }
+                status.mediaIds(mediaIds);
+            }
+        } catch (final IOException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(LOGTAG, e);
+            }
+        } catch (final TwitterException e) {
+            if (BuildConfig.DEBUG) {
+                Log.w(LOGTAG, e);
+            }
+            final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
+            results.add(response);
+            return true;
+        }
+        return false;
+    }
+
+    private FileBody getBodyFromMedia(final ContentResolver resolver, final Builder builder,
+                                      final ParcelableMediaUpdate media,
+                                      final ParcelableStatusUpdate statusUpdate) throws IOException {
+        final Uri mediaUri = Uri.parse(media.uri);
+        final String mediaType = resolver.getType(mediaUri);
+        final InputStream is = resolver.openInputStream(mediaUri);
+        if (is == null) {
+            throw new FileNotFoundException(media.uri);
+        }
+        final long length = is.available();
+        final ContentLengthInputStream cis = new ContentLengthInputStream(is, length);
+        cis.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,
+                statusUpdate));
+        final ContentType contentType;
+        if (TextUtils.isEmpty(mediaType)) {
+            contentType = ContentType.parse("application/octet-stream");
+        } else {
+            contentType = ContentType.parse(mediaType);
+        }
+        return new FileBody(cis, "attachment", length, contentType);
     }
 
     private void triggerEasterEgg(boolean notReplyToOther, boolean hasEasterEggTriggerText, boolean hasEasterEggRestoreText) {
