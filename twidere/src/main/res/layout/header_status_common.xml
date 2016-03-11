@@ -172,7 +172,7 @@
         android:layout_alignStart="@+id/profile_container"
         android:layout_below="@id/profile_container"
         android:layout_marginBottom="@dimen/element_spacing_small"
-        android:layout_marginTop="@dimen/element_spacing_normal"
+        android:layout_marginTop="@dimen/element_spacing_small"
         android:paddingLeft="@dimen/element_spacing_normal"
         android:paddingRight="@dimen/element_spacing_normal"
         android:textAppearance="?android:textAppearanceMedium"

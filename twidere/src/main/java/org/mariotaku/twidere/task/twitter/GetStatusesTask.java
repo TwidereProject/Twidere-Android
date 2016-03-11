@@ -222,7 +222,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
         final boolean insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
-                && !hasIntersection;
+                && !hasIntersection && statuses.size() > 1;
         if (insertGap) {
             values[minIdx].put(Statuses.IS_GAP, true);
         }

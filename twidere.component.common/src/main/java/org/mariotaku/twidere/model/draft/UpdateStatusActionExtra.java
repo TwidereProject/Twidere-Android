@@ -21,6 +21,9 @@ public class UpdateStatusActionExtra implements ActionExtra {
     @ParcelableThisPlease
     @JsonField(name = "is_possibly_sensitive")
     boolean isPossiblySensitive;
+    @ParcelableThisPlease
+    @JsonField(name = "repost_status_id")
+    String repostStatusId;
 
     public ParcelableStatus getInReplyToStatus() {
         return inReplyToStatus;
@@ -38,6 +41,13 @@ public class UpdateStatusActionExtra implements ActionExtra {
         this.isPossiblySensitive = isPossiblySensitive;
     }
 
+    public String isRepostStatusId() {
+        return repostStatusId;
+    }
+
+    public void setRepostStatusId(String repostStatusId) {
+        this.repostStatusId = repostStatusId;
+    }
 
     @Override
     public int describeContents() {

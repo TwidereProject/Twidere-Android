@@ -19,11 +19,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/link_to_quoted_status"
-        android:checkable="true"
-        android:checked="true"
-        android:title="@string/link_to_quoted_status" />
-    <item
         android:id="@+id/quote_original_status"
         android:checkable="true"
         android:title="@string/quote_original_status" />

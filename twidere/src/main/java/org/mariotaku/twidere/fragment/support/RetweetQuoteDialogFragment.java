@@ -40,10 +40,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.twitter.Validator;
+
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.model.Draft;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -63,36 +66,10 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
 
-public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implements
-        Constants, DialogInterface.OnClickListener {
+public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implements Constants {
 
     public static final String FRAGMENT_TAG = "retweet_quote";
     private PopupMenu mPopupMenu;
-
-    @Override
-    public void onClick(final DialogInterface dialog, final int which) {
-        final ParcelableStatus status = getStatus();
-        if (status == null) return;
-        switch (which) {
-            case DialogInterface.BUTTON_POSITIVE: {
-                final AsyncTwitterWrapper twitter = mTwitterWrapper;
-                if (twitter == null) return;
-                retweetOrQuote(twitter, status);
-                break;
-            }
-            case DialogInterface.BUTTON_NEUTRAL: {
-                final Intent intent = new Intent(INTENT_ACTION_QUOTE);
-                final Menu menu = mPopupMenu.getMenu();
-                final MenuItem quoteOriginalStatus = menu.findItem(R.id.quote_original_status);
-                intent.putExtra(EXTRA_STATUS, status);
-                intent.putExtra(EXTRA_QUOTE_ORIGINAL_STATUS, quoteOriginalStatus.isChecked());
-                startActivity(intent);
-                break;
-            }
-            default:
-                break;
-        }
-    }
 
     @NonNull
     @Override
@@ -113,11 +90,31 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         builder.setView(view);
         builder.setTitle(R.string.retweet_quote_confirm_title);
         if (isMyRetweet(status)) {
-            builder.setPositiveButton(R.string.cancel_retweet, this);
+            builder.setPositiveButton(R.string.cancel_retweet, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mTwitterWrapper.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
+                }
+            });
         } else if (!status.user_is_protected) {
-            builder.setPositiveButton(R.string.retweet, this);
+            builder.setPositiveButton(R.string.retweet, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    retweetOrQuote(mTwitterWrapper, credentials, status);
+                }
+            });
         }
-        builder.setNeutralButton(R.string.quote, this);
+        builder.setNeutralButton(R.string.quote, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final Intent intent = new Intent(INTENT_ACTION_QUOTE);
+                final Menu menu = mPopupMenu.getMenu();
+                final MenuItem quoteOriginalStatus = menu.findItem(R.id.quote_original_status);
+                intent.putExtra(EXTRA_STATUS, status);
+                intent.putExtra(EXTRA_QUOTE_ORIGINAL_STATUS, quoteOriginalStatus.isChecked());
+                startActivity(intent);
+            }
+        });
         builder.setNegativeButton(android.R.string.cancel, null);
 
         holder.displayStatus(status, false, true);
@@ -146,7 +143,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 final ParcelableStatus status = getStatus();
                 if (twitter == null || status == null) return false;
-                retweetOrQuote(twitter, status);
+                retweetOrQuote(twitter, credentials, status);
                 dismiss();
                 return true;
             }
@@ -159,7 +156,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateTextCount(getDialog(), s, status);
+                updateTextCount(getDialog(), s, status, credentials);
             }
 
             @Override
@@ -197,24 +194,26 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                updateTextCount(dialog, editComment.getText(), status);
+                updateTextCount(dialog, editComment.getText(), status, credentials);
             }
         });
         return dialog;
     }
 
-    private void updateTextCount(DialogInterface dialog, CharSequence s, ParcelableStatus status) {
+    private void updateTextCount(DialogInterface dialog, CharSequence s, ParcelableStatus status,
+                                 ParcelableAccount account) {
         if (!(dialog instanceof AlertDialog)) return;
         final AlertDialog alertDialog = (AlertDialog) dialog;
         final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         if (positiveButton == null) return;
-        if (s.length() > 0) {
+        if (useQuote(s.length() > 0, account)) {
             positiveButton.setText(R.string.comment);
         } else {
             positiveButton.setText(isMyRetweet(status) ? R.string.cancel_retweet : R.string.retweet);
         }
         final String statusLink = LinkCreator.getStatusWebLink(status).toString();
         final StatusTextCountView textCountView = (StatusTextCountView) alertDialog.findViewById(R.id.comment_text_count);
+        assert textCountView != null;
         textCountView.setTextCount(mValidator.getTweetLength(s + " " + statusLink));
     }
 
@@ -224,34 +223,59 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         return args.getParcelable(EXTRA_STATUS);
     }
 
-    private void retweetOrQuote(AsyncTwitterWrapper twitter, ParcelableStatus status) {
+    private void retweetOrQuote(AsyncTwitterWrapper twitter, ParcelableAccount account, ParcelableStatus status) {
         final Dialog dialog = getDialog();
         if (dialog == null) return;
         final EditText editComment = ((EditText) dialog.findViewById(R.id.edit_comment));
-        if (editComment.length() > 0) {
+        if (useQuote(editComment.length() > 0, account)) {
             final Menu menu = mPopupMenu.getMenu();
-            final MenuItem quoteOriginalStatus = menu.findItem(R.id.quote_original_status);
-            final MenuItem linkToQuotedStatus = menu.findItem(R.id.link_to_quoted_status);
+            final MenuItem itemQuoteOriginalStatus = menu.findItem(R.id.quote_original_status);
             final Uri statusLink;
-            if (!status.is_quote || !quoteOriginalStatus.isChecked()) {
-                statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name, status.id);
-            } else {
-                statusLink = LinkCreator.getTwitterStatusLink(status.quoted_user_screen_name, status.quoted_id);
+            final boolean quoteOriginalStatus = itemQuoteOriginalStatus.isChecked();
+
+            String commentText;
+            final ParcelableStatusUpdate update = new ParcelableStatusUpdate();
+            update.accounts = new ParcelableAccount[]{account};
+            final String editingComment = String.valueOf(editComment.getText());
+            switch (ParcelableAccountUtils.getAccountType(account)) {
+                case ParcelableAccount.Type.FANFOU: {
+                    if (!status.is_quote || !quoteOriginalStatus) {
+                        commentText = getString(R.string.fanfou_repost_format, editingComment,
+                                status.user_screen_name, status.text_plain);
+                        update.repost_status_id = status.id;
+                    } else {
+                        commentText = getString(R.string.fanfou_repost_format, editingComment,
+                                status.quoted_user_screen_name, status.quoted_text_plain);
+                        update.repost_status_id = status.quoted_id;
+                    }
+                    if (commentText.length() > Validator.MAX_TWEET_LENGTH) {
+                        commentText = commentText.substring(0, Math.max(Validator.MAX_TWEET_LENGTH,
+                                editingComment.length()));
+                    }
+                    break;
+                }
+                default: {
+                    if (!status.is_quote || !quoteOriginalStatus) {
+                        statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name,
+                                status.id);
+                    } else {
+                        statusLink = LinkCreator.getTwitterStatusLink(status.quoted_user_screen_name,
+                                status.quoted_id);
+                    }
+                    commentText = editingComment + " " + statusLink;
+                    break;
+                }
             }
-            final String commentText = editComment.getText() + " " + statusLink;
-            ParcelableStatusUpdate update = new ParcelableStatusUpdate();
             update.text = commentText;
-            update.accounts = ParcelableAccountUtils.getAccounts(getContext(), status.account_key);
-            if (linkToQuotedStatus.isChecked()) {
-                update.in_reply_to_status = status;
-            }
             update.is_possibly_sensitive = status.is_possibly_sensitive;
             BackgroundOperationService.updateStatusesAsync(getContext(), Draft.Action.QUOTE, update);
-        } else if (isMyRetweet(status)) {
-            twitter.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
         } else {
             twitter.retweetStatusAsync(status.account_key, status.id);
         }
+    }
+
+    private boolean useQuote(boolean hasComment, ParcelableAccount account) {
+        return hasComment || ParcelableAccount.Type.FANFOU.equals(account.account_type);
     }
 
     public static RetweetQuoteDialogFragment show(final FragmentManager fm, final ParcelableStatus status) {

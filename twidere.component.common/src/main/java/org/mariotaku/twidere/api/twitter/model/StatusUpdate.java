@@ -37,6 +37,10 @@ public class StatusUpdate extends SimpleValueMap {
         put("in_reply_to_status_id", inReplyToStatusId);
     }
 
+    public void setRepostStatusId(final String repostStatusId) {
+        put("repost_status_id", repostStatusId);
+    }
+
     public void setLocation(final GeoLocation location) {
         remove("lat");
         remove("long");

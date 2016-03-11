@@ -51,9 +51,12 @@ public class ParcelableStatusUpdate implements Parcelable {
     @JsonField(name = "in_reply_to_status")
     @ParcelableThisPlease
     public ParcelableStatus in_reply_to_status;
-    @JsonField(name = "boolean")
+    @JsonField(name = "is_possibly_sensitive")
     @ParcelableThisPlease
     public boolean is_possibly_sensitive;
+    @JsonField(name = "repost_status_id")
+    @ParcelableThisPlease
+    public String repost_status_id;
 
     public ParcelableStatusUpdate() {
     }
@@ -67,6 +70,7 @@ public class ParcelableStatusUpdate implements Parcelable {
                 ", location=" + location +
                 ", in_reply_to_status=" + in_reply_to_status +
                 ", is_possibly_sensitive=" + is_possibly_sensitive +
+                ", repost_status_id='" + repost_status_id + '\'' +
                 '}';
     }
 
