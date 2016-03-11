@@ -24,12 +24,13 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 
 import java.util.List;
 
@@ -42,8 +43,15 @@ public class UserBlocksLoader extends CursorSupportUsersLoader {
 
     @NonNull
     @Override
-    protected final PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging)
+    protected final List<User> getCursoredUsers(@NonNull final Twitter twitter,
+                                                @NonNull ParcelableCredentials credentials,
+                                                @NonNull final Paging paging)
             throws TwitterException {
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.FANFOU: {
+                return twitter.getFanfouBlocking(paging);
+            }
+        }
         return twitter.getBlocksList(paging);
     }
 

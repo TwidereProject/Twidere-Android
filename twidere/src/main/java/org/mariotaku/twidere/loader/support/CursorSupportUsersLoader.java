@@ -92,7 +92,7 @@ public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
         mPrevCursor = cursor.getPreviousCursor();
     }
 
-    protected final void incrementPage(ResponseList<User> users) {
+    protected final void incrementPage(List<User> users) {
         if (users.isEmpty()) return;
         if (mPage == -1) {
             mPage = 1;
@@ -106,7 +106,7 @@ public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
 
 
     @NonNull
-    protected ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter,
+    protected List<User> getCursoredUsers(@NonNull final Twitter twitter,
                                                   @NonNull final ParcelableCredentials credentials,
                                                   @NonNull final Paging paging)
             throws TwitterException {
@@ -129,7 +129,7 @@ public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
         } else if (getPage() > 1) {
             paging.setPage(getPage());
         }
-        final ResponseList<User> users;
+        final List<User> users;
         if (useIDs(credentials)) {
             final IDs ids = getIDs(twitter, credentials, paging);
             setCursors(ids);
