@@ -26,7 +26,7 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.SeekBarDialogPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    <SwitchPreference
         android:defaultValue="true"
         android:key="display_profile_image"
         android:order="23"
@@ -34,9 +34,9 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    </SwitchPreference>
 
-    <org.mariotaku.twidere.preference.SummaryListPreference
+    <ListPreference
         android:defaultValue="@string/default_profile_image_style"
         android:entries="@array/entries_profile_image_style"
         android:entryValues="@array/values_profile_image_style"
@@ -46,9 +46,9 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.SummaryListPreference>
+    </ListPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    <SwitchPreference
         android:defaultValue="false"
         android:key="media_preview"
         android:order="25"
@@ -56,7 +56,7 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    </SwitchPreference>
 
     <org.mariotaku.twidere.preference.LinkHighlightPreference
         android:defaultValue="none"
@@ -68,7 +68,7 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.LinkHighlightPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    <SwitchPreference
         android:defaultValue="false"
         android:key="compact_cards"
         android:order="32"
@@ -77,8 +77,8 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    </SwitchPreference>
+    <SwitchPreference
         android:defaultValue="false"
         android:key="hide_card_actions"
         android:order="33"
@@ -86,9 +86,9 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    </SwitchPreference>
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    <SwitchPreference
         android:defaultValue="false"
         android:key="i_want_my_stars_back"
         android:order="34"
@@ -97,6 +97,6 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+    </SwitchPreference>
 
 </PreferenceScreen>

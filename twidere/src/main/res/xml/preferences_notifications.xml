@@ -13,14 +13,14 @@
         android:key="cat_general"
         android:title="@string/general">
 
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="combined_notifications"
             android:summaryOff="@string/combined_notifications_summary_off"
             android:summaryOn="@string/combined_notifications_summary_on"
             android:title="@string/combined_notifications" />
 
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="pebble_notifications"
             android:summary="@string/pebble_notifications_summary"

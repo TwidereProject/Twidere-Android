@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -992,6 +993,15 @@ public class ThemeUtils implements Constants {
                 break;
             }
         }
+    }
+
+    public static void fixNightMode(Resources resources, Configuration newConfig) {
+        int currentNightMode = resources.getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES)
+            newConfig.uiMode = (newConfig.uiMode & ~Configuration.UI_MODE_NIGHT_MASK)
+                    | Configuration.UI_MODE_NIGHT_YES;
     }
 
 

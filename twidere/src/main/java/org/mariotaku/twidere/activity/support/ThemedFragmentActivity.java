@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -205,6 +206,12 @@ public abstract class ThemedFragmentActivity extends FragmentActivity implements
         if (handleKeyboardShortcutRepeat(mKeyboardShortcutsHandler, keyCode, event.getRepeatCount(), event, mMetaState))
             return true;
         return isKeyboardShortcutHandled(mKeyboardShortcutsHandler, keyCode, event, mMetaState) || super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        ThemeUtils.fixNightMode(getResources(), newConfig);
+        super.onConfigurationChanged(newConfig);
     }
 
     protected boolean shouldApplyWindowBackground() {

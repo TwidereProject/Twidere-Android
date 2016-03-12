@@ -8,7 +8,7 @@
         android:key="category_content"
         android:title="@string/content">
 
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="name_first"
             android:title="@string/name_first"
@@ -17,7 +17,7 @@
             <extra
                 android:name="notify_change"
                 android:value="true"/>
-        </org.mariotaku.twidere.preference.AutoFixSwitchPreference>
+        </SwitchPreference>
 
         <org.mariotaku.twidere.preference.SeekBarDialogPreference
             android:defaultValue="20"
@@ -28,12 +28,12 @@
             app:min="10"
             app:step="5"/>
 
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="remember_position"
             android:summary="@string/remember_position_summary"
             android:title="@string/remember_position"/>
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="read_from_bottom"
             android:summaryOff="@string/read_from_bottom_summary_off"
@@ -73,12 +73,12 @@
     <PreferenceCategory
         android:key="category_safety"
         android:title="@string/safety">
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="phishing_link_warning"
             android:summary="@string/phishing_link_warning_summary"
             android:title="@string/phishing_link_warning"/>
-        <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="display_sensitive_contents"
             android:summary="@string/display_sensitive_contents_summary"

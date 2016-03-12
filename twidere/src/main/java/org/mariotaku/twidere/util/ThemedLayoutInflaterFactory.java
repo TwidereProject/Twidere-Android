@@ -35,6 +35,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.AppCompatDelegateAccessor;
+import android.support.v7.app.AppCompatPreferenceActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.TwidereToolbar;
 import android.util.AttributeSet;
@@ -48,7 +49,6 @@ import android.widget.TextView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.AppCompatPreferenceActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.view.ProfileImageView;

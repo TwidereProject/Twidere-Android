@@ -19,13 +19,13 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    <SwitchPreference
         android:defaultValue="false"
         android:key="usage_statistics"
         android:order="11"
         android:title="@string/usage_statistics"/>
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    <SwitchPreference
         android:defaultValue="@bool/debug"
         android:key="bug_reports"
         android:order="12"

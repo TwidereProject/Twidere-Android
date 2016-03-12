@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.activity.support;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -72,7 +71,6 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     private ArrayList<ControlBarOffsetListener> mControlBarOffsetListeners = new ArrayList<>();
 
     // Data fields
-    private boolean mIsVisible;
     private Rect mSystemWindowsInsets;
     private int mKeyMetaState;
 
@@ -86,10 +84,6 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     @Override
     public int getThemeColor() {
         return ThemeUtils.getUserAccentColor(this);
-    }
-
-    public boolean isVisible() {
-        return mIsVisible;
     }
 
     @Override
@@ -131,11 +125,6 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     }
 
     @Override
-    public void startActivity(final Intent intent) {
-        super.startActivity(intent);
-    }
-
-    @Override
     public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
         return false;
     }
@@ -156,23 +145,10 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
         GeneralComponentHelper.build(this).inject(this);
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mIsVisible = true;
-    }
-
     @Override
     protected void onPause() {
         mActionHelper.dispatchOnPause();
         super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        mIsVisible = false;
-        super.onStop();
     }
 
     @Override

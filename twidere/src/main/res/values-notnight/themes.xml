@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Twidere" parent="Theme.Compat.Base.Light">
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">#f8f8f8</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+        <item name="coloredActionBar">true</item>
+
+        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+    </style>
+
+    <style name="Theme.Twidere.NoActionBar" parent="Theme.Compat.Base.Light.NoActionBar">
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">#f8f8f8</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+        <item name="coloredActionBar">true</item>
+
+        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+    </style>
+
+
+    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Compat.Base.Light.DialogWhenLarge">
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">false</item>
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">#f8f8f8</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+        <item name="coloredActionBar">true</item>
+
+        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+    </style>
+
+
+    <style name="Theme.Twidere.Dialog" parent="Theme.Compat.Base.Light.Dialog">
+
+        <!-- Custom view styles -->
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
+
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+        <item name="coloredActionBar">true</item>
+
+        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+    </style>
+
+
+    <style name="Theme.Twidere.Compose" parent="Theme.Compat.Base.Light.Dialog">
+
+        <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">false</item>
+
+        <item name="android:actionModeStyle">@style/Widget.Twidere.ActionMode.Light</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:panelColorBackground">#e5e5e5</item>
+        <item name="android:dividerVertical">@drawable/divider_compose_vertical_light</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowActionModeOverlay">false</item>
+
+        <!-- Custom view styles -->
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
+
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+        <item name="coloredActionBar">true</item>
+
+        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+    </style>
+
+    <style name="Theme.Twidere.QuickSearchBar" parent="Theme.Twidere.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowActionModeOverlay">false</item>
+    </style>
+
+    <style name="Theme.Twidere.Drawer" parent="Theme.Twidere.NoActionBar">
+        <!-- Window attributes -->
+        <item name="android:windowBackground">@color/bg_color_drawer_light</item>
+        <item name="textColorDrawerNamePrimary">?android:textColorPrimaryInverse</item>
+        <item name="textColorDrawerNameSecondary">?android:textColorSecondaryInverse</item>
+    </style>
+
+    <style name="Theme.Twidere.NoDisplay" parent="Theme.Twidere.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--<item name="android:backgroundDimEnabled">false</item>-->
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
+        <!--<item name="android:windowNoDisplay">true</item>-->
+    </style>
+
+</resources>

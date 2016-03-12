@@ -21,12 +21,14 @@ package org.mariotaku.twidere.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.util.StrictModeUtils;
+import org.mariotaku.twidere.util.ThemeUtils;
 
 public class MainActivity extends Activity implements Constants {
 
@@ -40,6 +42,12 @@ public class MainActivity extends Activity implements Constants {
         final Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        ThemeUtils.fixNightMode(getResources(), newConfig);
+        super.onConfigurationChanged(newConfig);
     }
 
 }

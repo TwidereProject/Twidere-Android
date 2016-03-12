@@ -75,7 +75,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Twidere.NoActionBar"
+        android:theme="@style/Theme.Compat.Base.NoActionBar"
         tools:ignore="UnusedAttribute">
         <uses-library
             android:name="com.sec.android.app.multiwindow"
@@ -233,7 +233,7 @@
             android:name=".activity.SettingsActivity"
             android:label="@string/settings"
             android:parentActivityName=".activity.support.HomeActivity"
-            android:theme="@style/Theme.Twidere.NoActionBar"
+            android:theme="@style/Theme.Twidere"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>

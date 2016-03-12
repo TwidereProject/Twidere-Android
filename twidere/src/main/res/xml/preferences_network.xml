@@ -7,12 +7,12 @@
         android:key="image_preload_options"
         android:title="@string/media_preload"/>
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    <SwitchPreference
         android:defaultValue="true"
         android:key="preload_wifi_only"
         android:title="@string/preload_wifi_only"/>
 
-    <org.mariotaku.twidere.preference.AutoFixSwitchPreference
+    <SwitchPreference
         android:defaultValue="false"
         android:key="bandwidth_saving_mode"
         android:summary="@string/bandwidth_saving_mode_summary"
