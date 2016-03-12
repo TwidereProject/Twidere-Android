@@ -113,7 +113,7 @@ public class InternalTwitterContentUtils {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            selectionArgs.add(String.valueOf(selectionArgs));
+            selectionArgs.add(String.valueOf(userKey));
             builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_ID).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
         }
         if (retweetedById != null) {
