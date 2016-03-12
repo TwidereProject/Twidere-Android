@@ -707,7 +707,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     final List<String> segments = uri.getPathSegments();
                     if (segments.size() != 4) return null;
                     final UserKey accountId = UserKey.valueOf(segments.get(2));
-                    final long conversationId = NumberUtils.toLong(segments.get(3), -1);
+                    final String conversationId = segments.get(3);
                     final Pair<SQLSelectQuery, String[]> query = ConversationQueryBuilder
                             .buildByConversationId(projection, accountId, conversationId, selection,
                                     sortOrder);

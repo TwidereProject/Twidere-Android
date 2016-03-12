@@ -130,7 +130,7 @@ public class TwidereQueryBuilder {
 
         public static Pair<SQLSelectQuery, String[]> buildByConversationId(final String[] projection,
                                                                            final UserKey accountKey,
-                                                                           final long conversationId,
+                                                                           final String conversationId,
                                                                            final String selection,
                                                                            final String sortOrder) {
             final Selectable select = Utils.getColumnsFromProjection(projection);
@@ -138,9 +138,9 @@ public class TwidereQueryBuilder {
             qb.from(new Tables(DirectMessages.TABLE_NAME));
             final Expression accountIdWhere = Expression.equalsArgs(DirectMessages.ACCOUNT_KEY);
             final Expression incomingWhere = Expression.and(Expression.notEquals(DirectMessages.IS_OUTGOING, 1),
-                    Expression.equals(DirectMessages.SENDER_ID, conversationId));
+                    Expression.equalsArgs(DirectMessages.SENDER_ID));
             final Expression outgoingWhere = Expression.and(Expression.equals(DirectMessages.IS_OUTGOING, 1),
-                    Expression.equals(DirectMessages.RECIPIENT_ID, conversationId));
+                    Expression.equalsArgs(DirectMessages.RECIPIENT_ID));
             final Expression conversationWhere = Expression.or(incomingWhere, outgoingWhere);
             if (selection != null) {
                 qb.where(Expression.and(accountIdWhere, conversationWhere, new Expression(selection)));
@@ -148,7 +148,7 @@ public class TwidereQueryBuilder {
                 qb.where(Expression.and(accountIdWhere, conversationWhere));
             }
             qb.orderBy(new OrderBy(sortOrder != null ? sortOrder : Conversation.DEFAULT_SORT_ORDER));
-            return Pair.create(qb.build(), new String[]{accountKey.toString()});
+            return Pair.create(qb.build(), new String[]{accountKey.toString(), conversationId, conversationId});
         }
 
         public static Pair<SQLSelectQuery, String[]> byScreenName(final String[] projection, final UserKey accountKey,

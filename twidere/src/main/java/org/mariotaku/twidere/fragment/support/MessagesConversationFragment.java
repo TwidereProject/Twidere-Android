@@ -446,7 +446,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (!isValid) {
             return new CursorLoader(getActivity(), TwidereDataStore.CONTENT_URI_NULL, cols, null, null, null);
         }
-        final Uri uri = buildDirectMessageConversationUri(accountId, String.valueOf(recipientId), null);
+        final Uri uri = buildDirectMessageConversationUri(accountId, recipientId, null);
         return new CursorLoader(getActivity(), uri, cols, null, null, Conversation.DEFAULT_SORT_ORDER);
     }
 
