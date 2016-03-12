@@ -36,6 +36,7 @@ import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ListResponse;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
@@ -106,17 +107,25 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User showUser(final Twitter twitter, final String id, final String screenName) throws TwitterException {
+    public static User showUser(final Twitter twitter, final String id, final String screenName,
+                                final String accountType) throws TwitterException {
         if (id != null) {
+            if (ParcelableAccount.Type.FANFOU.equals(accountType)) {
+                return twitter.showFanfouUser(id);
+            }
             return twitter.showUser(id);
         } else if (screenName != null) {
+            if (ParcelableAccount.Type.FANFOU.equals(accountType)) {
+                return twitter.showFanfouUser(screenName);
+            }
             return twitter.showUserByScreenName(screenName);
         }
         throw new TwitterException("Invalid user id or screen name");
     }
 
     @NonNull
-    public static User showUserAlternative(final Twitter twitter, final String id, final String screenName)
+    public static User showUserAlternative(final Twitter twitter, final String id,
+                                           final String screenName)
             throws TwitterException {
         final String searchScreenName;
         if (screenName != null) {
@@ -149,10 +158,11 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User tryShowUser(final Twitter twitter, final String id, final String screenName)
+    public static User tryShowUser(final Twitter twitter, final String id, final String screenName,
+                                   String accountType)
             throws TwitterException {
         try {
-            return showUser(twitter, id, screenName);
+            return showUser(twitter, id, screenName, accountType);
         } catch (final TwitterException e) {
             // Twitter specific error for private API calling through proxy
             if (e.getStatusCode() == 200) {

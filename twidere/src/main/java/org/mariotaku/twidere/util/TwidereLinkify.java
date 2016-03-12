@@ -160,10 +160,10 @@ public final class TwidereLinkify implements Constants {
             string.removeSpan(span);
         }
         if (userId > 0) {
-            applyLink(String.valueOf(userId), 0, string.length(), string, accountKey, extraId,
+            applyLink(String.valueOf(userId), null, 0, string.length(), string, accountKey, extraId,
                     LINK_TYPE_USER_ID, false, highlightOption, listener);
         } else if (screenName != null) {
-            applyLink(screenName, 0, string.length(), string, accountKey, extraId,
+            applyLink(screenName, null, 0, string.length(), string, accountKey, extraId,
                     LINK_TYPE_MENTION, false, highlightOption, listener);
         }
         return string;
@@ -179,8 +179,8 @@ public final class TwidereLinkify implements Constants {
         for (final Entity entity : mExtractor.extractCashtagsWithIndices(spannable.toString())) {
             final int start = entity.getStart();
             final int end = entity.getEnd();
-            applyLink(entity.getValue(), start, end, spannable, accountKey, extraId, LINK_TYPE_CASHTAG,
-                    false, highlightOption, listener);
+            applyLink(entity.getValue(), null, start, end, spannable, accountKey, extraId,
+                    LINK_TYPE_CASHTAG, false, highlightOption, listener);
             hasMatches = true;
         }
         return hasMatches;
@@ -192,8 +192,8 @@ public final class TwidereLinkify implements Constants {
         for (final Entity entity : mExtractor.extractHashtagsWithIndices(spannable.toString())) {
             final int start = entity.getStart();
             final int end = entity.getEnd();
-            applyLink(entity.getValue(), start, end, spannable, accountId, extraId, LINK_TYPE_HASHTAG,
-                    false, highlightOption, listener);
+            applyLink(entity.getValue(), null, start, end, spannable, accountId, extraId,
+                    LINK_TYPE_HASHTAG, false, highlightOption, listener);
             hasMatches = true;
         }
         return hasMatches;
@@ -214,15 +214,35 @@ public final class TwidereLinkify implements Constants {
                 break;
             }
             case LINK_TYPE_ENTITY_URL: {
-                final URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
+                final int length = string.length();
+                final URLSpan[] spans = string.getSpans(0, length, URLSpan.class);
                 for (final URLSpan span : spans) {
-                    final int start = string.getSpanStart(span);
-                    final int end = string.getSpanEnd(span);
-                    if (start < 0 || end > string.length() || start > end) {
+                    int start = string.getSpanStart(span), end = string.getSpanEnd(span);
+                    if (span instanceof TwidereURLSpan || start < 0 || end > length || start > end) {
                         continue;
                     }
                     string.removeSpan(span);
-                    applyLink(span.getURL(), start, end, string, accountKey, extraId, LINK_TYPE_ENTITY_URL, sensitive, highlightOption, listener);
+                    String url = span.getURL();
+                    if (USER_TYPE_FANFOU_COM.equals(accountKey.getHost())) {
+                        // Fix search path
+                        if (url.startsWith("/")) {
+                            url = "http://fanfou.com" + url;
+                        }
+                        if ("fanfou.com".equals(UriUtils.getAuthority(url)) && start > 0) {
+                            // Process special case for fanfou
+                            final char ch = string.charAt(start - 1);
+                            // Extend selection
+                            if (isAtSymbol(ch)) {
+                                start = start - 1;
+                            } else if (isHashSymbol(ch) && end < length - 1 && isHashSymbol(string.charAt(end))) {
+                                start = start - 1;
+                                end = end + 1;
+                            }
+                        }
+                    }
+                    applyLink(url, String.valueOf(string.subSequence(start, end)), start, end,
+                            string, accountKey, extraId, LINK_TYPE_ENTITY_URL, sensitive,
+                            highlightOption, listener);
                 }
                 break;
             }
@@ -234,12 +254,14 @@ public final class TwidereLinkify implements Constants {
                             || string.getSpans(start, end, URLSpan.class).length > 0) {
                         continue;
                     }
-                    applyLink(entity.getValue(), start, end, string, accountKey, extraId, LINK_TYPE_ENTITY_URL, sensitive, highlightOption, listener);
+                    applyLink(entity.getValue(), null, start, end, string, accountKey, extraId,
+                            LINK_TYPE_LINK_IN_TEXT, sensitive, highlightOption, listener);
                 }
                 break;
             }
             case LINK_TYPE_STATUS: {
-                final URLSpan[] spans = string.getSpans(0, string.length(), URLSpan.class);
+                final int length = string.length();
+                final URLSpan[] spans = string.getSpans(0, length, URLSpan.class);
                 for (final URLSpan span : spans) {
                     final Matcher matcher = PATTERN_TWITTER_STATUS.matcher(span.getURL());
                     if (matcher.matches()) {
@@ -247,7 +269,8 @@ public final class TwidereLinkify implements Constants {
                         final int end = string.getSpanEnd(span);
                         final String url = matcherGroup(matcher, GROUP_ID_TWITTER_STATUS_STATUS_ID);
                         string.removeSpan(span);
-                        applyLink(url, start, end, string, accountKey, extraId, LINK_TYPE_STATUS, sensitive, highlightOption, listener);
+                        applyLink(url, null, start, end, string, accountKey, extraId,
+                                LINK_TYPE_STATUS, sensitive, highlightOption, listener);
                     }
                 }
                 break;
@@ -259,6 +282,14 @@ public final class TwidereLinkify implements Constants {
         }
     }
 
+    static boolean isAtSymbol(char ch) {
+        return ch == '@' || ch == '\uff20';
+    }
+
+    static boolean isHashSymbol(char ch) {
+        return ch == '#' || ch == '\uff03';
+    }
+
     private boolean addMentionOrListLinks(final Spannable spannable, final UserKey accountKey,
                                           final long extraId, final int highlightOption, final OnLinkClickListener listener) {
         boolean hasMatches = false;
@@ -266,16 +297,21 @@ public final class TwidereLinkify implements Constants {
         final Matcher matcher = Regex.VALID_MENTION_OR_LIST.matcher(spannable);
         while (matcher.find()) {
             final int start = matcherStart(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_AT);
-            final int username_end = matcherEnd(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME);
+            final int usernameEnd = matcherEnd(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME);
             final int listStart = matcherStart(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST);
             final int listEnd = matcherEnd(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST);
             final String username = matcherGroup(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME);
             final String list = matcherGroup(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST);
-            applyLink(username, start, username_end, spannable, accountKey, extraId, LINK_TYPE_MENTION,
-                    false, highlightOption, listener);
-            if (listStart >= 0 && listEnd >= 0 && list != null) {
-                applyLink(String.format("%s/%s", username, list.substring(list.startsWith("/") ? 1 : 0)), listStart,
-                        listEnd, spannable, accountKey, extraId, LINK_TYPE_LIST, false, highlightOption, listener);
+            applyLink(username, null, start, usernameEnd, spannable, accountKey, extraId,
+                    LINK_TYPE_MENTION, false, highlightOption, listener);
+            if (listStart >= 0 && listEnd >= 0 && list != null && username != null) {
+                StringBuilder sb = new StringBuilder(username);
+                if (!list.startsWith("/")) {
+                    sb.append("/");
+                }
+                sb.append(list);
+                applyLink(sb.toString(), null, listStart, listEnd, spannable, accountKey, extraId,
+                        LINK_TYPE_LIST, false, highlightOption, listener);
             }
             hasMatches = true;
         }
@@ -289,8 +325,8 @@ public final class TwidereLinkify implements Constants {
                 final String screenName = matcherGroup(m, GROUP_ID_TWITTER_LIST_SCREEN_NAME);
                 final String listName = matcherGroup(m, GROUP_ID_TWITTER_LIST_LIST_NAME);
                 spannable.removeSpan(span);
-                applyLink(screenName + "/" + listName, start, end, spannable, accountKey, extraId,
-                        LINK_TYPE_LIST, false, highlightOption, listener);
+                applyLink(screenName + "/" + listName, null, start, end, spannable, accountKey,
+                        extraId, LINK_TYPE_LIST, false, highlightOption, listener);
                 hasMatches = true;
             }
         }
@@ -303,13 +339,6 @@ public final class TwidereLinkify implements Constants {
         final TwidereURLSpan span = new TwidereURLSpan(url, orig, accountKey, extraId, type, sensitive,
                 highlightOption, start, end, listener);
         text.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
-
-    private void applyLink(final String url, final int start, final int end, final Spannable text,
-                           final UserKey accountKey, final long extraId, final int type, final boolean sensitive,
-                           final int highlightOption, final OnLinkClickListener listener) {
-        applyLink(url, null, start, end, text, accountKey, extraId, type, sensitive, highlightOption,
-                listener);
     }
 
     @IntDef({VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE, VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT,

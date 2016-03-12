@@ -17,13 +17,19 @@ import org.mariotaku.restfu.ExceptionFactory;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.RestFuUtils;
+import org.mariotaku.restfu.RestMethod;
 import org.mariotaku.restfu.RestRequest;
+import org.mariotaku.restfu.annotation.HttpMethod;
 import org.mariotaku.restfu.http.Authorization;
+import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.MultiValueMap;
+import org.mariotaku.restfu.http.RawValue;
 import org.mariotaku.restfu.http.SimpleValueMap;
+import org.mariotaku.restfu.http.ValueMap;
+import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
@@ -137,8 +143,17 @@ public class TwitterAPIFactory implements TwidereConstants {
                                            final boolean includeEntities, final boolean includeRetweets,
                                            @NonNull Class<T> cls) {
         final HashMap<String, String> extraParams = new HashMap<>();
-        extraParams.put("include_entities", String.valueOf(includeEntities));
-        extraParams.put("include_retweets", String.valueOf(includeRetweets));
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.FANFOU: {
+                extraParams.put("format", "html");
+                break;
+            }
+            case ParcelableAccount.Type.TWITTER: {
+                extraParams.put("include_entities", String.valueOf(includeEntities));
+                extraParams.put("include_retweets", String.valueOf(includeRetweets));
+                break;
+            }
+        }
         return getInstance(context, credentials, extraParams, cls);
     }
 
@@ -172,6 +187,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
         final TwitterConverterFactory converterFactory = new TwitterConverterFactory();
         factory.setRestConverterFactory(converterFactory);
+        factory.setRestRequestFactory(new TwidereRestRequestFactory(extraRequestParams));
         factory.setHttpRequestFactory(new TwidereHttpRequestFactory(userAgent));
         factory.setExceptionFactory(new TwidereExceptionFactory(converterFactory));
         return factory.build(cls);
@@ -203,8 +219,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     public static boolean isTwitterCredentials(ParcelableAccount credentials) {
-        return credentials.account_type == null ||
-                ParcelableAccount.Type.TWITTER.equals(credentials.account_type);
+        return ParcelableAccount.Type.TWITTER.equals(credentials.account_type);
     }
 
     public static boolean isStatusNetCredentials(ParcelableAccount credentials) {
@@ -527,4 +542,34 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
     }
 
+    private static class TwidereRestRequestFactory implements RestRequest.Factory<TwitterException> {
+        private final Map<String, String> extraRequestParams;
+
+        public TwidereRestRequestFactory(Map<String, String> extraRequestParams) {
+            this.extraRequestParams = extraRequestParams;
+        }
+
+        @Override
+        public RestRequest create(RestMethod<TwitterException> restMethod,
+                                  RestConverter.Factory<TwitterException> factory,
+                                  ValueMap valuePool) throws RestConverter.ConvertException, IOException, TwitterException {
+            final HttpMethod method = restMethod.getMethod();
+            final String path = restMethod.getPath();
+            final MultiValueMap<String> headers = restMethod.getHeaders(valuePool);
+            final MultiValueMap<String> queries = restMethod.getQueries(valuePool);
+            final MultiValueMap<Body> params = restMethod.getParams(factory, valuePool);
+            final RawValue rawValue = restMethod.getRawValue();
+            final BodyType bodyType = restMethod.getBodyType();
+            final Map<String, Object> extras = restMethod.getExtras();
+
+            if (queries != null && extraRequestParams != null) {
+                for (Map.Entry<String, String> entry : extraRequestParams.entrySet()) {
+                    queries.add(entry.getKey(), entry.getValue());
+                }
+            }
+
+            return new RestRequest(method.value(), method.allowBody(), path, headers, queries,
+                    params, rawValue, bodyType, extras);
+        }
+    }
 }

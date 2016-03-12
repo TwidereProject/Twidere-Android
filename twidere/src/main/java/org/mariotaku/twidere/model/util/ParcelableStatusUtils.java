@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.mariotaku.twidere.api.fanfou.model.FanfouSearchStatus;
 import org.mariotaku.twidere.api.statusnet.model.Attention;
 import org.mariotaku.twidere.api.twitter.model.Place;
 import org.mariotaku.twidere.api.twitter.model.Status;
@@ -118,12 +117,15 @@ public class ParcelableStatusUtils {
         if (result.extras.user_profile_image_url_profile_size == null) {
             result.extras.user_profile_image_url_profile_size = user.getProfileImageUrlLarge();
         }
-        if (status instanceof FanfouSearchStatus) {
-            result.text_html = status.getText();
+        String text = status.getText();
+        // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
+        // We should treat this as an html
+        if (text.contains("<") && text.contains(">")) {
+            result.text_html = text;
             result.text_plain = HtmlEscapeHelper.toPlainText(result.text_html);
         } else {
             result.text_html = InternalTwitterContentUtils.formatStatusText(status);
-            result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(status.getText());
+            result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(text);
         }
         result.media = ParcelableMediaUtils.fromStatus(status);
         result.source = status.getSource();

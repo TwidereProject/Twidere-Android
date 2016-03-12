@@ -127,6 +127,7 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MenuUtils;
@@ -423,7 +424,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 break;
             }
             case R.id.drafts: {
-                Utils.openDrafts(this);
+                IntentUtils.openDrafts(this);
                 break;
             }
             case R.id.delete: {

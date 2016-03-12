@@ -586,4 +586,76 @@ public class IntentUtils implements Constants {
         context.startActivity(intent);
     }
 
+    public static void openPublicTimeline(@NonNull final Context context, @Nullable final UserKey accountKey) {
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_PUBLIC_TIMELINE);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        context.startActivity(intent);
+    }
+
+    public static void openUserMediaTimeline(final Activity activity, final UserKey accountKey,
+                                             final long userId, final String screenName) {
+        if (activity == null) return;
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_MEDIA_TIMELINE);
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, String.valueOf(accountKey));
+        }
+        if (userId > 0) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(userId));
+        }
+        if (screenName != null) {
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        activity.startActivity(intent);
+    }
+
+    public static void openAccountsManager(Context context) {
+        final Intent intent = new Intent();
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_ACCOUNTS);
+        intent.setData(builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openDrafts(Context context) {
+        final Intent intent = new Intent();
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_DRAFTS);
+        intent.setData(builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openProfileEditor(Context context, @Nullable UserKey accountId) {
+        final Intent intent = new Intent();
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_PROFILE_EDITOR);
+        if (accountId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountId.toString());
+        }
+        intent.setData(builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
+
+    public static void openFilters(Context context) {
+        final Intent intent = new Intent();
+        final Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_FILTERS);
+        intent.setData(builder.build());
+        intent.setPackage(BuildConfig.APPLICATION_ID);
+        context.startActivity(intent);
+    }
 }

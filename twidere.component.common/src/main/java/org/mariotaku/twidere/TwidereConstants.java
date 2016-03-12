@@ -53,9 +53,10 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String TWITTER_CONSUMER_SECRET_LEGACY = "JARXkJTfxo0F8MyctYy9bUmrLISjo8vXAHsZHYuk2E";
     String TWITTER_CONSUMER_KEY = "i5XtSVfoWjLjKlnrvhiLPMZC0";
     String TWITTER_CONSUMER_SECRET = "sQncmZ2atQR6tKbqnnAtqjrECqN8k6FD4p4OoNS0XTDkUz3HGH";
+    String FANFOU_CONSUMER_KEY = "86d1146dda1d21d59351008a1d1058fd";
+    String FANFOU_CONSUMER_SECRET = "c00f4b83dbfc52e2ed78a21d4edfc3cc";
 
     String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
-    String DEFAULT_TWITTER_OAUTH_BASE_URL = "https://api.twitter.com/oauth/";
 
     String SCHEME_HTTP = "http";
     String SCHEME_HTTPS = "https";
@@ -81,6 +82,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_USER_BLOCKS = "user_blocks";
     String AUTHORITY_STATUS = "status";
     String AUTHORITY_STATUSES = "statuses";
+    String AUTHORITY_PUBLIC_TIMELINE = "public_timeline";
     String AUTHORITY_DIRECT_MESSAGES_CONVERSATION = "direct_messages_conversation";
     String AUTHORITY_DIRECT_MESSAGES = "direct_messages";
     String AUTHORITY_SEARCH = "search";

@@ -33,16 +33,17 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.task.UpdateAccountInfoTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
-import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 
@@ -73,17 +74,19 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         final Context context = getContext();
         final ContentResolver resolver = context.getContentResolver();
         final UserKey accountKey = mAccountKey;
-        final int accountColor = DataStoreUtils.getAccountColor(context, accountKey);
+        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
+                mAccountKey);
+        if (credentials == null) return SingleResponse.getInstance();
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableUser user = mExtras.getParcelable(EXTRA_USER);
             if (user != null) {
                 final ContentValues values = ParcelableUserValuesCreator.create(user);
                 resolver.insert(CachedUsers.CONTENT_URI, values);
-                user.account_color = accountColor;
+                user.account_color = credentials.color;
                 return SingleResponse.getInstance(user);
             }
         }
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, credentials, true, true);
         if (twitter == null) return SingleResponse.getInstance();
         if (mLoadFromCache) {
             final Expression where;
@@ -103,7 +106,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                         final ParcelableUserCursorIndices indices = new ParcelableUserCursorIndices(cur);
                         final ParcelableUser user = indices.newObject(cur);
                         user.account_key = accountKey;
-                        user.account_color = accountColor;
+                        user.account_color = credentials.color;
                         return SingleResponse.getInstance(user);
                     }
                 } finally {
@@ -112,11 +115,12 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             }
         }
         try {
-            final User twitterUser = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName);
+            final User twitterUser = TwitterWrapper.tryShowUser(twitter, mUserId, mScreenName,
+                    credentials.account_type);
             final ContentValues cachedUserValues = createCachedUser(twitterUser);
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
             final ParcelableUser user = ParcelableUserUtils.fromUser(twitterUser, accountKey);
-            user.account_color = accountColor;
+            user.account_color = credentials.color;
             return SingleResponse.getInstance(user);
         } catch (final TwitterException e) {
             Log.w(LOGTAG, e);

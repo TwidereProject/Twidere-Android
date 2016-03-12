@@ -63,7 +63,7 @@ public class UpdateProfileBannerImageTask extends ManagedAsyncTask<Object, Objec
             } catch (InterruptedException e) {
                 Log.w(LOGTAG, e);
             }
-            final User user = TwitterWrapper.tryShowUser(twitter, mAccountKey.getId(), null);
+            final User user = twitter.verifyCredentials();
             return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey));
         } catch (TwitterException | FileNotFoundException e) {
             return SingleResponse.getInstance(e);

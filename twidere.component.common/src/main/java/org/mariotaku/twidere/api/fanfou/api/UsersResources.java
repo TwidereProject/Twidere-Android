@@ -12,6 +12,9 @@ import org.mariotaku.twidere.api.twitter.model.User;
  */
 public interface UsersResources {
 
+    @GET("/users/show.json")
+    User showFanfouUser(@Query("id") String userId) throws TwitterException;
+
     @GET("/users/followers.json")
     PageableResponseList<User> getUsersFollowers(@Query("id") String id, @Query Paging paging) throws TwitterException;
 

@@ -42,6 +42,9 @@ public interface TimelineResources {
     @GET("/statuses/home_timeline.json")
     ResponseList<Status> getHomeTimeline(@Query Paging paging) throws TwitterException;
 
+    @GET("/statuses/public_timeline.json")
+    ResponseList<Status> getPublicTimeline(@Query Paging paging) throws TwitterException;
+
     @GET("/statuses/mentions_timeline.json")
     ResponseList<Status> getMentionsTimeline(@Query Paging paging) throws TwitterException;
 

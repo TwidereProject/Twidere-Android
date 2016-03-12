@@ -104,6 +104,7 @@ import org.mariotaku.twidere.fragment.support.AbsStatusesFragment.DefaultOnLiked
 import org.mariotaku.twidere.loader.support.ConversationLoader;
 import org.mariotaku.twidere.loader.support.ParcelableStatusLoader;
 import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
@@ -117,7 +118,9 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
@@ -2447,6 +2450,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public StatusActivity loadInBackground() {
             final Context context = getContext();
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
+                    mAccountKey);
+            if (credentials == null || !ParcelableAccount.Type.TWITTER.equals(ParcelableAccountUtils.getAccountType(credentials))) {
+                return null;
+            }
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountKey, false);
             if (twitter == null) return null;
             final Paging paging = new Paging();

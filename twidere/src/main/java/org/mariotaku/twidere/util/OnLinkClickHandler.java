@@ -72,10 +72,41 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 IntentUtils.openTweetSearch(context, accountKey, "#" + link);
                 break;
             }
+            case TwidereLinkify.LINK_TYPE_LINK_IN_TEXT: {
+                if (PreviewMediaExtractor.isSupported(link)) {
+                    openMedia(accountKey, extraId, sensitive, link, start, end);
+                } else {
+                    openLink(link);
+                }
+                break;
+            }
             case TwidereLinkify.LINK_TYPE_ENTITY_URL: {
                 if (PreviewMediaExtractor.isSupported(link)) {
                     openMedia(accountKey, extraId, sensitive, link, start, end);
                 } else {
+                    if (orig != null && "fanfou.com".equals(UriUtils.getAuthority(link))) {
+                        // Process special case for fanfou
+                        final char ch = orig.charAt(0);
+                        // Extend selection
+                        final int length = orig.length();
+                        if (TwidereLinkify.isAtSymbol(ch)) {
+                            String id = UriUtils.getPath(link);
+                            if (id != null) {
+                                int idxOfSlash = id.indexOf('/');
+                                if (idxOfSlash == 0) {
+                                    id = id.substring(1);
+                                }
+                                final String screenName = orig.substring(1, length);
+                                IntentUtils.openUserProfile(context, accountKey, id, screenName, null,
+                                        true, UserFragment.Referral.USER_MENTION);
+                                break;
+                            }
+                        } else if (TwidereLinkify.isHashSymbol(ch) &&
+                                TwidereLinkify.isHashSymbol(orig.charAt(length - 1))) {
+                            IntentUtils.openSearch(context, accountKey, orig.substring(1, length - 1));
+                            break;
+                        }
+                    }
                     openLink(link);
                 }
                 break;

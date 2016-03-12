@@ -38,6 +38,7 @@ public class TwidereDataUtils {
                 return "mention";
             case TwidereLinkify.LINK_TYPE_CASHTAG:
                 return "cashTag";
+            case TwidereLinkify.LINK_TYPE_LINK_IN_TEXT:
             case TwidereLinkify.LINK_TYPE_ENTITY_URL:
                 return "urlLink";
             case TwidereLinkify.LINK_TYPE_LIST:

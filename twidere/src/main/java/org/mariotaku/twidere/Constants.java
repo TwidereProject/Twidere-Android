@@ -69,6 +69,7 @@ public interface Constants extends TwidereConstants {
     int LINK_ID_SEARCH = 28;
     int LINK_ID_DIRECT_MESSAGES = 29;
     int LINK_ID_INTERACTIONS = 30;
+    int LINK_ID_PUBLIC_TIMELINE = 31;
     int LINK_ID_MUTES_USERS = 41;
     int LINK_ID_MAP = 51;
     int LINK_ID_SCHEDULED_STATUSES = 61;

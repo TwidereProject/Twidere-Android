@@ -518,6 +518,10 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
                 setTitle(getString(R.string.interactions));
                 break;
             }
+            case LINK_ID_PUBLIC_TIMELINE: {
+                setTitle(getString(R.string.public_timeline));
+                break;
+            }
             default: {
                 setTitle(getString(R.string.app_name));
                 break;

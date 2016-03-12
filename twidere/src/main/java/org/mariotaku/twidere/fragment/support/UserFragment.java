@@ -1285,7 +1285,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.follow: {
                 if (user.account_key.equals(user.key)) {
-                    Utils.openProfileEditor(getActivity(), user.account_key);
+                    IntentUtils.openProfileEditor(getActivity(), user.account_key);
                     break;
                 }
                 final UserRelationship userRelationship = mRelationship;
@@ -1341,7 +1341,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.name_container: {
                 if (user.account_key.equals(user.key)) return;
-                Utils.openProfileEditor(getActivity(), user.account_key);
+                IntentUtils.openProfileEditor(getActivity(), user.account_key);
                 break;
             }
             case R.id.profile_birthday_banner: {
@@ -1370,6 +1370,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 IntentUtils.openTweetSearch(getActivity(), user.account_key, "#" + link);
                 break;
             }
+            case TwidereLinkify.LINK_TYPE_LINK_IN_TEXT:
             case TwidereLinkify.LINK_TYPE_ENTITY_URL: {
                 final Uri uri = Uri.parse(link);
                 final Intent intent;
