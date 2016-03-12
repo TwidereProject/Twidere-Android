@@ -457,7 +457,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
             final String key = preference.getKey();
             if (WIZARD_PREFERENCE_KEY_EDIT_CUSTOM_TABS.equals(key)) {
                 final Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                intent.putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT, CustomTabsFragment.class.getName());
+                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, CustomTabsFragment.class.getName());
                 intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.tabs);
                 startActivityForResult(intent, REQUEST_CUSTOM_TABS);
             } else if (WIZARD_PREFERENCE_KEY_USE_DEFAULTS.equals(key)) {

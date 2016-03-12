@@ -72,5 +72,8 @@
         <item>http</item>
         <!--<item>socks</item>-->
     </string-array>
+    <string-array name="values_media_preload">
+        <item>wifi</item>
+    </string-array>
 
 </resources>

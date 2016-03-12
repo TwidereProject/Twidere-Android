@@ -19,6 +19,8 @@
         <item name="coloredActionBar">true</item>
 
         <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="Theme.Twidere.NoActionBar" parent="Theme.Compat.Base.Light.NoActionBar">
@@ -40,6 +42,8 @@
         <item name="coloredActionBar">true</item>
 
         <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
 

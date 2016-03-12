@@ -21,6 +21,8 @@
         <item name="darkTheme">true</item>
 
         <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="Theme.Twidere.NoActionBar" parent="Theme.Compat.Base.NoActionBar">
@@ -45,6 +47,8 @@
         <item name="darkTheme">true</item>
 
         <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Compat.Base.DialogWhenLarge">

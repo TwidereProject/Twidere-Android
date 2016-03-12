@@ -20,25 +20,24 @@
 package org.mariotaku.twidere.fragment;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceScreen;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.util.Utils;
 
-public class SettingsDetailsFragment extends BasePreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsDetailsFragment extends PreferenceFragmentCompat implements Constants,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         final PreferenceManager preferenceManager = getPreferenceManager();
+        preferenceManager.setSharedPreferencesName(SHARED_PREFERENCES_NAME);
         final PreferenceScreen defaultScreen = getPreferenceScreen();
         final PreferenceScreen preferenceScreen;
         if (defaultScreen != null) {
@@ -48,6 +47,7 @@ public class SettingsDetailsFragment extends BasePreferenceFragment implements S
             preferenceScreen = preferenceManager.createPreferenceScreen(getActivity());
         }
         setPreferenceScreen(preferenceScreen);
+
         final Bundle args = getArguments();
         final Object rawResId = args.get(EXTRA_RESID);
         final int resId;
@@ -61,20 +61,26 @@ public class SettingsDetailsFragment extends BasePreferenceFragment implements S
         if (resId != 0) {
             addPreferencesFromResource(resId);
         }
-        final Context context = preferenceScreen.getContext();
-        if (args.containsKey(EXTRA_SETTINGS_INTENT_ACTION)) {
-            final Intent hiddenEntryIntent = new Intent(args.getString(EXTRA_SETTINGS_INTENT_ACTION));
-            final PackageManager pm = context.getPackageManager();
-            for (ResolveInfo info : pm.queryIntentActivities(hiddenEntryIntent, PackageManager.MATCH_DEFAULT_ONLY)) {
-                final Preference preference = new Preference(context);
-                final Intent intent = new Intent(hiddenEntryIntent);
-                intent.setPackage(info.resolvePackageName);
-                intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-                preference.setIntent(intent);
-                preference.setTitle(info.loadLabel(pm));
-                preferenceScreen.addPreference(preference);
-            }
-        }
+
+//        final Context context = preferenceScreen.getContext();
+//        if (args.containsKey(EXTRA_SETTINGS_INTENT_ACTION)) {
+//            final Intent hiddenEntryIntent = new Intent(args.getString(EXTRA_SETTINGS_INTENT_ACTION));
+//            final PackageManager pm = context.getPackageManager();
+//            for (ResolveInfo info : pm.queryIntentActivities(hiddenEntryIntent, PackageManager.MATCH_DEFAULT_ONLY)) {
+//                final Preference preference = new Preference(context);
+//                final Intent intent = new Intent(hiddenEntryIntent);
+//                intent.setPackage(info.resolvePackageName);
+//                intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+//                preference.setIntent(intent);
+//                preference.setTitle(info.loadLabel(pm));
+//                preferenceScreen.addPreference(preference);
+//            }
+//        }
+    }
+
+    @Override
+    public void onActivityCreated(final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

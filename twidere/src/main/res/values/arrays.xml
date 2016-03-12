@@ -78,5 +78,8 @@
         <item>HTTP</item>
         <!--<item>SOCKS</item>-->
     </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
 
 </resources>

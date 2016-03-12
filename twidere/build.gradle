@@ -85,6 +85,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:cardview-v7:23.2.1'
     compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile 'com.android.support:preference-v7:23.2.1'
+    compile 'com.android.support:preference-v14:23.2.1'
     compile 'com.twitter:twitter-text:1.13.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.squareup:otto:1.3.8'

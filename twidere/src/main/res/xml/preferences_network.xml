@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/network">
 
-    <org.mariotaku.twidere.preference.ImagePreloadPreference
-        android:key="image_preload_options"
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="media_preload"
         android:title="@string/media_preload"/>
 
     <SwitchPreference
