@@ -14,16 +14,22 @@
      limitations under the License.
 -->
 
-<org.mariotaku.twidere.view.ColorLabelRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.ColorLabelRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
     android:descendantFocusability="blocksDescendants"
-    android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:padding="@dimen/element_spacing_normal"
+    android:paddingBottom="@dimen/element_spacing_normal"
+    android:paddingEnd="@dimen/element_spacing_normal"
+    android:paddingLeft="0dp"
+    android:paddingRight="@dimen/element_spacing_normal"
+    android:paddingStart="0dp"
+    android:paddingTop="@dimen/element_spacing_normal"
     app:ignorePadding="true">
-
 
     <View
         android:id="@+id/drag_handle"
@@ -33,18 +39,32 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_weight="0"
-        android:background="@drawable/list_drag_handle" />
+        android:background="@drawable/list_drag_handle"
+        tools:layout_height="?android:attr/listPreferredItemHeight"/>
 
     <org.mariotaku.twidere.view.ShapedImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
-        android:layout_width="@dimen/icon_size_list_item"
-        android:layout_height="@dimen/icon_size_list_item"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/drag_handle"
         android:layout_toRightOf="@+id/drag_handle"
         android:contentDescription="@string/your_profile_image"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <ImageView
+        android:id="@+id/account_type"
+        android:layout_width="@dimen/element_size_small"
+        android:layout_height="@dimen/element_size_small"
+        android:layout_alignBottom="@android:id/icon"
+        android:layout_alignEnd="@android:id/icon"
+        android:layout_alignRight="@android:id/icon"
+        android:layout_marginBottom="@dimen/element_spacing_minus_normal"
+        android:scaleType="centerInside"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_account_logo_twitter"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +84,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?android:textColorPrimary" />
+            android:textColor="?android:textColorPrimary"/>
 
         <TextView
             android:id="@android:id/text2"
@@ -72,7 +92,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:textColorSecondary" />
+            android:textColor="?android:textColorSecondary"/>
     </LinearLayout>
 
     <com.lnikkila.extendedtouchview.ExtendedTouchView
@@ -82,6 +102,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:clipChildren="false"
         app:touchHeight="48dp"
         app:touchWidth="48dp">
 
@@ -89,7 +110,7 @@
             android:id="@android:id/toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
     </com.lnikkila.extendedtouchview.ExtendedTouchView>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

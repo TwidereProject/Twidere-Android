@@ -114,6 +114,7 @@ public class TwidereApplication extends Application implements Constants,
         if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy();
         }
+        resetTheme(getSharedPreferences());
         super.onCreate();
         initializeAsyncTask();
         initDebugMode();
@@ -251,7 +252,7 @@ public class TwidereApplication extends Application implements Constants,
                 break;
             }
             case KEY_THEME: {
-//                resetTheme(preferences);
+                resetTheme(preferences);
                 break;
             }
         }

@@ -27,6 +27,7 @@ import android.support.v4.content.Loader;
 import org.mariotaku.twidere.loader.support.RetweetsOfMeLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,
                                                                     final Bundle args,
                                                                     final boolean fromUser) {
-        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = Utils.getAccountKey(context, args);
         final String maxId = args.getString(EXTRA_MAX_ID);
         final String sinceId = args.getString(EXTRA_SINCE_ID);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);

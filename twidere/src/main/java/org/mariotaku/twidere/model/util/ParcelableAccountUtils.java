@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.model.UserKey;
@@ -99,5 +100,22 @@ public class ParcelableAccountUtils {
     public static String getAccountType(@NonNull ParcelableAccount account) {
         if (account.account_type == null) return ParcelableAccount.Type.TWITTER;
         return account.account_type;
+    }
+
+    public static int getAccountTypeIcon(@Nullable String accountType) {
+        if (accountType == null) return R.drawable.ic_account_logo_twitter;
+        switch (accountType) {
+            case ParcelableAccount.Type.TWITTER: {
+                return R.drawable.ic_account_logo_twitter;
+            }
+            case ParcelableAccount.Type.FANFOU: {
+                return R.drawable.ic_account_logo_fanfou;
+            }
+            case ParcelableAccount.Type.STATUSNET: {
+                return R.drawable.ic_account_logo_statusnet;
+            }
+
+        }
+        return R.drawable.ic_account_logo_twitter;
     }
 }

@@ -823,6 +823,13 @@ public final class Utils implements Constants {
     }
 
     @Nullable
+    public static UserKey getAccountKey(@NonNull Context context, @Nullable Bundle args) {
+        final UserKey[] accountKeys = getAccountKeys(context, args);
+        if (ArrayUtils.isEmpty(accountKeys)) return null;
+        return accountKeys[0];
+    }
+
+    @Nullable
     public static String getReadPositionTagWithAccounts(@Nullable final String tag,
                                                         final UserKey... accountKeys) {
         if (tag == null) return null;

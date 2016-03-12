@@ -39,6 +39,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:clipChildren="false"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -75,16 +76,17 @@
                     android:id="@+id/sign_in_sign_up"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clipChildren="false"
                     android:orientation="horizontal"
                     android:padding="8dp">
 
-                    <Button
+                    <android.support.v7.widget.AppCompatButton
                         android:id="@+id/sign_up"
                         style="?android:buttonStyleSmall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:minHeight="48dp"
+                        android:minHeight="@dimen/element_size_normal"
                         android:text="@string/register"/>
 
                     <android.support.v7.widget.AppCompatButton
@@ -93,7 +95,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:minHeight="48dp"
+                        android:minHeight="@dimen/element_size_normal"
                         android:onClick="onClick"
                         android:text="@string/sign_in"
                         app:backgroundTint="@color/material_light_green"/>

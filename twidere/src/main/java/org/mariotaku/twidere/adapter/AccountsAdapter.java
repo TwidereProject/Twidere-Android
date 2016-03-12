@@ -34,6 +34,7 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -93,6 +94,8 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Cons
         } else {
             mImageLoader.cancelDisplayTask(holder.profileImage);
         }
+        final String accountType = cursor.getString(mIndices.account_type);
+        holder.accountType.setImageResource(ParcelableAccountUtils.getAccountTypeIcon(accountType));
         holder.toggle.setChecked(cursor.getShort(mIndices.is_activated) == 1);
         holder.toggle.setOnCheckedChangeListener(mCheckedChangeListener);
         holder.toggle.setTag(cursor.getString(mIndices.account_key));

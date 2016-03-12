@@ -25,9 +25,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.loader.support.TweetSearchLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.util.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -52,7 +54,7 @@ public class StatusesSearchFragment extends ParcelableStatusesFragment {
                                                                     final Bundle args,
                                                                     final boolean fromUser) {
         setRefreshing(true);
-        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = Utils.getAccountKey(context, args);
         final String maxId = args.getString(EXTRA_MAX_ID);
         final String sinceId = args.getString(EXTRA_SINCE_ID);
         final int page = args.getInt(EXTRA_PAGE, -1);

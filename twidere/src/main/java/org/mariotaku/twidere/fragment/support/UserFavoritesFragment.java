@@ -27,6 +27,7 @@ import android.support.v4.content.Loader;
 import org.mariotaku.twidere.loader.support.UserFavoritesLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.util.Utils;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class UserFavoritesFragment extends ParcelableStatusesFragment {
                                                                     final Bundle args,
                                                                     final boolean fromUser) {
         setRefreshing(true);
-        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = Utils.getAccountKey(context, args);
         final String maxId = args.getString(EXTRA_MAX_ID);
         final String sinceId = args.getString(EXTRA_SINCE_ID);
         final String userId = args.getString(EXTRA_USER_ID);

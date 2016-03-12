@@ -106,6 +106,9 @@ public class User extends TwitterResponseObject implements Comparable<User> {
     @JsonField(name = "media_count")
     long mediaCount = -1;
 
+    @JsonField(name = "photo_count")
+    long photoCount = -1;
+
     @JsonField(name = "lang")
     String lang;
 
@@ -324,7 +327,8 @@ public class User extends TwitterResponseObject implements Comparable<User> {
 
 
     public long getMediaCount() {
-        return mediaCount;
+        if (mediaCount != -1) return mediaCount;
+        return photoCount;
     }
 
 

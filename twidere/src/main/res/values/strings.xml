@@ -760,4 +760,7 @@
     <string name="external_user_host_format">External user at <xliff:g id="host">%s</xliff:g></string>
     <string name="external_group_host_format">External group at <xliff:g id="host">%s</xliff:g></string>
     <string name="error_too_many_photos_fanfou">Too many photos</string>
+    <string name="load_defaults">Load defaults</string>
+    <string name="provider_default">Twidere</string>
+    <string name="provider_fanfou">Fanfou</string>
 </resources>

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.activity.support;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -148,6 +149,18 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
         super.setSupportActionBar(toolbar);
         mToolbar = toolbar;
         ThemeUtils.applyToolbarItemColor(this, toolbar, mCurrentThemeColor);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        int currentNightMode = getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES)
+            newConfig.uiMode = (newConfig.uiMode & ~Configuration.UI_MODE_NIGHT_MASK) | Configuration.UI_MODE_NIGHT_YES;
+
+        super.onConfigurationChanged(newConfig);
+
     }
 
     @Nullable
