@@ -438,9 +438,9 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         final UserKey accountId = args != null ? args.<UserKey>getParcelable(EXTRA_ACCOUNT_KEY) : null;
-        final long recipientId = args != null ? args.getLong(EXTRA_RECIPIENT_ID, -1) : -1;
+        final String recipientId = args != null ? args.getString(EXTRA_RECIPIENT_ID) : null;
         final String[] cols = DirectMessages.COLUMNS;
-        final boolean isValid = accountId != null && recipientId > 0;
+        final boolean isValid = accountId != null && recipientId != null;
         mConversationContainer.setVisibility(isValid ? View.VISIBLE : View.GONE);
         mRecipientSelectorContainer.setVisibility(isValid ? View.GONE : View.VISIBLE);
         if (!isValid) {

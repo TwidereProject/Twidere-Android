@@ -606,9 +606,8 @@ public final class Utils implements Constants {
                 isAccountIdRequired = false;
                 final String paramRecipientId = uri.getQueryParameter(QUERY_PARAM_RECIPIENT_ID);
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                final long conversationId = NumberUtils.toLong(paramRecipientId, -1);
-                if (conversationId > 0) {
-                    args.putLong(EXTRA_RECIPIENT_ID, conversationId);
+                if (paramRecipientId != null) {
+                    args.putString(EXTRA_RECIPIENT_ID, paramRecipientId);
                 } else if (paramScreenName != null) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
@@ -2058,7 +2057,7 @@ public final class Utils implements Constants {
     @Nullable
     public static ParcelableUser getUserForConversation(@NonNull final Context context,
                                                         @NonNull final UserKey accountKey,
-                                                        final String conversationId) {
+                                                        @NonNull final String conversationId) {
         final ContentResolver cr = context.getContentResolver();
         final Expression where = Expression.and(Expression.equalsArgs(ConversationEntries.ACCOUNT_KEY),
                 Expression.equalsArgs(ConversationEntries.CONVERSATION_ID));

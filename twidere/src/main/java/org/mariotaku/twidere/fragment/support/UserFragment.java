@@ -828,7 +828,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         if (activity instanceof IThemedActivity) {
             ViewSupport.setBackground(mPagerOverlay, ThemeUtils.getNormalWindowContentOverlay(activity));
-            ViewSupport.setBackground(mErrorOverlay, ThemeUtils.getNormalWindowContentOverlay(activity));
+//            ViewSupport.setBackground(mErrorOverlay, ThemeUtils.getNormalWindowContentOverlay(activity));
             setUiColor(((IThemedActivity) activity).getCurrentThemeColor());
         }
 

@@ -64,13 +64,6 @@
         android:layout_height="match_parent"
         android:visibility="gone">
 
-        <View
-            android:id="@+id/error_window_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="?android:windowContentOverlay"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -93,6 +86,14 @@
                 android:layout_marginTop="@dimen/element_spacing_normal"
                 android:textAppearance="?android:textAppearanceMedium"/>
         </LinearLayout>
+
+        <View
+            android:id="@+id/error_window_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/element_spacing_normal"
+            android:layout_gravity="top"
+            android:background="@drawable/shadow_bottom"/>
+
     </FrameLayout>
 
 
