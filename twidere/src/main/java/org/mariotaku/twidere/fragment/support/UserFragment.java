@@ -1111,12 +1111,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 return true;
             }
             case R.id.open_in_browser: {
-                if (user.extras != null && user.extras.statusnet_profile_url != null) {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(user.extras.statusnet_profile_url));
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    startActivity(intent);
-                } else {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" + user.screen_name));
+                final Uri uri = LinkCreator.getUserWebLink(user);
+                if (uri != null) {
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
                     startActivity(intent);
                 }

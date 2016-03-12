@@ -26,6 +26,7 @@ import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 
 /**
@@ -107,5 +108,23 @@ public class LinkCreator implements Constants {
         builder.appendPath("statuses");
         builder.appendPath(id);
         return builder.build();
+    }
+
+    private static Uri getFanfouUserLink(String id) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_HTTP);
+        builder.authority(AUTHORITY_FANFOU);
+        builder.appendPath(id);
+        return builder.build();
+    }
+
+    public static Uri getUserWebLink(@NonNull ParcelableUser user) {
+        if (user.extras != null && user.extras.statusnet_profile_url != null) {
+            return Uri.parse(user.extras.statusnet_profile_url);
+        }
+        if (USER_TYPE_FANFOU_COM.equals(user.key.getHost())) {
+            return getFanfouUserLink(user.key.getId());
+        }
+        return getTwitterUserLink(user.screen_name);
     }
 }
