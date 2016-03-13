@@ -136,7 +136,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
             final String id = cursor.getString(indices.id);
             return ParcelableStatus.calculateHashCode(accountKey, id);
         }
-        return System.identityHashCode(mData.get(dataPosition));
+        return mData.get(dataPosition).hashCode();
     }
 
     @Nullable

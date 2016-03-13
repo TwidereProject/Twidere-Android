@@ -118,7 +118,7 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
             final long minPosition = cursor.getLong(indices.min_position);
             return ParcelableActivity.calculateHashCode(accountKey, timestamp, maxPosition, minPosition);
         }
-        return System.identityHashCode(mData.get(dataPosition));
+        return mData.get(dataPosition).hashCode();
     }
 
     @Nullable

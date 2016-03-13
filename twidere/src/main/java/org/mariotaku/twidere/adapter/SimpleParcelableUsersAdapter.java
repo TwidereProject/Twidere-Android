@@ -50,7 +50,7 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
     public long getItemId(final int position) {
         final ParcelableUser item = getItem(position);
         if (item != null) {
-            return System.identityHashCode(item);
+            return item.hashCode();
         } else {
             return -1;
         }
