@@ -19,12 +19,120 @@
         android:summary="@string/bandwidth_saving_mode_summary"
         android:title="@string/bandwidth_saving_mode"/>
 
-    <Preference
-        android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
+    <PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:title="@string/advanced">
-        <extra
-            android:name="resid"
-            android:value="@xml/preferences_advanced_network"/>
-    </Preference>
+
+        <PreferenceCategory
+            android:key="category_connectivity"
+            android:title="@string/connectivity">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="builtin_dns_resolver"
+                android:title="@string/builtin_dns_resolver"/>
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:dependency="builtin_dns_resolver"
+                android:key="tcp_dns_query"
+                android:summary="@string/tcp_dns_query_summary"
+                android:title="@string/tcp_dns_query"/>
+
+            <EditTextPreference
+                android:dependency="builtin_dns_resolver"
+                android:dialogTitle="@string/dns_server"
+                android:inputType="textVisiblePassword"
+                android:key="dns_server"
+                android:singleLine="true"
+                android:summary="@string/dns_server_summary"
+                android:title="@string/dns_server"/>
+
+            <Preference
+                android:fragment="org.mariotaku.twidere.fragment.HostMappingsListFragment"
+                android:key="custom_host_mapping"
+                android:summary="@string/custom_host_mapping_summary"
+                android:title="@string/custom_host_mapping"/>
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="retry_on_network_issue"
+                android:summary="@string/retry_on_network_issue_summary"
+                android:title="@string/retry_on_network_issue"/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:key="category_proxy"
+            android:title="@string/proxy">
+            <SwitchPreference
+                android:defaultValue="false"
+                android:disableDependentsState="false"
+                android:key="enable_proxy"
+                android:summary="@string/proxy_summary"
+                android:title="@string/proxy"/>
+
+            <ListPreference
+                android:defaultValue="http"
+                android:dependency="enable_proxy"
+                android:entries="@array/entries_proxy_type"
+                android:entryValues="@array/values_proxy_type"
+                android:key="proxy_type"
+                android:title="@string/proxy_type"/>
+            <EditTextPreference
+                android:dependency="enable_proxy"
+                android:key="proxy_host"
+                android:singleLine="true"
+                android:title="@string/proxy_host"/>
+            <EditTextPreference
+                android:dependency="enable_proxy"
+                android:inputType="number"
+                android:key="proxy_port"
+                android:singleLine="true"
+                android:title="@string/proxy_port"/>
+            <EditTextPreference
+                android:dependency="enable_proxy"
+                android:inputType="textEmailAddress"
+                android:key="proxy_username"
+                android:singleLine="true"
+                android:title="@string/proxy_username"/>
+            <EditTextPreference
+                android:dependency="enable_proxy"
+                android:inputType="textPassword"
+                android:key="proxy_password"
+                android:singleLine="true"
+                android:title="@string/proxy_password"/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:key="category_api"
+            android:title="@string/api">
+
+            <!--<org.mariotaku.twidere.preference.DefaultAPIPreference-->
+                <!--android:summary="@string/default_api_settings_summary"-->
+                <!--android:title="@string/default_api_settings"/>-->
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:key="category_tumbor"
+            android:title="@string/thumbor_integration">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="thumbor_enabled"
+                android:title="@string/thumbor_integration"/>
+
+            <EditTextPreference
+                android:dependency="thumbor_enabled"
+                android:inputType="textUri"
+                android:key="thumbor_address"
+                android:title="@string/server_address"/>
+
+            <EditTextPreference
+                android:dependency="thumbor_enabled"
+                android:inputType="textVisiblePassword"
+                android:key="thumbor_security_key"
+                android:title="@string/security_key"/>
+        </PreferenceCategory>
+
+    </PreferenceScreen>
 
 </PreferenceScreen>
