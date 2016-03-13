@@ -25,9 +25,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +46,10 @@ public abstract class BaseAccountPreferenceFragment extends BasePreferenceFragme
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
         final PreferenceManager pm = getPreferenceManager();
         final ParcelableAccount account = getArguments().getParcelable(EXTRA_ACCOUNT);
         final String preferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX

@@ -34,14 +34,12 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v4.view.ViewPager;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceScreen;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,18 +48,18 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.activity.support.DataImportActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
-import org.mariotaku.twidere.adapter.TabsAdapter;
+import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.fragment.BaseDialogFragment;
-import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
-import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
-import org.mariotaku.twidere.fragment.support.InteractionsTimelineFragment;
+import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
+import org.mariotaku.twidere.fragment.support.InteractionsTimelineFragment;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.preference.WizardPageHeaderPreference;
@@ -82,7 +80,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SettingsWizardActivity extends BaseThemedActivity implements Constants {
+public class SettingsWizardActivity extends BaseAppCompatActivity implements Constants {
 
     public static final String WIZARD_PREFERENCE_KEY_NEXT_PAGE = "next_page";
     public static final String WIZARD_PREFERENCE_KEY_USE_DEFAULTS = "use_defaults";
@@ -94,7 +92,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
     private ViewPager mViewPager;
 
     private LinePageIndicator mIndicator;
-    private TabsAdapter mAdapter;
+    private SupportTabsAdapter mAdapter;
 
     private AbsInitialSettingsTask mTask;
 
@@ -195,7 +193,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_wizard);
-        mAdapter = new TabsAdapter(this, getFragmentManager(), null);
+        mAdapter = new SupportTabsAdapter(this, getSupportFragmentManager(), null);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setEnabled(false);
         mIndicator.setViewPager(mViewPager);
@@ -208,13 +206,13 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
     }
 
     private void initPages() {
-        mAdapter.addTab(WizardPageWelcomeFragment.class, null, getString(R.string.wizard_page_welcome_title), null, 0);
-        mAdapter.addTab(WizardPageThemeFragment.class, null, getString(R.string.theme), null, 0);
-        mAdapter.addTab(WizardPageTabsFragment.class, null, getString(R.string.tabs), null, 0);
-        mAdapter.addTab(WizardPageCardsFragment.class, null, getString(R.string.cards), null, 0);
-        mAdapter.addTab(WizardPageUsageStatisticsFragment.class, null, getString(R.string.usage_statistics), null, 0);
-        mAdapter.addTab(WizardPageHintsFragment.class, null, getString(R.string.hints), null, 0);
-        mAdapter.addTab(WizardPageFinishedFragment.class, null, getString(R.string.wizard_page_finished_title), null, 0);
+        mAdapter.addTab(WizardPageWelcomeFragment.class, null, getString(R.string.wizard_page_welcome_title), null, 0, null);
+        mAdapter.addTab(WizardPageThemeFragment.class, null, getString(R.string.theme), null, 0, null);
+        mAdapter.addTab(WizardPageTabsFragment.class, null, getString(R.string.tabs), null, 0, null);
+        mAdapter.addTab(WizardPageCardsFragment.class, null, getString(R.string.cards), null, 0, null);
+        mAdapter.addTab(WizardPageUsageStatisticsFragment.class, null, getString(R.string.usage_statistics), null, 0, null);
+        mAdapter.addTab(WizardPageHintsFragment.class, null, getString(R.string.hints), null, 0, null);
+        mAdapter.addTab(WizardPageFinishedFragment.class, null, getString(R.string.wizard_page_finished_title), null, 0, null);
     }
 
     private void openImportSettingsDialog() {
@@ -223,7 +221,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
     }
 
     public static abstract class BaseWizardPageFragment extends BasePreferenceFragment implements
-            OnPreferenceClickListener {
+            Preference.OnPreferenceClickListener {
 
         public void gotoFinishPage() {
             final Activity a = getActivity();
@@ -247,8 +245,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
         }
 
         @Override
-        public void onActivityCreated(final Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             addPreferencesFromResource(getPreferenceResource());
 
             final Context context = getActivity();
@@ -284,6 +281,12 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
             for (int i = 0, j = screen.getPreferenceCount(); i < j; i++) {
                 screen.getPreference(i).setOnPreferenceChangeListener(listener);
             }
+        }
+
+        @Override
+        public void onActivityCreated(final Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+
 
         }
 
@@ -332,7 +335,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
         }
     }
 
-    public static class WizardPageFinishedFragment extends BaseFragment implements OnClickListener {
+    public static class WizardPageFinishedFragment extends BaseSupportFragment implements OnClickListener {
 
         @Override
         public void onClick(final View v) {
@@ -456,10 +459,10 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
         public boolean onPreferenceClick(final Preference preference) {
             final String key = preference.getKey();
             if (WIZARD_PREFERENCE_KEY_EDIT_CUSTOM_TABS.equals(key)) {
-                final Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, CustomTabsFragment.class.getName());
-                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.tabs);
-                startActivityForResult(intent, REQUEST_CUSTOM_TABS);
+//                final Intent intent = new Intent(getActivity(), SettingsActivity.class);
+//                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, CustomTabsFragment.class.getName());
+//                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.tabs);
+//                startActivityForResult(intent, REQUEST_CUSTOM_TABS);
             } else if (WIZARD_PREFERENCE_KEY_USE_DEFAULTS.equals(key)) {
                 applyInitialTabSettings();
             }
@@ -486,7 +489,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
             return R.xml.settings_wizard_page_tab;
         }
 
-        public static class TabsUnchangedDialogFragment extends BaseDialogFragment implements
+        public static class TabsUnchangedDialogFragment extends BaseSupportDialogFragment implements
                 DialogInterface.OnClickListener {
 
             @Override
@@ -517,7 +520,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
         }
     }
 
-    public static class WizardPageThemeFragment extends BaseWizardPageFragment implements OnPreferenceClickListener {
+    public static class WizardPageThemeFragment extends BaseWizardPageFragment implements Preference.OnPreferenceClickListener {
 
         @Override
         protected int getHeaderSummary() {
@@ -535,7 +538,7 @@ public class SettingsWizardActivity extends BaseThemedActivity implements Consta
         }
     }
 
-    public static class WizardPageWelcomeFragment extends BaseWizardPageFragment implements OnPreferenceClickListener {
+    public static class WizardPageWelcomeFragment extends BaseWizardPageFragment implements Preference.OnPreferenceClickListener {
 
         public void applyInitialSettings() {
             final Activity a = getActivity();

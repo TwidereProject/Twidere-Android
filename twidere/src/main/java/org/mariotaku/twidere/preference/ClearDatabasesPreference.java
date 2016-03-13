@@ -27,6 +27,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
@@ -37,14 +38,14 @@ import static org.mariotaku.twidere.provider.TwidereDataStore.CACHE_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 
-public class ClearDatabasesPreference extends AsyncTaskPreference implements Constants, OnPreferenceClickListener {
+public class ClearDatabasesPreference extends AsyncTaskPreference implements Constants {
 
     public ClearDatabasesPreference(final Context context) {
         this(context, null);
     }
 
     public ClearDatabasesPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceStyle);
+        this(context, attrs, R.attr.preferenceStyle);
     }
 
     public ClearDatabasesPreference(final Context context, final AttributeSet attrs, final int defStyle) {

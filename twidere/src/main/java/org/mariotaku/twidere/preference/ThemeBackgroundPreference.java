@@ -1,35 +1,34 @@
 package org.mariotaku.twidere.preference;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.DialogPreference;
+import android.support.v7.preference.PreferenceDialogFragmentCompat;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.graphic.AlphaPatternDrawable;
-import org.mariotaku.twidere.util.support.ViewSupport;
+import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 /**
  * Created by mariotaku on 14/11/8.
  */
-public class ThemeBackgroundPreference extends DialogPreference implements Constants {
+public class ThemeBackgroundPreference extends DialogPreference implements Constants,
+        IDialogPreference {
 
     public final static int MAX_ALPHA = 0xFF;
     public final static int MIN_ALPHA = 0x40;
@@ -37,47 +36,17 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
     private final String[] mBackgroundEntries, mBackgroundValues;
     private String mValue;
 
-    private View mAlphaContainer;
-    private SeekBar mAlphaSlider;
-    private ImageView mAlphaPreview;
 
-    private OnClickListener mSingleChoiceListener = new OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            final String value = mBackgroundValues[which];
-            setValue(value);
-        }
-    };
+    public ThemeBackgroundPreference(Context context) {
+        this(context, null);
+    }
 
-    private OnSeekBarChangeListener mAlphaSliderChangedListener = new OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            updateAlphaPreview();
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-    };
-
-    @Override
-    protected void onDialogClosed(boolean positiveResult) {
-        super.onDialogClosed(positiveResult);
-        if (positiveResult) {
-            final SharedPreferences preferences = getSharedPreferences();
-            final SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt(KEY_THEME_BACKGROUND_ALPHA, getSliderAlpha());
-            editor.apply();
-            persistValue(mValue);
-            notifyChanged();
-            callChangeListener(mValue);
-        }
+    public ThemeBackgroundPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setKey(KEY_THEME_BACKGROUND);
+        final Resources resources = context.getResources();
+        mBackgroundEntries = resources.getStringArray(R.array.entries_theme_background);
+        mBackgroundValues = resources.getStringArray(R.array.values_theme_background);
     }
 
     @Override
@@ -91,51 +60,25 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
         setSummary(valueIndex != -1 ? mBackgroundEntries[valueIndex] : null);
     }
 
-    private void setValue(String value) {
-        mValue = value;
-        updateAlphaVisibility();
-    }
-
     private void persistValue(String value) {
         // Always persist/notify the first time.
         if (!TextUtils.equals(getPersistedString(null), value)) {
             persistString(value);
             notifyChanged();
         }
-        updateAlphaVisibility();
         updateSummary();
-    }
-
-    private void updateAlphaVisibility() {
-        if (mAlphaContainer == null) return;
-        final boolean isTransparent = VALUE_THEME_BACKGROUND_TRANSPARENT.equals(mValue);
-        mAlphaContainer.setVisibility(isTransparent ? View.VISIBLE : View.GONE);
     }
 
     public String getValue() {
         return mValue;
     }
 
-    public ThemeBackgroundPreference(Context context) {
-        this(context, null);
+    private void setValue(String value) {
+        mValue = value;
     }
 
     private int getValueIndex() {
         return findIndexOfValue(mValue);
-    }
-
-    public ThemeBackgroundPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setKey(KEY_THEME_BACKGROUND);
-        final Resources resources = context.getResources();
-        mBackgroundEntries = resources.getStringArray(R.array.entries_theme_background);
-        mBackgroundValues = resources.getStringArray(R.array.values_theme_background);
-    }
-
-    @Override
-    protected void onPrepareDialogBuilder(Builder builder) {
-        super.onPrepareDialogBuilder(builder);
-        builder.setSingleChoiceItems(mBackgroundEntries, getValueIndex(), mSingleChoiceListener);
     }
 
     public int findIndexOfValue(String value) {
@@ -150,47 +93,94 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
     }
 
     @Override
-    protected void showDialog(Bundle state) {
-        super.showDialog(state);
-        final Dialog dialog = getDialog();
-        final SharedPreferences preferences = getSharedPreferences();
-        if (dialog instanceof AlertDialog && preferences != null) {
-            mValue = getPersistedString(null);
-            final Resources res = dialog.getContext().getResources();
-            final LayoutInflater inflater = dialog.getLayoutInflater();
-            final ListView listView = ((AlertDialog) dialog).getListView();
-            final ViewGroup listViewParent = (ViewGroup) listView.getParent();
-            listViewParent.removeView(listView);
-            final View view = inflater.inflate(R.layout.dialog_theme_background_preference, listViewParent);
-            ((ViewGroup) view.findViewById(R.id.list_container)).addView(listView);
-            mAlphaContainer = view.findViewById(R.id.alpha_container);
-            mAlphaSlider = (SeekBar) view.findViewById(R.id.alpha_slider);
-            mAlphaPreview = (ImageView) view.findViewById(R.id.alpha_preview);
-            mAlphaSlider.setMax(MAX_ALPHA - MIN_ALPHA);
-            mAlphaSlider.setOnSeekBarChangeListener(mAlphaSliderChangedListener);
-            mAlphaSlider.setProgress(preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA) - MIN_ALPHA);
-            final int patternSize = res.getDimensionPixelSize(R.dimen.element_spacing_msmall);
-            ViewSupport.setBackground(mAlphaPreview, new AlphaPatternDrawable(patternSize));
-            updateAlphaVisibility();
-            updateAlphaPreview();
+    public void displayDialog(PreferenceFragmentCompat fragment) {
+        InternalDialogFragment df = InternalDialogFragment.newInstance(getKey());
+        df.setTargetFragment(fragment, 0);
+        df.show(fragment.getFragmentManager(), getKey());
+    }
 
-            final int checkedIdx = findIndexOfValue(mValue);
-            if (checkedIdx < 0) {
-                listView.clearChoices();
-            } else {
-                listView.setItemChecked(checkedIdx, true);
-            }
+    private void saveValue() {
+        persistValue(mValue);
+    }
+
+    private void setSelectedOption(int which) {
+        setValue(mBackgroundValues[which]);
+    }
+
+    public static class InternalDialogFragment extends PreferenceDialogFragmentCompat {
+
+        private View mAlphaContainer;
+        private SeekBar mAlphaSlider;
+
+        public static InternalDialogFragment newInstance(String key) {
+            final InternalDialogFragment df = new InternalDialogFragment();
+            final Bundle args = new Bundle();
+            args.putString(PreferenceDialogFragmentCompat.ARG_KEY, key);
+            df.setArguments(args);
+            return df;
         }
-    }
 
-    private void updateAlphaPreview() {
-        if (mAlphaPreview == null || mAlphaSlider == null) return;
-        final Drawable drawable = mAlphaPreview.getDrawable();
-        if (drawable == null) return;
-        drawable.setAlpha(getSliderAlpha());
-    }
+        private int getSliderAlpha() {
+            return mAlphaSlider.getProgress() + MIN_ALPHA;
+        }
 
-    private int getSliderAlpha() {
-        return mAlphaSlider.getProgress() + MIN_ALPHA;
+        @Override
+        public void onDialogClosed(boolean positive) {
+            if (!positive) return;
+            final ThemeBackgroundPreference preference = (ThemeBackgroundPreference) getPreference();
+            final SharedPreferences preferences = preference.getSharedPreferences();
+            final SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt(KEY_THEME_BACKGROUND_ALPHA, getSliderAlpha());
+            editor.apply();
+            preference.saveValue();
+            preference.notifyChanged();
+        }
+
+        private void updateAlphaVisibility() {
+            if (mAlphaContainer == null) return;
+            final ThemeBackgroundPreference preference = (ThemeBackgroundPreference) getPreference();
+            final boolean isTransparent = VALUE_THEME_BACKGROUND_TRANSPARENT.equals(preference.getValue());
+            mAlphaContainer.setVisibility(isTransparent ? View.VISIBLE : View.GONE);
+        }
+
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            final ThemeBackgroundPreference preference = (ThemeBackgroundPreference) getPreference();
+            final SharedPreferences preferences = preference.getSharedPreferences();
+            preference.setValue(preference.getPersistedString(null));
+            builder.setSingleChoiceItems(preference.mBackgroundEntries, preference.getValueIndex(), new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    preference.setSelectedOption(which);
+                    updateAlphaVisibility();
+                }
+            });
+            builder.setPositiveButton(android.R.string.ok, this);
+            builder.setNegativeButton(android.R.string.cancel, this);
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    if (dialog instanceof AlertDialog && preferences != null) {
+                        AlertDialog alertDialog = (AlertDialog) dialog;
+                        final LayoutInflater inflater = alertDialog.getLayoutInflater();
+                        final ListView listView = alertDialog.getListView();
+                        final ViewGroup listViewParent = (ViewGroup) listView.getParent();
+                        listViewParent.removeView(listView);
+                        final View view = inflater.inflate(R.layout.dialog_theme_background_preference, listViewParent);
+                        ((ViewGroup) view.findViewById(R.id.list_container)).addView(listView);
+                        mAlphaContainer = view.findViewById(R.id.alpha_container);
+                        mAlphaSlider = (SeekBar) view.findViewById(R.id.alpha_slider);
+                        mAlphaSlider.setMax(MAX_ALPHA - MIN_ALPHA);
+                        mAlphaSlider.setProgress(preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA) - MIN_ALPHA);
+                        updateAlphaVisibility();
+                    }
+                }
+            });
+            return dialog;
+        }
     }
 }

@@ -25,11 +25,12 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -62,7 +63,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     }
 
     public AccountsListPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceCategoryStyle);
+        this(context, attrs, R.attr.preferenceCategoryStyle);
     }
 
     public AccountsListPreference(final Context context, final AttributeSet attrs, final int defStyle) {
@@ -150,18 +151,18 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         }
 
         @Override
-        protected void onBindView(@NonNull final View view) {
-            super.onBindView(view);
-            final View iconView = view.findViewById(android.R.id.icon);
+        public void onBindViewHolder(PreferenceViewHolder holder) {
+            super.onBindViewHolder(holder);
+            final View iconView = holder.findViewById(android.R.id.icon);
             if (iconView instanceof ImageView) {
                 final ImageView imageView = (ImageView) iconView;
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
-            final View titleView = view.findViewById(android.R.id.title);
+            final View titleView = holder.findViewById(android.R.id.title);
             if (titleView instanceof TextView) {
                 ((TextView) titleView).setSingleLine(true);
             }
-            final View summaryView = view.findViewById(android.R.id.summary);
+            final View summaryView = holder.findViewById(android.R.id.summary);
             if (summaryView instanceof TextView) {
                 ((TextView) summaryView).setSingleLine(true);
             }

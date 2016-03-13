@@ -85,9 +85,9 @@
         android:key="category_api"
         android:title="@string/api">
 
-        <org.mariotaku.twidere.preference.DefaultAPIPreference
-            android:summary="@string/default_api_settings_summary"
-            android:title="@string/default_api_settings"/>
+        <!--<org.mariotaku.twidere.preference.DefaultAPIPreference-->
+            <!--android:summary="@string/default_api_settings_summary"-->
+            <!--android:title="@string/default_api_settings"/>-->
 
     </PreferenceCategory>
 

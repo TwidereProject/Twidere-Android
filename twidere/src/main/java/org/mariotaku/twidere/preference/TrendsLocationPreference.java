@@ -25,9 +25,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -50,8 +49,6 @@ import java.util.List;
 
 public class TrendsLocationPreference extends Preference implements Constants, OnClickListener {
 
-    private SharedPreferences mPreferences;
-
     private int mCheckedWoeId = 1;
 
     private GetAvailableTrendsTask mGetAvailableTrendsTask;
@@ -65,7 +62,7 @@ public class TrendsLocationPreference extends Preference implements Constants, O
     }
 
     public TrendsLocationPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceStyle);
+        this(context, attrs, R.attr.preferenceStyle);
     }
 
     public TrendsLocationPreference(final Context context, final AttributeSet attrs, final int defStyle) {
@@ -75,12 +72,9 @@ public class TrendsLocationPreference extends Preference implements Constants, O
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
-        final SharedPreferences.Editor editor = getEditor();
-        if (editor == null) return;
         final Location item = mAdapter.getItem(which);
         if (item != null) {
-            editor.putInt(KEY_LOCAL_TRENDS_WOEID, item.getWoeid());
-            editor.apply();
+            persistInt(item.getWoeid());
         }
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
@@ -89,9 +83,7 @@ public class TrendsLocationPreference extends Preference implements Constants, O
 
     @Override
     protected void onClick() {
-        mPreferences = getSharedPreferences();
-        if (mPreferences == null) return;
-        mCheckedWoeId = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
+        mCheckedWoeId = getPersistedInt(1);
         if (mGetAvailableTrendsTask != null) {
             mGetAvailableTrendsTask.cancel(false);
         }

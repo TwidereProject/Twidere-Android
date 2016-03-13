@@ -22,12 +22,10 @@ package org.mariotaku.twidere.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.preference.Preference;
-import android.support.annotation.NonNull;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -60,12 +58,6 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
     }
 
     @Override
-    public View getView(final View convertView, final ViewGroup parent) {
-        if (mCompactModeChanged) return super.getView(null, parent);
-        return super.getView(convertView, parent);
-    }
-
-    @Override
     public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
         if (mHolder == null) return;
         if (KEY_COMPACT_CARDS.equals(key)) {
@@ -83,10 +75,11 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
         }
     }
 
-
     @Override
-    protected void onBindView(@NonNull final View view) {
-        if (mHolder == null) return;
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        if (mHolder == null) {
+            mHolder = new StatusViewHolder(mAdapter, holder.itemView);
+        }
         mCompactModeChanged = false;
         mHolder.setupViewOptions();
         mHolder.displaySampleStatus();
@@ -103,14 +96,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
                 }
             }
         });
-        super.onBindView(view);
-    }
-
-    @Override
-    protected View onCreateView(final ViewGroup parent) {
-        final View statusView = super.onCreateView(parent);
-        mHolder = new StatusViewHolder(mAdapter, statusView);
-        return statusView;
+        super.onBindViewHolder(holder);
     }
 
 }

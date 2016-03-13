@@ -21,8 +21,9 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
+    android:clipChildren="false"
     android:padding="@dimen/element_spacing_normal">
 
     <TextView

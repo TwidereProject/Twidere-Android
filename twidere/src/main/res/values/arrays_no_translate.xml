@@ -75,5 +75,15 @@
     <string-array name="values_media_preload">
         <item>wifi</item>
     </string-array>
+    <string-array name="values_home_refresh_content">
+        <item>mentions</item>
+        <item>messages</item>
+        <item>trends</item>
+    </string-array>
+    <string-array name="values_notification_content">
+        <item>home</item>
+        <item>mentions</item>
+        <item>inbox</item>
+    </string-array>
 
 </resources>

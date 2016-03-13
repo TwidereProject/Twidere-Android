@@ -21,22 +21,22 @@ package org.mariotaku.twidere.preference;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.provider.SearchRecentSuggestions;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.provider.RecentSearchProvider;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 
-public class ClearSearchHistoryPreference extends AsyncTaskPreference implements Constants, OnPreferenceClickListener {
+public class ClearSearchHistoryPreference extends AsyncTaskPreference implements Constants {
 
     public ClearSearchHistoryPreference(final Context context) {
         this(context, null);
     }
 
     public ClearSearchHistoryPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceStyle);
+        this(context, attrs, R.attr.preferenceStyle);
     }
 
     public ClearSearchHistoryPreference(final Context context, final AttributeSet attrs, final int defStyle) {

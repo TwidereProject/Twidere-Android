@@ -563,6 +563,14 @@ public class ThemeUtils implements Constants {
                 ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA);
     }
 
+
+    public static int getActionBarAlpha(final String option, final int alpha) {
+        if (isTransparentBackground(option)) {
+            return getActionBarAlpha(alpha);
+        }
+        return 0xFF;
+    }
+
     public static int getActionBarAlpha(final int alpha) {
         final int normalizedAlpha = TwidereMathUtils.clamp(alpha, 0, 0xFF);
         final int delta = (ThemeBackgroundPreference.MAX_ALPHA - normalizedAlpha);
@@ -925,15 +933,22 @@ public class ThemeUtils implements Constants {
     }
 
     public static void applyToolbarItemColor(Context context, Toolbar toolbar, int toolbarColor) {
-        final int contrastForegroundColor = getContrastForegroundColor(context, toolbarColor);
         if (toolbar == null || isDarkTheme(context)) {
             return;
         }
+        final int contrastForegroundColor = getContrastForegroundColor(context, toolbarColor);
         toolbar.setTitleTextColor(contrastForegroundColor);
         toolbar.setSubtitleTextColor(contrastForegroundColor);
+        int popupItemColor, popupTheme = toolbar.getPopupTheme();
+        if (popupTheme != 0) {
+            popupItemColor = getThemeForegroundColor(context, popupTheme);
+        } else {
+            popupItemColor = getThemeForegroundColor(context);
+        }
+        getThemeForegroundColor(context);
         setActionBarOverflowColor(toolbar, contrastForegroundColor);
         wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class),
-                contrastForegroundColor, contrastForegroundColor);
+                contrastForegroundColor, popupItemColor);
         if (toolbar instanceof TwidereToolbar) {
             ((TwidereToolbar) toolbar).setItemColor(contrastForegroundColor);
         }

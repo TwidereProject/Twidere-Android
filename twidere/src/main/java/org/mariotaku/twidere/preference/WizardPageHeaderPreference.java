@@ -20,8 +20,9 @@
 package org.mariotaku.twidere.preference;
 
 import android.content.Context;
-import android.preference.Preference;
 import android.support.annotation.NonNull;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -30,27 +31,27 @@ import org.mariotaku.twidere.R;
 
 public final class WizardPageHeaderPreference extends Preference {
 
-	public WizardPageHeaderPreference(final Context context) {
-		this(context, null);
-	}
+    public WizardPageHeaderPreference(final Context context) {
+        this(context, null);
+    }
 
-	public WizardPageHeaderPreference(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.preferenceStyle);
-	}
+    public WizardPageHeaderPreference(final Context context, final AttributeSet attrs) {
+        this(context, attrs, R.attr.preferenceStyle);
+    }
 
-	public WizardPageHeaderPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-		setLayoutResource(R.layout.header_wizard_page);
-		setSelectable(false);
-	}
+    public WizardPageHeaderPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+        setLayoutResource(R.layout.header_wizard_page);
+        setSelectable(false);
+    }
 
-	@Override
-	protected void onBindView(@NonNull final View view) {
-		super.onBindView(view);
-		final TextView title = (TextView) view.findViewById(android.R.id.title);
-		final TextView summary = (TextView) view.findViewById(android.R.id.summary);
-		title.setText(getTitle());
-		summary.setText(getSummary());
-	}
+    @Override
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        final TextView title = (TextView) holder.findViewById(android.R.id.title);
+        final TextView summary = (TextView) holder.findViewById(android.R.id.summary);
+        title.setText(getTitle());
+        summary.setText(getSummary());
+    }
 
 }

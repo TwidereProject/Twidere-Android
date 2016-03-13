@@ -25,7 +25,7 @@ public class ActionIconButton extends AppCompatImageButton {
     }
 
     public ActionIconButton(Context context, AttributeSet attrs) {
-        this(context, attrs, android.R.attr.imageButtonStyle);
+        this(context, attrs, R.attr.imageButtonStyle);
     }
 
     public ActionIconButton(Context context, AttributeSet attrs, int defStyleAttr) {

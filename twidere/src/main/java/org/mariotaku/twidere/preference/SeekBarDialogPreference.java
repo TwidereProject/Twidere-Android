@@ -23,13 +23,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
@@ -60,7 +57,7 @@ public class SeekBarDialogPreference extends DialogPreference {
     }
 
     public SeekBarDialogPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.dialogPreferenceStyle);
+        this(context, attrs, R.attr.dialogPreferenceStyle);
     }
 
     public SeekBarDialogPreference(final Context context, final AttributeSet attrs, final int defStyle) {
@@ -132,53 +129,53 @@ public class SeekBarDialogPreference extends DialogPreference {
         mProgressTextSuffix = progressTextSuffix;
     }
 
-    @Override
-    protected void onBindDialogView(@NonNull final View view) {
-        super.onBindDialogView(view);
+//    @Override
+//    protected void onBindDialogView(@NonNull final View view) {
+//        super.onBindDialogView(view);
+//
+//        final CharSequence message = getDialogMessage();
+//        final TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
+//        dialogMessageText.setText(message);
+//        dialogMessageText.setVisibility(TextUtils.isEmpty(message) ? View.GONE : View.VISIBLE);
+//
+//        mProgressText = (TextView) view.findViewById(R.id.text_progress);
+//
+//        mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
+//        mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
+//                // update text that displays the current SeekBar progress value
+//                // note: this does not persist the progress value. that is only
+//                // ever done in setProgress()
+//                final String progressStr = String.valueOf(progress * mStep + mMinProgress);
+//                mProgressText.setText(mProgressTextSuffix == null ? progressStr : progressStr
+//                        .concat(mProgressTextSuffix.toString()));
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(final SeekBar seekBar) {
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(final SeekBar seekBar) {
+//            }
+//        });
+//        mSeekBar.setMax((int) Math.ceil((mMaxProgress - mMinProgress) / (double) mStep));
+//        mSeekBar.setProgress((int) Math.ceil((mProgress - mMinProgress) / (double) mStep));
+//    }
 
-        final CharSequence message = getDialogMessage();
-        final TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
-        dialogMessageText.setText(message);
-        dialogMessageText.setVisibility(TextUtils.isEmpty(message) ? View.GONE : View.VISIBLE);
-
-        mProgressText = (TextView) view.findViewById(R.id.text_progress);
-
-        mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
-        mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
-                // update text that displays the current SeekBar progress value
-                // note: this does not persist the progress value. that is only
-                // ever done in setProgress()
-                final String progressStr = String.valueOf(progress * mStep + mMinProgress);
-                mProgressText.setText(mProgressTextSuffix == null ? progressStr : progressStr
-                        .concat(mProgressTextSuffix.toString()));
-            }
-
-            @Override
-            public void onStartTrackingTouch(final SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(final SeekBar seekBar) {
-            }
-        });
-        mSeekBar.setMax((int) Math.ceil((mMaxProgress - mMinProgress) / (double) mStep));
-        mSeekBar.setProgress((int) Math.ceil((mProgress - mMinProgress) / (double) mStep));
-    }
-
-    @Override
-    protected void onDialogClosed(final boolean positiveResult) {
-        super.onDialogClosed(positiveResult);
-
-        // when the user selects "OK", persist the new value
-        if (positiveResult) {
-            final int realProgress = mSeekBar.getProgress() * mStep + mMinProgress;
-            if (callChangeListener(realProgress)) {
-                setProgress(realProgress);
-            }
-        }
-    }
+//    @Override
+//    protected void onDialogClosed(final boolean positiveResult) {
+//        super.onDialogClosed(positiveResult);
+//
+//        // when the user selects "OK", persist the new value
+//        if (positiveResult) {
+//            final int realProgress = mSeekBar.getProgress() * mStep + mMinProgress;
+//            if (callChangeListener(realProgress)) {
+//                setProgress(realProgress);
+//            }
+//        }
+//    }
 
     @Override
     protected Object onGetDefaultValue(final TypedArray a, final int index) {

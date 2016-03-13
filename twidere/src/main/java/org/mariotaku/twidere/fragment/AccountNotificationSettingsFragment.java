@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.fragment;
 
 import android.os.Bundle;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;

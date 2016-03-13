@@ -23,14 +23,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
+import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 
-public abstract class AsyncTaskPreference extends Preference implements Constants, OnPreferenceClickListener {
+public abstract class AsyncTaskPreference extends Preference implements Constants {
 
     private Task mTask;
 
@@ -39,21 +38,19 @@ public abstract class AsyncTaskPreference extends Preference implements Constant
     }
 
     public AsyncTaskPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceStyle);
+        this(context, attrs, R.attr.preferenceStyle);
     }
 
     public AsyncTaskPreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        setOnPreferenceClickListener(this);
     }
 
     @Override
-    public final boolean onPreferenceClick(final Preference preference) {
+    protected void onClick() {
         if (mTask == null || mTask.getStatus() != Status.RUNNING) {
             mTask = new Task(this);
             mTask.execute();
         }
-        return true;
     }
 
     protected abstract void doInBackground();

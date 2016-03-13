@@ -27,33 +27,33 @@ import org.mariotaku.twidere.R;
 
 public class NotificationContentPreference extends MultiSelectListPreference implements Constants {
 
-	public NotificationContentPreference(final Context context) {
-		this(context, null);
-	}
+    public NotificationContentPreference(final Context context) {
+        this(context, null);
+    }
 
-	public NotificationContentPreference(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.preferenceStyle);
-	}
+    public NotificationContentPreference(final Context context, final AttributeSet attrs) {
+        this(context, attrs, R.attr.preferenceStyle);
+    }
 
-	public NotificationContentPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public NotificationContentPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	protected boolean[] getDefaults() {
-		return new boolean[] { DEFAULT_HOME_TIMELINE_NOTIFICATION, DEFAULT_MENTIONS_NOTIFICATION,
-				DEFAULT_DIRECT_MESSAGES_NOTIFICATION };
-	}
+    @Override
+    protected boolean[] getDefaults() {
+        return new boolean[]{DEFAULT_HOME_TIMELINE_NOTIFICATION, DEFAULT_MENTIONS_NOTIFICATION,
+                DEFAULT_DIRECT_MESSAGES_NOTIFICATION};
+    }
 
-	@Override
-	protected String[] getKeys() {
-		return new String[] { KEY_HOME_TIMELINE_NOTIFICATION, KEY_MENTIONS_NOTIFICATION,
-				KEY_DIRECT_MESSAGES_NOTIFICATION };
-	}
+    @Override
+    protected String[] getKeys() {
+        return new String[]{KEY_HOME_TIMELINE_NOTIFICATION, KEY_MENTIONS_NOTIFICATION,
+                KEY_DIRECT_MESSAGES_NOTIFICATION};
+    }
 
-	@Override
-	protected String[] getNames() {
-		return getContext().getResources().getStringArray(R.array.entries_notification_content);
-	}
+    @Override
+    protected String[] getNames() {
+        return getContext().getResources().getStringArray(R.array.entries_notification_content);
+    }
 
 }

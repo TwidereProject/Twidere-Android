@@ -23,6 +23,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import org.mariotaku.twidere.R;
+
 import java.io.File;
 import java.io.FileFilter;
 
@@ -33,7 +35,7 @@ public class ClearCachePreference extends AsyncTaskPreference {
     }
 
     public ClearCachePreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceStyle);
+        this(context, attrs, R.attr.preferenceStyle);
     }
 
     public ClearCachePreference(final Context context, final AttributeSet attrs, final int defStyle) {

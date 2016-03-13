@@ -20,10 +20,7 @@
 package org.mariotaku.twidere.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -33,12 +30,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.DialogPreference;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.DialogPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -51,6 +50,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.KeyboardShortcutPreferenceCompatActivity;
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants;
+import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
 
@@ -60,9 +60,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
 public class KeyboardShortcutsFragment extends BasePreferenceFragment implements KeyboardShortcutConstants {
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
+    public void onCreatePreferences(Bundle bundle, String s) {
         final Activity activity = getActivity();
         final PreferenceScreen defaultScreen = getPreferenceScreen();
         final PreferenceScreen preferenceScreen;
@@ -77,6 +75,12 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_keyboard_shortcuts, menu);
     }
@@ -86,7 +90,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         switch (item.getItemId()) {
             case R.id.reset: {
                 final DialogFragment f = new ResetKeyboardShortcutConfirmDialogFragment();
-                f.show(getFragmentManager().beginTransaction(), "reset_keyboard_shortcut_confirm");
+                f.show(getFragmentManager(), "reset_keyboard_shortcut_confirm");
                 return true;
             }
         }
@@ -136,7 +140,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         return new KeyboardShortcutPreference(context, shortcutHandler, contextTag, action);
     }
 
-    private static class KeyboardShortcutPreference extends DialogPreference implements OnKeyListener {
+    private static class KeyboardShortcutPreference extends DialogPreference implements
+            OnKeyListener, DialogInterface.OnClickListener {
 
         private final KeyboardShortcutsHandler mKeyboardShortcutHandler;
         private final String mContextTag, mAction;
@@ -203,28 +208,28 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             return true;
         }
 
-        @Override
-        protected void onPrepareDialogBuilder(Builder builder) {
-            builder.setPositiveButton(getContext().getString(android.R.string.ok), this);
-            builder.setNegativeButton(getContext().getString(android.R.string.cancel), this);
-            builder.setNeutralButton(getContext().getString(R.string.clear), this);
-            builder.setOnKeyListener(this);
-        }
+//        @Override
+//        protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
+//            builder.setPositiveButton(getContext().getString(android.R.string.ok), this);
+//            builder.setNegativeButton(getContext().getString(android.R.string.cancel), this);
+//            builder.setNeutralButton(getContext().getString(R.string.clear), this);
+//            builder.setOnKeyListener(this);
+//        }
 
-        @Override
-        protected void onAttachedToActivity() {
-            super.onAttachedToActivity();
-            mKeyboardShortcutHandler.registerOnSharedPreferenceChangeListener(mPreferencesChangeListener);
-        }
+//        @Override
+//        protected void onAttachedToActivity() {
+//            super.onAttachedToActivity();
+//            mKeyboardShortcutHandler.registerOnSharedPreferenceChangeListener(mPreferencesChangeListener);
+//        }
 
-        @Override
-        protected View onCreateDialogView() {
-            final View view = super.onCreateDialogView();
-            mKeysLabel = (TextView) view.findViewById(R.id.keys_label);
-            mConflictLabel = (TextView) view.findViewById(R.id.conflict_label);
-            mConflictLabel.setVisibility(View.GONE);
-            return view;
-        }
+//        @Override
+//        protected View onCreateDialogView() {
+//            final View view = super.onCreateDialogView();
+//            mKeysLabel = (TextView) view.findViewById(R.id.keys_label);
+//            mConflictLabel = (TextView) view.findViewById(R.id.conflict_label);
+//            mConflictLabel.setVisibility(View.GONE);
+//            return view;
+//        }
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -294,8 +299,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         }
 
         @Override
-        protected void onAttachedToActivity() {
-            super.onAttachedToActivity();
+        public void onAttached() {
+            super.onAttached();
             mKeyboardShortcutHandler.registerOnSharedPreferenceChangeListener(mPreferencesChangeListener);
         }
 
@@ -308,7 +313,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
 
     }
 
-    public static class ResetKeyboardShortcutConfirmDialogFragment extends BaseDialogFragment implements OnClickListener {
+    public static class ResetKeyboardShortcutConfirmDialogFragment extends BaseSupportDialogFragment
+            implements OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {

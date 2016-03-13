@@ -21,7 +21,7 @@ package org.mariotaku.twidere.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -30,7 +30,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
-public class BasePreferenceFragment extends PreferenceFragment implements Constants {
+public abstract class BasePreferenceFragment extends PreferenceFragmentCompat implements Constants {
 
     @Inject
     protected KeyboardShortcutsHandler mKeyboardShortcutHandler;

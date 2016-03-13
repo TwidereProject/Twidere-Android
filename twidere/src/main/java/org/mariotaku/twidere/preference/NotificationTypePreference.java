@@ -24,7 +24,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
-import android.preference.DialogPreference;
+import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
@@ -40,7 +40,7 @@ public class NotificationTypePreference extends DialogPreference implements Cons
     }
 
     public NotificationTypePreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.dialogPreferenceStyle);
+        this(context, attrs, R.attr.dialogPreferenceStyle);
     }
 
     public NotificationTypePreference(final Context context, final AttributeSet attrs, final int defStyle) {
@@ -50,32 +50,32 @@ public class NotificationTypePreference extends DialogPreference implements Cons
         a.recycle();
     }
 
-    @Override
-    public void onClick(final DialogInterface dialog, final int which) {
-        final Dialog showingDialog = getDialog();
-        if (!(showingDialog instanceof AlertDialog)) return;
-        final AlertDialog alertDialog = (AlertDialog) showingDialog;
-        final ListView listView = alertDialog.getListView();
-        if (listView == null) return;
-        int value = 0;
-        final int[] flags = getFlags();
-        for (int i = 0, j = flags.length; i < j; i++) {
-            if (listView.isItemChecked(i)) {
-                value |= flags[i];
-            }
-        }
-        persistInt(value);
-        notifyChanged();
-    }
-
-    @Override
-    public void onPrepareDialogBuilder(final AlertDialog.Builder builder) {
-        super.onPrepareDialogBuilder(builder);
-        builder.setPositiveButton(android.R.string.ok, this);
-        builder.setNegativeButton(android.R.string.cancel, null);
-        final int value = getPersistedInt(mDefaultValue);
-        builder.setMultiChoiceItems(getEntries(), getCheckedItems(value), null);
-    }
+//    @Override
+//    public void onClick(final DialogInterface dialog, final int which) {
+//        final Dialog showingDialog = getDialog();
+//        if (!(showingDialog instanceof AlertDialog)) return;
+//        final AlertDialog alertDialog = (AlertDialog) showingDialog;
+//        final ListView listView = alertDialog.getListView();
+//        if (listView == null) return;
+//        int value = 0;
+//        final int[] flags = getFlags();
+//        for (int i = 0, j = flags.length; i < j; i++) {
+//            if (listView.isItemChecked(i)) {
+//                value |= flags[i];
+//            }
+//        }
+//        persistInt(value);
+//        notifyChanged();
+//    }
+//
+//    @Override
+//    public void onPrepareDialogBuilder(final AlertDialog.Builder builder) {
+//        super.onPrepareDialogBuilder(builder);
+//        builder.setPositiveButton(android.R.string.ok, this);
+//        builder.setNegativeButton(android.R.string.cancel, null);
+//        final int value = getPersistedInt(mDefaultValue);
+//        builder.setMultiChoiceItems(getEntries(), getCheckedItems(value), null);
+//    }
 
     private boolean[] getCheckedItems(final int value) {
         final int[] flags = getFlags();

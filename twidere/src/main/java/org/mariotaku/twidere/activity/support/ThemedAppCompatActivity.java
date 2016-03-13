@@ -26,11 +26,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ThemedAppCompatDelegateFactory;
+import android.support.v7.widget.ActionBarContainer;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IAppCompatActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.StrictModeUtils;
@@ -131,12 +135,31 @@ public abstract class ThemedAppCompatActivity extends AppCompatActivity implemen
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         mCurrentThemeFontFamily = getThemeFontFamily();
         super.onApplyThemeResource(theme, resId, first);
-        final Toolbar actionBarToolbar = getActionBarToolbar();
-        ThemeUtils.applyToolbarItemColor(this, actionBarToolbar, mCurrentThemeColor);
+        final Window window = getWindow();
         if (shouldApplyWindowBackground()) {
-            ThemeUtils.applyWindowBackground(this, getWindow(), mCurrentThemeBackgroundOption,
+            ThemeUtils.applyWindowBackground(this, window, mCurrentThemeBackgroundOption,
                     mCurrentThemeBackgroundAlpha);
         }
+    }
+
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        final Window window = getWindow();
+        final Toolbar actionBarToolbar = (Toolbar) window.findViewById(R.id.action_bar);
+        final ActionBarContainer actionBarContainer = (ActionBarContainer) window.findViewById(R.id.action_bar_container);
+        ThemeUtils.applyActionBarBackground(actionBarContainer, this, mCurrentThemeColor,
+                mCurrentThemeBackgroundOption, true);
+        ThemeUtils.applyToolbarItemColor(this, actionBarToolbar, mCurrentThemeColor);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        final boolean result = super.onPrepareOptionsMenu(menu);
+        final Window window = getWindow();
+        final Toolbar actionBarToolbar = (Toolbar) window.findViewById(R.id.action_bar);
+        ThemeUtils.applyToolbarItemColor(this, actionBarToolbar, mCurrentThemeColor);
+        return result;
     }
 
     @Override

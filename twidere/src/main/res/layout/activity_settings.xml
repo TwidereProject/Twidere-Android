@@ -26,30 +26,33 @@
     android:layout_height="match_parent"
     app:setPadding="true">
 
-    <RelativeLayout
+    <android.support.v4.widget.SlidingPaneLayout
+        android:id="@+id/sliding_pane"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/settings_content"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+
+            <ListView
+                android:id="@+id/entries_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                tools:listitem="@layout/list_item_preference_header_item"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/detail_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/twidere_action_bar_container"/>
-
-        <org.mariotaku.twidere.view.TwidereActionBarContainer
-            android:id="@+id/twidere_action_bar_container"
-            style="?attr/actionBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_alignParentTop="true"
-            android:touchscreenBlocksFocus="true"
-            tools:ignore="UnusedAttribute"/>
-
-        <View
-            android:id="@+id/window_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/twidere_action_bar_container"
-            android:background="?android:windowContentOverlay"/>
-    </RelativeLayout>
+            android:layout_gravity="end"
+            android:layout_marginLeft="@dimen/element_size_normal"
+            android:layout_marginStart="@dimen/element_size_normal"
+            android:clickable="true"
+            tools:background="?android:colorBackground"/>
+    </android.support.v4.widget.SlidingPaneLayout>
 </org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout>

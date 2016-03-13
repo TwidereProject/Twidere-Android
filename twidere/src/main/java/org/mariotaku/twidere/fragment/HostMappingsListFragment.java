@@ -19,10 +19,7 @@
 
 package org.mariotaku.twidere.fragment;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -31,11 +28,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,6 +51,7 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -182,8 +181,8 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
         mode.setTitle(getResources().getQuantityString(R.plurals.Nitems_selected, count, count));
     }
 
-    public static class AddMappingDialogFragment extends BaseDialogFragment implements OnClickListener,
-            OnShowListener, TextWatcher, OnCheckedChangeListener {
+    public static class AddMappingDialogFragment extends BaseSupportDialogFragment implements OnClickListener,
+            TextWatcher, OnCheckedChangeListener {
 
 
         private EditText mEditHost, mEditAddress;
@@ -228,33 +227,38 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
 
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
             final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-            @SuppressLint("InflateParams")
-            final View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_host_mapping, null);
-            builder.setView(view);
-            mEditHost = (EditText) view.findViewById(R.id.host);
-            mEditAddress = (EditText) view.findViewById(R.id.address);
-            mCheckExclude = (CheckBox) view.findViewById(R.id.exclude);
-            mEditHost.addTextChangedListener(this);
-            mEditAddress.addTextChangedListener(this);
-            mCheckExclude.setOnCheckedChangeListener(this);
-            final Bundle args = getArguments();
-            if (args != null) {
-                mEditHost.setEnabled(!args.getBoolean(EXTRA_EDIT_MODE, false));
-                if (savedInstanceState == null) {
-                    mEditHost.setText(args.getCharSequence(EXTRA_HOST));
-                    mEditAddress.setText(args.getCharSequence(EXTRA_ADDRESS));
-                    mCheckExclude.setChecked(args.getBoolean(EXTRA_EXCLUDED));
-                }
-            }
+            builder.setView(R.layout.dialog_host_mapping);
             builder.setTitle(R.string.add_host_mapping);
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, null);
             final AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(this);
+            dialog.setOnShowListener(new OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    AlertDialog alertDialog = (AlertDialog) dialog;
+                    mEditHost = (EditText) alertDialog.findViewById(R.id.host);
+                    mEditAddress = (EditText) alertDialog.findViewById(R.id.address);
+                    mCheckExclude = (CheckBox) alertDialog.findViewById(R.id.exclude);
+                    mEditHost.addTextChangedListener(AddMappingDialogFragment.this);
+                    mEditAddress.addTextChangedListener(AddMappingDialogFragment.this);
+                    mCheckExclude.setOnCheckedChangeListener(AddMappingDialogFragment.this);
+                    final Bundle args = getArguments();
+                    if (args != null) {
+                        mEditHost.setEnabled(!args.getBoolean(EXTRA_EDIT_MODE, false));
+                        if (savedInstanceState == null) {
+                            mEditHost.setText(args.getCharSequence(EXTRA_HOST));
+                            mEditAddress.setText(args.getCharSequence(EXTRA_ADDRESS));
+                            mCheckExclude.setChecked(args.getBoolean(EXTRA_EXCLUDED));
+                        }
+                    }
+                    updateButton();
+                }
+            });
             return dialog;
         }
 
@@ -264,11 +268,6 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
             outState.putCharSequence(EXTRA_ADDRESS, mEditAddress.getText());
             outState.putCharSequence(EXTRA_EXCLUDED, mEditAddress.getText());
             super.onSaveInstanceState(outState);
-        }
-
-        @Override
-        public void onShow(final DialogInterface dialog) {
-            updateButton();
         }
 
         private void updateAddressField() {

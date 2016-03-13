@@ -16,46 +16,40 @@
 
 
 <!-- Layout of a header item in PreferenceActivity. -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:activatedBackgroundIndicator"
     android:gravity="center_vertical"
-    android:minHeight="?android:listPreferredItemHeight"
+    android:minHeight="?listPreferredItemHeightSmall"
     android:orientation="horizontal">
 
-    <ImageView
+    <org.mariotaku.twidere.view.ActionIconView
         android:id="@android:id/icon"
         android:layout_width="@dimen/header_icon_width"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/header_icon_width"
         android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/element_spacing_large"
-        android:layout_marginRight="@dimen/element_spacing_large"
+        android:layout_marginEnd="@dimen/element_spacing_mlarge"
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_mlarge"
+        android:layout_marginStart="@dimen/element_spacing_normal"
         android:layout_weight="0"
-        android:contentDescription="@string/icon" />
+        android:contentDescription="@string/icon"
+        app:iabColor="?android:colorForeground"
+        tools:src="@drawable/ic_action_settings"/>
 
-    <LinearLayout
+    <TextView
+        android:id="@android:id/title"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:textColorPrimary"
+        tools:text="@string/settings"/>
 
-        <TextView
-            android:id="@android:id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@android:id/summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
 </LinearLayout>

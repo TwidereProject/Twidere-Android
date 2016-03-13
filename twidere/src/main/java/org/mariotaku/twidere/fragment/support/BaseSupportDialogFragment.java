@@ -31,6 +31,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DebugModeUtils;
+import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.UserColorNameManager;
@@ -48,6 +49,9 @@ public class BaseSupportDialogFragment extends DialogFragment implements Constan
     protected SharedPreferencesWrapper mPreferences;
     @Inject
     protected TwidereValidator mValidator;
+    @Inject
+    protected KeyboardShortcutsHandler mKeyboardShortcutsHandler;
+
 
     public TwidereApplication getApplication() {
         final Activity activity = getActivity();

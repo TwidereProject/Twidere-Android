@@ -24,9 +24,10 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.NyanActivity;
 
 public class AppVersionPreference extends Preference {
@@ -47,7 +48,7 @@ public class AppVersionPreference extends Preference {
     }
 
     public AppVersionPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceStyle);
+        this(context, attrs, R.attr.preferenceStyle);
     }
 
     public AppVersionPreference(final Context context, final AttributeSet attrs, final int defStyle) {

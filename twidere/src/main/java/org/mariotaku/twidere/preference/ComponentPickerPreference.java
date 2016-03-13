@@ -24,57 +24,58 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.support.v7.preference.ListPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import java.util.List;
 
-public abstract class ComponentPickerPreference extends AutoInvalidateListPreference {
+public abstract class ComponentPickerPreference extends ListPreference {
 
-	protected final PackageManager packageManager;
+    protected final PackageManager packageManager;
 
-	public ComponentPickerPreference(final Context context) {
-		this(context, null);
-	}
+    public ComponentPickerPreference(final Context context) {
+        this(context, null);
+    }
 
-	public ComponentPickerPreference(final Context context, final AttributeSet attrs) {
-		super(context, attrs);
-		packageManager = context.getPackageManager();
-		init();
-	}
+    public ComponentPickerPreference(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+        packageManager = context.getPackageManager();
+        init();
+    }
 
-	@Override
-	public CharSequence getSummary() {
-		if (isNoneValue(getValue())) return getNoneEntry();
-		return super.getSummary();
-	}
+    @Override
+    public CharSequence getSummary() {
+        if (isNoneValue(getValue())) return getNoneEntry();
+        return super.getSummary();
+    }
 
-	protected abstract String getIntentAction();
+    protected abstract String getIntentAction();
 
-	protected abstract String getNoneEntry();
+    protected abstract String getNoneEntry();
 
-	private void init() {
-		final Intent queryIntent = new Intent(getIntentAction());
-		final List<ResolveInfo> infoList = resolve(queryIntent);
-		final int infoListSize = infoList.size();
-		final CharSequence[] entries = new CharSequence[infoListSize + 1], values = new CharSequence[infoListSize + 1];
-		entries[0] = getNoneEntry();
-		values[0] = "";
-		for (int i = 0; i < infoListSize; i++) {
-			final ResolveInfo info = infoList.get(i);
-			entries[i + 1] = info.loadLabel(packageManager);
-			values[i + 1] =getComponentName(info).flattenToString();
-		}
-		setEntries(entries);
-		setEntryValues(values);
-	}
+    private void init() {
+        final Intent queryIntent = new Intent(getIntentAction());
+        final List<ResolveInfo> infoList = resolve(queryIntent);
+        final int infoListSize = infoList.size();
+        final CharSequence[] entries = new CharSequence[infoListSize + 1], values = new CharSequence[infoListSize + 1];
+        entries[0] = getNoneEntry();
+        values[0] = "";
+        for (int i = 0; i < infoListSize; i++) {
+            final ResolveInfo info = infoList.get(i);
+            entries[i + 1] = info.loadLabel(packageManager);
+            values[i + 1] = getComponentName(info).flattenToString();
+        }
+        setEntries(entries);
+        setEntryValues(values);
+    }
 
-	protected abstract ComponentName getComponentName(ResolveInfo info);
+    protected abstract ComponentName getComponentName(ResolveInfo info);
 
-	protected abstract List<ResolveInfo> resolve(Intent queryIntent);
+    protected abstract List<ResolveInfo> resolve(Intent queryIntent);
 
-	public static boolean isNoneValue(final String value) {
-		return TextUtils.isEmpty(value) || "none".equals(value);
-	}
+    public static boolean isNoneValue(final String value) {
+        return TextUtils.isEmpty(value) || "none".equals(value);
+    }
 
 }

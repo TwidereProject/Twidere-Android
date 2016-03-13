@@ -19,16 +19,14 @@
 
 package org.mariotaku.twidere.preference;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
-import android.preference.Preference;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.Preference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -40,20 +38,17 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.Language;
+import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.List;
 
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Language;
-
 public class TranslationDestinationPreference extends Preference implements Constants, OnClickListener {
-
-    private SharedPreferences mPreferences;
 
     private String mSelectedLanguageCode = "en";
 
@@ -68,7 +63,7 @@ public class TranslationDestinationPreference extends Preference implements Cons
     }
 
     public TranslationDestinationPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceStyle);
+        this(context, attrs, R.attr.preferenceStyle);
     }
 
     public TranslationDestinationPreference(final Context context, final AttributeSet attrs, final int defStyle) {
@@ -78,12 +73,9 @@ public class TranslationDestinationPreference extends Preference implements Cons
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
-        final SharedPreferences.Editor editor = getEditor();
-        if (editor == null) return;
         final Language item = mAdapter.getItem(which);
         if (item != null) {
-            editor.putString(KEY_TRANSLATION_DESTINATION, item.getCode());
-            editor.commit();
+            persistString(item.getCode());
         }
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
@@ -92,8 +84,6 @@ public class TranslationDestinationPreference extends Preference implements Cons
 
     @Override
     protected void onClick() {
-        mPreferences = getSharedPreferences();
-        if (mPreferences == null) return;
         if (mGetAvailableTrendsTask != null) {
             mGetAvailableTrendsTask.cancel(false);
         }
@@ -172,17 +162,9 @@ public class TranslationDestinationPreference extends Preference implements Cons
         @Override
         protected ResponseList<Language> doInBackground(final Object... args) {
             final Twitter twitter = TwitterAPIFactory.getDefaultTwitterInstance(getContext(), false);
-            final String pref = mPreferences.getString(KEY_TRANSLATION_DESTINATION, null);
             if (twitter == null) return null;
             try {
-                if (pref == null) {
-                    mSelectedLanguageCode = twitter.getAccountSettings().getLanguage();
-                    final Editor editor = mPreferences.edit();
-                    editor.putString(KEY_TRANSLATION_DESTINATION, mSelectedLanguageCode);
-                    editor.apply();
-                } else {
-                    mSelectedLanguageCode = pref;
-                }
+                mSelectedLanguageCode = twitter.getAccountSettings().getLanguage();
                 return twitter.getLanguages();
             } catch (final TwitterException e) {
                 Log.w(LOGTAG, e);
@@ -199,7 +181,8 @@ public class TranslationDestinationPreference extends Preference implements Cons
             if (result == null) return;
             final AlertDialog.Builder selectorBuilder = new AlertDialog.Builder(getContext());
             selectorBuilder.setTitle(getTitle());
-            selectorBuilder.setSingleChoiceItems(mAdapter, mAdapter.findItemPosition(mSelectedLanguageCode),
+            final String value = getPersistedString(mSelectedLanguageCode);
+            selectorBuilder.setSingleChoiceItems(mAdapter, mAdapter.findItemPosition(value),
                     TranslationDestinationPreference.this);
             selectorBuilder.setNegativeButton(android.R.string.cancel, null);
             mDialog = selectorBuilder.create();

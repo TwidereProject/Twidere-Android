@@ -5,13 +5,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.AttributeSet;
 
-import org.jraf.android.backport.switchwidget.SwitchPreference;
 
-public class ComponentStatePreference extends SwitchPreference {
+public class ComponentStatePreference extends SwitchPreferenceCompat {
 
     private final PackageManager mPackageManager;
     private final ComponentName mComponentName;
@@ -39,18 +38,16 @@ public class ComponentStatePreference extends SwitchPreference {
 
     @Override
     public boolean shouldDisableDependents() {
-        final boolean disableDependentsState = getDisableDependentsState();
-        final boolean value = isComponentEnabled();
-        return disableDependentsState ? value : !value;
+        return getDisableDependentsState() || !isComponentAvailable();
     }
 
     @Override
-    protected Object onGetDefaultValue(@NonNull final TypedArray a, final int index) {
+    protected final Boolean onGetDefaultValue(@NonNull final TypedArray a, final int index) {
         return isComponentEnabled();
     }
 
     @Override
-    protected void onSetInitialValue(final boolean restoreValue, final Object defaultValue) {
+    protected final void onSetInitialValue(final boolean restoreValue, final Object defaultValue) {
         setChecked(getPersistedBoolean(true));
     }
 
@@ -69,18 +66,6 @@ public class ComponentStatePreference extends SwitchPreference {
     @Override
     protected boolean shouldPersist() {
         return true;
-    }
-
-    @Override
-    protected void notifyHierarchyChanged() {
-        super.notifyHierarchyChanged();
-        updateEnableState();
-    }
-
-    @Override
-    protected void onAttachedToHierarchy(@NonNull final PreferenceManager preferenceManager) {
-        super.onAttachedToHierarchy(preferenceManager);
-        updateEnableState();
     }
 
     @Override
@@ -109,8 +94,5 @@ public class ComponentStatePreference extends SwitchPreference {
         }
     }
 
-    private void updateEnableState() {
-        setEnabled(isComponentAvailable());
-    }
 
 }

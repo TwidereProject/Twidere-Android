@@ -8,7 +8,7 @@
         android:key="content_to_notify"
         android:title="@string/content_to_notify"/>
 
-    <RingtonePreference
+    <org.mariotaku.twidere.preference.RingtonePreference
         android:key="notification_ringtone"
         android:ringtoneType="notification"
         android:showDefault="true"

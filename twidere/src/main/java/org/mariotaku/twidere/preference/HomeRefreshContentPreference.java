@@ -27,31 +27,31 @@ import org.mariotaku.twidere.R;
 
 public class HomeRefreshContentPreference extends MultiSelectListPreference implements Constants {
 
-	public HomeRefreshContentPreference(final Context context) {
-		this(context, null);
-	}
+    public HomeRefreshContentPreference(final Context context) {
+        this(context, null);
+    }
 
-	public HomeRefreshContentPreference(final Context context, final AttributeSet attrs) {
-		this(context, attrs, android.R.attr.preferenceStyle);
-	}
+    public HomeRefreshContentPreference(final Context context, final AttributeSet attrs) {
+        this(context, attrs, R.attr.preferenceStyle);
+    }
 
-	public HomeRefreshContentPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public HomeRefreshContentPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	protected boolean[] getDefaults() {
-		return new boolean[] { true, true, true };
-	}
+    @Override
+    protected boolean[] getDefaults() {
+        return new boolean[]{true, true, true};
+    }
 
-	@Override
-	protected String[] getKeys() {
-		return new String[] { KEY_HOME_REFRESH_MENTIONS, KEY_HOME_REFRESH_DIRECT_MESSAGES, KEY_HOME_REFRESH_TRENDS };
-	}
+    @Override
+    protected String[] getKeys() {
+        return new String[]{KEY_HOME_REFRESH_MENTIONS, KEY_HOME_REFRESH_DIRECT_MESSAGES, KEY_HOME_REFRESH_TRENDS};
+    }
 
-	@Override
-	protected String[] getNames() {
-		return getContext().getResources().getStringArray(R.array.entries_home_refresh_content);
-	}
+    @Override
+    protected String[] getNames() {
+        return getContext().getResources().getStringArray(R.array.entries_home_refresh_content);
+    }
 
 }

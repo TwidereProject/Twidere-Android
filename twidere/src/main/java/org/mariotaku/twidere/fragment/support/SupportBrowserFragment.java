@@ -33,6 +33,7 @@ public class SupportBrowserFragment extends BaseSupportWebViewFragment {
         final Object uri = args != null ? args.get(EXTRA_URI) : null;
         final WebView view = getWebView();
         view.loadUrl(ParseUtils.parseString(uri, "about:blank"));
+        view.getSettings().setDisplayZoomControls(false);
     }
 
 

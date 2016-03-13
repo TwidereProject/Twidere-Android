@@ -23,8 +23,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
+import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,7 +58,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
     private boolean mEditNoVersionSuffixChanged;
 
     public DefaultAPIPreference(final Context context, final AttributeSet attrs) {
-        this(context, attrs, android.R.attr.preferenceStyle);
+        this(context, attrs, R.attr.preferenceStyle);
     }
 
     public DefaultAPIPreference(final Context context, final AttributeSet attrs, final int defStyle) {
@@ -94,64 +94,64 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         }
     }
 
-    @Override
-    protected void onBindDialogView(@NonNull final View view) {
-        super.onBindDialogView(view);
-        final SharedPreferences pref = getSharedPreferences();
-        final String apiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
-        final int authType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_OAUTH);
-        final boolean sameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
-        final boolean noVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
-        final String consumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
-        final String consumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
-        setValues(apiUrlFormat, authType, noVersionSuffix, sameOAuthSigningUrl, consumerKey, consumerSecret);
-    }
-
-    @Override
-    protected View onCreateDialogView() {
-        final View view = super.onCreateDialogView();
-        mEditAPIUrlFormat = (EditText) view.findViewById(R.id.api_url_format);
-        mEditAuthType = (RadioGroup) view.findViewById(R.id.auth_type);
-        mButtonOAuth = (RadioButton) view.findViewById(R.id.oauth);
-        mButtonxAuth = (RadioButton) view.findViewById(R.id.xauth);
-        mButtonBasic = (RadioButton) view.findViewById(R.id.basic);
-        mButtonTwipOMode = (RadioButton) view.findViewById(R.id.twip_o);
-        mEditSameOAuthSigningUrl = (CheckBox) view.findViewById(R.id.same_oauth_signing_url);
-        mEditNoVersionSuffix = (CheckBox) view.findViewById(R.id.no_version_suffix);
-        mEditConsumerKey = (EditText) view.findViewById(R.id.consumer_key);
-        mEditConsumerSecret = (EditText) view.findViewById(R.id.consumer_secret);
-        mAPIFormatHelpButton = view.findViewById(R.id.api_url_format_help);
-
-        mEditNoVersionSuffix.setOnCheckedChangeListener(this);
-        mEditAuthType.setOnCheckedChangeListener(this);
-        mAPIFormatHelpButton.setOnClickListener(this);
-
-        return view;
-    }
-
-    @Override
-    protected void onDialogClosed(final boolean positiveResult) {
-        if (!positiveResult) return;
-        final String apiUrlFormat = ParseUtils.parseString(mEditAPIUrlFormat.getText());
-        final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
-        final boolean sameOAuthSigningUrl = mEditSameOAuthSigningUrl.isChecked();
-        final boolean noVersionSuffix = mEditNoVersionSuffix.isChecked();
-        final String consumerKey = ParseUtils.parseString(mEditConsumerKey.getText());
-        final String consumerSecret = ParseUtils.parseString(mEditConsumerSecret.getText());
-        final SharedPreferences.Editor editor = getSharedPreferences().edit();
-        if (!isEmpty(consumerKey) && !isEmpty(consumerSecret)) {
-            editor.putString(KEY_CONSUMER_KEY, consumerKey);
-            editor.putString(KEY_CONSUMER_SECRET, consumerSecret);
-        } else {
-            editor.remove(KEY_CONSUMER_KEY);
-            editor.remove(KEY_CONSUMER_SECRET);
-        }
-        editor.putString(KEY_API_URL_FORMAT, apiUrlFormat);
-        editor.putInt(KEY_AUTH_TYPE, authType);
-        editor.putBoolean(KEY_SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl);
-        editor.putBoolean(KEY_NO_VERSION_SUFFIX, noVersionSuffix);
-        editor.apply();
-    }
+//    @Override
+//    protected void onBindDialogView(@NonNull final View view) {
+//        super.onBindDialogView(view);
+//        final SharedPreferences pref = getSharedPreferences();
+//        final String apiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
+//        final int authType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_OAUTH);
+//        final boolean sameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
+//        final boolean noVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
+//        final String consumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+//        final String consumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
+//        setValues(apiUrlFormat, authType, noVersionSuffix, sameOAuthSigningUrl, consumerKey, consumerSecret);
+//    }
+//
+//    @Override
+//    protected View onCreateDialogView() {
+//        final View view = super.onCreateDialogView();
+//        mEditAPIUrlFormat = (EditText) view.findViewById(R.id.api_url_format);
+//        mEditAuthType = (RadioGroup) view.findViewById(R.id.auth_type);
+//        mButtonOAuth = (RadioButton) view.findViewById(R.id.oauth);
+//        mButtonxAuth = (RadioButton) view.findViewById(R.id.xauth);
+//        mButtonBasic = (RadioButton) view.findViewById(R.id.basic);
+//        mButtonTwipOMode = (RadioButton) view.findViewById(R.id.twip_o);
+//        mEditSameOAuthSigningUrl = (CheckBox) view.findViewById(R.id.same_oauth_signing_url);
+//        mEditNoVersionSuffix = (CheckBox) view.findViewById(R.id.no_version_suffix);
+//        mEditConsumerKey = (EditText) view.findViewById(R.id.consumer_key);
+//        mEditConsumerSecret = (EditText) view.findViewById(R.id.consumer_secret);
+//        mAPIFormatHelpButton = view.findViewById(R.id.api_url_format_help);
+//
+//        mEditNoVersionSuffix.setOnCheckedChangeListener(this);
+//        mEditAuthType.setOnCheckedChangeListener(this);
+//        mAPIFormatHelpButton.setOnClickListener(this);
+//
+//        return view;
+//    }
+//
+//    @Override
+//    protected void onDialogClosed(final boolean positiveResult) {
+//        if (!positiveResult) return;
+//        final String apiUrlFormat = ParseUtils.parseString(mEditAPIUrlFormat.getText());
+//        final int authType = getCheckedAuthType(mEditAuthType.getCheckedRadioButtonId());
+//        final boolean sameOAuthSigningUrl = mEditSameOAuthSigningUrl.isChecked();
+//        final boolean noVersionSuffix = mEditNoVersionSuffix.isChecked();
+//        final String consumerKey = ParseUtils.parseString(mEditConsumerKey.getText());
+//        final String consumerSecret = ParseUtils.parseString(mEditConsumerSecret.getText());
+//        final SharedPreferences.Editor editor = getSharedPreferences().edit();
+//        if (!isEmpty(consumerKey) && !isEmpty(consumerSecret)) {
+//            editor.putString(KEY_CONSUMER_KEY, consumerKey);
+//            editor.putString(KEY_CONSUMER_SECRET, consumerSecret);
+//        } else {
+//            editor.remove(KEY_CONSUMER_KEY);
+//            editor.remove(KEY_CONSUMER_SECRET);
+//        }
+//        editor.putString(KEY_API_URL_FORMAT, apiUrlFormat);
+//        editor.putInt(KEY_AUTH_TYPE, authType);
+//        editor.putBoolean(KEY_SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl);
+//        editor.putBoolean(KEY_NO_VERSION_SUFFIX, noVersionSuffix);
+//        editor.apply();
+//    }
 
     @Override
     protected void onRestoreInstanceState(final Parcelable state) {
