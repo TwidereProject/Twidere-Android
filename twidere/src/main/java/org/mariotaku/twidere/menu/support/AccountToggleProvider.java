@@ -29,8 +29,8 @@ import android.view.SubMenu;
 import android.view.View;
 
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.UserKey;
 
 public class AccountToggleProvider extends ActionProvider implements TwidereConstants {
 

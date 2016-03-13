@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class TwidereListUtils {

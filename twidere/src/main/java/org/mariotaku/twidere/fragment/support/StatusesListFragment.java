@@ -24,7 +24,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
-import org.mariotaku.twidere.loader.support.IntentExtrasStatusesLoader;
+import org.mariotaku.twidere.loader.IntentExtrasStatusesLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 
 import java.util.List;

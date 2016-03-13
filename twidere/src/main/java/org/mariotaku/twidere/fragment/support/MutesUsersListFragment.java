@@ -23,9 +23,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
-import org.mariotaku.twidere.loader.support.MutesUsersLoader;
-import org.mariotaku.twidere.loader.support.UserFriendsLoader;
+import org.mariotaku.twidere.loader.CursorSupportUsersLoader;
+import org.mariotaku.twidere.loader.MutesUsersLoader;
 import org.mariotaku.twidere.model.UserKey;
 
 public class MutesUsersListFragment extends CursorSupportUsersListFragment {

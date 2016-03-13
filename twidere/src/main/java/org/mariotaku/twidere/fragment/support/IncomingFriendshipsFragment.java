@@ -25,8 +25,8 @@ import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
-import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
-import org.mariotaku.twidere.loader.support.IncomingFriendshipsLoader;
+import org.mariotaku.twidere.loader.CursorSupportUsersLoader;
+import org.mariotaku.twidere.loader.IncomingFriendshipsLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;

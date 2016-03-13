@@ -22,9 +22,9 @@ package org.mariotaku.twidere.util;
 import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 15/4/6.

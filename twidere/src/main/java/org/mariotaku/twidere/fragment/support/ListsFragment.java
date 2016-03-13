@@ -33,7 +33,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.LinkHandlerActivity;
-import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
+import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;

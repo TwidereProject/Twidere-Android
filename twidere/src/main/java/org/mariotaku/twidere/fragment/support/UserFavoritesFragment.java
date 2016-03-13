@@ -24,7 +24,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
-import org.mariotaku.twidere.loader.support.UserFavoritesLoader;
+import org.mariotaku.twidere.loader.UserFavoritesLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.Utils;

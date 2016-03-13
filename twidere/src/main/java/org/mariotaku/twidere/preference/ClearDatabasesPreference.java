@@ -23,7 +23,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;

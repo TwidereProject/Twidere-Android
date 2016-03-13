@@ -22,16 +22,16 @@
  */
 package jopt.csp.util;
 
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.IntCollection;
+import org.apache.commons.collections.primitives.IntList;
+import org.apache.commons.collections.primitives.RandomAccessIntList;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
-
-import org.apache.commons.collections.primitives.ArrayIntList;
-import org.apache.commons.collections.primitives.IntCollection;
-import org.apache.commons.collections.primitives.IntList;
-import org.apache.commons.collections.primitives.RandomAccessIntList;
 
 
 /**

@@ -12,7 +12,7 @@ import android.widget.ListView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ResolveInfoListAdapter;
-import org.mariotaku.twidere.loader.support.IntentActivitiesLoader;
+import org.mariotaku.twidere.loader.IntentActivitiesLoader;
 
 import java.util.List;
 

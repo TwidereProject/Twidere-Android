@@ -62,6 +62,23 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
     private View mAPIFormatHelpButton;
     private boolean mEditNoVersionSuffixChanged;
 
+    public static int getCheckedAuthType(final int checkedId) {
+        switch (checkedId) {
+            case R.id.xauth: {
+                return ParcelableCredentials.AUTH_TYPE_XAUTH;
+            }
+            case R.id.basic: {
+                return ParcelableCredentials.AUTH_TYPE_BASIC;
+            }
+            case R.id.twip_o: {
+                return ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE;
+            }
+            default: {
+                return ParcelableCredentials.AUTH_TYPE_OAUTH;
+            }
+        }
+    }
+
     @Override
     public void onCheckedChanged(final RadioGroup group, final int checkedId) {
         final int authType = getCheckedAuthType(checkedId);
@@ -215,23 +232,6 @@ public class APIEditorActivity extends BaseSupportDialogActivity implements OnCh
         mButtonTWIPOMode.setChecked(authType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
         if (mEditAuthType.getCheckedRadioButtonId() == -1) {
             mButtonOAuth.setChecked(true);
-        }
-    }
-
-    private int getCheckedAuthType(final int checkedId) {
-        switch (checkedId) {
-            case R.id.xauth: {
-                return ParcelableCredentials.AUTH_TYPE_XAUTH;
-            }
-            case R.id.basic: {
-                return ParcelableCredentials.AUTH_TYPE_BASIC;
-            }
-            case R.id.twip_o: {
-                return ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE;
-            }
-            default: {
-                return ParcelableCredentials.AUTH_TYPE_OAUTH;
-            }
         }
     }
 

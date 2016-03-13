@@ -4,13 +4,10 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
 import android.support.annotation.ColorInt;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;

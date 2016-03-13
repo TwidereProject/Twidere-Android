@@ -60,7 +60,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
-import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
+import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.UserList;

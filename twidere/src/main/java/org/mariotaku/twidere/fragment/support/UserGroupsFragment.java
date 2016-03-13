@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 
-import org.mariotaku.twidere.loader.support.UserGroupsLoader;
+import org.mariotaku.twidere.loader.UserGroupsLoader;
 import org.mariotaku.twidere.model.ParcelableGroup;
 import org.mariotaku.twidere.model.UserKey;
 

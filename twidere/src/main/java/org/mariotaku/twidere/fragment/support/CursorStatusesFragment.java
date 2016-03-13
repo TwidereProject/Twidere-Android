@@ -42,7 +42,7 @@ import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
-import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
+import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;

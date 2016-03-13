@@ -245,7 +245,7 @@ public interface SharedPreferenceConstants {
     String KEY_NO_CLOSE_AFTER_TWEET_SENT = "no_close_after_tweet_sent";
     @Preference(type = STRING, hasDefault = false)
     String KEY_API_URL_FORMAT = "api_url_format";
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_SAME_OAUTH_SIGNING_URL = "same_oauth_signing_url";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_NO_VERSION_SUFFIX = "no_version_suffix";

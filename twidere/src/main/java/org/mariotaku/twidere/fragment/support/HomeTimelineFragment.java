@@ -24,8 +24,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.RefreshTaskParam;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ErrorInfoStore;

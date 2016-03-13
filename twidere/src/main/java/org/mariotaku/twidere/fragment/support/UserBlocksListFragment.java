@@ -23,8 +23,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.loader.support.CursorSupportUsersLoader;
-import org.mariotaku.twidere.loader.support.UserBlocksLoader;
+import org.mariotaku.twidere.loader.CursorSupportUsersLoader;
+import org.mariotaku.twidere.loader.UserBlocksLoader;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 

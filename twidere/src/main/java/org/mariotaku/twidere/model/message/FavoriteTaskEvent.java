@@ -22,8 +22,8 @@ package org.mariotaku.twidere.model.message;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 14/12/10.

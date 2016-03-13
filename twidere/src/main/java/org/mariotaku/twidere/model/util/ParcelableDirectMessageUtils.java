@@ -2,8 +2,8 @@ package org.mariotaku.twidere.model.util;
 
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 

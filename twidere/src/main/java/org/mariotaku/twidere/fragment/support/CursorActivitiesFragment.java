@@ -41,7 +41,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
-import org.mariotaku.twidere.loader.support.ExtendedObjectCursorLoader;
+import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;

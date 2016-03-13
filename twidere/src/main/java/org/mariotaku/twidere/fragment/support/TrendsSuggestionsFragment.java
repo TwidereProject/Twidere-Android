@@ -35,13 +35,13 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.adapter.TrendsAdapter;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 
 import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
-import static org.mariotaku.twidere.util.Utils.getDefaultAccountKey;
 import static org.mariotaku.twidere.util.IntentUtils.openTweetSearch;
+import static org.mariotaku.twidere.util.Utils.getDefaultAccountKey;
 
 public class TrendsSuggestionsFragment extends AbsContentListViewFragment<TrendsAdapter>
         implements LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {

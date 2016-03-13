@@ -20,11 +20,9 @@
 package org.mariotaku.twidere.preference;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;

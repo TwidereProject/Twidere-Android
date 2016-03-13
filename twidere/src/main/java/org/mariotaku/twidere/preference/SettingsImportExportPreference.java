@@ -19,17 +19,9 @@
 
 package org.mariotaku.twidere.preference;
 
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
-
-import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.DataExportActivity;
-import org.mariotaku.twidere.activity.support.DataImportActivity;
 
 /**
  * Created by mariotaku on 15/3/19.

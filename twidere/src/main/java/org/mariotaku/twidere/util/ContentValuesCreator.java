@@ -51,7 +51,6 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;

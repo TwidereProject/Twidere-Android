@@ -3,9 +3,9 @@ package org.mariotaku.twidere.adapter.iface;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;

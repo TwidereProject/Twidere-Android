@@ -32,7 +32,7 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
-import org.mariotaku.twidere.loader.support.UserListsLoader;
+import org.mariotaku.twidere.loader.UserListsLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.UserListDestroyedEvent;

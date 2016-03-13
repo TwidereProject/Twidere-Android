@@ -21,9 +21,9 @@ package org.mariotaku.twidere.util;
 
 import android.content.Context;
 
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
  * Created by mariotaku on 15/1/23.

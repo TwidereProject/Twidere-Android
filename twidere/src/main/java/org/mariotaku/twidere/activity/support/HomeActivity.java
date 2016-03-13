@@ -66,7 +66,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.activity.SettingsWizardActivity;
 import org.mariotaku.twidere.activity.UsageStatisticsActivity;
-import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
+import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;

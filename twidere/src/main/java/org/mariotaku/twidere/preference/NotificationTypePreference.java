@@ -19,14 +19,10 @@
 
 package org.mariotaku.twidere.preference;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.support.v7.preference.DialogPreference;
 import android.util.AttributeSet;
-import android.widget.ListView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;

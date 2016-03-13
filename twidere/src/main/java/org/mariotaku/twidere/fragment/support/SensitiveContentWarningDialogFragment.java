@@ -27,9 +27,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;

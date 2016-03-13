@@ -19,14 +19,14 @@
 
 package org.mariotaku.twidere.task;
 
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
-import org.mariotaku.twidere.fragment.ProgressDialogFragment;
+import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 
 import java.io.File;
 
@@ -46,9 +46,9 @@ public abstract class ProgressSaveFileTask extends SaveFileTask {
         ((IExtendedActivity) context).executeAfterFragmentResumed(new IExtendedActivity.Action() {
             @Override
             public void execute(IExtendedActivity activity) {
-                final DialogFragment fragment = new ProgressDialogFragment();
+                final DialogFragment fragment = new SupportProgressDialogFragment();
                 fragment.setCancelable(false);
-                fragment.show(((Activity) activity).getFragmentManager(), PROGRESS_FRAGMENT_TAG);
+                fragment.show(((FragmentActivity) activity).getSupportFragmentManager(), PROGRESS_FRAGMENT_TAG);
             }
         });
     }
@@ -59,7 +59,7 @@ public abstract class ProgressSaveFileTask extends SaveFileTask {
         ((IExtendedActivity) context).executeAfterFragmentResumed(new IExtendedActivity.Action() {
             @Override
             public void execute(IExtendedActivity activity) {
-                final FragmentManager fm = ((Activity) activity).getFragmentManager();
+                final FragmentManager fm = ((FragmentActivity) activity).getSupportFragmentManager();
                 final DialogFragment fragment = (DialogFragment) fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG);
                 if (fragment != null) {
                     fragment.dismiss();

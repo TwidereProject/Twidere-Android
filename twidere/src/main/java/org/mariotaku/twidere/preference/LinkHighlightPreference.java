@@ -20,18 +20,14 @@
 package org.mariotaku.twidere.preference;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.text.SpannableString;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.text.TwidereHighLightStyle;
-import org.mariotaku.twidere.util.Utils;
 
 public class LinkHighlightPreference extends ListPreference implements Constants {
 

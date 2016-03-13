@@ -32,8 +32,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.AccountPreferences;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.DataStoreUtils;
 
 import java.util.HashMap;

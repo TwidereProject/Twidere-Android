@@ -34,7 +34,7 @@ import android.widget.TextView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.api.twitter.model.ScheduledStatus;
-import org.mariotaku.twidere.loader.support.ScheduledStatusesLoader;
+import org.mariotaku.twidere.loader.ScheduledStatusesLoader;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 

@@ -118,6 +118,16 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
         mEntriesListView.setAdapter(mEntriesAdapter);
         mEntriesListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         mEntriesListView.setOnItemClickListener(this);
+
+        if (savedInstanceState == null) {
+            for (int i = 0, j = mEntriesAdapter.getCount(); i < j; i++) {
+                if (mEntriesAdapter.getItemViewType(i) == EntriesAdapter.VIEW_TYPE_PREFERENCE_ENTRY) {
+                    openDetails(i);
+                    mEntriesListView.setItemChecked(i, true);
+                    break;
+                }
+            }
+        }
     }
 
     private void initEntries() {
@@ -241,10 +251,15 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        openDetails(position);
+    }
+
+    protected void openDetails(int position) {
         final Entry entry = mEntriesAdapter.getItem(position);
         if (!(entry instanceof PreferenceEntry)) return;
         final PreferenceEntry pe = (PreferenceEntry) entry;
         final FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         final FragmentTransaction ft = fm.beginTransaction();
         if (pe.preference != 0) {
             final Bundle args = new Bundle();

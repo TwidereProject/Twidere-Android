@@ -23,16 +23,13 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceScreen;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.SettingsActivity;
-import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.Utils;
 
 public class SettingsDetailsFragment extends PreferenceFragmentCompat implements Constants,

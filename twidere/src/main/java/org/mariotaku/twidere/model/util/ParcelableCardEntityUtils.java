@@ -9,8 +9,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.text.ParseException;
 import java.util.Date;

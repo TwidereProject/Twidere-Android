@@ -151,6 +151,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             final ThemeBackgroundPreference preference = (ThemeBackgroundPreference) getPreference();
             final SharedPreferences preferences = preference.getSharedPreferences();
             preference.setValue(preference.getPersistedString(null));
+            builder.setTitle(preference.getDialogTitle());
             builder.setSingleChoiceItems(preference.mBackgroundEntries, preference.getValueIndex(), new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

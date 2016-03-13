@@ -26,8 +26,8 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-import org.mariotaku.twidere.util.support.graphics.OutlineCompat;
 import org.mariotaku.twidere.util.support.DrawableSupport;
+import org.mariotaku.twidere.util.support.graphics.OutlineCompat;
 
 /**
  * Interface by which a View builds its {@link org.mariotaku.twidere.util.support.graphics.OutlineCompat}, used for shadow casting and clipping.

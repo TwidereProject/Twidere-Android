@@ -51,15 +51,15 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.activity.support.DataImportActivity;
 import org.mariotaku.twidere.activity.support.HomeActivity;
-import org.mariotaku.twidere.adapter.support.SupportTabsAdapter;
+import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
-import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
 import org.mariotaku.twidere.fragment.support.InteractionsTimelineFragment;
+import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.preference.WizardPageHeaderPreference;
@@ -664,7 +664,7 @@ public class SettingsWizardActivity extends BaseAppCompatActivity implements Con
 
         @Override
         protected void onPreExecute() {
-            ProgressDialogFragment.show(mActivity, FRAGMENT_TAG).setCancelable(false);
+            SupportProgressDialogFragment.show(mActivity, FRAGMENT_TAG).setCancelable(false);
         }
 
         private boolean wasConfigured(final List<SupportTabSpec> tabs) {

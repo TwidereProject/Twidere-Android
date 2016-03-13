@@ -35,8 +35,6 @@ import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
-import org.mariotaku.twidere.fragment.BaseDialogFragment;
-import org.mariotaku.twidere.fragment.BaseFragment;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
 import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
@@ -44,7 +42,7 @@ import org.mariotaku.twidere.fragment.support.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
-import org.mariotaku.twidere.loader.support.TwitterAPIStatusesLoader;
+import org.mariotaku.twidere.loader.TwitterAPIStatusesLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
 import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.provider.TwidereDataProvider;
@@ -71,8 +69,6 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface GeneralComponent {
     void inject(DummyStatusHolderAdapter object);
-
-    void inject(BaseFragment object);
 
     void inject(BaseSupportFragment object);
 
@@ -115,8 +111,6 @@ public interface GeneralComponent {
     void inject(ManagedAsyncTask<Object, Object, Object> object);
 
     void inject(BasePreferenceFragment object);
-
-    void inject(BaseDialogFragment object);
 
     void inject(BaseFiltersFragment.FilteredUsersFragment.FilterUsersListAdapter object);
 

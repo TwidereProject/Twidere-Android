@@ -33,8 +33,9 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
@@ -55,7 +56,7 @@ import java.util.Arrays;
 /**
  * Created by mariotaku on 16/2/9.
  */
-public class NetworkDiagnosticsFragment extends BaseFragment {
+public class NetworkDiagnosticsFragment extends BaseSupportFragment {
 
     private TextView mLogTextView;
     private Button mStartDiagnosticsButton;
@@ -75,8 +76,8 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
+        super.onBaseViewCreated(view, savedInstanceState);
         mStartDiagnosticsButton = (Button) view.findViewById(R.id.start_diagnostics);
         mLogTextView = (TextView) view.findViewById(R.id.log_text);
     }

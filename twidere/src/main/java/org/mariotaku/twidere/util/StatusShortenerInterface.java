@@ -32,10 +32,10 @@ import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.IStatusShortener;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 

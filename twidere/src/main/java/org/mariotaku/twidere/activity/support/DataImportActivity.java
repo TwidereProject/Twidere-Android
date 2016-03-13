@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.fragment.support.DataExportImportTypeSelectorDialogFragment;
+import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
 import org.mariotaku.twidere.util.DataImportExportUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -149,7 +149,7 @@ public class DataImportActivity extends ThemedFragmentActivity implements DataEx
 
         @Override
         protected void onPreExecute() {
-            ProgressDialogFragment.show(mActivity, FRAGMENT_TAG).setCancelable(false);
+            SupportProgressDialogFragment.show(mActivity, FRAGMENT_TAG).setCancelable(false);
         }
 
     }
@@ -200,7 +200,7 @@ public class DataImportActivity extends ThemedFragmentActivity implements DataEx
 
         @Override
         protected void onPreExecute() {
-            ProgressDialogFragment.show(mActivity, FRAGMENT_TAG).setCancelable(false);
+            SupportProgressDialogFragment.show(mActivity, FRAGMENT_TAG).setCancelable(false);
         }
 
     }

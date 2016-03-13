@@ -113,6 +113,7 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
             mAdapter = new SimpleCursorAdapter(context, layout, null, new String[]{Audio.Media.TITLE}, new int[]{android.R.id.text1}, 0);
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(getPreference().getDialogTitle());
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
             int checkedItem = -1;

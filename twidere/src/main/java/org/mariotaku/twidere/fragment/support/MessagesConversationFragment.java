@@ -82,7 +82,7 @@ import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.loader.support.UserSearchLoader;
+import org.mariotaku.twidere.loader.UserSearchLoader;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableUser;

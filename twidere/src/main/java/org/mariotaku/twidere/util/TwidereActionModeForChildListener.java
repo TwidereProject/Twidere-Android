@@ -25,6 +25,7 @@ import android.graphics.Rect;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatCallback;
+import android.support.v7.app.AppCompatUtils;
 import android.support.v7.view.ActionMode;
 import android.support.v7.view.StandaloneActionMode;
 import android.support.v7.view.SupportActionModeWrapper;
@@ -42,8 +43,6 @@ import android.widget.PopupWindow;
 
 import org.mariotaku.twidere.activity.iface.IAppCompatActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-
-import android.support.v7.app.AppCompatUtils;
 import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 
 /**

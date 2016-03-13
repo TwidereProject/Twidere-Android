@@ -25,9 +25,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
-import org.mariotaku.twidere.loader.support.UserSearchLoader;
-import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.loader.UserSearchLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 

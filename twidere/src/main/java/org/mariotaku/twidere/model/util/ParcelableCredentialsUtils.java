@@ -5,9 +5,9 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.DataStoreUtils;
 
