@@ -1502,7 +1502,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         public long getItemId(int position) {
-            return System.identityHashCode(mAccounts[position]);
+            return mAccounts[position].hashCode();
         }
 
         @NonNull
@@ -1797,7 +1797,7 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
 
         @Override
         public long getItemId(int position) {
-            return System.identityHashCode(getItem(position));
+            return getItem(position).hashCode();
         }
 
         @Override

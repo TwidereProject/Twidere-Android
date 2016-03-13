@@ -2159,7 +2159,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public long getItemId(int position) {
             final ParcelableStatus status = getStatus(position);
-            if (status != null) return System.identityHashCode(status);
+            if (status != null) return status.hashCode();
             return getItemType(position);
         }
 

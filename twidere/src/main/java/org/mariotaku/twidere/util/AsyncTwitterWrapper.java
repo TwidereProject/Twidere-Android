@@ -322,11 +322,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         TaskStarter.execute(task);
     }
 
-    public int getSavedSearchesAsync(UserKey[] accountKeys) {
+    public void getSavedSearchesAsync(UserKey[] accountKeys) {
         final GetSavedSearchesTask task = new GetSavedSearchesTask(mContext);
         task.setParams(accountKeys);
         TaskStarter.execute(task);
-        return System.identityHashCode(task);
     }
 
     @NonNull

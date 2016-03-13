@@ -95,7 +95,7 @@ public class InternalTwitterContentUtils {
             return false;
         final StringBuilder builder = new StringBuilder();
         final List<String> selectionArgs = new ArrayList<>();
-        builder.append("SELECT NULL WHERE");
+        builder.append("SELECT ");
         if (textPlain != null) {
             selectionArgs.add(textPlain);
             builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.VALUE
@@ -142,7 +142,7 @@ public class InternalTwitterContentUtils {
                 selectionArgs.toArray(new String[selectionArgs.size()]));
         if (cur == null) return false;
         try {
-            return cur.getCount() > 0;
+            return cur.moveToFirst() && cur.getInt(0) != 0;
         } finally {
             cur.close();
         }
