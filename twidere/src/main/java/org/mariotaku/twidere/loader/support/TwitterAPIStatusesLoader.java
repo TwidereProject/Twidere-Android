@@ -75,10 +75,11 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     private final boolean mLoadingMore;
     // Statuses sorted descending by default
     private Comparator<ParcelableStatus> mComparator = ParcelableStatus.REVERSE_COMPARATOR;
+
     @Inject
-    DiskCache mFileCache;
+    protected DiskCache mFileCache;
     @Inject
-    SharedPreferencesWrapper mPreferences;
+    protected SharedPreferencesWrapper mPreferences;
 
     public TwitterAPIStatusesLoader(@NonNull final Context context,
                                     @Nullable final UserKey accountKey,

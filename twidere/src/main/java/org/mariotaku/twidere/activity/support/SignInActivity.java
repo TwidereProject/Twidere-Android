@@ -1092,7 +1092,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 }
             }
 
-            values.put(Accounts.ACCOUNT_KEY, user.getId());
+            values.put(Accounts.ACCOUNT_KEY, UserKeyUtils.fromUser(user).toString());
             values.put(Accounts.SCREEN_NAME, user.getScreenName());
             values.put(Accounts.NAME, user.getName());
             values.put(Accounts.PROFILE_IMAGE_URL, TwitterContentUtils.getProfileImageUrl(user));
