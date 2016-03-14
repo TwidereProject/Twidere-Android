@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto"
-                  android:key="settings_content"
-                  android:title="@string/content_and_storage">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="settings_content"
+    android:title="@string/content_and_storage">
 
     <PreferenceCategory
         android:key="category_content"
@@ -11,9 +12,9 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="name_first"
-            android:title="@string/name_first"
-            app:asb_summaryOff="@string/name_first_summary_off"
-            app:asb_summaryOn="@string/name_first_summary_on">
+            android:summaryOff="@string/name_first_summary_off"
+            android:summaryOn="@string/name_first_summary_on"
+            android:title="@string/name_first">
             <extra
                 android:name="notify_change"
                 android:value="true"/>

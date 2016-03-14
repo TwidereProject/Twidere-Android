@@ -39,4 +39,5 @@ public class DrawerContentFrameLayout extends FrameLayout {
         super(context, attrs, defStyle);
         ThemeUtils.setupDrawerBackground(context, this);
     }
+
 }

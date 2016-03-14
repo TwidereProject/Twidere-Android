@@ -27,8 +27,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -43,8 +45,8 @@ import android.view.MenuItem;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
-import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
+import org.mariotaku.twidere.activity.AccountSelectorActivity;
+import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.support.AbsStatusesFragment;
@@ -81,7 +83,7 @@ public class MenuUtils implements Constants {
         item.setChecked(checked);
     }
 
-    public static void setMenuItemIcon(final Menu menu, final int id, final int icon) {
+    public static void setMenuItemIcon(final Menu menu, final int id, @DrawableRes final int icon) {
         if (menu == null) return;
         final MenuItem item = menu.findItem(id);
         if (item == null) return;
@@ -96,7 +98,7 @@ public class MenuUtils implements Constants {
         MenuItemCompat.setShowAsAction(item, flags);
     }
 
-    public static void setMenuItemTitle(final Menu menu, final int id, final int icon) {
+    public static void setMenuItemTitle(final Menu menu, final int id, @StringRes final int icon) {
         if (menu == null) return;
         final MenuItem item = menu.findItem(id);
         if (item == null) return;

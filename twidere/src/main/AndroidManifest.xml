@@ -139,7 +139,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.HomeActivity"
+            android:name=".activity.HomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Twidere.NoActionBar"
@@ -163,11 +163,11 @@
                 android:value=".activity.support.HomeActivity"/>
         </activity>
         <activity
-            android:name=".activity.support.ComposeActivity"
+            android:name=".activity.ComposeActivity"
             android:excludeFromRecents="true"
             android:label="@string/compose"
             android:launchMode="singleTop"
-            android:parentActivityName=".activity.support.HomeActivity"
+            android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/Theme.Twidere.Compose"
             android:windowSoftInputMode="adjustResize">
             <intent-filter android:label="@string/compose">
@@ -193,10 +193,10 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.support.HomeActivity"/>
+                android:value=".activity.HomeActivity"/>
         </activity>
         <activity
-            android:name=".activity.support.QuickSearchBarActivity"
+            android:name=".activity.QuickSearchBarActivity"
             android:label="@string/search"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Twidere.QuickSearchBar"
@@ -208,7 +208,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.SignInActivity"
+            android:name=".activity.SignInActivity"
             android:label="@string/sign_in"
             android:theme="@style/Theme.Twidere.DialogWhenLarge.NoActionBar"
             android:windowSoftInputMode="adjustResize">
@@ -219,7 +219,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.BrowserSignInActivity"
+            android:name=".activity.BrowserSignInActivity"
             android:label="@string/browser_sign_in"
             android:theme="@style/Theme.Twidere"
             android:windowSoftInputMode="adjustResize">
@@ -232,7 +232,7 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/settings"
-            android:parentActivityName=".activity.support.HomeActivity"
+            android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/Theme.Twidere"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -244,15 +244,15 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.support.HomeActivity"/>
+                android:value=".activity.HomeActivity"/>
         </activity>
         <activity
-            android:name=".activity.support.APIEditorActivity"
+            android:name=".activity.APIEditorActivity"
             android:label="@string/edit_api"
             android:theme="@style/Theme.Twidere.Dialog"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activity.support.AccountSelectorActivity"
+            android:name=".activity.AccountSelectorActivity"
             android:label="@string/select_account"
             android:theme="@style/Theme.Twidere.Dialog">
             <intent-filter>
@@ -262,17 +262,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.ColorPickerDialogActivity"
+            android:name=".activity.ColorPickerDialogActivity"
             android:label="@string/set_color"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
-            android:name=".activity.support.LinkHandlerActivity"
-            android:parentActivityName=".activity.support.HomeActivity"
-            android:theme="@style/Theme.Twidere.DialogWhenLarge.NoActionBar"
+            android:name=".activity.LinkHandlerActivity"
+            android:parentActivityName=".activity.HomeActivity"
+            android:theme="@style/Theme.Twidere"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.support.HomeActivity"/>
+                android:value=".activity.HomeActivity"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -284,7 +284,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.MediaViewerActivity"
+            android:name=".activity.MediaViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/media"
             android:theme="@style/Theme.Twidere.Viewer"
@@ -292,7 +292,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.support.HomeActivity"/>
+                android:value=".activity.HomeActivity"/>
 
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.VIEW_MEDIA"/>
@@ -306,7 +306,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.FileSelectorActivity"
+            android:name=".activity.FileSelectorActivity"
             android:exported="false"
             android:label="@string/pick_file"
             android:theme="@style/Theme.Twidere.NoDisplay"
@@ -319,7 +319,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.ThemedImagePickerActivity"
+            android:name=".activity.ThemedImagePickerActivity"
             android:exported="false"
             android:theme="@style/Theme.Twidere.NoDisplay"
             android:windowSoftInputMode="adjustResize">
@@ -332,7 +332,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.CustomTabEditorActivity"
+            android:name=".activity.CustomTabEditorActivity"
             android:exported="false"
             android:label="@string/add_tab"
             android:theme="@style/Theme.Twidere.Dialog"
@@ -359,7 +359,7 @@
             android:label="@string/copy_link"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
-            android:name=".activity.support.RequestPermissionsActivity"
+            android:name=".activity.RequestPermissionsActivity"
             android:label="@string/permissions_request"
             android:theme="@style/Theme.Twidere.Dialog">
             <intent-filter>
@@ -369,7 +369,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.support.UserListSelectorActivity"
+            android:name=".activity.UserListSelectorActivity"
             android:label="@string/select_user_list"
             android:theme="@style/Theme.Twidere.Dialog">
             <intent-filter>
@@ -384,15 +384,15 @@
             android:label="@string/settings_wizard"
             android:theme="@style/Theme.Twidere"/>
         <activity
-            android:name=".activity.support.DataExportActivity"
+            android:name=".activity.DataExportActivity"
             android:label="@string/export_settings"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
-            android:name=".activity.support.DataImportActivity"
+            android:name=".activity.DataImportActivity"
             android:label="@string/import_settings"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
-            android:name=".activity.support.ActivityPickerActivity"
+            android:name=".activity.ActivityPickerActivity"
             android:theme="@style/Theme.Twidere.Dialog">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.PICK_ACTIVITY"/>

@@ -33,7 +33,7 @@ import com.squareup.leakcanary.RefWatcher;
 import com.squareup.leakcanary.ServiceHeapDumpListener;
 
 import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.activity.support.ComposeActivity;
+import org.mariotaku.twidere.activity.ComposeActivity;
 import org.mariotaku.twidere.util.net.NoIntercept;
 
 import java.io.IOException;

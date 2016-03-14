@@ -85,7 +85,7 @@ import com.squareup.otto.Subscribe;
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
+import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;

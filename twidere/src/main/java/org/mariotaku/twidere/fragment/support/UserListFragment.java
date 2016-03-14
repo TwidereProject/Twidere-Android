@@ -58,8 +58,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
-import org.mariotaku.twidere.activity.support.AccountSelectorActivity;
-import org.mariotaku.twidere.activity.support.UserListSelectorActivity;
+import org.mariotaku.twidere.activity.AccountSelectorActivity;
+import org.mariotaku.twidere.activity.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;

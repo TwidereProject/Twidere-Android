@@ -35,12 +35,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v4.view.ViewPager;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceScreen;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,9 +45,6 @@ import android.view.ViewGroup;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
-import org.mariotaku.twidere.activity.support.DataImportActivity;
-import org.mariotaku.twidere.activity.support.HomeActivity;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
@@ -70,7 +64,6 @@ import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.InternalParseUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.ThemedLayoutInflaterFactory;
 import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.LinePageIndicator;
@@ -172,21 +165,6 @@ public class SettingsWizardActivity extends BaseAppCompatActivity implements Con
     @Override
     public int getThemeColor() {
         return ThemeUtils.getUserAccentColor(this);
-    }
-
-    @NonNull
-    @Override
-    public LayoutInflater getLayoutInflater() {
-        final LayoutInflater inflater = super.getLayoutInflater();
-        if (inflater.getFactory() == null) {
-            LayoutInflaterCompat.setFactory(inflater, new ThemedLayoutInflaterFactory(this, new LayoutInflaterFactory() {
-                @Override
-                public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-                    return SettingsWizardActivity.this.onCreateView(parent, name, context, attrs);
-                }
-            }));
-        }
-        return inflater;
     }
 
     @Override
@@ -314,7 +292,7 @@ public class SettingsWizardActivity extends BaseAppCompatActivity implements Con
         final Intent intent = getIntent();
         intent.putExtra(EXTRA_PAGE, mViewPager.getCurrentItem());
         setIntent(intent);
-        restart();
+        recreate();
     }
 
     public static class WizardPageCardsFragment extends BaseWizardPageFragment {

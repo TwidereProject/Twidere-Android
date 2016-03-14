@@ -26,7 +26,7 @@
     android:divider="?android:dividerVertical"
     android:orientation="vertical"
     android:showDividers="middle"
-    tools:context=".activity.support.RequestPermissionsActivity">
+    tools:context=".activity.RequestPermissionsActivity">
 
     <ScrollView
         android:layout_width="match_parent"

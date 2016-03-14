@@ -28,7 +28,7 @@ import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.Body;
-import org.mariotaku.twidere.activity.support.ThemedImagePickerActivity;
+import org.mariotaku.twidere.activity.ThemedImagePickerActivity;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.io.IOException;

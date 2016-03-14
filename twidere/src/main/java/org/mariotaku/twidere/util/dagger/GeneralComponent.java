@@ -21,12 +21,10 @@ package org.mariotaku.twidere.util.dagger;
 
 import android.support.v7.widget.RecyclerView;
 
-import org.mariotaku.twidere.activity.BasePreferenceActivity;
-import org.mariotaku.twidere.activity.BaseThemedActivity;
-import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
-import org.mariotaku.twidere.activity.support.ComposeActivity;
-import org.mariotaku.twidere.activity.support.MediaViewerActivity;
-import org.mariotaku.twidere.activity.support.ThemedFragmentActivity;
+import org.mariotaku.twidere.activity.BaseAppCompatActivity;
+import org.mariotaku.twidere.activity.ComposeActivity;
+import org.mariotaku.twidere.activity.ThemedFragmentActivity;
+import org.mariotaku.twidere.activity.MediaViewerActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.BaseArrayAdapter;
@@ -74,10 +72,6 @@ public interface GeneralComponent {
 
     void inject(MultiSelectEventHandler object);
 
-    void inject(BasePreferenceActivity object);
-
-    void inject(BaseThemedActivity object);
-
     void inject(BaseSupportDialogFragment object);
 
     void inject(RefreshService object);
@@ -113,8 +107,6 @@ public interface GeneralComponent {
     void inject(BasePreferenceFragment object);
 
     void inject(BaseFiltersFragment.FilteredUsersFragment.FilterUsersListAdapter object);
-
-    void inject(AccountsDashboardFragment.OptionItemsAdapter object);
 
     void inject(EmojiSpannableFactory object);
 

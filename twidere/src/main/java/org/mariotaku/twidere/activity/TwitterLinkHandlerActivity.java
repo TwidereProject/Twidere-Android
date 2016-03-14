@@ -15,7 +15,6 @@ import android.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.support.IntentSupport;
 

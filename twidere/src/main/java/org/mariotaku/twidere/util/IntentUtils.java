@@ -20,7 +20,7 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.activity.support.MediaViewerActivity;
+import org.mariotaku.twidere.activity.MediaViewerActivity;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.support.SensitiveContentWarningDialogFragment;
 import org.mariotaku.twidere.fragment.support.UserFragment;

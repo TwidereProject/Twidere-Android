@@ -27,7 +27,7 @@ import android.os.Bundle;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
-import org.mariotaku.twidere.activity.support.HomeActivity;
+import org.mariotaku.twidere.activity.HomeActivity;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.PreProcessing;

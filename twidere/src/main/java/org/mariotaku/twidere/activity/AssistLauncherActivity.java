@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.activity.support.ComposeActivity;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 
 public class AssistLauncherActivity extends Activity implements Constants {

@@ -17,10 +17,10 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.MainFrameLayout
+<org.mariotaku.twidere.view.ExtendedFrameLayout
     android:id="@+id/home_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -32,29 +32,33 @@
 
     <include layout="@layout/layout_empty_tab_hint"/>
 
-    <RelativeLayout
-        android:id="@+id/twidere_action_bar_with_overlay"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/action_bar"
         android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:elevation="@dimen/toolbar_elevation"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetEnd="0dp"
+        app:contentInsetStart="0dp">
+
+        <org.mariotaku.twidere.view.TabPagerIndicator
+            android:id="@+id/main_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tabDisplayOption="icon"
+            app:tabExpandEnabled="true"
+            app:tabHorizontalPadding="@dimen/element_spacing_normal"/>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/actions_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/element_spacing_large"
+        android:clickable="true"
+        android:src="@drawable/ic_action_status_compose"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
 
-        <org.mariotaku.twidere.view.TwidereActionBarContainer
-            android:id="@+id/twidere_action_bar_container"
-            style="?attr/actionBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_alignParentTop="true"
-            android:layout="@layout/layout_actionbar_home"
-            android:touchscreenBlocksFocus="true"
-            tools:ignore="UnusedAttribute"/>
-
-        <View
-            android:id="@+id/window_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/twidere_action_bar_container"
-            android:background="?android:windowContentOverlay"/>
-    </RelativeLayout>
-
-    <include layout="@layout/layout_home_actions_button"/>
-</org.mariotaku.twidere.view.MainFrameLayout>
+</org.mariotaku.twidere.view.ExtendedFrameLayout>

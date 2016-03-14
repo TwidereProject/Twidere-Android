@@ -43,6 +43,6 @@
     private android.graphics.drawable.Drawable mWindowContentOverlay;
 }
 
--keepclassmembers class org.mariotaku.twidere.activity.support.BrowserSignInActivity.InjectorJavaScriptInterface {
+-keepclassmembers class org.mariotaku.twidere.activity.BrowserSignInActivity.InjectorJavaScriptInterface {
     public *;
 }

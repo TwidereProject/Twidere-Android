@@ -12,8 +12,8 @@ import android.view.KeyEvent;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.ComposeActivity;
-import org.mariotaku.twidere.activity.support.QuickSearchBarActivity;
+import org.mariotaku.twidere.activity.ComposeActivity;
+import org.mariotaku.twidere.activity.QuickSearchBarActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants;
 

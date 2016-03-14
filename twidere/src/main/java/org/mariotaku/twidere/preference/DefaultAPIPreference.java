@@ -43,7 +43,7 @@ import android.widget.Toast;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.APIEditorActivity;
+import org.mariotaku.twidere.activity.APIEditorActivity;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;

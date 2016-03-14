@@ -51,7 +51,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.ExtensionsListFragment;
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment;

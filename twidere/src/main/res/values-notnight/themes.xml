@@ -18,7 +18,8 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
         <item name="coloredActionBar">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">light</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
@@ -41,7 +42,8 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
         <item name="coloredActionBar">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">light</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
@@ -69,7 +71,9 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
         <item name="coloredActionBar">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">light</item>
+
     </style>
 
 
@@ -94,7 +98,9 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
         <item name="coloredActionBar">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">light</item>
+
     </style>
 
 
@@ -130,7 +136,9 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
         <item name="coloredActionBar">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">light</item>
+
     </style>
 
     <style name="Theme.Twidere.QuickSearchBar" parent="Theme.Twidere.Dialog">
@@ -145,8 +153,6 @@
     <style name="Theme.Twidere.Drawer" parent="Theme.Twidere.NoActionBar">
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/bg_color_drawer_light</item>
-        <item name="textColorDrawerNamePrimary">?android:textColorPrimaryInverse</item>
-        <item name="textColorDrawerNameSecondary">?android:textColorSecondaryInverse</item>
     </style>
 
     <style name="Theme.Twidere.NoDisplay" parent="Theme.Twidere.Dialog">

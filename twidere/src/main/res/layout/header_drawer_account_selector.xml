@@ -17,7 +17,9 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/account_dashboard_header"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -36,7 +38,7 @@
         android:focusable="false"
         android:foreground="@color/drawer_banner_foreground"
         android:scaleType="centerCrop"
-        tools:src="@drawable/nyan_stars_background" />
+        tools:src="@drawable/nyan_stars_background"/>
 
     <FrameLayout
         android:id="@+id/profile_container"
@@ -64,7 +66,7 @@
                 android:focusable="false"
                 app:sivBorder="true"
                 app:sivBorderWidth="2dp"
-                tools:src="@mipmap/ic_launcher" />
+                tools:src="@mipmap/ic_launcher"/>
 
             <org.mariotaku.twidere.view.ExtendedRecyclerView
                 android:id="@+id/other_accounts_list"
@@ -78,7 +80,7 @@
                 android:layout_toEndOf="@id/profile_image"
                 android:layout_toRightOf="@id/profile_image"
                 android:focusable="false"
-                tools:visibility="invisible" />
+                tools:visibility="invisible"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -104,9 +106,9 @@
                         android:focusable="false"
                         android:singleLine="true"
                         android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?attr/textColorDrawerNamePrimary"
+                        android:textColor="@android:color/white"
                         android:textStyle="bold"
-                        tools:text="Name" />
+                        tools:text="Name"/>
 
                     <TextView
                         android:id="@+id/screen_name"
@@ -115,8 +117,8 @@
                         android:focusable="false"
                         android:singleLine="true"
                         android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?textColorDrawerNameSecondary"
-                        tools:text="\@username" />
+                        android:textColor="@color/light_gray"
+                        tools:text="\@username"/>
 
                 </LinearLayout>
 
@@ -129,7 +131,7 @@
                         android:id="@+id/account_dashboard_menu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:focusable="true" />
+                        android:focusable="true"/>
                 </FrameLayout>
 
 
@@ -143,7 +145,7 @@
             android:focusable="false"
             android:scaleType="fitCenter"
             android:visibility="invisible"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
     </FrameLayout>
 
     <FrameLayout
@@ -159,7 +161,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/no_account" />
+            android:text="@string/no_account"/>
 
     </FrameLayout>
 

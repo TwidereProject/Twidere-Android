@@ -139,11 +139,6 @@ public class ImageCropperActivity extends CropImageActivity implements IThemedAc
     }
 
     @Override
-    public final void restart() {
-        Utils.restartActivity(this);
-    }
-
-    @Override
     protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resId, boolean first) {
         mCurrentThemeColor = getThemeColor();
         mCurrentThemeFontFamily = getThemeFontFamily();

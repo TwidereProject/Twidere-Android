@@ -20,7 +20,8 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
         <item name="darkTheme">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
@@ -46,7 +47,8 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
         <item name="darkTheme">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
@@ -73,7 +75,9 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
         <item name="darkTheme">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
+
     </style>
 
     <style name="Theme.Twidere.Dialog" parent="Theme.Compat.Base.Dialog">
@@ -97,7 +101,9 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
         <item name="darkTheme">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
+
     </style>
 
     <style name="Theme.Twidere.Compose" parent="Theme.Compat.Base.Dialog">
@@ -131,7 +137,9 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
         <item name="darkTheme">true</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
+
     </style>
 
     <style name="Theme.Twidere.QuickSearchBar" parent="Theme.Twidere.Dialog">
@@ -143,14 +151,19 @@
         <item name="android:windowActionModeOverlay">false</item>
 
         <item name="darkTheme">true</item>
+
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
+
     </style>
 
     <style name="Theme.Twidere.Drawer" parent="Theme.Twidere.NoActionBar">
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/bg_color_drawer_dark</item>
-        <item name="textColorDrawerNamePrimary">?android:textColorPrimary</item>
-        <item name="textColorDrawerNameSecondary">?android:textColorSecondary</item>
         <item name="darkTheme">true</item>
+
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
 
     </style>
 
@@ -166,7 +179,10 @@
         <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
 
         <item name="darkTheme">true</item>
-        <!--<item name="android:windowNoDisplay">true</item>-->
+
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
+
     </style>
 
     <style name="Theme.Twidere.Viewer" parent="Theme.AppCompat">
@@ -195,8 +211,11 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
 
-        <item name="asb_switchPreferenceStyle">@style/asb_Preference.SwitchPreference</item>
         <item name="darkTheme">true</item>
+
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">dark</item>
+
     </style>
 
     <style name="Theme.Nyan" parent="Theme.Compat.Base.NoActionBar">

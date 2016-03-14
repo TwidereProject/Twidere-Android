@@ -50,8 +50,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.twitter.Validator;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.ColorPickerDialogActivity;
-import org.mariotaku.twidere.activity.support.ThemedImagePickerActivity;
+import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
+import org.mariotaku.twidere.activity.ThemedImagePickerActivity;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;

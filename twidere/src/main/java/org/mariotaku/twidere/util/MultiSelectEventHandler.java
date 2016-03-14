@@ -33,7 +33,7 @@ import com.twitter.Extractor;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.support.BaseAppCompatActivity;
+import org.mariotaku.twidere.activity.BaseAppCompatActivity;
 import org.mariotaku.twidere.menu.AccountActionProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
