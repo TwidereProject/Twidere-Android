@@ -19,12 +19,10 @@
 
 package org.mariotaku.twidere.preference;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -98,7 +96,7 @@ public class NotificationTypePreference extends DialogPreference implements Cons
 
     @Override
     public void displayDialog(PreferenceFragmentCompat fragment) {
-        final MultiSelectListDialogFragment df = MultiSelectListDialogFragment.newInstance(getKey());
+        final NotificationTypeDialogFragment df = NotificationTypeDialogFragment.newInstance(getKey());
         df.setTargetFragment(fragment, 0);
         df.show(fragment.getFragmentManager(), getKey());
     }
@@ -107,27 +105,17 @@ public class NotificationTypePreference extends DialogPreference implements Cons
         return mDefaultValue;
     }
 
-    public final static class MultiSelectListDialogFragment extends ThemedPreferenceDialogFragmentCompat
+    public final static class NotificationTypeDialogFragment extends ThemedPreferenceDialogFragmentCompat
             implements DialogInterface.OnMultiChoiceClickListener {
 
         private boolean[] mCheckedItems;
 
-        @NonNull
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Context context = getContext();
+        protected void onPrepareDialogBuilder(AlertDialogWrapper.Builder builder) {
             NotificationTypePreference preference = (NotificationTypePreference) getPreference();
-            onClick(null, DialogInterface.BUTTON_NEGATIVE);
-            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context)
-                    .setTitle(preference.getDialogTitle())
-                    .setIcon(preference.getDialogIcon())
-                    .setPositiveButton(preference.getPositiveButtonText(), this)
-                    .setNegativeButton(preference.getNegativeButtonText(), this);
             final int value = preference.getPersistedInt(preference.getDefaultValue());
             mCheckedItems = preference.getCheckedItems(value);
             builder.setMultiChoiceItems(preference.getEntries(), mCheckedItems, this);
-            // Create the dialog
-            return builder.create();
         }
 
         @Override
@@ -145,8 +133,8 @@ public class NotificationTypePreference extends DialogPreference implements Cons
             preference.notifyChanged();
         }
 
-        public static MultiSelectListDialogFragment newInstance(String key) {
-            final MultiSelectListDialogFragment df = new MultiSelectListDialogFragment();
+        public static NotificationTypeDialogFragment newInstance(String key) {
+            final NotificationTypeDialogFragment df = new NotificationTypeDialogFragment();
             final Bundle args = new Bundle();
             args.putString(PreferenceDialogFragmentCompat.ARG_KEY, key);
             df.setArguments(args);

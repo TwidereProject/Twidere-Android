@@ -42,7 +42,7 @@ public abstract class ThemedPreferenceDialogFragmentCompat extends PreferenceDia
         if (needInputMethod()) {
             supportRequestInputMethod(dialog);
         }
-        return builder.create();
+        return dialog;
     }
 
     @Override
