@@ -20,7 +20,7 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference
+    <org.mariotaku.twidere.preference.ThemedListPreference
         android:defaultValue="crop"
         android:entries="@array/entries_media_preview_style"
         android:entryValues="@array/values_media_preview_style"
@@ -29,7 +29,7 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </ListPreference>
+    </org.mariotaku.twidere.preference.ThemedListPreference>
     <SwitchPreference
         android:defaultValue="false"
         android:key="show_absolute_time"
@@ -48,7 +48,7 @@
             android:value="true"/>
     </SwitchPreference>
 
-    <ListPreference
+    <org.mariotaku.twidere.preference.ThemedListPreference
         android:defaultValue="@string/default_tab_display_option"
         android:entries="@array/entries_tab_display_option"
         android:entryValues="@array/values_tab_display_option"

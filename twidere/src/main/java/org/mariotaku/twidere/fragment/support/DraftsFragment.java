@@ -246,8 +246,8 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mListView = (ListView) view.findViewById(android.R.id.list);
         mEmptyView = view.findViewById(android.R.id.empty);
         mEmptyText = (TextView) view.findViewById(R.id.empty_text);

@@ -59,7 +59,6 @@ import org.mariotaku.twidere.fragment.support.SupportBrowserFragment;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 
 import java.util.ArrayList;
@@ -77,7 +76,6 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
     private EntriesAdapter mEntriesAdapter;
     private TintedStatusNativeActionModeAwareLayout mMainContent;
     private View mDetailFragmentContainer;
-    private TwidereActionModeForChildListener mTwidereActionModeForChildListener;
 
     public static void setShouldNotifyChange(Activity activity) {
         if (!(activity instanceof SettingsActivity)) return;
@@ -105,8 +103,6 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
         mMainContent.setDrawColor(true);
         mMainContent.setColor(statusBarColor, alpha);
 
-        mTwidereActionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
-        mMainContent.setActionModeForChildListener(mTwidereActionModeForChildListener);
         mDetailFragmentContainer.setBackgroundColor((backgroundAlpha << 24 | 0xFFFFFF) & ThemeUtils.getThemeBackgroundColor(this));
 
         mSlidingPaneLayout.setShadowResourceLeft(R.drawable.sliding_pane_shadow_left);
@@ -226,9 +222,6 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
 
     @Override
     public void onBackPressed() {
-        if (mTwidereActionModeForChildListener.finishExisting()) {
-            return;
-        }
         if (isTopSettings() && shouldNotifyChange()) {
             final RestartConfirmDialogFragment df = new RestartConfirmDialogFragment();
             df.show(getSupportFragmentManager(), "restart_confirm");

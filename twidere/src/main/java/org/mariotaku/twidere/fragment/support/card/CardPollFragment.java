@@ -98,8 +98,8 @@ public class CardPollFragment extends BaseSupportFragment implements
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mPollContainer = (TableLayout) view.findViewById(R.id.poll_container);
         mPollSummary = (TextView) view.findViewById(R.id.poll_summary);
     }

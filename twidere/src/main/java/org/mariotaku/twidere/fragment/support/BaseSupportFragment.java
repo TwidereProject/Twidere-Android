@@ -86,9 +86,8 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     }
 
     @Override
-    public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        onBaseViewCreated(view, savedInstanceState);
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
         requestFitSystemWindows();
     }
 
@@ -152,11 +151,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-
-    }
-
-    @Override
     public void executeAfterFragmentResumed(Action action) {
         mActionHelper.executeAfterFragmentResumed(action);
     }
@@ -171,10 +165,6 @@ public class BaseSupportFragment extends Fragment implements IBaseFragment, Cons
     public void onDestroy() {
         super.onDestroy();
         DebugModeUtils.watchReferenceLeak(this);
-    }
-
-    public Context getThemedContext() {
-        return getActivity();
     }
 
     protected void fitSystemWindows(Rect insets) {

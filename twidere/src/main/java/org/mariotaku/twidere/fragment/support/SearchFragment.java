@@ -245,8 +245,8 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     }
 
     @Override
-    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mPagerWindowOverlay = view.findViewById(R.id.pager_window_overlay);
         mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
@@ -257,7 +257,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
         final View view = getView();
         if (view != null) {
             final int top = Utils.getInsetsTopWithoutActionBarHeight(getActivity(), insets.top);
-            view.setPadding(insets.left, top, insets.right, insets.bottom);
+//            view.setPadding(insets.left, top, insets.right, insets.bottom);
         }
         updateTabOffset();
     }

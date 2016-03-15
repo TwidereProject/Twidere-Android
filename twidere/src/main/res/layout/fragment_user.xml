@@ -17,10 +17,12 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <org.mariotaku.twidere.view.ExtendedFrameLayout
         android:id="@+id/details_container"
@@ -37,7 +39,7 @@
                 android:id="@+id/profile_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"/>
 
             <FrameLayout
                 android:id="@+id/profile_birthday_banner"
@@ -49,7 +51,7 @@
 
                 <org.mariotaku.twidere.view.BirthdayView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"/>
             </FrameLayout>
         </RelativeLayout>
 
@@ -58,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:hdl_contentLayout="@layout/fragment_content_pages"
-            app:hdl_headerLayout="@layout/header_user" />
+            app:hdl_headerLayout="@layout/header_user"/>
     </org.mariotaku.twidere.view.ExtendedFrameLayout>
 
 </FrameLayout>

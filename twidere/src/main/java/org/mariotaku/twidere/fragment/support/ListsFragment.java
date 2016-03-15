@@ -112,8 +112,8 @@ public class ListsFragment extends BaseSupportFragment implements RefreshScrollT
     }
 
     @Override
-    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
         mPagerOverlay = view.findViewById(R.id.pager_window_overlay);
@@ -149,23 +149,12 @@ public class ListsFragment extends BaseSupportFragment implements RefreshScrollT
 
     @Override
     protected void fitSystemWindows(Rect insets) {
-        final View view = getView();
-        if (view != null) {
-            final int top = Utils.getInsetsTopWithoutActionBarHeight(getActivity(), insets.top);
-            view.setPadding(insets.left, top, insets.right, insets.bottom);
-        }
+        super.fitSystemWindows(insets);
         updateTabOffset();
     }
 
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
-        if (mPagerIndicator == null) return false;
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof LinkHandlerActivity) {
-            ((LinkHandlerActivity) activity).getSystemWindowsInsets(insets);
-            insets.top = mPagerIndicator.getHeight() + getControlBarHeight();
-            return true;
-        }
         return false;
     }
 

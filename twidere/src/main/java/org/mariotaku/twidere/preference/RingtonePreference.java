@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -33,11 +32,14 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.AttributeSet;
+import android.view.View;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
@@ -112,14 +114,32 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
             a.recycle();
             mAdapter = new SimpleCursorAdapter(context, layout, null, new String[]{Audio.Media.TITLE}, new int[]{android.R.id.text1}, 0);
 
-            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(getPreference().getDialogTitle());
-            builder.setPositiveButton(android.R.string.ok, this);
-            builder.setNegativeButton(android.R.string.cancel, this);
-            int checkedItem = -1;
-            builder.setSingleChoiceItems(mAdapter, checkedItem, new OnClickListener() {
+            final MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
+            builder.title(getPreference().getDialogTitle());
+            builder.positiveText(android.R.string.ok);
+            builder.negativeText(android.R.string.cancel);
+            builder.onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+                    RingtonePreferenceDialogFragment.this.onClick(materialDialog, DialogInterface.BUTTON_POSITIVE);
+                }
+            });
+            builder.onNegative(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+                    RingtonePreferenceDialogFragment.this.onClick(materialDialog, DialogInterface.BUTTON_NEGATIVE);
+                }
+            });
+            builder.cancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    RingtonePreferenceDialogFragment.this.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+                }
+            });
+            int checkedItem = -1;
+            builder.adapter(mAdapter, new MaterialDialog.ListCallback() {
+                @Override
+                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                     if (mMediaPlayer != null) {
                         if (mMediaPlayer.isPlaying()) {
                             mMediaPlayer.stop();
@@ -143,7 +163,7 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
                 }
             });
             getLoaderManager().initLoader(0, null, this);
-            return builder.create();
+            return builder.build();
         }
 
         @Override

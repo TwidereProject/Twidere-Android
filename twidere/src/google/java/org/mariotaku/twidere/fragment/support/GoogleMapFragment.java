@@ -80,7 +80,6 @@ public class GoogleMapFragment extends SupportMapFragment implements Constants, 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onBaseViewCreated(view, savedInstanceState);
         requestFitSystemWindows();
     }
 
@@ -141,11 +140,6 @@ public class GoogleMapFragment extends SupportMapFragment implements Constants, 
         if (callback.getSystemWindowsInsets(insets)) {
             fitSystemWindows(insets);
         }
-    }
-
-    @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-
     }
 
     @Override

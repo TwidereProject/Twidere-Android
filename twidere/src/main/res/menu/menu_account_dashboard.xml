@@ -22,7 +22,7 @@
         <item
             android:id="@id/lists"
             android:icon="@drawable/ic_action_list"
-            android:title="@string/likes"/>
+            android:title="@string/lists"/>
         <item
             android:id="@id/groups"
             android:icon="@drawable/ic_action_list"

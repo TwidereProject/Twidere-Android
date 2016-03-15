@@ -27,11 +27,12 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.AttributeSet;
+
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
@@ -90,7 +91,7 @@ abstract class MultiSelectListPreference extends DialogPreference implements IDi
                 throw new IllegalArgumentException();
             mValues = new boolean[length];
             mPreferences = preference.getDefaultSharedPreferences();
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getContext());
             for (int i = 0; i < length; i++) {
                 mValues[i] = mPreferences.getBoolean(mKeys[i], mDefaultValues[i]);
             }
@@ -101,26 +102,15 @@ abstract class MultiSelectListPreference extends DialogPreference implements IDi
             return builder.create();
         }
 
-
-        @Override
-        public void onClick(final DialogInterface dialog, final int which) {
-            if (mPreferences == null) return;
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    final SharedPreferences.Editor editor = mPreferences.edit();
-                    final int length = mKeys.length;
-                    for (int i = 0; i < length; i++) {
-                        editor.putBoolean(mKeys[i], mValues[i]);
-                    }
-                    editor.apply();
-                    break;
-            }
-
-        }
-
         @Override
         public void onDialogClosed(boolean positive) {
-
+            if (mPreferences == null || !positive) return;
+            final SharedPreferences.Editor editor = mPreferences.edit();
+            final int length = mKeys.length;
+            for (int i = 0; i < length; i++) {
+                editor.putBoolean(mKeys[i], mValues[i]);
+            }
+            editor.apply();
         }
 
         @Override

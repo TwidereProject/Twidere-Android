@@ -19,7 +19,7 @@
             android:summary="@string/tcp_dns_query_summary"
             android:title="@string/tcp_dns_query"/>
 
-        <EditTextPreference
+        <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="builtin_dns_resolver"
             android:dialogTitle="@string/dns_server"
             android:inputType="textVisiblePassword"
@@ -50,31 +50,31 @@
             android:summary="@string/proxy_summary"
             android:title="@string/proxy"/>
 
-        <ListPreference
+        <org.mariotaku.twidere.preference.ThemedListPreference
             android:defaultValue="http"
             android:dependency="enable_proxy"
             android:entries="@array/entries_proxy_type"
             android:entryValues="@array/values_proxy_type"
             android:key="proxy_type"
             android:title="@string/proxy_type"/>
-        <EditTextPreference
+        <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="enable_proxy"
             android:key="proxy_host"
             android:singleLine="true"
             android:title="@string/proxy_host"/>
-        <EditTextPreference
+        <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="enable_proxy"
             android:inputType="number"
             android:key="proxy_port"
             android:singleLine="true"
             android:title="@string/proxy_port"/>
-        <EditTextPreference
+        <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="enable_proxy"
             android:inputType="textEmailAddress"
             android:key="proxy_username"
             android:singleLine="true"
             android:title="@string/proxy_username"/>
-        <EditTextPreference
+        <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="enable_proxy"
             android:inputType="textPassword"
             android:key="proxy_password"
@@ -101,13 +101,13 @@
             android:key="thumbor_enabled"
             android:title="@string/thumbor_integration"/>
 
-        <EditTextPreference
+        <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="thumbor_enabled"
             android:inputType="textUri"
             android:key="thumbor_address"
             android:title="@string/server_address"/>
 
-        <EditTextPreference
+        <org.mariotaku.twidere.preference.ThemedEditTextPreference
             android:dependency="thumbor_enabled"
             android:inputType="textVisiblePassword"
             android:key="thumbor_security_key"

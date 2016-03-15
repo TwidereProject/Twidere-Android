@@ -21,15 +21,21 @@ package org.mariotaku.twidere.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.DialogPreference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat;
+import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 /**
  * A {@link DialogPreference} that provides a user with the means to select an
@@ -37,7 +43,7 @@ import org.mariotaku.twidere.R;
  *
  * @author lukehorvat
  */
-public class SeekBarDialogPreference extends DialogPreference {
+public class SeekBarDialogPreference extends DialogPreference implements IDialogPreference {
     private static final int DEFAULT_MIN_PROGRESS = 0;
     private static final int DEFAULT_MAX_PROGRESS = 100;
     private static final int DEFAULT_PROGRESS = 0;
@@ -49,8 +55,7 @@ public class SeekBarDialogPreference extends DialogPreference {
     private int mStep;
 
     private CharSequence mProgressTextSuffix;
-    private TextView mProgressText;
-    private SeekBar mSeekBar;
+
 
     public SeekBarDialogPreference(final Context context) {
         this(context, null);
@@ -129,54 +134,6 @@ public class SeekBarDialogPreference extends DialogPreference {
         mProgressTextSuffix = progressTextSuffix;
     }
 
-//    @Override
-//    protected void onBindDialogView(@NonNull final View view) {
-//        super.onBindDialogView(view);
-//
-//        final CharSequence message = getDialogMessage();
-//        final TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
-//        dialogMessageText.setText(message);
-//        dialogMessageText.setVisibility(TextUtils.isEmpty(message) ? View.GONE : View.VISIBLE);
-//
-//        mProgressText = (TextView) view.findViewById(R.id.text_progress);
-//
-//        mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
-//        mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
-//                // update text that displays the current SeekBar progress value
-//                // note: this does not persist the progress value. that is only
-//                // ever done in setProgress()
-//                final String progressStr = String.valueOf(progress * mStep + mMinProgress);
-//                mProgressText.setText(mProgressTextSuffix == null ? progressStr : progressStr
-//                        .concat(mProgressTextSuffix.toString()));
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(final SeekBar seekBar) {
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(final SeekBar seekBar) {
-//            }
-//        });
-//        mSeekBar.setMax((int) Math.ceil((mMaxProgress - mMinProgress) / (double) mStep));
-//        mSeekBar.setProgress((int) Math.ceil((mProgress - mMinProgress) / (double) mStep));
-//    }
-
-//    @Override
-//    protected void onDialogClosed(final boolean positiveResult) {
-//        super.onDialogClosed(positiveResult);
-//
-//        // when the user selects "OK", persist the new value
-//        if (positiveResult) {
-//            final int realProgress = mSeekBar.getProgress() * mStep + mMinProgress;
-//            if (callChangeListener(realProgress)) {
-//                setProgress(realProgress);
-//            }
-//        }
-//    }
-
     @Override
     protected Object onGetDefaultValue(final TypedArray a, final int index) {
         return a.getInt(index, DEFAULT_PROGRESS);
@@ -224,6 +181,85 @@ public class SeekBarDialogPreference extends DialogPreference {
     @Override
     protected void onSetInitialValue(final boolean restore, final Object defaultValue) {
         setProgress(restore ? getPersistedInt(DEFAULT_PROGRESS) : (Integer) defaultValue);
+    }
+
+    @Override
+    public void displayDialog(PreferenceFragmentCompat fragment) {
+        SeekBarDialogPreferenceFragment df = SeekBarDialogPreferenceFragment.newInstance(getKey());
+        df.setTargetFragment(fragment, 0);
+        df.show(fragment.getFragmentManager(), getKey());
+    }
+
+    public static class SeekBarDialogPreferenceFragment extends ThemedPreferenceDialogFragmentCompat {
+
+        public static SeekBarDialogPreferenceFragment newInstance(String key) {
+            final SeekBarDialogPreferenceFragment fragment = new SeekBarDialogPreferenceFragment();
+            final Bundle args = new Bundle();
+            args.putString(ARG_KEY, key);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        private TextView mProgressText;
+        private SeekBar mSeekBar;
+
+        @Override
+        protected void onBindDialogView(View view) {
+            super.onBindDialogView(view);
+            final SeekBarDialogPreference preference = (SeekBarDialogPreference) getPreference();
+            final CharSequence message = preference.getDialogMessage();
+            final TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
+            dialogMessageText.setText(message);
+            dialogMessageText.setVisibility(TextUtils.isEmpty(message) ? View.GONE : View.VISIBLE);
+
+            mProgressText = (TextView) view.findViewById(R.id.text_progress);
+
+            mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
+            mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
+                    // update text that displays the current SeekBar progress value
+                    // note: this does not persist the progress value. that is only
+                    // ever done in setProgress()
+                    final int step = preference.getStep();
+                    final int minProgress = preference.getMinProgress();
+                    final String progressStr = String.valueOf(progress * step + minProgress);
+                    final CharSequence progressTextSuffix = preference.getProgressTextSuffix();
+                    if (progressTextSuffix == null) {
+                        mProgressText.setText(progressStr);
+                    } else {
+                        mProgressText.setText(progressStr.concat(progressTextSuffix.toString()));
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(final SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(final SeekBar seekBar) {
+                }
+            });
+            final int maxProgress = preference.getMaxProgress();
+            final int minProgress = preference.getMinProgress();
+            final int step = preference.getStep();
+            final int progress = preference.getProgress();
+            mSeekBar.setMax((int) Math.ceil((maxProgress - minProgress) / (double) step));
+            mSeekBar.setProgress((int) Math.ceil((progress - minProgress) / (double) step));
+        }
+
+        @Override
+        public void onDialogClosed(boolean positive) {
+            if (positive) {
+                final SeekBarDialogPreference preference = (SeekBarDialogPreference) getPreference();
+                final int minProgress = preference.getMinProgress();
+                final int step = preference.getStep();
+                final int realProgress = mSeekBar.getProgress() * step + minProgress;
+                if (preference.callChangeListener(realProgress)) {
+                    preference.setProgress(realProgress);
+                }
+            }
+        }
     }
 
     private static class SavedState extends BaseSavedState {

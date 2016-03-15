@@ -75,7 +75,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Compat.Base.NoActionBar"
+        android:theme="@style/Theme.Twidere.NoActionBar"
         tools:ignore="UnusedAttribute">
         <uses-library
             android:name="com.sec.android.app.multiwindow"

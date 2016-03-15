@@ -21,7 +21,6 @@ package org.mariotaku.twidere.preference;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.preference.ListPreference;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
 import android.util.AttributeSet;
@@ -29,7 +28,7 @@ import android.util.AttributeSet;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 
-public class ThemeFontFamilyPreference extends ListPreference implements Constants {
+public class ThemeFontFamilyPreference extends ThemedListPreference implements Constants {
 
     private static final int[] ENTRIES_RES = {R.string.font_family_regular, R.string.font_family_condensed,
             R.string.font_family_light};

@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Twidere" parent="Theme.Compat.Base.Light">
+    <style name="Theme.Twidere" parent="Theme.AppCompat.Light">
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+        <item name="actionModeBackground">?colorPrimary</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">#f8f8f8</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+        <item name="coloredActionBar">true</item>
+
+        <!-- ATE attributes -->
+        <item name="ateThemeKey">light</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
+
+    <style name="Theme.Twidere.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
@@ -24,32 +50,8 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
-    <style name="Theme.Twidere.NoActionBar" parent="Theme.Compat.Base.Light.NoActionBar">
 
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
-        </item>
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">#f8f8f8</item>
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_dark</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
-        <item name="coloredActionBar">true</item>
-
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">light</item>
-
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
-
-
-    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Compat.Base.Light.DialogWhenLarge">
+    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.AppCompat.Light.DialogWhenLarge">
 
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -77,7 +79,7 @@
     </style>
 
 
-    <style name="Theme.Twidere.Dialog" parent="Theme.Compat.Base.Light.Dialog">
+    <style name="Theme.Twidere.Dialog" parent="Theme.AppCompat.Light.Dialog">
 
         <!-- Custom view styles -->
 
@@ -104,7 +106,7 @@
     </style>
 
 
-    <style name="Theme.Twidere.Compose" parent="Theme.Compat.Base.Light.Dialog">
+    <style name="Theme.Twidere.Compose" parent="Theme.AppCompat.Light.Dialog">
 
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
@@ -150,10 +152,6 @@
         <item name="android:windowActionModeOverlay">false</item>
     </style>
 
-    <style name="Theme.Twidere.Drawer" parent="Theme.Twidere.NoActionBar">
-        <!-- Window attributes -->
-        <item name="android:windowBackground">@color/bg_color_drawer_light</item>
-    </style>
 
     <style name="Theme.Twidere.NoDisplay" parent="Theme.Twidere.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>

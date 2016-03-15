@@ -58,6 +58,7 @@
         android:layout_margin="@dimen/element_spacing_large"
         android:clickable="true"
         android:src="@drawable/ic_action_status_compose"
+        app:backgroundTint="?colorPrimary"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 

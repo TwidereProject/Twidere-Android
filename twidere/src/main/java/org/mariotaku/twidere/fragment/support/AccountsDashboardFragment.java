@@ -56,7 +56,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -119,7 +118,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     private View mAccountProfileContainer;
     private View mNoAccountContainer;
 
-    private Context mThemedContext;
     private AccountToggleProvider mAccountActionProvider;
     private final SupportFragmentReloadCursorObserver mReloadContentObserver = new SupportFragmentReloadCursorObserver(
             this, 0, this) {
@@ -385,8 +383,8 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mNavigationView = (NavigationView) view.findViewById(R.id.navigation_view);
         mAccountSelectorView = mNavigationView.getHeaderView(0);
         mAccountsSelector = (RecyclerView) mAccountSelectorView.findViewById(R.id.other_accounts_list);
@@ -488,13 +486,6 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         final int[] location = new int[2];
         view.getLocationOnScreen(location);
         rectF.set(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
-    }
-
-    @Override
-    public Context getThemedContext() {
-        if (mThemedContext != null) return mThemedContext;
-        final Context context = getActivity();
-        return mThemedContext = new ContextThemeWrapper(context, R.style.Theme_Twidere_Drawer);
     }
 
     private void onAccountSelected(AccountProfileImageViewHolder holder, final ParcelableAccount account) {

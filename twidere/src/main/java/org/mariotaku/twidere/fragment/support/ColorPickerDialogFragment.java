@@ -21,11 +21,11 @@ package org.mariotaku.twidere.fragment.support;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
@@ -91,9 +91,8 @@ public final class ColorPickerDialogFragment extends BaseSupportDialogFragment i
                 mController = new ColorPickerDialog.Controller(dialog.getContext(), dialog.getWindow().getDecorView());
 
                 final boolean showAlphaSlider = args.getBoolean(EXTRA_ALPHA_SLIDER, true);
-                final Resources res = getResources();
                 for (int presetColor : PRESET_COLORS) {
-                    mController.addColor(res.getColor(presetColor));
+                    mController.addColor(ContextCompat.getColor(getContext(), presetColor));
                 }
                 mController.setAlphaEnabled(showAlphaSlider);
                 mController.setInitialColor(color);

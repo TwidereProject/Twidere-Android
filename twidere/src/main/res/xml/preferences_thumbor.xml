@@ -22,11 +22,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/thumbor_integration">
 
-    <EditTextPreference
+    <org.mariotaku.twidere.preference.ThemedEditTextPreference
         android:inputType="textUri"
         android:key="thumbor_address"
         android:title="@string/server_address"/>
-    <EditTextPreference
+    <org.mariotaku.twidere.preference.ThemedEditTextPreference
         android:inputType="textVisiblePassword"
         android:key="thumbor_security_key"
         android:title="@string/security_key"/>

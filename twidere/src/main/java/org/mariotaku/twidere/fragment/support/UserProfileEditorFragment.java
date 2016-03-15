@@ -271,8 +271,8 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mProgressContainer = view.findViewById(R.id.progress_container);
         mEditProfileContent = view.findViewById(R.id.edit_profile_content);
         mProfileBannerView = (ImageView) view.findViewById(R.id.profile_banner);

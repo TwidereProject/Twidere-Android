@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -18,35 +17,38 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
+<org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout
+    android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/content_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
-        android:id="@+id/status_content"
+        android:id="@+id/twidere_action_bar_with_overlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone">
+        android:orientation="vertical">
 
-        <org.mariotaku.twidere.view.ExtendedRecyclerView
-            android:id="@+id/recycler_view"
+        <org.mariotaku.twidere.view.TwidereActionBarContainer
+            android:id="@+id/twidere_action_bar_container"
+            style="?attr/actionBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical">
+            android:layout_height="?actionBarSize"
+            android:layout_alignParentTop="true"
+            android:touchscreenBlocksFocus="true"
+            tools:ignore="UnusedAttribute"/>
 
-            <requestFocus/>
-        </org.mariotaku.twidere.view.ExtendedRecyclerView>
-
-        <MultiAutoCompleteTextView
+        <View
+            android:id="@+id/window_overlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
+            android:layout_below="@+id/twidere_action_bar_container"
+            android:background="?android:windowContentOverlay"/>
     </RelativeLayout>
-
-    <include layout="@layout/layout_content_fragment_common"/>
-</FrameLayout>
+</org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout>

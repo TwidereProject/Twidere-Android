@@ -17,10 +17,9 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout
+<org.mariotaku.twidere.view.ExtendedFrameLayout
     android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -29,26 +28,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <RelativeLayout
-        android:id="@+id/twidere_action_bar_with_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <org.mariotaku.twidere.view.TwidereActionBarContainer
-            android:id="@+id/twidere_action_bar_container"
-            style="?attr/actionBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_alignParentTop="true"
-            android:touchscreenBlocksFocus="true"
-            tools:ignore="UnusedAttribute"/>
-
-        <View
-            android:id="@+id/window_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/twidere_action_bar_container"
-            android:background="?android:windowContentOverlay"/>
-    </RelativeLayout>
-</org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout>
+</org.mariotaku.twidere.view.ExtendedFrameLayout>

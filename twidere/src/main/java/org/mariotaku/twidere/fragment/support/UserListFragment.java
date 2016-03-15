@@ -391,8 +391,8 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
     }
 
     @Override
-    public void onBaseViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
         mPagerOverlay = view.findViewById(R.id.pager_window_overlay);

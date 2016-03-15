@@ -272,8 +272,8 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     }
 
     @Override
-    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mProgressContainer = view.findViewById(R.id.progress_container);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);

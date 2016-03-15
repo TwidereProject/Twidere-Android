@@ -30,7 +30,7 @@ import android.util.AttributeSet;
 
 import java.util.List;
 
-public abstract class ComponentPickerPreference extends ListPreference {
+public abstract class ComponentPickerPreference extends ThemedListPreference {
 
     protected final PackageManager packageManager;
 

@@ -122,8 +122,8 @@ public class FiltersFragment extends BaseSupportFragment implements RefreshScrol
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
         mPagerOverlay = view.findViewById(R.id.pager_window_overlay);

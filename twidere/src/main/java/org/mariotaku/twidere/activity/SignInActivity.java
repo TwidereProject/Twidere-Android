@@ -42,7 +42,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
@@ -101,7 +100,6 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassExcept
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwidereActionModeForChildListener;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserAgentUtils;
@@ -109,7 +107,6 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.support.ViewSupport;
 import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator;
-import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 
 import java.lang.ref.WeakReference;
@@ -281,15 +278,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
             itemBrowser.setVisible(is_oauth);
             itemBrowser.setEnabled(is_oauth);
         }
-        final boolean result = super.onPrepareOptionsMenu(menu);
-        if (!shouldSetActionItemColor()) return result;
-        final Toolbar toolbar = peekActionBarToolbar();
-        if (toolbar != null) {
-            final int themeColor = getCurrentThemeColor();
-            final int itemColor = ThemeUtils.getContrastForegroundColor(this, themeColor);
-            ThemeUtils.wrapToolbarMenuIcon(ViewSupport.findViewByType(toolbar, ActionMenuView.class), itemColor, itemColor);
-        }
-        return result;
+        return true;
     }
 
     @Override
@@ -321,10 +310,6 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
         mResolver = getContentResolver();
         setContentView(R.layout.activity_sign_in);
         setSupportActionBar((Toolbar) findViewById(R.id.action_bar));
-
-        TwidereActionModeForChildListener actionModeForChildListener = new TwidereActionModeForChildListener(this, this, false);
-        final TintedStatusNativeActionModeAwareLayout layout = (TintedStatusNativeActionModeAwareLayout) findViewById(R.id.main_content);
-        layout.setActionModeForChildListener(actionModeForChildListener);
 
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
         final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);

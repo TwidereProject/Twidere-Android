@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -17,8 +16,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
+
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -147,7 +150,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getContext());
             final ThemeBackgroundPreference preference = (ThemeBackgroundPreference) getPreference();
             final SharedPreferences preferences = preference.getSharedPreferences();
             preference.setValue(preference.getPersistedString(null));
@@ -161,14 +164,15 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
             });
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
-            final AlertDialog dialog = builder.create();
+            final Dialog dialog = builder.create();
             dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
-                    if (dialog instanceof AlertDialog && preferences != null) {
-                        AlertDialog alertDialog = (AlertDialog) dialog;
-                        final LayoutInflater inflater = alertDialog.getLayoutInflater();
-                        final ListView listView = alertDialog.getListView();
+                    if (preferences != null) {
+                        final MaterialDialog materialDialog = (MaterialDialog) dialog;
+                        final LayoutInflater inflater = materialDialog.getLayoutInflater();
+                        final ListView listView = materialDialog.getListView();
+                        assert listView != null;
                         final ViewGroup listViewParent = (ViewGroup) listView.getParent();
                         listViewParent.removeView(listView);
                         final View view = inflater.inflate(R.layout.dialog_theme_background_preference, listViewParent);
@@ -177,6 +181,14 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
                         mAlphaSlider = (SeekBar) view.findViewById(R.id.alpha_slider);
                         mAlphaSlider.setMax(MAX_ALPHA - MIN_ALPHA);
                         mAlphaSlider.setProgress(preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA) - MIN_ALPHA);
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                materialDialog.onItemClick(parent, view, position, id);
+                                preference.setSelectedOption(position);
+                                updateAlphaVisibility();
+                            }
+                        });
                         updateAlphaVisibility();
                     }
                 }

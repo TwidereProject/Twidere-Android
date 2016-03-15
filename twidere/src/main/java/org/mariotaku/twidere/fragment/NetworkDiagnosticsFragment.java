@@ -76,8 +76,8 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mStartDiagnosticsButton = (Button) view.findViewById(R.id.start_diagnostics);
         mLogTextView = (TextView) view.findViewById(R.id.log_text);
     }

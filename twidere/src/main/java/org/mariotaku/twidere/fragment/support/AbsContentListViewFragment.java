@@ -192,8 +192,8 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
     }
 
     @Override
-    public void onBaseViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mProgressContainer = view.findViewById(R.id.progress_container);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
         mListView = (ListView) view.findViewById(R.id.list_view);

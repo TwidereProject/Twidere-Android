@@ -163,8 +163,8 @@ public class CustomTabsFragment extends BaseSupportFragment implements LoaderCal
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mListView = (DragSortListView) view.findViewById(android.R.id.list);
         mEmptyView = view.findViewById(android.R.id.empty);
         mEmptyIcon = (ImageView) view.findViewById(R.id.empty_icon);

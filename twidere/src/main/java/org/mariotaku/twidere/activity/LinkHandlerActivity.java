@@ -29,13 +29,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.ActionBarContainer;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
@@ -82,7 +82,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     public Fragment getCurrentVisibleFragment() {
-        return getSupportFragmentManager().findFragmentById(R.id.content_fragment);
+        return getSupportFragmentManager().findFragmentById(android.R.id.content);
     }
 
     @Override
@@ -92,20 +92,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     public void onFitSystemWindows(Rect insets) {
-        final View actionBarContainer = findViewById(R.id.twidere_action_bar_container);
-        if (actionBarContainer != null) {
-            final ViewGroup.LayoutParams toolBarParams = actionBarContainer.getLayoutParams();
-            boolean changed = false;
-            if (toolBarParams instanceof ViewGroup.MarginLayoutParams) {
-                final int topMargin = ((ViewGroup.MarginLayoutParams) toolBarParams).topMargin;
-                changed = topMargin != insets.top;
-                ((ViewGroup.MarginLayoutParams) toolBarParams).topMargin = insets.top;
-            }
-            if (changed) {
-                actionBarContainer.setLayoutParams(toolBarParams);
-            }
-        }
-        insets.top += ThemeUtils.getActionBarHeight(this);
         super.onFitSystemWindows(insets);
         final Fragment fragment = getCurrentVisibleFragment();
         if (fragment instanceof IBaseFragment) {
@@ -179,13 +165,13 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        supportRequestWindowFeature(AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR_OVERLAY);
         mMultiSelectHandler = new MultiSelectEventHandler(this);
         mMultiSelectHandler.dispatchOnCreate();
         final Intent intent = getIntent();
         final Uri data = intent.getData();
         final int linkId = matchLinkId(data);
         super.onCreate(savedInstanceState);
-
         ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -224,11 +210,6 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
         actionBar.setSubtitle(subtitle);
-    }
-
-    @Override
-    public void onContentChanged() {
-        super.onContentChanged();
     }
 
     protected boolean shouldSetActionItemColor() {
