@@ -42,6 +42,7 @@ import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
 import org.mariotaku.twidere.loader.TwitterAPIStatusesLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
+import org.mariotaku.twidere.preference.KeyboardShortcutPreference;
 import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.provider.TwidereDataProvider;
 import org.mariotaku.twidere.service.BackgroundOperationService;
@@ -133,4 +134,6 @@ public interface GeneralComponent {
     void inject(GetDirectMessagesTask task);
 
     void inject(AbsFriendshipOperationTask task);
+
+    void inject(KeyboardShortcutPreference preference);
 }

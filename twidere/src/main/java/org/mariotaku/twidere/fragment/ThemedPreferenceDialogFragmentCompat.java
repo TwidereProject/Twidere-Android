@@ -59,9 +59,4 @@ public abstract class ThemedPreferenceDialogFragmentCompat extends PreferenceDia
         window.setSoftInputMode(5);
     }
 
-    @Override
-    public final void onClick(DialogInterface dialog, int which) {
-        super.onClick(dialog, which);
-    }
-
 }
