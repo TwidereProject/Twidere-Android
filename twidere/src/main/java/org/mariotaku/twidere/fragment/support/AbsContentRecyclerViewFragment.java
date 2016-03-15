@@ -37,6 +37,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
+import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper;
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
@@ -56,7 +57,7 @@ import org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout;
 public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAdapter, L extends RecyclerView.LayoutManager>
         extends BaseSupportFragment implements SwipeRefreshLayout.OnRefreshListener,
         HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
-        ContentScrollHandler.ContentListSupport, IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener {
+        ContentScrollHandler.ContentListSupport, ControlBarShowHideHelper.ControlBarAnimationListener {
 
     private View mProgressContainer;
     private SwipeRefreshLayout mSwipeRefreshLayout;

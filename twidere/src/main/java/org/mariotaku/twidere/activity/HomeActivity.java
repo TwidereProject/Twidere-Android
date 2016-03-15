@@ -90,7 +90,6 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ExtendedFrameLayout;
@@ -166,10 +165,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         return getSupportFragmentManager().findFragmentById(R.id.left_drawer);
     }
 
-    public boolean getDefaultSystemWindowsInsets(Rect insets) {
-        return super.getSystemWindowsInsets(insets);
-    }
-
     @Override
     public boolean getSystemWindowsInsets(Rect insets) {
         if (mTabIndicator == null || mHomeContent == null) return false;
@@ -179,7 +174,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         } else {
             insets.top = ThemeUtils.getActionBarHeight(this);
         }
-        insets.top += mHomeContent.getTop();
         return true;
     }
 
@@ -366,7 +360,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
                 if (top != oldTop) {
                     final Fragment fragment = getLeftDrawerFragment();
                     if (fragment instanceof AccountsDashboardFragment) {
-                        ((AccountsDashboardFragment) fragment).requestFitSystemWindows();
+                        ((AccountsDashboardFragment) fragment).setStatusBarHeight(top);
                     }
                 }
             }
@@ -733,19 +727,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         final boolean isTransparent = ThemeUtils.isTransparentBackground(backgroundOption);
         final int actionBarAlpha = isTransparent ? ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(this)) : 0xFF;
         mTabIndicator.setItemContext(ThemeUtils.getActionBarThemedContext(this, themeColor));
-        final int[] foregroundColors = new int[2];
-        ThemeUtils.getColorForegroundAndInverse(this, foregroundColors);
-        if (ThemeUtils.isDarkTheme(this)) {
-            mTabIndicator.setStripColor(themeColor);
-            mTabIndicator.setIconColor(foregroundColors[0]);
-            mTabIndicator.setLabelColor(foregroundColors[0]);
-        } else {
-            final int contrastColor = TwidereColorUtils.getContrastYIQ(themeColor,
-                    ThemeUtils.ACCENT_COLOR_THRESHOLD, foregroundColors[0], foregroundColors[1]);
-            mTabIndicator.setStripColor(contrastColor);
-            mTabIndicator.setIconColor(contrastColor);
-            mTabIndicator.setLabelColor(contrastColor);
-        }
         mActionsButton.setAlpha(actionBarAlpha / 255f);
     }
 

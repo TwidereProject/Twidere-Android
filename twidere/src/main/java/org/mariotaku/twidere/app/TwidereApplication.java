@@ -61,6 +61,8 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
+import org.mariotaku.twidere.util.theme.TabPagerIndicatorViewProcessor;
+import org.mariotaku.twidere.view.TabPagerIndicator;
 
 public class TwidereApplication extends Application implements Constants,
         OnSharedPreferenceChangeListener {
@@ -118,6 +120,7 @@ public class TwidereApplication extends Application implements Constants,
         if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy();
         }
+        ATE.registerViewProcessor(TabPagerIndicator.class, new TabPagerIndicatorViewProcessor());
         if (!ATE.config(this, null).isConfigured()) {
             final int accentColor = ThemeUtils.getUserAccentColor(this);
             ATE.config(this, null).primaryColor(accentColor).accentColor(accentColor).commit();
