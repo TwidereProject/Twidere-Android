@@ -2245,6 +2245,9 @@ public final class Utils implements Constants {
 
     @Nullable
     public static Location getCachedLocation(Context context) {
+        if (BuildConfig.DEBUG) {
+            Log.v(LOGTAG, "Fetching cached location", new Exception());
+        }
         Location location = null;
         final LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (lm == null) return null;

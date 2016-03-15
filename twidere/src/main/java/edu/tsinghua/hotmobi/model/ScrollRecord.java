@@ -60,7 +60,7 @@ public class ScrollRecord implements LogModel {
     }
 
     public void setAccountHost(String accountHost) {
-        accountHost = accountHost;
+        this.accountHost = accountHost;
     }
 
     public void setTimeOffset(long timeOffset) {

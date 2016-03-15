@@ -19,15 +19,26 @@
 
 package org.mariotaku.twidere.preference;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.preference.DialogPreference;
+import android.support.v7.preference.PreferenceDialogFragmentCompat;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.AttributeSet;
+
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat;
+import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
-public class NotificationTypePreference extends DialogPreference implements Constants {
+public class NotificationTypePreference extends DialogPreference implements Constants,
+        IDialogPreference {
 
     private final int mDefaultValue;
 
@@ -45,33 +56,6 @@ public class NotificationTypePreference extends DialogPreference implements Cons
         mDefaultValue = a.getInteger(R.styleable.NotificationTypePreference_notificationType, 0);
         a.recycle();
     }
-
-//    @Override
-//    public void onClick(final DialogInterface dialog, final int which) {
-//        final Dialog showingDialog = getDialog();
-//        if (!(showingDialog instanceof AlertDialog)) return;
-//        final AlertDialog alertDialog = (AlertDialog) showingDialog;
-//        final ListView listView = alertDialog.getListView();
-//        if (listView == null) return;
-//        int value = 0;
-//        final int[] flags = getFlags();
-//        for (int i = 0, j = flags.length; i < j; i++) {
-//            if (listView.isItemChecked(i)) {
-//                value |= flags[i];
-//            }
-//        }
-//        persistInt(value);
-//        notifyChanged();
-//    }
-//
-//    @Override
-//    public void onPrepareDialogBuilder(final AlertDialog.Builder builder) {
-//        super.onPrepareDialogBuilder(builder);
-//        builder.setPositiveButton(android.R.string.ok, this);
-//        builder.setNegativeButton(android.R.string.cancel, null);
-//        final int value = getPersistedInt(mDefaultValue);
-//        builder.setMultiChoiceItems(getEntries(), getCheckedItems(value), null);
-//    }
 
     private boolean[] getCheckedItems(final int value) {
         final int[] flags = getFlags();
@@ -112,4 +96,67 @@ public class NotificationTypePreference extends DialogPreference implements Cons
                 VALUE_NOTIFICATION_FLAG_LIGHT};
     }
 
+    @Override
+    public void displayDialog(PreferenceFragmentCompat fragment) {
+        final MultiSelectListDialogFragment df = MultiSelectListDialogFragment.newInstance(getKey());
+        df.setTargetFragment(fragment, 0);
+        df.show(fragment.getFragmentManager(), getKey());
+    }
+
+    public int getDefaultValue() {
+        return mDefaultValue;
+    }
+
+    public final static class MultiSelectListDialogFragment extends ThemedPreferenceDialogFragmentCompat
+            implements DialogInterface.OnMultiChoiceClickListener {
+
+        private boolean[] mCheckedItems;
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Context context = getContext();
+            NotificationTypePreference preference = (NotificationTypePreference) getPreference();
+            onClick(null, DialogInterface.BUTTON_NEGATIVE);
+            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context)
+                    .setTitle(preference.getDialogTitle())
+                    .setIcon(preference.getDialogIcon())
+                    .setPositiveButton(preference.getPositiveButtonText(), this)
+                    .setNegativeButton(preference.getNegativeButtonText(), this);
+            final int value = preference.getPersistedInt(preference.getDefaultValue());
+            mCheckedItems = preference.getCheckedItems(value);
+            builder.setMultiChoiceItems(preference.getEntries(), mCheckedItems, this);
+            // Create the dialog
+            return builder.create();
+        }
+
+        @Override
+        public void onDialogClosed(boolean positive) {
+            if (!positive || mCheckedItems == null) return;
+            NotificationTypePreference preference = (NotificationTypePreference) getPreference();
+            int value = 0;
+            final int[] flags = preference.getFlags();
+            for (int i = 0, j = flags.length; i < j; i++) {
+                if (mCheckedItems[i]) {
+                    value |= flags[i];
+                }
+            }
+            preference.persistInt(value);
+            preference.notifyChanged();
+        }
+
+        public static MultiSelectListDialogFragment newInstance(String key) {
+            final MultiSelectListDialogFragment df = new MultiSelectListDialogFragment();
+            final Bundle args = new Bundle();
+            args.putString(PreferenceDialogFragmentCompat.ARG_KEY, key);
+            df.setArguments(args);
+            return df;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            mCheckedItems[which] = isChecked;
+        }
+
+    }
 }
