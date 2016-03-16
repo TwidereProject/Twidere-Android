@@ -1632,6 +1632,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     Color.BLACK);
         }
         WindowSupport.setStatusBarColor(activity.getWindow(), statusBarColor);
+        int stackedTabColor = ThemeUtils.getActionBarColor(activity, mUiColor,
+                activity.getThemeBackgroundOption());
 
         if (mActionBarBackground != null) {
             mActionBarBackground.setFactor(factor);
@@ -1651,8 +1653,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
 
             final Drawable tabBackground = mPagerIndicator.getBackground();
-            int stackedTabColor = ThemeUtils.getActionBarColor(activity, mUiColor,
-                    activity.getThemeBackgroundOption());
+
 
             if (ThemeUtils.isTransparentBackground(activity.getCurrentThemeBackgroundOption())) {
                 stackedTabColor = ColorUtils.setAlphaComponent(stackedTabColor,
@@ -1678,13 +1679,16 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             mPreviousTabItemIsDark = (tabItemIsDark ? 1 : -1);
 
-            final int barColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor, stackedTabColor);
-            final boolean actionItemIsDark = TwidereColorUtils.getYIQLuminance(barColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD;
-            if (mPreviousActionBarItemIsDark == 0 || (actionItemIsDark ? 1 : -1) != mPreviousActionBarItemIsDark) {
-                ThemeUtils.applyToolbarItemColor(activity, activity.getActionBarToolbar(), barColor);
-            }
-            mPreviousActionBarItemIsDark = actionItemIsDark ? 1 : -1;
+
         }
+
+        final int barColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor, stackedTabColor);
+        final boolean actionItemIsDark = TwidereColorUtils.getYIQLuminance(barColor) > ThemeUtils.ACCENT_COLOR_THRESHOLD;
+        if (mPreviousActionBarItemIsDark == 0 || (actionItemIsDark ? 1 : -1) != mPreviousActionBarItemIsDark) {
+            ThemeUtils.applyToolbarItemColor(activity, mToolbar, barColor);
+        }
+        mPreviousActionBarItemIsDark = actionItemIsDark ? 1 : -1;
+
         updateTitleAlpha();
     }
 
@@ -1694,8 +1698,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final float nameShowingRatio = (mHeaderDrawerLayout.getPaddingTop() - location[1])
                 / (float) mNameView.getHeight();
         final float textAlpha = TwidereMathUtils.clamp(nameShowingRatio, 0, 1);
-        final ThemedAppCompatActivity activity = (ThemedAppCompatActivity) getActivity();
-        final Toolbar actionBarView = activity.getActionBarToolbar();
+        final Toolbar actionBarView = mToolbar;
         if (actionBarView != null) {
             final TextView titleView = ViewSupport.findViewByText(actionBarView, actionBarView.getTitle());
             if (titleView != null) {

@@ -54,12 +54,10 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.LinkHandlerActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.graphic.ActionBarColorDrawable;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
@@ -599,19 +597,11 @@ public class ThemeUtils implements Constants {
         if (toolbar instanceof TwidereToolbar) {
             ((TwidereToolbar) toolbar).setItemColor(itemColor);
         }
-        final ActionMenuView actionMenuView = ViewSupport.findViewByType(toolbar, ActionMenuView.class);
-        if (actionMenuView == null) return;
-        View overflowView = null;
-        for (int i = 0, j = actionMenuView.getChildCount(); i < j; i++) {
-            final View child = actionMenuView.getChildAt(i);
-            final ActionMenuView.LayoutParams lp = (ActionMenuView.LayoutParams) child.getLayoutParams();
-            if (lp.isOverflowButton) {
-                overflowView = child;
-                break;
-            }
+        final Drawable overflowIcon = toolbar.getOverflowIcon();
+        if (overflowIcon != null) {
+            overflowIcon.setColorFilter(itemColor, Mode.SRC_ATOP);
+            toolbar.setOverflowIcon(overflowIcon);
         }
-        if (!(overflowView instanceof ImageView)) return;
-        ((ImageView) overflowView).setColorFilter(itemColor, Mode.SRC_ATOP);
     }
 
     public static void setCompatToolbarOverlay(Activity activity, Drawable overlay) {
@@ -817,6 +807,11 @@ public class ThemeUtils implements Constants {
             popupItemColor = getThemeForegroundColor(context, popupTheme);
         } else {
             popupItemColor = getThemeForegroundColor(context);
+        }
+        final Drawable navigationIcon = toolbar.getNavigationIcon();
+        if (navigationIcon != null) {
+            navigationIcon.setColorFilter(contrastForegroundColor, Mode.SRC_ATOP);
+            toolbar.setNavigationIcon(navigationIcon);
         }
         getThemeForegroundColor(context);
         setActionBarOverflowColor(toolbar, contrastForegroundColor);

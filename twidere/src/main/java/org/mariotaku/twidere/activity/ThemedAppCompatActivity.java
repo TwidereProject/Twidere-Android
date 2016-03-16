@@ -45,12 +45,7 @@ public abstract class ThemedAppCompatActivity extends ATEActivity implements Con
     // Data fields
     private int mCurrentThemeColor;
     private int mCurrentThemeBackgroundAlpha;
-    @ShapeStyle
-    private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
-    private String mCurrentThemeFontFamily;
-
-    private Toolbar mToolbar;
 
     @Override
     public int getCurrentThemeBackgroundAlpha() {
@@ -88,8 +83,6 @@ public abstract class ThemedAppCompatActivity extends ATEActivity implements Con
             StrictModeUtils.detectAllVmPolicy();
             StrictModeUtils.detectAllThreadPolicy();
         }
-        final int themeColor = getThemeColor();
-
         super.onCreate(savedInstanceState);
     }
 
@@ -104,9 +97,7 @@ public abstract class ThemedAppCompatActivity extends ATEActivity implements Con
     protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resId, boolean first) {
         mCurrentThemeColor = getThemeColor();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
-        mProfileImageStyle = Utils.getProfileImageStyle(this);
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
-        mCurrentThemeFontFamily = getThemeFontFamily();
         super.onApplyThemeResource(theme, resId, first);
         final Window window = getWindow();
         if (shouldApplyWindowBackground()) {
@@ -120,21 +111,6 @@ public abstract class ThemedAppCompatActivity extends ATEActivity implements Con
     public void onConfigurationChanged(Configuration newConfig) {
         ThemeUtils.fixNightMode(getResources(), newConfig);
         super.onConfigurationChanged(newConfig);
-    }
-
-    @Nullable
-    public final Toolbar peekActionBarToolbar() {
-        return mToolbar;
-    }
-
-    @Nullable
-    public final Toolbar getActionBarToolbar() {
-        if (mToolbar != null) return mToolbar;
-        final View actionBarView = getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
-        if (actionBarView instanceof Toolbar) {
-            return (Toolbar) actionBarView;
-        }
-        return null;
     }
 
     protected boolean shouldApplyWindowBackground() {
