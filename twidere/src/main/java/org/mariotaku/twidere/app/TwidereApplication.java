@@ -121,11 +121,15 @@ public class TwidereApplication extends Application implements Constants,
             StrictModeUtils.detectAllVmPolicy();
         }
         ATE.registerViewProcessor(TabPagerIndicator.class, new TabPagerIndicatorViewProcessor());
+        final SharedPreferences preferences = getSharedPreferences();
         if (!ATE.config(this, null).isConfigured()) {
-            final int accentColor = ThemeUtils.getUserAccentColor(this);
-            ATE.config(this, null).primaryColor(accentColor).accentColor(accentColor).commit();
+            final int themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,
+                    R.color.branding_color));
+            ATE.config(this, "light").primaryColor(themeColor).accentColor(themeColor).coloredActionBar(true).commit();
+            ATE.config(this, "dark").accentColor(themeColor).coloredActionBar(false).commit();
+            ATE.config(this, null).primaryColor(themeColor).accentColor(themeColor).commit();
         }
-        resetTheme(getSharedPreferences());
+        resetTheme(preferences);
         super.onCreate();
         initializeAsyncTask();
         initDebugMode();
@@ -268,8 +272,8 @@ public class TwidereApplication extends Application implements Constants,
             }
             case KEY_THEME_COLOR: {
                 final int themeColor = preferences.getInt(key, ContextCompat.getColor(this, R.color.branding_color));
-                ATE.config(this, "light").primaryColor(themeColor).accentColor(themeColor).commit();
-                ATE.config(this, "dark").accentColor(themeColor).commit();
+                ATE.config(this, "light").primaryColor(themeColor).accentColor(themeColor).coloredActionBar(true).commit();
+                ATE.config(this, "dark").accentColor(themeColor).coloredActionBar(false).commit();
                 break;
             }
         }

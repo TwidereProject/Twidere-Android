@@ -37,7 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:elevation="@dimen/toolbar_elevation"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:contentInsetEnd="0dp"
         app:contentInsetStart="0dp">
 
@@ -58,7 +57,7 @@
         android:layout_margin="@dimen/element_spacing_large"
         android:clickable="true"
         android:src="@drawable/ic_action_status_compose"
-        app:backgroundTint="?colorPrimary"
+        android:tag="background|primary_color,tint|primary_color_dependent"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 

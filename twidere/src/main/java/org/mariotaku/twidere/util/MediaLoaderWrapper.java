@@ -220,6 +220,15 @@ public class MediaLoaderWrapper implements Constants {
         mImageLoader.displayImage(url, view, mProfileImageDisplayOptions, listener);
     }
 
+    public void loadProfileImage(final ParcelableAccount account, final ImageLoadingListener listener) {
+        if (account.account_user != null && account.account_user.extras != null
+                && !TextUtils.isEmpty(account.account_user.extras.profile_image_url_profile_size)) {
+            loadProfileImage(account.account_user.extras.profile_image_url_profile_size, listener);
+        } else {
+            loadProfileImage(account.profile_image_url, listener);
+        }
+    }
+
     public void loadProfileImage(final String url, final ImageLoadingListener listener) {
         mImageLoader.loadImage(url, mProfileImageDisplayOptions, listener);
     }

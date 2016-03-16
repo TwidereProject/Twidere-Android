@@ -27,11 +27,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.internal.widget.PreferenceImageView;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -113,6 +115,9 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             mAccount = account;
             mSwitchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE);
             mSwitchPreference.registerOnSharedPreferenceChangeListener(this);
+            setTitle(mAccount.name);
+            setSummary(String.format("@%s", mAccount.screen_name));
+            mImageLoader.loadProfileImage(mAccount, this);
         }
 
         @Override
@@ -123,7 +128,9 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         @Override
         public void onLoadingComplete(final String imageUri, final View view, final Bitmap loadedImage) {
             final Bitmap roundedBitmap = BitmapUtils.getCircleBitmap(loadedImage);
-            setIcon(new BitmapDrawable(getContext().getResources(), roundedBitmap));
+            final BitmapDrawable icon = new BitmapDrawable(getContext().getResources(), roundedBitmap);
+            icon.setGravity(Gravity.FILL);
+            setIcon(icon);
         }
 
         @Override
@@ -141,21 +148,18 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             notifyChanged();
         }
 
-        @Override
-        protected void onAttachedToHierarchy(@NonNull final PreferenceManager preferenceManager) {
-            super.onAttachedToHierarchy(preferenceManager);
-            setTitle(mAccount.name);
-            setSummary(String.format("@%s", mAccount.screen_name));
-//            setIcon(R.drawable.ic_profile_image_default);
-            mImageLoader.loadProfileImage(mAccount.profile_image_url, this);
-        }
 
         @Override
         public void onBindViewHolder(PreferenceViewHolder holder) {
             super.onBindViewHolder(holder);
             final View iconView = holder.findViewById(android.R.id.icon);
-            if (iconView instanceof ImageView) {
-                final ImageView imageView = (ImageView) iconView;
+            if (iconView instanceof PreferenceImageView) {
+                final PreferenceImageView imageView = (PreferenceImageView) iconView;
+                final int maxSize = getContext().getResources().getDimensionPixelSize(R.dimen.element_size_normal);
+                imageView.setMinimumWidth(maxSize);
+                imageView.setMinimumHeight(maxSize);
+                imageView.setMaxWidth(maxSize);
+                imageView.setMaxHeight(maxSize);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
             final View titleView = holder.findViewById(android.R.id.title);
