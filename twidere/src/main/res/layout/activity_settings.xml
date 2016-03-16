@@ -17,42 +17,34 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout
-    android:id="@+id/main_content"
+<android.support.v4.widget.SlidingPaneLayout
+    android:id="@+id/sliding_pane"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:setPadding="true">
+    android:layout_height="match_parent">
 
-    <android.support.v4.widget.SlidingPaneLayout
-        android:id="@+id/sliding_pane"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
 
-        <FrameLayout
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start">
-
-            <ListView
-                android:id="@+id/entries_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@null"
-                android:dividerHeight="0dp"
-                tools:listitem="@layout/list_item_preference_header_item"/>
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/detail_fragment_container"
+        <ListView
+            android:id="@+id/entries_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:layout_marginLeft="@dimen/element_size_normal"
-            android:layout_marginStart="@dimen/element_size_normal"
-            android:clickable="true"
-            tools:background="?android:colorBackground"/>
-    </android.support.v4.widget.SlidingPaneLayout>
-</org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout>
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            tools:listitem="@layout/list_item_preference_header_item"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/detail_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginLeft="@dimen/element_size_normal"
+        android:layout_marginStart="@dimen/element_size_normal"
+        android:clickable="true"
+        tools:background="?android:colorBackground"/>
+</android.support.v4.widget.SlidingPaneLayout>

@@ -15,17 +15,17 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
  */
 public class TabPagerIndicatorViewProcessor implements ViewProcessor<TabPagerIndicator, Object> {
     @Override
-    public void process(@NonNull Context context, String key, TabPagerIndicator view, Object extra) {
+    public void process(@NonNull Context context, String key, TabPagerIndicator target, Object extra) {
         final int primaryColor = Config.primaryColor(context, key);
         final boolean isDark = !ATEUtil.isColorLight(primaryColor);
         final int primaryColorDependent = isDark ? Color.WHITE : Color.BLACK;
-        view.setIconColor(primaryColorDependent);
-        view.setLabelColor(primaryColorDependent);
+        target.setIconColor(primaryColorDependent);
+        target.setLabelColor(primaryColorDependent);
         if (Config.coloredActionBar(context, key)) {
-            view.setStripColor(primaryColorDependent);
+            target.setStripColor(primaryColorDependent);
         } else {
-            view.setStripColor(Config.accentColor(context, key));
+            target.setStripColor(Config.accentColor(context, key));
         }
-        view.updateAppearance();
+        target.updateAppearance();
     }
 }

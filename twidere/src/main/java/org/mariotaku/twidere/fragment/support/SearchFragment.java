@@ -19,20 +19,13 @@
 
 package org.mariotaku.twidere.fragment.support;
 
-import android.app.ActionBar;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.KeyEvent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,148 +34,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.ComposeActivity;
 import org.mariotaku.twidere.activity.LinkHandlerActivity;
+import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
-import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.RecentSearchProvider;
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
-import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
-import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.TabPagerIndicator;
 
-public class SearchFragment extends BaseSupportFragment implements RefreshScrollTopInterface,
+public class SearchFragment extends AbsToolbarTabPagesFragment implements RefreshScrollTopInterface,
         SupportFragmentCallback, SystemWindowsInsetsCallback, ControlBarOffsetListener,
-        OnPageChangeListener, KeyboardShortcutCallback, LinkHandlerActivity.HideUiOnScroll {
-
-    private ViewPager mViewPager;
-    private View mPagerWindowOverlay;
-    private TabPagerIndicator mPagerIndicator;
-
-    private SupportTabsAdapter mPagerAdapter;
-
-    private int mControlBarOffsetPixels;
-    private int mControlBarHeight;
-
-    public UserKey getAccountKey() {
-        return getArguments().getParcelable(EXTRA_ACCOUNT_KEY);
-    }
-
-    @Override
-    public Fragment getCurrentVisibleFragment() {
-        final int currentItem = mViewPager.getCurrentItem();
-        if (currentItem < 0 || currentItem >= mPagerAdapter.getCount()) return null;
-        return (Fragment) mPagerAdapter.instantiateItem(mViewPager, currentItem);
-    }
-
-    @Override
-    public boolean triggerRefresh(final int position) {
-        return false;
-    }
-
-    public String getQuery() {
-        return getArguments().getString(EXTRA_QUERY);
-    }
-
-    @Override
-    public boolean getSystemWindowsInsets(Rect insets) {
-        if (mPagerIndicator == null) return false;
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof LinkHandlerActivity) {
-            ((LinkHandlerActivity) activity).getSystemWindowsInsets(insets);
-            insets.top = mPagerIndicator.getHeight() + getControlBarHeight();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean handleKeyboardShortcutSingle(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
-        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState)) return true;
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
-        if (action != null) {
-            switch (action) {
-                case ACTION_NAVIGATION_PREVIOUS_TAB: {
-                    final int previous = mViewPager.getCurrentItem() - 1;
-                    if (previous >= 0 && previous < mPagerAdapter.getCount()) {
-                        mViewPager.setCurrentItem(previous, true);
-                    }
-                    return true;
-                }
-                case ACTION_NAVIGATION_NEXT_TAB: {
-                    final int next = mViewPager.getCurrentItem() + 1;
-                    if (next >= 0 && next < mPagerAdapter.getCount()) {
-                        mViewPager.setCurrentItem(next, true);
-                    }
-                    return true;
-                }
-            }
-        }
-        return handler.handleKey(getActivity(), null, keyCode, event, metaState);
-    }
-
-    @Override
-    public boolean isKeyboardShortcutHandled(@NonNull KeyboardShortcutsHandler handler, int keyCode, @NonNull KeyEvent event, int metaState) {
-        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event, metaState)) return true;
-        final String action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState);
-        return ACTION_NAVIGATION_PREVIOUS_TAB.equals(action) || ACTION_NAVIGATION_NEXT_TAB.equals(action);
-    }
-
-    @Override
-    public boolean handleKeyboardShortcutRepeat(@NonNull KeyboardShortcutsHandler handler, int keyCode, int repeatCount, @NonNull KeyEvent event, int metaState) {
-        return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof IControlBarActivity) {
-            ((IControlBarActivity) context).registerControlBarOffsetListener(this);
-        }
-    }
-
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_content_pages, container, false);
-    }
+        OnPageChangeListener, LinkHandlerActivity.HideUiOnScroll {
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        final Bundle args = getArguments();
-        final FragmentActivity activity = getActivity();
-        mPagerAdapter = new SupportTabsAdapter(activity, getChildFragmentManager(), null, 1);
-        mPagerAdapter.addTab(StatusesSearchFragment.class, args, getString(R.string.statuses), R.drawable.ic_action_twitter, 0, null);
-        mPagerAdapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_action_user, 1, null);
-        mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(2);
-        mPagerIndicator.setViewPager(mViewPager);
-        mPagerIndicator.setTabDisplayOption(TabPagerIndicator.LABEL);
-        mPagerIndicator.setOnPageChangeListener(this);
-        ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator, mPagerWindowOverlay);
-        ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
-        ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
-        ThemeUtils.setWindowOverlayViewOverlay(activity, new EmptyDrawable());
 
-        if (activity instanceof IThemedActivity) {
-            final String backgroundOption = ((IThemedActivity) activity).getCurrentThemeBackgroundOption();
-            final boolean isTransparent = ThemeUtils.isTransparentBackground(backgroundOption);
-            final int actionBarAlpha = isTransparent ? ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(activity)) : 0xFF;
-            mPagerIndicator.setAlpha(actionBarAlpha / 255f);
-        }
-        if (savedInstanceState == null && args != null && args.containsKey(EXTRA_QUERY)) {
-            final String query = args.getString(EXTRA_QUERY);
+        final String query = getQuery();
+        if (savedInstanceState == null && !TextUtils.isEmpty(query)) {
             final SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(),
                     RecentSearchProvider.AUTHORITY, RecentSearchProvider.MODE);
             suggestions.saveRecentQuery(query, null);
@@ -190,23 +64,7 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
             final ContentValues values = new ContentValues();
             values.put(SearchHistory.QUERY, query);
             cr.insert(SearchHistory.CONTENT_URI, values);
-            if (activity instanceof LinkHandlerActivity) {
-                final ActionBar ab = activity.getActionBar();
-                if (ab != null) {
-                    ab.setSubtitle(query);
-                }
-            }
         }
-        updateTabOffset();
-    }
-
-    @Override
-    public void onDetach() {
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof IControlBarActivity) {
-            ((IControlBarActivity) activity).unregisterControlBarOffsetListener(this);
-        }
-        super.onDetach();
     }
 
     @Override
@@ -245,105 +103,25 @@ public class SearchFragment extends BaseSupportFragment implements RefreshScroll
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
-        mPagerWindowOverlay = view.findViewById(R.id.pager_window_overlay);
-        mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.view_pager_tabs);
-    }
-
-    @Override
-    protected void fitSystemWindows(Rect insets) {
-        final View view = getView();
-        if (view != null) {
-            final int top = Utils.getInsetsTopWithoutActionBarHeight(getActivity(), insets.top);
-//            view.setPadding(insets.left, top, insets.right, insets.bottom);
-        }
-        updateTabOffset();
-    }
-
-    @Override
-    public void onControlBarOffsetChanged(IControlBarActivity activity, float offset) {
-        mControlBarHeight = activity.getControlBarHeight();
-        mControlBarOffsetPixels = Math.round(mControlBarHeight * (1 - offset));
-        updateTabOffset();
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof LinkHandlerActivity) {
-            ((LinkHandlerActivity) activity).setControlBarVisibleAnimate(true);
-        }
-    }
-
-    @Override
-    public boolean scrollToStart() {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (!(fragment instanceof RefreshScrollTopInterface)) return false;
-        ((RefreshScrollTopInterface) fragment).scrollToStart();
-        return true;
-    }
-
-    @Override
-    public boolean triggerRefresh() {
-        final Fragment fragment = getCurrentVisibleFragment();
-        if (!(fragment instanceof RefreshScrollTopInterface)) return false;
-        ((RefreshScrollTopInterface) fragment).triggerRefresh();
-        return true;
-    }
-
-    private int getControlBarHeight() {
-        return ThemeUtils.getControlBarHeight(getActivity(), mControlBarHeight);
-    }
-
-    private Fragment getKeyboardShortcutRecipient() {
-        return getCurrentVisibleFragment();
-    }
-
-    private boolean handleFragmentKeyboardShortcutRepeat(KeyboardShortcutsHandler handler, int keyCode,
-                                                         int repeatCount, @NonNull KeyEvent event, int metaState) {
-        final Fragment fragment = getKeyboardShortcutRecipient();
-        if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutRepeat(handler, keyCode,
-                    repeatCount, event, metaState);
-        }
+    public boolean triggerRefresh(final int position) {
         return false;
     }
 
-    private boolean handleFragmentKeyboardShortcutSingle(KeyboardShortcutsHandler handler, int keyCode,
-                                                         @NonNull KeyEvent event, int metaState) {
-        final Fragment fragment = getKeyboardShortcutRecipient();
-        if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).handleKeyboardShortcutSingle(handler, keyCode,
-                    event, metaState);
-        }
-        return false;
+    public UserKey getAccountKey() {
+        return getArguments().getParcelable(EXTRA_ACCOUNT_KEY);
     }
 
-    private boolean isFragmentKeyboardShortcutHandled(KeyboardShortcutsHandler handler, int keyCode,
-                                                      @NonNull KeyEvent event, int metaState) {
-        final Fragment fragment = getKeyboardShortcutRecipient();
-        if (fragment instanceof KeyboardShortcutCallback) {
-            return ((KeyboardShortcutCallback) fragment).isKeyboardShortcutHandled(handler, keyCode,
-                    event, metaState);
-        }
-        return false;
+    public String getQuery() {
+        return getArguments().getString(EXTRA_QUERY);
     }
 
-    private void updateTabOffset() {
-        ThemeUtils.updateControlBarUi(getActivity(), getControlBarHeight(), mControlBarOffsetPixels,
-                mPagerIndicator, mPagerWindowOverlay);
+
+    @Override
+    protected void addTabs(SupportTabsAdapter adapter) {
+        final Bundle args = getArguments();
+        adapter.addTab(StatusesSearchFragment.class, args, getString(R.string.statuses), R.drawable.ic_action_twitter, 0, null);
+        adapter.addTab(SearchUsersFragment.class, args, getString(R.string.users), R.drawable.ic_action_user, 1, null);
     }
+
 
 }

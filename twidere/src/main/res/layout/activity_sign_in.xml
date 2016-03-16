@@ -16,122 +16,91 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout
-    android:id="@+id/main_content"
+
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:setPadding="true">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/twidere_action_bar_container"
-            android:layout_gravity="center">
-
-            <LinearLayout
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:clipChildren="false"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/username_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <EditText
-                        android:id="@+id/username"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="@string/username"
-                        android:inputType="textEmailAddress"
-                        android:singleLine="true"
-                        android:typeface="normal"/>
-
-                    <EditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:ems="10"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
-                        android:singleLine="true"
-                        android:typeface="normal"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/sign_in_sign_up"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipChildren="false"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/sign_up"
-                        style="?android:buttonStyleSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="@dimen/element_size_normal"
-                        android:text="@string/register"/>
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/sign_in"
-                        style="?android:buttonStyleSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="@dimen/element_size_normal"
-                        android:onClick="onClick"
-                        android:text="@string/sign_in"
-                        app:backgroundTint="@color/material_light_green"/>
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/sign_in_method_introduction"
-                    style="?android:borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:clickable="true"
-                    android:gravity="center_vertical"
-                    android:minHeight="36dp"
-                    android:onClick="onClick"
-                    android:text="@string/sign_in_method_introduction_title"
-                    android:textAppearance="?android:textAppearanceSmall"/>
-            </LinearLayout>
-        </ScrollView>
-
-        <org.mariotaku.twidere.view.TwidereActionBarContainer
-            android:id="@+id/twidere_action_bar_container"
-            style="?attr/actionBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_alignParentTop="true"
-            android:touchscreenBlocksFocus="true"
-            tools:ignore="UnusedAttribute"/>
-
-        <View
-            android:id="@+id/window_overlay"
+        <LinearLayout
+            android:id="@+id/username_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/twidere_action_bar_container"
-            android:background="?android:windowContentOverlay"/>
-    </RelativeLayout>
+            android:orientation="vertical"
+            android:padding="8dp">
 
-</org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout>
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/username"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:typeface="normal"/>
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:typeface="normal"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sign_in_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/sign_up"
+                style="?android:buttonStyleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="@dimen/element_size_normal"
+                android:text="@string/register"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/sign_in"
+                style="?android:buttonStyleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="@dimen/element_size_normal"
+                android:onClick="onClick"
+                android:text="@string/sign_in"
+                app:backgroundTint="@color/material_light_green"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/sign_in_method_introduction"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:minHeight="36dp"
+            android:onClick="onClick"
+            android:text="@string/sign_in_method_introduction_title"
+            android:textAppearance="?android:textAppearanceSmall"/>
+    </LinearLayout>
+</ScrollView>

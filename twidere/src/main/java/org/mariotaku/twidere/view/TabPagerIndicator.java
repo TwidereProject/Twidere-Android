@@ -528,7 +528,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
 
     public void updateAppearance() {
         final int positionStart = mLayoutManager.findFirstVisibleItemPosition();
-        final int itemCount = mLayoutManager.findLastVisibleItemPosition() - positionStart;
+        final int itemCount = mLayoutManager.findLastVisibleItemPosition() - positionStart + 1;
         mIndicatorAdapter.notifyItemRangeChanged(positionStart, itemCount);
     }
 
@@ -598,27 +598,22 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
 
         public void setDisplayBadge(boolean display) {
             mDisplayBadge = display;
-//            notifyDataSetChanged();
         }
 
         public void setIconColor(int color) {
             mIconColor = color;
-//            notifyDataSetChanged();
         }
 
         public void setLabelColor(int color) {
             mLabelColor = color;
-            notifyDataSetChanged();
         }
 
         public void setStripColor(int color) {
             mStripColor = color;
-//            notifyDataSetChanged();
         }
 
         public void setTabProvider(TabProvider tabProvider) {
             mTabProvider = tabProvider;
-//            notifyDataSetChanged();
         }
     }
 

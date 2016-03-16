@@ -11,6 +11,9 @@ import android.view.animation.DecelerateInterpolator;
  */
 public interface IControlBarActivity {
 
+    /**
+     * @param offset 0: invisible, 1: visible
+     */
     void setControlBarOffset(float offset);
 
     void setControlBarVisibleAnimate(boolean visible);

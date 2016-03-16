@@ -20,22 +20,15 @@
 package org.mariotaku.twidere.activity;
 
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
-import android.view.View;
-import android.view.WindowManager;
+import android.support.v7.widget.Toolbar;
 
 import com.soundcloud.android.crop.CropImageActivity;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.support.ViewSupport;
-import org.mariotaku.twidere.view.ShapedImageView;
-import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 
 /**
  * Created by mariotaku on 15/6/16.
@@ -45,38 +38,20 @@ public class ImageCropperActivity extends CropImageActivity implements IThemedAc
     // Data fields
     private int mCurrentThemeColor;
     private int mCurrentThemeBackgroundAlpha;
-    @ShapedImageView.ShapeStyle
-    private int mProfileImageStyle;
     private String mCurrentThemeBackgroundOption;
-    private String mCurrentThemeFontFamily;
 
-
-    private TintedStatusFrameLayout mMainContent;
-    private View mDoneCancelBar;
+    private Toolbar mDoneCancelBar;
 
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        mMainContent = (TintedStatusFrameLayout) findViewById(R.id.main_content);
-        mDoneCancelBar = findViewById(R.id.done_cancel_bar);
+        mDoneCancelBar = (Toolbar) findViewById(R.id.done_cancel_bar);
     }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        final int themeColor = getThemeColor();
-        final String backgroundOption = getCurrentThemeBackgroundOption();
-        mMainContent.setDrawColor(true);
-        mMainContent.setDrawShadow(false);
-        mMainContent.setColor(themeColor);
-        ViewSupport.setBackground(mDoneCancelBar, ThemeUtils.getActionBarBackground(this,
-                themeColor, backgroundOption, true));
-        ViewCompat.setElevation(mDoneCancelBar, ThemeUtils.getSupportActionBarElevation(this));
-        final View windowOverlay = findViewById(R.id.window_overlay);
-        ViewSupport.setBackground(windowOverlay, ThemeUtils.getNormalWindowContentOverlay(this));
+
     }
 
     @Override
@@ -89,18 +64,6 @@ public class ImageCropperActivity extends CropImageActivity implements IThemedAc
         super.setContentView(R.layout.activity_image_cropper);
     }
 
-
-    @Override
-    public void setTheme(final int resId) {
-        super.setTheme(resId);
-        ThemeUtils.applyWindowBackground(this, getWindow(),
-                mCurrentThemeBackgroundOption, mCurrentThemeBackgroundAlpha);
-    }
-
-    @Override
-    public String getCurrentThemeFontFamily() {
-        return mCurrentThemeFontFamily;
-    }
 
     @Override
     public int getCurrentThemeBackgroundAlpha() {
@@ -133,18 +96,10 @@ public class ImageCropperActivity extends CropImageActivity implements IThemedAc
     }
 
     @Override
-    @ShapedImageView.ShapeStyle
-    public int getCurrentProfileImageStyle() {
-        return mProfileImageStyle;
-    }
-
-    @Override
     protected void onApplyThemeResource(@NonNull Resources.Theme theme, int resId, boolean first) {
         mCurrentThemeColor = getThemeColor();
-        mCurrentThemeFontFamily = getThemeFontFamily();
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
-        mProfileImageStyle = Utils.getProfileImageStyle(this);
         super.onApplyThemeResource(theme, resId, first);
     }
 

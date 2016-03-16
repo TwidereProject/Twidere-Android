@@ -35,9 +35,11 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.ActionBarContextView;
 
 import com.afollestad.appthemeengine.ATE;
 
@@ -61,6 +63,8 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
+import org.mariotaku.twidere.util.theme.ActionBarContextViewViewProcessor;
+import org.mariotaku.twidere.util.theme.FloatingActionButtonViewProcessor;
 import org.mariotaku.twidere.util.theme.TabPagerIndicatorViewProcessor;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
@@ -121,6 +125,8 @@ public class TwidereApplication extends Application implements Constants,
             StrictModeUtils.detectAllVmPolicy();
         }
         ATE.registerViewProcessor(TabPagerIndicator.class, new TabPagerIndicatorViewProcessor());
+        ATE.registerViewProcessor(FloatingActionButton.class, new FloatingActionButtonViewProcessor());
+        ATE.registerViewProcessor(ActionBarContextView.class, new ActionBarContextViewViewProcessor());
         final SharedPreferences preferences = getSharedPreferences();
         if (!ATE.config(this, null).isConfigured()) {
             final int themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,

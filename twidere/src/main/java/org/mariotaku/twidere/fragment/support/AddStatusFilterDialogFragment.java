@@ -25,12 +25,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.twitter.Extractor;
 
 import org.mariotaku.twidere.R;
@@ -49,24 +49,27 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment implements OnMultiChoiceClickListener,
-        OnClickListener {
+public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
 
     public static final String FRAGMENT_TAG = "add_status_filter";
 
     private final Extractor mExtractor = new Extractor();
     private FilterItemInfo[] mFilterItems;
-    private final Set<FilterItemInfo> mCheckedFilterItems = new HashSet<>();
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
+        final MaterialDialog materialDialog = (MaterialDialog) dialog;
+        final Integer[] selectedIndices = materialDialog.getSelectedIndices();
+        assert selectedIndices != null;
+
         final Set<UserKey> userKeys = new HashSet<>();
         final Set<String> keywords = new HashSet<>();
         final Set<String> sources = new HashSet<>();
         final ArrayList<ContentValues> userValues = new ArrayList<>();
         final ArrayList<ContentValues> keywordValues = new ArrayList<>();
         final ArrayList<ContentValues> sourceValues = new ArrayList<>();
-        for (final FilterItemInfo info : mCheckedFilterItems) {
+        for (final int idx : selectedIndices) {
+            final FilterItemInfo info = mFilterItems[idx];
             final Object value = info.value;
             if (value instanceof ParcelableUserMention) {
                 final ParcelableUserMention mention = (ParcelableUserMention) value;
@@ -103,20 +106,11 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
         ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues);
     }
 
-    @Override
-    public void onClick(final DialogInterface dialog, final int which, final boolean isChecked) {
-        if (isChecked) {
-            mCheckedFilterItems.add(mFilterItems[which]);
-        } else {
-            mCheckedFilterItems.remove(mFilterItems[which]);
-        }
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-        final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+        final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(wrapped);
         mFilterItems = getFilterItemsInfo();
         final String[] entries = new String[mFilterItems.length];
         final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
@@ -135,9 +129,10 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
             }
         }
         builder.setTitle(R.string.add_to_filter);
-        builder.setMultiChoiceItems(entries, null, this);
+        builder.setMultiChoiceItems(entries, null, null);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(android.R.string.cancel, null);
+        builder.alwaysCallMultiChoiceCallback();
         return builder.create();
     }
 

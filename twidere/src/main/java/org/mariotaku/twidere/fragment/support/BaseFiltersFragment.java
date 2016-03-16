@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,17 +34,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AutoCompleteTextView;
@@ -57,6 +55,7 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.UserListSelectorActivity;
+import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -97,17 +96,17 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         showProgress();
     }
 
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final View view = super.onCreateView(inflater, container, savedInstanceState);
-        assert view != null;
-        final ListView listView = (ListView) view.findViewById(R.id.list_view);
-        final Resources res = getResources();
-        final float density = res.getDisplayMetrics().density;
-        final int padding = (int) density * 16;
-        listView.setPadding(padding, 0, padding, 0);
-        return view;
-    }
+//    @Override
+//    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+//        final View view = super.onCreateView(inflater, container, savedInstanceState);
+//        assert view != null;
+//        final ListView listView = (ListView) view.findViewById(R.id.list_view);
+//        final Resources res = getResources();
+//        final float density = res.getDisplayMetrics().density;
+//        final int padding = (int) density * 16;
+//        listView.setPadding(padding, 0, padding, 0);
+//        return view;
+//    }
 
     @Override
     public void setUserVisibleHint(final boolean isVisibleToUser) {
@@ -123,8 +122,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
     }
 
     private boolean isQuickReturnEnabled() {
-        final int firstVisiblePosition = getListView().getFirstVisiblePosition();
-        return mActionMode == null && firstVisiblePosition >= 1;
+        return mActionMode == null;
     }
 
     @Override
@@ -146,7 +144,8 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         final ListView listView = getListView();
         switch (item.getItemId()) {
             case R.id.delete: {
-                final Expression where = Expression.in(new Column(Filters._ID), new RawItemArray(listView.getCheckedItemIds()));
+                final Expression where = Expression.in(new Column(Filters._ID),
+                        new RawItemArray(listView.getCheckedItemIds()));
                 mResolver.delete(getContentUri(), where.getSQL(), null);
                 break;
             }
@@ -171,9 +170,29 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
     }
 
     @Override
+    public void onItemCheckedStateChanged(final ActionMode mode, final int position, final long id,
+                                          final boolean checked) {
+        updateTitle(mode);
+    }
+
+    @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-        setControlVisible(firstVisibleItem < 1);
+        if (ViewCompat.isLaidOut(view)) {
+            int childCount = view.getChildCount();
+            if (childCount > 0) {
+                final View firstChild = view.getChildAt(0);
+                final FragmentActivity activity = getActivity();
+                int controlBarHeight = 0;
+                if (activity instanceof IControlBarActivity) {
+                    controlBarHeight = ((IControlBarActivity) activity).getControlBarHeight();
+                }
+                final boolean visible = firstChild.getTop() > controlBarHeight;
+                setControlVisible(visible);
+            } else {
+                setControlVisible(true);
+            }
+        }
     }
 
     @Override
@@ -203,6 +222,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         inflater.inflate(R.menu.menu_filters, menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -218,11 +238,6 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onItemCheckedStateChanged(final ActionMode mode, final int position, final long id,
-                                          final boolean checked) {
-        updateTitle(mode);
-    }
 
     @Override
     public boolean isRefreshing() {
@@ -269,7 +284,6 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
             final FragmentActivity activity = getActivity();
             final Context wrapped = ThemeUtils.getDialogThemedContext(activity);
             final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
-            buildDialog(builder);
             builder.setView(R.layout.dialog_auto_complete_textview);
 
             builder.setTitle(R.string.add_rule);
@@ -307,9 +321,6 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
             return ParseUtils.parseString(editText.getText());
         }
 
-        private void buildDialog(final AlertDialog.Builder builder) {
-
-        }
     }
 
     private static final class FilterListAdapter extends SimpleCursorAdapter {

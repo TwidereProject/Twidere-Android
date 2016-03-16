@@ -210,7 +210,7 @@
         <activity
             android:name=".activity.SignInActivity"
             android:label="@string/sign_in"
-            android:theme="@style/Theme.Twidere.DialogWhenLarge.NoActionBar"
+            android:theme="@style/Theme.Twidere"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.TWITTER_LOGIN"/>

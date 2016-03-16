@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -16,39 +17,42 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout
-    android:id="@+id/main_content"
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/content_fragment"
+    <org.mariotaku.twidere.view.ExtendedViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <RelativeLayout
-        android:id="@+id/twidere_action_bar_with_overlay"
+    <org.mariotaku.twidere.view.ExtendedLinearLayout
+        android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:elevation="@dimen/toolbar_elevation"
+        android:orientation="vertical"
+        android:tag="background|primary_color">
 
-        <org.mariotaku.twidere.view.TwidereActionBarContainer
-            android:id="@+id/twidere_action_bar_container"
-            style="?attr/actionBarStyle"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:layout_alignParentTop="true"
-            android:touchscreenBlocksFocus="true"
-            tools:ignore="UnusedAttribute"/>
+            app:popupTheme="?actionBarPopupTheme"/>
 
-        <View
-            android:id="@+id/window_overlay"
+        <org.mariotaku.twidere.view.TabPagerIndicator
+            android:id="@+id/toolbar_tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/twidere_action_bar_container"
-            android:background="?android:windowContentOverlay"/>
-    </RelativeLayout>
-</org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout>
+            android:layout_height="@dimen/element_size_normal"
+            app:tabDividerVerticalPadding="@dimen/element_spacing_mlarge"
+            app:tabExpandEnabled="true"
+            app:tabHorizontalPadding="@dimen/element_spacing_large"
+            app:tabShowDivider="true"
+            tools:ignore="UnusedAttribute"
+            tools:listitem="@layout/layout_tab_item"/>
+    </org.mariotaku.twidere.view.ExtendedLinearLayout>
+
+</FrameLayout>

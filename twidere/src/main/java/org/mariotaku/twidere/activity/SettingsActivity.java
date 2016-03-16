@@ -59,7 +59,6 @@ import org.mariotaku.twidere.fragment.support.SupportBrowserFragment;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.view.TintedStatusNativeActionModeAwareLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +73,6 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
 
     private boolean mShouldNotifyChange;
     private EntriesAdapter mEntriesAdapter;
-    private TintedStatusNativeActionModeAwareLayout mMainContent;
     private View mDetailFragmentContainer;
 
     public static void setShouldNotifyChange(Activity activity) {
@@ -87,7 +85,6 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
         super.onContentChanged();
         mEntriesListView = (ListView) findViewById(R.id.entries_list);
         mSlidingPaneLayout = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
-        mMainContent = (TintedStatusNativeActionModeAwareLayout) findViewById(R.id.main_content);
         mDetailFragmentContainer = findViewById(R.id.detail_fragment_container);
     }
 
@@ -98,10 +95,6 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
         setContentView(R.layout.activity_settings);
 
         final int backgroundAlpha = getCurrentThemeBackgroundAlpha();
-        final int alpha = ThemeUtils.getActionBarAlpha(getThemeBackgroundOption(), backgroundAlpha);
-        final int statusBarColor = ThemeUtils.getActionBarColor(this, getCurrentThemeColor(), getThemeBackgroundOption());
-        mMainContent.setDrawColor(true);
-        mMainContent.setColor(statusBarColor, alpha);
 
         mDetailFragmentContainer.setBackgroundColor((backgroundAlpha << 24 | 0xFFFFFF) & ThemeUtils.getThemeBackgroundColor(this));
 
@@ -180,7 +173,7 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
         if (shouldNotifyChange()) {
             final Intent data = new Intent();
             data.putExtra(EXTRA_CHANGED, true);
-            setResult(isTopSettings() ? RESULT_OK : RESULT_SETTINGS_CHANGED, data);
+            setResult(RESULT_SETTINGS_CHANGED, data);
         }
         super.finish();
     }

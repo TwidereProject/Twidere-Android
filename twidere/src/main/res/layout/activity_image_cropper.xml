@@ -18,43 +18,38 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.TintedStatusFrameLayout
-    android:id="@+id/main_content"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:setPadding="true">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <com.soundcloud.android.crop.CropImageView
+        android:id="@+id/crop_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/done_cancel_bar"
+        android:background="@drawable/crop__texture"/>
 
-        <com.soundcloud.android.crop.CropImageView
-            android:id="@+id/crop_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/done_cancel_bar"
-            android:background="@drawable/crop__texture"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/done_cancel_bar"
+        style="?attr/actionBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
+        android:touchscreenBlocksFocus="true"
+        app:contentInsetEnd="0dp"
+        app:contentInsetStart="0dp"
+        tools:ignore="UnusedAttribute">
 
-        <org.mariotaku.twidere.view.TwidereActionBarContextFrameLayout
-            android:id="@+id/done_cancel_bar"
-            style="?attr/actionBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_alignParentTop="true"
-            android:layout="@layout/layout_image_cropper_done_cancel"
-            android:touchscreenBlocksFocus="true"
-            tools:ignore="UnusedAttribute"/>
+        <include layout="@layout/layout_image_cropper_done_cancel"/>
+    </android.support.v7.widget.Toolbar>
 
-
-        <View
-            android:id="@+id/window_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/done_cancel_bar"
-            android:background="?android:windowContentOverlay"/>
-    </RelativeLayout>
-
-</org.mariotaku.twidere.view.TintedStatusFrameLayout>
+    <View
+        android:id="@+id/window_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/done_cancel_bar"
+        android:background="?android:windowContentOverlay"/>
+</RelativeLayout>

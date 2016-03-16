@@ -38,8 +38,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.menu.ActionMenuItemView;
-import android.support.v7.widget.ActionBarContainer;
-import android.support.v7.widget.ActionBarContextView;
 import android.support.v7.widget.ActionBarOverlayLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ContentFrameLayout;
@@ -89,14 +87,6 @@ public class ThemeUtils implements Constants {
     }
 
 
-    public static void applyActionBarBackground(final ActionBarContainer actionBar, final Context context,
-                                                final int accentColor, String backgroundOption, boolean outlineEnabled) {
-        if (actionBar == null || context == null) return;
-        actionBar.setPrimaryBackground(getActionBarBackground(context, accentColor, backgroundOption, outlineEnabled));
-        actionBar.setSplitBackground(getActionBarSplitBackground(context));
-        actionBar.setStackedBackground(getActionBarStackedBackground(context, accentColor, backgroundOption, outlineEnabled));
-    }
-
     public static void applyColorFilterToMenuIcon(final Menu menu, final int color, final int popupColor,
                                                   final int highlightColor, final Mode mode,
                                                   final int... excludedGroups) {
@@ -121,13 +111,6 @@ public class ThemeUtils implements Constants {
                 applyColorFilterToMenuIcon(item.getSubMenu(), popupColor, popupColor, highlightColor, mode, excludedGroups);
             }
         }
-    }
-
-    public static void setActionBarContextViewBackground(@NonNull ActionBarContextView contextView,
-                                                         int accentColor,
-                                                         String backgroundOption, boolean outlineEnabled) {
-        ViewSupport.setBackground(contextView, getActionBarBackground(contextView.getContext(),
-                accentColor, backgroundOption, outlineEnabled));
     }
 
     public static void applyWindowBackground(@NonNull Context context, @NonNull Window window, String option, int alpha) {
@@ -166,15 +149,6 @@ public class ThemeUtils implements Constants {
             actionBarColor = context.getResources().getColor(R.color.background_color_action_bar_dark);
         }
         return ActionBarColorDrawable.create(actionBarColor, outlineEnabled);
-    }
-
-    public static Drawable getActionBarSplitBackground(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.backgroundSplit});
-        try {
-            return a.getDrawable(0);
-        } finally {
-            a.recycle();
-        }
     }
 
     @NonNull
@@ -340,16 +314,6 @@ public class ThemeUtils implements Constants {
                 colors[0] = a.getColor(0, Color.WHITE);
                 colors[1] = a.getColor(1, Color.BLACK);
             }
-        } finally {
-            a.recycle();
-        }
-    }
-
-    public static void getColorForegroundAndInverse(final Context context, int[] colors) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS_COLOR_FOREGROUND_AND_INVERSE);
-        try {
-            colors[0] = a.getColor(0, Color.WHITE);
-            colors[1] = a.getColor(1, Color.BLACK);
         } finally {
             a.recycle();
         }
@@ -841,10 +805,6 @@ public class ThemeUtils implements Constants {
         return ContextCompat.getColor(context, R.color.background_color_action_bar_dark);
     }
 
-    public static boolean isDarkTheme(final String name) {
-        return VALUE_THEME_NAME_DARK.equals(name);
-    }
-
     public static void applyToolbarItemColor(Context context, Toolbar toolbar, int toolbarColor) {
         if (toolbar == null || isDarkTheme(context)) {
             return;
@@ -865,33 +825,6 @@ public class ThemeUtils implements Constants {
         if (toolbar instanceof TwidereToolbar) {
             ((TwidereToolbar) toolbar).setItemColor(contrastForegroundColor);
         }
-    }
-
-    public static void updateControlBarUi(FragmentActivity activity, int controlBarHeight,
-                                          int controlBarOffsetPixels, View pagerIndicator,
-                                          View pagerWindowOverlay) {
-        final int translationY = controlBarHeight - controlBarOffsetPixels;
-        if (activity instanceof LinkHandlerActivity) {
-            final View view = activity.getWindow().findViewById(android.support.v7.appcompat.R.id.action_bar);
-            if (view != null && controlBarHeight != 0) {
-                view.setAlpha(translationY / (float) controlBarHeight);
-            }
-        }
-        pagerIndicator.setTranslationY(translationY);
-        pagerWindowOverlay.setTranslationY(translationY);
-    }
-
-    public static int getControlBarHeight(FragmentActivity activity, int defaultControlBarHeight) {
-        final int controlBarHeight;
-        if (activity instanceof LinkHandlerActivity) {
-            controlBarHeight = ((LinkHandlerActivity) activity).getControlBarHeight();
-        } else {
-            controlBarHeight = defaultControlBarHeight;
-        }
-        if (controlBarHeight == 0) {
-            return getActionBarHeight(activity);
-        }
-        return controlBarHeight;
     }
 
     public static int getLocalNightMode(SharedPreferences preferences) {

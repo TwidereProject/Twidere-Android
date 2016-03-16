@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.Twidere" parent="Theme.AppCompat.Light">
 
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
         </item>
-        <item name="actionModeBackground">?colorPrimary</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
@@ -25,31 +24,6 @@
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
-
-    <style name="Theme.Twidere.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
-        </item>
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">#f8f8f8</item>
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_dark</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
-        <item name="coloredActionBar">true</item>
-
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">light</item>
-
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
-
 
     <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.AppCompat.Light.DialogWhenLarge">
 

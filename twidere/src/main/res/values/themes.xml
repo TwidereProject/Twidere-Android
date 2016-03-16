@@ -7,8 +7,6 @@
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
         </item>
-        <item name="actionModeStyle">@style/Widget.AppCompat.ActionBar</item>
-        <item name="actionModeBackground">?colorPrimary</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
@@ -28,31 +26,11 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
-    <style name="Theme.Twidere.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.Twidere.NoActionBar" parent="Theme.Twidere">
 
-        <!-- Window attributes -->
-        <item name="android:windowBackground">@color/background_color_window_dark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
 
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
-        </item>
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_light</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-        <item name="darkTheme">true</item>
-
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">dark</item>
-
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.AppCompat.DialogWhenLarge">

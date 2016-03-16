@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.activity.iface;
 
-import org.mariotaku.twidere.view.ShapedImageView;
-
 public interface IThemedActivity {
 
     int getCurrentThemeBackgroundAlpha();
@@ -36,10 +34,5 @@ public interface IThemedActivity {
     int getThemeColor();
 
     String getThemeFontFamily();
-
-    String getCurrentThemeFontFamily();
-
-    @ShapedImageView.ShapeStyle
-    int getCurrentProfileImageStyle();
 
 }
