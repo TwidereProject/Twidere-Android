@@ -290,6 +290,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "extras")
     @CursorField(value = Statuses.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
     public Extras extras;
+    public transient boolean is_filtered;
 
     @CursorField(value = Statuses._ID, excludeWrite = true)
     long _id;

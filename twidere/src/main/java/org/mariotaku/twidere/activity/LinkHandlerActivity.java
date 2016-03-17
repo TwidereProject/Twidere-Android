@@ -190,7 +190,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         mFinishOnly = Boolean.parseBoolean(uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY));
 
         if (fragment instanceof IToolBarSupportFragment) {
-            ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
+            ThemeUtils.setCompatContentViewOverlay(getWindow(), new EmptyDrawable());
         }
     }
 

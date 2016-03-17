@@ -180,8 +180,13 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         final ParcelableStatus[] array = data.toArray(new ParcelableStatus[data.size()]);
         for (int i = 0, size = array.length; i < size; i++) {
             final ParcelableStatus status = array[i];
-            if (shouldFilterStatus(db, status) && !status.is_gap && i != size - 1) {
-                deleteStatus(data, status.id);
+            final boolean filtered = shouldFilterStatus(db, status);
+            if (filtered) {
+                if (!status.is_gap && i != size - 1) {
+                    data.remove(i);
+                } else {
+                    status.is_filtered = true;
+                }
             }
         }
         if (mComparator != null) {
@@ -211,8 +216,8 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
 
     @NonNull
     protected abstract List<? extends Status> getStatuses(@NonNull Twitter twitter,
-                                                @NonNull ParcelableCredentials credentials,
-                                                @NonNull Paging paging) throws TwitterException;
+                                                          @NonNull ParcelableCredentials credentials,
+                                                          @NonNull Paging paging) throws TwitterException;
 
     @WorkerThread
     protected abstract boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status);

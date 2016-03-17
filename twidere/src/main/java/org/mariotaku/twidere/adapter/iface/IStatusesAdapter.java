@@ -37,6 +37,8 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupport
 
     int getStatusCount();
 
+    int getRawStatusCount();
+
     TwidereLinkify getTwidereLinkify();
 
     boolean isCardActionsShown(int position);

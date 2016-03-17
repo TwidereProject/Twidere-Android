@@ -22,14 +22,11 @@ package org.mariotaku.twidere.fragment.support;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.twitter.Extractor;
 
@@ -41,7 +38,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
@@ -49,68 +45,17 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
+public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment {
 
     public static final String FRAGMENT_TAG = "add_status_filter";
 
     private final Extractor mExtractor = new Extractor();
     private FilterItemInfo[] mFilterItems;
 
-    @Override
-    public void onClick(final DialogInterface dialog, final int which) {
-        final MaterialDialog materialDialog = (MaterialDialog) dialog;
-        final Integer[] selectedIndices = materialDialog.getSelectedIndices();
-        assert selectedIndices != null;
-
-        final Set<UserKey> userKeys = new HashSet<>();
-        final Set<String> keywords = new HashSet<>();
-        final Set<String> sources = new HashSet<>();
-        final ArrayList<ContentValues> userValues = new ArrayList<>();
-        final ArrayList<ContentValues> keywordValues = new ArrayList<>();
-        final ArrayList<ContentValues> sourceValues = new ArrayList<>();
-        for (final int idx : selectedIndices) {
-            final FilterItemInfo info = mFilterItems[idx];
-            final Object value = info.value;
-            if (value instanceof ParcelableUserMention) {
-                final ParcelableUserMention mention = (ParcelableUserMention) value;
-                userKeys.add(mention.key);
-                userValues.add(ContentValuesCreator.createFilteredUser(mention));
-            } else if (value instanceof UserItem) {
-                final UserItem item = (UserItem) value;
-                userKeys.add(item.key);
-                userValues.add(createFilteredUser(item));
-            } else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
-                if (value != null) {
-                    final String keyword = ParseUtils.parseString(value);
-                    keywords.add(keyword);
-                    final ContentValues values = new ContentValues();
-                    values.put(Filters.Keywords.VALUE, "#" + keyword);
-                    keywordValues.add(values);
-                }
-            } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
-                if (value != null) {
-                    final String source = ParseUtils.parseString(value);
-                    sources.add(source);
-                    final ContentValues values = new ContentValues();
-                    values.put(Filters.Sources.VALUE, source);
-                    sourceValues.add(values);
-                }
-            }
-        }
-        final ContentResolver resolver = getContentResolver();
-        ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, userKeys, null);
-        ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords, null);
-        ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources, null);
-        ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues);
-        ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues);
-        ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues);
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-        final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(wrapped);
+        final MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
         mFilterItems = getFilterItemsInfo();
         final String[] entries = new String[mFilterItems.length];
         final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
@@ -118,22 +63,80 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment imp
             final FilterItemInfo info = mFilterItems[i];
             switch (info.type) {
                 case FilterItemInfo.FILTER_TYPE_USER:
-                    entries[i] = getString(R.string.user_filter_name, getName(mUserColorNameManager, info.value, nameFirst));
+                    entries[i] = getString(R.string.user_filter_name, getName(mUserColorNameManager,
+                            info.value, nameFirst));
                     break;
                 case FilterItemInfo.FILTER_TYPE_KEYWORD:
-                    entries[i] = getString(R.string.keyword_filter_name, getName(mUserColorNameManager, info.value, nameFirst));
+                    entries[i] = getString(R.string.keyword_filter_name, getName(mUserColorNameManager,
+                            info.value, nameFirst));
                     break;
                 case FilterItemInfo.FILTER_TYPE_SOURCE:
-                    entries[i] = getString(R.string.source_filter_name, getName(mUserColorNameManager, info.value, nameFirst));
+                    entries[i] = getString(R.string.source_filter_name, getName(mUserColorNameManager,
+                            info.value, nameFirst));
                     break;
             }
         }
-        builder.setTitle(R.string.add_to_filter);
-        builder.setMultiChoiceItems(entries, null, null);
-        builder.setPositiveButton(android.R.string.ok, this);
-        builder.setNegativeButton(android.R.string.cancel, null);
-        builder.alwaysCallMultiChoiceCallback();
-        return builder.create();
+        builder.title(R.string.add_to_filter);
+        builder.items(entries);
+        builder.positiveText(android.R.string.ok);
+        builder.itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
+            @Override
+            public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                return false;
+            }
+        });
+        builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                final Integer[] selectedIndices = dialog.getSelectedIndices();
+                assert selectedIndices != null;
+
+                final Set<UserKey> userKeys = new HashSet<>();
+                final Set<String> keywords = new HashSet<>();
+                final Set<String> sources = new HashSet<>();
+                final ArrayList<ContentValues> userValues = new ArrayList<>();
+                final ArrayList<ContentValues> keywordValues = new ArrayList<>();
+                final ArrayList<ContentValues> sourceValues = new ArrayList<>();
+                for (final int idx : selectedIndices) {
+                    final FilterItemInfo info = mFilterItems[idx];
+                    final Object value = info.value;
+                    if (value instanceof ParcelableUserMention) {
+                        final ParcelableUserMention mention = (ParcelableUserMention) value;
+                        userKeys.add(mention.key);
+                        userValues.add(ContentValuesCreator.createFilteredUser(mention));
+                    } else if (value instanceof UserItem) {
+                        final UserItem item = (UserItem) value;
+                        userKeys.add(item.key);
+                        userValues.add(createFilteredUser(item));
+                    } else if (info.type == FilterItemInfo.FILTER_TYPE_KEYWORD) {
+                        if (value != null) {
+                            final String keyword = ParseUtils.parseString(value);
+                            keywords.add(keyword);
+                            final ContentValues values = new ContentValues();
+                            values.put(Filters.Keywords.VALUE, "#" + keyword);
+                            keywordValues.add(values);
+                        }
+                    } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
+                        if (value != null) {
+                            final String source = ParseUtils.parseString(value);
+                            sources.add(source);
+                            final ContentValues values = new ContentValues();
+                            values.put(Filters.Sources.VALUE, source);
+                            sourceValues.add(values);
+                        }
+                    }
+                }
+                final ContentResolver resolver = getContentResolver();
+                ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, userKeys, null);
+                ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords, null);
+                ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources, null);
+                ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues);
+                ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues);
+                ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues);
+            }
+        });
+        builder.negativeText(android.R.string.cancel);
+        return builder.build();
     }
 
     private FilterItemInfo[] getFilterItemsInfo() {

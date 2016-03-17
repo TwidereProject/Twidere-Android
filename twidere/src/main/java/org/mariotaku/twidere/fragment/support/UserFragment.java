@@ -1669,7 +1669,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         final int currentActionBarColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor,
                 stackedTabColor);
-        final boolean actionItemIsDark = !ATEUtil.isColorLight(stackedTabColor);
+        final boolean actionItemIsDark = ATEUtil.isColorLight(stackedTabColor);
         if (mPreviousActionBarItemIsDark == 0 || (actionItemIsDark ? 1 : -1) != mPreviousActionBarItemIsDark) {
             ThemeUtils.applyToolbarItemColor(activity, mToolbar, currentActionBarColor);
         }

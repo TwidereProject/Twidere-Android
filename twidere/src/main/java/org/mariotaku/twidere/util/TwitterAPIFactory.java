@@ -218,12 +218,17 @@ public class TwitterAPIFactory implements TwidereConstants {
         return isTwitterCredentials(ParcelableAccountUtils.getAccount(context, accountId));
     }
 
-    public static boolean isTwitterCredentials(ParcelableAccount credentials) {
-        return ParcelableAccount.Type.TWITTER.equals(credentials.account_type);
+    public static boolean isTwitterCredentials(ParcelableAccount account) {
+        if (account.account_type == null) {
+            final String accountHost = account.account_key.getHost();
+            if (accountHost == null) return true;
+            return USER_TYPE_TWITTER_COM.equals(accountHost);
+        }
+        return ParcelableAccount.Type.TWITTER.equals(account.account_type);
     }
 
-    public static boolean isStatusNetCredentials(ParcelableAccount credentials) {
-        return ParcelableAccount.Type.STATUSNET.equals(credentials.account_type);
+    public static boolean isStatusNetCredentials(ParcelableAccount account) {
+        return ParcelableAccount.Type.STATUSNET.equals(account.account_type);
     }
 
     @WorkerThread

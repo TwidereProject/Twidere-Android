@@ -1844,6 +1844,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Override
         public int getStatusCount() {
+            return getRawStatusCount();
+        }
+
+        @Override
+        public int getRawStatusCount() {
             return getTypeCount(ITEM_IDX_CONVERSATION) + getTypeCount(ITEM_IDX_STATUS)
                     + getTypeCount(ITEM_IDX_REPLY);
         }

@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.Space;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ShapedImageView;
+import org.mariotaku.twidere.view.holder.EmptyViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
@@ -56,6 +58,7 @@ import java.util.List;
 public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<RecyclerView.ViewHolder>
         implements Constants, IStatusesAdapter<List<ParcelableStatus>> {
     public static final int ITEM_VIEW_TYPE_STATUS = 2;
+    public static final int ITEM_VIEW_TYPE_EMPTY = 3;
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
     private final TwidereLinkify mLinkify;
@@ -82,6 +85,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private boolean mShowAccountsColor;
     private List<ParcelableStatus> mData;
     private int mShowingActionCardPosition = RecyclerView.NO_POSITION;
+    private boolean mLastItemFiltered;
 
     public ParcelableStatusesAdapter(Context context, boolean compact) {
         super(context);
@@ -115,12 +119,19 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     @Override
     public ParcelableStatus getStatus(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
-        if (dataPosition < 0 || dataPosition >= getStatusCount()) return null;
+        if (dataPosition < 0 || dataPosition >= getRawStatusCount()) return null;
         return mData.get(dataPosition);
     }
 
     @Override
     public int getStatusCount() {
+        if (mData == null) return 0;
+        if (mLastItemFiltered) return mData.size() - 1;
+        return mData.size();
+    }
+
+    @Override
+    public int getRawStatusCount() {
         if (mData == null) return 0;
         return mData.size();
     }
@@ -179,6 +190,11 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
 
     public void setData(List<ParcelableStatus> data) {
         mData = data;
+        if (!(data instanceof ObjectCursor) && !data.isEmpty()) {
+            mLastItemFiltered = data.get(data.size() - 1).is_filtered;
+        } else {
+            mLastItemFiltered = false;
+        }
         notifyDataSetChanged();
     }
 
@@ -306,6 +322,9 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
                 final View view = mInflater.inflate(R.layout.card_item_load_indicator, parent, false);
                 return new LoadIndicatorViewHolder(view);
             }
+            case ITEM_VIEW_TYPE_EMPTY: {
+                return new EmptyViewHolder(new Space(getContext()));
+            }
         }
         throw new IllegalStateException("Unknown view type " + viewType);
     }
@@ -341,6 +360,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP;
         }
+        if (isFiltered(position)) return ITEM_VIEW_TYPE_EMPTY;
         return ITEM_VIEW_TYPE_STATUS;
     }
 
@@ -401,6 +421,11 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
             start += 1;
         }
         return start;
+    }
+
+    private boolean isFiltered(int position) {
+        if (mData instanceof ObjectCursor) return false;
+        return getStatus(position).is_filtered;
     }
 
     public static class EventListener implements GapClickListener, IStatusViewHolder.StatusClickListener {

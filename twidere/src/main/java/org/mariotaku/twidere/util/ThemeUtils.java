@@ -214,17 +214,8 @@ public class ThemeUtils implements Constants {
         return getColorFromAttribute(context, android.R.attr.colorForeground, 0);
     }
 
-    public static int getDialogThemeResource(final Context context) {
-        return getDialogThemeResource(getThemeNameOption(context));
-    }
-
-    public static int getDialogThemeResource(final String name) {
-        if (VALUE_THEME_NAME_DARK.equals(name)) return R.style.Theme_Twidere_Dialog;
-        return R.style.Theme_Twidere_Dialog;
-    }
-
     public static Context getDialogThemedContext(final Context context) {
-        return new ContextThemeWrapper(context, getDialogThemeResource(context));
+        return new ContextThemeWrapper(context, R.style.Theme_Twidere_Dialog);
     }
 
     public static Drawable getImageHighlightDrawable(final Context context) {
@@ -610,12 +601,11 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static void setCompatContentViewOverlay(Activity activity, Drawable overlay) {
+    public static void setCompatContentViewOverlay(Window window, Drawable overlay) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
-        final Window window = activity.getWindow();
         View contentLayout = window.findViewById(android.support.v7.appcompat.R.id.action_bar_activity_content);
         if (contentLayout == null) {
-            contentLayout = window.findViewById(R.id.content);
+            contentLayout = window.findViewById(android.R.id.content);
         }
         if (contentLayout instanceof FrameLayout) {
             ViewSupport.setForeground(contentLayout, overlay);
@@ -780,10 +770,10 @@ public class ThemeUtils implements Constants {
     }
 
     public static void applyToolbarItemColor(Context context, Toolbar toolbar, int toolbarColor) {
-        if (toolbar == null || isDarkTheme(context)) {
+        if (toolbar == null) {
             return;
         }
-        final int contrastForegroundColor = getContrastForegroundColor(context, toolbarColor);
+        final int contrastForegroundColor = getColorDependent(toolbarColor);
         toolbar.setTitleTextColor(contrastForegroundColor);
         toolbar.setSubtitleTextColor(contrastForegroundColor);
         int popupItemColor, popupTheme = toolbar.getPopupTheme();

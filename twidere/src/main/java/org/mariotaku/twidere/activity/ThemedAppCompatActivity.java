@@ -19,12 +19,15 @@
 
 package org.mariotaku.twidere.activity;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.Window;
 
@@ -38,6 +41,9 @@ import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public abstract class ThemedAppCompatActivity extends ATEActivity implements Constants,
         IThemedActivity, IAppCompatActivity {
@@ -115,6 +121,53 @@ public abstract class ThemedAppCompatActivity extends ATEActivity implements Con
 
     protected boolean shouldApplyWindowBackground() {
         return true;
+    }
+
+
+    private static final String[] sClassPrefixList = {
+            "android.widget.",
+            "android.view.",
+            "android.webkit."
+    };
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        // Fix for https://github.com/afollestad/app-theme-engine/issues/109
+        if (context != this) {
+            final AppCompatDelegate delegate = getDelegate();
+            View view = delegate.createView(parent, name, context, attrs);
+            if (view == null) {
+                view = newInstance(name, context, attrs);
+            }
+            if (view == null) {
+                for (String prefix : sClassPrefixList) {
+                    view = newInstance(prefix + name, context, attrs);
+                    if (view != null) break;
+                }
+            }
+            if (view != null) {
+                return view;
+            }
+        }
+        return super.onCreateView(parent, name, context, attrs);
+    }
+
+    private View newInstance(String name, Context context, AttributeSet attrs) {
+        try {
+            final Class<?> cls = Class.forName(name);
+            final Constructor<?> constructor = cls.getConstructor(Context.class, AttributeSet.class);
+            return (View) constructor.newInstance(context, attrs);
+        } catch (InstantiationException e) {
+            return null;
+        } catch (IllegalAccessException e) {
+            return null;
+        } catch (InvocationTargetException e) {
+            return null;
+        } catch (NoSuchMethodException e) {
+            return null;
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 
 }

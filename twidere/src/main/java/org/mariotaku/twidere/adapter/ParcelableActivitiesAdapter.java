@@ -50,6 +50,7 @@ import org.mariotaku.twidere.util.OnLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder;
+import org.mariotaku.twidere.view.holder.EmptyViewHolder;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -447,19 +448,13 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
         }
     }
 
-    static class EmptyViewHolder extends RecyclerView.ViewHolder {
-        public EmptyViewHolder(View view) {
-            super(view);
-        }
-    }
-
     static class EventListener implements IStatusViewHolder.StatusClickListener, GapClickListener,
             ActivityEventListener {
 
         final WeakReference<ParcelableActivitiesAdapter> adapterRef;
 
         EventListener(ParcelableActivitiesAdapter adapter) {
-            adapterRef = new WeakReference<ParcelableActivitiesAdapter>(adapter);
+            adapterRef = new WeakReference<>(adapter);
         }
 
         @Override

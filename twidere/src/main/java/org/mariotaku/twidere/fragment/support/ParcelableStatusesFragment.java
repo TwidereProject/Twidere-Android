@@ -151,7 +151,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
         if (position == 0) return;
         final ParcelableStatusesAdapter adapter = getAdapter();
         // Load the last item
-        final int idx = adapter.getStatusStartIndex() + adapter.getStatusCount() - 1;
+        final int idx = adapter.getStatusStartIndex() + adapter.getRawStatusCount() - 1;
         if (idx < 0) return;
         final ParcelableStatus status = adapter.getStatus(idx);
         UserKey[] accountKeys = {status.account_key};

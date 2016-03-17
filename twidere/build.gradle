@@ -87,8 +87,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.android.support:preference-v7:23.2.1'
     compile 'com.android.support:preference-v14:23.2.1'
-    compile('com.github.afollestad:app-theme-engine:1.0.1@aar') { transitive = true }
-    compile('com.github.afollestad.material-dialogs:commons:0.8.5.7@aar') { transitive = true }
+    compile('com.github.afollestad.app-theme-engine:library:1.0.2-SNAPSHOT@aar') { transitive = true }
+    compile('com.github.afollestad.material-dialogs:commons:0.8.5.8-SNAPSHOT@aar') { transitive = true }
     compile 'com.twitter:twitter-text:1.13.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.squareup:otto:1.3.8'

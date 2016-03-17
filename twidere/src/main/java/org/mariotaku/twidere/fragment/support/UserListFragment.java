@@ -57,9 +57,9 @@ import android.widget.CheckBox;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.activity.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.UserListSelectorActivity;
+import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -422,7 +422,6 @@ public class UserListFragment extends BaseSupportFragment implements OnClickList
         final FragmentActivity activity = getActivity();
         ThemeUtils.initPagerIndicatorAsActionBarTab(activity, mPagerIndicator, mPagerOverlay);
         ThemeUtils.setCompatToolbarOverlay(activity, new EmptyDrawable());
-        ThemeUtils.setCompatContentViewOverlay(activity, new EmptyDrawable());
         ThemeUtils.setWindowOverlayViewOverlay(activity, new EmptyDrawable());
 
         if (activity instanceof IThemedActivity) {

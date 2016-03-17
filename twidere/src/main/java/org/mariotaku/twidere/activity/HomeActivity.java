@@ -334,7 +334,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
         setSupportActionBar(mActionBar);
 
-        ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
+        ThemeUtils.setCompatContentViewOverlay(getWindow(), new EmptyDrawable());
 
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
         int tabDisplayOptionInt = Utils.getTabDisplayOptionInt(this);

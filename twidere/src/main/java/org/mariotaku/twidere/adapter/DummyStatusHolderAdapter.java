@@ -176,6 +176,11 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
         return 0;
     }
 
+    @Override
+    public int getRawStatusCount() {
+        return 0;
+    }
+
     @Nullable
     @Override
     public String getStatusId(int position) {
