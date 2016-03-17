@@ -741,7 +741,7 @@
     <string name="interactions">Interactions</string>
     <string name="network_diagnostics">Network diagnostics</string>
     <string name="action_start">Start</string>
-    <string name="builtin_dns_resolver">Builtin DNS resolver</string>
+    <string name="builtin_dns_resolver">Built-in DNS resolver</string>
     <string name="bandwidth_saving_mode">Bandwidth saving mode</string>
     <string name="retry_on_network_issue">Retry on network issue</string>
     <string name="retry_on_network_issue_summary">Try recover from network issue automatically</string>
