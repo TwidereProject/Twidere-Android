@@ -76,7 +76,7 @@ public class SimpleParcelableUsersAdapter extends BaseArrayAdapter<ParcelableUse
         holder.text2.setText(String.format("@%s", user.screen_name));
         holder.icon.setVisibility(isProfileImageDisplayed() ? View.VISIBLE : View.GONE);
         if (isProfileImageDisplayed()) {
-            mImageLoader.displayProfileImage(holder.icon, user.profile_image_url);
+            mImageLoader.displayProfileImage(holder.icon, user);
         } else {
             mImageLoader.cancelDisplayTask(holder.icon);
         }

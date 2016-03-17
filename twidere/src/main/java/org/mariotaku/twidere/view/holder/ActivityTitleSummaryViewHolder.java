@@ -144,7 +144,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
             view.setImageDrawable(null);
             if (i < length) {
                 view.setVisibility(View.VISIBLE);
-                imageLoader.displayProfileImage(view, statuses[i].profile_image_url);
+                imageLoader.displayProfileImage(view, statuses[i]);
             } else {
                 imageLoader.cancelDisplayTask(view);
                 view.setVisibility(View.GONE);

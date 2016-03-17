@@ -21,10 +21,7 @@ package org.mariotaku.twidere.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,6 +32,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceScreen;
@@ -42,6 +41,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -480,9 +481,10 @@ public class SettingsWizardActivity extends BaseAppCompatActivity implements Con
                 gotoNextPage();
             }
 
+            @NonNull
             @Override
             public Dialog onCreateDialog(final Bundle savedInstanceState) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
                 builder.setMessage(R.string.wizard_page_tabs_unchanged_message);
                 builder.setPositiveButton(android.R.string.ok, this);
                 return builder.create();
@@ -632,7 +634,7 @@ public class SettingsWizardActivity extends BaseAppCompatActivity implements Con
 
         @Override
         protected void onPostExecute(final Boolean result) {
-            final FragmentManager fm = mActivity.getFragmentManager();
+            final FragmentManager fm = mActivity.getSupportFragmentManager();
             final DialogFragment f = (DialogFragment) fm.findFragmentByTag(FRAGMENT_TAG);
             if (f != null) {
                 f.dismiss();

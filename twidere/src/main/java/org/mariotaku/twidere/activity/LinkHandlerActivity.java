@@ -41,6 +41,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
+import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
@@ -185,8 +186,12 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(android.R.id.content, fragment);
         ft.commit();
-        showFragment(linkId, uri);
+        setTitle(linkId, uri);
         mFinishOnly = Boolean.parseBoolean(uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY));
+
+        if (fragment instanceof IToolBarSupportFragment) {
+            ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
+        }
     }
 
     @Override
@@ -264,7 +269,7 @@ public class LinkHandlerActivity extends BaseAppCompatActivity implements System
         return mActionBarHeight = ThemeUtils.getActionBarHeight(this);
     }
 
-    private boolean showFragment(final int linkId, final Uri uri) {
+    private boolean setTitle(final int linkId, final Uri uri) {
         setSubtitle(null);
         switch (linkId) {
             case LINK_ID_STATUS: {

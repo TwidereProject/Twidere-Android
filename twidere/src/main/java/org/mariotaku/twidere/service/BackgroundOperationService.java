@@ -314,11 +314,13 @@ public class BackgroundOperationService extends IntentService implements Constan
                 recipientId, text, imageUri);
 
         final ContentResolver resolver = getContentResolver();
-        if (result.getData() != null && result.getData().id != null) {
-            final ContentValues values = ContentValuesCreator.createDirectMessage(result.getData());
-            final String delete_where = DirectMessages.ACCOUNT_KEY + " = " + accountId + " AND "
-                    + DirectMessages.MESSAGE_ID + " = " + result.getData().id;
-            resolver.delete(DirectMessages.Outbox.CONTENT_URI, delete_where, null);
+        if (result.hasData()) {
+            final ParcelableDirectMessage message = result.getData();
+            final ContentValues values = ContentValuesCreator.createDirectMessage(message);
+            final String deleteWhere = Expression.and(Expression.equalsArgs(DirectMessages.ACCOUNT_KEY),
+                    Expression.equalsArgs(DirectMessages.MESSAGE_ID)).getSQL();
+            String[] deleteWhereArgs = {message.account_key.toString(), message.id};
+            resolver.delete(DirectMessages.Outbox.CONTENT_URI, deleteWhere, deleteWhereArgs);
             resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
             showOkMessage(R.string.direct_message_sent, false);
         } else {

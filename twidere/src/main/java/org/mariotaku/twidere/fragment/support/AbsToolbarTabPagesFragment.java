@@ -44,7 +44,7 @@ public abstract class AbsToolbarTabPagesFragment extends BaseSupportFragment imp
     private SupportTabsAdapter mPagerAdapter;
     private TabPagerIndicator mPagerIndicator;
     private ViewPager mViewPager;
-    private View mPagerOverlay;
+    private View mWindowOverlay;
     private Toolbar mToolbar;
     private int mControlBarHeight;
     private ExtendedLinearLayout mToolbarContainer;
@@ -117,7 +117,7 @@ public abstract class AbsToolbarTabPagesFragment extends BaseSupportFragment imp
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mToolbarContainer = (ExtendedLinearLayout) view.findViewById(R.id.toolbar_container);
         mPagerIndicator = (TabPagerIndicator) view.findViewById(R.id.toolbar_tabs);
-        mPagerOverlay = view.findViewById(R.id.pager_window_overlay);
+        mWindowOverlay = view.findViewById(R.id.window_overlay);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         final Object host = getHost();
@@ -213,7 +213,9 @@ public abstract class AbsToolbarTabPagesFragment extends BaseSupportFragment imp
     @Override
     public void setControlBarOffset(float offset) {
         if (mToolbarContainer == null) return;
-        mToolbarContainer.setTranslationY((offset - 1) * getControlBarHeight());
+        final float translationY = (offset - 1) * getControlBarHeight();
+        mToolbarContainer.setTranslationY(translationY);
+        mWindowOverlay.setTranslationY(translationY);
     }
 
     @Override

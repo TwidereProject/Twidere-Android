@@ -1522,7 +1522,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
 
                 public void displayUser(ParcelableUser item) {
-                    adapter.getMediaLoader().displayProfileImage(profileImageView, item.profile_image_url);
+                    adapter.getMediaLoader().displayProfileImage(profileImageView, item);
                 }
 
                 @Override

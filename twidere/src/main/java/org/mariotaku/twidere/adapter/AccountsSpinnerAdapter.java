@@ -97,7 +97,7 @@ public class AccountsSpinnerAdapter extends ArrayAdapter<ParcelableCredentials> 
             if (icon != null) {
                 icon.setVisibility(View.VISIBLE);
                 if (mDisplayProfileImage) {
-                    mImageLoader.displayProfileImage(icon, item.profile_image_url);
+                    mImageLoader.displayProfileImage(icon, item);
                 } else {
                     mImageLoader.cancelDisplayTask(icon);
 //                    icon.setImageResource(R.drawable.ic_profile_image_default);

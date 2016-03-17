@@ -103,7 +103,7 @@ public class StaggeredGridParcelableStatusesAdapter extends ParcelableStatusesAd
             mediaImageContainer.requestLayout();
 
             mediaImageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(firstMedia.type));
-            loader.displayProfileImage(mediaProfileImageView, status.user_profile_image_url);
+            loader.displayProfileImage(mediaProfileImageView, status);
             loader.displayPreviewImageWithCredentials(mediaImageView, firstMedia.preview_url,
                     status.account_key, adapter.getMediaLoadingHandler());
         }

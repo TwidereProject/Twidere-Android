@@ -54,8 +54,6 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 
 import com.squareup.otto.Subscribe;
 
@@ -92,7 +90,7 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.ExtendedFrameLayout;
+import org.mariotaku.twidere.view.ExtendedRelativeLayout;
 import org.mariotaku.twidere.view.ExtendedViewPager;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
@@ -114,11 +112,12 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
     private ExtendedViewPager mViewPager;
     private Toolbar mActionBar;
+    private View mWindowOverlay;
     private TabPagerIndicator mTabIndicator;
     private DrawerLayout mDrawerLayout;
     private View mEmptyTabHint;
     private FloatingActionButton mActionsButton;
-    private ExtendedFrameLayout mHomeContent;
+    private ExtendedRelativeLayout mHomeContent;
 
     private UpdateUnreadCountTask mUpdateUnreadCountTask;
 
@@ -335,6 +334,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
 
         setSupportActionBar(mActionBar);
 
+        ThemeUtils.setCompatContentViewOverlay(this, new EmptyDrawable());
+
         final boolean refreshOnStart = mPreferences.getBoolean(KEY_REFRESH_ON_START, false);
         int tabDisplayOptionInt = Utils.getTabDisplayOptionInt(this);
 
@@ -411,7 +412,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     protected void onResume() {
         super.onResume();
         invalidateOptionsMenu();
-        updateActionsButtonStyle();
         updateActionsButton();
     }
 
@@ -575,7 +575,9 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
     public void setControlBarOffset(float offset) {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
-        mActionBar.setTranslationY(mTabColumns > 1 ? 0 : (int) (getControlBarHeight() * (offset - 1)));
+        final int translationY = mTabColumns > 1 ? 0 : (int) (getControlBarHeight() * (offset - 1));
+        mActionBar.setTranslationY(translationY);
+        mWindowOverlay.setTranslationY(translationY);
         final ViewGroup.LayoutParams lp = mActionsButton.getLayoutParams();
         if (lp instanceof MarginLayoutParams) {
             mActionsButton.setTranslationY((((MarginLayoutParams) lp).bottomMargin + mActionsButton.getHeight()) * (1 - offset));
@@ -594,7 +596,8 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         mViewPager = (ExtendedViewPager) findViewById(R.id.main_pager);
         mEmptyTabHint = findViewById(R.id.empty_tab_hint);
         mActionsButton = (FloatingActionButton) findViewById(R.id.actions_button);
-        mHomeContent = (ExtendedFrameLayout) findViewById(R.id.home_content);
+        mHomeContent = (ExtendedRelativeLayout) findViewById(R.id.home_content);
+        mWindowOverlay = findViewById(R.id.window_overlay);
     }
 
     private Fragment getKeyboardShortcutRecipient() {
@@ -795,13 +798,6 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
         }
         mActionsButton.setImageResource(icon);
         mActionsButton.setContentDescription(getString(title));
-    }
-
-    private void updateActionsButtonStyle() {
-        final boolean leftsideComposeButton = mPreferences.getBoolean(KEY_LEFTSIDE_COMPOSE_BUTTON, false);
-        final FrameLayout.LayoutParams lp = (LayoutParams) mActionsButton.getLayoutParams();
-        lp.gravity = Gravity.BOTTOM | (leftsideComposeButton ? Gravity.LEFT : Gravity.RIGHT);
-        mActionsButton.setLayoutParams(lp);
     }
 
     @Override

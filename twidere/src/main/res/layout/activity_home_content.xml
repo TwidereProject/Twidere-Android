@@ -17,7 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.ExtendedFrameLayout
+<org.mariotaku.twidere.view.ExtendedRelativeLayout
     android:id="@+id/home_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -37,6 +37,7 @@
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
         android:elevation="@dimen/toolbar_elevation"
         app:contentInsetEnd="0dp"
         app:contentInsetStart="0dp">
@@ -51,11 +52,20 @@
             tools:listitem="@layout/layout_tab_item"/>
     </android.support.v7.widget.Toolbar>
 
+    <View
+        android:id="@+id/window_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/action_bar"
+        android:background="?android:windowContentOverlay"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/actions_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_margin="@dimen/element_spacing_large"
         android:clickable="true"
         android:src="@drawable/ic_action_status_compose"
@@ -63,4 +73,4 @@
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
 
-</org.mariotaku.twidere.view.ExtendedFrameLayout>
+</org.mariotaku.twidere.view.ExtendedRelativeLayout>

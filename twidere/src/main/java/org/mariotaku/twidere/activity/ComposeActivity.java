@@ -1461,8 +1461,9 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
             itemView.setAlpha(isSelected ? 1 : 0.33f);
             ((CheckableLinearLayout) itemView).setChecked(isSelected);
             final MediaLoaderWrapper loader = adapter.getImageLoader();
-            if (ObjectUtils.notEqual(account.profile_image_url, iconView.getTag()) || iconView.getDrawable() == null) {
-                loader.displayProfileImage(iconView, account.profile_image_url);
+            if (ObjectUtils.notEqual(account, iconView.getTag()) || iconView.getDrawable() == null) {
+                iconView.setTag(account);
+                loader.displayProfileImage(iconView, account);
             }
             iconView.setBorderColor(account.color);
             iconView.setTag(account.profile_image_url);

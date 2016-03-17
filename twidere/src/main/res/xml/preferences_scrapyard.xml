@@ -55,9 +55,4 @@
         android:key="tab_display_option"
         android:title="@string/tab_display_option"/>
 
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="leftside_compose_button"
-        android:summary="@string/leftside_compose_button_summary"
-        android:title="@string/leftside_compose_button"/>
 </PreferenceScreen>

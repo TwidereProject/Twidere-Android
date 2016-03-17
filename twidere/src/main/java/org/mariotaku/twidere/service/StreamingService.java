@@ -323,11 +323,12 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onScrubGeo(final long userId, final long upToStatusId) {
-            final String where = Statuses.USER_ID + " = " + userId + " AND " + Statuses.STATUS_ID + " >= "
-                    + upToStatusId;
+            final String where = Expression.and(Expression.equalsArgs(Statuses.USER_ID),
+                    Expression.greaterEqualsArgs(Statuses.SORT_ID)).getSQL();
+            final String[] whereArgs = {String.valueOf(userId), String.valueOf(upToStatusId)};
             final ContentValues values = new ContentValues();
             values.putNull(Statuses.LOCATION);
-            resolver.update(Statuses.CONTENT_URI, values, where, null);
+            resolver.update(Statuses.CONTENT_URI, values, where, whereArgs);
         }
 
         @Override
