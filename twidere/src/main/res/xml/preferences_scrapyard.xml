@@ -30,7 +30,7 @@
             android:name="notify_change"
             android:value="true"/>
     </org.mariotaku.twidere.preference.ThemedListPreference>
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="show_absolute_time"
         android:summary="@string/show_absolute_time_summary"
@@ -38,15 +38,15 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </SwitchPreference>
-    <SwitchPreference
+    </SwitchPreferenceCompat>
+    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="unread_count"
         android:title="@string/unread_count">
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </SwitchPreference>
+    </SwitchPreferenceCompat>
 
     <org.mariotaku.twidere.preference.ThemedListPreference
         android:defaultValue="@string/default_tab_display_option"
@@ -55,7 +55,7 @@
         android:key="tab_display_option"
         android:title="@string/tab_display_option"/>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="leftside_compose_button"
         android:summary="@string/leftside_compose_button_summary"

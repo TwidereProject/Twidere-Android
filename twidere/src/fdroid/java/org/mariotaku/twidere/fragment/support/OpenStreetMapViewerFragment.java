@@ -85,8 +85,8 @@ public class OpenStreetMapViewerFragment extends BaseSupportFragment implements 
     }
 
     @Override
-    public void onBaseViewCreated(View view, Bundle savedInstanceState) {
-        super.onBaseViewCreated(view, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mMapView = (MapView) view.findViewById(R.id.map_view);
     }
 

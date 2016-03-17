@@ -26,7 +26,7 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.SeekBarDialogPreference>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="display_profile_image"
         android:order="23"
@@ -34,7 +34,7 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </SwitchPreference>
+    </SwitchPreferenceCompat>
 
     <org.mariotaku.twidere.preference.ThemedListPreference
         android:defaultValue="@string/default_profile_image_style"
@@ -48,7 +48,7 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.ThemedListPreference>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="media_preview"
         android:order="25"
@@ -56,7 +56,7 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </SwitchPreference>
+    </SwitchPreferenceCompat>
 
     <org.mariotaku.twidere.preference.LinkHighlightPreference
         android:defaultValue="none"
@@ -68,7 +68,7 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.LinkHighlightPreference>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="compact_cards"
         android:order="32"
@@ -77,8 +77,8 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </SwitchPreference>
-    <SwitchPreference
+    </SwitchPreferenceCompat>
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="hide_card_actions"
         android:order="33"
@@ -86,9 +86,9 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </SwitchPreference>
+    </SwitchPreferenceCompat>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="i_want_my_stars_back"
         android:order="34"
@@ -97,6 +97,6 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </SwitchPreference>
+    </SwitchPreferenceCompat>
 
 </PreferenceScreen>

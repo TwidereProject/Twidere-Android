@@ -7,12 +7,12 @@
         android:key="category_connectivity"
         android:title="@string/connectivity">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="builtin_dns_resolver"
             android:title="@string/builtin_dns_resolver"/>
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:dependency="builtin_dns_resolver"
             android:key="tcp_dns_query"
@@ -34,7 +34,7 @@
             android:summary="@string/custom_host_mapping_summary"
             android:title="@string/custom_host_mapping"/>
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="retry_on_network_issue"
             android:summary="@string/retry_on_network_issue_summary"
@@ -43,7 +43,7 @@
     <PreferenceCategory
         android:key="category_proxy"
         android:title="@string/proxy">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:disableDependentsState="false"
             android:key="enable_proxy"
@@ -96,7 +96,7 @@
         android:key="category_tumbor"
         android:title="@string/thumbor_integration">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="thumbor_enabled"
             android:title="@string/thumbor_integration"/>

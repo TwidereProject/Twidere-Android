@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/auto_refresh">
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:disableDependentsState="false"
         android:key="auto_refresh"
         android:title="@string/auto_refresh"/>
@@ -12,19 +12,19 @@
         android:dependency="auto_refresh"
         android:key="cat_refresh_content"
         android:title="@string/content_to_refresh">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="auto_refresh_home_timeline"
             android:title="@string/home"/>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="auto_refresh_mentions"
             android:title="@string/mentions"/>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="auto_refresh_direct_messages"
             android:title="@string/direct_messages"/>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="auto_refresh_trends"
             android:title="@string/trends"/>

@@ -48,12 +48,12 @@
     <PreferenceCategory
         android:key="cat_other_settings"
         android:title="@string/other_settings">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="notification_following_only"
             android:summary="@string/following_only_summary"
             android:title="@string/following_only"/>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="notification_mentions_only"
             android:title="@string/mentions_only"/>

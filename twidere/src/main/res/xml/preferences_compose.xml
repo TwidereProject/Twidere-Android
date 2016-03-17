@@ -20,13 +20,13 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="quick_send"
         android:summary="@string/quick_send_summary"
         android:title="@string/quick_send"/>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="no_close_after_tweet_sent"
         android:summary="@string/no_close_after_status_updated_summary"

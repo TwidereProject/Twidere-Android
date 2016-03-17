@@ -9,7 +9,7 @@
         android:key="category_content"
         android:title="@string/content">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="name_first"
             android:summaryOff="@string/name_first_summary_off"
@@ -18,7 +18,7 @@
             <extra
                 android:name="notify_change"
                 android:value="true"/>
-        </SwitchPreference>
+        </SwitchPreferenceCompat>
 
         <org.mariotaku.twidere.preference.SeekBarDialogPreference
             android:defaultValue="20"
@@ -29,12 +29,12 @@
             app:min="10"
             app:step="5"/>
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="remember_position"
             android:summary="@string/remember_position_summary"
             android:title="@string/remember_position"/>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="read_from_bottom"
             android:summaryOff="@string/read_from_bottom_summary_off"
@@ -74,12 +74,12 @@
     <PreferenceCategory
         android:key="category_safety"
         android:title="@string/safety">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="phishing_link_warning"
             android:summary="@string/phishing_link_warning_summary"
             android:title="@string/phishing_link_warning"/>
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="display_sensitive_contents"
             android:summary="@string/display_sensitive_contents_summary"

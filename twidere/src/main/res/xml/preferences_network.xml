@@ -3,17 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/network">
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="media_preload"
         android:title="@string/media_preload"/>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="preload_wifi_only"
         android:title="@string/preload_wifi_only"/>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="bandwidth_saving_mode"
         android:summary="@string/bandwidth_saving_mode_summary"
