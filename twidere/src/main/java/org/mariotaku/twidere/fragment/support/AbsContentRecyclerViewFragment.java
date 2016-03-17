@@ -49,7 +49,7 @@ import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView;
-import org.mariotaku.twidere.view.themed.AccentSwipeRefreshLayout;
+import org.mariotaku.twidere.view.themed.ExtendedSwipeRefreshLayout;
 
 /**
  * Created by mariotaku on 15/10/26.
@@ -225,8 +225,8 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mLayoutManager = onCreateLayoutManager(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        if (mSwipeRefreshLayout instanceof AccentSwipeRefreshLayout) {
-            ((AccentSwipeRefreshLayout) mSwipeRefreshLayout).setTouchInterceptor(new IExtendedView.TouchInterceptor() {
+        if (mSwipeRefreshLayout instanceof ExtendedSwipeRefreshLayout) {
+            ((ExtendedSwipeRefreshLayout) mSwipeRefreshLayout).setTouchInterceptor(new IExtendedView.TouchInterceptor() {
                 @Override
                 public boolean dispatchTouchEvent(View view, MotionEvent event) {
                     return false;
