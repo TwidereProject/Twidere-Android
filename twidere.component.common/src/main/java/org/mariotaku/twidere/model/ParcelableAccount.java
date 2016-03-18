@@ -148,6 +148,8 @@ public class ParcelableAccount implements Parcelable {
 
     @Override
     public int hashCode() {
+        // Dummy account
+        if (account_key == null) return 0;
         return account_key.hashCode();
     }
 

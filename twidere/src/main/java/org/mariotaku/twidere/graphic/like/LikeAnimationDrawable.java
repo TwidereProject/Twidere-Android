@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.android.support.v7.view.menu.TwidereActionMenuItemView;
 import android.util.Property;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -32,7 +33,8 @@ import java.lang.ref.WeakReference;
 /**
  * Created by mariotaku on 15/11/4.
  */
-public class LikeAnimationDrawable extends Drawable implements Animatable, Drawable.Callback, DoNotWrapDrawable {
+public class LikeAnimationDrawable extends Drawable implements Animatable, Drawable.Callback,
+        DoNotWrapDrawable, TwidereActionMenuItemView.IgnoreTinting {
 
     @NonNull
     private LikeAnimationState mState;

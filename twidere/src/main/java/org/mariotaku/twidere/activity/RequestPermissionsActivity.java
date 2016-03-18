@@ -36,13 +36,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.BaseSupportDialogActivity;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.PermissionsManager;
 
 import static android.text.TextUtils.isEmpty;
 
-public class RequestPermissionsActivity extends BaseSupportDialogActivity implements OnClickListener {
+public class RequestPermissionsActivity extends BaseActivity implements OnClickListener {
 
     private ImageView mIconView;
     private TextView mNameView, mDescriptionView, mMessageView;

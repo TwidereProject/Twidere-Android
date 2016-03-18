@@ -30,7 +30,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
-import android.util.Pair;
 
 import com.squareup.otto.Bus;
 
@@ -108,7 +107,6 @@ import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.ReportSpamAndBlockTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
-import org.mariotaku.twidere.util.collection.CompactHashSet;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -128,10 +126,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     private final SharedPreferencesWrapper mPreferences;
     private final Bus mBus;
 
-    private Set<Pair<UserKey, String>> mCreatingFavoriteIds = new CompactHashSet<>();
-    private Set<Pair<UserKey, String>> mDestroyingFavoriteIds = new CompactHashSet<>();
-    private Set<Pair<UserKey, String>> mCreatingRetweetIds = new CompactHashSet<>();
-    private Set<Pair<UserKey, String>> mDestroyingStatusIds = new CompactHashSet<>();
+    private IntList mCreatingFavoriteIds = new ArrayIntList();
+    private IntList mDestroyingFavoriteIds = new ArrayIntList();
+    private IntList mCreatingRetweetIds = new ArrayIntList();
+    private IntList mDestroyingStatusIds = new ArrayIntList();
     private IntList mUpdatingRelationshipIds = new ArrayIntList();
 
     private final LongList mSendingDraftIds = new ArrayLongList();
@@ -333,20 +331,24 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mSendingDraftIds.toArray();
     }
 
-    public boolean isCreatingFavorite(final UserKey accountId, final String statusId) {
-        return mCreatingFavoriteIds.contains(Pair.create(accountId, statusId));
+    public boolean isCreatingFavorite(@Nullable final UserKey accountId, @Nullable final String statusId) {
+        return mCreatingFavoriteIds.contains(calculateHashCode(accountId, statusId));
     }
 
-    public boolean isCreatingRetweet(final UserKey accountKey, final String statusId) {
-        return mCreatingRetweetIds.contains(Pair.create(accountKey, statusId));
+    public boolean isCreatingRetweet(@Nullable final UserKey accountKey, @Nullable final String statusId) {
+        return mCreatingRetweetIds.contains(calculateHashCode(accountKey, statusId));
     }
 
-    public boolean isDestroyingFavorite(final UserKey accountKey, final String statusId) {
-        return mDestroyingFavoriteIds.contains(Pair.create(accountKey, statusId));
+    public boolean isDestroyingFavorite(@Nullable final UserKey accountKey, @Nullable final String statusId) {
+        return mDestroyingFavoriteIds.contains(calculateHashCode(accountKey, statusId));
     }
 
-    public boolean isDestroyingStatus(final UserKey accountId, final String statusId) {
-        return mDestroyingStatusIds.contains(Pair.create(accountId, statusId));
+    public boolean isDestroyingStatus(@Nullable final UserKey accountId, @Nullable final String statusId) {
+        return mDestroyingStatusIds.contains(calculateHashCode(accountId, statusId));
+    }
+
+    static int calculateHashCode(@Nullable final UserKey accountId, @Nullable final String statusId) {
+        return (accountId == null ? 0 : accountId.hashCode()) ^ (statusId == null ? 0 : statusId.hashCode());
     }
 
     public boolean isHomeTimelineRefreshing() {
@@ -749,13 +751,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mCreatingFavoriteIds.add(Pair.create(mAccountKey, mStatusId));
+            final int hashCode = calculateHashCode(mAccountKey, mStatusId);
+            if (!mCreatingFavoriteIds.contains(hashCode)) {
+                mCreatingFavoriteIds.add(hashCode);
+            }
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mCreatingFavoriteIds.remove(Pair.create(mAccountKey, mStatusId));
+            mCreatingFavoriteIds.removeElement(calculateHashCode(mAccountKey, mStatusId));
             final FavoriteTaskEvent taskEvent = new FavoriteTaskEvent(FavoriteTaskEvent.Action.CREATE,
                     mAccountKey, mStatusId);
             taskEvent.setFinished(true);
@@ -1202,13 +1207,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mDestroyingFavoriteIds.add(Pair.create(mAccountKey, mStatusId));
+            final int hashCode = calculateHashCode(mAccountKey, mStatusId);
+            if (!mDestroyingFavoriteIds.contains(hashCode)) {
+                mDestroyingFavoriteIds.add(hashCode);
+            }
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mDestroyingFavoriteIds.remove(Pair.create(mAccountKey, mStatusId));
+            mDestroyingFavoriteIds.removeElement(calculateHashCode(mAccountKey, mStatusId));
             final FavoriteTaskEvent taskEvent = new FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY,
                     mAccountKey, mStatusId);
             taskEvent.setFinished(true);
@@ -1309,13 +1317,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mDestroyingStatusIds.add(Pair.create(mAccountKey, mStatusId));
+            final int hashCode = calculateHashCode(mAccountKey, mStatusId);
+            if (!mDestroyingStatusIds.contains(hashCode)) {
+                mDestroyingStatusIds.add(hashCode);
+            }
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mDestroyingStatusIds.remove(Pair.create(mAccountKey, mStatusId));
+            mDestroyingStatusIds.removeElement(calculateHashCode(mAccountKey, mStatusId));
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
                 if (status.retweet_id != null) {
@@ -1533,13 +1544,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mCreatingRetweetIds.add(Pair.create(mAccountKey, mStatusId));
+            final int hashCode = calculateHashCode(mAccountKey, mStatusId);
+            if (!mCreatingRetweetIds.contains(hashCode)) {
+                mCreatingRetweetIds.add(hashCode);
+            }
             bus.post(new StatusListChangedEvent());
         }
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableStatus> result) {
-            mCreatingRetweetIds.remove(Pair.create(mAccountKey, mStatusId));
+            mCreatingRetweetIds.removeElement(calculateHashCode(mAccountKey, mStatusId));
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
                 // BEGIN HotMobi

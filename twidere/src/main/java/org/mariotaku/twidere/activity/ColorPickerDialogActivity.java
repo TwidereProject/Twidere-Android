@@ -23,11 +23,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import org.mariotaku.twidere.activity.BaseSupportDialogActivity;
-import org.mariotaku.twidere.fragment.support.ColorPickerDialogFragment;
-import org.mariotaku.twidere.fragment.support.ColorPickerDialogFragment.Callback;
+import org.mariotaku.twidere.fragment.ColorPickerDialogFragment;
+import org.mariotaku.twidere.fragment.ColorPickerDialogFragment.Callback;
 
-public class ColorPickerDialogActivity extends BaseSupportDialogActivity implements Callback {
+public class ColorPickerDialogActivity extends BaseActivity implements Callback {
 
     public static final int RESULT_CLEARED = -2;
 

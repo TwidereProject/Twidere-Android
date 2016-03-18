@@ -25,8 +25,8 @@ import android.support.v4.app.Fragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import org.mariotaku.twidere.fragment.support.GoogleMapFragment;
-import org.mariotaku.twidere.fragment.support.WebMapFragment;
+import org.mariotaku.twidere.fragment.GoogleMapFragment;
+import org.mariotaku.twidere.fragment.WebMapFragment;
 
 /**
  * Created by mariotaku on 15/4/27.

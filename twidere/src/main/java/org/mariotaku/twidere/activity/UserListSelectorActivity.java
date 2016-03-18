@@ -46,8 +46,8 @@ import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.fragment.support.CreateUserListDialogFragment;
-import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.CreateUserListDialogFragment;
+import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -65,7 +65,8 @@ import java.util.List;
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.DataStoreUtils.getAccountScreenName;
 
-public class UserListSelectorActivity extends BaseSupportDialogActivity implements OnClickListener, OnItemClickListener {
+public class UserListSelectorActivity extends BaseActivity implements OnClickListener,
+        OnItemClickListener {
 
     private AutoCompleteTextView mEditScreenName;
     private ListView mUserListsListView, mUsersListView;

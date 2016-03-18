@@ -22,27 +22,15 @@ package org.mariotaku.twidere.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
 
-import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.SettingsActivity;
+import org.mariotaku.twidere.activity.HiddenSettingsActivity;
 import org.mariotaku.twidere.constant.IntentConstants;
-import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
 
 public class SecretCodeBroadcastReceiver extends BroadcastReceiver implements IntentConstants {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        final Intent testIntent = new Intent(context, SettingsActivity.class);
-        final String cls = SettingsDetailsFragment.class.getName();
-        final Bundle args = new Bundle();
-        args.putInt(EXTRA_RESID, R.xml.preferences_hidden);
-        args.putString(EXTRA_SETTINGS_INTENT_ACTION, INTENT_ACTION_HIDDEN_SETTINGS_ENTRY);
-        testIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, cls);
-        testIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_ARGUMENTS, args);
-        testIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.hidden_settings);
-        testIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_SHORT_TITLE, R.string.hidden_settings);
+        final Intent testIntent = new Intent(context, HiddenSettingsActivity.class);
         testIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(testIntent);
     }

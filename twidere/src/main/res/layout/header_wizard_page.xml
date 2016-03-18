@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/element_spacing_normal"
         android:singleLine="true"
+        android:tag="text_color|accent_color"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@dimen/text_size_wizard_title"/>
 

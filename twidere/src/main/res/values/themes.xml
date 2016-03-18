@@ -18,7 +18,6 @@
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-        <item name="darkTheme">true</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
@@ -54,7 +53,6 @@
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-        <item name="darkTheme">true</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
@@ -80,7 +78,6 @@
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-        <item name="darkTheme">true</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
@@ -113,8 +110,6 @@
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowActionModeOverlay">false</item>
 
-        <item name="darkTheme">true</item>
-
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
 
@@ -130,8 +125,6 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
-
-        <item name="darkTheme">true</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
@@ -164,8 +157,6 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
 
-        <item name="darkTheme">true</item>
-
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
 
@@ -175,7 +166,6 @@
 
     <style name="Theme.Nyan" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/nyan_background</item>
-        <item name="darkTheme">true</item>
         <item name="colorPrimary">@color/nyan_background</item>
     </style>
 

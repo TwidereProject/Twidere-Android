@@ -23,6 +23,7 @@
 -dontwarn com.makeramen.roundedimageview.**
 
 -keepattributes *Annotation*
+-keepattributes EnclosingMethod
 
 # https://github.com/bluelinelabs/LoganSquare
 -keep class com.bluelinelabs.logansquare.** { *; }

@@ -28,7 +28,7 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.fragment.support.UserFragment;
+import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;

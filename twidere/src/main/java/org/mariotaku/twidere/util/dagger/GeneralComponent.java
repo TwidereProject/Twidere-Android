@@ -21,9 +21,8 @@ package org.mariotaku.twidere.util.dagger;
 
 import android.support.v7.widget.RecyclerView;
 
-import org.mariotaku.twidere.activity.BaseAppCompatActivity;
+import org.mariotaku.twidere.activity.BaseActivity;
 import org.mariotaku.twidere.activity.ComposeActivity;
-import org.mariotaku.twidere.activity.ThemedFragmentActivity;
 import org.mariotaku.twidere.activity.MediaViewerActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
@@ -35,11 +34,10 @@ import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
-import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
-import org.mariotaku.twidere.fragment.support.BaseFiltersFragment;
-import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
-import org.mariotaku.twidere.fragment.support.MessagesConversationFragment;
+import org.mariotaku.twidere.fragment.BaseFiltersFragment;
+import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.BaseSupportFragment;
+import org.mariotaku.twidere.fragment.MessagesConversationFragment;
 import org.mariotaku.twidere.loader.TwitterAPIStatusesLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference;
@@ -77,15 +75,13 @@ public interface GeneralComponent {
 
     void inject(RefreshService object);
 
-    void inject(ThemedFragmentActivity object);
-
     void inject(ComposeActivity object);
 
     void inject(TwidereDataProvider object);
 
     void inject(BaseListFragment object);
 
-    void inject(BaseAppCompatActivity object);
+    void inject(BaseActivity object);
 
     void inject(BackgroundOperationService object);
 

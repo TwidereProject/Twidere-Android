@@ -26,7 +26,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
-import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
 
 import java.io.File;
 

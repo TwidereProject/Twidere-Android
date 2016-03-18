@@ -22,6 +22,7 @@ package org.mariotaku.twidere.graphic;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.support.v7.graphics.drawable.DrawableWrapper;
+import android.support.v7.widget.android.support.v7.view.menu.TwidereActionMenuItemView;
 import android.view.MenuItem;
 
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -29,7 +30,7 @@ import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 /**
  * Created by mariotaku on 15/1/16.
  */
-public class ActionIconDrawable extends DrawableWrapper {
+public class ActionIconDrawable extends DrawableWrapper implements TwidereActionMenuItemView.IgnoreTinting {
 
     private int mDefaultColor;
     private int mHighlightColor;

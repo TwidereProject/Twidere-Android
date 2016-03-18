@@ -27,4 +27,4 @@
     android:focusable="true"
     app:headerLayout="@layout/header_drawer_account_selector"
     app:menu="@menu/menu_account_dashboard"
-    tools:context=".fragment.support.AccountsDashboardFragment"/>
+    tools:context=".fragment.AccountsDashboardFragment"/>

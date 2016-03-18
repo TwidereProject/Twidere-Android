@@ -79,6 +79,7 @@
                         style="?android:listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:tag="text_color|accent_color"
                         android:text="@string/account"/>
 
                     <Spinner
@@ -100,6 +101,7 @@
                         style="?android:listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:tag="text_color|accent_color"
                         android:text="@string/user"/>
 
                     <FrameLayout
@@ -126,6 +128,7 @@
                         style="?android:listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:tag="text_color|accent_color"
                         android:text="@string/extra_configurations"/>
 
                     <LinearLayout

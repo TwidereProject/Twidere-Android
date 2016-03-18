@@ -32,12 +32,11 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 /**
  * Created by mariotaku on 15/4/20.
  */
-public class KeyboardShortcutPreferenceCompatActivity extends BaseSupportDialogActivity implements
+public class KeyboardShortcutPreferenceCompatActivity extends BaseActivity implements
         Constants, OnClickListener {
 
     public static final String EXTRA_CONTEXT_TAG = "context_tag";
@@ -52,11 +51,6 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseSupportDialogA
     @Override
     public String getThemeBackgroundOption() {
         return VALUE_THEME_BACKGROUND_DEFAULT;
-    }
-
-    @Override
-    public int getThemeColor() {
-        return ThemeUtils.getThemeColor(this);
     }
 
     @Override

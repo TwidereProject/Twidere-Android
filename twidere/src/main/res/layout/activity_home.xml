@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/left_drawer"
-        class="org.mariotaku.twidere.fragment.support.AccountsDashboardFragment"
+        class="org.mariotaku.twidere.fragment.AccountsDashboardFragment"
         android:layout_width="@dimen/drawer_width_home"
         android:layout_height="match_parent"
         android:layout_gravity="start"

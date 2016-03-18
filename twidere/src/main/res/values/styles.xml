@@ -33,8 +33,6 @@
         <item name="sivCornerRadiusRatio">10%p</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
         <item name="sivShape">circle</item>
-        <item name="riv_oval">true</item>
-        <item name="riv_corner_radius">2dp</item>
     </style>
 
     <style name="Widget.Light.ProfileImage" parent="Widget.Base">
@@ -44,8 +42,6 @@
         <item name="sivCornerRadiusRatio">10%p</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
         <item name="sivShape">circle</item>
-        <item name="riv_oval">true</item>
-        <item name="riv_corner_radius">2dp</item>
     </style>
 
     <style name="Widget.ProfileImage.Large">
@@ -57,7 +53,6 @@
         <item name="sivBorderWidth">2dp</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
         <item name="sivShape">circle</item>
-        <item name="riv_corner_radius">4dp</item>
     </style>
 
     <style name="Widget.Light.ProfileImage.Large">
@@ -69,7 +64,6 @@
         <item name="sivBorderWidth">2dp</item>
         <item name="sivBackgroundColor">?android:colorBackground</item>
         <item name="sivShape">circle</item>
-        <item name="riv_corner_radius">4dp</item>
     </style>
 
     <style name="Widget.ProfileType" parent="Widget.Base">

@@ -39,7 +39,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
 import org.mariotaku.twidere.model.CustomAPIConfig;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -49,7 +49,7 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
 import static org.mariotaku.twidere.util.Utils.trim;
 
-public class APIEditorActivity extends BaseSupportDialogActivity implements OnCheckedChangeListener,
+public class APIEditorActivity extends BaseActivity implements OnCheckedChangeListener,
         OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private EditText mEditAPIUrlFormat;

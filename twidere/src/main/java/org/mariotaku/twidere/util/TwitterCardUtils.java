@@ -25,7 +25,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.mariotaku.twidere.fragment.support.card.CardPollFragment;
+import org.mariotaku.twidere.fragment.card.CardPollFragment;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;

@@ -23,8 +23,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import org.mariotaku.twidere.fragment.support.card.CardBrowserFragment;
-import org.mariotaku.twidere.fragment.support.card.CardPollFragment;
+import org.mariotaku.twidere.fragment.card.CardBrowserFragment;
+import org.mariotaku.twidere.fragment.card.CardPollFragment;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;

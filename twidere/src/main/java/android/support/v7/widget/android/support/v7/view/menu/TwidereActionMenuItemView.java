@@ -65,7 +65,11 @@ public class TwidereActionMenuItemView extends ActionMenuItemView implements Vie
     @Override
     public void setIcon(Drawable icon) {
         invalidateTintColor();
-        mIcon = TintHelper.createTintedDrawable(icon, mTintColor);
+        if (icon instanceof IgnoreTinting) {
+            mIcon = icon;
+        } else {
+            mIcon = TintHelper.createTintedDrawable(icon, mTintColor);
+        }
         super.setIcon(mIcon);
         invalidateActionView();
     }
@@ -103,5 +107,9 @@ public class TwidereActionMenuItemView extends ActionMenuItemView implements Vie
     @Override
     public boolean setsToolbarColor() {
         return false;
+    }
+
+    public interface IgnoreTinting {
+
     }
 }

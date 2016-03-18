@@ -55,7 +55,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
-import org.mariotaku.twidere.fragment.support.UserFragment;
+import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.UserKey;
@@ -69,7 +69,6 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SwipeDismissListViewTouchListener;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.view.ExtendedRelativeLayout;
@@ -82,7 +81,7 @@ import jopt.csp.util.SortableIntList;
 /**
  * Created by mariotaku on 15/1/6.
  */
-public class QuickSearchBarActivity extends ThemedFragmentActivity implements OnClickListener,
+public class QuickSearchBarActivity extends BaseActivity implements OnClickListener,
         LoaderCallbacks<Cursor>, OnItemSelectedListener, OnItemClickListener,
         OnFitSystemWindowsListener, SwipeDismissListViewTouchListener.DismissCallbacks {
 
@@ -114,11 +113,6 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         ContentResolverUtils.bulkDelete(cr, SearchHistory.CONTENT_URI, SearchHistory._ID, ids,
                 null);
         getSupportLoaderManager().restartLoader(0, null, this);
-    }
-
-    @Override
-    public int getThemeColor() {
-        return ThemeUtils.getUserAccentColor(this);
     }
 
     @Override
@@ -335,7 +329,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
         static final int VIEW_TYPE_USER_SCREEN_NAME = 3;
 
         private final LayoutInflater mInflater;
-        private final MediaLoaderWrapper mImageLoader;
+        private final MediaLoaderWrapper mMediaLoader;
         private final UserColorNameManager mUserColorNameManager;
         private final QuickSearchBarActivity mActivity;
         private final SortableIntList mRemovedPositions;
@@ -347,7 +341,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
             super(activity, null, 0);
             mRemovedPositions = new SortableIntList();
             mActivity = activity;
-            mImageLoader = activity.mImageLoader;
+            mMediaLoader = activity.mMediaLoader;
             mUserColorNameManager = activity.mUserColorNameManager;
             mInflater = LayoutInflater.from(activity);
         }
@@ -408,7 +402,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                     holder.text2.setVisibility(View.VISIBLE);
                     holder.text2.setText(String.format("@%s", cursor.getString(mIndices.summary)));
                     holder.icon.clearColorFilter();
-                    mImageLoader.displayProfileImage(holder.icon, cursor.getString(mIndices.icon));
+                    mMediaLoader.displayProfileImage(holder.icon, cursor.getString(mIndices.icon));
                     break;
                 }
                 case VIEW_TYPE_USER_SCREEN_NAME: {
@@ -416,7 +410,7 @@ public class QuickSearchBarActivity extends ThemedFragmentActivity implements On
                     holder.text1.setText(String.format("@%s", cursor.getString(mIndices.title)));
                     holder.text2.setVisibility(View.GONE);
                     holder.icon.setColorFilter(holder.text1.getCurrentTextColor(), Mode.SRC_ATOP);
-                    mImageLoader.cancelDisplayTask(holder.icon);
+                    mMediaLoader.cancelDisplayTask(holder.icon);
                     holder.icon.setImageResource(R.drawable.ic_action_user);
                     break;
                 }

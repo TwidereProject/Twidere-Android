@@ -52,7 +52,7 @@ import org.mariotaku.twidere.util.support.ViewSupport;
 import static org.mariotaku.twidere.util.Utils.createFragmentForIntent;
 import static org.mariotaku.twidere.util.Utils.matchLinkId;
 
-public class LinkHandlerActivity extends BaseAppCompatActivity implements SystemWindowsInsetsCallback,
+public class LinkHandlerActivity extends BaseActivity implements SystemWindowsInsetsCallback,
         IControlBarActivity, SupportFragmentCallback {
 
     private final View.OnLayoutChangeListener mLayoutChangeListener = new View.OnLayoutChangeListener() {

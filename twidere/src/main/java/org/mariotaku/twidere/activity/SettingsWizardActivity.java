@@ -49,12 +49,12 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
-import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.fragment.support.BaseSupportFragment;
-import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
-import org.mariotaku.twidere.fragment.support.HomeTimelineFragment;
-import org.mariotaku.twidere.fragment.support.InteractionsTimelineFragment;
-import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.BaseSupportFragment;
+import org.mariotaku.twidere.fragment.DirectMessagesFragment;
+import org.mariotaku.twidere.fragment.HomeTimelineFragment;
+import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
+import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.preference.WizardPageHeaderPreference;
@@ -74,7 +74,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SettingsWizardActivity extends BaseAppCompatActivity implements Constants {
+public class SettingsWizardActivity extends BaseActivity implements Constants {
 
     public static final String WIZARD_PREFERENCE_KEY_NEXT_PAGE = "next_page";
     public static final String WIZARD_PREFERENCE_KEY_USE_DEFAULTS = "use_defaults";
@@ -161,11 +161,6 @@ public class SettingsWizardActivity extends BaseAppCompatActivity implements Con
     @Override
     public String getThemeBackgroundOption() {
         return ThemeUtils.getThemeBackgroundOption(this);
-    }
-
-    @Override
-    public int getThemeColor() {
-        return ThemeUtils.getUserAccentColor(this);
     }
 
     @Override

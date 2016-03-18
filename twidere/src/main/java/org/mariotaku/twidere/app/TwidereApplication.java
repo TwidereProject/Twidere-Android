@@ -53,6 +53,7 @@ import org.mariotaku.twidere.activity.AssistLauncherActivity;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
+import org.mariotaku.twidere.util.theme.ProfileImageViewViewProcessor;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
@@ -68,11 +69,13 @@ import org.mariotaku.twidere.util.net.TwidereDns;
 import org.mariotaku.twidere.util.theme.ActionBarContextViewViewProcessor;
 import org.mariotaku.twidere.util.theme.ExtendedSwipeRefreshLayoutViewProcessor;
 import org.mariotaku.twidere.util.theme.FloatingActionButtonViewProcessor;
+import org.mariotaku.twidere.util.theme.OptimalLinkColorTagProcessor;
 import org.mariotaku.twidere.util.theme.ProgressWheelViewProcessor;
 import org.mariotaku.twidere.util.theme.TabPagerIndicatorViewProcessor;
 import org.mariotaku.twidere.util.theme.TimelineContentTextViewViewProcessor;
-import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
+import org.mariotaku.twidere.view.ProfileImageView;
+import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.TimelineContentTextView;
 
 public class TwidereApplication extends Application implements Constants,
@@ -89,6 +92,7 @@ public class TwidereApplication extends Application implements Constants,
     private SQLiteDatabase mDatabase;
 
     private ApplicationModule mApplicationModule;
+    private ProfileImageViewViewProcessor mProfileImageViewViewProcessor;
 
     @NonNull
     public static TwidereApplication getInstance(@NonNull final Context context) {
@@ -137,6 +141,9 @@ public class TwidereApplication extends Application implements Constants,
         ATE.registerViewProcessor(ExtendedSwipeRefreshLayout.class, new ExtendedSwipeRefreshLayoutViewProcessor());
         ATE.registerViewProcessor(TimelineContentTextView.class, new TimelineContentTextViewViewProcessor());
         ATE.registerViewProcessor(ProgressWheel.class, new ProgressWheelViewProcessor());
+        mProfileImageViewViewProcessor = new ProfileImageViewViewProcessor();
+        ATE.registerViewProcessor(ProfileImageView.class, mProfileImageViewViewProcessor);
+        ATE.registerTagProcessor("optimal_link_color", new OptimalLinkColorTagProcessor());
         final SharedPreferences preferences = getSharedPreferences();
         if (!ATE.config(this, null).isConfigured()) {
             final int themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,
@@ -295,6 +302,11 @@ public class TwidereApplication extends Application implements Constants,
             }
             case KEY_THEME_BACKGROUND: {
                 Config.markChanged(this, VALUE_THEME_NAME_LIGHT, VALUE_THEME_NAME_DARK);
+                break;
+            }
+            case KEY_PROFILE_IMAGE_STYLE: {
+                Config.markChanged(this, VALUE_THEME_NAME_LIGHT, VALUE_THEME_NAME_DARK);
+                mProfileImageViewViewProcessor.setStyle(Utils.getProfileImageStyle(preferences.getString(key, null)));
                 break;
             }
             case KEY_THEME_COLOR: {

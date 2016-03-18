@@ -31,15 +31,15 @@ import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.BaseSupportDialogActivity;
-import org.mariotaku.twidere.fragment.support.FileSelectorDialogFragment;
+import org.mariotaku.twidere.fragment.FileSelectorDialogFragment;
 import org.mariotaku.twidere.util.PermissionUtils;
 
 import java.io.File;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
-public class FileSelectorActivity extends BaseSupportDialogActivity implements FileSelectorDialogFragment.Callback {
+public class FileSelectorActivity extends BaseActivity implements
+        FileSelectorDialogFragment.Callback {
 
 
     private Runnable mResumeFragmentsRunnable;

@@ -27,7 +27,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
-import org.mariotaku.twidere.fragment.support.PhishingLinkWarningDialogFragment;
+import org.mariotaku.twidere.fragment.PhishingLinkWarningDialogFragment;
 
 public class DirectMessageOnLinkClickHandler extends OnLinkClickHandler {
 

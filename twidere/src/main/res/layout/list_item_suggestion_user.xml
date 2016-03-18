@@ -17,22 +17,23 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/element_size_normal"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:minHeight="?android:listPreferredItemHeightSmall"
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_small">
 
-    <org.mariotaku.twidere.view.SquareShapedImageView
+    <org.mariotaku.twidere.view.ShapedImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
         android:contentDescription="@string/icon"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,9 +41,9 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingEnd="0dp"
+        android:paddingLeft="@dimen/element_spacing_small"
         android:paddingRight="0dp"
-        android:paddingStart="@dimen/element_spacing_small"
-        android:paddingLeft="@dimen/element_spacing_small">
+        android:paddingStart="@dimen/element_spacing_small">
 
         <TextView
             android:id="@android:id/text1"
@@ -50,7 +51,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:text="Mariotaku" />
+            tools:text="Mariotaku"/>
 
         <TextView
             android:id="@android:id/text2"
@@ -60,7 +61,7 @@
             android:layout_marginStart="@dimen/element_spacing_small"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="\@mariotaku" />
+            tools:text="\@mariotaku"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -75,9 +75,8 @@ import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
-import org.mariotaku.twidere.graphic.EmptyDrawable;
+import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -101,8 +100,6 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.support.ViewSupport;
-import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator;
 
 import java.lang.ref.WeakReference;
@@ -114,7 +111,7 @@ import static org.mariotaku.twidere.util.Utils.isUserLoggedIn;
 import static org.mariotaku.twidere.util.Utils.showErrorMessage;
 import static org.mariotaku.twidere.util.Utils.trim;
 
-public class SignInActivity extends BaseAppCompatActivity implements OnClickListener, TextWatcher {
+public class SignInActivity extends BaseActivity implements OnClickListener, TextWatcher {
 
     public static final String FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress";
     private static final String TWITTER_SIGNUP_URL = "https://twitter.com/signup";
@@ -163,7 +160,7 @@ public class SignInActivity extends BaseAppCompatActivity implements OnClickList
                 break;
             }
             case REQUEST_BROWSER_SIGN_IN: {
-                if (resultCode == BaseAppCompatActivity.RESULT_OK && data != null) {
+                if (resultCode == BaseActivity.RESULT_OK && data != null) {
                     doBrowserLogin(data);
                 }
                 break;

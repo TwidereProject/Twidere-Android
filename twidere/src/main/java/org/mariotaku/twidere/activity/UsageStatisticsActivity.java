@@ -19,51 +19,38 @@
 
 package org.mariotaku.twidere.activity;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
-public class UsageStatisticsActivity extends Activity implements Constants {
-
-    private static final int REQUEST_USAGE_STATISTICS = 201;
+public class UsageStatisticsActivity extends BaseActivity implements Constants {
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_USAGE_STATISTICS: {
-                DependencyHolder holder = DependencyHolder.get(this);
-                final SharedPreferencesWrapper prefs = holder.getPreferences();
-                if (!prefs.contains(KEY_USAGE_STATISTICS)) {
-                    final SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean(KEY_USAGE_STATISTICS, prefs.getBoolean(KEY_USAGE_STATISTICS));
-                    editor.apply();
-                }
-                finish();
-                return;
-            }
+    protected void onDestroy() {
+        if (!mPreferences.contains(KEY_USAGE_STATISTICS)) {
+            final SharedPreferences.Editor editor = mPreferences.edit();
+            editor.putBoolean(KEY_USAGE_STATISTICS, mPreferences.getBoolean(KEY_USAGE_STATISTICS));
+            editor.apply();
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onDestroy();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setVisible(true);
         final Bundle fragmentArgs = new Bundle();
         fragmentArgs.putInt(EXTRA_RESID, R.xml.preferences_usage_statistics);
-        final Intent intent = new Intent(this, SettingsActivity.class);
-        intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsDetailsFragment.class.getName());
-        intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_ARGUMENTS, fragmentArgs);
-        intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.usage_statistics);
-        startActivityForResult(intent, REQUEST_USAGE_STATISTICS);
+        final FragmentManager fm = getSupportFragmentManager();
+        final FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(android.R.id.content, Fragment.instantiate(this,
+                SettingsDetailsFragment.class.getName(), fragmentArgs));
+        ft.commit();
     }
 
 }

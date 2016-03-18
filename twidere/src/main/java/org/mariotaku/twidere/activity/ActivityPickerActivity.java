@@ -16,8 +16,8 @@ import org.mariotaku.twidere.loader.IntentActivitiesLoader;
 
 import java.util.List;
 
-public class ActivityPickerActivity extends BaseSupportDialogActivity implements LoaderCallbacks<List<ResolveInfo>>,
-        OnItemClickListener {
+public class ActivityPickerActivity extends BaseActivity implements
+        LoaderCallbacks<List<ResolveInfo>>, OnItemClickListener {
 
     private ResolveInfoListAdapter mAdapter;
 

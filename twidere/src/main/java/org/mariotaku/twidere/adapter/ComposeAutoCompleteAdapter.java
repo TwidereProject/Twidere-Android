@@ -27,6 +27,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FilterQueryProvider;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -71,7 +72,7 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
     public void bindView(final View view, final Context context, final Cursor cursor) {
         final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-        final ProfileImageView icon = (ProfileImageView) view.findViewById(android.R.id.icon);
+        final ImageView icon = (ImageView) view.findViewById(android.R.id.icon);
 
         // Clear images in order to prevent images in recycled view shown.
         icon.setImageDrawable(null);

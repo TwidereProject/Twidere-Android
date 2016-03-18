@@ -42,8 +42,8 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
-public class AccountSelectorActivity extends BaseSupportDialogActivity implements LoaderCallbacks<Cursor>,
-        OnClickListener, OnItemClickListener {
+public class AccountSelectorActivity extends BaseActivity implements
+        LoaderCallbacks<Cursor>, OnClickListener, OnItemClickListener {
 
     private final ContentObserver mContentObserver = new ContentObserver(null) {
 

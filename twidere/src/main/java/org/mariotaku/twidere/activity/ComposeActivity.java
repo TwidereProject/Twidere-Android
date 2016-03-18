@@ -106,8 +106,8 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
-import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftValuesCreator;
@@ -171,7 +171,7 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
-public class ComposeActivity extends BaseAppCompatActivity implements OnMenuItemClickListener,
+public class ComposeActivity extends BaseActivity implements OnMenuItemClickListener,
         OnClickListener, OnLongClickListener, Callback, ATEToolbarCustomizer {
 
     // Constants
@@ -229,11 +229,6 @@ public class ComposeActivity extends BaseAppCompatActivity implements OnMenuItem
     // Listeners
     private LocationListener mLocationListener;
     private boolean mNameFirst;
-
-    @Override
-    public int getThemeColor() {
-        return ThemeUtils.getUserAccentColor(this);
-    }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {

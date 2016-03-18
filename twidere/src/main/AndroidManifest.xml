@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.mariotaku.twidere"
-    android:installLocation="auto" >
+<manifest package="org.mariotaku.twidere"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="auto">
 
-    <uses-sdk />
+    <uses-sdk/>
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.location"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.location.gps"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.location.network"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:name="android.hardware.nfc"
-        android:required="false" />
+        android:required="false"/>
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="true"/>
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.NFC" />
-    <uses-permission android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS" />
-    <uses-permission android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA" />
-    <uses-permission android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-permission android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"/>
+    <uses-permission android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"/>
+    <uses-permission android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"/>
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
-        tools:node="remove" />
+        tools:node="remove"/>
 
     <permission-group
         android:name="org.mariotaku.twidere.permission.PERMISSION_GROUP"
-        android:label="@string/app_name" />
+        android:label="@string/app_name"/>
 
     <permission
         android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"
         android:description="@string/permission_description_shorten_status"
         android:label="@string/permission_label_shorten_status"
-        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP" />
+        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
     <permission
         android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"
         android:description="@string/permission_description_upload_media"
         android:label="@string/permission_label_upload_media"
-        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP" />
+        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
     <permission
         android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"
         android:description="@string/permission_description_sync_timeline"
         android:label="@string/permission_label_sync_timeline"
-        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP" />
+        android:permissionGroup="org.mariotaku.twidere.permission.PERMISSION_GROUP"/>
 
     <application
         android:name=".app.TwidereApplication"
@@ -74,35 +74,35 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Twidere.NoActionBar"
-        tools:ignore="UnusedAttribute" >
+        tools:ignore="UnusedAttribute">
         <uses-library
             android:name="com.sec.android.app.multiwindow"
-            android:required="false" />
+            android:required="false"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="dc4ee756d3b705e00011782f1426fc8656ad3bd9" />
+            android:value="dc4ee756d3b705e00011782f1426fc8656ad3bd9"/>
         <meta-data
             android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIKbKATV1AGbLB4kem3w8QaPVJSPVVumbMHxkfwA" />
+            android:value="AEdPqrEAAAAIKbKATV1AGbLB4kem3w8QaPVJSPVVumbMHxkfwA"/>
         <meta-data
             android:name="com.sec.android.support.multiwindow"
-            android:value="true" />
+            android:value="true"/>
         <meta-data
             android:name="com.sec.android.multiwindow.DEFAULT_SIZE_W"
-            android:value="480dp" />
+            android:value="480dp"/>
         <meta-data
             android:name="com.sec.android.multiwindow.DEFAULT_SIZE_H"
-            android:value="640dp" />
+            android:value="640dp"/>
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W"
-            android:value="240dp" />
+            android:value="240dp"/>
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
-            android:value="320dp" />
+            android:value="320dp"/>
         <meta-data
             android:name="override_tinted_status_bar_defaults"
-            android:value="true" />
+            android:value="true"/>
 
         <activity
             android:name=".activity.MainActivity"
@@ -110,13 +110,13 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Twidere.NoActionBar"
-            android:windowSoftInputMode="adjustNothing" >
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
@@ -126,13 +126,13 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Twidere.NoActionBar"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
@@ -140,24 +140,24 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Twidere.NoActionBar"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.HOME" />
+                <action android:name="org.mariotaku.twidere.HOME"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".activity.support.HomeActivity" />
+                android:value=".activity.support.HomeActivity"/>
         </activity>
         <activity
             android:name=".activity.ComposeActivity"
@@ -166,64 +166,64 @@
             android:launchMode="singleTop"
             android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/Theme.Twidere.Compose"
-            android:windowSoftInputMode="adjustResize" >
-            <intent-filter android:label="@string/compose" >
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="org.mariotaku.twidere.COMPOSE" />
-                <action android:name="org.mariotaku.twidere.REPLY" />
-                <action android:name="org.mariotaku.twidere.QUOTE" />
-                <action android:name="org.mariotaku.twidere.EDIT_DRAFT" />
-                <action android:name="org.mariotaku.twidere.MENTION" />
-                <action android:name="org.mariotaku.twidere.REPLY_MULTIPLE" />
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter android:label="@string/compose">
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="org.mariotaku.twidere.COMPOSE"/>
+                <action android:name="org.mariotaku.twidere.REPLY"/>
+                <action android:name="org.mariotaku.twidere.QUOTE"/>
+                <action android:name="org.mariotaku.twidere.EDIT_DRAFT"/>
+                <action android:name="org.mariotaku.twidere.MENTION"/>
+                <action android:name="org.mariotaku.twidere.REPLY_MULTIPLE"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-            <intent-filter android:label="@string/app_name" >
-                <action android:name="android.intent.action.SEND" />
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.SEND"/>
+                <action android:name="android.intent.action.SEND_MULTIPLE"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:mimeType="image/*" />
-                <data android:mimeType="text/plain" />
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="text/plain"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity" />
+                android:value=".activity.HomeActivity"/>
         </activity>
         <activity
             android:name=".activity.QuickSearchBarActivity"
             android:label="@string/search"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Twidere.QuickSearchBar"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.GLOBAL_SEARCH" />
+                <action android:name="org.mariotaku.twidere.GLOBAL_SEARCH"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.SignInActivity"
             android:label="@string/sign_in"
             android:theme="@style/Theme.Twidere"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.TWITTER_LOGIN" />
+                <action android:name="org.mariotaku.twidere.TWITTER_LOGIN"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.BrowserSignInActivity"
             android:label="@string/browser_sign_in"
             android:theme="@style/Theme.Twidere"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.TWITTER_BROWSER_LOGIN" />
+                <action android:name="org.mariotaku.twidere.TWITTER_BROWSER_LOGIN"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
@@ -231,53 +231,53 @@
             android:label="@string/settings"
             android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/Theme.Twidere"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
-                <action android:name="org.mariotaku.twidere.SETTINGS" />
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
+                <action android:name="org.mariotaku.twidere.SETTINGS"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity" />
+                android:value=".activity.HomeActivity"/>
         </activity>
         <activity
             android:name=".activity.APIEditorActivity"
             android:label="@string/edit_api"
             android:theme="@style/Theme.Twidere.Dialog"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.AccountSelectorActivity"
             android:label="@string/select_account"
-            android:theme="@style/Theme.Twidere.Dialog" >
+            android:theme="@style/Theme.Twidere.Dialog">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.SELECT_ACCOUNT" />
+                <action android:name="org.mariotaku.twidere.SELECT_ACCOUNT"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.ColorPickerDialogActivity"
             android:label="@string/set_color"
-            android:theme="@style/Theme.Twidere.NoDisplay" />
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
             android:name=".activity.LinkHandlerActivity"
             android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/Theme.Twidere"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity" />
+                android:value=".activity.HomeActivity"/>
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:scheme="twidere" />
+                <data android:scheme="twidere"/>
             </intent-filter>
         </activity>
         <activity
@@ -285,20 +285,20 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/media"
             android:theme="@style/Theme.Twidere.Viewer"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity" />
+                android:value=".activity.HomeActivity"/>
 
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.VIEW_MEDIA" />
+                <action android:name="org.mariotaku.twidere.VIEW_MEDIA"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:scheme="file" />
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:scheme="file"/>
             </intent-filter>
         </activity>
         <activity
@@ -306,25 +306,25 @@
             android:exported="false"
             android:label="@string/pick_file"
             android:theme="@style/Theme.Twidere.NoDisplay"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.PICK_FILE" />
-                <action android:name="org.mariotaku.twidere.PICK_DIRECTORY" />
+                <action android:name="org.mariotaku.twidere.PICK_FILE"/>
+                <action android:name="org.mariotaku.twidere.PICK_DIRECTORY"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.ThemedImagePickerActivity"
             android:exported="false"
             android:theme="@style/Theme.Twidere.NoDisplay"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="org.mariotaku.twidere.PICK_IMAGE" />
-                <action android:name="org.mariotaku.twidere.TAKE_PHOTO" />
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="org.mariotaku.twidere.PICK_IMAGE"/>
+                <action android:name="org.mariotaku.twidere.TAKE_PHOTO"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
@@ -332,106 +332,106 @@
             android:exported="false"
             android:label="@string/add_tab"
             android:theme="@style/Theme.Twidere.Dialog"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.ADD_TAB" />
-                <action android:name="org.mariotaku.twidere.EDIT_TAB" />
+                <action android:name="org.mariotaku.twidere.ADD_TAB"/>
+                <action android:name="org.mariotaku.twidere.EDIT_TAB"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.CreateComposeShortcutActivity"
             android:label="@string/compose"
-            android:theme="@style/Theme.Twidere.NoDisplay" >
+            android:theme="@style/Theme.Twidere.NoDisplay">
             <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.CopyLinkActivity"
             android:label="@string/copy_link"
-            android:theme="@style/Theme.Twidere.NoDisplay" />
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
             android:name=".activity.RequestPermissionsActivity"
             android:label="@string/permissions_request"
-            android:theme="@style/Theme.Twidere.Dialog" >
+            android:theme="@style/Theme.Twidere.Dialog">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.REQUEST_PERMISSIONS" />
+                <action android:name="org.mariotaku.twidere.REQUEST_PERMISSIONS"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.UserListSelectorActivity"
             android:label="@string/select_user_list"
-            android:theme="@style/Theme.Twidere.Dialog" >
+            android:theme="@style/Theme.Twidere.Dialog">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.SELECT_USER" />
-                <action android:name="org.mariotaku.twidere.SELECT_USER_LIST" />
+                <action android:name="org.mariotaku.twidere.SELECT_USER"/>
+                <action android:name="org.mariotaku.twidere.SELECT_USER_LIST"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.SettingsWizardActivity"
             android:label="@string/settings_wizard"
-            android:theme="@style/Theme.Twidere.NoActionBar" />
+            android:theme="@style/Theme.Twidere.NoActionBar"/>
         <activity
             android:name=".activity.DataExportActivity"
             android:label="@string/export_settings"
-            android:theme="@style/Theme.Twidere.NoDisplay" />
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
             android:name=".activity.DataImportActivity"
             android:label="@string/import_settings"
-            android:theme="@style/Theme.Twidere.NoDisplay" />
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
             android:name=".activity.ActivityPickerActivity"
-            android:theme="@style/Theme.Twidere.Dialog" >
+            android:theme="@style/Theme.Twidere.Dialog">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.PICK_ACTIVITY" />
+                <action android:name="org.mariotaku.twidere.PICK_ACTIVITY"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.TwitterLinkHandlerActivity"
             android:excludeFromRecents="true"
             android:taskAffinity=":twidere_twitter_link_handler"
-            android:theme="@style/Theme.Twidere.NoDisplay" >
+            android:theme="@style/Theme.Twidere.NoDisplay">
             <intent-filter>
                 <data
                     android:host="twitter.com"
                     android:pathPrefix="/"
-                    android:scheme="http" />
+                    android:scheme="http"/>
                 <data
                     android:host="twitter.com"
                     android:pathPrefix="/"
-                    android:scheme="https" />
+                    android:scheme="https"/>
                 <data
                     android:host="www.twitter.com"
                     android:pathPrefix="/"
-                    android:scheme="http" />
+                    android:scheme="http"/>
                 <data
                     android:host="www.twitter.com"
                     android:pathPrefix="/"
-                    android:scheme="https" />
+                    android:scheme="https"/>
                 <data
                     android:host="mobile.twitter.com"
                     android:pathPrefix="/"
-                    android:scheme="http" />
+                    android:scheme="http"/>
                 <data
                     android:host="mobile.twitter.com"
                     android:pathPrefix="/"
-                    android:scheme="https" />
+                    android:scheme="https"/>
 
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
         </activity>
         <activity
@@ -439,56 +439,50 @@
             android:enabled="false"
             android:excludeFromRecents="true"
             android:taskAffinity=":twidere_assist_launcher"
-            android:theme="@style/Theme.Twidere.NoDisplay" >
+            android:theme="@style/Theme.Twidere.NoDisplay">
             <intent-filter>
-                <action android:name="android.intent.action.ASSIST" />
+                <action android:name="android.intent.action.ASSIST"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
             <meta-data
                 android:name="com.android.systemui.action_assist_icon"
-                android:resource="@drawable/ic_assist_twidere" />
+                android:resource="@drawable/ic_assist_twidere"/>
         </activity>
         <activity
             android:name=".activity.KeyboardShortcutPreferenceCompatActivity"
-            android:theme="@style/Theme.Twidere.Dialog" />
+            android:theme="@style/Theme.Twidere.Dialog"/>
         <activity
-            android:name=".activity.TestActivity"
-            android:enabled="false"
-            android:label="Twidere test"
+            android:name=".activity.HiddenSettingsActivity"
+            android:label="@string/hidden_settings"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.Twidere"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.NyanActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Nyan"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".activity.UsageStatisticsActivity"
             android:label="@string/usage_statistics"
-            android:theme="@style/Theme.Twidere.NoDisplay" />
+            android:theme="@style/Theme.Twidere"/>
         <activity
             android:name=".activity.ImageCropperActivity"
             android:label="@string/crop_image"
             android:theme="@style/Theme.Twidere.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
 
         <service
             android:name=".service.RefreshService"
-            android:label="@string/label_refresh_service" />
+            android:label="@string/label_refresh_service"/>
         <service
             android:name=".service.StreamingService"
-            android:label="@string/label_streaming_service" />
+            android:label="@string/label_streaming_service"/>
         <service
             android:name=".service.BackgroundOperationService"
-            android:label="@string/label_background_operation_service" />
+            android:label="@string/label_background_operation_service"/>
         <service
             android:name=".nyan.NyanWallpaperService"
             android:enabled="false"
@@ -496,14 +490,14 @@
             android:icon="@drawable/nyan_sakamoto_thumbnail"
             android:label="@string/nyan_sakamoto"
             android:permission="android.permission.BIND_WALLPAPER"
-            android:process=":wallpaper" >
-            <intent-filter android:priority="1" >
-                <action android:name="android.service.wallpaper.WallpaperService" />
+            android:process=":wallpaper">
+            <intent-filter android:priority="1">
+                <action android:name="android.service.wallpaper.WallpaperService"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.service.wallpaper"
-                android:resource="@xml/nyan_wallpaper" />
+                android:resource="@xml/nyan_wallpaper"/>
         </service>
         <service
             android:name=".nyan.NyanDaydreamService"
@@ -512,12 +506,12 @@
             android:icon="@drawable/nyan_sakamoto_thumbnail"
             android:label="@string/nyan_sakamoto"
             android:process=":daydream"
-            tools:ignore="ExportedService" >
-            <intent-filter android:priority="1" >
-                <action android:name="android.service.dreams.DreamService" />
+            tools:ignore="ExportedService">
+            <intent-filter android:priority="1">
+                <action android:name="android.service.dreams.DreamService"/>
             </intent-filter>
         </service>
-        <service android:name="edu.tsinghua.hotmobi.UploadLogsService" />
+        <service android:name="edu.tsinghua.hotmobi.UploadLogsService"/>
 
         <provider
             android:name=".provider.TwidereDataProvider"
@@ -525,54 +519,54 @@
             android:exported="true"
             android:grantUriPermissions="true"
             android:label="@string/label_data_provider"
-            tools:ignore="ExportedContentProvider" />
+            tools:ignore="ExportedContentProvider"/>
         <provider
             android:name=".provider.RecentSearchProvider"
             android:authorities="org.mariotaku.twidere.provider.SearchRecentSuggestions"
-            tools:ignore="ExportedContentProvider" />
+            tools:ignore="ExportedContentProvider"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="twidere.file"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
         <provider
             android:name=".provider.CacheProvider"
             android:authorities="twidere.cache"
-            android:exported="false" />
+            android:exported="false"/>
 
-        <receiver android:name=".receiver.ConnectivityStateReceiver" >
+        <receiver android:name=".receiver.ConnectivityStateReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
         <receiver
             android:name=".receiver.NotificationReceiver"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="org.mariotaku.twidere.NOTIFICATION_DELETED" />
+                <action android:name="org.mariotaku.twidere.NOTIFICATION_DELETED"/>
             </intent-filter>
         </receiver>
         <receiver
             android:name=".receiver.SecretCodeBroadcastReceiver"
-            android:label="@string/twidere_test" >
+            android:label="@string/twidere_test">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE" />
+                <action android:name="android.provider.Telephony.SECRET_CODE"/>
 
                 <data
                     android:host="8943373"
-                    android:scheme="android_secret_code" />
+                    android:scheme="android_secret_code"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.PowerStateReceiver" >
+        <receiver android:name=".receiver.PowerStateReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BATTERY_LOW" />
-                <action android:name="android.intent.action.BATTERY_OKAY" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.BATTERY_LOW"/>
+                <action android:name="android.intent.action.BATTERY_OKAY"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
             </intent-filter>
         </receiver>
     </application>

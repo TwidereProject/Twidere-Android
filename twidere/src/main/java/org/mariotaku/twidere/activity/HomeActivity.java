@@ -43,6 +43,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayoutAccessor;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseIntArray;
 import android.view.Gravity;
@@ -61,12 +62,12 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
+import org.mariotaku.twidere.fragment.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
+import org.mariotaku.twidere.fragment.DirectMessagesFragment;
+import org.mariotaku.twidere.fragment.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
-import org.mariotaku.twidere.fragment.support.AccountsDashboardFragment;
-import org.mariotaku.twidere.fragment.support.DirectMessagesFragment;
-import org.mariotaku.twidere.fragment.support.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.graphic.EmptyDrawable;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
@@ -97,7 +98,7 @@ import org.mariotaku.twidere.view.TabPagerIndicator;
 import java.util.Collections;
 import java.util.List;
 
-public class HomeActivity extends BaseAppCompatActivity implements OnClickListener, OnPageChangeListener,
+public class HomeActivity extends BaseActivity implements OnClickListener, OnPageChangeListener,
         SupportFragmentCallback, OnLongClickListener, DrawerLayout.DrawerListener {
     private final Handler mHandler = new Handler();
 
@@ -330,6 +331,7 @@ public class HomeActivity extends BaseAppCompatActivity implements OnClickListen
             finish();
             return;
         }
+        supportRequestWindowFeature(AppCompatDelegate.FEATURE_ACTION_MODE_OVERLAY);
         setContentView(R.layout.activity_home);
 
         setSupportActionBar(mActionBar);

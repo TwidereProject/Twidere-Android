@@ -22,7 +22,7 @@ package org.mariotaku.twidere.util;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 
-import org.mariotaku.twidere.fragment.support.OpenStreetMapViewerFragment;
+import org.mariotaku.twidere.fragment.OpenStreetMapViewerFragment;
 
 /**
  * Created by mariotaku on 15/4/27.

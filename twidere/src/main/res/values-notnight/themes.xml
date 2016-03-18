@@ -17,7 +17,6 @@
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
-        <item name="coloredActionBar">true</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">light</item>
@@ -46,7 +45,6 @@
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
-        <item name="coloredActionBar">true</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">light</item>
@@ -73,7 +71,6 @@
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
-        <item name="coloredActionBar">true</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">light</item>
@@ -100,12 +97,17 @@
     </style>
 
     <style name="Theme.Twidere.QuickSearchBar" parent="Theme.Twidere.Dialog">
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">false</item>
+
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">100%</item>
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowActionModeOverlay">false</item>
+
     </style>
 
 

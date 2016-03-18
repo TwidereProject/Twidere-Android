@@ -36,7 +36,6 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback;
 import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -51,11 +50,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.ExtensionsListFragment;
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
-import org.mariotaku.twidere.fragment.support.BaseSupportDialogFragment;
-import org.mariotaku.twidere.fragment.support.SupportBrowserFragment;
+import org.mariotaku.twidere.fragment.SupportBrowserFragment;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
@@ -63,8 +62,8 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingsActivity extends BaseAppCompatActivity implements OnItemClickListener,
-        OnPreferenceStartFragmentCallback, OnPreferenceDisplayDialogCallback {
+public class SettingsActivity extends BaseActivity implements OnItemClickListener,
+        OnPreferenceStartFragmentCallback {
 
     private static final int RESULT_SETTINGS_CHANGED = 10;
 
@@ -259,15 +258,6 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
         ft.setBreadCrumbTitle(pe.title);
         ft.commit();
         mSlidingPaneLayout.closePane();
-    }
-
-    @Override
-    public boolean onPreferenceDisplayDialog(PreferenceFragmentCompat fragment, Preference preference) {
-        if (preference instanceof IDialogPreference) {
-            ((IDialogPreference) preference).displayDialog(fragment);
-            return true;
-        }
-        return false;
     }
 
     static class EntriesAdapter extends BaseAdapter {

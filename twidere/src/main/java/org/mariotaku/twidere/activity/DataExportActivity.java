@@ -8,8 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.support.DataExportImportTypeSelectorDialogFragment;
-import org.mariotaku.twidere.fragment.support.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.DataExportImportTypeSelectorDialogFragment;
+import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
 import org.mariotaku.twidere.util.DataImportExportUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -19,15 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class DataExportActivity extends ThemedFragmentActivity implements DataExportImportTypeSelectorDialogFragment.Callback {
+public class DataExportActivity extends BaseActivity implements
+        DataExportImportTypeSelectorDialogFragment.Callback {
 
     private ExportSettingsTask mTask;
     private Runnable mResumeFragmentsRunnable;
-
-    @Override
-    public int getThemeColor() {
-        return ThemeUtils.getThemeColor(this);
-    }
 
     @Override
     public void onCancelled(DialogFragment df) {

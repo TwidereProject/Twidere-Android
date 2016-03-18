@@ -31,8 +31,4 @@ public interface IThemedActivity {
 
     String getThemeBackgroundOption();
 
-    int getThemeColor();
-
-    String getThemeFontFamily();
-
 }

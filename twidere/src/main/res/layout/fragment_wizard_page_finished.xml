@@ -72,6 +72,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-condensed"
                 android:singleLine="true"
+                android:tag="text_color|accent_color"
                 android:text="@android:string/ok"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="@dimen/text_size_wizard_nav_item"
