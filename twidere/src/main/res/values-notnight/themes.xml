@@ -22,6 +22,7 @@
         <!-- ATE attributes -->
         <item name="ateThemeKey">light</item>
 
+        <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
@@ -50,6 +51,8 @@
         <!-- ATE attributes -->
         <item name="ateThemeKey">light</item>
 
+        <item name="actionBarTheme">@null</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
 
@@ -75,11 +78,14 @@
         <!-- ATE attributes -->
         <item name="ateThemeKey">light</item>
 
+        <item name="actionBarTheme">@null</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
 
     <style name="Theme.Twidere.Compose" parent="Theme.Twidere.Dialog">
 
+        <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
 

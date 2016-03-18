@@ -26,7 +26,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.view.menu.ActionMenuItemView;
+import android.support.v7.widget.TwidereActionMenuView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.Window;
@@ -39,8 +40,6 @@ import org.mariotaku.twidere.activity.iface.IAppCompatActivity;
 import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
-import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -140,21 +139,44 @@ public abstract class ThemedAppCompatActivity extends ATEActivity implements Con
                 view = newInstance(name, context, attrs);
             }
             if (view == null) {
-                for (String prefix : sClassPrefixList) {
-                    view = newInstance(prefix + name, context, attrs);
-                    if (view != null) break;
-                }
+                view = newInstance(name, context, attrs);
             }
             if (view != null) {
                 return view;
             }
         }
+        if (parent instanceof TwidereActionMenuView) {
+            final Class<?> cls = findClass(name);
+            if (cls != null && ActionMenuItemView.class.isAssignableFrom(cls)) {
+                return ((TwidereActionMenuView) parent).createActionMenuView(context, attrs);
+            }
+        }
         return super.onCreateView(parent, name, context, attrs);
+    }
+
+    private Class<?> findClass(String name) {
+        Class<?> cls = null;
+        try {
+            cls = Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            // Ignore
+        }
+        if (cls != null) return cls;
+        for (String prefix : sClassPrefixList) {
+            try {
+                cls = Class.forName(prefix + name);
+            } catch (ClassNotFoundException e) {
+                // Ignore
+            }
+            if (cls != null) return cls;
+        }
+        return null;
     }
 
     private View newInstance(String name, Context context, AttributeSet attrs) {
         try {
-            final Class<?> cls = Class.forName(name);
+            final Class<?> cls = findClass(name);
+            if (cls == null) throw new ClassNotFoundException(name);
             final Constructor<?> constructor = cls.getConstructor(Context.class, AttributeSet.class);
             return (View) constructor.newInstance(context, attrs);
         } catch (InstantiationException e) {

@@ -46,6 +46,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -61,6 +62,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.Spannable;
@@ -88,6 +90,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.appthemeengine.Config;
+import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
+import com.afollestad.appthemeengine.util.ATEUtil;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperToast.Duration;
 import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
@@ -166,8 +171,8 @@ import java.util.TreeSet;
 
 import javax.inject.Inject;
 
-public class ComposeActivity extends ThemedFragmentActivity implements OnMenuItemClickListener,
-        OnClickListener, OnLongClickListener, Callback {
+public class ComposeActivity extends BaseAppCompatActivity implements OnMenuItemClickListener,
+        OnClickListener, OnLongClickListener, Callback, ATEToolbarCustomizer {
 
     // Constants
     private static final String FAKE_IMAGE_LINK = "https://www.example.com/fake_image.jpg";
@@ -597,11 +602,11 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
         if (accounts.length == 1) {
             mCountView.setText(null);
             final ParcelableAccount account = accounts[0];
-            mImageLoader.displayProfileImage(mProfileImageView, account);
+            mMediaLoader.displayProfileImage(mProfileImageView, account);
             mProfileImageView.setBorderColor(account.color);
         } else {
             mCountView.setText(String.valueOf(accounts.length));
-            mImageLoader.cancelDisplayTask(mProfileImageView);
+            mMediaLoader.cancelDisplayTask(mProfileImageView);
             mProfileImageView.setImageDrawable(null);
             mProfileImageView.setBorderColors(Utils.getAccountColors(accounts));
         }
@@ -1385,6 +1390,16 @@ public class ComposeActivity extends ThemedFragmentActivity implements OnMenuIte
                 new String[]{FAKE_IMAGE_LINK}, textOrig) : textOrig + " " + FAKE_IMAGE_LINK : textOrig;
         final int validatedCount = text != null ? mValidator.getTweetLength(text) : 0;
         mSendTextCountView.setTextCount(validatedCount);
+    }
+
+    @Override
+    public int getLightToolbarMode(@Nullable Toolbar toolbar) {
+        return Config.LIGHT_TOOLBAR_AUTO;
+    }
+
+    @Override
+    public int getToolbarColor(@Nullable Toolbar toolbar) {
+        return ATEUtil.resolveColor(this, android.R.attr.panelColorBackground);
     }
 
     static class ComposeLocationListener implements LocationListener {

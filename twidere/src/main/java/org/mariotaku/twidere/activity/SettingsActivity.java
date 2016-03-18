@@ -134,7 +134,7 @@ public class SettingsActivity extends BaseAppCompatActivity implements OnItemCli
                 R.xml.preferences_refresh);
         mEntriesAdapter.addPreference(R.drawable.ic_action_notification, getString(R.string.notifications),
                 R.xml.preferences_notifications);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_server, getString(R.string.network),
+        mEntriesAdapter.addPreference(R.drawable.ic_action_web, getString(R.string.network),
                 R.xml.preferences_network);
         mEntriesAdapter.addPreference(R.drawable.ic_action_status_compose, getString(R.string.compose),
                 R.xml.preferences_compose);

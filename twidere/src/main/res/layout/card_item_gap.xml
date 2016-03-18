@@ -18,7 +18,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.themed.ThemedTextView
+<TextView
     android:id="@+id/gap_indicator"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

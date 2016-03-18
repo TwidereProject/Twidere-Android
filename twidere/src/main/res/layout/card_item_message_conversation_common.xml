@@ -47,7 +47,7 @@
             android:textColor="?android:attr/textColorSecondary"
             tools:text="@string/sample_status_text"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

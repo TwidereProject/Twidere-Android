@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.viewprocessors.ViewProcessor;
 
-import org.mariotaku.twidere.view.themed.ExtendedSwipeRefreshLayout;
+import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
 
 /**
  * Created by mariotaku on 16/3/18.

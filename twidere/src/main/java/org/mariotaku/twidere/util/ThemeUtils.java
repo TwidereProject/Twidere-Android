@@ -657,11 +657,18 @@ public class ThemeUtils implements Constants {
         wrapMenuIcon(view, colorDark, colorLight, excludeGroups);
     }
 
+
     public static int getActionIconColor(Context context) {
         final int colorDark = ContextCompat.getColor(context, R.color.action_icon_dark);
         final int colorLight = ContextCompat.getColor(context, R.color.action_icon_light);
         final int itemBackgroundColor = ThemeUtils.getThemeBackgroundColor(context);
         return TwidereColorUtils.getContrastYIQ(itemBackgroundColor, colorDark, colorLight);
+    }
+
+    public static int getActionIconColor(Context context, int backgroundColor) {
+        final int colorDark = ContextCompat.getColor(context, R.color.action_icon_dark);
+        final int colorLight = ContextCompat.getColor(context, R.color.action_icon_light);
+        return ATEUtil.isColorLight(backgroundColor) ? colorDark : colorLight;
     }
 
     public static void wrapMenuIcon(ActionMenuView view, int colorDark, int colorLight, int... excludeGroups) {

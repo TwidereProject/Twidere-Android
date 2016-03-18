@@ -29,7 +29,7 @@
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
-    <org.mariotaku.twidere.view.themed.ThemedTextView
+    <TextView
         android:id="@+id/retweeted_by"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <org.mariotaku.twidere.view.themed.ThemedTextView
+                <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
                     android:textColor="?android:textColorPrimary"
                     tools:text="Name"/>
 
-                <org.mariotaku.twidere.view.themed.ThemedTextView
+                <TextView
                     android:id="@+id/screen_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                     tools:text="\@username"/>
             </LinearLayout>
 
-            <org.mariotaku.twidere.view.themed.ThemedTextView
+            <TextView
                 android:id="@+id/time_source"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
 
-    <org.mariotaku.twidere.view.StatusTextView
+    <org.mariotaku.twidere.view.TimelineContentTextView
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -242,7 +242,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/quoted_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -251,7 +251,7 @@
             android:textColor="?android:textColorPrimary"
             tools:text="Name"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/quoted_screen_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -263,7 +263,7 @@
             tools:text="\@username"/>
     </LinearLayout>
 
-    <org.mariotaku.twidere.view.StatusTextView
+    <org.mariotaku.twidere.view.TimelineContentTextView
         android:id="@+id/quoted_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -396,11 +396,12 @@
         android:splitMotionEvents="false"
         tools:visibility="invisible"/>
 
-    <android.support.v7.widget.ActionMenuView
+    <android.support.v7.widget.TwidereActionMenuView
         android:id="@+id/menu_bar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
         android:layout_below="@+id/counts_users_height_holder"
-        android:clipChildren="false"/>
+        android:clipChildren="false"
+        android:tag="ate_ignore"/>
 
 </RelativeLayout>

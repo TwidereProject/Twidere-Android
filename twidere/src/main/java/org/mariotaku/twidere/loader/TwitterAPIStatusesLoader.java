@@ -183,7 +183,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             final boolean filtered = shouldFilterStatus(db, status);
             if (filtered) {
                 if (!status.is_gap && i != size - 1) {
-                    data.remove(i);
+                    data.remove(status);
                 } else {
                     status.is_filtered = true;
                 }

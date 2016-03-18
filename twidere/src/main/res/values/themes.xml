@@ -23,6 +23,7 @@
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
 
+        <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
@@ -58,6 +59,8 @@
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
 
+        <item name="actionBarTheme">@null</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="Theme.Twidere.Dialog" parent="Theme.AppCompat.Dialog">
@@ -82,6 +85,8 @@
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
 
+        <item name="actionBarTheme">@null</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
 
@@ -164,6 +169,8 @@
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>
 
+        <item name="actionBarTheme">@null</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="Theme.Nyan" parent="Theme.AppCompat.NoActionBar">

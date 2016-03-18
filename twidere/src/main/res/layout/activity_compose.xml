@@ -99,7 +99,7 @@
                         android:color="?android:textColorSecondary"
                         android:src="@drawable/ic_action_location"/>
 
-                    <org.mariotaku.twidere.view.themed.ThemedTextView
+                    <TextView
                         android:id="@+id/location_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -201,12 +201,13 @@
             android:layout_toStartOf="@+id/send"
             android:scrollbars="none">
 
-            <android.support.v7.widget.ActionMenuView
+            <android.support.v7.widget.TwidereActionMenuView
                 android:id="@+id/menu_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="@null"/>
+                android:background="@null"
+                android:tag="ate_ignore"/>
         </FrameLayout>
 
         <LinearLayout

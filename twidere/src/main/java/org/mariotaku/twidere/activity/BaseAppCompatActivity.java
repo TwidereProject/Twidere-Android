@@ -29,17 +29,18 @@ import android.view.MotionEvent;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.activity.ThemedAppCompatActivity;
 import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
+import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener;
 
@@ -65,6 +66,10 @@ public class BaseAppCompatActivity extends ThemedAppCompatActivity implements Co
     protected SharedPreferencesWrapper mPreferences;
     @Inject
     protected NotificationManagerWrapper mNotificationManager;
+    @Inject
+    protected MediaLoaderWrapper mMediaLoader;
+    @Inject
+    protected UserColorNameManager mUserColorNameManager;
 
     private ActionHelper mActionHelper = new ActionHelper(this);
 

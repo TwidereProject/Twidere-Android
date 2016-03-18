@@ -22,19 +22,19 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.view.themed.ThemedTextView;
 
 import java.lang.ref.WeakReference;
 
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.mariotaku.twidere.util.Utils.formatSameDayTime;
 
-public class ShortTimeView extends ThemedTextView implements Constants {
+public class ShortTimeView extends AppCompatTextView implements Constants {
 
     private static final long TICKER_DURATION = 5000L;
 

@@ -24,6 +24,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.support.v4.text.BidiFormatter;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -34,12 +35,11 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.view.themed.ThemedTextView;
 
 /**
  * Created by mariotaku on 15/5/28.
  */
-public class NameView extends ThemedTextView {
+public class NameView extends AppCompatTextView {
 
     private boolean mNameFirst;
     private boolean mTwoLine;

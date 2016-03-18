@@ -74,7 +74,7 @@
         android:textStyle="italic"
         tools:text="External group at gnu.io"/>
 
-    <org.mariotaku.twidere.view.themed.ThemedTextView
+    <TextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
         android:orientation="horizontal"
         android:paddingTop="@dimen/element_spacing_small">
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/members_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="255"/>
 
-        <org.mariotaku.twidere.view.themed.ThemedTextView
+        <TextView
             android:id="@+id/admins_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -68,8 +68,10 @@ import org.mariotaku.twidere.util.theme.ActionBarContextViewViewProcessor;
 import org.mariotaku.twidere.util.theme.ExtendedSwipeRefreshLayoutViewProcessor;
 import org.mariotaku.twidere.util.theme.FloatingActionButtonViewProcessor;
 import org.mariotaku.twidere.util.theme.TabPagerIndicatorViewProcessor;
+import org.mariotaku.twidere.util.theme.TimelineContentTextViewViewProcessor;
 import org.mariotaku.twidere.view.TabPagerIndicator;
-import org.mariotaku.twidere.view.themed.ExtendedSwipeRefreshLayout;
+import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
+import org.mariotaku.twidere.view.TimelineContentTextView;
 
 public class TwidereApplication extends Application implements Constants,
         OnSharedPreferenceChangeListener {
@@ -131,6 +133,7 @@ public class TwidereApplication extends Application implements Constants,
         ATE.registerViewProcessor(FloatingActionButton.class, new FloatingActionButtonViewProcessor());
         ATE.registerViewProcessor(ActionBarContextView.class, new ActionBarContextViewViewProcessor());
         ATE.registerViewProcessor(ExtendedSwipeRefreshLayout.class, new ExtendedSwipeRefreshLayoutViewProcessor());
+        ATE.registerViewProcessor(TimelineContentTextView.class, new TimelineContentTextViewViewProcessor());
         final SharedPreferences preferences = getSharedPreferences();
         if (!ATE.config(this, null).isConfigured()) {
             final int themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,

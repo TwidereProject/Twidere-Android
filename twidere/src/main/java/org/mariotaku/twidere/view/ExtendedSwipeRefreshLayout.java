@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.themed;
+package org.mariotaku.twidere.view;
 
 import android.content.Context;
 import android.graphics.Rect;

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.text.InputType;
 import android.text.Selection;
 import android.text.method.ArrowKeyMovementMethod;
@@ -31,6 +30,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.afollestad.appthemeengine.inflation.ATEMultiAutoCompleteTextView;
+import com.afollestad.appthemeengine.inflation.ATEMultiAutoCompleteTextView2;
+
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.model.UserKey;
@@ -38,7 +40,7 @@ import org.mariotaku.twidere.util.EmojiSupportUtils;
 import org.mariotaku.twidere.util.widget.StatusTextTokenizer;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
-public class ComposeEditText extends AppCompatMultiAutoCompleteTextView implements IThemeBackgroundTintView {
+public class ComposeEditText extends ATEMultiAutoCompleteTextView2 implements IThemeBackgroundTintView {
 
     private ComposeAutoCompleteAdapter mAdapter;
     private UserKey mAccountKey;
@@ -48,11 +50,7 @@ public class ComposeEditText extends AppCompatMultiAutoCompleteTextView implemen
     }
 
     public ComposeEditText(final Context context, final AttributeSet attrs) {
-        this(context, attrs, R.attr.autoCompleteTextViewStyle);
-    }
-
-    public ComposeEditText(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(context, attrs, defStyle);
+        super(context, attrs);
         EmojiSupportUtils.initForTextView(this);
         setTokenizer(new StatusTextTokenizer());
         setOnItemClickListener(new AdapterView.OnItemClickListener() {

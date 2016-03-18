@@ -163,7 +163,6 @@ import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener;
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout;
 import org.mariotaku.twidere.view.ExtendedRecyclerView;
 import org.mariotaku.twidere.view.ForegroundColorView;
-import org.mariotaku.twidere.view.StatusTextView;
 import org.mariotaku.twidere.view.TwitterCardContainer;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
@@ -915,7 +914,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         private final ActionMenuView menuBar;
         private final TextView nameView, screenNameView;
-        private final StatusTextView textView;
+        private final TextView textView;
         private final TextView quotedTextView;
         private final TextView quotedNameView, quotedScreenNameView;
         private final ImageView profileImageView;
@@ -951,7 +950,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             menuBar = (ActionMenuView) itemView.findViewById(R.id.menu_bar);
             nameView = (TextView) itemView.findViewById(R.id.name);
             screenNameView = (TextView) itemView.findViewById(R.id.screen_name);
-            textView = (StatusTextView) itemView.findViewById(R.id.text);
+            textView = (TextView) itemView.findViewById(R.id.text);
             profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
             profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
             timeSourceView = (TextView) itemView.findViewById(R.id.time_source);

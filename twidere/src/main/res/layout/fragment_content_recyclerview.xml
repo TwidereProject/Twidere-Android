@@ -25,7 +25,7 @@
 
     <include layout="@layout/layout_content_fragment_common"/>
 
-    <org.mariotaku.twidere.view.themed.ExtendedSwipeRefreshLayout
+    <org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,5 +39,5 @@
             android:focusable="true"
             android:scrollbars="vertical"/>
 
-    </org.mariotaku.twidere.view.themed.ExtendedSwipeRefreshLayout>
+    </org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout>
 </FrameLayout>

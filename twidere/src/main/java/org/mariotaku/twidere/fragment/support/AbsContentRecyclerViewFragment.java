@@ -49,7 +49,7 @@ import org.mariotaku.twidere.util.TwidereColorUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView;
-import org.mariotaku.twidere.view.themed.ExtendedSwipeRefreshLayout;
+import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
 
 /**
  * Created by mariotaku on 15/10/26.
