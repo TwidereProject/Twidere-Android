@@ -303,7 +303,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 if (args.containsKey(EXTRA_ACCOUNT)) {
                     account = args.getParcelable(EXTRA_ACCOUNT);
                     recipient = args.getParcelable(EXTRA_USER);
-                } else if (args.containsKey(EXTRA_ACCOUNT_KEY)) {
+                } else if (args.containsKey(EXTRA_ACCOUNT_KEY) && args.containsKey(EXTRA_RECIPIENT_ID)) {
                     final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                     if (accountKey == null) {
                         getActivity().finish();
@@ -314,9 +314,16 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                         mAccountSpinner.setSelection(accountPos);
                     }
                     final String userId = args.getString(EXTRA_RECIPIENT_ID);
-                    account = accountPos >= 0 ? accountsSpinnerAdapter.getItem(accountPos) :
-                            ParcelableCredentialsUtils.getCredentials(activity, accountKey);
-                    recipient = Utils.getUserForConversation(activity, accountKey, userId);
+                    if (accountPos >= 0) {
+                        account = accountsSpinnerAdapter.getItem(accountPos);
+                    } else {
+                        account = ParcelableCredentialsUtils.getCredentials(activity, accountKey);
+                    }
+                    if (userId != null) {
+                        recipient = Utils.getUserForConversation(activity, accountKey, userId);
+                    } else {
+                        recipient = null;
+                    }
                 } else {
                     account = null;
                     recipient = null;

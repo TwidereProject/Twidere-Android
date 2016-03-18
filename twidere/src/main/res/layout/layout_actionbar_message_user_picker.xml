@@ -17,7 +17,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,7 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/element_spacing_small"
-        tools:listitem="@layout/spinner_item_account_icon" />
+        android:tag="tint|primary_color_dependent"
+        tools:listitem="@layout/spinner_item_account_icon"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -46,9 +48,10 @@
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:gravity="bottom"
-            android:inputType="textPersonName|textMultiLine">
+            android:inputType="textPersonName|textMultiLine"
+            android:tag="background|primary_color_dependent">
 
-            <requestFocus />
+            <requestFocus/>
         </EditText>
 
         <org.mariotaku.twidere.view.themed.BackgroundTintImageButton
@@ -60,7 +63,7 @@
             android:color="?android:textColorPrimary"
             android:padding="@dimen/element_spacing_normal"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_action_search" />
+            android:src="@drawable/ic_action_search"/>
     </FrameLayout>
 
 </RelativeLayout>

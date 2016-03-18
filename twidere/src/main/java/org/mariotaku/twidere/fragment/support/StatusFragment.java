@@ -2485,18 +2485,20 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 countValues.put(Statuses.RETWEET_COUNT, activitySummary.retweetCount);
 
                 final ContentResolver cr = context.getContentResolver();
-                final Expression statusWhere = Expression.or(
+                final Expression statusWhere = Expression.and(
                         Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                        Expression.equalsArgs(Statuses.STATUS_ID),
-                        Expression.equalsArgs(Statuses.RETWEET_ID)
-                );
+                        Expression.or(
+                                Expression.equalsArgs(Statuses.STATUS_ID),
+                                Expression.equalsArgs(Statuses.RETWEET_ID)
+                        ));
                 final String[] statusWhereArgs = {mAccountKey.toString(), mStatusId, mStatusId};
                 cr.update(Statuses.CONTENT_URI, countValues, statusWhere.getSQL(), statusWhereArgs);
-                final Expression activityWhere = Expression.or(
+                final Expression activityWhere = Expression.and(
                         Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                        Expression.equalsArgs(Activities.STATUS_ID),
-                        Expression.equalsArgs(Activities.STATUS_RETWEET_ID)
-                );
+                        Expression.or(
+                                Expression.equalsArgs(Activities.STATUS_ID),
+                                Expression.equalsArgs(Activities.STATUS_RETWEET_ID)
+                        ));
 
                 final ParcelableStatus pStatus = ParcelableStatusUtils.fromStatus(status,
                         mAccountKey, false);
