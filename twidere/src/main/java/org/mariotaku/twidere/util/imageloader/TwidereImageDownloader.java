@@ -49,14 +49,13 @@ public class TwidereImageDownloader extends BaseImageDownloader implements Const
     }
 
     @Override
-    protected InputStream getStreamFromNetwork(final String uriString, final Object extras) throws IOException {
+    protected InputStream getStreamFromNetwork(String uriString, final Object extras) throws IOException {
         if (uriString == null) return null;
         try {
             if (isTwitterProfileImage(uriString)) {
-                final String replaced = Utils.getTwitterProfileImageOfSize(uriString, mTwitterProfileImageSize);
-                return getStreamFromNetworkInternal(replaced, extras);
-            } else
-                return getStreamFromNetworkInternal(uriString, extras);
+                uriString = Utils.getTwitterProfileImageOfSize(uriString, mTwitterProfileImageSize);
+            }
+            return getStreamFromNetworkInternal(uriString, extras);
         } catch (final FileNotFoundException e) {
             if (isTwitterProfileImage(uriString) && !uriString.contains("_normal.")) {
                 return getStreamFromNetworkInternal(Utils.getNormalTwitterProfileImage(uriString), extras);

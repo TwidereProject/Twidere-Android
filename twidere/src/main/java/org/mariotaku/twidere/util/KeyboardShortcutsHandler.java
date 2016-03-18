@@ -14,7 +14,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ComposeActivity;
 import org.mariotaku.twidere.activity.QuickSearchBarActivity;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants;
 
 import java.util.HashMap;
@@ -64,8 +63,9 @@ public class KeyboardShortcutsHandler implements Constants, KeyboardShortcutCons
 
     private final SharedPreferencesWrapper mPreferences;
 
-    public KeyboardShortcutsHandler(final TwidereApplication context) {
-        mPreferences = SharedPreferencesWrapper.getInstance(context, KEYBOARD_SHORTCUTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
+    public KeyboardShortcutsHandler(final Context context) {
+        mPreferences = SharedPreferencesWrapper.getInstance(context,
+                KEYBOARD_SHORTCUTS_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     public String findAction(@NonNull KeyboardShortcutSpec spec) {

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util.dagger;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -39,7 +40,6 @@ import org.mariotaku.mediaviewer.library.MediaDownloader;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTaskManager;
@@ -83,9 +83,11 @@ import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
 @Module
 public class ApplicationModule implements Constants {
 
-    private final TwidereApplication application;
+    private static ApplicationModule sApplicationModule;
 
-    public ApplicationModule(TwidereApplication application) {
+    private final Application application;
+
+    public ApplicationModule(Application application) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
             throw new RuntimeException("Module must be created inside main thread");
         }
@@ -93,7 +95,9 @@ public class ApplicationModule implements Constants {
     }
 
     static ApplicationModule get(@NonNull Context context) {
-        return TwidereApplication.getInstance(context).getApplicationModule();
+        if (sApplicationModule != null) return sApplicationModule;
+        Application application = (Application) context.getApplicationContext();
+        return sApplicationModule = new ApplicationModule(application);
     }
 
     @Provides

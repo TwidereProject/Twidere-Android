@@ -19,6 +19,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,11 +27,10 @@
     android:orientation="horizontal"
     tools:layout_height="?actionBarSize">
 
-    <Spinner
+    <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/account_spinner"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/element_spacing_small"
         android:tag="tint|primary_color_dependent"
         tools:listitem="@layout/spinner_item_account_icon"/>
 
@@ -38,8 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toEndOf="@+id/account_spinner"
-        android:layout_toRightOf="@+id/account_spinner"
-        android:padding="@dimen/element_spacing_small">
+        android:layout_toRightOf="@+id/account_spinner">
 
         <EditText
             android:id="@+id/user_query"
@@ -47,23 +46,24 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
-            android:gravity="bottom"
+            android:gravity="bottom|center_vertical"
             android:inputType="textPersonName|textMultiLine"
-            android:tag="background|primary_color_dependent">
+            android:tag="tint|primary_color_dependent,text_color|primary_color_dependent">
 
             <requestFocus/>
         </EditText>
 
-        <org.mariotaku.twidere.view.themed.BackgroundTintImageButton
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/query_button"
-            style="?cardActionButtonStyle"
+            style="?actionButtonStyle"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
-            android:layout_gravity="end"
-            android:color="?android:textColorPrimary"
-            android:padding="@dimen/element_spacing_normal"
+            android:layout_gravity="end|center_vertical"
+            android:contentDescription="@string/search"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_action_search"/>
+            android:src="@drawable/ic_action_search"
+            android:tag="tint|primary_color_dependent"
+            app:backgroundTintMode="src_atop"/>
     </FrameLayout>
 
 </RelativeLayout>

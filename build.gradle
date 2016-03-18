@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.0.0-beta7'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath('fr.avianey.androidsvgdrawable:gradle-plugin:3.0.0') {
             // should be excluded to avoid conflict
@@ -73,14 +73,6 @@ subprojects {
 
     }
 
-}
-
-task clean(type: Delete) {
-    delete(rootProject.buildDir)
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
 }
 
 def loadSigningConfig(def cfg, def file) {
