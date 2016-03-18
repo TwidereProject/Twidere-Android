@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <org.mariotaku.twidere.view.themed.AccentProgressWheel
+    <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/load_progress"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"

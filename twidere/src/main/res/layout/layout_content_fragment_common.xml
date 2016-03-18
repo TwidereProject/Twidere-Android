@@ -18,7 +18,6 @@
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:app="http://schemas.android.com/apk/res-auto"
        xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
@@ -28,14 +27,12 @@
         android:padding="@dimen/element_spacing_large"
         tools:visibility="gone">
 
-        <org.mariotaku.twidere.view.themed.AccentProgressWheel
+        <ProgressBar
             android:id="@+id/load_progress"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
             android:layout_gravity="center"
-            android:padding="@dimen/element_spacing_xsmall"
-            app:matProg_barColor="?colorAccent"
-            app:matProg_progressIndeterminate="true"/>
+            android:padding="@dimen/element_spacing_xsmall"/>
     </FrameLayout>
 
     <LinearLayout

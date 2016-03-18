@@ -43,6 +43,7 @@ import android.support.v7.widget.ActionBarContextView;
 
 import com.afollestad.appthemeengine.ATE;
 import com.afollestad.appthemeengine.Config;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
@@ -67,6 +68,7 @@ import org.mariotaku.twidere.util.net.TwidereDns;
 import org.mariotaku.twidere.util.theme.ActionBarContextViewViewProcessor;
 import org.mariotaku.twidere.util.theme.ExtendedSwipeRefreshLayoutViewProcessor;
 import org.mariotaku.twidere.util.theme.FloatingActionButtonViewProcessor;
+import org.mariotaku.twidere.util.theme.ProgressWheelViewProcessor;
 import org.mariotaku.twidere.util.theme.TabPagerIndicatorViewProcessor;
 import org.mariotaku.twidere.util.theme.TimelineContentTextViewViewProcessor;
 import org.mariotaku.twidere.view.TabPagerIndicator;
@@ -134,6 +136,7 @@ public class TwidereApplication extends Application implements Constants,
         ATE.registerViewProcessor(ActionBarContextView.class, new ActionBarContextViewViewProcessor());
         ATE.registerViewProcessor(ExtendedSwipeRefreshLayout.class, new ExtendedSwipeRefreshLayoutViewProcessor());
         ATE.registerViewProcessor(TimelineContentTextView.class, new TimelineContentTextViewViewProcessor());
+        ATE.registerViewProcessor(ProgressWheel.class, new ProgressWheelViewProcessor());
         final SharedPreferences preferences = getSharedPreferences();
         if (!ATE.config(this, null).isConfigured()) {
             final int themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,
