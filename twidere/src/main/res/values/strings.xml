@@ -345,7 +345,7 @@
     <string name="preview_images">Preview images</string>
     <string name="preload_wifi_only">Preload using Wi-Fi only</string>
     <string name="sign_in_method_introduction_title">How does it work?</string>
-    <string name="sign_in_method_introduction">Most Twitter apps opens a webpage to authorize to Twitter, this could be inconvenient when using custom API, or on slow network. Twidere simulates a normal browser to help sign in to Twitter. Don\'t worry, your password will never be stored nor leaked.</string>
+    <string name="sign_in_method_introduction">Most Twitter apps open a webpage to authorize to Twitter, this could be inconvenient when using custom API, or on slow network. Twidere simulates a normal browser to help sign in to Twitter. Don\'t worry, your password will never be stored nor leaked.</string>
     <string name="edit_draft">Edit draft</string>
     <string name="profile_image">Profile image</string>
     <string name="your_profile_image">Your profile image</string>
@@ -741,7 +741,7 @@
     <string name="interactions">Interactions</string>
     <string name="network_diagnostics">Network diagnostics</string>
     <string name="action_start">Start</string>
-    <string name="builtin_dns_resolver">Builtin DNS resolver</string>
+    <string name="builtin_dns_resolver">Built-in DNS resolver</string>
     <string name="bandwidth_saving_mode">Bandwidth saving mode</string>
     <string name="retry_on_network_issue">Retry on network issue</string>
     <string name="retry_on_network_issue_summary">Try recover from network issue automatically</string>
