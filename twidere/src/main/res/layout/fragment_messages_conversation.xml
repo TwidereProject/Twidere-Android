@@ -65,7 +65,7 @@
             android:padding="@dimen/element_spacing_normal"
             tools:ignore="UnusedAttribute">
 
-            <org.mariotaku.twidere.view.ActionIconView
+            <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/add_image"
                 android:layout_width="@dimen/element_size_normal"
                 android:layout_height="@dimen/element_size_normal"
@@ -78,7 +78,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_action_gallery"/>
 
-            <org.mariotaku.twidere.view.ActionIconView
+            <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/send"
                 android:layout_width="@dimen/element_size_normal"
                 android:layout_height="@dimen/element_size_normal"
@@ -162,7 +162,7 @@
             android:paddingLeft="@dimen/element_spacing_normal"
             android:paddingRight="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.ActionIconView
+            <org.mariotaku.twidere.view.IconActionView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:color="?android:textColorSecondary"

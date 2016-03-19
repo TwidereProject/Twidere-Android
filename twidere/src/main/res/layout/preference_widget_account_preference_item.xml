@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <org.mariotaku.twidere.view.ActionIconButton
+    <org.mariotaku.twidere.view.IconActionButton
         android:id="@+id/settings"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"

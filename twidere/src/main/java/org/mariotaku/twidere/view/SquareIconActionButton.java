@@ -23,17 +23,17 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-public class SquareActionIconButton extends ActionIconButton {
+public class SquareIconActionButton extends IconActionButton {
 
-    public SquareActionIconButton(final Context context) {
+    public SquareIconActionButton(final Context context) {
         this(context, null);
     }
 
-    public SquareActionIconButton(final Context context, final AttributeSet attrs) {
+    public SquareIconActionButton(final Context context, final AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SquareActionIconButton(final Context context, final AttributeSet attrs, final int defStyle) {
+    public SquareIconActionButton(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
     }
 

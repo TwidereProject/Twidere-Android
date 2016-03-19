@@ -66,6 +66,7 @@
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
         </item>
+        <item name="android:panelColorBackground">#3c3c3c</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
@@ -89,20 +90,21 @@
 
     <style name="Theme.Twidere.Compose" parent="Theme.Twidere.Dialog">
 
+        <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">false</item>
 
-        <item name="android:actionModeStyle">@style/Widget.Twidere.ActionMode.Dark</item>
-
         <item name="android:windowNoTitle">true</item>
-        <item name="android:panelColorBackground">#3c3c3c</item>
-        <item name="android:dividerVertical">@drawable/divider_compose_vertical_dark</item>
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowActionModeOverlay">false</item>
 
     </style>
 
     <style name="Theme.Twidere.QuickSearchBar" parent="Theme.Twidere.Dialog">
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">false</item>
+
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
@@ -110,14 +112,10 @@
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowActionModeOverlay">false</item>
 
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">dark</item>
-
     </style>
 
     <style name="Theme.Twidere.NoDisplay" parent="Theme.Twidere.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
-        <!--<item name="android:backgroundDimEnabled">false</item>-->
         <item name="android:windowFrame">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -125,10 +123,6 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
-
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">dark</item>
-
     </style>
 
     <style name="Theme.Twidere.Viewer" parent="Theme.AppCompat">

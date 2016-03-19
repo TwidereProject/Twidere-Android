@@ -52,7 +52,7 @@
                 android:text="@string/api_url_format"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-            <org.mariotaku.twidere.view.ActionIconView
+            <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/api_url_format_help"
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"

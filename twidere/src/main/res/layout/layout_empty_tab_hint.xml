@@ -32,7 +32,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <org.mariotaku.twidere.view.ActionIconView
+        <org.mariotaku.twidere.view.IconActionView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:color="?android:textColorSecondary"

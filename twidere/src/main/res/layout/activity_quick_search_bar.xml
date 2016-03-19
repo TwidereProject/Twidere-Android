@@ -69,7 +69,7 @@
                     <requestFocus/>
                 </EditText>
 
-                <org.mariotaku.twidere.view.ActionIconButton
+                <org.mariotaku.twidere.view.IconActionButton
                     android:id="@+id/search_submit"
                     android:layout_width="@dimen/element_size_normal"
                     android:layout_height="match_parent"

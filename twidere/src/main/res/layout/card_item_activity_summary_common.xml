@@ -24,7 +24,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/element_spacing_normal">
 
-    <org.mariotaku.twidere.view.ActionIconView
+    <org.mariotaku.twidere.view.IconActionView
         android:id="@+id/activity_type"
         android:layout_width="@dimen/element_size_small"
         android:layout_height="@dimen/element_size_small"

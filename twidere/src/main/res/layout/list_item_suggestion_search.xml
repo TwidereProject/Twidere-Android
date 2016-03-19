@@ -27,7 +27,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_small">
 
-    <org.mariotaku.twidere.view.SquareActionIconButton
+    <org.mariotaku.twidere.view.SquareIconActionButton
         android:id="@android:id/icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -61,7 +61,7 @@
 
     </LinearLayout>
 
-    <org.mariotaku.twidere.view.SquareActionIconButton
+    <org.mariotaku.twidere.view.SquareIconActionButton
         android:id="@+id/edit_query"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="match_parent"

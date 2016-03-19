@@ -57,7 +57,7 @@
             android:orientation="vertical"
             tools:visibility="visible">
 
-            <org.mariotaku.twidere.view.ActionIconView
+            <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/empty_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

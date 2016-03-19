@@ -45,7 +45,7 @@
             android:layout_marginStart="@dimen/element_spacing_normal"
             tools:visibility="visible"/>
 
-        <org.mariotaku.twidere.view.ActionIconView
+        <org.mariotaku.twidere.view.IconActionView
             android:id="@+id/status_info_icon"
             style="?profileImageStyle"
             android:layout_width="@dimen/element_size_small"
@@ -167,7 +167,7 @@
 
             </LinearLayout>
 
-            <org.mariotaku.twidere.view.ActionIconView
+            <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/extra_type"
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"
@@ -315,7 +315,7 @@
             android:paddingLeft="@dimen/element_spacing_small"
             android:paddingRight="@dimen/element_spacing_small">
 
-            <org.mariotaku.twidere.view.ActionIconButton
+            <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/reply_icon"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
@@ -337,7 +337,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="255"/>
 
-            <org.mariotaku.twidere.view.ActionIconButton
+            <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/retweet_icon"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
@@ -359,7 +359,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="255"/>
 
-            <org.mariotaku.twidere.view.ActionIconButton
+            <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/favorite_icon"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
@@ -383,7 +383,7 @@
 
         </LinearLayout>
 
-        <org.mariotaku.twidere.view.ActionIconButton
+        <org.mariotaku.twidere.view.IconActionButton
             android:id="@+id/item_menu"
             style="?cardActionButtonStyle"
             android:layout_width="@dimen/element_size_normal"

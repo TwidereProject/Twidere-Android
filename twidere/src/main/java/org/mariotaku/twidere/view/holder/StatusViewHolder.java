@@ -34,7 +34,7 @@ import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UnitConvertUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.ActionIconButton;
+import org.mariotaku.twidere.view.IconActionButton;
 import org.mariotaku.twidere.view.ActionIconThemedTextView;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ForegroundColorView;
@@ -69,7 +69,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final TextView statusInfoLabel;
     private final ShortTimeView timeView;
     private final CardMediaContainer mediaPreview, quoteMediaPreview;
-    private final ActionIconButton replyIconView, retweetIconView, favoriteIconView;
+    private final IconActionButton replyIconView, retweetIconView, favoriteIconView;
     private final TextView replyCountView, retweetCountView, favoriteCountView;
     private final IColorLabelView itemContent;
     private final ForegroundColorView quoteIndicator;
@@ -111,9 +111,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         itemMenu = itemView.findViewById(R.id.item_menu);
         actionButtons = itemView.findViewById(R.id.action_buttons);
 
-        replyIconView = (ActionIconButton) itemView.findViewById(R.id.reply_icon);
-        retweetIconView = (ActionIconButton) itemView.findViewById(R.id.retweet_icon);
-        favoriteIconView = (ActionIconButton) itemView.findViewById(R.id.favorite_icon);
+        replyIconView = (IconActionButton) itemView.findViewById(R.id.reply_icon);
+        retweetIconView = (IconActionButton) itemView.findViewById(R.id.retweet_icon);
+        favoriteIconView = (IconActionButton) itemView.findViewById(R.id.favorite_icon);
 
         replyCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.reply_count);
         retweetCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.retweet_count);

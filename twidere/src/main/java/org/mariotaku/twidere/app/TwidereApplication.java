@@ -53,7 +53,6 @@ import org.mariotaku.twidere.activity.AssistLauncherActivity;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
 import org.mariotaku.twidere.service.RefreshService;
-import org.mariotaku.twidere.util.theme.ProfileImageViewViewProcessor;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.DebugModeUtils;
 import org.mariotaku.twidere.util.ExternalThemeManager;
@@ -63,13 +62,14 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereBugReporter;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
-import org.mariotaku.twidere.util.dagger.ApplicationModule;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
 import org.mariotaku.twidere.util.theme.ActionBarContextViewViewProcessor;
 import org.mariotaku.twidere.util.theme.ExtendedSwipeRefreshLayoutViewProcessor;
 import org.mariotaku.twidere.util.theme.FloatingActionButtonViewProcessor;
+import org.mariotaku.twidere.util.theme.IconActionButtonTagProcessor;
 import org.mariotaku.twidere.util.theme.OptimalLinkColorTagProcessor;
+import org.mariotaku.twidere.util.theme.ProfileImageViewViewProcessor;
 import org.mariotaku.twidere.util.theme.ProgressWheelViewProcessor;
 import org.mariotaku.twidere.util.theme.TabPagerIndicatorViewProcessor;
 import org.mariotaku.twidere.util.theme.TimelineContentTextViewViewProcessor;
@@ -91,7 +91,6 @@ public class TwidereApplication extends Application implements Constants,
     private SQLiteOpenHelper mSQLiteOpenHelper;
     private SQLiteDatabase mDatabase;
 
-    private ApplicationModule mApplicationModule;
     private ProfileImageViewViewProcessor mProfileImageViewViewProcessor;
 
     @NonNull
@@ -144,15 +143,23 @@ public class TwidereApplication extends Application implements Constants,
         mProfileImageViewViewProcessor = new ProfileImageViewViewProcessor();
         ATE.registerViewProcessor(ProfileImageView.class, mProfileImageViewViewProcessor);
         ATE.registerTagProcessor("optimal_link_color", new OptimalLinkColorTagProcessor());
+        ATE.registerTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR,
+                new IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR));
+        ATE.registerTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_ACTIVATED,
+                new IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_ACTIVATED));
+        ATE.registerTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_DISABLED,
+                new IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_DISABLED));
         final SharedPreferences preferences = getSharedPreferences();
-        if (!ATE.config(this, null).isConfigured()) {
-            final int themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,
-                    R.color.branding_color));
+        final int themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,
+                R.color.branding_color));
+        if (!ATE.config(this, VALUE_THEME_NAME_LIGHT).isConfigured()) {
             ATE.config(this, VALUE_THEME_NAME_LIGHT)
                     .primaryColor(themeColor)
                     .accentColor(themeColor)
                     .coloredActionBar(true)
                     .commit();
+        }
+        if (!ATE.config(this, VALUE_THEME_NAME_DARK).isConfigured()) {
             ATE.config(this, VALUE_THEME_NAME_DARK)
                     .accentColor(themeColor)
                     .coloredActionBar(false)
@@ -316,10 +323,12 @@ public class TwidereApplication extends Application implements Constants,
                         .primaryColor(themeColor)
                         .accentColor(themeColor)
                         .coloredActionBar(true)
+                        .coloredStatusBar(true)
                         .commit();
                 ATE.config(this, VALUE_THEME_NAME_DARK)
                         .accentColor(themeColor)
                         .coloredActionBar(false)
+                        .coloredStatusBar(false)
                         .commit();
                 break;
             }
@@ -357,11 +366,6 @@ public class TwidereApplication extends Application implements Constants,
             Class.forName(AsyncTask.class.getName());
         } catch (final ClassNotFoundException ignore) {
         }
-    }
-
-    public ApplicationModule getApplicationModule() {
-        if (mApplicationModule != null) return mApplicationModule;
-        return mApplicationModule = new ApplicationModule(this);
     }
 
     @Nullable

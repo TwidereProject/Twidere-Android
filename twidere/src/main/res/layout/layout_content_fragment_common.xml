@@ -43,7 +43,7 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <org.mariotaku.twidere.view.ActionIconView
+        <org.mariotaku.twidere.view.IconActionView
             android:id="@+id/error_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

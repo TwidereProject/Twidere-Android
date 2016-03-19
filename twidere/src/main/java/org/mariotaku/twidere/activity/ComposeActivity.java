@@ -145,10 +145,10 @@ import org.mariotaku.twidere.util.TwidereViewUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.view.ActionIconView;
 import org.mariotaku.twidere.view.BadgeView;
 import org.mariotaku.twidere.view.CheckableLinearLayout;
 import org.mariotaku.twidere.view.ComposeEditText;
+import org.mariotaku.twidere.view.IconActionView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextCountView;
 import org.mariotaku.twidere.view.helper.SimpleItemTouchHelperCallback;
@@ -205,7 +205,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     private BadgeView mCountView;
     private View mAccountSelectorButton;
     private View mLocationContainer;
-    private ActionIconView mLocationIcon;
+    private IconActionView mLocationIcon;
     private TextView mLocationText;
     private TextView mReplyLabel;
     private View mReplyLabelDivider;
@@ -541,7 +541,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         mCountView = (BadgeView) findViewById(R.id.accounts_count);
         mAccountSelectorButton = findViewById(R.id.account_selector_button);
         mLocationContainer = findViewById(R.id.location_container);
-        mLocationIcon = (ActionIconView) findViewById(R.id.location_icon);
+        mLocationIcon = (IconActionView) findViewById(R.id.location_icon);
         mLocationText = (TextView) findViewById(R.id.location_text);
         mReplyLabel = (TextView) findViewById(R.id.reply_label);
         mReplyLabelDivider = findViewById(R.id.reply_label_divider);
@@ -1313,11 +1313,8 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
 
     private void updateLocationState() {
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
-        if (attachLocation) {
-            mLocationIcon.setColorFilter(ThemeUtils.getOptimalAccentColor(this, false
-            ), Mode.SRC_ATOP);
-        } else {
-            mLocationIcon.setColorFilter(mLocationIcon.getDefaultColor(), Mode.SRC_ATOP);
+        mLocationIcon.setActivated(attachLocation);
+        if (!attachLocation) {
             mLocationText.setText(R.string.no_location);
         }
     }

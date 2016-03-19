@@ -6,29 +6,30 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.view.iface.IIconActionButton;
 
 /**
  * Created by mariotaku on 14/11/5.
  */
-public class ActionIconButton extends AppCompatImageButton {
+public class IconActionView extends AppCompatImageView implements IIconActionButton {
 
     @ColorInt
     private int mDefaultColor, mActivatedColor, mDisabledColor;
 
-    public ActionIconButton(Context context) {
+    public IconActionView(Context context) {
         this(context, null);
     }
 
-    public ActionIconButton(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.imageButtonStyle);
+    public IconActionView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public ActionIconButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    public IconActionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton,
                 R.attr.cardActionButtonStyle, R.style.Widget_CardActionButton);

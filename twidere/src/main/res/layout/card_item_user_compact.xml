@@ -104,7 +104,7 @@
             android:orientation="horizontal"
             tools:visibility="visible">
 
-            <org.mariotaku.twidere.view.ActionIconButton
+            <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/follow"
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
@@ -114,7 +114,7 @@
                 app:backgroundTint="@color/color_stateful_follow"
                 app:iabColor="@android:color/transparent"/>
 
-            <org.mariotaku.twidere.view.ActionIconButton
+            <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/accept_request"
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
@@ -124,7 +124,7 @@
                 app:backgroundTint="@color/material_light_green"
                 app:iabColor="@android:color/transparent"/>
 
-            <org.mariotaku.twidere.view.ActionIconButton
+            <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/deny_request"
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"

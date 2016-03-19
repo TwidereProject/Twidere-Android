@@ -90,14 +90,16 @@
                     android:orientation="horizontal"
                     android:padding="@dimen/element_spacing_normal">
 
-                    <org.mariotaku.twidere.view.ActionIconView
+                    <org.mariotaku.twidere.view.IconActionView
                         android:id="@+id/location_icon"
                         android:layout_width="@dimen/element_size_small"
                         android:layout_height="@dimen/element_size_small"
                         android:layout_marginLeft="@dimen/element_spacing_normal"
                         android:layout_marginRight="@dimen/element_spacing_normal"
-                        android:color="?android:textColorSecondary"
-                        android:src="@drawable/ic_action_location"/>
+                        android:src="@drawable/ic_action_location"
+                        android:tag="iab_activated_color|accent_color"
+                        app:iabActivatedColor="?colorAccent"
+                        app:iabColor="?android:textColorSecondary"/>
 
                     <TextView
                         android:id="@+id/location_text"
@@ -236,7 +238,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="140"/>
 
-            <org.mariotaku.twidere.view.ActionIconView
+            <org.mariotaku.twidere.view.IconActionView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:color="?android:textColorSecondary"

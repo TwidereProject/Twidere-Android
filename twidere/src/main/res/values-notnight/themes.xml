@@ -59,6 +59,7 @@
         <!-- Widget styles -->
         <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
         </item>
+        <item name="android:panelColorBackground">#e5e5e5</item>
 
         <!-- Card UI styles -->
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
@@ -77,51 +78,6 @@
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
-
-
-    <style name="Theme.Twidere.Compose" parent="Theme.Twidere.Dialog">
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowActionModeOverlay">false</item>
-
-        <item name="android:actionModeStyle">@style/Widget.Twidere.ActionMode.Light</item>
-
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:panelColorBackground">#e5e5e5</item>
-        <item name="android:dividerVertical">@drawable/divider_compose_vertical_light</item>
-        <item name="android:windowActionBarOverlay">false</item>
-        <item name="android:windowActionModeOverlay">false</item>
-
-    </style>
-
-    <style name="Theme.Twidere.QuickSearchBar" parent="Theme.Twidere.Dialog">
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">false</item>
-
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">100%</item>
-        <item name="android:windowActionBarOverlay">false</item>
-        <item name="android:windowActionModeOverlay">false</item>
-
-    </style>
-
-
-    <style name="Theme.Twidere.NoDisplay" parent="Theme.Twidere.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <!--<item name="android:backgroundDimEnabled">false</item>-->
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
-        <!--<item name="android:windowNoDisplay">true</item>-->
     </style>
 
 </resources>
