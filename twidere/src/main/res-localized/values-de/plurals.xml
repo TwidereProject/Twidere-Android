@@ -15,8 +15,8 @@
     <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Benutzer von der Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernt.</item>
   </plurals>
   <plurals name="delete_N_users_from_list_confirm">
-    <item quantity="one">Benutzer <xliff:g id="count">%1$d</xliff:g> aus Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernen?</item>
-    <item quantity="other">Benutzer <xliff:g id="count">%1$d</xliff:g> aus Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernen?</item>
+    <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Benutzer aus Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernen?</item>
+    <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Benutzer aus Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernen?</item>
   </plurals>
   <plurals name="N_new_statuses">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> neuer Tweet</item>

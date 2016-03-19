@@ -42,7 +42,7 @@
         android:background="@drawable/list_drag_handle"
         tools:layout_height="?android:attr/listPreferredItemHeight"/>
 
-    <org.mariotaku.twidere.view.ShapedImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
         android:layout_width="@dimen/element_size_normal"

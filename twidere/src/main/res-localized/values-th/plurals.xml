@@ -21,13 +21,13 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> เมนชั่นใหม่</item>
   </plurals>
   <plurals name="N_new_interactions">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> การปฏิสัมพันธ์ใหม่</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> การแจ้งเตือนใหม่</item>
   </plurals>
   <plurals name="N_new_messages">
     <item quantity="other"><xliff:g id="count">%d</xliff:g> ข้อความใหม่</item>
   </plurals>
   <plurals name="N_media">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> มีเดีย</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> รูปภาพ</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
     <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> ทวีตต่อวัน)</item>
@@ -37,6 +37,9 @@
   </plurals>
   <plurals name="N_statuses">
     <item quantity="other"><xliff:g id="count">%d</xliff:g> ทวีต</item>
+  </plurals>
+  <plurals name="N_favorites">
+    <item quantity="other"><xliff:g id="count">%d</xliff:g>ถูกใจ</item>
   </plurals>
   <plurals name="N_likes">
     <item quantity="other"><xliff:g id="count">%d</xliff:g> ไลค์</item>

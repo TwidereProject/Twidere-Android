@@ -27,7 +27,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_msmall">
 
-    <org.mariotaku.twidere.view.ShapedImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
         style="?profileImageStyleLarge"
         android:layout_width="@dimen/element_size_normal"

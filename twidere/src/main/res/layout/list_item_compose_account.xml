@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <org.mariotaku.twidere.view.ShapedImageView
+    <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
         android:layout_width="wrap_content"

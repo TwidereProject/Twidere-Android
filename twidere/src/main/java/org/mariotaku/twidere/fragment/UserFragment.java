@@ -204,6 +204,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
     private View mPagerOverlay;
+    private View mWindowOverlay;
     private View mErrorOverlay;
     private View mProfileBannerContainer;
     private ExtendedRelativeLayout mProfileContentContainer;
@@ -1203,6 +1204,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mErrorOverlay = contentView.findViewById(R.id.error_window_overlay);
         mFollowButton = (Button) headerView.findViewById(R.id.follow);
         mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
+        mWindowOverlay = view.findViewById(R.id.window_overlay);
         mPagesContent = view.findViewById(R.id.pages_content);
         mPagesErrorContainer = view.findViewById(R.id.pages_error_container);
         mPagesErrorIcon = (ImageView) view.findViewById(R.id.pages_error_icon);
@@ -1647,7 +1649,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            setCompatToolbarOverlayAlpha(activity, factor * tabOutlineAlphaFactor);
+            mWindowOverlay.setAlpha(factor * tabOutlineAlphaFactor);
+//            setCompatToolbarOverlayAlpha(activity, factor * tabOutlineAlphaFactor);
         }
 
         final int currentTabColor = (Integer) sArgbEvaluator.evaluate(tabOutlineAlphaFactor,
