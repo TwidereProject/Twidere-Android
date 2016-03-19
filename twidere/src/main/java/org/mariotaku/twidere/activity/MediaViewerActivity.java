@@ -924,7 +924,9 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         public void onDownloadFinished() {
             super.onDownloadFinished();
             if (mMediaDownloadEvent != null) {
+                mMediaDownloadEvent.markEnd();
                 HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
+                mMediaDownloadEvent = null;
             }
         }
     }

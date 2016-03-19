@@ -54,6 +54,16 @@ public class MediaDownloadEvent extends BaseEvent implements Parcelable {
         MediaDownloadEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    @Override
+    public String toString() {
+        return "MediaDownloadEvent{" +
+                "type=" + type +
+                ", url='" + url + '\'' +
+                ", mediaUrl='" + mediaUrl + '\'' +
+                ", size=" + size +
+                "} " + super.toString();
+    }
+
     public static final Creator<MediaDownloadEvent> CREATOR = new Creator<MediaDownloadEvent>() {
         public MediaDownloadEvent createFromParcel(Parcel source) {
             MediaDownloadEvent target = new MediaDownloadEvent();
