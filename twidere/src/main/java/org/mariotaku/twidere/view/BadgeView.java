@@ -10,6 +10,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.mariotaku.twidere.R;
+
 /**
  * Created by mariotaku on 14/11/16.
  */
@@ -31,10 +33,9 @@ public class BadgeView extends View {
     public BadgeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mTextPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
-        final TypedArray a = context.obtainStyledAttributes(attrs,
-                new int[]{android.R.attr.textColor, android.R.attr.text});
-        setColor(a.getColor(0, Color.WHITE));
-        setText(a.getString(1));
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BadgeView);
+        setColor(a.getColor(R.styleable.BadgeView_android_textColor, Color.WHITE));
+        setText(a.getString(R.styleable.BadgeView_android_text));
         a.recycle();
         mTextPaint.setTextAlign(Align.CENTER);
         mTextBounds = new Rect();

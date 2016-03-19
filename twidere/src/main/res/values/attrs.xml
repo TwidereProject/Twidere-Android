@@ -104,6 +104,25 @@
     <declare-styleable name="TintedStatusLayout">
         <attr name="setPadding" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="BadgeView">
+        <attr name="android:textColor"/>
+        <attr name="android:text"/>
+    </declare-styleable>
+    <declare-styleable name="CardMediaContainer">
+        <attr name="android:horizontalSpacing"/>
+        <attr name="android:verticalSpacing"/>
+    </declare-styleable>
+    <declare-styleable name="MessageViewHolder">
+        <attr name="android:textColorPrimary"/>
+        <attr name="android:textColorPrimaryInverse"/>
+        <attr name="android:textColorSecondary"/>
+        <attr name="android:textColorSecondaryInverse"/>
+    </declare-styleable>
+    <declare-styleable name="RingtonePreference">
+        <attr name="android:ringtoneType"/>
+        <attr name="android:showDefault"/>
+        <attr name="android:showSilent"/>
+    </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>

@@ -1829,6 +1829,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
+        public long getStatusPositionKey(int position) {
+            final ParcelableStatus status = getStatus(position);
+            if (status == null) return -1;
+            return status.position_key > 0 ? status.timestamp : getStatusTimestamp(position);
+        }
+
+        @Override
         public UserKey getAccountKey(int position) {
             final ParcelableStatus status = getStatus(position);
             return status != null ? status.account_key : null;

@@ -31,7 +31,7 @@
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="@dimen/element_spacing_normal"
     app:ignorePadding="true"
-    tools:context=".adapter.DirectMessagesEntryAdapter">
+    tools:context=".adapter.MessageEntriesAdapter">
 
     <org.mariotaku.twidere.view.ShapedImageView
         android:id="@+id/profile_image"

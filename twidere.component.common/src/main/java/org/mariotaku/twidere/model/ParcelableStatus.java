@@ -73,6 +73,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.STATUS_TIMESTAMP)
     public long timestamp;
     @ParcelableThisPlease
+    @JsonField(name = "position_key")
+    @CursorField(Statuses.POSITION_KEY)
+    public long position_key;
+    @ParcelableThisPlease
     @JsonField(name = "user_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.USER_ID, converter = UserKeyCursorFieldConverter.class)
     public UserKey user_key;

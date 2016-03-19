@@ -174,6 +174,7 @@ public class LinkHandlerActivity extends BaseActivity implements SystemWindowsIn
                 supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
             }
         }
+
         super.onCreate(savedInstanceState);
 
         if (fragment == null) {

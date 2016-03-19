@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<!--suppress AndroidElementNotAllowed -->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/hints">
 
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:icon="@drawable/ic_action_location"
         android:order="11"
         android:summary="@string/wizard_hint_summary_location_requirement"
-        android:title="@string/wizard_hint_title_location_requirement" />
+        android:title="@string/wizard_hint_title_location_requirement"/>
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:icon="@drawable/ic_action_storage"
         android:order="12"
         android:summary="@string/wizard_hint_summary_storage_requirement"
-        android:title="@string/wizard_hint_title_storage_requirement" />
+        android:title="@string/wizard_hint_title_storage_requirement"/>
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:icon="@drawable/ic_action_accounts"
         android:order="13"
         android:summary="@string/wizard_hint_compose_select_account"
-        android:title="@string/select_account" />
+        android:title="@string/select_account"/>
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:icon="@drawable/ic_action_speaker_muted"
         android:order="14"
         android:summary="@string/wizard_hint_filters"
-        android:title="@string/filters" />
+        android:title="@string/filters"/>
     <org.mariotaku.twidere.preference.ForegroundColorIconPreference
         android:icon="@drawable/ic_action_refresh"
         android:order="15"
         android:summary="@string/wizard_hint_rate_limit"
-        android:title="@string/rate_limit" />
+        android:title="@string/rate_limit"/>
 
 </PreferenceScreen>

@@ -17,12 +17,13 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.ExtendedFrameLayout
+<org.mariotaku.twidere.view.TintedStatusFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
+    android:fitsSystemWindows="true"
+    app:setPadding="false">
 
     <RelativeLayout
         android:id="@+id/profile_banner_container"
@@ -50,7 +51,7 @@
         </FrameLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+    <org.mariotaku.twidere.view.ExtendedRelativeLayout
         android:id="@+id/profile_content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -76,6 +77,6 @@
             android:elevation="@dimen/toolbar_elevation"
             android:tag="ate_ignore"
             app:popupTheme="?actionBarPopupTheme"/>
-    </RelativeLayout>
+    </org.mariotaku.twidere.view.ExtendedRelativeLayout>
 
-</org.mariotaku.twidere.view.ExtendedFrameLayout>
+</org.mariotaku.twidere.view.TintedStatusFrameLayout>

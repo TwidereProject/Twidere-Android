@@ -55,7 +55,6 @@ import javax.inject.Inject;
 
 public abstract class AccountsListPreference extends PreferenceCategory implements Constants {
 
-    private static final int[] ATTRS = {R.attr.switchKey, R.attr.switchDefault};
     @Nullable
     private final String mSwitchKey;
     private final boolean mSwitchDefault;
@@ -70,9 +69,9 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
 
     public AccountsListPreference(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
-        final TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
-        mSwitchKey = a.getString(0);
-        mSwitchDefault = a.getBoolean(1, false);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AccountsListPreference);
+        mSwitchKey = a.getString(R.styleable.AccountsListPreference_switchKey);
+        mSwitchDefault = a.getBoolean(R.styleable.AccountsListPreference_switchDefault, false);
         a.recycle();
     }
 

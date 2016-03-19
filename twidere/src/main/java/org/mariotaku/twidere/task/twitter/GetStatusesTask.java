@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
@@ -23,9 +22,12 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.task.AbstractTask;
@@ -87,9 +89,8 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         bus.post(new GetStatusesTaskEvent(getContentUri(), false, AsyncTwitterWrapper.getException(result)));
     }
 
-
-    @UiThread
-    public void notifyStart() {
+    @Override
+    protected void beforeExecute(RefreshTaskParam refreshTaskParam) {
         bus.post(new GetStatusesTaskEvent(getContentUri(), true, null));
     }
 
@@ -166,13 +167,10 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     @NonNull
     protected abstract String getErrorInfoKey();
 
-    private void storeStatus(final UserKey accountKey, final List<Status> statuses,
+    private void storeStatus(@NonNull final UserKey accountKey, @NonNull final List<Status> statuses,
                              final String sinceId, final String maxId,
                              final long sinceSortId, final long maxSortId,
                              int loadItemLimit, final boolean notify) {
-        if (statuses == null || statuses.isEmpty() || accountKey == null) {
-            return;
-        }
         final Uri uri = getContentUri();
         final ContentResolver resolver = context.getContentResolver();
         final boolean noItemsBefore = DataStoreUtils.getStatusCount(context, uri, accountKey) <= 0;
@@ -180,17 +178,28 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         final String[] statusIds = new String[statuses.size()];
         int minIdx = -1;
         boolean hasIntersection = false;
-        for (int i = 0, j = statuses.size(); i < j; i++) {
-            final Status status = statuses.get(i);
-            values[i] = ContentValuesCreator.createStatus(status, accountKey);
-            values[i].put(Statuses.INSERTED_DATE, System.currentTimeMillis());
-            if (minIdx == -1 || status.compareTo(statuses.get(minIdx)) < 0) {
-                minIdx = i;
+        if (!statuses.isEmpty()) {
+            final long firstSortId = statuses.get(0).getSortId();
+            final long lastSortId = statuses.get(statuses.size() - 1).getSortId();
+            // Get id diff of first and last item
+            long sortDiff = firstSortId - lastSortId;
+
+            for (int i = 0, j = statuses.size(); i < j; i++) {
+                final Status item = statuses.get(i);
+                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(item, accountKey,
+                        false);
+                values[i] = ParcelableStatusValuesCreator.create(status);
+                values[i].put(Statuses.INSERTED_DATE, System.currentTimeMillis());
+                values[i].put(Statuses.POSITION_KEY, getPositionKey(status.timestamp, status.sort_id,
+                        lastSortId, sortDiff));
+                if (minIdx == -1 || item.compareTo(statuses.get(minIdx)) < 0) {
+                    minIdx = i;
+                }
+                if (sinceId != null && item.getSortId() <= sinceSortId) {
+                    hasIntersection = true;
+                }
+                statusIds[i] = item.getId();
             }
-            if (sinceId != null && status.getSortId() <= sinceSortId) {
-                hasIntersection = true;
-            }
-            statusIds[i] = status.getId();
         }
         // Delete all rows conflicting before new data inserted.
         final Expression accountWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY);
@@ -241,5 +250,9 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         }
     }
 
+    public static long getPositionKey(long timestamp, long sortId, long lastSortId, long sortDiff) {
+        if (sortDiff == 0) return timestamp;
+        return timestamp + (sortId - lastSortId) * 499 / sortDiff;
+    }
 
 }

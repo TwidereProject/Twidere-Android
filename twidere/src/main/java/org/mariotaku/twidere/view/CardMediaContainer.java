@@ -66,10 +66,9 @@ public class CardMediaContainer extends ViewGroup implements Constants {
 
     public CardMediaContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{
-                android.R.attr.horizontalSpacing, android.R.attr.verticalSpacing});
-        mHorizontalSpacing = a.getDimensionPixelSize(0, 0);
-        mVerticalSpacing = a.getDimensionPixelSize(1, 0);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CardMediaContainer);
+        mHorizontalSpacing = a.getDimensionPixelSize(R.styleable.CardMediaContainer_android_horizontalSpacing, 0);
+        mVerticalSpacing = a.getDimensionPixelSize(R.styleable.CardMediaContainer_android_verticalSpacing, 0);
         a.recycle();
     }
 

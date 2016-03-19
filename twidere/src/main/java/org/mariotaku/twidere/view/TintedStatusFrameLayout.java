@@ -25,27 +25,30 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.WindowInsetsCompat;
 import android.util.AttributeSet;
+import android.view.View;
+
+import com.afollestad.appthemeengine.inflation.ViewInterface;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.TwidereMathUtils;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 
 /**
  * Created by mariotaku on 14/11/26.
  */
-public class TintedStatusFrameLayout extends ExtendedFrameLayout implements TintedStatusLayout {
+public class TintedStatusFrameLayout extends ExtendedFrameLayout implements TintedStatusLayout,
+        ViewInterface {
 
-    private final Paint mBlackPaint, mShadowPaint, mColorPaint;
+    private final Paint mColorPaint;
     private boolean mSetPadding;
 
     private int mStatusBarHeight;
-    private float mFactor;
-    private int mColorAlpha, mShadowAlpha;
-    private boolean mDrawShadow, mDrawColor;
     private Rect mSystemWindowsInsets;
+    private WindowInsetsListener mWindowInsetsListener;
 
     public TintedStatusFrameLayout(Context context) {
         this(context, null);
@@ -60,51 +63,37 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TintedStatusLayout);
         setSetPaddingEnabled(a.getBoolean(R.styleable.TintedStatusLayout_setPadding, false));
         a.recycle();
-        mBlackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBlackPaint.setColor(Color.BLACK);
-        mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mColorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mSystemWindowsInsets = new Rect();
         setWillNotDraw(false);
-        setFactor(1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_STABLE | SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            ViewCompat.setOnApplyWindowInsetsListener(this, new android.support.v4.view.OnApplyWindowInsetsListener() {
+                @Override
+                public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                    final int top = insets.getSystemWindowInsetTop();
+                    final int left = insets.getSystemWindowInsetLeft();
+                    final int right = insets.getSystemWindowInsetRight();
+                    final int bottom = insets.getSystemWindowInsetBottom();
+                    if (mSetPadding) {
+                        setPadding(left, top, right, bottom);
+                    }
+                    setStatusBarHeight(top);
+                    if (mWindowInsetsListener != null) {
+                        mWindowInsetsListener.onApplyWindowInsets(left, top, right, bottom);
+                    }
+                    return insets.consumeSystemWindowInsets();
+                }
+            });
+        }
     }
 
 
     @Override
-    public void setColor(int color) {
-        setColor(color, Color.alpha(color));
-    }
-
-    @Override
-    public void setColor(int color, int alpha) {
-        mColorPaint.setColor(color);
-        mColorAlpha = alpha;
-        updateAlpha();
-    }
-
-    @Override
-    public void setDrawColor(boolean color) {
-        mDrawColor = color;
+    public void setStatusBarColor(int color) {
+        mColorPaint.setColor(0xFF000000 | color);
+        mColorPaint.setAlpha(Color.alpha(color));
         invalidate();
-    }
-
-    @Override
-    public void setDrawShadow(boolean shadow) {
-        mDrawShadow = shadow;
-        invalidate();
-    }
-
-    @Override
-    public void setFactor(float f) {
-        mFactor = f;
-        updateAlpha();
-    }
-
-    @Override
-    public void setShadowColor(int color) {
-        mShadowPaint.setColor(color);
-        mShadowAlpha = Color.alpha(color);
-        updateAlpha();
     }
 
     @Override
@@ -118,35 +107,32 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
     }
 
     @Override
-    public void getSystemWindowsInsets(Rect insets) {
-        insets.set(mSystemWindowsInsets);
-    }
-
-    @Override
     protected void dispatchDraw(@NonNull Canvas canvas) {
         super.dispatchDraw(canvas);
-        if (mDrawShadow) {
-            canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mShadowPaint);
-        } else if (mDrawColor) {
-//            canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mBlackPaint);
-        }
-        canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mDrawColor ? mColorPaint : mBlackPaint);
+        canvas.drawRect(0, 0, canvas.getWidth(), mStatusBarHeight, mColorPaint);
     }
 
     @Override
     protected boolean fitSystemWindows(@NonNull Rect insets) {
-        setStatusBarHeight(Utils.getInsetsTopWithoutActionBarHeight(getContext(), insets.top));
-        if (mSetPadding) {
-            setPadding(insets.left, insets.top, insets.right, insets.bottom);
-        }
         mSystemWindowsInsets.set(insets);
-        return super.fitSystemWindows(insets);
+        return true;
     }
 
-    private void updateAlpha() {
-        final float f = mFactor;
-        mShadowPaint.setAlpha(Math.round(mShadowAlpha * TwidereMathUtils.clamp(1 - f, 0, 1)));
-        mColorPaint.setAlpha(Math.round(mColorAlpha * TwidereMathUtils.clamp(f, 0, 1)));
-        invalidate();
+    @Override
+    public boolean setsStatusBarColor() {
+        return true;
+    }
+
+    @Override
+    public boolean setsToolbarColor() {
+        return false;
+    }
+
+    public void setWindowInsetsListener(WindowInsetsListener listener) {
+        mWindowInsetsListener = listener;
+    }
+
+    public interface WindowInsetsListener {
+        void onApplyWindowInsets(int left, int top, int right, int bottom);
     }
 }

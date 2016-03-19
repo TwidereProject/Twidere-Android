@@ -126,7 +126,6 @@ import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.DraftsFragment;
@@ -160,6 +159,7 @@ import org.mariotaku.twidere.fragment.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.UserProfileEditorFragment;
 import org.mariotaku.twidere.fragment.UserTimelineFragment;
 import org.mariotaku.twidere.fragment.UsersListFragment;
+import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -1371,6 +1371,12 @@ public final class Utils implements Constants {
     @ShapeStyle
     public static int getProfileImageStyle(Context context) {
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final String style = prefs.getString(KEY_PROFILE_IMAGE_STYLE, null);
+        return getProfileImageStyle(style);
+    }
+
+    @ShapeStyle
+    public static int getProfileImageStyle(@NonNull SharedPreferences prefs) {
         final String style = prefs.getString(KEY_PROFILE_IMAGE_STYLE, null);
         return getProfileImageStyle(style);
     }

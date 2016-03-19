@@ -26,7 +26,6 @@ import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.task.AbstractTask;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -148,7 +147,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                 deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_sort_position);
             }
             final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity);
-            values.put(Statuses.INSERTED_DATE, System.currentTimeMillis());
+            values.put(Activities.INSERTED_DATE, System.currentTimeMillis());
             valuesList.add(values);
         }
         if (deleteBound[0] > 0 && deleteBound[1] > 0) {

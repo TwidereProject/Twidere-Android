@@ -316,8 +316,8 @@ public class CustomTabUtils implements Constants {
     public static String getTabTypeName(final Context context, final String type) {
         if (context == null) return null;
         final CustomTabConfiguration conf = getTabConfiguration(type);
-        final Integer res_id = conf != null ? conf.getDefaultTitle() : null;
-        return res_id != null ? context.getString(res_id) : null;
+        if (conf == null) return null;
+        return context.getString(conf.getDefaultTitle());
     }
 
     public static boolean isSingleTab(final String type) {

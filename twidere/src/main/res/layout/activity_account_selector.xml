@@ -26,7 +26,7 @@
     android:divider="?android:dividerVertical"
     android:orientation="vertical"
     android:showDividers="middle"
-    tools:context=".activity.SelectAccountActivity">
+    tools:context=".activity.AccountSelectorActivity">
 
     <ListView
         android:id="@android:id/list"

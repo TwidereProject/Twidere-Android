@@ -15,6 +15,8 @@ import org.mariotaku.twidere.util.ThemeUtils;
  * Created by mariotaku on 16/3/18.
  */
 public class OptimalLinkColorTagProcessor extends TagProcessor {
+    public static final String TAG = "optimal_link_color";
+
     @Override
     public boolean isTypeSupported(@NonNull View view) {
         return view instanceof TextView;

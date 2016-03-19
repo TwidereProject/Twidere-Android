@@ -163,7 +163,6 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         return mData.get(dataPosition).id;
     }
 
-
     @Override
     public long getStatusTimestamp(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
@@ -174,6 +173,23 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
             return cursor.getLong(indices.timestamp);
         }
         return mData.get(dataPosition).timestamp;
+    }
+
+    @Override
+    public long getStatusPositionKey(int adapterPosition) {
+        int dataPosition = adapterPosition - getStatusStartIndex();
+        if (dataPosition < 0 || dataPosition >= getStatusCount()) return -1;
+        if (mData instanceof ObjectCursor) {
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
+            final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
+            final long positionKey = cursor.getLong(indices.position_key);
+            if (positionKey > 0) return positionKey;
+            return cursor.getLong(indices.timestamp);
+        }
+        final ParcelableStatus status = mData.get(dataPosition);
+        final long positionKey = status.position_key;
+        if (positionKey > 0) return positionKey;
+        return status.timestamp;
     }
 
     @Override

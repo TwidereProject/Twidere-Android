@@ -31,16 +31,14 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.afollestad.appthemeengine.inflation.ATEMultiAutoCompleteTextView;
-import com.afollestad.appthemeengine.inflation.ATEMultiAutoCompleteTextView2;
 
-import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.EmojiSupportUtils;
 import org.mariotaku.twidere.util.widget.StatusTextTokenizer;
 import org.mariotaku.twidere.view.iface.IThemeBackgroundTintView;
 
-public class ComposeEditText extends ATEMultiAutoCompleteTextView2 implements IThemeBackgroundTintView {
+public class ComposeEditText extends ATEMultiAutoCompleteTextView implements IThemeBackgroundTintView {
 
     private ComposeAutoCompleteAdapter mAdapter;
     private UserKey mAccountKey;

@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.model;
 
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.TwidereConstants;
@@ -28,154 +30,161 @@ import java.util.Map.Entry;
 
 public final class CustomTabConfiguration {
 
-	public static final int FIELD_TYPE_NONE = 0;
-	public static final int FIELD_TYPE_USER = 1;
-	public static final int FIELD_TYPE_USER_LIST = 2;
-	public static final int FIELD_TYPE_TEXT = 3;
+    public static final int FIELD_TYPE_NONE = 0;
+    public static final int FIELD_TYPE_USER = 1;
+    public static final int FIELD_TYPE_USER_LIST = 2;
+    public static final int FIELD_TYPE_TEXT = 3;
 
-	public static final int ACCOUNT_NONE = 0;
-	public static final int ACCOUNT_REQUIRED = 1;
-	public static final int ACCOUNT_OPTIONAL = 2;
+    public static final int ACCOUNT_NONE = 0;
+    public static final int ACCOUNT_REQUIRED = 1;
+    public static final int ACCOUNT_OPTIONAL = 2;
 
-	private final int title, icon, secondaryFieldType, secondaryFieldTitle, sortPosition, accountRequirement;
-	private final Class<? extends Fragment> cls;
-	private final String secondaryFieldTextKey;
-	private final boolean singleTab;
-	private final ExtraConfiguration[] extraConfigurations;
+    @StringRes
+    private final int title;
+    @DrawableRes
+    private final int icon;
+    private final int secondaryFieldType;
+    private final int secondaryFieldTitle;
+    private final int sortPosition;
+    private final int accountRequirement;
+    private final Class<? extends Fragment> cls;
+    private final String secondaryFieldTextKey;
+    private final boolean singleTab;
+    private final ExtraConfiguration[] extraConfigurations;
 
-	public CustomTabConfiguration(final Class<? extends Fragment> cls, final int title, final int icon,
-			final int accountRequirement, final int secondaryFieldType, final int sortPosition,
-			final boolean singleTab, final ExtraConfiguration... extraConfigurations) {
-		this(cls, title, icon, accountRequirement, secondaryFieldType, 0, TwidereConstants.EXTRA_TEXT, sortPosition,
-				singleTab, extraConfigurations);
-	}
+    public CustomTabConfiguration(final Class<? extends Fragment> cls, final int title, final int icon,
+                                  final int accountRequirement, final int secondaryFieldType, final int sortPosition,
+                                  final boolean singleTab, final ExtraConfiguration... extraConfigurations) {
+        this(cls, title, icon, accountRequirement, secondaryFieldType, 0, TwidereConstants.EXTRA_TEXT, sortPosition,
+                singleTab, extraConfigurations);
+    }
 
-	public CustomTabConfiguration(final Class<? extends Fragment> cls, final int title, final int icon,
-			final int accountRequirement, final int secondaryFieldType, final int sortPosition,
-			final ExtraConfiguration... extraConfigurations) {
-		this(cls, title, icon, accountRequirement, secondaryFieldType, 0, TwidereConstants.EXTRA_TEXT, sortPosition,
-				false, extraConfigurations);
-	}
+    public CustomTabConfiguration(final Class<? extends Fragment> cls, final int title, final int icon,
+                                  final int accountRequirement, final int secondaryFieldType, final int sortPosition,
+                                  final ExtraConfiguration... extraConfigurations) {
+        this(cls, title, icon, accountRequirement, secondaryFieldType, 0, TwidereConstants.EXTRA_TEXT, sortPosition,
+                false, extraConfigurations);
+    }
 
-	public CustomTabConfiguration(final Class<? extends Fragment> cls, final int title, final int icon,
-			final int accountRequirement, final int secondaryFieldType, final int secondaryFieldTitle,
-			final String secondaryFieldTextKey, final int sortPosition, final boolean singleTab,
-			final ExtraConfiguration... extraConfigurations) {
-		this.cls = cls;
-		this.title = title;
-		this.icon = icon;
-		this.sortPosition = sortPosition;
-		this.accountRequirement = accountRequirement;
-		this.secondaryFieldType = secondaryFieldType;
-		this.secondaryFieldTitle = secondaryFieldTitle;
-		this.secondaryFieldTextKey = secondaryFieldTextKey;
-		this.singleTab = singleTab;
-		this.extraConfigurations = extraConfigurations;
-	}
+    public CustomTabConfiguration(final Class<? extends Fragment> cls, final int title, final int icon,
+                                  final int accountRequirement, final int secondaryFieldType, final int secondaryFieldTitle,
+                                  final String secondaryFieldTextKey, final int sortPosition, final boolean singleTab,
+                                  final ExtraConfiguration... extraConfigurations) {
+        this.cls = cls;
+        this.title = title;
+        this.icon = icon;
+        this.sortPosition = sortPosition;
+        this.accountRequirement = accountRequirement;
+        this.secondaryFieldType = secondaryFieldType;
+        this.secondaryFieldTitle = secondaryFieldTitle;
+        this.secondaryFieldTextKey = secondaryFieldTextKey;
+        this.singleTab = singleTab;
+        this.extraConfigurations = extraConfigurations;
+    }
 
-	public CustomTabConfiguration(final Class<? extends Fragment> cls, final int title, final int icon,
-			final int accountRequirement, final int secondaryFieldType, final int secondaryFieldTitle,
-			final String secondaryFieldTextKey, final int sortPosition, final ExtraConfiguration... extraConfigurations) {
-		this(cls, title, icon, accountRequirement, secondaryFieldType, 0, secondaryFieldTextKey, sortPosition, false,
-				extraConfigurations);
-	}
+    public CustomTabConfiguration(final Class<? extends Fragment> cls, final int title, final int icon,
+                                  final int accountRequirement, final int secondaryFieldType, final int secondaryFieldTitle,
+                                  final String secondaryFieldTextKey, final int sortPosition, final ExtraConfiguration... extraConfigurations) {
+        this(cls, title, icon, accountRequirement, secondaryFieldType, 0, secondaryFieldTextKey, sortPosition, false,
+                extraConfigurations);
+    }
 
-	public int getAccountRequirement() {
-		return accountRequirement;
-	}
+    public int getAccountRequirement() {
+        return accountRequirement;
+    }
 
-	public int getDefaultIcon() {
-		return icon;
-	}
+    public int getDefaultIcon() {
+        return icon;
+    }
 
-	public int getDefaultTitle() {
-		return title;
-	}
+    public int getDefaultTitle() {
+        return title;
+    }
 
-	public ExtraConfiguration[] getExtraConfigurations() {
-		return extraConfigurations;
-	}
+    public ExtraConfiguration[] getExtraConfigurations() {
+        return extraConfigurations;
+    }
 
-	public Class<? extends Fragment> getFragmentClass() {
-		return cls;
-	}
+    public Class<? extends Fragment> getFragmentClass() {
+        return cls;
+    }
 
-	public String getSecondaryFieldTextKey() {
-		return secondaryFieldTextKey;
-	}
+    public String getSecondaryFieldTextKey() {
+        return secondaryFieldTextKey;
+    }
 
-	public int getSecondaryFieldTitle() {
-		return secondaryFieldTitle;
-	}
+    public int getSecondaryFieldTitle() {
+        return secondaryFieldTitle;
+    }
 
-	public int getSecondaryFieldType() {
-		return secondaryFieldType;
-	}
+    public int getSecondaryFieldType() {
+        return secondaryFieldType;
+    }
 
-	public int getSortPosition() {
-		return sortPosition;
-	}
+    public int getSortPosition() {
+        return sortPosition;
+    }
 
-	public boolean isSingleTab() {
-		return singleTab;
-	}
+    public boolean isSingleTab() {
+        return singleTab;
+    }
 
-	@Override
-	public String toString() {
-		return "CustomTabConfiguration{title=" + title + ", icon=" + icon + ", secondaryFieldType="
-				+ secondaryFieldType + ", secondaryFieldTitle=" + secondaryFieldTitle + ", sortPosition="
-				+ sortPosition + ", accountRequirement=" + accountRequirement + ", cls=" + cls
-				+ ", secondaryFieldTextKey=" + secondaryFieldTextKey + ", singleTab=" + singleTab + "}";
-	}
+    @Override
+    public String toString() {
+        return "CustomTabConfiguration{title=" + title + ", icon=" + icon + ", secondaryFieldType="
+                + secondaryFieldType + ", secondaryFieldTitle=" + secondaryFieldTitle + ", sortPosition="
+                + sortPosition + ", accountRequirement=" + accountRequirement + ", cls=" + cls
+                + ", secondaryFieldTextKey=" + secondaryFieldTextKey + ", singleTab=" + singleTab + "}";
+    }
 
-	public static class CustomTabConfigurationComparator implements Comparator<Entry<String, CustomTabConfiguration>> {
+    public static class CustomTabConfigurationComparator implements Comparator<Entry<String, CustomTabConfiguration>> {
 
-		public static final CustomTabConfigurationComparator SINGLETON = new CustomTabConfigurationComparator();
+        public static final CustomTabConfigurationComparator SINGLETON = new CustomTabConfigurationComparator();
 
-		@Override
-		public int compare(final Entry<String, CustomTabConfiguration> lhs,
-				final Entry<String, CustomTabConfiguration> rhs) {
-			return lhs.getValue().getSortPosition() - rhs.getValue().getSortPosition();
-		}
+        @Override
+        public int compare(final Entry<String, CustomTabConfiguration> lhs,
+                           final Entry<String, CustomTabConfiguration> rhs) {
+            return lhs.getValue().getSortPosition() - rhs.getValue().getSortPosition();
+        }
 
-	}
+    }
 
-	public static class ExtraConfiguration {
-		private final String key;
-		private final int titleRes;
-		private final Type type;
-		private final Object defaultValue;
+    public static class ExtraConfiguration {
+        private final String key;
+        private final int titleRes;
+        private final Type type;
+        private final Object defaultValue;
 
-		public ExtraConfiguration(final String key, final int titleRes, final Type type, final Object defaultValue) {
-			this.key = key;
-			this.titleRes = titleRes;
-			this.type = type;
-			this.defaultValue = defaultValue;
-		}
+        public ExtraConfiguration(final String key, final int titleRes, final Type type, final Object defaultValue) {
+            this.key = key;
+            this.titleRes = titleRes;
+            this.type = type;
+            this.defaultValue = defaultValue;
+        }
 
-		public boolean defaultBoolean() {
-			return (Boolean) defaultValue;
-		}
+        public boolean defaultBoolean() {
+            return (Boolean) defaultValue;
+        }
 
-		public String getKey() {
-			return key;
-		}
+        public String getKey() {
+            return key;
+        }
 
-		public int getTitleRes() {
-			return titleRes;
-		}
+        public int getTitleRes() {
+            return titleRes;
+        }
 
-		public Type getType() {
-			return type;
-		}
+        public Type getType() {
+            return type;
+        }
 
-		public static ExtraConfiguration newBoolean(final String key, final int titleRes, final boolean def) {
-			return new ExtraConfiguration(key, titleRes, Type.BOOLEAN, def);
-		}
+        public static ExtraConfiguration newBoolean(final String key, final int titleRes, final boolean def) {
+            return new ExtraConfiguration(key, titleRes, Type.BOOLEAN, def);
+        }
 
-		public enum Type {
-			BOOLEAN
-		}
-	}
+        public enum Type {
+            BOOLEAN
+        }
+    }
 
 }

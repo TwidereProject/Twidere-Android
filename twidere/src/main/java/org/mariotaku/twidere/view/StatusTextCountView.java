@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
@@ -33,6 +34,7 @@ import static org.mariotaku.twidere.util.Utils.getLocalizedNumber;
 
 public class StatusTextCountView extends AppCompatTextView {
 
+    @ColorInt
     private final int mTextColor;
     private final Locale mLocale;
     private int mTextCount;
@@ -87,8 +89,15 @@ public class StatusTextCountView extends AppCompatTextView {
         final float hue = exceededLimit ? nearLimit ? 5 * (maxLength - count) : 50 : 0;
         final float[] textColorHsv = new float[3];
         Color.colorToHSV(mTextColor, textColorHsv);
-        final float[] errorColorHsv = {hue, 1.0f, 0.75f + textColorHsv[2] / 4};
-        setTextColor(count >= maxLength - 10 ? Color.HSVToColor(errorColorHsv) : mTextColor);
+        final float[] errorColorHsv = new float[3];
+        errorColorHsv[0] = hue;
+        errorColorHsv[1] = 1;
+        errorColorHsv[2] = 0.75f + textColorHsv[2] / 4;
+        if (count >= maxLength - 10) {
+            setTextColor(Color.HSVToColor(errorColorHsv));
+        } else {
+            setTextColor(mTextColor);
+        }
     }
 
 }

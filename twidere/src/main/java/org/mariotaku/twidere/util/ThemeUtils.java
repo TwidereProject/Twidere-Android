@@ -168,17 +168,6 @@ public class ThemeUtils implements Constants {
         return null;
     }
 
-    public static int getContrastForegroundColor(Context context, int color) {
-        final int[] colors = new int[2];
-        getDarkLightForegroundColors(context, colors);
-        if (!isLightTheme(context) || TwidereColorUtils.getYIQLuminance(color) <= ACCENT_COLOR_THRESHOLD) {
-            //return light text color
-            return colors[1];
-        }
-        //return dark text color
-        return colors[0];
-    }
-
 
     public static int getContrastColor(int color, int darkColor, int lightColor) {
         if (TwidereColorUtils.getYIQLuminance(color) <= ACCENT_COLOR_THRESHOLD) {
@@ -262,21 +251,6 @@ public class ThemeUtils implements Constants {
     }
 
 
-    public static void getDarkLightForegroundColors(final Context context, int[] colors) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS_COLOR_FOREGROUND_AND_INVERSE);
-        try {
-            if (isLightTheme(context)) {
-                colors[0] = a.getColor(0, Color.WHITE);
-                colors[1] = a.getColor(1, Color.BLACK);
-            } else {
-                colors[0] = a.getColor(1, Color.WHITE);
-                colors[1] = a.getColor(0, Color.BLACK);
-            }
-        } finally {
-            a.recycle();
-        }
-    }
-
     public static int getThemeBackgroundColor(final Context context) {
         final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.colorBackground});
         try {
@@ -316,9 +290,7 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static String getThemeFontFamily(final Context context) {
-        if (context == null) return VALUE_THEME_FONT_FAMILY_REGULAR;
-        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
+    public static String getThemeFontFamily(@NonNull  final SharedPreferences pref) {
         final String fontFamily = pref.getString(KEY_THEME_FONT_FAMILY, VALUE_THEME_FONT_FAMILY_REGULAR);
         if (!TextUtils.isEmpty(fontFamily)) return fontFamily;
         return VALUE_THEME_FONT_FAMILY_REGULAR;

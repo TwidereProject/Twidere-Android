@@ -156,7 +156,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
                 final int startIndex = adapter.getStatusStartIndex();
                 for (int i = firstVisiblePosition, j = lastVisiblePosition + 1; i < j; i++) {
                     if (status.account_key.equals(adapter.getAccountKey(i)) &&
-                            adapter.getStatusId(i) == status.id) {
+                            status.id.equals(adapter.getStatusId(i))) {
                         data.set(i - startIndex, status);
                         return;
                     }

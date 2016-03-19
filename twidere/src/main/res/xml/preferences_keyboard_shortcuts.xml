@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<!--suppress AndroidElementNotAllowed -->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/keyboard_shortcuts">
     <PreferenceCategory
         android:key="cat_general"
         android:title="@string/general">

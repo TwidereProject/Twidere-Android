@@ -58,13 +58,11 @@ public class MessageViewHolder extends ViewHolder {
         super(itemView);
         this.adapter = adapter;
         final Context context = itemView.getContext();
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.textColorPrimary,
-                android.R.attr.textColorPrimaryInverse, android.R.attr.textColorSecondary,
-                android.R.attr.textColorSecondaryInverse});
-        textColorPrimary = a.getColor(0, 0);
-        textColorPrimaryInverse = a.getColor(1, 0);
-        textColorSecondary = a.getColor(2, 0);
-        textColorSecondaryInverse = a.getColor(3, 0);
+        final TypedArray a = context.obtainStyledAttributes(R.styleable.MessageViewHolder);
+        textColorPrimary = a.getColor(R.styleable.MessageViewHolder_android_textColorPrimary, 0);
+        textColorPrimaryInverse = a.getColor(R.styleable.MessageViewHolder_android_textColorPrimaryInverse, 0);
+        textColorSecondary = a.getColor(R.styleable.MessageViewHolder_android_textColorSecondary, 0);
+        textColorSecondaryInverse = a.getColor(R.styleable.MessageViewHolder_android_textColorSecondaryInverse, 0);
         a.recycle();
         messageContent = (MessageBubbleView) itemView.findViewById(R.id.message_content);
         textView = (TextView) itemView.findViewById(R.id.text);

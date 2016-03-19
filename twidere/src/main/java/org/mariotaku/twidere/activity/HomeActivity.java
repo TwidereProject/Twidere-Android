@@ -672,25 +672,38 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
         if (handleExtraIntent && refreshOnStart) {
             mTwitterWrapper.refreshAll();
         }
+        final Intent extraIntent = intent.getParcelableExtra(EXTRA_EXTRA_INTENT);
 
         final Uri uri = intent.getData();
         @CustomTabType
         final String tabType = uri != null ? Utils.matchTabType(uri) : null;
         int initialTab = -1;
         if (tabType != null) {
-            final UserKey accountId = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
+            final UserKey accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
             for (int i = 0, j = mPagerAdapter.getCount(); i < j; i++) {
                 final SupportTabSpec tab = mPagerAdapter.getTab(i);
                 if (tabType.equals(CustomTabUtils.getTabTypeAlias(tab.type))) {
                     if (tab.args != null && CustomTabUtils.hasAccountId(this, tab.args,
-                            getActivatedAccountKeys(), accountId)) {
+                            getActivatedAccountKeys(), accountKey)) {
                         initialTab = i;
                         break;
                     }
                 }
             }
+            if (initialTab == -1 && (extraIntent == null || !handleExtraIntent)) {
+                // Tab not found, open account specific page
+                switch (tabType) {
+                    case CustomTabType.NOTIFICATIONS_TIMELINE: {
+                        IntentUtils.openInteractions(this, accountKey);
+                        return -1;
+                    }
+                    case CustomTabType.DIRECT_MESSAGES: {
+                        IntentUtils.openDirectMessages(this, accountKey);
+                        return -1;
+                    }
+                }
+            }
         }
-        final Intent extraIntent = intent.getParcelableExtra(EXTRA_EXTRA_INTENT);
         if (extraIntent != null && handleExtraIntent) {
             extraIntent.setExtrasClassLoader(getClassLoader());
             startActivity(extraIntent);

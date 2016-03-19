@@ -42,6 +42,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 import static android.text.TextUtils.isEmpty;
@@ -55,12 +56,11 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
 
     public RingtonePreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        final int[] styleable = {android.R.attr.ringtoneType, android.R.attr.showDefault,
-                android.R.attr.showSilent};
-        TypedArray a = context.obtainStyledAttributes(attrs, styleable);
-        mRingtoneType = a.getInt(0, RingtoneManager.TYPE_RINGTONE);
-        mShowDefault = a.getBoolean(1, true);
-        mShowSilent = a.getBoolean(2, true);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RingtonePreference);
+        mRingtoneType = a.getInt(R.styleable.RingtonePreference_android_ringtoneType,
+                RingtoneManager.TYPE_RINGTONE);
+        mShowDefault = a.getBoolean(R.styleable.RingtonePreference_android_showDefault, true);
+        mShowSilent = a.getBoolean(R.styleable.RingtonePreference_android_showSilent, true);
         a.recycle();
     }
 
