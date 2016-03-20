@@ -634,11 +634,11 @@ public interface TwidereDataStore {
             String CONTENT_PATH = Filters.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
             Uri CONTENT_URI = Uri.withAppendedPath(Filters.CONTENT_URI, CONTENT_PATH_SEGMENT);
 
-            String USER_ID = "user_id";
+            String USER_KEY = "user_id";
             String NAME = "name";
             String SCREEN_NAME = "screen_name";
 
-            String[] COLUMNS = {_ID, USER_ID, NAME, SCREEN_NAME};
+            String[] COLUMNS = {_ID, USER_KEY, NAME, SCREEN_NAME};
 
             String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL,
                     TYPE_TEXT_NOT_NULL};

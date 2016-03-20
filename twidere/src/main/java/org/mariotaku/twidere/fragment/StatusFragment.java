@@ -99,7 +99,6 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.TranslationResult;
-import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener;
 import org.mariotaku.twidere.loader.ConversationLoader;
@@ -774,7 +773,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (!getUserVisibleHint()) return;
+        if (!getUserVisibleHint() || menuInfo == null) return;
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
                 (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
@@ -2479,9 +2478,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final List<ParcelableUser> retweeters = new ArrayList<>();
             try {
                 for (Status status : twitter.getRetweets(mStatusId, paging)) {
-                    final User user = status.getUser();
-                    if (!DataStoreUtils.isFilteringUser(context, user.getId())) {
-                        retweeters.add(ParcelableUserUtils.fromUser(user, mAccountKey));
+                    final ParcelableUser user = ParcelableUserUtils.fromUser(status.getUser(), mAccountKey);
+                    if (!DataStoreUtils.isFilteringUser(context, user.key.toString())) {
+                        retweeters.add(user);
                     }
                 }
                 activitySummary.setRetweeters(retweeters);

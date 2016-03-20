@@ -114,21 +114,21 @@ public class InternalTwitterContentUtils {
                 builder.append(" OR ");
             }
             selectionArgs.add(String.valueOf(userKey));
-            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_ID).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
+            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_KEY).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
         }
         if (retweetedById != null) {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
             selectionArgs.add(String.valueOf(retweetedById));
-            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_ID).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
+            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_KEY).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
         }
         if (quotedUserId != null) {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
             selectionArgs.add(String.valueOf(quotedUserId));
-            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_ID).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
+            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_KEY).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
         }
         if (source != null) {
             if (!selectionArgs.isEmpty()) {

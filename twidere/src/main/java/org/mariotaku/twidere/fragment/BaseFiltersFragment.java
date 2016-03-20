@@ -406,7 +406,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
                     final ParcelableUser user = data.getParcelableExtra(EXTRA_USER);
                     final ContentValues values = ContentValuesCreator.createFilteredUser(user);
                     final ContentResolver resolver = getContentResolver();
-                    final String where = Expression.equalsArgs(Filters.Users.USER_ID).getSQL();
+                    final String where = Expression.equalsArgs(Filters.Users.USER_KEY).getSQL();
                     final String[] whereArgs = {user.key.toString()};
                     resolver.delete(Filters.Users.CONTENT_URI, where, whereArgs);
                     resolver.insert(Filters.Users.CONTENT_URI, values);
@@ -479,7 +479,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
             public Cursor swapCursor(final Cursor c) {
                 final Cursor old = super.swapCursor(c);
                 if (c != null) {
-                    mUserIdIdx = c.getColumnIndex(Filters.Users.USER_ID);
+                    mUserIdIdx = c.getColumnIndex(Filters.Users.USER_KEY);
                     mNameIdx = c.getColumnIndex(Filters.Users.NAME);
                     mScreenNameIdx = c.getColumnIndex(Filters.Users.SCREEN_NAME);
                 }

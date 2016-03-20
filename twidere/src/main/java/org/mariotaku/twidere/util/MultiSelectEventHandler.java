@@ -147,7 +147,7 @@ public class MultiSelectEventHandler implements Constants, ActionMode.Callback, 
                     }
                 }
                 ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
-                        Filters.Users.USER_ID, userIds, null);
+                        Filters.Users.USER_KEY, userIds, null);
                 ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, valuesList);
                 Toast.makeText(mActivity, R.string.message_users_muted, Toast.LENGTH_SHORT).show();
                 mode.finish();

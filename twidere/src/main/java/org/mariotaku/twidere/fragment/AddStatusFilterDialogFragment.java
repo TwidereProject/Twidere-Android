@@ -127,7 +127,7 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment {
                     }
                 }
                 final ContentResolver resolver = getContentResolver();
-                ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_ID, userKeys, null);
+                ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, userKeys, null);
                 ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords, null);
                 ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources, null);
                 ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues);
@@ -188,7 +188,7 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment {
     private static ContentValues createFilteredUser(UserItem item) {
         if (item == null) return null;
         final ContentValues values = new ContentValues();
-        values.put(Filters.Users.USER_ID, item.key.toString());
+        values.put(Filters.Users.USER_KEY, item.key.toString());
         values.put(Filters.Users.NAME, item.name);
         values.put(Filters.Users.SCREEN_NAME, item.screen_name);
         return values;

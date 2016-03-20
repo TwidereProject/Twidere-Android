@@ -151,7 +151,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
                 .actions(SQLQueryBuilder.update(OnConflict.REPLACE, filteredUsersTable)
                         .set(new SetValue(new Column(Filters.Users.NAME), new Column(Table.NEW, CachedUsers.NAME)),
                                 new SetValue(new Column(Filters.Users.SCREEN_NAME), new Column(Table.NEW, CachedUsers.SCREEN_NAME)))
-                        .where(Expression.equals(new Column(Filters.Users.USER_ID), new Column(Table.NEW, CachedUsers.USER_KEY)))
+                        .where(Expression.equals(new Column(Filters.Users.USER_KEY), new Column(Table.NEW, CachedUsers.USER_KEY)))
                         .build())
                 .buildSQL());
 
@@ -273,8 +273,8 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
 
     private void migrateFilteredUsers(SQLiteDatabase db) {
         db.execSQL(SQLQueryBuilder.update(OnConflict.REPLACE, Filters.Users.TABLE_NAME)
-                        .set(new SetValue(Filters.Users.USER_ID, new RawSQLLang(Filters.Users.USER_ID + "||?")))
-                        .where(Expression.notLikeArgs(new Column(Filters.Users.USER_ID)))
+                        .set(new SetValue(Filters.Users.USER_KEY, new RawSQLLang(Filters.Users.USER_KEY + "||?")))
+                        .where(Expression.notLikeArgs(new Column(Filters.Users.USER_KEY)))
                         .buildSQL(),
                 new Object[]{"@twitter.com", "%@%"});
     }

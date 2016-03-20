@@ -1018,7 +1018,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (userRelationship == null) return true;
                 final ContentResolver cr = getContentResolver();
                 if (userRelationship.isFiltering) {
-                    final String where = Expression.equalsArgs(Filters.Users.USER_ID).getSQL();
+                    final String where = Expression.equalsArgs(Filters.Users.USER_KEY).getSQL();
                     final String[] whereArgs = {user.key.toString()};
                     cr.delete(Filters.Users.CONTENT_URI, where, whereArgs);
                     Utils.showInfoMessage(getActivity(), R.string.message_user_unmuted, false);

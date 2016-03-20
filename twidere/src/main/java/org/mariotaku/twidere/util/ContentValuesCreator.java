@@ -131,7 +131,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createFilteredUser(final ParcelableStatus status) {
         if (status == null) return null;
         final ContentValues values = new ContentValues();
-        values.put(Filters.Users.USER_ID, status.user_key.toString());
+        values.put(Filters.Users.USER_KEY, status.user_key.toString());
         values.put(Filters.Users.NAME, status.user_name);
         values.put(Filters.Users.SCREEN_NAME, status.user_screen_name);
         return values;
@@ -140,7 +140,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createFilteredUser(final ParcelableUser user) {
         if (user == null) return null;
         final ContentValues values = new ContentValues();
-        values.put(Filters.Users.USER_ID, user.key.toString());
+        values.put(Filters.Users.USER_KEY, user.key.toString());
         values.put(Filters.Users.NAME, user.name);
         values.put(Filters.Users.SCREEN_NAME, user.screen_name);
         return values;
@@ -149,7 +149,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createFilteredUser(final ParcelableUserMention user) {
         if (user == null) return null;
         final ContentValues values = new ContentValues();
-        values.put(Filters.Users.USER_ID, user.key.toString());
+        values.put(Filters.Users.USER_KEY, user.key.toString());
         values.put(Filters.Users.NAME, user.name);
         values.put(Filters.Users.SCREEN_NAME, user.screen_name);
         return values;

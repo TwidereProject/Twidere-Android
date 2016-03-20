@@ -291,7 +291,7 @@ public class DataStoreUtils implements Constants {
     public static String[] getFilteredUserIds(Context context) {
         if (context == null) return new String[0];
         final ContentResolver resolver = context.getContentResolver();
-        final String[] projection = {Filters.Users.USER_ID};
+        final String[] projection = {Filters.Users.USER_KEY};
         final Cursor cur = resolver.query(Filters.Users.CONTENT_URI, projection, null, null, null);
         if (cur == null) return new String[0];
         try {
@@ -313,7 +313,7 @@ public class DataStoreUtils implements Constants {
     @NonNull
     public static Expression buildStatusFilterWhereClause(@NonNull final String table, final Expression extraSelection) {
         final SQLSelectQuery filteredUsersQuery = SQLQueryBuilder
-                .select(new Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_ID))
+                .select(new Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_KEY))
                 .from(new Tables(Filters.Users.TABLE_NAME))
                 .build();
         final Expression filteredUsersWhere = Expression.or(
@@ -616,7 +616,7 @@ public class DataStoreUtils implements Constants {
     @NonNull
     public static Expression buildActivityFilterWhereClause(@NonNull final String table, final Expression extraSelection) {
         final SQLSelectQuery filteredUsersQuery = SQLQueryBuilder
-                .select(new Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_ID))
+                .select(new Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_KEY))
                 .from(new Tables(Filters.Users.TABLE_NAME))
                 .build();
         final Expression filteredUsersWhere = Expression.or(
@@ -790,7 +790,7 @@ public class DataStoreUtils implements Constants {
                         .orderBy(new OrderBy(Statuses.STATUS_ID, false))
                         .limit(itemLimit);
                 final Expression where = Expression.and(Expression.lesserThan(new Column(Statuses._ID),
-                                SQLQueryBuilder.select(SQLFunctions.MIN(new Column(Statuses._ID))).from(qb.build()).build()),
+                        SQLQueryBuilder.select(SQLFunctions.MIN(new Column(Statuses._ID))).from(qb.build()).build()),
                         accountWhere);
                 final String[] whereArgs = {String.valueOf(accountKey), String.valueOf(accountKey)};
                 resolver.delete(uri, where.getSQL(), whereArgs);
@@ -849,11 +849,11 @@ public class DataStoreUtils implements Constants {
         sAccountScreenNames.clear();
     }
 
-    public static boolean isFilteringUser(Context context, String userId) {
+    public static boolean isFilteringUser(Context context, String userKey) {
         final ContentResolver cr = context.getContentResolver();
-        final Expression where = Expression.equalsArgs(Filters.Users.USER_ID);
+        final Expression where = Expression.equalsArgs(Filters.Users.USER_KEY);
         final Cursor c = cr.query(Filters.Users.CONTENT_URI, new String[]{SQLFunctions.COUNT()},
-                where.getSQL(), new String[]{userId}, null);
+                where.getSQL(), new String[]{userKey}, null);
         if (c == null) return false;
         try {
             if (c.moveToFirst()) {
@@ -1069,7 +1069,7 @@ public class DataStoreUtils implements Constants {
     }
 
     public static int getInteractionsCount(@NonNull final Context context, @Nullable final Bundle extraArgs,
-                                           final UserKey[] accountIds, final long since,final String sinceColumn) {
+                                           final UserKey[] accountIds, final long since, final String sinceColumn) {
         Expression extraWhere = null;
         String[] extraWhereArgs = null;
         boolean followingOnly = false;
