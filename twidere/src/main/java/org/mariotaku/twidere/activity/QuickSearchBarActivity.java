@@ -224,7 +224,10 @@ public class QuickSearchBarActivity extends BaseActivity implements OnClickListe
         if (savedInstanceState == null) {
             final Intent intent = getIntent();
             final UserKey accountKey = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY);
-            final int index = accountsSpinnerAdapter.findPositionByKey(accountKey);
+            int index = -1;
+            if (accountKey != null) {
+                index = accountsSpinnerAdapter.findPositionByKey(accountKey);
+            }
             if (index != -1) {
                 mAccountSpinner.setSelection(index);
             }
