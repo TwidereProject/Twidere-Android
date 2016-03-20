@@ -602,7 +602,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (!getUserVisibleHint()) return;
+        if (!getUserVisibleHint() || menuInfo == null) return;
         final ParcelableActivitiesAdapter adapter = getAdapter();
         final MenuInflater inflater = new MenuInflater(getContext());
         final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
