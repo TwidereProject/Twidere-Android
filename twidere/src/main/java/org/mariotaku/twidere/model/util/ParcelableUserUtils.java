@@ -76,6 +76,7 @@ public class ParcelableUserUtils implements TwidereConstants {
             extras.profile_image_url_profile_size = user.getProfileImageUrlLarge();
         }
         extras.groups_count = user.getGroupsCount();
+        extras.unique_id = user.getUniqueId();
         obj.extras = extras;
         return obj;
     }

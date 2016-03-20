@@ -1863,8 +1863,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
         public boolean check(@NonNull ParcelableUser user) {
-            return TextUtils.equals(relationship.getSourceUserId(), user.account_key.getId())
-                    && user.key.check(relationship.getTargetUserId(), null);
+            if (!TextUtils.equals(relationship.getSourceUserId(), user.account_key.getId())) {
+                return false;
+            }
+            final String targetUserId = relationship.getTargetUserId();
+            return (user.extras != null && TextUtils.equals(targetUserId, user.extras.unique_id))
+                    || TextUtils.equals(targetUserId, user.key.getId());
         }
     }
 

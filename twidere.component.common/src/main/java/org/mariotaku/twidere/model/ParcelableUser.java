@@ -31,9 +31,9 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
-import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 
 
@@ -318,6 +318,10 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "groups_count")
         @ParcelableThisPlease
         public long groups_count = -1;
+        @JsonField(name = "unique_id")
+        @ParcelableThisPlease
+        public String unique_id;
+
 
         @Override
         public int describeContents() {
