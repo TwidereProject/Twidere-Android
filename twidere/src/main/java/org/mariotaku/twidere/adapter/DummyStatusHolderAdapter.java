@@ -56,7 +56,7 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     private boolean shouldShowAccountsColor;
     private boolean useStarsForLikes;
     private boolean showAbsoluteTime;
-    private int showingActionCardPosition;
+    private int showingActionCardPosition = RecyclerView.NO_POSITION;
 
     public DummyStatusHolderAdapter(Context context) {
         this(context, new TwidereLinkify(null), null);
