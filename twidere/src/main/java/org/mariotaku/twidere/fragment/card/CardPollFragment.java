@@ -175,7 +175,9 @@ public class CardPollFragment extends BaseSupportFragment implements
 
                             @Override
                             public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) {
-                                final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(),
+                                final Context context = getContext();
+                                if (context == null) return null;
+                                final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(context,
                                         card.account_key, true, true, TwitterCaps.class);
                                 if (caps == null) return null;
                                 try {
