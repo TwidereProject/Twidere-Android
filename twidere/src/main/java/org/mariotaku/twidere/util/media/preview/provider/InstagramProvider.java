@@ -11,6 +11,7 @@ import org.mariotaku.twidere.util.UriUtils;
 import java.util.Locale;
 
 /**
+ * Process instagram image links
  * Created by mariotaku on 16/1/1.
  */
 public class InstagramProvider implements Provider {

@@ -96,6 +96,7 @@ import org.mariotaku.twidere.util.media.MediaExtra;
 import org.mariotaku.twidere.util.media.preview.provider.TwitterMediaProvider;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -623,9 +624,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         getDelegate().invalidateOptionsMenu();
     }
 
-    /**
-     * @hide
-     */
     @Override
     public void invalidateOptionsMenu() {
         getDelegate().invalidateOptionsMenu();
@@ -1043,8 +1041,10 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         protected Uri getDownloadUri() {
             final Pair<String, String> bestVideoUrlAndType = getBestVideoUrlAndType(getMedia(),
                     SUPPORTED_VIDEO_TYPES);
-            if (bestVideoUrlAndType == null || bestVideoUrlAndType.first == null) return null;
-            return Uri.parse(bestVideoUrlAndType.first);
+            if (bestVideoUrlAndType != null && bestVideoUrlAndType.first != null) {
+                return Uri.parse(bestVideoUrlAndType.first);
+            }
+            return getArguments().getParcelable(ImagePageFragment.EXTRA_MEDIA_URI);
         }
 
 
@@ -1168,7 +1168,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         }
 
         @Nullable
-        private Pair<String, String> getBestVideoUrlAndType(final ParcelableMedia media,
+        private Pair<String, String> getBestVideoUrlAndType(@Nullable final ParcelableMedia media,
                                                             @NonNull final String[] supportedTypes) {
             if (media == null) return null;
             switch (media.type) {
@@ -1265,6 +1265,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             }
         }
 
+        @Nullable
         private ParcelableMedia getMedia() {
             return getArguments().getParcelable(EXTRA_MEDIA);
         }
@@ -1298,8 +1299,8 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                 mProgressBar.setProgress(Math.round(1000 * position / (float) duration));
                 final long durationSecs = TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS),
                         positionSecs = TimeUnit.SECONDS.convert(position, TimeUnit.MILLISECONDS);
-                mDurationLabel.setText(String.format("%02d:%02d", durationSecs / 60, durationSecs % 60));
-                mPositionLabel.setText(String.format("%02d:%02d", positionSecs / 60, positionSecs % 60));
+                mDurationLabel.setText(String.format(Locale.ROOT, "%02d:%02d", durationSecs / 60, durationSecs % 60));
+                mPositionLabel.setText(String.format(Locale.ROOT, "%02d:%02d", positionSecs / 60, positionSecs % 60));
                 mHandler.postDelayed(this, 16);
             }
         }

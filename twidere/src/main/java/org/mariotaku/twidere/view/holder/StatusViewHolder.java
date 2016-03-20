@@ -34,10 +34,10 @@ import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UnitConvertUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.view.IconActionButton;
 import org.mariotaku.twidere.view.ActionIconThemedTextView;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.ForegroundColorView;
+import org.mariotaku.twidere.view.IconActionView;
 import org.mariotaku.twidere.view.NameView;
 import org.mariotaku.twidere.view.ShortTimeView;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
@@ -69,8 +69,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final TextView statusInfoLabel;
     private final ShortTimeView timeView;
     private final CardMediaContainer mediaPreview, quoteMediaPreview;
-    private final IconActionButton replyIconView, retweetIconView, favoriteIconView;
+    private final IconActionView replyIconView, retweetIconView, favoriteIconView;
     private final TextView replyCountView, retweetCountView, favoriteCountView;
+    private final View replyView, retweetView, favoriteView;
     private final IColorLabelView itemContent;
     private final ForegroundColorView quoteIndicator;
     private final View actionButtons;
@@ -111,9 +112,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         itemMenu = itemView.findViewById(R.id.item_menu);
         actionButtons = itemView.findViewById(R.id.action_buttons);
 
-        replyIconView = (IconActionButton) itemView.findViewById(R.id.reply_icon);
-        retweetIconView = (IconActionButton) itemView.findViewById(R.id.retweet_icon);
-        favoriteIconView = (IconActionButton) itemView.findViewById(R.id.favorite_icon);
+        replyView = itemView.findViewById(R.id.reply);
+        retweetView = itemView.findViewById(R.id.retweet);
+        favoriteView = itemView.findViewById(R.id.favorite);
+
+        replyIconView = (IconActionView) itemView.findViewById(R.id.reply_icon);
+        retweetIconView = (IconActionView) itemView.findViewById(R.id.retweet_icon);
+        favoriteIconView = (IconActionView) itemView.findViewById(R.id.favorite_icon);
 
         replyCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.reply_count);
         retweetCountView = (ActionIconThemedTextView) itemView.findViewById(R.id.retweet_count);
@@ -461,9 +466,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
         itemMenu.setOnClickListener(eventListener);
         profileImageView.setOnClickListener(eventListener);
-        replyIconView.setOnClickListener(eventListener);
-        retweetIconView.setOnClickListener(eventListener);
-        favoriteIconView.setOnClickListener(eventListener);
+        replyView.setOnClickListener(eventListener);
+        retweetView.setOnClickListener(eventListener);
+        favoriteView.setOnClickListener(eventListener);
     }
 
     @Override
@@ -606,17 +611,20 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                     break;
                 }
                 case R.id.reply_count:
-                case R.id.reply_icon: {
+                case R.id.reply_icon:
+                case R.id.reply: {
                     listener.onItemActionClick(holder, R.id.reply, position);
                     break;
                 }
                 case R.id.retweet_count:
-                case R.id.retweet_icon: {
+                case R.id.retweet_icon:
+                case R.id.retweet: {
                     listener.onItemActionClick(holder, R.id.retweet, position);
                     break;
                 }
                 case R.id.favorite_count:
-                case R.id.favorite_icon: {
+                case R.id.favorite_icon:
+                case R.id.favorite: {
                     listener.onItemActionClick(holder, R.id.favorite, position);
                     break;
                 }
