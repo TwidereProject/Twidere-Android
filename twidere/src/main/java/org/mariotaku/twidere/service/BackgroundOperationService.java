@@ -54,6 +54,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
+import org.mariotaku.twidere.api.fanfou.model.PhotoStatusUpdate;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterUpload;
@@ -95,7 +96,6 @@ import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereListUtils;
@@ -732,9 +732,13 @@ public class BackgroundOperationService extends IntentService implements Constan
                 FileBody body = null;
                 try {
                     body = getBodyFromMedia(resolver, builder, media, statusUpdate);
-                    final String location = ParseUtils.parseString(statusUpdate.location);
-                    final ParcelableStatus result = ParcelableStatusUtils.fromStatus(twitter.uploadPhoto(body,
-                            statusText, location), credentials.account_key, false);
+                    final PhotoStatusUpdate update = new PhotoStatusUpdate(body, statusText);
+                    if (statusUpdate.location != null) {
+                        update.setLocation(statusUpdate.location.toString());
+                    }
+                    final Status newStatus = twitter.uploadPhoto(update);
+                    final ParcelableStatus result = ParcelableStatusUtils.fromStatus(newStatus,
+                            credentials.account_key, false);
                     if (shouldShorten && shortener != null && shortenedResult != null) {
                         shortener.callback(shortenedResult, result);
                     }

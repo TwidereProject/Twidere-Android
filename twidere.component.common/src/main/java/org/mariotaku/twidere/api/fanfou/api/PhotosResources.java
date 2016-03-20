@@ -5,7 +5,7 @@ import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
-import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.twidere.api.fanfou.model.PhotoStatusUpdate;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -21,7 +21,6 @@ public interface PhotosResources {
 
     @POST("/photos/upload.json")
     @BodyType(BodyType.MULTIPART)
-    Status uploadPhoto(@Param("photo") Body data, @Param("status") String status,
-                                    @Param("location") String location) throws TwitterException;
+    Status uploadPhoto(@Param PhotoStatusUpdate update) throws TwitterException;
 
 }
