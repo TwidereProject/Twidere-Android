@@ -369,6 +369,7 @@
         android:layout_alignTop="@+id/counts_users_height_holder"
         android:layout_marginLeft="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
+        android:overScrollMode="never"
         android:splitMotionEvents="false"
         tools:visibility="invisible"/>
 

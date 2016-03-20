@@ -1109,7 +1109,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             if (interactUsersAdapter.getItemCount() > 0) {
                 countsUsersView.setVisibility(View.VISIBLE);
-                countsUsersHeightHolder.setVisibility(View.VISIBLE);
+                countsUsersHeightHolder.setVisibility(View.INVISIBLE);
             } else {
                 countsUsersView.setVisibility(View.GONE);
                 countsUsersHeightHolder.setVisibility(View.GONE);
