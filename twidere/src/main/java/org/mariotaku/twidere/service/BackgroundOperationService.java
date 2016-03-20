@@ -732,7 +732,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                 FileBody body = null;
                 try {
                     body = getBodyFromMedia(resolver, builder, media, statusUpdate);
-                    final String location = ParseUtils.parseString(statusUpdate.location.toString());
+                    final String location = ParseUtils.parseString(statusUpdate.location);
                     final ParcelableStatus result = ParcelableStatusUtils.fromStatus(twitter.uploadPhoto(body,
                             statusText, location), credentials.account_key, false);
                     if (shouldShorten && shortener != null && shortenedResult != null) {
