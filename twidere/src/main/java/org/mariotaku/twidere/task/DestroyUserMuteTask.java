@@ -39,7 +39,7 @@ public class DestroyUserMuteTask extends AbsFriendshipOperationTask {
         // I bet you don't want to see this user in your auto complete list.
         final ContentValues values = new ContentValues();
         values.put(CachedRelationships.ACCOUNT_KEY, args.accountKey.toString());
-        values.put(CachedRelationships.USER_ID, args.userKey.toString());
+        values.put(CachedRelationships.USER_KEY, args.userKey.toString());
         values.put(CachedRelationships.MUTING, false);
         resolver.insert(CachedRelationships.CONTENT_URI, values);
     }

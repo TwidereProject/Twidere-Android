@@ -42,7 +42,6 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.view.ProfileImageView;
 
 import javax.inject.Inject;
 
@@ -112,12 +111,15 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Cons
         if (filter != null) return filter.runQuery(constraint);
         final String query = constraint.toString();
         final String queryEscaped = query.replace("_", "^_");
-        final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
+        final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, mUserColorNameManager);
         final Expression usersSelection = Expression.or(
                 Expression.likeRaw(new Columns.Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                 Expression.likeRaw(new Columns.Column(CachedUsers.NAME), "?||'%'", "^"),
-                Expression.in(new Columns.Column(CachedUsers.USER_KEY), new RawItemArray(nicknameIds)));
-        final String[] selectionArgs = new String[]{queryEscaped, queryEscaped};
+                Expression.inArgs(new Columns.Column(CachedUsers.USER_KEY), nicknameKeys.length));
+        //TODO
+        final String[] selectionArgs = new String[nicknameKeys.length + 2];
+        selectionArgs[0] = selectionArgs[1] = queryEscaped;
+        System.arraycopy(nicknameKeys, 0, selectionArgs, 2, nicknameKeys.length);
         final String[] order = {CachedUsers.LAST_SEEN, CachedUsers.SCORE, CachedUsers.SCREEN_NAME,
                 CachedUsers.NAME};
         final boolean[] ascending = {false, false, true, true};

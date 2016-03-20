@@ -1825,7 +1825,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 return SingleResponse.getInstance(new TwitterException("No Account"));
             }
             final boolean isFiltering = DataStoreUtils.isFilteringUser(context, mUserId);
-            if (mAccountKey.getId() == mUserId)
+            if (mAccountKey.getId().equals(mUserId))
                 return SingleResponse.getInstance();
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountKey, false);
             if (twitter == null) {
@@ -1839,7 +1839,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 } else {
                     Utils.setLastSeen(context, userKey, System.currentTimeMillis());
                 }
-                Utils.updateRelationship(context, relationship, mAccountKey);
+                Utils.updateRelationship(context, mAccountKey, userKey, relationship);
                 return SingleResponse.getInstance(new UserRelationship(relationship, isFiltering));
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);

@@ -49,22 +49,24 @@ public class TwidereQueryBuilder {
 
         public static Pair<SQLSelectQuery, String[]> withRelationship(final String[] projection,
                                                                       final String selection,
+                                                                      final String[] selectionArgs,
                                                                       final String sortOrder,
                                                                       final UserKey accountKey) {
             return withRelationship(Utils.getColumnsFromProjection(projection), selection,
-                    sortOrder, accountKey);
+                    selectionArgs, sortOrder, accountKey);
         }
 
         public static Pair<SQLSelectQuery, String[]> withRelationship(final Selectable select,
                                                                       final String selection,
+                                                                      final String[] selectionArgs,
                                                                       final String sortOrder,
                                                                       final UserKey accountKey) {
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
             qb.select(select).from(new Tables(CachedUsers.TABLE_NAME));
             final Column relationshipsUserId = new Column(new Table(CachedRelationships.TABLE_NAME),
-                    CachedRelationships.USER_ID);
+                    CachedRelationships.USER_KEY);
             final Column usersUserId = new Column(new Table(CachedUsers.TABLE_NAME),
-                    CachedRelationships.USER_ID);
+                    CachedRelationships.USER_KEY);
             final Column relationshipsAccountId = new Column(new Table(CachedRelationships.TABLE_NAME),
                     CachedRelationships.ACCOUNT_KEY);
             final Expression on = Expression.and(
@@ -78,11 +80,17 @@ public class TwidereQueryBuilder {
             if (sortOrder != null) {
                 qb.orderBy(new OrderBy(sortOrder));
             }
-            return Pair.create(qb.build(), new String[]{accountKey.toString()});
+            final String[] accountKeyArgs = {accountKey.toString()};
+            final String[] mergedArgs = new String[TwidereArrayUtils.arraysLength(accountKeyArgs, selectionArgs)];
+            TwidereArrayUtils.mergeArray(mergedArgs, accountKeyArgs, selectionArgs);
+            return Pair.create(qb.build(), mergedArgs);
         }
 
-        public static Pair<SQLSelectQuery, String[]> withScore(final String[] projection, final String selection,
-                                                               final String sortOrder, final UserKey accountKey,
+        public static Pair<SQLSelectQuery, String[]> withScore(final String[] projection,
+                                                               final String selection,
+                                                               final String[] selectionArgs,
+                                                               final String sortOrder,
+                                                               final UserKey accountKey,
                                                                final int limit) {
             final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
             final Selectable select = Utils.getColumnsFromProjection(projection);
@@ -101,8 +109,11 @@ public class TwidereQueryBuilder {
                             CachedRelationships.MUTING));
             columns[columns.length - 1] = new Column(expr, "score");
             qb.select(select);
-            final Pair<SQLSelectQuery, String[]> pair = withRelationship(new Columns(columns), null, null, accountKey);
+            final Pair<SQLSelectQuery, String[]> pair = withRelationship(new Columns(columns), null,
+                    null, null, accountKey);
             qb.from(pair.first);
+            final String[] mergedArgs = new String[TwidereArrayUtils.arraysLength(pair.second, selectionArgs)];
+            TwidereArrayUtils.mergeArray(mergedArgs, pair.second, selectionArgs);
             if (selection != null) {
                 qb.where(new Expression(selection));
             }
@@ -112,7 +123,7 @@ public class TwidereQueryBuilder {
             if (limit > 0) {
                 qb.limit(limit);
             }
-            return Pair.create(qb.build(), pair.second);
+            return Pair.create(qb.build(), mergedArgs);
         }
 
         private static Object[] valueOrZero(String... columns) {

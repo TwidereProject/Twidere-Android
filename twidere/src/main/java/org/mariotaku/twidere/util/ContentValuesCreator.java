@@ -65,10 +65,11 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 public final class ContentValuesCreator implements TwidereConstants {
 
     public static ContentValues createCachedRelationship(final Relationship relationship,
-                                                         final UserKey accountKey) {
+                                                         final UserKey accountKey,
+                                                         final UserKey userKey) {
         final ContentValues values = new ContentValues();
         values.put(CachedRelationships.ACCOUNT_KEY, accountKey.toString());
-        values.put(CachedRelationships.USER_ID, relationship.getTargetUserId());
+        values.put(CachedRelationships.USER_KEY, userKey.toString());
         values.put(CachedRelationships.FOLLOWING, relationship.isSourceFollowingTarget());
         values.put(CachedRelationships.FOLLOWED_BY, relationship.isSourceFollowedByTarget());
         values.put(CachedRelationships.BLOCKING, relationship.isSourceBlockingTarget());

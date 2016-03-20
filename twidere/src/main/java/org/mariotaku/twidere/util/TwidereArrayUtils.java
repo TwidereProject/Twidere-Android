@@ -96,11 +96,21 @@ public final class TwidereArrayUtils {
         return list1.toArray((T[]) Array.newInstance(array1.getClass().getComponentType(), list1.size()));
     }
 
-    @SuppressWarnings("SuspiciousSystemArraycopy")
+    public static int arraysLength(@NonNull final Object... arrays) {
+        int length = 0;
+        for (Object array : arrays) {
+            if (array == null) continue;
+            length += Array.getLength(array);
+        }
+        return length;
+    }
+
     public static void mergeArray(final Object dest, @NonNull final Object... arrays) {
         for (int i = 0, j = arrays.length, k = 0; i < j; i++) {
             final Object array = arrays[i];
+            if (array == null) continue;
             final int length = Array.getLength(array);
+            //noinspection SuspiciousSystemArraycopy
             System.arraycopy(array, 0, dest, k, length);
             k += length;
         }

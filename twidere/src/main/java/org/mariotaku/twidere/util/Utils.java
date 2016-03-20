@@ -1322,21 +1322,21 @@ public final class Utils implements Constants {
         return nf.format(number);
     }
 
-    public static long[] getMatchedNicknameIds(final String str, UserColorNameManager manager) {
-        if (isEmpty(str)) return new long[0];
-        final List<Long> list = new ArrayList<>();
+    @NonNull
+    public static String[] getMatchedNicknameKeys(final String str, UserColorNameManager manager) {
+        if (isEmpty(str)) return new String[0];
+        final List<String> list = new ArrayList<>();
         for (final Entry<String, ?> entry : manager.getNameEntries()) {
             final String value = ParseUtils.parseString(entry.getValue());
-            final long def = -1;
-            final long key = NumberUtils.toLong(entry.getKey(), def);
-            if (key == -1 || isEmpty(value)) {
+            final String key = entry.getKey();
+            if (isEmpty(key) || isEmpty(value)) {
                 continue;
             }
             if (TwidereStringUtils.startsWithIgnoreCase(value, str)) {
                 list.add(key);
             }
         }
-        return TwidereArrayUtils.fromList(list);
+        return list.toArray(new String[list.size()]);
     }
 
     @NonNull
@@ -1994,9 +1994,11 @@ public final class Utils implements Constants {
         return orig.replaceAll("\\n+", "\n");
     }
 
-    public static void updateRelationship(Context context, Relationship relationship, UserKey accountId) {
+    public static void updateRelationship(Context context, UserKey accountKey, UserKey userKey,
+                                          Relationship relationship) {
         final ContentResolver resolver = context.getContentResolver();
-        final ContentValues values = ContentValuesCreator.createCachedRelationship(relationship, accountId);
+        final ContentValues values = ContentValuesCreator.createCachedRelationship(relationship,
+                accountKey, userKey);
         resolver.insert(CachedRelationships.CONTENT_URI, values);
     }
 

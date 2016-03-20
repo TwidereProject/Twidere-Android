@@ -64,6 +64,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
 
     @Override
     public Object doLongOperation(RefreshTaskParam param) {
+        if (param.shouldAbort()) return null;
         final UserKey[] accountIds = param.getAccountKeys();
         final String[] maxIds = param.getMaxIds();
         final String[] sinceIds = param.getSinceIds();

@@ -28,4 +28,6 @@ public interface RefreshTaskParam {
 
     boolean isLoadingMore();
 
+    boolean shouldAbort();
+
 }

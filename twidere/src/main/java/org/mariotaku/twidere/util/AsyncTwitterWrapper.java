@@ -807,7 +807,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             values.put(CachedRelationships.BLOCKING, true);
             values.put(CachedRelationships.FOLLOWING, false);
             values.put(CachedRelationships.FOLLOWED_BY, false);
-            final String where = Expression.inArgs(CachedRelationships.USER_ID, list.size()).getSQL();
+            final String where = Expression.inArgs(CachedRelationships.USER_KEY, list.size()).getSQL();
             final String[] selectionArgs = list.toArray(new String[list.size()]);
             mResolver.update(CachedRelationships.CONTENT_URI, values, where, selectionArgs);
         }

@@ -864,11 +864,13 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 final Expression selection;
                 final String[] selectionArgs;
                 if (queryEscaped != null) {
-                    final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
+                    final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, mUserColorNameManager);
                     selection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                             Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
-                            Expression.in(new Column(CachedUsers.USER_KEY), new RawItemArray(nicknameIds)));
-                    selectionArgs = new String[]{queryEscaped, queryEscaped};
+                            Expression.inArgs(new Column(CachedUsers.USER_KEY), nicknameKeys.length));
+                    selectionArgs = new String[nicknameKeys.length + 2];
+                    selectionArgs[0] = selectionArgs[1] = queryEscaped;
+                    System.arraycopy(nicknameKeys, 0, selectionArgs, 2, nicknameKeys.length);
                 } else {
                     selection = null;
                     selectionArgs = null;

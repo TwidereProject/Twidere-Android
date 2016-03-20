@@ -14,6 +14,7 @@ public class BaseRefreshTaskParam implements RefreshTaskParam {
     private final long[] maxSortIds;
     private final long[] sinceSortIds;
     private boolean isLoadingMore;
+    private boolean shouldAbort;
 
     public BaseRefreshTaskParam(UserKey[] accountKeys, String[] maxIds, String[] sinceIds) {
         this(accountKeys, maxIds, sinceIds, null, null);
@@ -71,7 +72,16 @@ public class BaseRefreshTaskParam implements RefreshTaskParam {
         return isLoadingMore;
     }
 
-    public void setIsLoadingMore(boolean isLoadingMore) {
+    public void setLoadingMore(boolean isLoadingMore) {
         this.isLoadingMore = isLoadingMore;
+    }
+
+    @Override
+    public boolean shouldAbort() {
+        return shouldAbort;
+    }
+
+    public void setShouldAbort(boolean shouldAbort) {
+        this.shouldAbort = shouldAbort;
     }
 }

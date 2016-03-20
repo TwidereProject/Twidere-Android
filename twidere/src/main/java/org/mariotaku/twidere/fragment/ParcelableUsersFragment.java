@@ -244,6 +244,7 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
             final ParcelableUsersAdapter adapter = getAdapter();
             final int position = findPosition(adapter, event.getAccountKey(), event.getUserKey());
             final List<ParcelableUser> data = adapter.getData();
+            if (position < 0 || position >= data.size()) return;
             if (shouldRemoveUser(position, event)) {
                 data.remove(position);
                 adapter.notifyItemRemoved(position);

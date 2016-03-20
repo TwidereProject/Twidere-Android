@@ -208,13 +208,18 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
             @Nullable
             @Override
             public long[] getMaxSortIds() {
-                return DataStoreUtils.getOldestActivityMaxSortPositions(getActivity(),
+                return DataStoreUtils.getOldestActivityMaxSortPositions(getContext(),
                         getContentUri(), getAccountKeys());
             }
 
             @Override
             public boolean hasMaxIds() {
                 return true;
+            }
+
+            @Override
+            public boolean shouldAbort() {
+                return getContext() == null;
             }
         });
     }
@@ -238,13 +243,18 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
             @Nullable
             @Override
             public long[] getSinceSortIds() {
-                return DataStoreUtils.getNewestActivityMaxSortPositions(getActivity(),
+                return DataStoreUtils.getNewestActivityMaxSortPositions(getContext(),
                         getContentUri(), getAccountKeys());
             }
 
             @Override
             public boolean hasSinceIds() {
                 return true;
+            }
+
+            @Override
+            public boolean shouldAbort() {
+                return getContext() == null;
             }
         });
         return true;

@@ -16,7 +16,7 @@ public class CachedRelationship {
     @CursorField(CachedRelationships.ACCOUNT_KEY)
     public UserKey account_key;
 
-    @CursorField(CachedRelationships.USER_ID)
+    @CursorField(CachedRelationships.USER_KEY)
     public String user_id;
 
     @CursorField(CachedRelationships.FOLLOWING)

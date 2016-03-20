@@ -158,7 +158,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
         final String[] maxIds = {status.id};
         mPage += mPageDelta;
         final BaseRefreshTaskParam param = new BaseRefreshTaskParam(accountKeys, maxIds, null);
-        param.setIsLoadingMore(true);
+        param.setLoadingMore(true);
         getStatuses(param);
     }
 

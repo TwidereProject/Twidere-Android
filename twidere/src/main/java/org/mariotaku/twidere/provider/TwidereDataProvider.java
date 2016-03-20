@@ -469,52 +469,63 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 return null;
         }
         final long rowId;
-        if (tableId == TABLE_ID_CACHED_USERS) {
-            final Expression where = Expression.and(Expression.equalsArgs(CachedUsers.USER_KEY),
-                    Expression.equalsArgs(CachedUsers.USER_HOST));
-            final String[] whereArgs = {values.getAsString(CachedUsers.USER_KEY),
-                    values.getAsString(CachedUsers.USER_HOST)};
-            mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs);
-            rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                    SQLiteDatabase.CONFLICT_IGNORE);
-        } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
-            values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
-            final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
-            final String[] args = {values.getAsString(SearchHistory.QUERY)};
-            mDatabaseWrapper.update(table, values, where.getSQL(), args);
-            rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                    SQLiteDatabase.CONFLICT_IGNORE);
-        } else if (tableId == TABLE_ID_CACHED_RELATIONSHIPS) {
-            final String accountKey = values.getAsString(CachedRelationships.ACCOUNT_KEY);
-            final String userId = values.getAsString(CachedRelationships.USER_ID);
-            final Expression where = Expression.and(
-                    Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
-                    Expression.equalsArgs(CachedRelationships.USER_ID)
-            );
-            final String[] whereArgs = {accountKey, userId};
-            if (mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs) > 0) {
-                final String[] projection = {CachedRelationships._ID};
-                final Cursor c = mDatabaseWrapper.query(table, projection, where.getSQL(), null,
-                        null, null, null);
-                if (c.moveToFirst()) {
-                    rowId = c.getLong(0);
-                } else {
-                    rowId = 0;
-                }
-                c.close();
-            } else {
+        switch (tableId) {
+            case TABLE_ID_CACHED_USERS: {
+                final Expression where = Expression.equalsArgs(CachedUsers.USER_KEY);
+                final String[] whereArgs = {values.getAsString(CachedUsers.USER_KEY)};
+                mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs);
                 rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
                         SQLiteDatabase.CONFLICT_IGNORE);
+                break;
             }
-        } else if (tableId == VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS) {
-            rowId = showDraftNotification(values);
-        } else if (shouldReplaceOnConflict(tableId)) {
-            rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                    SQLiteDatabase.CONFLICT_REPLACE);
-        } else if (table != null) {
-            rowId = mDatabaseWrapper.insert(table, null, values);
-        } else {
-            return null;
+            case TABLE_ID_SEARCH_HISTORY: {
+                values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
+                final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
+                final String[] args = {values.getAsString(SearchHistory.QUERY)};
+                mDatabaseWrapper.update(table, values, where.getSQL(), args);
+                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                        SQLiteDatabase.CONFLICT_IGNORE);
+                break;
+            }
+            case TABLE_ID_CACHED_RELATIONSHIPS: {
+                final String accountKey = values.getAsString(CachedRelationships.ACCOUNT_KEY);
+                final String userId = values.getAsString(CachedRelationships.USER_KEY);
+                final Expression where = Expression.and(
+                        Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
+                        Expression.equalsArgs(CachedRelationships.USER_KEY)
+                );
+                final String[] whereArgs = {accountKey, userId};
+                if (mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs) > 0) {
+                    final String[] projection = {CachedRelationships._ID};
+                    final Cursor c = mDatabaseWrapper.query(table, projection, where.getSQL(), null,
+                            null, null, null);
+                    if (c.moveToFirst()) {
+                        rowId = c.getLong(0);
+                    } else {
+                        rowId = 0;
+                    }
+                    c.close();
+                } else {
+                    rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                            SQLiteDatabase.CONFLICT_IGNORE);
+                }
+                break;
+            }
+            case VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS: {
+                rowId = showDraftNotification(values);
+                break;
+            }
+            default: {
+                if (shouldReplaceOnConflict(tableId)) {
+                    rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                            SQLiteDatabase.CONFLICT_REPLACE);
+                } else if (table != null) {
+                    rowId = mDatabaseWrapper.insert(table, null, values);
+                } else {
+                    return null;
+                }
+                break;
+            }
         }
         onDatabaseUpdated(tableId, uri);
         onNewItemsInserted(uri, tableId, values);
@@ -729,7 +740,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP: {
                     final UserKey accountKey = UserKey.valueOf(uri.getLastPathSegment());
                     final Pair<SQLSelectQuery, String[]> query = CachedUsersQueryBuilder.withRelationship(projection,
-                            selection, sortOrder, accountKey);
+                            selection, selectionArgs, sortOrder, accountKey);
                     final Cursor c = mDatabaseWrapper.rawQuery(query.first.getSQL(), query.second);
                     setNotificationUri(c, CachedUsers.CONTENT_URI);
                     return c;
@@ -737,7 +748,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE: {
                     final UserKey accountKey = UserKey.valueOf(uri.getLastPathSegment());
                     final Pair<SQLSelectQuery, String[]> query = CachedUsersQueryBuilder.withScore(projection,
-                            selection, sortOrder, accountKey, 0);
+                            selection, selectionArgs, sortOrder, accountKey, 0);
                     final Cursor c = mDatabaseWrapper.rawQuery(query.first.getSQL(), query.second);
                     setNotificationUri(c, CachedUsers.CONTENT_URI);
                     return c;
@@ -834,19 +845,21 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(CachedUsers.SCREEN_NAME, Suggestions.Search.VALUE).getSQL(),
             };
             String queryTrimmed = queryEscaped.startsWith("@") ? queryEscaped.substring(1) : queryEscaped;
-            final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
+            final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, mUserColorNameManager);
             final Expression usersSelection = Expression.or(
                     Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
-                    Expression.in(new Column(CachedUsers.USER_KEY), new RawItemArray(nicknameIds)));
-            final String[] selectionArgs = new String[]{queryTrimmed, queryTrimmed};
+                    Expression.in(new Column(CachedUsers.USER_KEY), new RawItemArray(nicknameKeys)));
+            final String[] selectionArgs = new String[nicknameKeys.length + 2];
+            selectionArgs[0] = selectionArgs[1] = queryTrimmed;
+            System.arraycopy(nicknameKeys, 0, selectionArgs, 2, nicknameKeys.length);
             final String[] order = {CachedUsers.LAST_SEEN, CachedUsers.SCORE, CachedUsers.SCREEN_NAME,
                     CachedUsers.NAME};
             final boolean[] ascending = {false, false, true, true};
             final OrderBy orderBy = new OrderBy(order, ascending);
 
             final Pair<SQLSelectQuery, String[]> usersQuery = CachedUsersQueryBuilder.withScore(usersProjection,
-                    usersSelection.getSQL(), orderBy.getSQL(), accountKey, 0);
+                    usersSelection.getSQL(), selectionArgs, orderBy.getSQL(), accountKey, 0);
             @SuppressLint("Recycle") final Cursor usersCursor = mDatabaseWrapper.rawQuery(usersQuery.first.getSQL(), usersQuery.second);
             final Expression exactUserSelection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?", "^"));
             final Cursor exactUserCursor = mDatabaseWrapper.query(CachedUsers.TABLE_NAME,
@@ -878,11 +891,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (query == null || type == null) return null;
         final String queryEscaped = query.replace("_", "^_");
         if (Suggestions.AutoComplete.TYPE_USERS.equals(type)) {
-            final long[] nicknameIds = Utils.getMatchedNicknameIds(query, mUserColorNameManager);
+            final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, mUserColorNameManager);
             final Expression where = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
-                    Expression.in(new Column(CachedUsers.USER_KEY), new RawItemArray(nicknameIds)));
-            final String[] whereArgs = {queryEscaped, queryEscaped};
+                    Expression.inArgs(new Column(CachedUsers.USER_KEY), nicknameKeys.length));
+            final String[] whereArgs = new String[nicknameKeys.length + 2];
+            whereArgs[0] = whereArgs[1] = queryEscaped;
+            System.arraycopy(nicknameKeys, 0, whereArgs, 2, nicknameKeys.length);
             final String[] mappedProjection = {
                     new Column(CachedUsers._ID, Suggestions._ID).getSQL(),
                     new Column("'" + Suggestions.AutoComplete.TYPE_USERS + "'", Suggestions.TYPE).getSQL(),
