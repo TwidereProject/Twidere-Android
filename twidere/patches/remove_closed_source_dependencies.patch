@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1458317043000)
+--- twidere/build.gradle	(date 1458458261000)
 +++ twidere/build.gradle	(revision )
 @@ -1,17 +1,17 @@
  import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
@@ -44,13 +44,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      flatDir { dirs "$projectDir/lib" }
  }
  
-@@ -87,15 +87,15 @@
-         transitive = true
-     }
-     //    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.7'
--    
-+
- 
+@@ -91,10 +91,10 @@
      compile project(':twidere.component.common')
      compile project(':twidere.component.nyan')
  

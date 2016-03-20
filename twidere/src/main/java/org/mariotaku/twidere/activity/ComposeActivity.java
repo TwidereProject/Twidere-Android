@@ -1195,7 +1195,9 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     }
 
     private boolean isScheduleSupported() {
-        for (ParcelableCredentials account : mAccountsAdapter.getSelectedAccounts()) {
+        final ParcelableCredentials[] accounts = mAccountsAdapter.getSelectedAccounts();
+        if (ArrayUtils.isEmpty(accounts)) return false;
+        for (ParcelableCredentials account : accounts) {
             if (TwitterContentUtils.getOfficialKeyType(this, account.consumer_key, account.consumer_secret)
                     != ConsumerKeyType.TWEETDECK) {
                 return false;
@@ -1324,16 +1326,16 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         final boolean hasMedia = hasMedia();
         final String text = mEditText != null ? ParseUtils.parseString(mEditText.getText()) : null;
         final int tweetLength = mValidator.getTweetLength(text), maxLength = mSendTextCountView.getMaxLength();
-        if (!mStatusShortenerUsed && tweetLength > maxLength) {
-            mEditText.setError(getString(R.string.error_message_status_too_long));
-            final int textLength = mEditText.length();
-            mEditText.setSelection(textLength - (tweetLength - maxLength), textLength);
+        if (mAccountsAdapter.isSelectionEmpty()) {
+            mEditText.setError(getString(R.string.no_account_selected));
             return;
         } else if (!hasMedia && (TextUtils.isEmpty(text) || noReplyContent(text))) {
             mEditText.setError(getString(R.string.error_message_no_content));
             return;
-        } else if (mAccountsAdapter.isSelectionEmpty()) {
-            mEditText.setError(getString(R.string.no_account_selected));
+        } else if (!mStatusShortenerUsed && tweetLength > maxLength) {
+            mEditText.setError(getString(R.string.error_message_status_too_long));
+            final int textLength = mEditText.length();
+            mEditText.setSelection(textLength - (tweetLength - maxLength), textLength);
             return;
         }
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION, false);
