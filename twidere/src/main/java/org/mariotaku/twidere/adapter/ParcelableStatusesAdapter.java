@@ -113,7 +113,17 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
 
     @Override
     public boolean isGapItem(int position) {
-        return getStatus(position).is_gap && position != getStatusCount() - 1;
+        int dataPosition = position - getStatusStartIndex();
+        final int statusCount = getStatusCount();
+        if (dataPosition < 0 || dataPosition >= statusCount) return false;
+        // Don't show gap if it's last item
+        if (dataPosition == statusCount - 1) return false;
+        if (mData instanceof ObjectCursor) {
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
+            final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
+            return cursor.getShort(indices.is_gap) == 1;
+        }
+        return mData.get(dataPosition).is_gap;
     }
 
     @Override

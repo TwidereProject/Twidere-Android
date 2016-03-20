@@ -132,6 +132,7 @@ import org.mariotaku.twidere.fragment.DraftsFragment;
 import org.mariotaku.twidere.fragment.FiltersFragment;
 import org.mariotaku.twidere.fragment.IncomingFriendshipsFragment;
 import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
+import org.mariotaku.twidere.fragment.ItemsListFragment;
 import org.mariotaku.twidere.fragment.ListsFragment;
 import org.mariotaku.twidere.fragment.MessagesConversationFragment;
 import org.mariotaku.twidere.fragment.MutesUsersListFragment;
@@ -142,7 +143,6 @@ import org.mariotaku.twidere.fragment.SearchFragment;
 import org.mariotaku.twidere.fragment.StatusFavoritersListFragment;
 import org.mariotaku.twidere.fragment.StatusFragment;
 import org.mariotaku.twidere.fragment.StatusRetweetersListFragment;
-import org.mariotaku.twidere.fragment.StatusesListFragment;
 import org.mariotaku.twidere.fragment.UserBlocksListFragment;
 import org.mariotaku.twidere.fragment.UserFavoritesFragment;
 import org.mariotaku.twidere.fragment.UserFollowersFragment;
@@ -158,7 +158,6 @@ import org.mariotaku.twidere.fragment.UserMediaTimelineFragment;
 import org.mariotaku.twidere.fragment.UserMentionsFragment;
 import org.mariotaku.twidere.fragment.UserProfileEditorFragment;
 import org.mariotaku.twidere.fragment.UserTimelineFragment;
-import org.mariotaku.twidere.fragment.UsersListFragment;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.AccountPreferences;
@@ -256,8 +255,7 @@ public final class Utils implements Constants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_SAVED_SEARCHES, null, LINK_ID_SAVED_SEARCHES);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_MENTIONS, null, LINK_ID_USER_MENTIONS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_INCOMING_FRIENDSHIPS, null, LINK_ID_INCOMING_FRIENDSHIPS);
-        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USERS, null, LINK_ID_USERS);
-        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUSES, null, LINK_ID_STATUSES);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_ITEMS, null, LINK_ID_ITEMS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS_RETWEETERS, null, LINK_ID_STATUS_RETWEETERS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_STATUS_FAVORITERS, null, LINK_ID_STATUS_FAVORITERS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_SEARCH, null, LINK_ID_SEARCH);
@@ -728,12 +726,8 @@ public final class Utils implements Constants {
                 fragment = new IncomingFriendshipsFragment();
                 break;
             }
-            case LINK_ID_USERS: {
-                fragment = new UsersListFragment();
-                break;
-            }
-            case LINK_ID_STATUSES: {
-                fragment = new StatusesListFragment();
+            case LINK_ID_ITEMS: {
+                fragment = new ItemsListFragment();
                 break;
             }
             case LINK_ID_STATUS_RETWEETERS: {

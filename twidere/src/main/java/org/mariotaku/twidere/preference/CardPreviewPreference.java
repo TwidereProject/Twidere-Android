@@ -29,7 +29,7 @@ import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
@@ -38,7 +38,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
 
     private StatusViewHolder mHolder;
     private boolean mCompactModeChanged;
-    private DummyStatusHolderAdapter mAdapter;
+    private DummyItemAdapter mAdapter;
 
     public CardPreviewPreference(final Context context) {
         this(context, null);
@@ -54,7 +54,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
                 Context.MODE_PRIVATE);
         setLayoutResources(preferences);
         preferences.registerOnSharedPreferenceChangeListener(this);
-        mAdapter = new DummyStatusHolderAdapter(context);
+        mAdapter = new DummyItemAdapter(context);
     }
 
     @Override

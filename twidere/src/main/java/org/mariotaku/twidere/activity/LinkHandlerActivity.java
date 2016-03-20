@@ -353,12 +353,8 @@ public class LinkHandlerActivity extends BaseActivity implements SystemWindowsIn
                 setTitle(R.string.incoming_friendships);
                 break;
             }
-            case LINK_ID_USERS: {
-                setTitle(R.string.users);
-                break;
-            }
-            case LINK_ID_STATUSES: {
-                setTitle(R.string.statuses);
+            case LINK_ID_ITEMS: {
+                // TODO show title
                 break;
             }
             case LINK_ID_USER_MEDIA_TIMELINE: {

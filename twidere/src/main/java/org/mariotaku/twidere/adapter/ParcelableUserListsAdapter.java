@@ -142,14 +142,7 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW_TYPE_USER_LIST: {
-                final View view;
-                view = mInflater.inflate(R.layout.card_item_user_list_compact, parent, false);
-                final View itemContent = view.findViewById(R.id.item_content);
-                itemContent.setBackgroundColor(mCardBackgroundColor);
-                final UserListViewHolder holder = new UserListViewHolder(this, view);
-                holder.setOnClickListeners();
-                holder.setupViewOptions();
-                return holder;
+                return createUserListViewHolder(this, mInflater, parent, mCardBackgroundColor);
             }
             case ITEM_VIEW_TYPE_LOAD_INDICATOR: {
                 final View view = mInflater.inflate(R.layout.card_item_load_indicator, parent, false);
@@ -193,6 +186,20 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
     @Override
     public IUserListsAdapter.UserListAdapterListener getUserListAdapterListener() {
         return mEventListener;
+    }
+
+    public static UserListViewHolder createUserListViewHolder(IUserListsAdapter<?> adapter,
+                                                              LayoutInflater inflater,
+                                                              ViewGroup parent,
+                                                              int cardBackgroundColor) {
+        final View view;
+        view = inflater.inflate(R.layout.card_item_user_list_compact, parent, false);
+        final View itemContent = view.findViewById(R.id.item_content);
+        itemContent.setBackgroundColor(cardBackgroundColor);
+        final UserListViewHolder holder = new UserListViewHolder(adapter, view);
+        holder.setOnClickListeners();
+        holder.setupViewOptions();
+        return holder;
     }
 
     public interface UserListAdapterListener {

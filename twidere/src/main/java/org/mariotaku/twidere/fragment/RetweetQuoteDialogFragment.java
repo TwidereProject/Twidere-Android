@@ -44,7 +44,7 @@ import com.twitter.Validator;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -79,7 +79,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final Context context = builder.getContext();
         final LayoutInflater inflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_status_quote_retweet, null);
-        final DummyStatusHolderAdapter adapter = new DummyStatusHolderAdapter(context);
+        final DummyItemAdapter adapter = new DummyItemAdapter(context);
         adapter.setShouldShowAccountsColor(true);
         final IStatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();

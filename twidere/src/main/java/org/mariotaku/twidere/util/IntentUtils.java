@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -19,7 +20,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.activity.MediaViewerActivity;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment;
@@ -59,14 +59,14 @@ public class IntentUtils implements Constants {
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_USER, user);
         final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(TwidereConstants.SCHEME_TWIDERE);
-        builder.authority(TwidereConstants.AUTHORITY_USER);
-        builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString());
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER);
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString());
         if (user.key != null) {
-            builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_USER_ID, user.key.toString());
+            builder.appendQueryParameter(QUERY_PARAM_USER_ID, user.key.toString());
         }
         if (user.screen_name != null) {
-            builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_SCREEN_NAME, user.screen_name);
+            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, user.screen_name);
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setExtrasClassLoader(context.getClassLoader());
@@ -100,13 +100,13 @@ public class IntentUtils implements Constants {
         }
     }
 
-    public static void openUsers(@NonNull final Context context, final List<ParcelableUser> users) {
-        if (users == null) return;
+    public static void openItems(@NonNull final Context context, final List<Parcelable> items) {
+        if (items == null) return;
         final Bundle extras = new Bundle();
-        extras.putParcelableArrayList(EXTRA_USERS, new ArrayList<>(users));
+        extras.putParcelableArrayList(EXTRA_ITEMS, new ArrayList<>(items));
         final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(TwidereConstants.SCHEME_TWIDERE);
-        builder.authority(TwidereConstants.AUTHORITY_USERS);
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_ITEMS);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.putExtras(extras);
         context.startActivity(intent);
@@ -115,12 +115,12 @@ public class IntentUtils implements Constants {
     public static void openUserMentions(@NonNull final Context context, @Nullable final UserKey accountKey,
                                         @NonNull final String screenName) {
         final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(TwidereConstants.SCHEME_TWIDERE);
-        builder.authority(TwidereConstants.AUTHORITY_USER_MENTIONS);
+        builder.scheme(SCHEME_TWIDERE);
+        builder.authority(AUTHORITY_USER_MENTIONS);
         if (accountKey != null) {
-            builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_SCREEN_NAME, screenName);
+        builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         context.startActivity(intent);
     }
@@ -150,7 +150,7 @@ public class IntentUtils implements Constants {
                                  final ParcelableMedia current, final ParcelableMedia[] media,
                                  final Bundle options, final boolean newDocument) {
         if (media == null) return;
-        final SharedPreferences prefs = context.getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         if (context instanceof FragmentActivity && isPossiblySensitive
                 && !prefs.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS, false)) {
             final FragmentActivity activity = (FragmentActivity) context;
@@ -371,18 +371,6 @@ public class IntentUtils implements Constants {
         } else {
             context.startActivity(intent);
         }
-    }
-
-    public static void openStatuses(final Context context, final List<ParcelableStatus> statuses) {
-        if (context == null || statuses == null) return;
-        final Bundle extras = new Bundle();
-        extras.putParcelableArrayList(EXTRA_STATUSES, new ArrayList<>(statuses));
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_STATUSES);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.putExtras(extras);
-        context.startActivity(intent);
     }
 
     public static void openStatusFavoriters(@NonNull final Context context, @Nullable final UserKey accountKey,

@@ -42,6 +42,7 @@ import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -75,7 +76,7 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     private final MediaLoadingHandler mLoadingHandler;
     private final int mCardBackgroundColor;
     private final boolean mCompactCards;
-    private final DummyStatusHolderAdapter mStatusAdapterDelegate;
+    private final DummyItemAdapter mStatusAdapterDelegate;
     private final EventListener mEventListener;
     private List<ParcelableActivity> mData;
     private final boolean mIsByFriends;
@@ -86,7 +87,7 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
 
     public ParcelableActivitiesAdapter(Context context, boolean compact, boolean byFriends) {
         super(context);
-        mStatusAdapterDelegate = new DummyStatusHolderAdapter(context,
+        mStatusAdapterDelegate = new DummyItemAdapter(context,
                 new TwidereLinkify(new OnLinkClickHandler(context, null)), this);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
@@ -102,8 +103,18 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     @Override
     public boolean isGapItem(int adapterPosition) {
         int dataPosition = adapterPosition - getActivityStartIndex();
-        if (dataPosition < 0 || dataPosition >= getActivityCount()) return false;
-        return getActivity(adapterPosition).is_gap;
+        final int activityCount = getActivityCount();
+        if (dataPosition < 0 || dataPosition >= activityCount) return false;
+        // Don't show gap if it's last item
+        if (dataPosition == activityCount - 1) {
+            return false;
+        }
+        if (mData instanceof ObjectCursor) {
+            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
+            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
+            return cursor.getShort(indices.is_gap) == 1;
+        }
+        return mData.get(dataPosition).is_gap;
     }
 
     @Override

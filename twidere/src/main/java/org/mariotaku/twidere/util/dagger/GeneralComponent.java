@@ -30,7 +30,7 @@ import org.mariotaku.twidere.adapter.BaseArrayAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
-import org.mariotaku.twidere.adapter.DummyStatusHolderAdapter;
+import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
@@ -65,7 +65,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface GeneralComponent {
-    void inject(DummyStatusHolderAdapter object);
+    void inject(DummyItemAdapter object);
 
     void inject(BaseSupportFragment object);
 

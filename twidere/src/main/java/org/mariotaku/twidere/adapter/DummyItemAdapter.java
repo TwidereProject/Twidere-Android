@@ -9,8 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.adapter.iface.IUserListsAdapter;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -27,7 +31,8 @@ import javax.inject.Inject;
 /**
  * Created by mariotaku on 16/1/22.
  */
-public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>, SharedPreferenceConstants {
+public final class DummyItemAdapter implements IStatusesAdapter<Object>,
+        IUsersAdapter<Object>, IUserListsAdapter<Object>, SharedPreferenceConstants {
 
     private final Context context;
     private final SharedPreferencesWrapper preferences;
@@ -58,12 +63,12 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     private boolean showAbsoluteTime;
     private int showingActionCardPosition = RecyclerView.NO_POSITION;
 
-    public DummyStatusHolderAdapter(Context context) {
+    public DummyItemAdapter(Context context) {
         this(context, new TwidereLinkify(null), null);
     }
 
-    public DummyStatusHolderAdapter(Context context, TwidereLinkify linkify,
-                                    @Nullable RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
+    public DummyItemAdapter(Context context, TwidereLinkify linkify,
+                            @Nullable RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter) {
         GeneralComponentHelper.build(context).inject(this);
         this.context = context;
         preferences = SharedPreferencesWrapper.getInstance(context, TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -81,6 +86,12 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     @Override
     public MediaLoaderWrapper getMediaLoader() {
         return loader;
+    }
+
+    @Nullable
+    @Override
+    public UserListAdapterListener getUserListAdapterListener() {
+        return null;
     }
 
     @NonNull
@@ -257,8 +268,55 @@ public final class DummyStatusHolderAdapter implements IStatusesAdapter<Object>,
     }
 
     @Override
+    public ParcelableUser getUser(int position) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getUserId(int position) {
+        return null;
+    }
+
+    @Override
+    public int getUserCount() {
+        return 0;
+    }
+
+    @Override
+    public ParcelableUserList getUserList(int position) {
+        return null;
+    }
+
+    @Override
+    public long getUserListId(int position) {
+        return 0;
+    }
+
+    @Override
+    public int getUserListsCount() {
+        return 0;
+    }
+
+    @Override
     public void setData(Object o) {
 
+    }
+
+    @Nullable
+    @Override
+    public UserAdapterListener getUserAdapterListener() {
+        return null;
+    }
+
+    @Override
+    public RequestClickListener getRequestClickListener() {
+        return null;
+    }
+
+    @Override
+    public FollowClickListener getFollowClickListener() {
+        return null;
     }
 
     @Override

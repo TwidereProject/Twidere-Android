@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -74,7 +75,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -397,7 +398,14 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     public void onActivityClick(ActivityTitleSummaryViewHolder holder, int position) {
         final ParcelableActivity activity = getAdapter().getActivity(position);
         if (activity == null) return;
-        IntentUtils.openUsers(getActivity(), Arrays.asList(ParcelableActivityUtils.getAfterFilteredSources(activity)));
+        final List<Parcelable> list = new ArrayList<>();
+        if (activity.target_object_statuses != null) {
+            Collections.addAll(list, activity.target_object_statuses);
+        } else if (activity.target_statuses != null) {
+            Collections.addAll(list, activity.target_statuses);
+        }
+        Collections.addAll(list, ParcelableActivityUtils.getAfterFilteredSources(activity));
+        IntentUtils.openItems(getActivity(), list);
     }
 
     @Override
