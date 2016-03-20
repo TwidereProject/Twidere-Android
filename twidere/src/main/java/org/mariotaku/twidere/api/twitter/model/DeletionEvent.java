@@ -10,17 +10,17 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class DeletionEvent {
 
     @JsonField(name = "id")
-    long id;
+    String id;
     @JsonField(name = "user_id")
-    long userId;
+    String userId;
     @JsonField(name = "timestamp_ms")
     long timestampMs;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 

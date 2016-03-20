@@ -1307,8 +1307,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     values.put(Statuses.RETWEET_COUNT, status.retweet_count - 1);
                 }
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
-                    mResolver.delete(uri, Statuses.STATUS_ID + " = " + mStatusId, null);
-                    mResolver.update(uri, values, Statuses.MY_RETWEET_ID + " = " + mStatusId, null);
+                    mResolver.delete(uri, Expression.equalsArgs(Statuses.STATUS_ID).getSQL(), new String[]{mStatusId});
+                    mResolver.update(uri, values, Expression.equalsArgs(Statuses.MY_RETWEET_ID).getSQL(), new String[]{mStatusId});
                 }
             }
             return SingleResponse.getInstance(status, exception);

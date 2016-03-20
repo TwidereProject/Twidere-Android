@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -97,8 +98,16 @@ public class AccountSelectorActivity extends BaseActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
-        final String where = isOAuthOnly() ? Accounts.AUTH_TYPE + " = " + ParcelableCredentials.AUTH_TYPE_OAUTH : null;
-        return new CursorLoader(this, Accounts.CONTENT_URI, Accounts.COLUMNS, where, null, null);
+        final String where;
+        final String[] whereArgs;
+        if (isOAuthOnly()) {
+            where = Expression.equalsArgs(Accounts.AUTH_TYPE).getSQL();
+            whereArgs = new String[]{String.valueOf(ParcelableCredentials.AUTH_TYPE_OAUTH)};
+        } else {
+            where = null;
+            whereArgs = null;
+        }
+        return new CursorLoader(this, Accounts.CONTENT_URI, Accounts.COLUMNS, where, whereArgs, null);
     }
 
     @Override

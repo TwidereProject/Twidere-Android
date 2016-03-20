@@ -226,17 +226,20 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onDirectMessageDeleted(final DeletionEvent event) {
-            final String where = Expression.equals(DirectMessages.MESSAGE_ID, event.getId()).getSQL();
+            final String where = Expression.equalsArgs(DirectMessages.MESSAGE_ID).getSQL();
+            final String[] whereArgs = {event.getId()};
             for (final Uri uri : MESSAGES_URIS) {
-                resolver.delete(uri, where, null);
+                resolver.delete(uri, where, whereArgs);
             }
         }
 
         @Override
         public void onStatusDeleted(final DeletionEvent event) {
-            final long statusId = event.getId();
-            resolver.delete(Statuses.CONTENT_URI, Expression.equals(Statuses.STATUS_ID, statusId).getSQL(), null);
-            resolver.delete(Activities.AboutMe.CONTENT_URI, Expression.equals(Activities.AboutMe.STATUS_ID, statusId).getSQL(), null);
+            final String statusId = event.getId();
+            resolver.delete(Statuses.CONTENT_URI, Expression.equalsArgs(Statuses.STATUS_ID).getSQL(),
+                    new String[]{statusId});
+            resolver.delete(Activities.AboutMe.CONTENT_URI, Expression.equalsArgs(Activities.STATUS_ID).getSQL(),
+                    new String[]{statusId});
         }
 
         @Override

@@ -849,7 +849,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final Expression usersSelection = Expression.or(
                     Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
-                    Expression.in(new Column(CachedUsers.USER_KEY), new RawItemArray(nicknameKeys)));
+                    Expression.inArgs(new Column(CachedUsers.USER_KEY), nicknameKeys.length));
             final String[] selectionArgs = new String[nicknameKeys.length + 2];
             selectionArgs[0] = selectionArgs[1] = queryTrimmed;
             System.arraycopy(nicknameKeys, 0, selectionArgs, 2, nicknameKeys.length);
