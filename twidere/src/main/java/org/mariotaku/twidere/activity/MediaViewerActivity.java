@@ -66,7 +66,6 @@ import android.widget.Toast;
 
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.pnikosis.materialishprogress.ProgressWheel;
 import com.sprylab.android.widget.TextureVideoView;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -91,7 +90,6 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.PermissionUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.media.MediaExtra;
@@ -104,6 +102,8 @@ import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.MediaDownloadEvent;
+import pl.droidsonroids.gif.GifTextureView;
+import pl.droidsonroids.gif.InputSource;
 
 public final class MediaViewerActivity extends AbsMediaViewerActivity implements Constants,
         AppCompatCallback, TaskStackBuilder.SupportParentable, ActionBarDrawerToggle.DelegateProvider,
@@ -225,6 +225,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         return mFileCache;
     }
 
+    @SuppressLint("SwitchIntDef")
     @Override
     protected MediaViewerFragment instantiateMediaFragment(int position) {
         final ParcelableMedia media = getMedia()[position];
@@ -235,9 +236,18 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         args.putParcelable(EXTRA_STATUS, intent.getParcelableExtra(EXTRA_STATUS));
         switch (media.type) {
             case ParcelableMedia.Type.IMAGE: {
+                if (media.media_url == null) {
+                    return (MediaViewerFragment) Fragment.instantiate(this,
+                            ExternalBrowserPageFragment.class.getName(), args);
+                }
                 args.putParcelable(ImagePageFragment.EXTRA_MEDIA_URI, Uri.parse(media.media_url));
-                return (MediaViewerFragment) Fragment.instantiate(this,
-                        ImagePageFragment.class.getName(), args);
+                if (media.media_url.endsWith(".gif")) {
+                    return (MediaViewerFragment) Fragment.instantiate(this,
+                            GifPageFragment.class.getName(), args);
+                } else {
+                    return (MediaViewerFragment) Fragment.instantiate(this,
+                            ImagePageFragment.class.getName(), args);
+                }
             }
             case ParcelableMedia.Type.ANIMATED_GIF:
             case ParcelableMedia.Type.CARD_ANIMATED_GIF: {
@@ -838,13 +848,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         }
 
         @Override
-        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            final ProgressWheel progressWheel = (ProgressWheel) view.findViewById(org.mariotaku.mediaviewer.library.R.id.load_progress);
-            progressWheel.setBarColor(ThemeUtils.getUserAccentColor(getContext()));
-        }
-
-        @Override
         public void setUserVisibleHint(boolean isVisibleToUser) {
             super.setUserVisibleHint(isVisibleToUser);
             if (isVisibleToUser) {
@@ -928,6 +931,61 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                 HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
                 mMediaDownloadEvent = null;
             }
+        }
+    }
+
+    public static class GifPageFragment extends CacheDownloadMediaViewerFragment {
+
+        private GifTextureView mGifView;
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            startLoading(false);
+        }
+
+        @Nullable
+        @Override
+        protected Uri getDownloadUri() {
+            return getArguments().getParcelable(ImagePageFragment.EXTRA_MEDIA_URI);
+        }
+
+        @Nullable
+        @Override
+        protected Object getDownloadExtra() {
+            return null;
+        }
+
+        @Override
+        protected void displayMedia(CacheDownloadLoader.Result result) {
+            final Context context = getContext();
+            if (context == null) return;
+            if (result.cacheUri != null) {
+                mGifView.setInputSource(new InputSource.UriSource(context.getContentResolver(), result.cacheUri));
+            } else {
+                mGifView.setInputSource(null);
+            }
+        }
+
+        @Override
+        protected boolean isAbleToLoad() {
+            return getDownloadUri() != null;
+        }
+
+        @Override
+        protected View onCreateMediaView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.layout_media_viewer_gif, parent, false);
+        }
+
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            mGifView = (GifTextureView) view.findViewById(R.id.gif_view);
+        }
+
+        @Override
+        protected void recycleMedia() {
+            mGifView.setInputSource(null);
         }
     }
 
@@ -1070,8 +1128,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             mVolumeButton = (ImageButton) view.findViewById(R.id.volume_button);
             mVideoControl = view.findViewById(R.id.video_control);
 
-            final ProgressWheel progressWheel = (ProgressWheel) view.findViewById(org.mariotaku.mediaviewer.library.R.id.load_progress);
-            progressWheel.setBarColor(ThemeUtils.getUserAccentColor(getContext()));
         }
 
 
