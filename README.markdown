@@ -1,36 +1,30 @@
-#Twidere - Twitter client, ∞#
-
-[![Join the chat at https://gitter.im/TwidereProject/Twidere-Android](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TwidereProject/Twidere-Android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+#Twidere for Android#
 
 [![Travis status](https://api.travis-ci.org/TwidereProject/Twidere-Android.png)](https://travis-ci.org/TwidereProject/Twidere-Android/)
 
-Twidere is a powerful twitter client for Android 4.0+, which gives you a full Material experience and nearly complete (and even better) Twitter feature.
+Material Design ready and feature reach Twitter app for Android 4.0+
 
 ---
 
 ## Features ##
 
-* Pure & Clean Material design works for both Lollipop and pre-Lollipop devices
-* Dark/Light theme, with theme color support
+* Pure & Clean Material design
+* Theme support
 * Media preview
-* Built in image viewer (with animated gif support) and map viewer
-* All tabs are customizable
-* Direct messages with conversation style
-* Very powerful filters (mute unwanted tweets)
-* Drafts feature
+* Customizable tabs
+* Powerful filters (mute unwanted tweets)
+* Drafts for tweets / DMs
 * Extension support like [Twicca](http://twicca.r246.jp/), but more friendly to users and developers
 * t.co link auto expanding
-* Multiple account support
+* Multiple account
 * Custom OAuth consumer key/secret
-* Direct login with user name and password (Don't worry! It's TOTALLY safe!)
 * Custom API Proxy (jtapi recommended, gtap and twip o mode works)
-* GZip compressing for API requests
-* TCP DNS query and custom host mapping to fight against censorship
-* Many many many other configurations to fit your habit
+* Advance network settings like proxy or DNS
+* Supports Twitter, Fanfou and GNU social
 * Free, open source, NO ads, forever!
 
-<a href="https://play.google.com/store/apps/details?id=org.mariotaku.twidere"><img src="http://www.android.com/images/brand/get_it_on_play_logo_large.png"/></a>
-<a href="https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere"><img src="https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png" alt="F-Droid"></a>
+[![Get it on Google Play](http://www.android.com/images/brand/get_it_on_play_logo_large.png)](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
+[![Get it on F-Droid](https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png)](https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere)
 
 ---
 
@@ -51,31 +45,7 @@ Thanks to their excellent design!
 
 ### Open source projects ###
 
-* [Android-ViewPagerIndicator](https://github.com/JakeWharton/Android-ViewPagerIndicator/), Copyright 2012 Jake Wharton
-* [Android ViewBadger](https://github.com/jgilfelt/android-viewbadger), Copyright (c) 2012 readyState Software Ltd.
-* [Universal Image Loader for Android](https://github.com/nostra13/Android-Universal-Image-Loader), Copyright 2011-2013 Sergey Tarasevich
-* [ImageViewZoom](https://github.com/sephiroth74/ImageViewZoom), Copyright 2012 Alessandro Crugnola
-* [Gallery2](https://android.googlesource.com/platform/packages/apps/Gallery2), Copyright 2008-2013 Android Open Source Project
-* [Commons Lang](http://commons.apache.org/proper/commons-lang/), Copyright 2001-2013 The Apache Software Foundation
-* [SwipeBackLayout](https://github.com/Issacw0ng/SwipeBackLayout), Copyright 2013 Issac Wong
-* [Crouton](https://github.com/keyboardsurfer/Crouton), Copyright 2013 Benjamin Weiss at Neofonie Mobile GmbH.
-* [twitter-text-java](https://github.com/twitter/twitter-text), Copyright 2014 Twitter, Inc and other contributors
-* [Twitter4J](https://github.com/yusuke/twitter4j), Copyright 2007-2013 Yusuke Yamamoto
-* [dnsjava](http://www.xbill.org/dnsjava/), Copyright 1999-2005, Brian Wellington
-* [HttpMime](http://hc.apache.org/httpcomponents-client-ga/httpmime/), Copyright 1999-2013 The Apache Software Foundation
-* [ACRA](http://github.com/ACRA/acra), Copyright 2013 Kevin Gaudin
-* [drag-sort-listview](https://github.com/bauerca/drag-sort-listview), Copyright 2012 Carl Bauer
-* [AndroidStaggeredGrid](https://github.com/etsy/AndroidStaggeredGrid), Copyright 2013 Etsy
-* [cwac-merge](https://github.com/commonsguy/cwac-merge), Copyright 2013 CommonsWare
-* [cwac-sacklist](https://github.com/commonsguy/cwac-sacklist), Copyright 2013 CommonsWare
-* [SlidingMenu](https://github.com/mariotaku/SlidingMenu) ([Original](https://github.com/jfeinstein10/SlidingMenu)), Copyright 2012 Jeremy Feinstein
-* [ColorPicker](https://github.com/uucky/ColorPicker-Android), Copyright 2015 Uucky & Mariotaku
-* [OkHttp](https://github.com/square/okhttp), Copyright 2014 Square, Inc
-* [Otto](https://github.com/square/otto), Copyright 2012 Square, Inc; Copyright 2010 Google, Inc
-* [ByakuGallery](https://github.com/diegocarloslima/ByakuGallery), Copyright 2013 Diego Carlos Lima
-* [MaterialEditText](https://github.com/rengwuxian/MaterialEditText), Copyright 2014 rengwuxian
-* [Material-ish Progress](https://github.com/pnikosis/materialish-progress), Copyright 2014 Nico Hormazábal
-* [android-gif-drawable](https://github.com/koral--/android-gif-drawable/), Copyright 2015 koral--
+Too many, see dependencies in `build.gradle`
 
 ---
 
