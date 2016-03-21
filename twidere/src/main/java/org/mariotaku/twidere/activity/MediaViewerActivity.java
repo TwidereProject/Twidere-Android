@@ -138,7 +138,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         getDelegate().onCreate(savedInstanceState);
         GeneralComponentHelper.build(this).inject(this);
         super.onCreate(savedInstanceState);
-        this.updateTime = System.currentTimeMillis();
+        updateTime = System.currentTimeMillis();
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -160,7 +160,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     protected void onPause() {
         mActionHelper.dispatchOnPause();
         super.onPause();
-        if (this.isFinishing()) {
+        if (isFinishing()) {
             ATE.cleanup();
         }
 
@@ -169,7 +169,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        ATE.invalidateActivity(this, this.updateTime, getATEKey());
+        ATE.invalidateActivity(this, updateTime, getATEKey());
     }
 
     @Override
@@ -330,7 +330,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        ATE.themeOverflow(this, this.getATEKey());
+        ATE.themeOverflow(this, getATEKey());
         getMenuInflater().inflate(R.menu.menu_media_viewer, menu);
         return true;
     }

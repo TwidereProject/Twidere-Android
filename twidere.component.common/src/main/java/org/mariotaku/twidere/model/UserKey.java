@@ -119,7 +119,8 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
     public static UserKey valueOf(@Nullable String str) {
         if (str == null) return null;
         boolean escaping = false, idFinished = false;
-        StringBuilder idBuilder = new StringBuilder(), hostBuilder = new StringBuilder();
+        StringBuilder idBuilder = new StringBuilder(str.length()),
+                hostBuilder = new StringBuilder(str.length());
         for (int i = 0, j = str.length(); i < j; i++) {
             final char ch = str.charAt(i);
             boolean append = false;
