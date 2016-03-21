@@ -26,11 +26,13 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener;
+import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.view.CardMediaContainer;
+import org.mariotaku.twidere.view.holder.GapViewHolder;
 
 /**
  * Created by mariotaku on 15/10/26.
@@ -56,7 +58,7 @@ public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListen
 
     void playLikeAnimation(LikeAnimationDrawable.OnLikedListener listener);
 
-    interface StatusClickListener extends ContentCardClickListener {
+    interface StatusClickListener extends ContentCardClickListener, IGapSupportedAdapter.GapClickListener {
 
         void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition);
 
@@ -68,19 +70,27 @@ public interface IStatusViewHolder extends CardMediaContainer.OnMediaClickListen
     }
 
     abstract class SimpleStatusClickListener implements StatusClickListener {
-
+        @Override
         public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
 
         }
 
+        @Override
         public void onStatusClick(IStatusViewHolder holder, int position) {
 
         }
 
+        @Override
         public boolean onStatusLongClick(IStatusViewHolder holder, int position) {
             return false;
         }
 
+        @Override
+        public void onGapClick(GapViewHolder holder, int position) {
+
+        }
+
+        @Override
         public void onUserProfileClick(IStatusViewHolder holder, int position) {
 
         }

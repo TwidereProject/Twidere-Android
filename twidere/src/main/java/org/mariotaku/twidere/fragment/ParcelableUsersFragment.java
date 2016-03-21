@@ -38,7 +38,7 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
-import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
@@ -56,7 +56,7 @@ import org.mariotaku.twidere.view.holder.UserViewHolder;
 import java.util.List;
 
 public abstract class ParcelableUsersFragment extends AbsContentListRecyclerViewFragment<ParcelableUsersAdapter>
-        implements LoaderCallbacks<List<ParcelableUser>>, UserAdapterListener, KeyboardShortcutCallback,
+        implements LoaderCallbacks<List<ParcelableUser>>, UserClickListener, KeyboardShortcutCallback,
         IUsersAdapter.FollowClickListener {
 
     @NonNull
@@ -74,7 +74,7 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
         final ParcelableUsersAdapter adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
-        adapter.setUserAdapterListener(this);
+        adapter.setUserClickListener(this);
 
         mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this);

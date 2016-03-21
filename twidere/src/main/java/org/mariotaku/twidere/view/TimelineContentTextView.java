@@ -57,7 +57,7 @@ public class TimelineContentTextView extends AppCompatTextView {
     public boolean dispatchTouchEvent(MotionEvent event) {
         // FIXME simple workaround to https://code.google.com/p/android/issues/detail?id=191430
         // Android clears TextView when setText(), so setText before touch
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN && isTextSelectable()) {
             if (getSelectionEnd() != getSelectionStart()) {
                 final CharSequence text = getText();
                 setText(null);
@@ -69,6 +69,9 @@ public class TimelineContentTextView extends AppCompatTextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (isTextSelectable()) {
+            return super.onTouchEvent(event);
+        }
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
                 Layout layout = getLayout();

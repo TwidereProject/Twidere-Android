@@ -48,9 +48,8 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
     private final boolean mDisplayProfileImage;
     private final boolean mShowAbsoluteTime;
     private final boolean mNameFirst;
-    private final EventListener mEventListener;
     private List<ParcelableUserList> mData;
-    private UserListAdapterListener mUserListAdapterListener;
+    private UserListClickListener mUserListClickListener;
 
 
     public ParcelableUserListsAdapter(Context context) {
@@ -58,7 +57,6 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
-        mEventListener = new EventListener(this);
         mInflater = LayoutInflater.from(context);
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
@@ -173,8 +171,8 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
         return ITEM_VIEW_TYPE_USER_LIST;
     }
 
-    public void setListener(UserListAdapterListener userListAdapterListener) {
-        mUserListAdapterListener = userListAdapterListener;
+    public void setUserListClickListener(UserListClickListener userListClickListener) {
+        mUserListClickListener = userListClickListener;
     }
 
     @Override
@@ -184,8 +182,8 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
 
     @Nullable
     @Override
-    public IUserListsAdapter.UserListAdapterListener getUserListAdapterListener() {
-        return mEventListener;
+    public UserListClickListener getUserListClickListener() {
+        return mUserListClickListener;
     }
 
     public static UserListViewHolder createUserListViewHolder(IUserListsAdapter<?> adapter,
@@ -202,33 +200,5 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
         return holder;
     }
 
-    public interface UserListAdapterListener {
 
-        void onUserListClick(UserListViewHolder holder, int position);
-
-        boolean onUserListLongClick(UserListViewHolder holder, int position);
-
-    }
-
-    static class EventListener implements IUserListsAdapter.UserListAdapterListener {
-
-        private final ParcelableUserListsAdapter mAdapter;
-
-        public EventListener(ParcelableUserListsAdapter adapter) {
-            mAdapter = adapter;
-        }
-
-        @Override
-        public void onUserListClick(UserListViewHolder holder, int position) {
-            final UserListAdapterListener listener = mAdapter.mUserListAdapterListener;
-            if (listener == null) return;
-            listener.onUserListClick(holder, position);
-        }
-
-        @Override
-        public boolean onUserListLongClick(UserListViewHolder holder, int position) {
-            final UserListAdapterListener listener = mAdapter.mUserListAdapterListener;
-            return listener != null && listener.onUserListLongClick(holder, position);
-        }
-    }
 }

@@ -31,8 +31,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter;
-import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter.UserListAdapterListener;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
+import org.mariotaku.twidere.adapter.iface.IUserListsAdapter.UserListClickListener;
 import org.mariotaku.twidere.loader.iface.ICursorSupportLoader;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
@@ -46,7 +46,7 @@ import org.mariotaku.twidere.view.holder.UserListViewHolder;
 import java.util.List;
 
 public abstract class ParcelableUserListsFragment extends AbsContentListRecyclerViewFragment<ParcelableUserListsAdapter>
-        implements LoaderCallbacks<List<ParcelableUserList>>, UserListAdapterListener, KeyboardShortcutCallback {
+        implements LoaderCallbacks<List<ParcelableUserList>>, UserListClickListener, KeyboardShortcutCallback {
 
     private RecyclerViewNavigationHelper mNavigationHelper;
     private long mNextCursor;
@@ -141,7 +141,7 @@ public abstract class ParcelableUserListsFragment extends AbsContentListRecycler
         final ParcelableUserListsAdapter adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
-        adapter.setListener(this);
+        adapter.setUserListClickListener(this);
 
         mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this);

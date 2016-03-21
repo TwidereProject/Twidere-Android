@@ -48,9 +48,9 @@ public interface IUserListsAdapter<Data> extends IContentCardAdapter {
     MediaLoaderWrapper getMediaLoader();
 
     @Nullable
-    UserListAdapterListener getUserListAdapterListener();
+    UserListClickListener getUserListClickListener();
 
-    interface UserListAdapterListener {
+    interface UserListClickListener {
 
         void onUserListClick(UserListViewHolder holder, int position);
 

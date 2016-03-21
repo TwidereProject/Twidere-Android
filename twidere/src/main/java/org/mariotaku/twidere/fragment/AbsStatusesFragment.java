@@ -44,7 +44,6 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
@@ -68,6 +67,7 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.imageloader.PauseRecyclerViewOnScrollListener;
 import org.mariotaku.twidere.view.ExtendedRecyclerView;
 import org.mariotaku.twidere.view.holder.GapViewHolder;
+import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.io.File;
@@ -84,7 +84,7 @@ import edu.tsinghua.hotmobi.model.TimelineType;
  * Created by mariotaku on 14/11/5.
  */
 public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFragment<ParcelableStatusesAdapter>
-        implements LoaderCallbacks<List<ParcelableStatus>>, StatusAdapterListener, KeyboardShortcutCallback {
+        implements LoaderCallbacks<List<ParcelableStatus>>, IStatusViewHolder.StatusClickListener, KeyboardShortcutCallback {
 
     private final Object mStatusesBusCallback;
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
@@ -364,7 +364,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     protected abstract String getTimelineType();
 
     @Override
-    public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {
+    public void onItemActionClick(RecyclerView.ViewHolder holder, int id, int position) {
         final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
         if (status == null) return;
@@ -387,7 +387,8 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_key, status.id);
                 } else {
-                    holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
+                    ((StatusViewHolder) holder).playLikeAnimation(new DefaultOnLikedListener(twitter,
+                            status));
                 }
                 break;
             }
@@ -407,7 +408,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     }
 
     @Override
-    public void onStatusMenuClick(IStatusViewHolder holder, View menuView, int position) {
+    public void onItemMenuClick(RecyclerView.ViewHolder holder, View menuView, int position) {
         if (getActivity() == null) return;
         final LinearLayoutManager lm = getLayoutManager();
         final View view = lm.findViewByPosition(position);
@@ -416,8 +417,9 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     }
 
     @Override
-    public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
+    public void onUserProfileClick(IStatusViewHolder holder, int position) {
         final FragmentActivity activity = getActivity();
+        final ParcelableStatus status = getAdapter().getStatus(position);
         IntentUtils.openUserProfile(activity, status.account_key, status.user_key.getId(),
                 status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
@@ -471,7 +473,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     @Override
     public void onDestroy() {
         final ParcelableStatusesAdapter adapter = getAdapter();
-        adapter.setListener(null);
+        adapter.setStatusClickListener(null);
         super.onDestroy();
     }
 
@@ -490,7 +492,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         final ParcelableStatusesAdapter adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
-        adapter.setListener(this);
+        adapter.setStatusClickListener(this);
         registerForContextMenu(recyclerView);
         mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager,
                 adapter, this);

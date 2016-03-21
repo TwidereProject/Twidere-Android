@@ -89,11 +89,9 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
-import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.adapter.iface.IStatusesAdapter.StatusAdapterListener;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -132,7 +130,7 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.CheckUtils;
 import org.mariotaku.twidere.util.CompareUtils;
-import org.mariotaku.twidere.util.ContentScrollHandler;
+import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -169,6 +167,7 @@ import org.mariotaku.twidere.view.holder.GapViewHolder;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder.StatusClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +182,7 @@ import edu.tsinghua.hotmobi.model.TweetEvent;
  * Created by mariotaku on 14/12/5.
  */
 public class StatusFragment extends BaseSupportFragment implements LoaderCallbacks<SingleResponse<ParcelableStatus>>,
-        OnMediaClickListener, StatusAdapterListener, KeyboardShortcutCallback, ContentScrollHandler.ContentListSupport {
+        OnMediaClickListener, StatusClickListener, KeyboardShortcutCallback, ContentListSupport {
 
     // Constants
     private static final int LOADER_ID_DETAIL_STATUS = 1;
@@ -376,7 +375,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         mLayoutManager.setRecycleChildrenOnDetach(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setClipToPadding(false);
-        mStatusAdapter.setEventListener(this);
+        mStatusAdapter.setStatusClickListener(this);
         mRecyclerView.setAdapter(mStatusAdapter);
         registerForContextMenu(mRecyclerView);
 
@@ -418,7 +417,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {
+    public void onItemActionClick(ViewHolder holder, int id, int position) {
         final ParcelableStatus status = mStatusAdapter.getStatus(position);
         if (status == null) return;
         switch (id) {
@@ -440,7 +439,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_key, status.id);
                 } else {
-                    holder.playLikeAnimation(new DefaultOnLikedListener(twitter, status));
+                    ((StatusViewHolder) holder).playLikeAnimation(new DefaultOnLikedListener(twitter,
+                            status));
                 }
                 break;
             }
@@ -458,7 +458,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public void onStatusMenuClick(IStatusViewHolder holder, View menuView, int position) {
+    public void onItemMenuClick(ViewHolder holder, View menuView, int position) {
         if (getActivity() == null) return;
         final View view = mLayoutManager.findViewByPosition(position);
         if (view == null) return;
@@ -466,8 +466,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     @Override
-    public void onUserProfileClick(IStatusViewHolder holder, ParcelableStatus status, int position) {
+    public void onUserProfileClick(IStatusViewHolder holder, int position) {
         final FragmentActivity activity = getActivity();
+        final ParcelableStatus status = mStatusAdapter.getStatus(position);
         IntentUtils.openUserProfile(activity, status.account_key, status.user_key.getId(),
                 status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
@@ -1681,7 +1682,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final MediaLoadingHandler mMediaLoadingHandler;
         private final TwidereLinkify mTwidereLinkify;
 
-        private StatusAdapterListener mStatusAdapterListener;
+        private StatusClickListener mStatusClickListener;
         private RecyclerView mRecyclerView;
         private DetailStatusViewHolder mStatusViewHolder;
 
@@ -1701,7 +1702,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final boolean mShowCardActions;
         private final boolean mUseStarsForLikes;
         private final boolean mShowAbsoluteTime;
-        private final ParcelableStatusesAdapter.EventListener mEventListener;
         private boolean mDetailMediaExpanded;
 
         private ParcelableStatus mStatus;
@@ -1749,7 +1749,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 mCardLayoutResource = R.layout.card_item_status;
             }
             mTwidereLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this));
-            mEventListener = new ParcelableStatusesAdapter.EventListener(this);
         }
 
         public int findPositionById(long itemId) {
@@ -1954,15 +1953,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
         @Nullable
         @Override
-        public IStatusViewHolder.StatusClickListener getStatusClickListener() {
-            return mEventListener;
+        public StatusClickListener getStatusClickListener() {
+            return mStatusClickListener;
         }
 
-        @Nullable
-        @Override
-        public StatusAdapterListener getStatusAdapterListener() {
-            return mStatusAdapterListener;
-        }
 
         public ParcelableStatus getStatus() {
             return mStatus;
@@ -1995,7 +1989,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Nullable
         @Override
         public GapClickListener getGapClickListener() {
-            return mEventListener;
+            return mStatusClickListener;
         }
 
 
@@ -2205,8 +2199,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return mItemCounts[idx];
         }
 
-        public void setEventListener(StatusAdapterListener listener) {
-            mStatusAdapterListener = listener;
+        public void setStatusClickListener(StatusClickListener listener) {
+            mStatusClickListener = listener;
         }
 
         public void setReplyError(CharSequence error) {
@@ -2264,7 +2258,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         public void setStatusActivity(StatusActivity activity) {
             final ParcelableStatus status = getStatus();
             if (status == null) return;
-            if (activity != null && activity.statusId != (status.is_retweet ? status.retweet_id : status.id)) {
+            if (activity != null && activity.isStatus(status)) {
                 return;
             }
             mStatusActivity = activity;
@@ -2602,6 +2596,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     ", replyCount=" + replyCount +
                     ", retweetCount=" + retweetCount +
                     '}';
+        }
+
+        public boolean isStatus(ParcelableStatus status) {
+            return TextUtils.equals(statusId, status.is_retweet ? status.retweet_id : status.id);
         }
     }
 

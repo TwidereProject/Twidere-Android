@@ -51,7 +51,7 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
     private final TextView membersCountView;
     private final TextView subscribersCountView;
 
-    private IUserListsAdapter.UserListAdapterListener userListClickListener;
+    private IUserListsAdapter.UserListClickListener userListClickListener;
 
     public UserListViewHolder(IUserListsAdapter<?> adapter, View itemView) {
         super(itemView);
@@ -91,7 +91,7 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
     }
 
     public void setOnClickListeners() {
-        setUserListClickListener(adapter.getUserListAdapterListener());
+        setUserListClickListener(adapter.getUserListClickListener());
     }
 
     @Override
@@ -116,7 +116,7 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
         return false;
     }
 
-    public void setUserListClickListener(IUserListsAdapter.UserListAdapterListener listener) {
+    public void setUserListClickListener(IUserListsAdapter.UserListClickListener listener) {
         userListClickListener = listener;
         ((View) itemContent).setOnClickListener(this);
         ((View) itemContent).setOnLongClickListener(this);

@@ -88,7 +88,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
         mHolder.setStatusClickListener(new IStatusViewHolder.SimpleStatusClickListener() {
             @Override
             public void onItemActionClick(RecyclerView.ViewHolder holder, int id, int position) {
-                if (id == R.id.favorite_count) {
+                if (id == R.id.favorite) {
                     ((StatusViewHolder) holder).playLikeAnimation(new LikeAnimationDrawable.OnLikedListener() {
                         @Override
                         public boolean onLiked() {

@@ -20,7 +20,8 @@
 package org.mariotaku.twidere.adapter.iface;
 
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView.ViewHolder;
+
+import org.mariotaku.twidere.view.holder.GapViewHolder;
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -36,7 +37,7 @@ public interface IGapSupportedAdapter {
 
     interface GapClickListener {
 
-        void onGapClick(ViewHolder holder, int position);
+        void onGapClick(GapViewHolder holder, int position);
 
     }
 

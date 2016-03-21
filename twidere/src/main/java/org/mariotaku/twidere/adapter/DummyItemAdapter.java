@@ -62,6 +62,10 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
     private boolean useStarsForLikes;
     private boolean showAbsoluteTime;
     private int showingActionCardPosition = RecyclerView.NO_POSITION;
+    private FollowClickListener followClickListener;
+    private RequestClickListener requestClickListener;
+    private IStatusViewHolder.StatusClickListener statusClickListener;
+    private UserClickListener userClickListener;
 
     public DummyItemAdapter(Context context) {
         this(context, new TwidereLinkify(null), null);
@@ -84,14 +88,14 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
 
     @NonNull
     @Override
-    public MediaLoaderWrapper getMediaLoader() {
-        return loader;
+    public Context getContext() {
+        return context;
     }
 
-    @Nullable
+    @NonNull
     @Override
-    public UserListAdapterListener getUserListAdapterListener() {
-        return null;
+    public MediaLoaderWrapper getMediaLoader() {
+        return loader;
     }
 
     @NonNull
@@ -100,33 +104,31 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
         return formatter;
     }
 
-    @NonNull
-    @Override
-    public Context getContext() {
-        return context;
-    }
-
     @Override
     public MediaLoadingHandler getMediaLoadingHandler() {
         return handler;
-    }
-
-    @Nullable
-    @Override
-    public IStatusViewHolder.StatusClickListener getStatusClickListener() {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public StatusAdapterListener getStatusAdapterListener() {
-        return null;
     }
 
     @NonNull
     @Override
     public UserColorNameManager getUserColorNameManager() {
         return manager;
+    }
+
+    @Nullable
+    @Override
+    public UserListClickListener getUserListClickListener() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public IStatusViewHolder.StatusClickListener getStatusClickListener() {
+        return statusClickListener;
+    }
+
+    public void setStatusClickListener(IStatusViewHolder.StatusClickListener statusClickListener) {
+        this.statusClickListener = statusClickListener;
     }
 
     @Override
@@ -155,7 +157,17 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
         return textSize;
     }
 
+    @Nullable
+    public UserClickListener getUserClickListener() {
+        return userClickListener;
+    }
+
+    public void setUserClickListener(UserClickListener userClickListener) {
+        this.userClickListener = userClickListener;
+    }
+
     @Override
+
     @IndicatorPosition
     public int getLoadMoreIndicatorPosition() {
         return IndicatorPosition.NONE;
@@ -179,6 +191,11 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
 
     @Override
     public ParcelableStatus getStatus(int position) {
+        if (adapter instanceof ParcelableStatusesAdapter) {
+            return ((ParcelableStatusesAdapter) adapter).getStatus(position);
+        } else if (adapter instanceof VariousItemsAdapter) {
+            return (ParcelableStatus) ((VariousItemsAdapter) adapter).getItem(position);
+        }
         return null;
     }
 
@@ -249,7 +266,6 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
         return sensitiveContentEnabled;
     }
 
-
     @Override
     public boolean isCardActionsShown(int position) {
         if (position == RecyclerView.NO_POSITION) return showCardActions;
@@ -269,6 +285,11 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
 
     @Override
     public ParcelableUser getUser(int position) {
+        if (adapter instanceof ParcelableUsersAdapter) {
+            return ((ParcelableUsersAdapter) adapter).getUser(position);
+        } else if (adapter instanceof VariousItemsAdapter) {
+            return (ParcelableUser) ((VariousItemsAdapter) adapter).getItem(position);
+        }
         return null;
     }
 
@@ -303,20 +324,23 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
 
     }
 
-    @Nullable
-    @Override
-    public UserAdapterListener getUserAdapterListener() {
-        return null;
-    }
 
     @Override
     public RequestClickListener getRequestClickListener() {
-        return null;
+        return requestClickListener;
+    }
+
+    public void setRequestClickListener(RequestClickListener requestClickListener) {
+        this.requestClickListener = requestClickListener;
     }
 
     @Override
     public FollowClickListener getFollowClickListener() {
-        return null;
+        return followClickListener;
+    }
+
+    public void setFollowClickListener(FollowClickListener followClickListener) {
+        this.followClickListener = followClickListener;
     }
 
     @Override
@@ -363,11 +387,11 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
         textSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
         nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true);
         displayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        displayMediaPreview = preferences.getBoolean(KEY_MEDIA_PREVIEW, false);
+        setMediaPreviewEnabled(preferences.getBoolean(KEY_MEDIA_PREVIEW, false));
         sensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
         showCardActions = !preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
         linkHighlightStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
-        useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
-        showAbsoluteTime = preferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);
+        setUseStarsForLikes(preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK));
+        setShowAbsoluteTime(preferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME));
     }
 }

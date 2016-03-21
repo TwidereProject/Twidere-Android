@@ -919,9 +919,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void onPrepareOptionsMenu(final Menu menu) {
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
-        final UserRelationship userRelationship = mRelationship;
-        if (twitter == null || user == null || userRelationship == null) return;
-        final Relationship relationship = userRelationship.relationship;
+        if (twitter == null || user == null) return;
 
         final boolean isMyself = user.account_key.equals(user.key);
         final MenuItem mentionItem = menu.findItem(R.id.mention);
@@ -934,20 +932,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         MenuUtils.setMenuItemAvailability(menu, R.id.saved_searches, isMyself);
         MenuUtils.setMenuItemAvailability(menu, R.id.scheduled_statuses, isMyself
                 && TwitterAPIFactory.getOfficialKeyType(getActivity(), user.account_key) == ConsumerKeyType.TWEETDECK);
-//        final MenuItem followItem = menu.findItem(MENU_FOLLOW);
-//        followItem.setVisible(!isMyself);
-//        final boolean shouldShowFollowItem = !creatingFriendship && !destroyingFriendship && !isMyself
-//                && relationship != null;
-//        followItem.setEnabled(shouldShowFollowItem);
-//        if (shouldShowFollowItem) {
-//            followItem.setTitle(isFollowing ? R.string.unfollow : isProtected ? R.string.send_follow_request
-//                    : R.string.follow);
-//            followItem.setIcon(isFollowing ? R.drawable.ic_action_cancel : R.drawable.ic_action_add);
-//        } else {
-//            followItem.setTitle(null);
-//            followItem.setIcon(null);
-//        }
-        if (!isMyself) {
+
+        final UserRelationship userRelationship = mRelationship;
+        if (!isMyself && userRelationship != null) {
+            final Relationship relationship = userRelationship.relationship;
             MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, relationship.canSourceDMTarget());
             MenuUtils.setMenuItemAvailability(menu, R.id.block, true);
             MenuUtils.setMenuItemAvailability(menu, R.id.mute_user, true);

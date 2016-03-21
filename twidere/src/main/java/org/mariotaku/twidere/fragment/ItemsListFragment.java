@@ -10,8 +10,15 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 
+import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.adapter.VariousItemsAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
+import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.util.IntentUtils;
+import org.mariotaku.twidere.view.holder.UserViewHolder;
+import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.util.List;
 
@@ -31,7 +38,26 @@ public class ItemsListFragment extends AbsContentListRecyclerViewFragment<Variou
     @NonNull
     @Override
     protected VariousItemsAdapter onCreateAdapter(Context context, boolean compact) {
-        return new VariousItemsAdapter(context, compact);
+        final VariousItemsAdapter adapter = new VariousItemsAdapter(context, compact);
+        final DummyItemAdapter dummyItemAdapter = adapter.getDummyAdapter();
+        dummyItemAdapter.setStatusClickListener(new IStatusViewHolder.SimpleStatusClickListener() {
+            @Override
+            public void onStatusClick(IStatusViewHolder holder, int position) {
+                final ParcelableStatus status = dummyItemAdapter.getStatus(position);
+                if (status == null) return;
+                IntentUtils.openStatus(getContext(), status, null);
+            }
+        });
+        dummyItemAdapter.setUserClickListener(new IUsersAdapter.SimpleUserClickListener() {
+            @Override
+            public void onUserClick(UserViewHolder holder, int position) {
+                final ParcelableUser user = dummyItemAdapter.getUser(position);
+                if (user == null) return;
+                IntentUtils.openUserProfile(getContext(), user, null, true,
+                        UserFragment.Referral.TIMELINE_STATUS);
+            }
+        });
+        return adapter;
     }
 
     @Override

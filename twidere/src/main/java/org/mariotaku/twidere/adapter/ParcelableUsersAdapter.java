@@ -50,7 +50,7 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
     private final boolean mDisplayProfileImage;
     private final boolean mShowAbsoluteTime;
     private List<ParcelableUser> mData;
-    private UserAdapterListener mUserAdapterListener;
+    private UserClickListener mUserClickListener;
     private RequestClickListener mRequestClickListener;
     private FollowClickListener mFollowClickListener;
 
@@ -200,12 +200,12 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
 
     @Nullable
     @Override
-    public UserAdapterListener getUserAdapterListener() {
-        return mUserAdapterListener;
+    public UserClickListener getUserClickListener() {
+        return mUserClickListener;
     }
 
-    public void setUserAdapterListener(UserAdapterListener userAdapterListener) {
-        mUserAdapterListener = userAdapterListener;
+    public void setUserClickListener(UserClickListener userClickListener) {
+        mUserClickListener = userClickListener;
     }
 
     @Override

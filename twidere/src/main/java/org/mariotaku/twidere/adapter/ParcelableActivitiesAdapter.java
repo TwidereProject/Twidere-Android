@@ -42,7 +42,6 @@ import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -218,10 +217,6 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     @Override
     public float getTextSize() {
         return mStatusAdapterDelegate.getTextSize();
-    }
-
-    public int getLinkHighlightingStyle() {
-        return mStatusAdapterDelegate.getLinkHighlightingStyle();
     }
 
     public boolean isNameFirst() {
@@ -469,11 +464,11 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
         }
 
         @Override
-        public final void onGapClick(RecyclerView.ViewHolder holder, int position) {
+        public final void onGapClick(GapViewHolder holder, int position) {
             final ParcelableActivitiesAdapter adapter = adapterRef.get();
             if (adapter == null) return;
             if (adapter.mActivityAdapterListener != null) {
-                adapter.mActivityAdapterListener.onGapClick((GapViewHolder) holder, position);
+                adapter.mActivityAdapterListener.onGapClick(holder, position);
             }
         }
 

@@ -32,7 +32,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.FollowClickListener;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.RequestClickListener;
-import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserAdapterListener;
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -63,7 +63,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     private final View actionsContainer;
     private final View processingRequestProgress;
 
-    private UserAdapterListener userClickListener;
+    private UserClickListener userClickListener;
     private RequestClickListener requestClickListener;
     private FollowClickListener followClickListener;
 
@@ -205,7 +205,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     }
 
     public void setOnClickListeners() {
-        setUserClickListener(adapter.getUserAdapterListener());
+        setUserClickListener(adapter.getUserClickListener());
         setActionClickListeners(adapter.getRequestClickListener(), adapter.getFollowClickListener());
     }
 
@@ -238,7 +238,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         friendsCountView.setTextSize(textSize);
     }
 
-    public void setUserClickListener(UserAdapterListener listener) {
+    public void setUserClickListener(UserClickListener listener) {
         userClickListener = listener;
         ((View) itemContent).setOnClickListener(this);
         ((View) itemContent).setOnLongClickListener(this);

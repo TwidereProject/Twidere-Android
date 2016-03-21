@@ -41,7 +41,7 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter {
     void setData(Data data);
 
     @Nullable
-    UserAdapterListener getUserAdapterListener();
+    UserClickListener getUserClickListener();
 
     RequestClickListener getRequestClickListener();
 
@@ -53,7 +53,7 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter {
     @Override
     MediaLoaderWrapper getMediaLoader();
 
-    interface UserAdapterListener {
+    interface UserClickListener {
 
         void onUserClick(UserViewHolder holder, int position);
 
@@ -70,5 +70,33 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter {
 
     interface FollowClickListener {
         void onFollowClicked(UserViewHolder holder, int position);
+    }
+
+    abstract class SimpleUserClickListener implements UserClickListener, RequestClickListener, FollowClickListener {
+
+        @Override
+        public void onFollowClicked(UserViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public void onAcceptClicked(UserViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public void onDenyClicked(UserViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public void onUserClick(UserViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public boolean onUserLongClick(UserViewHolder holder, int position) {
+            return false;
+        }
     }
 }
