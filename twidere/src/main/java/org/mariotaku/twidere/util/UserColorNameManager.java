@@ -51,10 +51,6 @@ public class UserColorNameManager implements TwidereConstants {
     public static String decideDisplayName(@NonNull final String nickname, final String name,
                                            final String screenName, final boolean nameFirst) {
         if (!isEmpty(nickname)) return nickname;
-        return nameFirst && isEmpty(name) ? name : "@" + screenName;
-    }
-
-    public static String decideDisplayName(final String name, final String screenName, final boolean nameFirst) {
         return nameFirst && !isEmpty(name) ? name : "@" + screenName;
     }
 
