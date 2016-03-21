@@ -93,7 +93,6 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.PermissionUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.media.MediaExtra;
@@ -145,11 +144,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    @Nullable
-    public String getATEKey() {
-        return ThemeUtils.getATEKey(this);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -175,7 +169,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        ATE.invalidateActivity(this, this.updateTime, this.getATEKey());
+        ATE.invalidateActivity(this, this.updateTime, getATEKey());
     }
 
     @Override
@@ -201,6 +195,11 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                 break;
             }
         }
+    }
+
+    @Nullable
+    public String getATEKey() {
+        return VALUE_THEME_NAME_DARK;
     }
 
     public void processShareIntent(Intent intent) {
