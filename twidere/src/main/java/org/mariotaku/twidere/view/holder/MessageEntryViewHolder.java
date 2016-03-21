@@ -95,7 +95,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         } else {
             content.drawEnd();
         }
-        content.drawStart(manager.getUserColor(conversationId, false));
+        content.drawStart(manager.getUserColor(conversationId));
 
         final String profileImage = cursor.getString(ConversationEntries.IDX_PROFILE_IMAGE_URL);
         loader.displayProfileImage(profileImageView, profileImage);

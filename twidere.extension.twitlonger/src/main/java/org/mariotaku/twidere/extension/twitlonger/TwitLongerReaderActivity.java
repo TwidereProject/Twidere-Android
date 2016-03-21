@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Twidere;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.SpanItem;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,10 +40,15 @@ public class TwitLongerReaderActivity extends Activity implements Constants, OnC
                     if (mTwitLongerPostTask != null) {
                         mTwitLongerPostTask.cancel(true);
                     }
-                    final Matcher m = PATTERN_TWITLONGER.matcher(mStatus.text_html);
-                    if (m.find()) {
-                        mTwitLongerPostTask = new TwitLongerReaderTask(this);
-                        mTwitLongerPostTask.execute(m.group(GROUP_TWITLONGER_ID));
+                    if (mStatus.spans != null) {
+                        for (SpanItem span : mStatus.spans) {
+                            final Matcher m = PATTERN_TWITLONGER.matcher(span.link);
+                            if (m.find()) {
+                                mTwitLongerPostTask = new TwitLongerReaderTask(this);
+                                mTwitLongerPostTask.execute(m.group(GROUP_TWITLONGER_ID));
+                                break;
+                            }
+                        }
                     }
                 } else {
                     if (mUser == null) return;
@@ -73,14 +78,20 @@ public class TwitLongerReaderActivity extends Activity implements Constants, OnC
         if (mResult == null || mUser == null) {
             if (Twidere.INTENT_ACTION_EXTENSION_OPEN_STATUS.equals(action)) {
                 mStatus = Twidere.getStatusFromIntent(getIntent());
-                if (mStatus == null || mStatus.text_html == null) {
+                if (mStatus == null || mStatus.spans == null) {
                     finish();
                     return;
                 }
                 mUser = mStatus.user_screen_name;
-                mPreview.setText(Html.fromHtml(mStatus.text_html));
-                final Matcher m = PATTERN_TWITLONGER.matcher(mStatus.text_html);
-                mActionButton.setEnabled(m.find());
+                mPreview.setText(mStatus.text_unescaped);
+                mActionButton.setEnabled(false);
+                for (SpanItem span : mStatus.spans) {
+                    final Matcher m = PATTERN_TWITLONGER.matcher(span.link);
+                    if (m.find()) {
+                        mActionButton.setEnabled(true);
+                        break;
+                    }
+                }
             } else if (Intent.ACTION_VIEW.equals(action) && data != null) {
                 mPreview.setText(data.toString());
                 final Matcher m = PATTERN_TWITLONGER.matcher(data.toString());

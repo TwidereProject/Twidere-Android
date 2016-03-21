@@ -1632,7 +1632,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean isMyRetweet(final ParcelableStatus status) {
-        return status != null && isMyRetweet(status.account_key, status.retweeted_by_user_id,
+        return status != null && isMyRetweet(status.account_key, status.retweeted_by_user_key,
                 status.my_retweet_id);
     }
 

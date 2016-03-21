@@ -641,7 +641,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     final ParcelableUser user = users[0];
                     final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
                     final String displayName = mUserColorNameManager.getDisplayName(user.key, user.name,
-                            user.screen_name, nameFirst, false);
+                            user.screen_name, nameFirst);
                     message = mContext.getString(R.string.added_user_to_list, displayName, result.getData().name);
                 } else {
                     final Resources res = mContext.getResources();
@@ -1015,7 +1015,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     final ParcelableUser user = users[0];
                     final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
                     final String displayName = mUserColorNameManager.getDisplayName(user.key,
-                            user.name, user.screen_name, nameFirst, false);
+                            user.name, user.screen_name, nameFirst);
                     message = mContext.getString(R.string.deleted_user_from_list, displayName,
                             result.getData().name);
                 } else {

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 
 import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.Tab;
 import org.mariotaku.twidere.model.TabCursorIndices;
@@ -24,12 +25,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.JsonSerializer;
-import org.mariotaku.twidere.util.Utils;
 
 /**
  * Created by mariotaku on 16/3/8.
  */
-public class UpdateAccountInfoTask extends AbstractTask<Pair<UserKey, ParcelableUser>, Object, Object> {
+public class UpdateAccountInfoTask extends AbstractTask<Pair<ParcelableAccount, ParcelableUser>, Object, Object> {
     private final Context context;
 
     public UpdateAccountInfoTask(Context context) {
@@ -37,16 +37,19 @@ public class UpdateAccountInfoTask extends AbstractTask<Pair<UserKey, Parcelable
     }
 
     @Override
-    protected Object doLongOperation(Pair<UserKey, ParcelableUser> params) {
+    protected Object doLongOperation(Pair<ParcelableAccount, ParcelableUser> params) {
         final ContentResolver resolver = context.getContentResolver();
-        final UserKey accountKey = params.first;
+        final ParcelableAccount account = params.first;
         final ParcelableUser user = params.second;
-        if (!Utils.isMyAccount(context, user.key) || user.is_cache) {
+        if (user.is_cache) {
+            return null;
+        }
+        if (!user.key.maybeEquals(user.account_key)) {
             return null;
         }
 
-        final String accountWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).getSQL();
-        final String[] accountWhereArgs = {accountKey.toString()};
+        final String accountWhere = Expression.equalsArgs(Accounts._ID).getSQL();
+        final String[] accountWhereArgs = {String.valueOf(account.id)};
 
         final ContentValues accountValues = new ContentValues();
         accountValues.put(Accounts.NAME, user.name);

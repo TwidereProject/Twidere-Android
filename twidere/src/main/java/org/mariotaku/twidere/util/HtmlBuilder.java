@@ -20,14 +20,17 @@
 package org.mariotaku.twidere.util;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
+
+import org.mariotaku.twidere.model.SpanItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import static android.text.TextUtils.isEmpty;
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.escape;
-import static org.mariotaku.twidere.util.HtmlEscapeHelper.toHtml;
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.unescape;
 
 public class HtmlBuilder {
@@ -75,7 +78,7 @@ public class HtmlBuilder {
     public String build() {
         if (links.isEmpty()) return escapeSource(source);
         Collections.sort(links);
-        final StringBuilder builder = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         final int linksSize = links.size();
         for (int i = 0; i < linksSize; i++) {
             final LinkSpec spec = links.get(i);
@@ -85,27 +88,72 @@ public class HtmlBuilder {
             final int start = spec.start, end = spec.end;
             if (i == 0) {
                 if (start >= 0 && start <= codePointsLength) {
-                    appendSource(builder, 0, start);
+                    appendSource(sb, 0, start, shouldReEscape, sourceIsEscaped);
                 }
             } else if (i > 0) {
                 final int lastEnd = links.get(i - 1).end;
                 if (lastEnd >= 0 && lastEnd <= start && start <= codePointsLength) {
-                    appendSource(builder, lastEnd, start);
+                    appendSource(sb, lastEnd, start, shouldReEscape, sourceIsEscaped);
                 }
             }
-            builder.append("<a href=\"");
-            builder.append(spec.link);
-            builder.append("\">");
+            sb.append("<a href=\"");
+            sb.append(spec.link);
+            sb.append("\">");
             if (start >= 0 && start <= end && end <= codePointsLength) {
-                builder.append(!isEmpty(spec.display) ? spec.displayIsHtml ? spec.display : toHtml(spec.display)
-                        : spec.link);
+                if (isEmpty(spec.display)) {
+                    append(sb, spec.link, shouldReEscape, false);
+                } else {
+                    append(sb, spec.display, shouldReEscape, spec.displayIsHtml);
+                }
             }
-            builder.append("</a>");
+            sb.append("</a>");
             if (i == linksSize - 1 && end >= 0 && end <= codePointsLength) {
-                appendSource(builder, end, codePointsLength);
+                appendSource(sb, end, codePointsLength, shouldReEscape, sourceIsEscaped);
             }
         }
-        return builder.toString();
+        return sb.toString();
+    }
+
+    public Pair<String, List<SpanItem>> buildWithIndices() {
+        List<SpanItem> items = new ArrayList<>();
+        if (links.isEmpty()) return Pair.create(escapeSource(source), items);
+        Collections.sort(links);
+        final StringBuilder sb = new StringBuilder();
+        final int linksSize = links.size();
+        for (int i = 0; i < linksSize; i++) {
+            final LinkSpec spec = links.get(i);
+            if (spec == null) {
+                continue;
+            }
+            final int start = spec.start, end = spec.end;
+            if (i == 0) {
+                if (start >= 0 && start <= codePointsLength) {
+                    appendSource(sb, 0, start, false, sourceIsEscaped);
+                }
+            } else if (i > 0) {
+                final int lastEnd = links.get(i - 1).end;
+                if (lastEnd >= 0 && lastEnd <= start && start <= codePointsLength) {
+                    appendSource(sb, lastEnd, start, false, sourceIsEscaped);
+                }
+            }
+            int spanStart = sb.length();
+            if (start >= 0 && start <= end && end <= codePointsLength) {
+                if (isEmpty(spec.display)) {
+                    append(sb, spec.link, false, false);
+                } else {
+                    append(sb, spec.display, false, spec.displayIsHtml);
+                }
+            }
+            final SpanItem item = new SpanItem();
+            item.start = spanStart;
+            item.end = sb.length();
+            item.link = spec.link;
+            items.add(item);
+            if (i == linksSize - 1 && end >= 0 && end <= codePointsLength) {
+                appendSource(sb, end, codePointsLength, false, sourceIsEscaped);
+            }
+        }
+        return Pair.create(sb.toString(), items);
     }
 
     public boolean hasLink(final int start, final int end) {
@@ -129,15 +177,23 @@ public class HtmlBuilder {
                 '}';
     }
 
-    private void appendSource(final StringBuilder builder, final int start, final int end) {
-        if (sourceIsEscaped == shouldReEscape) {
-            for (int i = start; i < end; i++) {
-                builder.appendCodePoint(codePoints.get(i));
-            }
-        } else if (shouldReEscape) {
-            builder.append(escape(codePoints.substring(start, end)));
+    private void appendSource(final StringBuilder builder, final int start, final int end, boolean escapeSource, boolean sourceEscaped) {
+        if (sourceEscaped == escapeSource) {
+            append(builder, codePoints.substring(start, end), escapeSource, sourceEscaped);
+        } else if (escapeSource) {
+            append(builder, escape(codePoints.substring(start, end)), true, sourceEscaped);
         } else {
-            builder.append(unescape(codePoints.substring(start, end)));
+            append(builder, unescape(codePoints.substring(start, end)), false, sourceEscaped);
+        }
+    }
+
+    private void append(final StringBuilder builder, final String text, boolean escapeText, boolean textEscaped) {
+        if (textEscaped == escapeText) {
+            builder.append(text);
+        } else if (escapeText) {
+            builder.append(escape(text));
+        } else {
+            builder.append(unescape(text));
         }
     }
 

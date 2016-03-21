@@ -60,7 +60,7 @@ public class ReportSpamDialogFragment extends BaseSupportDialogFragment implemen
         final ParcelableUser user = getUser();
         if (user != null) {
             final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
-            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst, false);
+            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst);
             builder.setTitle(getString(R.string.report_user, displayName));
             builder.setMessage(getString(R.string.report_user_confirm_message, displayName));
         }

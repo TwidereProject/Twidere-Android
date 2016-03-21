@@ -49,7 +49,7 @@ public class AcceptFriendshipTask extends AbsFriendshipOperationTask {
     protected void showSucceededMessage(@NonNull Arguments params, @NonNull ParcelableUser user) {
         final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
         final String message = context.getString(R.string.accepted_users_follow_request,
-                manager.getDisplayName(user, nameFirst, true));
+                manager.getDisplayName(user, nameFirst));
         Utils.showOkMessage(context, message, false);
     }
 

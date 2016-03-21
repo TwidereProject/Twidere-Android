@@ -875,8 +875,20 @@ public interface TwidereDataStore {
         String RETWEETED = "retweeted";
 
         String EXTRAS = "extras";
+        String SPANS = "spans";
+        String QUOTED_SPANS = "quoted_spans";
 
         String POSITION_KEY = "position_key";
+
+        String ACCOUNT_COLOR = "account_color";
+        String USER_COLOR = "user_color";
+        String QUOTED_USER_COLOR = "quoted_user_color";
+        String RETWEET_USER_COLOR = "retweet_user_color";
+
+        String USER_NICKNAME = "user_nickname";
+        String QUOTED_USER_NICKNAME = "quoted_user_nickname";
+        String RETWEET_USER_NICKNAME = "retweet_user_nickname";
+        String IN_REPLY_TO_USER_NICKNAME = "in_reply_to_user_nickname";
 
         String[] COLUMNS = {_ID, ACCOUNT_KEY, STATUS_ID, SORT_ID, USER_ID, STATUS_TIMESTAMP,
                 TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED, USER_NAME, USER_SCREEN_NAME,
@@ -890,7 +902,9 @@ public interface TwidereDataStore {
                 IS_QUOTE, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
                 IS_POSSIBLY_SENSITIVE, MEDIA_JSON, MENTIONS_JSON, QUOTED_MEDIA_JSON, CARD_NAME, CARD,
                 PLACE_FULL_NAME, LANG, RETWEETED, QUOTED_LOCATION, QUOTED_PLACE_FULL_NAME, INSERTED_DATE,
-                EXTRAS, POSITION_KEY};
+                EXTRAS, POSITION_KEY, SPANS, QUOTED_SPANS, ACCOUNT_COLOR, USER_COLOR, QUOTED_USER_COLOR,
+                RETWEET_USER_COLOR, USER_NICKNAME, QUOTED_USER_NICKNAME, RETWEET_USER_NICKNAME,
+                IN_REPLY_TO_USER_NICKNAME};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
@@ -901,7 +915,8 @@ public interface TwidereDataStore {
                 TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, INSERTED_DATE_TYPE,
-                TYPE_TEXT, TYPE_INT};
+                TYPE_TEXT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
+                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
 
     }
 
@@ -918,8 +933,8 @@ public interface TwidereDataStore {
         String STATUS_QUOTE_SOURCE = "status_quote_source";
         String STATUS_TEXT_PLAIN = "status_text_plain";
         String STATUS_QUOTE_TEXT_PLAIN = "status_quote_text_plain";
-        String STATUS_TEXT_HTML = "status_text_html";
-        String STATUS_QUOTE_TEXT_HTML = "status_quote_text_html";
+        String STATUS_SPANS = "status_spans";
+        String STATUS_QUOTE_SPANS = "status_quote_spans";
         String STATUS_USER_FOLLOWING = "status_user_following";
         String IS_GAP = "status_is_gap";
         String MIN_SORT_POSITION = "min_position";
@@ -940,7 +955,7 @@ public interface TwidereDataStore {
 
         String[] COLUMNS = {_ID, ACCOUNT_KEY, ACTION, TIMESTAMP, STATUS_ID, STATUS_USER_ID,
                 STATUS_RETWEETED_BY_USER_ID, STATUS_QUOTED_USER_ID, STATUS_SOURCE, STATUS_QUOTE_SOURCE,
-                STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_TEXT_HTML, STATUS_QUOTE_TEXT_HTML,
+                STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_SPANS, STATUS_QUOTE_SPANS,
                 IS_GAP, MIN_SORT_POSITION, MAX_SORT_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
                 TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS,
                 STATUS_RETWEET_ID, STATUS_USER_FOLLOWING, INSERTED_DATE, MIN_REQUEST_POSITION,

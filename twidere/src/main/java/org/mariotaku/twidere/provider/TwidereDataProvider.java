@@ -1324,14 +1324,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             userCursor.moveToFirst();
             final String displayName = mUserColorNameManager.getDisplayName(userCursor.getString(idxUserId),
                     userCursor.getString(idxUserName), userCursor.getString(idxUserScreenName),
-                    mNameFirst, false);
+                    mNameFirst);
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.from_name, displayName);
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1);
                 final String othersName = mUserColorNameManager.getDisplayName(userCursor.getString(idxUserId),
                         userCursor.getString(idxUserName), userCursor.getString(idxUserScreenName),
-                        mNameFirst, false);
+                        mNameFirst);
                 notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName);
             } else {
                 notificationContent = resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1);

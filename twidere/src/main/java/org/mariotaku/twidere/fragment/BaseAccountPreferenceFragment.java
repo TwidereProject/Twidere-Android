@@ -63,7 +63,7 @@ public abstract class BaseAccountPreferenceFragment extends BasePreferenceFragme
         if (account != null && intent.hasExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT)) {
             final boolean nameFirst = prefs.getBoolean(KEY_NAME_FIRST, true);
             final String name = mUserColorNameManager.getDisplayName(account.account_key,
-                    account.name, account.screen_name, nameFirst, false);
+                    account.name, account.screen_name, nameFirst);
             activity.setTitle(name);
         }
         updatePreferenceScreen();

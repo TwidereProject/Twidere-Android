@@ -57,6 +57,6 @@ public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
         return InternalTwitterContentUtils.isFiltered(database, null, status.text_plain,
-                status.text_html, status.source, status.retweeted_by_user_id, status.quoted_user_id);
+                status.spans, status.source, status.retweeted_by_user_key, status.quoted_user_key);
     }
 }

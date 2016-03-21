@@ -158,7 +158,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
             IntentUtils.openUserProfile(context, account.account_user, null, true,
                     UserFragment.Referral.SELF_PROFILE);
         } else {
-            IntentUtils.openUserProfile(context, account.account_key, account.account_key.getId(),
+            IntentUtils.openUserProfile(context, account.account_key, account.account_key,
                     account.screen_name, null, true, UserFragment.Referral.SELF_PROFILE);
         }
     }

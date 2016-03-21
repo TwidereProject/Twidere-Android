@@ -167,8 +167,9 @@ public class QuickSearchBarActivity extends BaseActivity implements OnClickListe
         final SuggestionItem item = mUsersSearchAdapter.getSuggestionItem(position);
         switch (mUsersSearchAdapter.getItemViewType(position)) {
             case SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM: {
-                IntentUtils.openUserProfile(this, getSelectedAccountKey(), item.extra_id, item.summary, null,
-                        true, UserFragment.Referral.DIRECT);
+                IntentUtils.openUserProfile(this, getSelectedAccountKey(),
+                        UserKey.valueOf(item.extra_id), item.summary, null, true,
+                        UserFragment.Referral.DIRECT);
                 finish();
                 break;
             }

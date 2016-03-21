@@ -62,7 +62,7 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
     protected void showSucceededMessage(@NonNull Arguments params, @NonNull ParcelableUser user) {
         final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
         final String message = context.getString(R.string.muted_user, manager.getDisplayName(user,
-                nameFirst, true));
+                nameFirst));
         Utils.showInfoMessage(context, message, false);
 
     }

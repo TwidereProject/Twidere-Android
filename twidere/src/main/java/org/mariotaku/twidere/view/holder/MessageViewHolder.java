@@ -24,7 +24,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.text.Spanned;
+import android.text.Spannable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -80,9 +80,10 @@ public class MessageViewHolder extends ViewHolder {
         final long timestamp = cursor.getLong(indices.timestamp);
         final ParcelableMedia[] media = JsonSerializer.parseArray(cursor.getString(indices.media),
                 ParcelableMedia.class);
-        final Spanned text = HtmlSpanBuilder.fromHtml(cursor.getString(indices.text_html));
+        final Spannable text = HtmlSpanBuilder.fromHtml(cursor.getString(indices.text_html));
         // Detect entity support
-        textView.setText(linkify.applyAllLinks(text, accountKey, false, true));
+        linkify.applyAllLinks(text, accountKey, false, true);
+        textView.setText(text);
         time.setText(Utils.formatToLongTimeString(context, timestamp));
         mediaContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
         mediaContainer.displayMedia(media, loader, accountKey, getLayoutPosition(), true,

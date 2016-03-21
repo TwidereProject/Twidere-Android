@@ -185,7 +185,7 @@ public class ActivityTitleSummaryMessage {
                 if (sources.length == 1 && activity.target_object_user_lists != null
                         && activity.target_object_user_lists.length == 1) {
                     final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(
-                            sources[0], nameFirst, false));
+                            sources[0], nameFirst));
                     final SpannableString listName = new SpannableString(activity.target_object_user_lists[0].name);
                     firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     listName.setSpan(new StyleSpan(Typeface.BOLD), 0, listName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -205,7 +205,7 @@ public class ActivityTitleSummaryMessage {
                 final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
                 if (status == null) return null;
                 final SpannableString title = new SpannableString(manager.getDisplayName(status,
-                        nameFirst, false));
+                        nameFirst));
                 title.setSpan(new StyleSpan(Typeface.BOLD), 0, title.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 return new ActivityTitleSummaryMessage(0, 0, title, status.text_unescaped);
@@ -220,7 +220,7 @@ public class ActivityTitleSummaryMessage {
         if (sources == null || sources.length == 0) return null;
         final Configuration configuration = resources.getConfiguration();
         final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(sources[0],
-                nameFirst, false));
+                nameFirst));
         firstDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         if (sources.length == 1) {
             final String format = resources.getString(stringRes);
@@ -228,7 +228,7 @@ public class ActivityTitleSummaryMessage {
         } else if (sources.length == 2) {
             final String format = resources.getString(stringResMulti);
             final SpannableString secondDisplayName = new SpannableString(manager.getDisplayName(sources[1],
-                    nameFirst, false));
+                    nameFirst));
             secondDisplayName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondDisplayName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return SpanFormatter.format(configuration.locale, format, firstDisplayName,
                     secondDisplayName);
@@ -246,14 +246,14 @@ public class ActivityTitleSummaryMessage {
         if (sources == null || sources.length == 0) return null;
         final Configuration configuration = resources.getConfiguration();
         final SpannableString firstSourceName = new SpannableString(manager.getDisplayName(
-                sources[0], nameFirst, false));
+                sources[0], nameFirst));
         firstSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, firstSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         final String displayName;
         final Object target = targets[0];
         if (target instanceof ParcelableUser) {
-            displayName = manager.getDisplayName((ParcelableUser) target, nameFirst, false);
+            displayName = manager.getDisplayName((ParcelableUser) target, nameFirst);
         } else if (target instanceof ParcelableStatus) {
-            displayName = manager.getDisplayName((ParcelableStatus) target, nameFirst, false);
+            displayName = manager.getDisplayName((ParcelableStatus) target, nameFirst);
         } else {
             throw new IllegalArgumentException();
         }
@@ -265,7 +265,7 @@ public class ActivityTitleSummaryMessage {
         } else if (sources.length == 2) {
             final String format = resources.getString(stringResMulti);
             final SpannableString secondSourceName = new SpannableString(manager.getDisplayName(sources[1],
-                    nameFirst, false));
+                    nameFirst));
             secondSourceName.setSpan(new StyleSpan(Typeface.BOLD), 0, secondSourceName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return SpanFormatter.format(configuration.locale, format, firstSourceName,
                     secondSourceName, firstTargetName);

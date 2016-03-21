@@ -97,7 +97,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
 
 
-        itemContent.drawStart(manager.getUserColor(user.key, false));
+        itemContent.drawStart(manager.getUserColor(user.key));
 
         final int userTypeRes = getUserTypeIconRes(user.is_verified, user.is_protected);
         if (userTypeRes != 0) {

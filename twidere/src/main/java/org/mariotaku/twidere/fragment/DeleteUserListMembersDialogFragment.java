@@ -68,7 +68,7 @@ public class DeleteUserListMembersDialogFragment extends BaseSupportDialogFragme
         if (users.length == 1) {
             final ParcelableUser user = users[0];
             final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
-            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst, false);
+            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst);
             builder.setTitle(getString(R.string.delete_user, displayName));
             builder.setMessage(getString(R.string.delete_user_from_list_confirm, displayName, userList.name));
         } else {

@@ -60,7 +60,7 @@ public class CreateUserBlockDialogFragment extends BaseSupportDialogFragment imp
         final ParcelableUser user = getUser();
         if (user != null) {
             final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
-            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst, false);
+            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst);
             builder.setTitle(getString(R.string.block_user, displayName));
             builder.setMessage(getString(R.string.block_user_confirm_message, displayName));
         }

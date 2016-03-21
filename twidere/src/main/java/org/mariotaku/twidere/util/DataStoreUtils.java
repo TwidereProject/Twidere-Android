@@ -650,9 +650,9 @@ public class DataStoreUtils implements Constants {
                 .select(new Columns(new Column(new Table(table), Activities._ID)))
                 .from(new Tables(table, Filters.Links.TABLE_NAME))
                 .where(Expression.or(
-                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_TEXT_HTML),
+                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_SPANS),
                                 "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'"),
-                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_TEXT_HTML),
+                        Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_SPANS),
                                 "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'")
                 ));
         final Expression filterExpression = Expression.or(

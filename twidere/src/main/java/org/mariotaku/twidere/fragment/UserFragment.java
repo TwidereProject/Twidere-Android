@@ -59,7 +59,9 @@ import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -371,7 +373,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mPagesContent.setVisibility(View.VISIBLE);
         } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
             mPagesErrorContainer.setVisibility(View.VISIBLE);
-            final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
+            final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst);
             mPagesErrorText.setText(R.string.user_protected_summary);
             mPagesErrorIcon.setImageResource(R.drawable.ic_info_locked);
             mPagesContent.setVisibility(View.GONE);
@@ -531,7 +533,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mHeaderErrorContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
-        final int userColor = mUserColorNameManager.getUserColor(user.key, true);
+        final int userColor = mUserColorNameManager.getUserColor(user.key);
         mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
         mProfileNameContainer.drawEnd(user.account_color);
         final String nick = mUserColorNameManager.getUserNickname(user.key, true);
@@ -547,9 +549,15 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mScreenNameView.setText(String.format("@%s", user.screen_name));
         mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
         final TwidereLinkify linkify = new TwidereLinkify(this);
-        mDescriptionView.setText(linkify.applyAllLinks(user.description_html != null ?
-                        HtmlSpanBuilder.fromHtml(user.description_html) : user.description_plain,
-                user.account_key, false, false));
+        if (user.description_html != null) {
+            final Spannable text = HtmlSpanBuilder.fromHtml(user.description_html);
+            linkify.applyAllLinks(text, user.account_key, false, false);
+            mDescriptionView.setText(text);
+        } else {
+            mDescriptionView.setText(user.description_plain);
+            Linkify.addLinks(mDescriptionView, Linkify.WEB_URLS);
+        }
+
         mLocationContainer.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
         mLocationView.setText(user.location);
         mURLContainer.setVisibility(TextUtils.isEmpty(user.url) && TextUtils.isEmpty(user.url_expanded) ? View.GONE : View.VISIBLE);
@@ -588,7 +596,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (relationship == null) {
             getFriendship();
         }
-        activity.setTitle(mUserColorNameManager.getDisplayName(user, mNameFirst, true));
+        activity.setTitle(mUserColorNameManager.getDisplayName(user, mNameFirst));
 
         Calendar cal = Calendar.getInstance();
         final int currentMonth = cal.get(Calendar.MONTH), currentDay = cal.get(Calendar.DAY_OF_MONTH);
@@ -706,7 +714,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     final UserKey accountKey = data.getParcelableExtra(EXTRA_KEY);
                     @Referral
                     final String referral = getArguments().getString(EXTRA_REFERRAL);
-                    IntentUtils.openUserProfile(getActivity(), accountKey, user.key.getId(),
+                    IntentUtils.openUserProfile(getActivity(), accountKey, user.key,
                             user.screen_name, null, true, referral);
                 }
                 break;
@@ -924,7 +932,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final boolean isMyself = user.account_key.equals(user.key);
         final MenuItem mentionItem = menu.findItem(R.id.mention);
         if (mentionItem != null) {
-            final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst, true);
+            final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst);
             mentionItem.setTitle(getString(R.string.mention_user_name, displayName));
         }
         MenuUtils.setMenuItemAvailability(menu, R.id.mention, !isMyself);
@@ -1047,7 +1055,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.set_color: {
                 final Intent intent = new Intent(getActivity(), ColorPickerDialogActivity.class);
-                intent.putExtra(EXTRA_COLOR, mUserColorNameManager.getUserColor(user.key, true));
+                intent.putExtra(EXTRA_COLOR, mUserColorNameManager.getUserColor(user.key));
                 intent.putExtra(EXTRA_ALPHA_SLIDER, false);
                 intent.putExtra(EXTRA_CLEAR_BUTTON, true);
                 startActivityForResult(intent, REQUEST_SET_COLOR);
@@ -1512,7 +1520,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mActionBarBackground.setColor(mPrimaryColor);
         }
         if (mUser != null) {
-            final String name = mUserColorNameManager.getDisplayName(mUser, mNameFirst, false);
+            final String name = mUserColorNameManager.getDisplayName(mUser, mNameFirst);
             ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(name, null, color));
         } else {
             ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(null, null, color));

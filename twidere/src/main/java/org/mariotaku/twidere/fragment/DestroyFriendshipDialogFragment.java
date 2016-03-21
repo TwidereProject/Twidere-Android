@@ -61,7 +61,7 @@ public class DestroyFriendshipDialogFragment extends BaseSupportDialogFragment i
         final ParcelableUser user = getUser();
         if (user != null) {
             final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
-            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst, true);
+            final String displayName = mUserColorNameManager.getDisplayName(user, nameFirst);
             builder.setTitle(getString(R.string.unfollow_user, displayName));
             builder.setMessage(getString(R.string.unfollow_user_confirm_message, displayName));
         }

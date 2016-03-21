@@ -470,7 +470,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
                 final String name = cursor.getString(mNameIdx);
                 final String screenName = cursor.getString(mScreenNameIdx);
                 final String displayName = mUserColorNameManager.getDisplayName(userId, name, screenName,
-                        mNameFirst, false);
+                        mNameFirst);
                 text1.setText(displayName);
                 text2.setText(userId.getHost());
             }

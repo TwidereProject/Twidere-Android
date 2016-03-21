@@ -46,9 +46,9 @@ import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.activity.HomeActivity;
 import org.mariotaku.twidere.activity.LinkHandlerActivity;
+import org.mariotaku.twidere.activity.iface.IControlBarActivity;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.DirectMessageEntry;
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter.MessageEntriesAdapterListener;
@@ -203,8 +203,8 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
     @Override
     public void onUserClick(int position, DirectMessageEntry entry) {
-        IntentUtils.openUserProfile(getActivity(), entry.account_key, entry.conversation_id,
-                entry.screen_name, null, true, null);
+        IntentUtils.openUserProfile(getActivity(), entry.account_key,
+                UserKey.valueOf(entry.conversation_id), entry.screen_name, null, true, null);
     }
 
     @Subscribe

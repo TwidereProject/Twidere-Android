@@ -62,10 +62,10 @@ public class CreateFriendshipTask extends AbsFriendshipOperationTask {
         final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
         if (user.is_protected) {
             message = context.getString(R.string.sent_follow_request_to_user,
-                    manager.getDisplayName(user, nameFirst, true));
+                    manager.getDisplayName(user, nameFirst));
         } else {
             message = context.getString(R.string.followed_user,
-                    manager.getDisplayName(user, nameFirst, true));
+                    manager.getDisplayName(user, nameFirst));
         }
         Utils.showOkMessage(context, message, false);
     }

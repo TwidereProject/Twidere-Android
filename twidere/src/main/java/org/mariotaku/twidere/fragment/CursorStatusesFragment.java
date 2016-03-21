@@ -121,8 +121,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
         final String[] projection = Statuses.COLUMNS;
         final String[] selectionArgs = TwidereArrayUtils.toStringArray(accountKeys, 0,
                 accountKeys.length);
-        return new CursorStatusesLoader(context, uri,
-                projection, selection, selectionArgs, sortOrder, fromUser, accountKeys);
+        return new ExtendedObjectCursorLoader<>(context, ParcelableStatusCursorIndices.class, uri,
+                projection, selection, selectionArgs, sortOrder, fromUser);
     }
 
     @Override
@@ -359,45 +359,4 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     protected abstract void updateRefreshState();
 
-    public static class CursorStatusesLoader extends ExtendedObjectCursorLoader<ParcelableStatus> {
-        private final UserKey[] mAccountKeys;
-
-        public CursorStatusesLoader(Context context, Uri uri, String[] projection,
-                                    String selection, String[] selectionArgs, String sortOrder,
-                                    boolean fromUser, UserKey[] accountKeys) {
-            super(context, ParcelableStatusCursorIndices.class, uri, projection, selection, selectionArgs, sortOrder, fromUser);
-            mAccountKeys = accountKeys;
-        }
-
-
-        @Override
-        protected ObjectCursor<ParcelableStatus> createObjectCursor(final Cursor cursor,
-                                                                    final ObjectCursor.CursorIndices<ParcelableStatus> indices) {
-            final ParcelableAccount[] accounts = ParcelableAccountUtils.getAccounts(getContext(), mAccountKeys);
-            return new StatusCursor(cursor, indices, accounts);
-        }
-
-
-        public static class StatusCursor extends ObjectCursor<ParcelableStatus> {
-
-            private final ParcelableAccount[] accounts;
-
-            public StatusCursor(Cursor cursor, CursorIndices<ParcelableStatus> indies, ParcelableAccount[] accounts) {
-                super(cursor, indies);
-                this.accounts = accounts;
-            }
-
-            @Override
-            protected ParcelableStatus get(Cursor cursor, CursorIndices<ParcelableStatus> indices) {
-                final ParcelableStatus activity = super.get(cursor, indices);
-                for (ParcelableAccount account : accounts) {
-                    if (account.account_key.equals(activity.account_key)) {
-                        activity.account_color = account.color;
-                        break;
-                    }
-                }
-                return activity;
-            }
-        }
-    }
 }

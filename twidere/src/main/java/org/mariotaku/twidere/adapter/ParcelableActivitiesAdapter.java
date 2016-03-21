@@ -494,7 +494,7 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
             final ParcelableActivity activity = adapter.getActivity(position);
             final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
             assert status != null;
-            IntentUtils.openUserProfile(context, status.account_key, status.user_key.getId(),
+            IntentUtils.openUserProfile(context, status.account_key, status.user_key,
                     status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
         }
 

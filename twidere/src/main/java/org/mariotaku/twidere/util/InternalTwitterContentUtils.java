@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
@@ -19,6 +20,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 
@@ -79,19 +81,19 @@ public class InternalTwitterContentUtils {
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
-                                     final String textPlain, final String textHtml,
+                                     final String textPlain, final SpanItem[] spans,
                                      final String source, final UserKey retweetedById,
                                      final UserKey quotedUserId) {
-        return isFiltered(database, userKey, textPlain, textHtml, source, retweetedById,
+        return isFiltered(database, userKey, textPlain, spans, source, retweetedById,
                 quotedUserId, true);
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
-                                     final String textPlain, final String textHtml,
+                                     final String textPlain, final SpanItem[] spans,
                                      final String source, final UserKey retweetedById,
                                      final UserKey quotedUserId, final boolean filterRts) {
         if (database == null) return false;
-        if (textPlain == null && textHtml == null && userKey == null && source == null)
+        if (textPlain == null && spans == null && userKey == null && source == null)
             return false;
         final StringBuilder builder = new StringBuilder();
         final List<String> selectionArgs = new ArrayList<>();
@@ -101,13 +103,18 @@ public class InternalTwitterContentUtils {
             builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.VALUE
                     + "||'%' FROM " + Filters.Keywords.TABLE_NAME + "))");
         }
-        if (textHtml != null) {
+        if (spans != null) {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            selectionArgs.add(textHtml);
-            builder.append("(SELECT 1 IN (SELECT ? LIKE '%<a href=\"%'||" + Filters.Links.TABLE_NAME + "."
-                    + Filters.VALUE + "||'%\">%' FROM " + Filters.Links.TABLE_NAME + "))");
+            StringBuilder spansFlat = new StringBuilder();
+            for (SpanItem span : spans) {
+                spansFlat.append(span.link);
+                spansFlat.append(' ');
+            }
+            selectionArgs.add(spansFlat.toString());
+            builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||" + Filters.Links.TABLE_NAME + "."
+                    + Filters.VALUE + "||'%' FROM " + Filters.Links.TABLE_NAME + "))");
         }
         if (userKey != null) {
             if (!selectionArgs.isEmpty()) {
@@ -151,8 +158,8 @@ public class InternalTwitterContentUtils {
     public static boolean isFiltered(final SQLiteDatabase database, final ParcelableStatus status,
                                      final boolean filter_rts) {
         if (database == null || status == null) return false;
-        return isFiltered(database, status.user_key, status.text_plain, status.text_html, status.source,
-                status.retweeted_by_user_id, status.quoted_user_id, filter_rts);
+        return isFiltered(database, status.user_key, status.text_plain, status.spans, status.source,
+                status.retweeted_by_user_key, status.quoted_user_key, filter_rts);
     }
 
     @Nullable
@@ -217,11 +224,6 @@ public class InternalTwitterContentUtils {
         return UNESCAPE_TWITTER_RAW_TEXT.translate(text);
     }
 
-    public static String escapeTwitterStatusText(final CharSequence text) {
-        if (text == null) return null;
-        return ESCAPE_TWITTER_RAW_TEXT.translate(text);
-    }
-
     public static String formatDirectMessageText(final DirectMessage message) {
         if (message == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, true);
@@ -234,6 +236,13 @@ public class InternalTwitterContentUtils {
         final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, true);
         parseEntities(builder, status);
         return builder.build();
+    }
+
+    public static Pair<String, List<SpanItem>> formatStatusTextWithIndices(final Status status) {
+        if (status == null) return null;
+        final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, true);
+        parseEntities(builder, status);
+        return builder.buildWithIndices();
     }
 
     public static String getMediaUrl(MediaEntity entity) {

@@ -469,7 +469,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onUserProfileClick(IStatusViewHolder holder, int position) {
         final FragmentActivity activity = getActivity();
         final ParcelableStatus status = mStatusAdapter.getStatus(position);
-        IntentUtils.openUserProfile(activity, status.account_key, status.user_key.getId(),
+        IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
                 status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
 
@@ -992,9 +992,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             linkClickHandler.setStatus(status);
 
             if (status.retweet_id != null) {
-                final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_id,
+                final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_key,
                         status.retweeted_by_user_name, status.retweeted_by_user_screen_name,
-                        nameFirst, false);
+                        nameFirst);
                 retweetedByView.setText(context.getString(R.string.name_retweeted, retweetedBy));
                 retweetedByView.setVisibility(View.VISIBLE);
             } else {
@@ -1013,24 +1013,25 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quotedTextView.setVisibility(View.VISIBLE);
                 quoteIndicator.setVisibility(View.VISIBLE);
 
-                quotedNameView.setName(manager.getUserNickname(status.quoted_user_id, status.quoted_user_name, false));
+                quotedNameView.setName(manager.getUserNickname(status.quoted_user_key, status.quoted_user_name, false));
                 quotedNameView.setScreenName(String.format("@%s", status.quoted_user_screen_name));
                 quotedNameView.updateText(formatter);
 
-                final CharSequence quotedText = HtmlSpanBuilder.fromHtml(status.quoted_text_html,
-                        status.text_unescaped);
-                quotedTextView.setText(linkify.applyAllLinks(quotedText, status.account_key,
-                        layoutPosition, status.is_possibly_sensitive, skipLinksInText));
+                final SpannableStringBuilder quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
+                ParcelableStatusUtils.applySpans(quotedText, status.quoted_spans);
+                linkify.applyAllLinks(quotedText, status.account_key, layoutPosition,
+                        status.is_possibly_sensitive, skipLinksInText);
+                quotedTextView.setText(quotedText);
 
-                quoteIndicator.setColor(manager.getUserColor(status.user_key, false));
-                profileContainer.drawStart(manager.getUserColor(status.quoted_user_id, false));
+                quoteIndicator.setColor(manager.getUserColor(status.user_key));
+                profileContainer.drawStart(manager.getUserColor(status.quoted_user_key));
             } else {
                 quoteOriginalLink.setVisibility(View.GONE);
                 quotedNameView.setVisibility(View.GONE);
                 quotedTextView.setVisibility(View.GONE);
                 quoteIndicator.setVisibility(View.GONE);
 
-                profileContainer.drawStart(manager.getUserColor(status.user_key, false));
+                profileContainer.drawStart(manager.getUserColor(status.user_key));
             }
 
             final long timestamp;
@@ -1071,10 +1072,11 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
-            final CharSequence text = HtmlSpanBuilder.fromHtml(status.text_html,
-                    status.text_unescaped);
-            textView.setText(linkify.applyAllLinks(text, status.account_key, layoutPosition,
-                    status.is_possibly_sensitive, skipLinksInText));
+            final SpannableStringBuilder text = SpannableStringBuilder.valueOf(status.text_unescaped);
+            ParcelableStatusUtils.applySpans(text, status.spans);
+            linkify.applyAllLinks(text, status.account_key, layoutPosition,
+                    status.is_possibly_sensitive, skipLinksInText);
+            textView.setText(text);
 
             final ParcelableLocation location;
             final String placeFullName;
@@ -1204,14 +1206,14 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case R.id.profile_container: {
                     final FragmentActivity activity = fragment.getActivity();
-                    IntentUtils.openUserProfile(activity, status.account_key, status.user_key.getId(),
+                    IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
                             status.user_screen_name, null, true, UserFragment.Referral.STATUS);
                     break;
                 }
                 case R.id.retweeted_by: {
                     if (status.retweet_id != null) {
                         IntentUtils.openUserProfile(adapter.getContext(), status.account_key,
-                                status.retweeted_by_user_id.getId(), status.retweeted_by_user_screen_name,
+                                status.retweeted_by_user_key, status.retweeted_by_user_screen_name,
                                 null, true, UserFragment.Referral.STATUS);
                     }
                     break;
@@ -1224,7 +1226,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 case R.id.quoted_name: {
                     IntentUtils.openUserProfile(adapter.getContext(), status.account_key,
-                            status.quoted_user_id.getId(), status.quoted_user_screen_name, null,
+                            status.quoted_user_key, status.quoted_user_screen_name, null,
                             true, UserFragment.Referral.STATUS);
                     break;
                 }

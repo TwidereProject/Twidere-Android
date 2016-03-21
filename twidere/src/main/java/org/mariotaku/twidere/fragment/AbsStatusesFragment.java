@@ -420,7 +420,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     public void onUserProfileClick(IStatusViewHolder holder, int position) {
         final FragmentActivity activity = getActivity();
         final ParcelableStatus status = getAdapter().getStatus(position);
-        IntentUtils.openUserProfile(activity, status.account_key, status.user_key.getId(),
+        IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
                 status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
     }
 

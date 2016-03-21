@@ -40,4 +40,29 @@ public class ParcelableCredentialsUtils {
         }
         return null;
     }
+
+
+    @NonNull
+    public static ParcelableCredentials[] getCredentialses(@Nullable final Cursor cursor, @Nullable final ParcelableCredentialsCursorIndices indices) {
+        if (cursor == null || indices == null) return new ParcelableCredentials[0];
+        try {
+            cursor.moveToFirst();
+            final ParcelableCredentials[] credentialses = new ParcelableCredentials[cursor.getCount()];
+            while (!cursor.isAfterLast()) {
+                credentialses[cursor.getPosition()] = indices.newObject(cursor);
+                cursor.moveToNext();
+            }
+            return credentialses;
+        } finally {
+            cursor.close();
+        }
+    }
+
+
+    public static ParcelableCredentials[] getCredentialses(@NonNull final Context context) {
+        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
+                Accounts.COLUMNS, null, null, null);
+        if (cur == null) return new ParcelableCredentials[0];
+        return getCredentialses(cur, new ParcelableCredentialsCursorIndices(cur));
+    }
 }

@@ -48,6 +48,7 @@ import org.mariotaku.twidere.util.LoganSquareMapperFinder;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -80,6 +81,8 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     protected DiskCache mFileCache;
     @Inject
     protected SharedPreferencesWrapper mPreferences;
+    @Inject
+    protected UserColorNameManager mUserColorNameManager;
 
     public TwitterAPIStatusesLoader(@NonNull final Context context,
                                     @Nullable final UserKey accountKey,
@@ -172,7 +175,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             final Status status = statuses.get(i);
             final ParcelableStatus item = ParcelableStatusUtils.fromStatus(status, mAccountKey,
                     insertGap && isGapEnabled() && minIdx == i);
-            item.account_color = credentials.color;
+            ParcelableStatusUtils.updateExtraInformation(item, credentials, mUserColorNameManager);
             data.add(item);
         }
 

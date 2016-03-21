@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.graphics.Typeface;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -45,7 +46,7 @@ public class HtmlSpanBuilder {
 
     private static final IAttoParser PARSER = new MarkupAttoParser();
 
-    public static Spanned fromHtml(String html) throws ParseException {
+    public static Spannable fromHtml(String html) throws ParseException {
         final HtmlParsingConfiguration conf = new HtmlParsingConfiguration();
         final HtmlSpanHandler handler = new HtmlSpanHandler(conf);
         try {
@@ -162,7 +163,7 @@ public class HtmlSpanBuilder {
             tagInfo.add(new TagInfo(sb.length(), elementName, attributes));
         }
 
-        public Spanned getText() {
+        public Spannable getText() {
             return sb;
         }
     }

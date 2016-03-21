@@ -242,7 +242,7 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
             }
         } else if (value instanceof ParcelableUserList) {
             final ParcelableUserList userList = (ParcelableUserList) value;
-            final String createdBy = mUserColorNameManager.getDisplayName(userList, displayName, false);
+            final String createdBy = mUserColorNameManager.getDisplayName(userList, displayName);
             text1.setText(userList.name);
             text2.setText(getString(R.string.created_by, createdBy));
             if (displayProfileImage) {

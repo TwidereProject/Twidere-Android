@@ -73,7 +73,6 @@ import com.squareup.otto.Subscribe;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.OrderBy;
-import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.BaseActivity;
 import org.mariotaku.twidere.activity.ThemedImagePickerActivity;
@@ -798,7 +797,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (activity == null) return;
         if (mRecipient != null) {
             activity.setTitle(mUserColorNameManager.getDisplayName(mRecipient,
-                    mPreferences.getBoolean(KEY_NAME_FIRST), true));
+                    mPreferences.getBoolean(KEY_NAME_FIRST)));
         } else {
             activity.setTitle(R.string.direct_messages);
         }

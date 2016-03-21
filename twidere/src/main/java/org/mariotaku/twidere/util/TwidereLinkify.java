@@ -110,34 +110,32 @@ public final class TwidereLinkify implements Constants {
         setHighlightOption(highlightOption);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final UserKey accountKey,
-                                         final long extraId, final boolean sensitive,
-                                         final boolean skipLinksInText) {
-        return applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive,
+    public void applyAllLinks(@Nullable Spannable text, final UserKey accountKey,
+                                   final long extraId, final boolean sensitive,
+                                   final boolean skipLinksInText) {
+        applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive,
                 mHighlightOption, skipLinksInText);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final UserKey accountKey,
-                                         final boolean sensitive, final boolean skipLinksInText) {
-        return applyAllLinks(text, mOnLinkClickListener, accountKey, -1, sensitive, mHighlightOption, skipLinksInText);
+    public void applyAllLinks(@Nullable Spannable text, final UserKey accountKey,
+                                   final boolean sensitive, final boolean skipLinksInText) {
+        applyAllLinks(text, mOnLinkClickListener, accountKey, -1, sensitive, mHighlightOption, skipLinksInText);
     }
 
-    public SpannableString applyAllLinks(@Nullable CharSequence text, final UserKey accountKey,
-                                         final long extraId, final boolean sensitive,
-                                         final int highlightOption, final boolean skipLinksInText) {
-        return applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive, highlightOption, skipLinksInText);
+    public void applyAllLinks(@Nullable Spannable text, final UserKey accountKey,
+                                   final long extraId, final boolean sensitive,
+                                   final int highlightOption, final boolean skipLinksInText) {
+        applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive, highlightOption, skipLinksInText);
     }
 
-    public SpannableString applyAllLinks(@Nullable final CharSequence text, final OnLinkClickListener listener,
-                                         final UserKey accountKey, final long extraId, final boolean sensitive,
-                                         final int highlightOption, boolean skipLinksInText) {
-        if (text == null) return null;
-        final SpannableString string = SpannableString.valueOf(text);
+    public void applyAllLinks(@Nullable final Spannable text, final OnLinkClickListener listener,
+                              final UserKey accountKey, final long extraId, final boolean sensitive,
+                              final int highlightOption, boolean skipLinksInText) {
+        if (text == null) return;
         for (final int type : ALL_LINK_TYPES) {
             if (type == LINK_TYPE_LINK_IN_TEXT && skipLinksInText) continue;
-            addLinks(string, accountKey, extraId, type, sensitive, listener, highlightOption);
+            addLinks(text, accountKey, extraId, type, sensitive, listener, highlightOption);
         }
-        return string;
     }
 
     public SpannableString applyUserProfileLink(final CharSequence text, final UserKey accountKey, final long extraId,
@@ -202,7 +200,7 @@ public final class TwidereLinkify implements Constants {
     /**
      * Applies a regex to the text of a TextView turning the matches into links.
      */
-    private void addLinks(final SpannableString string, final UserKey accountKey, final long extraId, final int type,
+    private void addLinks(final Spannable string, final UserKey accountKey, final long extraId, final int type,
                           final boolean sensitive, final OnLinkClickListener listener, final int highlightOption) {
         switch (type) {
             case LINK_TYPE_MENTION: {

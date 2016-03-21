@@ -97,8 +97,8 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                                     id = id.substring(1);
                                 }
                                 final String screenName = orig.substring(1, length);
-                                IntentUtils.openUserProfile(context, accountKey, id, screenName, null,
-                                        true, UserFragment.Referral.USER_MENTION);
+                                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(id),
+                                        screenName, null, true, UserFragment.Referral.USER_MENTION);
                                 break;
                             }
                         } else if (TwidereLinkify.isHashSymbol(ch) &&
@@ -125,8 +125,8 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
-                IntentUtils.openUserProfile(context, accountKey, link, null, null, true,
-                        UserFragment.Referral.USER_MENTION);
+                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, null,
+                        true, UserFragment.Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {

@@ -232,7 +232,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                             UserFragment.Referral.SELF_PROFILE);
                 } else {
                     IntentUtils.openUserProfile(activity, account.account_key,
-                            account.account_key.getId(), account.screen_name, null, true,
+                            account.account_key, account.screen_name, null, true,
                             UserFragment.Referral.SELF_PROFILE);
                 }
                 break;

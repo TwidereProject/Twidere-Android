@@ -146,11 +146,11 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment {
         if (status == null) return new FilterItemInfo[0];
         final ArrayList<FilterItemInfo> list = new ArrayList<>();
         if (status.is_retweet) {
-            list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.retweeted_by_user_id,
+            list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.retweeted_by_user_key,
                     status.retweeted_by_user_name, status.retweeted_by_user_screen_name)));
         }
         if (status.is_quote) {
-            list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.quoted_user_id,
+            list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.quoted_user_key,
                     status.quoted_user_name, status.quoted_user_screen_name)));
         }
         list.add(new FilterItemInfo(FilterItemInfo.FILTER_TYPE_USER, new UserItem(status.user_key,
@@ -176,11 +176,11 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment {
     private String getName(final UserColorNameManager manager, final Object value, boolean nameFirst) {
         if (value instanceof ParcelableUserMention) {
             final ParcelableUserMention mention = (ParcelableUserMention) value;
-            return manager.getDisplayName(mention.key, mention.name, mention.screen_name, nameFirst,
-                    true);
+            return manager.getDisplayName(mention.key, mention.name, mention.screen_name, nameFirst
+            );
         } else if (value instanceof UserItem) {
             final UserItem item = (UserItem) value;
-            return manager.getDisplayName(item.key, item.name, item.screen_name, nameFirst, true);
+            return manager.getDisplayName(item.key, item.name, item.screen_name, nameFirst);
         } else
             return ParseUtils.parseString(value);
     }

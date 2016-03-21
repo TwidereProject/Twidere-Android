@@ -155,7 +155,7 @@ public class MenuUtils implements Constants {
                                       @NonNull final AsyncTwitterWrapper twitter) {
         if (menu instanceof ContextMenu) {
             ((ContextMenu) menu).setHeaderTitle(context.getString(R.string.status_menu_title_format,
-                    manager.getDisplayName(status, preferences.getBoolean(KEY_NAME_FIRST), false),
+                    manager.getDisplayName(status, preferences.getBoolean(KEY_NAME_FIRST)),
                     status.text_unescaped));
         }
         final int retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet);
@@ -303,7 +303,7 @@ public class MenuUtils implements Constants {
             }
             case R.id.set_color: {
                 final Intent intent = new Intent(context, ColorPickerDialogActivity.class);
-                final int color = colorNameManager.getUserColor(status.user_key, true);
+                final int color = colorNameManager.getUserColor(status.user_key);
                 if (color != 0) {
                     intent.putExtra(IntentConstants.EXTRA_COLOR, color);
                 }

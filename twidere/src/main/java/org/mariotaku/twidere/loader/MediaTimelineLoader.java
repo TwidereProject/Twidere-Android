@@ -127,7 +127,7 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
         final UserKey retweetUserId = status.is_retweet ? status.user_key : null;
         return !isMyTimeline() && InternalTwitterContentUtils.isFiltered(database, retweetUserId, status.text_plain,
-                status.text_html, status.source, null, status.quoted_user_id);
+                status.spans, status.source, null, status.quoted_user_key);
     }
 
     private boolean isMyTimeline() {
