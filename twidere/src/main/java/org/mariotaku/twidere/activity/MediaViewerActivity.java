@@ -64,6 +64,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.appthemeengine.ATE;
+import com.afollestad.appthemeengine.Config;
+import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.sprylab.android.widget.TextureVideoView;
@@ -90,6 +93,7 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.PermissionUtils;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.media.MediaExtra;
@@ -108,7 +112,7 @@ import pl.droidsonroids.gif.InputSource;
 
 public final class MediaViewerActivity extends AbsMediaViewerActivity implements Constants,
         AppCompatCallback, TaskStackBuilder.SupportParentable, ActionBarDrawerToggle.DelegateProvider,
-        IExtendedActivity {
+        IExtendedActivity, ATEToolbarCustomizer {
 
     private static final int REQUEST_SHARE_MEDIA = 201;
     private static final int REQUEST_PERMISSION_SAVE_MEDIA = 202;
@@ -125,15 +129,65 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     private int mSaveToStoragePosition = -1;
     private File mShareFile;
 
+    private long updateTime = -1L;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ATE.preApply(this, getATEKey());
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         GeneralComponentHelper.build(this).inject(this);
         super.onCreate(savedInstanceState);
+        this.updateTime = System.currentTimeMillis();
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Nullable
+    public String getATEKey() {
+        return ThemeUtils.getATEKey(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ATE.postApply(this, getATEKey());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getDelegate().onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        mActionHelper.dispatchOnPause();
+        super.onPause();
+        if (this.isFinishing()) {
+            ATE.cleanup();
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ATE.invalidateActivity(this, this.updateTime, this.getATEKey());
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        getDelegate().onPostResume();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        mActionHelper.dispatchOnResumeFragments();
     }
 
     @Override
@@ -186,18 +240,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     public boolean isBarShowing() {
         final ActionBar actionBar = getSupportActionBar();
         return actionBar != null && actionBar.isShowing();
-    }
-
-    @Override
-    protected void onPause() {
-        mActionHelper.dispatchOnPause();
-        super.onPause();
-    }
-
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-        mActionHelper.dispatchOnResumeFragments();
     }
 
     @Override
@@ -289,6 +331,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        ATE.themeOverflow(this, this.getATEKey());
         getMenuInflater().inflate(R.menu.menu_media_viewer, menu);
         return true;
     }
@@ -367,6 +410,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -381,7 +425,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
 
     protected final void shareMedia(@CacheProvider.Type final String type) {
         final ViewPager viewPager = findViewPager();
@@ -453,6 +496,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         task.execute();
     }
 
+
     protected final void requestAndSaveToStorage(int position) {
         mSaveToStoragePosition = position;
         if (PermissionUtils.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -492,7 +536,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         }
         AsyncTaskUtils.executeTask(mSaveFileTask);
     }
-
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -562,18 +605,6 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         getDelegate().onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        getDelegate().onStop();
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        getDelegate().onPostResume();
     }
 
     @Override
@@ -826,6 +857,16 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         return mDelegate;
     }
 
+    @Override
+    public int getLightToolbarMode(@Nullable Toolbar toolbar) {
+        return Config.LIGHT_TOOLBAR_OFF;
+    }
+
+    @Override
+    public int getToolbarColor(@Nullable Toolbar toolbar) {
+        return 0;
+    }
+
 
     public static class ImagePageFragment extends SubsampleImageViewerFragment {
         private int mMediaLoadState;
@@ -979,6 +1020,12 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             mGifView = (GifTextureView) view.findViewById(R.id.gif_view);
+            mGifView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((MediaViewerActivity) getActivity()).toggleBar();
+                }
+            });
         }
 
         @Override
