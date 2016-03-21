@@ -1108,8 +1108,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
 
         for (final String mention : mentions) {
-            if (mention.equalsIgnoreCase(status.user_screen_name) || mention.equalsIgnoreCase(myScreenName)
-                    || mention.equalsIgnoreCase(status.retweeted_by_user_screen_name)) {
+            if (mention.equalsIgnoreCase(status.user_screen_name)) {
                 continue;
             }
             mEditText.append("@" + mention + " ");
