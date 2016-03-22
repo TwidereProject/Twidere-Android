@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,7 +32,6 @@ import android.support.v4.content.Loader;
 
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -43,7 +41,6 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.SimpleRefreshTaskParam;
@@ -54,7 +51,6 @@ import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
@@ -138,7 +134,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
             if (!event.uri.equals(getContentUri())) return;
             setRefreshing(event.running);
             if (!event.running) {
-                setLoadMoreIndicatorPosition(IndicatorPosition.END);
+                setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
                 setRefreshEnabled(true);
                 onLoadingFinished();
             }

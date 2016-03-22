@@ -14,7 +14,7 @@
     <PreferenceCategory
         android:key="cat_general"
         android:title="@string/general">
-        <org.mariotaku.twidere.preference.ThemedListPreference
+        <org.mariotaku.twidere.preference.EntrySummaryListPreference
             android:defaultValue="15"
             android:entries="@array/entries_refresh_interval"
             android:entryValues="@array/values_refresh_interval"

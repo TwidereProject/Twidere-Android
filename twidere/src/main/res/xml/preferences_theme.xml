@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/theme">
 
-    <org.mariotaku.twidere.preference.ThemedListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryListPreference
         android:defaultValue="light"
         android:entries="@array/entries_theme"
         android:entryValues="@array/values_theme"
@@ -15,7 +15,7 @@
         <extra
             android:name="recreate_activity"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.ThemedListPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
     <org.mariotaku.twidere.preference.ThemeBackgroundPreference
         android:defaultValue="default"

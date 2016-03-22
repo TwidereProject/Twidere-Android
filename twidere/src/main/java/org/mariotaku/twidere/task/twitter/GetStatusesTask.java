@@ -199,7 +199,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
                         false);
                 ParcelableStatusUtils.updateExtraInformation(status, credentials, manager);
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
-                        sortDiff);
+                        sortDiff, i, j);
                 values[i] = ParcelableStatusValuesCreator.create(status);
                 values[i].put(Statuses.INSERTED_DATE, System.currentTimeMillis());
                 if (minIdx == -1 || item.compareTo(statuses.get(minIdx)) < 0) {
@@ -260,9 +260,18 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         }
     }
 
-    public static long getPositionKey(long timestamp, long sortId, long lastSortId, long sortDiff) {
+    public static long getPositionKey(long timestamp, long sortId, long lastSortId, long sortDiff,
+                                      int position, int count) {
         if (sortDiff == 0) return timestamp;
-        return timestamp + (sortId - lastSortId) * 499 / sortDiff;
+        int extraValue;
+        if (sortDiff > 0) {
+            // descent sorted by time
+            extraValue = count - 1 - position;
+        } else {
+            // ascent sorted by time
+            extraValue = position;
+        }
+        return timestamp + (sortId - lastSortId) * (499 - count) / sortDiff + extraValue;
     }
 
 }

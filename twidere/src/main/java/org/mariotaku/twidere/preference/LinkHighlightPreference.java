@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.preference;
 
 import android.content.Context;
-import android.support.v7.preference.PreferenceViewHolder;
 import android.text.SpannableString;
 import android.util.AttributeSet;
 
@@ -28,7 +27,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.text.TwidereHighLightStyle;
 
-public class LinkHighlightPreference extends ThemedListPreference implements Constants {
+public class LinkHighlightPreference extends EntrySummaryListPreference implements Constants {
 
     private static final int[] ENTRIES_RES = {R.string.none, R.string.highlight, R.string.underline,
             R.string.highlight_and_underline};
@@ -50,14 +49,6 @@ public class LinkHighlightPreference extends ThemedListPreference implements Con
         }
         setEntries(entries);
         setEntryValues(VALUES);
-    }
-
-    @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
-        super.onBindViewHolder(holder);
-//        final TextView summary = (TextView) holder.findViewById(android.R.id.summary);
-//        summary.setVisibility(View.VISIBLE);
-//        summary.setText(getStyledEntry(Utils.getLinkHighlightingStyleInt(getValue()), getEntry()));
     }
 
     private static CharSequence getStyledEntry(final int option, final CharSequence entry) {

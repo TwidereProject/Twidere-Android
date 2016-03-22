@@ -276,7 +276,14 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         if (accountKey == null) {
             accountKey = defaultId;
         }
-        mAccountsAdapter.setSelectedAccountKey(accountKey);
+        ParcelableAccount selectedAccount = null;
+        for (ParcelableAccount account : accounts) {
+            if (account.account_key.equals(accountKey)) {
+                selectedAccount = account;
+                break;
+            }
+        }
+        mAccountsAdapter.setSelectedAccount(selectedAccount);
 
         if (mAccountActionProvider != null) {
             mAccountActionProvider.setExclusive(false);
@@ -563,7 +570,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 final Editor editor = mPreferences.edit();
                 editor.putString(KEY_DEFAULT_ACCOUNT_KEY, account.account_key.toString());
                 editor.apply();
-                mAccountsAdapter.setSelectedAccountKey(account.account_key);
+                mAccountsAdapter.setSelectedAccount(account);
                 updateAccountActions();
                 updateAccountOptionsSeparatorLabel(clickedDrawable);
                 snapshotView.setVisibility(View.INVISIBLE);
@@ -759,10 +766,10 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             return selectedAccount.account_key;
         }
 
-        public void setSelectedAccountKey(@Nullable UserKey accountKey) {
+        public void setSelectedAccount(@Nullable ParcelableAccount account) {
             final ParcelableAccount selectedAccount = getSelectedAccount();
-            if (selectedAccount == null || accountKey == null) return;
-            swap(accountKey, selectedAccount.account_key);
+            if (selectedAccount == null || account == null) return;
+            swap(account, selectedAccount);
         }
 
         @Override
@@ -821,14 +828,14 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             return mInternalAccounts;
         }
 
-        private void swap(UserKey fromId, UserKey toId) {
+        private void swap(@NonNull ParcelableAccount from, @NonNull ParcelableAccount to) {
             int fromIdx = -1, toIdx = -1;
             for (int i = 0, j = mInternalAccounts.length; i < j; i++) {
                 final ParcelableAccount account = mInternalAccounts[i];
-                if (fromId.equals(account.account_key)) {
+                if (from.id == account.id) {
                     fromIdx = i;
                 }
-                if (toId.equals(account.account_key)) {
+                if (to.id == account.id) {
                     toIdx = i;
                 }
             }

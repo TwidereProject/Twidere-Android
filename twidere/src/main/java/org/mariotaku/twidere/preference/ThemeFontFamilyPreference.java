@@ -28,7 +28,7 @@ import android.util.AttributeSet;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 
-public class ThemeFontFamilyPreference extends ThemedListPreference implements Constants {
+public class ThemeFontFamilyPreference extends EntrySummaryListPreference implements Constants {
 
     private static final int[] ENTRIES_RES = {R.string.font_family_regular, R.string.font_family_condensed,
             R.string.font_family_light};

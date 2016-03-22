@@ -51,7 +51,7 @@
             android:summary="@string/proxy_summary"
             android:title="@string/proxy"/>
 
-        <org.mariotaku.twidere.preference.ThemedListPreference
+        <org.mariotaku.twidere.preference.EntrySummaryListPreference
             android:defaultValue="http"
             android:dependency="enable_proxy"
             android:entries="@array/entries_proxy_type"

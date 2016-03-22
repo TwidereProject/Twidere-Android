@@ -36,7 +36,7 @@
             android:value="true"/>
     </SwitchPreferenceCompat>
 
-    <org.mariotaku.twidere.preference.ThemedListPreference
+    <org.mariotaku.twidere.preference.EntrySummaryListPreference
         android:defaultValue="@string/default_profile_image_style"
         android:entries="@array/entries_profile_image_style"
         android:entryValues="@array/values_profile_image_style"
@@ -46,7 +46,7 @@
         <extra
             android:name="notify_change"
             android:value="true"/>
-    </org.mariotaku.twidere.preference.ThemedListPreference>
+    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
