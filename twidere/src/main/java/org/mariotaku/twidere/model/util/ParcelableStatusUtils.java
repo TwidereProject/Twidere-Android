@@ -242,19 +242,19 @@ public class ParcelableStatusUtils {
     public static void updateExtraInformation(ParcelableStatus status, ParcelableCredentials credentials, UserColorNameManager manager) {
         status.account_color = credentials.color;
         status.user_color = manager.getUserColor(status.user_key);
-        status.user_nickname = manager.getUserNickname(status.user_key, false);
+        status.user_nickname = manager.getUserNickname(status.user_key);
 
         if (status.quoted_user_key != null) {
             status.quoted_user_color = manager.getUserColor(status.quoted_user_key);
-            status.quoted_user_nickname = manager.getUserNickname(status.quoted_user_key, false);
+            status.quoted_user_nickname = manager.getUserNickname(status.quoted_user_key);
         }
         if (status.retweeted_by_user_key != null) {
             status.retweet_user_color = manager.getUserColor(status.retweeted_by_user_key);
-            status.retweet_user_nickname = manager.getUserNickname(status.retweeted_by_user_key, false);
+            status.retweet_user_nickname = manager.getUserNickname(status.retweeted_by_user_key);
         }
 
         if (status.in_reply_to_user_id != null) {
-            status.in_reply_to_user_nickname = manager.getUserNickname(status.in_reply_to_user_id, false);
+            status.in_reply_to_user_nickname = manager.getUserNickname(status.in_reply_to_user_id);
         }
     }
 }

@@ -41,6 +41,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -780,7 +781,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
         final ParcelableStatus status = mStatusAdapter.getStatus(contextMenuInfo.getPosition());
         inflater.inflate(R.menu.action_status, menu);
-        MenuUtils.setupForStatus(getContext(), mPreferences, menu, status, mUserColorNameManager,
+        MenuUtils.setupForStatus(getContext(), mPreferences, menu, status,
                 mTwitterWrapper);
     }
 
@@ -976,6 +977,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             initViews();
         }
 
+        @UiThread
         public void displayStatus(@Nullable final ParcelableCredentials account,
                                   @Nullable final ParcelableStatus status,
                                   @Nullable final StatusActivity statusActivity,
@@ -984,7 +986,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final StatusFragment fragment = adapter.getFragment();
             final Context context = adapter.getContext();
             final MediaLoaderWrapper loader = adapter.getMediaLoader();
-            final UserColorNameManager manager = adapter.getUserColorNameManager();
             final BidiFormatter formatter = adapter.getBidiFormatter();
             final AsyncTwitterWrapper twitter = adapter.getTwitterWrapper();
             final boolean nameFirst = adapter.isNameFirst();
@@ -992,9 +993,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             linkClickHandler.setStatus(status);
 
             if (status.retweet_id != null) {
-                final String retweetedBy = manager.getDisplayName(status.retweeted_by_user_key,
-                        status.retweeted_by_user_name, status.retweeted_by_user_screen_name,
-                        nameFirst);
+                final String retweetedBy = UserColorNameManager.decideDisplayName(status.retweet_user_nickname,
+                        status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst);
                 retweetedByView.setText(context.getString(R.string.name_retweeted, retweetedBy));
                 retweetedByView.setVisibility(View.VISIBLE);
             } else {
@@ -1013,7 +1013,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 quotedTextView.setVisibility(View.VISIBLE);
                 quoteIndicator.setVisibility(View.VISIBLE);
 
-                quotedNameView.setName(manager.getUserNickname(status.quoted_user_key, status.quoted_user_name, false));
+                quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
+                        status.quoted_user_name));
                 quotedNameView.setScreenName(String.format("@%s", status.quoted_user_screen_name));
                 quotedNameView.updateText(formatter);
 
@@ -1023,15 +1024,15 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         status.is_possibly_sensitive, skipLinksInText);
                 quotedTextView.setText(quotedText);
 
-                quoteIndicator.setColor(manager.getUserColor(status.user_key));
-                profileContainer.drawStart(manager.getUserColor(status.quoted_user_key));
+                quoteIndicator.setColor(status.user_color);
+                profileContainer.drawStart(status.quoted_user_color);
             } else {
                 quoteOriginalLink.setVisibility(View.GONE);
                 quotedNameView.setVisibility(View.GONE);
                 quotedTextView.setVisibility(View.GONE);
                 quoteIndicator.setVisibility(View.GONE);
 
-                profileContainer.drawStart(manager.getUserColor(status.user_key));
+                profileContainer.drawStart(status.user_color);
             }
 
             final long timestamp;
@@ -1042,8 +1043,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 timestamp = status.timestamp;
             }
 
-
-            nameView.setName(manager.getUserNickname(status.user_key, status.user_name, false));
+            nameView.setName(UserColorNameManager.decideNickname(status.user_nickname, status.user_name));
             nameView.setScreenName(String.format("@%s", status.user_screen_name));
             nameView.updateText(formatter);
 
@@ -1160,7 +1160,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
 
             MenuUtils.setupForStatus(context, fragment.mPreferences, menuBar.getMenu(), status,
-                    adapter.getStatusAccount(), manager, twitter);
+                    adapter.getStatusAccount(), twitter);
 
 
             final String lang = status.lang;

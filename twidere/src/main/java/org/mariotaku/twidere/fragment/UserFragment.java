@@ -44,6 +44,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -143,6 +144,7 @@ import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.UserColorNameManager.UserColorChangedListener;
 import org.mariotaku.twidere.util.UserColorNameManager.UserNicknameChangedListener;
 import org.mariotaku.twidere.util.Utils;
@@ -236,7 +238,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private boolean mNameFirst;
     private int mPreviousTabItemIsDark, mPreviousActionBarItemIsDark;
     private boolean mHideBirthdayView;
-    private boolean mFirstCreate;
     private UserEvent mUserEvent;
 
     private final LoaderCallbacks<SingleResponse<UserRelationship>> mFriendshipLoaderCallbacks =
@@ -282,7 +283,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mProgressContainer.setVisibility(View.VISIBLE);
                 mHeaderErrorTextView.setText(null);
                 mHeaderErrorTextView.setVisibility(View.GONE);
-                setListShown(false);
             }
             final ParcelableUser user = mUser;
             final boolean loadFromCache = user == null || !user.is_cache && user.key.check(userId, null);
@@ -304,7 +304,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mCardContent.setVisibility(View.VISIBLE);
                 mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
-                setListShown(true);
                 displayUser(user);
                 if (user.is_cache) {
                     final Bundle args = new Bundle();
@@ -318,7 +317,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mCardContent.setVisibility(View.VISIBLE);
                 mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
-                setListShown(true);
                 displayUser(mUser);
             } else {
                 if (data.hasException()) {
@@ -332,18 +330,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
     };
-
-    private static void setCompatToolbarOverlayAlpha(FragmentActivity activity, float alpha) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) return;
-        final View windowOverlay = activity.findViewById(R.id.window_overlay);
-        if (windowOverlay != null) {
-            windowOverlay.setAlpha(alpha);
-            return;
-        }
-        final Drawable drawable = ThemeUtils.getCompatToolbarOverlay(activity);
-        if (drawable == null) return;
-        drawable.setAlpha(Math.round(alpha * 255));
-    }
 
     private void showRelationship(@Nullable final ParcelableUser user,
                                   @Nullable final UserRelationship userRelationship) {
@@ -373,7 +359,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mPagesContent.setVisibility(View.VISIBLE);
         } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
             mPagesErrorContainer.setVisibility(View.VISIBLE);
-            final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst);
             mPagesErrorText.setText(R.string.user_protected_summary);
             mPagesErrorIcon.setImageResource(R.drawable.ic_info_locked);
             mPagesContent.setVisibility(View.GONE);
@@ -521,6 +506,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
     }
 
+    @UiThread
     public void displayUser(final ParcelableUser user) {
         mUser = user;
         final FragmentActivity activity = getActivity();
@@ -533,11 +519,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mHeaderErrorContainer.setVisibility(View.GONE);
         mProgressContainer.setVisibility(View.GONE);
         mUser = user;
-        final int userColor = mUserColorNameManager.getUserColor(user.key);
-        mProfileImageView.setBorderColor(userColor != 0 ? userColor : Color.WHITE);
+        mProfileImageView.setBorderColor(user.color != 0 ? user.color : Color.WHITE);
         mProfileNameContainer.drawEnd(user.account_color);
-        final String nick = mUserColorNameManager.getUserNickname(user.key, true);
-        mNameView.setText(mBidiFormatter.unicodeWrap(TextUtils.isEmpty(nick) ? user.name : getString(R.string.name_with_nickname, user.name, nick)));
+        mNameView.setText(mBidiFormatter.unicodeWrap(TextUtils.isEmpty(user.nickname) ? user.name : getString(R.string.name_with_nickname, user.name, user.nickname)));
         final int typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected);
         if (typeIconRes != 0) {
             mProfileTypeView.setImageResource(typeIconRes);
@@ -577,8 +561,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mGroupsContainer.setVisibility(groupsCount < 0 ? View.GONE : View.VISIBLE);
 
         mMediaLoader.displayOriginalProfileImage(mProfileImageView, user);
-        if (userColor != 0) {
-            setUiColor(userColor);
+        if (user.color != 0) {
+            setUiColor(user.color);
         } else if (user.link_color != 0) {
             setUiColor(user.link_color);
         } else if (activity instanceof IThemedActivity) {
@@ -596,7 +580,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (relationship == null) {
             getFriendship();
         }
-        activity.setTitle(mUserColorNameManager.getDisplayName(user, mNameFirst));
+        activity.setTitle(UserColorNameManager.decideDisplayName(user.nickname, user.name,
+                user.screen_name, mNameFirst));
 
         Calendar cal = Calendar.getInstance();
         final int currentMonth = cal.get(Calendar.MONTH), currentDay = cal.get(Calendar.DAY_OF_MONTH);
@@ -731,7 +716,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mFirstCreate = savedInstanceState == null;
         final FragmentActivity activity = getActivity();
         setHasOptionsMenu(true);
         mUserColorNameManager.registerColorChangedListener(this);
@@ -924,6 +908,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
+    @UiThread
     public void onPrepareOptionsMenu(final Menu menu) {
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
@@ -932,7 +917,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final boolean isMyself = user.account_key.equals(user.key);
         final MenuItem mentionItem = menu.findItem(R.id.mention);
         if (mentionItem != null) {
-            final String displayName = mUserColorNameManager.getDisplayName(user, mNameFirst);
+            final String displayName = UserColorNameManager.decideDisplayName(user.nickname,
+                    user.name, user.screen_name, mNameFirst);
             mentionItem.setTitle(getString(R.string.mention_user_name, displayName));
         }
         MenuUtils.setMenuItemAvailability(menu, R.id.mention, !isMyself);
@@ -1066,7 +1052,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.set_nickname: {
-                final String nick = mUserColorNameManager.getUserNickname(user.key, true);
+                final String nick = mUserColorNameManager.getUserNickname(user.key);
                 SetUserNicknameDialogFragment.show(getFragmentManager(), user.key, nick);
                 break;
             }
@@ -1475,9 +1461,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return true;
     }
 
-    public void setListShown(boolean shown) {
-    }
-
     private void getFriendship() {
         final ParcelableUser user = getUser();
         if (user == null) return;
@@ -1558,7 +1541,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     private void setupUserPages() {
-        final Context context = getActivity();
         final Bundle args = getArguments(), tabArgs = new Bundle();
         final ParcelableUser user = args.getParcelable(EXTRA_USER);
         if (user != null) {
@@ -1583,30 +1565,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
     }
 
-    private void updateFollowProgressState() {
-        final AsyncTwitterWrapper twitter = mTwitterWrapper;
-        final ParcelableUser user = getUser();
-        if (twitter == null || user == null) {
-            mFollowButton.setVisibility(View.GONE);
-            mFollowProgress.setVisibility(View.GONE);
-            return;
-        }
-        final LoaderManager lm = getLoaderManager();
-        final boolean loadingRelationship = lm.getLoader(LOADER_ID_FRIENDSHIP) != null;
-        final UserKey accountKey = user.account_key;
-        final boolean updatingRelationship = twitter.isUpdatingRelationship(accountKey, user.key);
-        if (loadingRelationship || updatingRelationship) {
-            mFollowButton.setVisibility(View.GONE);
-            mFollowProgress.setVisibility(View.VISIBLE);
-        } else if (mRelationship != null) {
-            mFollowButton.setVisibility(View.VISIBLE);
-            mFollowProgress.setVisibility(View.GONE);
-        } else {
-            mFollowButton.setVisibility(View.GONE);
-            mFollowProgress.setVisibility(View.GONE);
-        }
-    }
-
     private void updateScrollOffset(int offset) {
         final View space = mProfileBannerSpace;
         final ProfileBannerImageView profileBannerView = mProfileBannerView;
@@ -1614,8 +1572,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final View profileBannerContainer = mProfileBannerContainer;
         final int spaceHeight = space.getHeight();
         final float factor = TwidereMathUtils.clamp(spaceHeight == 0 ? 0 : (offset / (float) spaceHeight), 0, 1);
-//        profileBannerContainer.setTranslationY(Math.max(-offset, -spaceHeight));
-//        profileBannerView.setTranslationY(Math.min(offset, spaceHeight) / 2);
         profileBannerContainer.setTranslationY(-offset);
         profileBannerView.setTranslationY(offset / 2);
         profileBirthdayBannerView.setTranslationY(offset / 2);

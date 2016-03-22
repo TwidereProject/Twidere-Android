@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -15,6 +16,7 @@ import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
 
 /**
  * Processing ParcelableUser
@@ -115,5 +117,11 @@ public class ParcelableUserUtils implements TwidereConstants {
             return user.profile_background_url;
         }
         return null;
+    }
+
+    public static void updateExtraInformation(ParcelableUser user, ParcelableAccount account, UserColorNameManager manager) {
+        user.account_color = account.color;
+        user.color = manager.getUserColor(user.key);
+        user.nickname = manager.getUserNickname(user.key);
     }
 }

@@ -264,7 +264,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             quotedTextView.setVisibility(View.VISIBLE);
             quoteIndicator.setVisibility(View.VISIBLE);
 
-            quotedNameView.setName(UserColorNameManager.getNickname(status.quoted_user_nickname,
+            quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
                     status.quoted_user_name));
             quotedNameView.setScreenName("@" + status.quoted_user_screen_name);
 
@@ -308,7 +308,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         } else {
             timeView.setTime(status.timestamp);
         }
-        nameView.setName(UserColorNameManager.getNickname(status.user_nickname, status.user_name));
+        nameView.setName(UserColorNameManager.decideNickname(status.user_nickname, status.user_name));
         nameView.setScreenName("@" + status.user_screen_name);
 
         if (statusInfoSpace != null) {

@@ -105,7 +105,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         } else {
             profileTypeView.setImageDrawable(null);
         }
-        nameView.setName(manager.getUserNickname(user.key, user.name, false));
+        nameView.setName(manager.getUserNickname(user.key, user.name));
         nameView.setScreenName("@" + user.screen_name);
         nameView.updateText(adapter.getBidiFormatter());
         descriptionView.setVisibility(TextUtils.isEmpty(user.description_unescaped) ? View.GONE : View.VISIBLE);

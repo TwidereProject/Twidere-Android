@@ -24,7 +24,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.support.annotation.WorkerThread;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.User;
@@ -48,14 +48,14 @@ public class UserColorNameManager implements TwidereConstants {
         mNicknamePreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public static String decideDisplayName(@NonNull final String nickname, final String name,
+    public static String decideDisplayName(final String nickname, final String name,
                                            final String screenName, final boolean nameFirst) {
         if (!isEmpty(nickname)) return nickname;
         return nameFirst && !isEmpty(name) ? name : "@" + screenName;
     }
 
-    public static String getNickname(@NonNull final String nickname, final String name) {
-        return TextUtils.isEmpty(nickname) ? name : nickname;
+    public static String decideNickname(String nick, String name) {
+        return isEmpty(nick) ? name : nick;
     }
 
     public void registerColorChangedListener(final UserColorChangedListener listener) {
@@ -92,46 +92,51 @@ public class UserColorNameManager implements TwidereConstants {
         editor.apply();
     }
 
+    @WorkerThread
     public String getDisplayName(final ParcelableUser user, final boolean nameFirst) {
         return getDisplayName(user.key, user.name, user.screen_name, nameFirst);
     }
 
+    @WorkerThread
     public String getDisplayName(final User user, final boolean nameFirst) {
         return getDisplayName(UserKeyUtils.fromUser(user), user.getName(), user.getScreenName(), nameFirst);
     }
 
+    @WorkerThread
     public String getDisplayName(final ParcelableUserList user, final boolean nameFirst) {
         return getDisplayName(user.user_key, user.user_name, user.user_screen_name, nameFirst);
     }
 
+    @WorkerThread
     public String getDisplayName(final ParcelableStatus status, final boolean nameFirst) {
         return getDisplayName(status.user_key, status.user_name, status.user_screen_name, nameFirst);
     }
 
+    @WorkerThread
     public String getDisplayName(@NonNull final UserKey userId, final String name,
                                  final String screenName, final boolean nameFirst) {
         return getDisplayName(userId.toString(), name, screenName, nameFirst);
     }
 
+    @WorkerThread
     public String getDisplayName(@NonNull final String userId, final String name,
                                  final String screenName, final boolean nameFirst) {
-        final String nick = getNickname(userId);
+        final String nick = getUserNicknameInternal(userId);
         return decideDisplayName(nick, name, screenName, nameFirst);
     }
 
+    @WorkerThread
     public int getUserColor(@NonNull final UserKey userId) {
         return getUserColor(userId.toString());
     }
 
+    @WorkerThread
     public int getUserColor(@NonNull final String userId) {
         return mColorPreferences.getInt(userId, Color.TRANSPARENT);
     }
 
-    public String getUserNickname(@NonNull final UserKey userId) {
-        return getUserNickname(userId, false);
-    }
-
-    public String getUserNickname(@NonNull final UserKey userKey, final boolean ignoreCache) {
+    @WorkerThread
+    public String getUserNickname(@NonNull final UserKey userKey) {
         final String userKeyString = userKey.toString();
         if (mNicknamePreferences.contains(userKey.getId())) {
             String nick = mNicknamePreferences.getString(userKey.getId(), null);
@@ -144,31 +149,25 @@ public class UserColorNameManager implements TwidereConstants {
         return mNicknamePreferences.getString(userKeyString, null);
     }
 
-    public String getNickname(@NonNull final String userId) {
-        return mNicknamePreferences.getString(userId, null);
-    }
-
+    @WorkerThread
     public String getUserNickname(@NonNull final UserKey userId, final String name) {
-        return getUserNickname(userId, name, false);
+        final String nick = getUserNickname(userId);
+        return decideNickname(nick, name);
     }
 
-    public String getUserNickname(@NonNull final UserKey userId, final String name, final boolean ignoreCache) {
-        final String nick = getUserNickname(userId, ignoreCache);
-        return isEmpty(nick) ? name : nick;
-    }
-
+    @WorkerThread
     public String getUserNickname(@NonNull final String userId, final String name) {
-        final String nick = getNickname(userId);
-        return isEmpty(nick) ? name : nick;
+        final String nick = getUserNicknameInternal(userId);
+        return decideNickname(nick, name);
     }
 
     public Set<? extends Map.Entry<String, ?>> getNameEntries() {
         return mNicknamePreferences.getAll().entrySet();
     }
 
-    public String getName(@NonNull final UserKey id, String name) {
-        final String nick = getUserNickname(id, true);
-        return TextUtils.isEmpty(nick) ? name : nick;
+    @WorkerThread
+    private String getUserNicknameInternal(@NonNull final String userId) {
+        return mNicknamePreferences.getString(userId, null);
     }
 
     public interface UserColorChangedListener {

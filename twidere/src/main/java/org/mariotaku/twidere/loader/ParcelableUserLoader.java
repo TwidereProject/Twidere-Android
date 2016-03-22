@@ -48,6 +48,10 @@ import org.mariotaku.twidere.task.UpdateAccountInfoTask;
 import org.mariotaku.twidere.task.util.TaskStarter;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
+import org.mariotaku.twidere.util.UserColorNameManager;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
+
+import javax.inject.Inject;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
 
@@ -59,10 +63,14 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
     private final String mUserId;
     private final String mScreenName;
 
+    @Inject
+    UserColorNameManager mUserColorNameManager;
+
     public ParcelableUserLoader(final Context context, final UserKey accountKey, final String userId,
                                 final String screenName, final Bundle extras, final boolean omitIntentExtra,
                                 final boolean loadFromCache) {
         super(context);
+        GeneralComponentHelper.build(context).inject(this);
         this.mOmitIntentExtra = omitIntentExtra;
         this.mLoadFromCache = loadFromCache;
         this.mExtras = extras;
@@ -92,7 +100,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             if (user != null) {
                 final ContentValues values = ParcelableUserValuesCreator.create(user);
                 resolver.insert(CachedUsers.CONTENT_URI, values);
-                user.account_color = credentials.color;
+                ParcelableUserUtils.updateExtraInformation(user, credentials, mUserColorNameManager);
                 return SingleResponse.getInstance(user);
             }
         }
@@ -135,7 +143,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             final ContentValues cachedUserValues = createCachedUser(twitterUser);
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues);
             final ParcelableUser user = ParcelableUserUtils.fromUser(twitterUser, accountKey);
-            user.account_color = credentials.color;
+            ParcelableUserUtils.updateExtraInformation(user, credentials, mUserColorNameManager);
             final SingleResponse<ParcelableUser> response = SingleResponse.getInstance(user);
             response.getExtras().putParcelable(EXTRA_ACCOUNT, credentials);
             return response;

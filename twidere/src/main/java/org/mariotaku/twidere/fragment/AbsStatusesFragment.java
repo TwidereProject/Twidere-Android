@@ -566,7 +566,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
                 (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
         final ParcelableStatus status = adapter.getStatus(contextMenuInfo.getPosition());
         inflater.inflate(R.menu.action_status, menu);
-        MenuUtils.setupForStatus(getContext(), mPreferences, menu, status, mUserColorNameManager,
+        MenuUtils.setupForStatus(getContext(), mPreferences, menu, status,
                 mTwitterWrapper);
     }
 

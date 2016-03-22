@@ -402,7 +402,7 @@ public class QuickSearchBarActivity extends BaseActivity implements OnClickListe
                     final UserKey userKey = UserKey.valueOf(cursor.getString(mIndices.extra_id));
                     assert userKey != null;
                     holder.text1.setText(mUserColorNameManager.getUserNickname(userKey,
-                            cursor.getString(mIndices.title), false));
+                            cursor.getString(mIndices.title)));
                     holder.text2.setVisibility(View.VISIBLE);
                     holder.text2.setText(String.format("@%s", cursor.getString(mIndices.summary)));
                     holder.icon.clearColorFilter();

@@ -613,7 +613,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
                 final ParcelableStatus status = getActivityStatus(position);
                 if (status == null) return;
                 inflater.inflate(R.menu.action_status, menu);
-                MenuUtils.setupForStatus(getContext(), mPreferences, menu, status, mUserColorNameManager,
+                MenuUtils.setupForStatus(getContext(), mPreferences, menu, status,
                         mTwitterWrapper);
                 break;
             }

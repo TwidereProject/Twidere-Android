@@ -30,6 +30,11 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
+import org.mariotaku.twidere.util.UserColorNameManager;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
+
+import javax.inject.Inject;
 
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT;
 import static org.mariotaku.twidere.util.Utils.findStatus;
@@ -44,9 +49,13 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
     private final UserKey mAccountId;
     private final String mStatusId;
 
+    @Inject
+    UserColorNameManager mUserColorNameManager;
+
     public ParcelableStatusLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
                                   final UserKey accountId, final String statusId) {
         super(context);
+        GeneralComponentHelper.build(context).inject(this);
         mOmitIntentExtra = omitIntentExtra;
         mExtras = extras;
         mAccountId = accountId;
@@ -66,10 +75,9 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
         }
         try {
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), mAccountId);
+            if (credentials == null) return SingleResponse.getInstance();
             final ParcelableStatus status = findStatus(getContext(), mAccountId, mStatusId);
-            if (credentials != null) {
-                status.account_color = credentials.color;
-            }
+            ParcelableStatusUtils.updateExtraInformation(status, credentials, mUserColorNameManager);
             final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(status);
             final Bundle extras = response.getExtras();
             extras.putParcelable(EXTRA_ACCOUNT, credentials);

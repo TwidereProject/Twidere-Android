@@ -78,7 +78,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         final String name = cursor.getString(ConversationEntries.IDX_NAME);
         final String screenName = cursor.getString(ConversationEntries.IDX_SCREEN_NAME);
 
-        nameView.setName(manager.getUserNickname(conversationId, name, false));
+        nameView.setName(manager.getUserNickname(conversationId, name));
         nameView.setScreenName("@" + screenName);
         nameView.updateText(adapter.getBidiFormatter());
         textView.setText(toPlainText(cursor.getString(ConversationEntries.IDX_TEXT)));

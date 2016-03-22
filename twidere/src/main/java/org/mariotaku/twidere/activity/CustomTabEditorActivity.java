@@ -235,7 +235,7 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
         icon.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
         if (value instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) value;
-            text1.setText(mUserColorNameManager.getUserNickname(user.key, user.name, false));
+            text1.setText(mUserColorNameManager.getUserNickname(user.key, user.name));
             text2.setText(String.format("@%s", user.screen_name));
             if (displayProfileImage) {
                 mMediaLoader.displayProfileImage(icon, user);
