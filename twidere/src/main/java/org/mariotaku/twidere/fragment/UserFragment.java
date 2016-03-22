@@ -914,7 +914,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = getUser();
         if (twitter == null || user == null) return;
 
-        final boolean isMyself = user.account_key.equals(user.key);
+        final boolean isMyself = user.account_key.maybeEquals(user.key);
         final MenuItem mentionItem = menu.findItem(R.id.mention);
         if (mentionItem != null) {
             final String displayName = UserColorNameManager.decideDisplayName(user.nickname,
@@ -1304,7 +1304,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.follow: {
-                if (user.account_key.equals(user.key)) {
+                if (user.account_key.maybeEquals(user.key)) {
                     IntentUtils.openProfileEditor(getActivity(), user.account_key);
                     break;
                 }
