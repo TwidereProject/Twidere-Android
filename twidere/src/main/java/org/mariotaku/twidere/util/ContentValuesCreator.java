@@ -33,6 +33,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageValuesCreator;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -201,11 +202,24 @@ public final class ContentValuesCreator implements TwidereConstants {
     }
 
     @NonNull
-    public static ContentValues createActivity(final ParcelableActivity activity) {
+    public static ContentValues createActivity(final ParcelableActivity activity,
+                                               ParcelableCredentials credentials, UserColorNameManager manager) {
         final ContentValues values = new ContentValues();
         final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
         if (status != null) {
+            ParcelableStatusUtils.updateExtraInformation(status, credentials, manager);
             createStatusActivity(status, values);
+
+            activity.account_color = status.account_color;
+            activity.status_user_color = status.user_color;
+            activity.status_retweet_user_color = status.retweet_user_color;
+            activity.status_quoted_user_color = status.quoted_user_color;
+
+            activity.status_user_nickname = status.user_nickname;
+            activity.status_in_reply_to_user_nickname = status.in_reply_to_user_nickname;
+            activity.status_retweet_user_nickname = status.retweet_user_nickname;
+            activity.status_quoted_user_nickname = status.quoted_user_nickname;
+
         }
         ParcelableActivityValuesCreator.writeTo(activity, values);
         return values;

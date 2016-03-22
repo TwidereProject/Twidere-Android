@@ -1302,12 +1302,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(Statuses.TABLE_NAME,
                 selection).getSQL();
         final String[] selectionArgs = {accountKey.toString()};
-        final String[] userProjection = {Statuses.USER_ID, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
+        final String[] userProjection = {Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
         final String[] statusProjection = {Statuses.STATUS_ID};
         final Cursor statusCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, statusProjection,
                 filteredSelection, selectionArgs, null, null, Statuses.DEFAULT_SORT_ORDER);
         final Cursor userCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, userProjection,
-                filteredSelection, selectionArgs, Statuses.USER_ID, null, Statuses.DEFAULT_SORT_ORDER);
+                filteredSelection, selectionArgs, Statuses.USER_KEY, null, Statuses.DEFAULT_SORT_ORDER);
         //noinspection TryFinallyCanBeTryWithResources
         try {
             final int usersCount = userCursor.getCount();

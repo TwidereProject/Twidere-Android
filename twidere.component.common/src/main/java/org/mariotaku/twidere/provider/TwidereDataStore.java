@@ -807,7 +807,7 @@ public interface TwidereDataStore {
          * User's ID of the status.<br>
          * Type: INTEGER (long)
          */
-        String USER_ID = "user_id";
+        String USER_KEY = "user_id";
 
         String IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id";
 
@@ -829,7 +829,7 @@ public interface TwidereDataStore {
 
         String RETWEET_TIMESTAMP = "retweet_timestamp";
 
-        String RETWEETED_BY_USER_ID = "retweeted_by_user_id";
+        String RETWEETED_BY_USER_KEY = "retweeted_by_user_id";
 
         String RETWEETED_BY_USER_NAME = "retweeted_by_user_name";
 
@@ -890,11 +890,11 @@ public interface TwidereDataStore {
         String RETWEET_USER_NICKNAME = "retweet_user_nickname";
         String IN_REPLY_TO_USER_NICKNAME = "in_reply_to_user_nickname";
 
-        String[] COLUMNS = {_ID, ACCOUNT_KEY, STATUS_ID, SORT_ID, USER_ID, STATUS_TIMESTAMP,
+        String[] COLUMNS = {_ID, ACCOUNT_KEY, STATUS_ID, SORT_ID, USER_KEY, STATUS_TIMESTAMP,
                 TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED, USER_NAME, USER_SCREEN_NAME,
                 USER_PROFILE_IMAGE_URL, IN_REPLY_TO_STATUS_ID, IN_REPLY_TO_USER_ID, IN_REPLY_TO_USER_NAME,
                 IN_REPLY_TO_USER_SCREEN_NAME, SOURCE, LOCATION, RETWEET_COUNT, FAVORITE_COUNT, REPLY_COUNT,
-                RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_ID, RETWEETED_BY_USER_NAME,
+                RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_KEY, RETWEETED_BY_USER_NAME,
                 RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE, QUOTED_ID, QUOTED_TEXT_HTML,
                 QUOTED_TEXT_PLAIN, QUOTED_TEXT_UNESCAPED, QUOTED_TIMESTAMP, QUOTED_SOURCE, QUOTED_USER_KEY,
                 QUOTED_USER_NAME, QUOTED_USER_SCREEN_NAME, QUOTED_USER_PROFILE_IMAGE,
@@ -937,6 +937,17 @@ public interface TwidereDataStore {
         String STATUS_QUOTE_SPANS = "status_quote_spans";
         String STATUS_USER_FOLLOWING = "status_user_following";
         String IS_GAP = "status_is_gap";
+
+        String ACCOUNT_COLOR = "account_color";
+        String STATUS_USER_COLOR = "status_user_color";
+        String STATUS_QUOTED_USER_COLOR = "status_quoted_user_color";
+        String STATUS_RETWEET_USER_COLOR = "status_retweet_user_color";
+
+        String STATUS_USER_NICKNAME = "status_user_nickname";
+        String STATUS_QUOTED_USER_NICKNAME = "status_quoted_user_nickname";
+        String STATUS_RETWEET_USER_NICKNAME = "status_retweet_user_nickname";
+        String STATUS_IN_REPLY_TO_USER_NICKNAME = "status_in_reply_to_user_nickname";
+
         String MIN_SORT_POSITION = "min_position";
         String MAX_SORT_POSITION = "max_position";
 
@@ -959,12 +970,16 @@ public interface TwidereDataStore {
                 IS_GAP, MIN_SORT_POSITION, MAX_SORT_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
                 TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS,
                 STATUS_RETWEET_ID, STATUS_USER_FOLLOWING, INSERTED_DATE, MIN_REQUEST_POSITION,
-                MAX_REQUEST_POSITION, POSITION_KEY};
+                MAX_REQUEST_POSITION, POSITION_KEY, ACCOUNT_COLOR, STATUS_USER_COLOR,
+                STATUS_QUOTED_USER_COLOR, STATUS_RETWEET_USER_COLOR, STATUS_USER_NICKNAME,
+                STATUS_QUOTED_USER_NICKNAME, STATUS_RETWEET_USER_NICKNAME,
+                STATUS_IN_REPLY_TO_USER_NICKNAME};
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, INSERTED_DATE_TYPE, TYPE_TEXT,
-                TYPE_TEXT, TYPE_INT};
+                TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
+                TYPE_TEXT, TYPE_TEXT};
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC";
 

@@ -30,9 +30,9 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
-import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeysConverter;
 import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -131,7 +131,39 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     public boolean status_user_following;
 
     @ParcelableThisPlease
+    @JsonField(name = "account_color")
+    @CursorField(Activities.ACCOUNT_COLOR)
     public int account_color;
+    @ParcelableThisPlease
+    @JsonField(name = "status_user_color")
+    @CursorField(Activities.STATUS_USER_COLOR)
+    public int status_user_color;
+    @ParcelableThisPlease
+    @JsonField(name = "status_quoted_user_color")
+    @CursorField(Activities.STATUS_QUOTED_USER_COLOR)
+    public int status_quoted_user_color;
+    @ParcelableThisPlease
+    @JsonField(name = "status_retweet_user_color")
+    @CursorField(Activities.STATUS_RETWEET_USER_COLOR)
+    public int status_retweet_user_color;
+
+    @ParcelableThisPlease
+    @JsonField(name = "status_user_nickname")
+    @CursorField(Activities.STATUS_USER_NICKNAME)
+    public String status_user_nickname;
+    @ParcelableThisPlease
+    @JsonField(name = "status_quoted_user_nickname")
+    @CursorField(Activities.STATUS_QUOTED_USER_NICKNAME)
+    public String status_quoted_user_nickname;
+    @ParcelableThisPlease
+    @JsonField(name = "status_retweet_user_nickname")
+    @CursorField(Activities.STATUS_RETWEET_USER_NICKNAME)
+    public String status_retweet_user_nickname;
+    @ParcelableThisPlease
+    @JsonField(name = "status_in_reply_to_user_nickname")
+    @CursorField(Activities.STATUS_IN_REPLY_TO_USER_NICKNAME)
+    public String status_in_reply_to_user_nickname;
+
 
     public transient UserKey[] after_filtered_source_ids;
     public transient ParcelableUser[] after_filtered_sources;

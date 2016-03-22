@@ -1091,6 +1091,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
         if (!ArrayUtils.isEmpty(status.mentions)) {
             for (ParcelableUserMention mention : status.mentions) {
+                if (mention.key.equals(status.account_key)) continue;
                 mentions.add(mention.screen_name);
             }
             mentions.addAll(mExtractor.extractMentionedScreennames(status.quoted_text_plain));

@@ -317,8 +317,8 @@ public class DataStoreUtils implements Constants {
                 .from(new Tables(Filters.Users.TABLE_NAME))
                 .build();
         final Expression filteredUsersWhere = Expression.or(
-                Expression.in(new Column(new Table(table), Statuses.USER_ID), filteredUsersQuery),
-                Expression.in(new Column(new Table(table), Statuses.RETWEETED_BY_USER_ID), filteredUsersQuery),
+                Expression.in(new Column(new Table(table), Statuses.USER_KEY), filteredUsersQuery),
+                Expression.in(new Column(new Table(table), Statuses.RETWEETED_BY_USER_KEY), filteredUsersQuery),
                 Expression.in(new Column(new Table(table), Statuses.QUOTED_USER_KEY), filteredUsersQuery)
         );
         final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder

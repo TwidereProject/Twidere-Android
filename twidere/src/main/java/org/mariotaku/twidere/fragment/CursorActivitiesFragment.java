@@ -365,35 +365,23 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         protected ObjectCursor<ParcelableActivity> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<ParcelableActivity> indices) {
             final String[] filteredUserIds = DataStoreUtils.getFilteredUserIds(getContext());
             final ParcelableAccount[] accounts = ParcelableAccountUtils.getAccounts(getContext(), mAccountKeys);
-            return new ActivityCursor(cursor, indices, filteredUserIds, accounts);
+            return new ActivityCursor(cursor, indices, filteredUserIds);
         }
 
         public static class ActivityCursor extends ObjectCursor<ParcelableActivity> {
 
             private final String[] filteredUserIds;
-            private final ParcelableAccount[] accounts;
 
-            public ActivityCursor(Cursor cursor, CursorIndices<ParcelableActivity> indies, String[] filteredUserIds, ParcelableAccount[] accounts) {
+            public ActivityCursor(Cursor cursor, CursorIndices<ParcelableActivity> indies,
+                                  String[] filteredUserIds) {
                 super(cursor, indies);
                 this.filteredUserIds = filteredUserIds;
-                this.accounts = accounts;
             }
 
             public String[] getFilteredUserIds() {
                 return filteredUserIds;
             }
 
-            @Override
-            protected ParcelableActivity get(Cursor cursor, CursorIndices<ParcelableActivity> indices) {
-                final ParcelableActivity activity = super.get(cursor, indices);
-                for (ParcelableAccount account : accounts) {
-                    if (account.account_key.equals(activity.account_key)) {
-                        activity.account_color = account.color;
-                        break;
-                    }
-                }
-                return activity;
-            }
         }
     }
 }

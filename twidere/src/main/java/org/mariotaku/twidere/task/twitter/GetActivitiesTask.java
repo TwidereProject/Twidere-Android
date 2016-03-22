@@ -33,6 +33,7 @@ import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -56,6 +57,8 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     protected ErrorInfoStore errorInfoStore;
     @Inject
     protected ReadStateManager readStateManager;
+    @Inject
+    protected UserColorNameManager userColorNameManager;
 
     public GetActivitiesTask(Context context) {
         this.context = context;
@@ -104,7 +107,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             // We should delete old activities has intersection with new items
             try {
                 final ResponseList<Activity> activities = getActivities(twitter, credentials, paging);
-                storeActivities(cr, loadItemLimit, accountKey, noItemsBefore, activities, sinceId, maxId);
+                storeActivities(cr, loadItemLimit, credentials, noItemsBefore, activities, sinceId, maxId);
                 if (saveReadPosition) {
                     saveReadPosition(accountKey, credentials, twitter);
                 }
@@ -128,7 +131,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     @NonNull
     protected abstract String getErrorInfoKey();
 
-    private void storeActivities(ContentResolver cr, int loadItemLimit, UserKey accountKey,
+    private void storeActivities(ContentResolver cr, int loadItemLimit, ParcelableCredentials credentials,
                                  boolean noItemsBefore, ResponseList<Activity> activities,
                                  final String sinceId, final String maxId) {
         long[] deleteBound = new long[2];
@@ -136,7 +139,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
         List<ContentValues> valuesList = new ArrayList<>();
         for (Activity activity : activities) {
             final ParcelableActivity parcelableActivity = ParcelableActivityUtils.fromActivity(activity,
-                    accountKey, false);
+                    credentials.account_key, false);
             if (deleteBound[0] < 0) {
                 deleteBound[0] = parcelableActivity.min_sort_position;
             } else {
@@ -147,7 +150,8 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             } else {
                 deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_sort_position);
             }
-            final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity);
+            final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity,
+                    credentials, userColorNameManager);
             values.put(Activities.INSERTED_DATE, System.currentTimeMillis());
             valuesList.add(values);
         }
@@ -157,7 +161,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                     Expression.greaterEqualsArgs(Activities.MIN_SORT_POSITION),
                     Expression.lesserEqualsArgs(Activities.MAX_SORT_POSITION)
             );
-            final String[] whereArgs = {accountKey.toString(), String.valueOf(deleteBound[0]),
+            final String[] whereArgs = {credentials.account_key.toString(), String.valueOf(deleteBound[0]),
                     String.valueOf(deleteBound[1])};
             int rowsDeleted = cr.delete(getContentUri(), where.getSQL(), whereArgs);
             // Why loadItemLimit / 2? because it will not acting strange in most cases
@@ -175,7 +179,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final String noGapWhere = Expression.and(Expression.equalsArgs(Activities.ACCOUNT_KEY),
                     Expression.equalsArgs(Activities.MIN_REQUEST_POSITION),
                     Expression.equalsArgs(Activities.MAX_REQUEST_POSITION)).getSQL();
-            final String[] noGapWhereArgs = {accountKey.toString(), maxId, maxId};
+            final String[] noGapWhereArgs = {credentials.toString(), maxId, maxId};
             cr.update(getContentUri(), noGapValues, noGapWhere, noGapWhereArgs);
         }
     }

@@ -88,7 +88,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public long position_key;
     @ParcelableThisPlease
     @JsonField(name = "user_id", typeConverter = UserKeyConverter.class)
-    @CursorField(value = Statuses.USER_ID, converter = UserKeyCursorFieldConverter.class)
+    @CursorField(value = Statuses.USER_KEY, converter = UserKeyCursorFieldConverter.class)
     public UserKey user_key;
     @ParcelableThisPlease
     @JsonField(name = "retweet_id")
@@ -96,7 +96,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public String retweet_id;
     @ParcelableThisPlease
     @JsonField(name = "retweeted_by_user_id", typeConverter = UserKeyConverter.class)
-    @CursorField(value = Statuses.RETWEETED_BY_USER_ID, converter = UserKeyCursorFieldConverter.class)
+    @CursorField(value = Statuses.RETWEETED_BY_USER_KEY, converter = UserKeyCursorFieldConverter.class)
     @Nullable
     public UserKey retweeted_by_user_key;
     @ParcelableThisPlease

@@ -42,8 +42,8 @@ public class DestroyFriendshipTask extends AbsFriendshipOperationTask {
     protected void succeededWorker(@NonNull Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args, @NonNull ParcelableUser user) {
         Utils.setLastSeen(context, user.key, -1);
         final Expression where = Expression.and(Expression.equalsArgs(TwidereDataStore.Statuses.ACCOUNT_KEY),
-                Expression.or(Expression.equalsArgs(TwidereDataStore.Statuses.USER_ID),
-                        Expression.equalsArgs(TwidereDataStore.Statuses.RETWEETED_BY_USER_ID)));
+                Expression.or(Expression.equalsArgs(TwidereDataStore.Statuses.USER_KEY),
+                        Expression.equalsArgs(TwidereDataStore.Statuses.RETWEETED_BY_USER_KEY)));
         final String[] whereArgs = {args.userKey.toString(), args.userKey.toString(),
                 args.userKey.toString()};
         final ContentResolver resolver = context.getContentResolver();

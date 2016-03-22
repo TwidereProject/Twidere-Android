@@ -50,7 +50,7 @@ public class CreateUserBlockTask extends AbsFriendshipOperationTask {
         for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
             final Expression where = Expression.and(
                     Expression.equalsArgs(TwidereDataStore.AccountSupportColumns.ACCOUNT_KEY),
-                    Expression.equalsArgs(TwidereDataStore.Statuses.USER_ID)
+                    Expression.equalsArgs(TwidereDataStore.Statuses.USER_KEY)
             );
             final String[] whereArgs = {args.accountKey.toString(), args.userKey.toString()};
             resolver.delete(uri, where.getSQL(), whereArgs);

@@ -325,9 +325,16 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     if (data == null) return;
                     final int color = data.getIntExtra(EXTRA_COLOR, Color.TRANSPARENT);
                     mUserColorNameManager.setUserColor(status.user_key, color);
+                    status.user_color = color;
                 } else if (resultCode == ColorPickerDialogActivity.RESULT_CLEARED) {
                     mUserColorNameManager.clearUserColor(status.user_key);
+                    status.user_color = 0;
                 }
+                final Bundle args = getArguments();
+                if (args.containsKey(EXTRA_STATUS)) {
+                    args.putParcelable(EXTRA_STATUS, status);
+                }
+                getLoaderManager().restartLoader(LOADER_ID_DETAIL_STATUS, args, this);
                 break;
             }
             case REQUEST_SELECT_ACCOUNT: {
@@ -566,6 +573,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final Bundle dataExtra = data.getExtras();
             final ParcelableCredentials credentials = dataExtra.getParcelable(EXTRA_ACCOUNT);
             if (mStatusAdapter.setStatus(status, credentials)) {
+                Bundle args = getArguments();
+                if (args.containsKey(EXTRA_STATUS)) {
+                    args.putParcelable(EXTRA_STATUS, status);
+                }
                 mStatusAdapter.setLoadMoreSupportedPosition(IndicatorPosition.BOTH);
                 mStatusAdapter.setData(null);
                 loadConversation(status, null, null);
@@ -2221,9 +2232,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final ParcelableStatus old = mStatus;
             mStatus = status;
             mStatusAccount = credentials;
+            final boolean changed = !CompareUtils.objectEquals(old, status);
             notifyDataSetChanged();
             updateItemDecoration();
-            return !CompareUtils.objectEquals(old, status);
+            return changed;
         }
 
         private void updateItemDecoration() {

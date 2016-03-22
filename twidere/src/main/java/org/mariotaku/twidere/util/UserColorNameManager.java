@@ -19,13 +19,17 @@
 
 package org.mariotaku.twidere.util;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
+import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -33,6 +37,8 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
 import java.util.Map;
 import java.util.Set;
@@ -42,8 +48,10 @@ import static android.text.TextUtils.isEmpty;
 public class UserColorNameManager implements TwidereConstants {
 
     private final SharedPreferences mColorPreferences, mNicknamePreferences;
+    private final Context mContext;
 
     public UserColorNameManager(Context context) {
+        mContext = context;
         mColorPreferences = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mNicknamePreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
@@ -68,28 +76,89 @@ public class UserColorNameManager implements TwidereConstants {
         mNicknamePreferences.registerOnSharedPreferenceChangeListener(new OnNickPreferenceChangeListener(listener));
     }
 
-    public void clearUserColor(@NonNull final UserKey userId) {
+    public void clearUserColor(@NonNull final UserKey userKey) {
         final SharedPreferences.Editor editor = mColorPreferences.edit();
-        editor.remove(userId.toString());
+        final String userKeyString = userKey.toString();
+        updateColor(userKeyString, 0);
+        editor.remove(userKeyString);
         editor.apply();
     }
 
     public void setUserColor(@NonNull final UserKey userKey, final int color) {
         final SharedPreferences.Editor editor = mColorPreferences.edit();
-        editor.putInt(userKey.toString(), color);
+        final String userKeyString = userKey.toString();
+        updateColor(userKeyString, color);
+        editor.putInt(userKeyString, color);
         editor.apply();
     }
 
     public void setUserNickname(@NonNull final UserKey userKey, final String nickname) {
         final SharedPreferences.Editor editor = mNicknamePreferences.edit();
-        editor.putString(userKey.toString(), nickname);
+        final String userKeyString = userKey.toString();
+        updateNickname(userKeyString, null);
+        editor.putString(userKeyString, nickname);
         editor.apply();
     }
 
     public void clearUserNickname(@NonNull final UserKey userKey) {
         final SharedPreferences.Editor editor = mNicknamePreferences.edit();
-        editor.remove(userKey.toString());
+        final String userKeyString = userKey.toString();
+        updateNickname(userKeyString, null);
+        editor.remove(userKeyString);
         editor.apply();
+    }
+
+    private void updateColor(String userKey, int color) {
+        final ContentResolver cr = mContext.getContentResolver();
+        ContentValues cv = new ContentValues();
+        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.USER_COLOR, Statuses.USER_KEY,
+                color, cv);
+        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.QUOTED_USER_COLOR,
+                Statuses.QUOTED_USER_KEY, color, cv);
+        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.RETWEET_USER_COLOR,
+                Statuses.RETWEETED_BY_USER_KEY, color, cv);
+
+        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_USER_COLOR,
+                Activities.STATUS_USER_ID, color, cv);
+        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_RETWEET_USER_COLOR,
+                Activities.STATUS_RETWEETED_BY_USER_ID, color, cv);
+        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_QUOTED_USER_COLOR,
+                Activities.STATUS_QUOTED_USER_ID, color, cv);
+    }
+
+    private void updateNickname(String userKey, String nickname) {
+        final ContentResolver cr = mContext.getContentResolver();
+        ContentValues cv = new ContentValues();
+        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.USER_NICKNAME, Statuses.USER_KEY,
+                nickname, cv);
+        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.QUOTED_USER_NICKNAME,
+                Statuses.QUOTED_USER_KEY, nickname, cv);
+        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.RETWEET_USER_NICKNAME,
+                Statuses.RETWEETED_BY_USER_KEY, nickname, cv);
+
+        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_USER_NICKNAME,
+                Activities.STATUS_USER_ID, nickname, cv);
+        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_RETWEET_USER_NICKNAME,
+                Activities.STATUS_RETWEETED_BY_USER_ID, nickname, cv);
+        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_QUOTED_USER_NICKNAME,
+                Activities.STATUS_QUOTED_USER_ID, nickname, cv);
+    }
+
+    private static void updateColumn(ContentResolver cr, Uri uri, String userKey, String valueColumn,
+                                     String whereColumn, int value, ContentValues temp) {
+        temp.clear();
+        temp.put(valueColumn, value);
+        cr.update(uri, temp, Expression.equalsArgs(whereColumn).getSQL(),
+                new String[]{userKey});
+    }
+
+
+    private static void updateColumn(ContentResolver cr, Uri uri, String userKey, String valueColumn,
+                                     String whereColumn, String value, ContentValues temp) {
+        temp.clear();
+        temp.put(valueColumn, value);
+        cr.update(uri, temp, Expression.equalsArgs(whereColumn).getSQL(),
+                new String[]{userKey});
     }
 
     @WorkerThread

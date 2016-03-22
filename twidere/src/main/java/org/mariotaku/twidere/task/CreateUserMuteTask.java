@@ -44,7 +44,7 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
         for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
             final Expression where = Expression.and(
                     Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                    Expression.equalsArgs(Statuses.USER_ID)
+                    Expression.equalsArgs(Statuses.USER_KEY)
             );
             final String[] whereArgs = {args.accountKey.toString(), args.userKey.toString()};
             resolver.delete(uri, where.getSQL(), whereArgs);

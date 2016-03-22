@@ -65,6 +65,8 @@ import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 
 import java.util.List;
 
+import static org.mariotaku.twidere.TwidereConstants.*;
+
 /**
  * Created by mariotaku on 15/4/12.
  */
@@ -216,7 +218,7 @@ public class MenuUtils implements Constants {
         final MenuItem translate = menu.findItem(R.id.translate);
         if (translate != null) {
             final boolean isOfficialKey = Utils.isOfficialCredentials(context, account);
-            final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             final boolean forcePrivateApis = prefs.getBoolean(SharedPreferenceConstants.KEY_FORCE_USING_PRIVATE_APIS, false);
             setMenuItemAvailability(menu, R.id.translate, forcePrivateApis || isOfficialKey);
         }
@@ -311,9 +313,9 @@ public class MenuUtils implements Constants {
                 intent.putExtra(IntentConstants.EXTRA_CLEAR_BUTTON, color != 0);
                 intent.putExtra(IntentConstants.EXTRA_ALPHA_SLIDER, false);
                 if (fragment != null) {
-                    fragment.startActivityForResult(intent, TwidereConstants.REQUEST_SET_COLOR);
+                    fragment.startActivityForResult(intent, REQUEST_SET_COLOR);
                 } else if (context instanceof Activity) {
-                    ((Activity) context).startActivityForResult(intent, TwidereConstants.REQUEST_SET_COLOR);
+                    ((Activity) context).startActivityForResult(intent, REQUEST_SET_COLOR);
                 }
                 break;
             }
@@ -323,7 +325,11 @@ public class MenuUtils implements Constants {
             }
             case R.id.set_nickname: {
                 final String nick = colorNameManager.getUserNickname(status.user_key);
-                SetUserNicknameDialogFragment.show(fm, status.user_key, nick);
+                final SetUserNicknameDialogFragment df = SetUserNicknameDialogFragment.show(fm,
+                        status.user_key, nick);
+                if (fragment != null) {
+                    df.setTargetFragment(fragment, REQUEST_SET_NICKNAME);
+                }
                 break;
             }
             case R.id.open_with_account: {
@@ -331,9 +337,9 @@ public class MenuUtils implements Constants {
                 intent.setClass(context, AccountSelectorActivity.class);
                 intent.putExtra(IntentConstants.EXTRA_SINGLE_SELECTION, true);
                 if (fragment != null) {
-                    fragment.startActivityForResult(intent, TwidereConstants.REQUEST_SELECT_ACCOUNT);
+                    fragment.startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
                 } else if (context instanceof Activity) {
-                    ((Activity) context).startActivityForResult(intent, TwidereConstants.REQUEST_SELECT_ACCOUNT);
+                    ((Activity) context).startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
                 }
                 break;
             }
@@ -349,7 +355,7 @@ public class MenuUtils implements Constants {
                     try {
                         context.startActivity(item.getIntent());
                     } catch (final ActivityNotFoundException e) {
-                        Log.w(TwidereConstants.LOGTAG, e);
+                        Log.w(LOGTAG, e);
                         return false;
                     }
                 }
