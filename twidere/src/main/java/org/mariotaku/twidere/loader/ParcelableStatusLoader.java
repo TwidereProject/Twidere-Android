@@ -90,12 +90,6 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
 
     @Override
     protected void onStartLoading() {
-        if (!mOmitIntentExtra && mExtras != null) {
-            final ParcelableStatus status = mExtras.getParcelable(EXTRA_STATUS);
-            if (status != null) {
-                deliverResult(SingleResponse.getInstance(status));
-            }
-        }
         forceLoad();
     }
 

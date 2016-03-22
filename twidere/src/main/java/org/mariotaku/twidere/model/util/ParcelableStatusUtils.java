@@ -3,6 +3,7 @@ package org.mariotaku.twidere.model.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
+import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
@@ -140,8 +142,14 @@ public class ParcelableStatusUtils {
         // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
         // We should treat this as an html
         if (text.contains("<") && text.contains(">")) {
-            result.text_unescaped = HtmlEscapeHelper.toPlainText(text);
+            final Spannable html = HtmlSpanBuilder.fromHtml(text);
+            result.text_unescaped = html.toString();
             result.text_plain = result.text_unescaped;
+            URLSpan[] spans = html.getSpans(0, html.length(), URLSpan.class);
+            result.spans = new SpanItem[spans.length];
+            for (int i = 0, j = spans.length; i < j; i++) {
+                result.spans[i] = SpanItem.from(html, spans[i]);
+            }
         } else {
             final Pair<String, List<SpanItem>> textWithIndices = InternalTwitterContentUtils.formatStatusTextWithIndices(status);
             result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(text);

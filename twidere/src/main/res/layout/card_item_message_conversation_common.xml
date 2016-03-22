@@ -17,11 +17,12 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:showIn="@layout/card_item_message_conversation_incoming">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/card_item_message_conversation_incoming">
 
     <org.mariotaku.twidere.view.CardMediaContainer
         android:id="@+id/media_preview_container"
@@ -45,6 +46,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
+            android:textIsSelectable="true"
             tools:text="@string/sample_status_text"/>
 
         <TextView
