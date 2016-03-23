@@ -36,6 +36,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableGroup;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
@@ -161,7 +162,7 @@ public abstract class ParcelableGroupsFragment extends AbsContentListRecyclerVie
 
     @Override
     public void onGroupClick(GroupViewHolder holder, int position) {
-
+        IntentUtils.openGroupDetails(getContext(), getAdapter().getGroup(position));
     }
 
     @Override

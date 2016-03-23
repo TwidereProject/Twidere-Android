@@ -16,22 +16,22 @@ import org.mariotaku.twidere.api.twitter.model.User;
 public interface GroupResources {
 
     @GET("/statusnet/groups/timeline/{group_id}.json")
-    ResponseList<Status> getGroupStatuses(@Path("group_id") long groupId, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getGroupStatuses(@Path("group_id") String groupId, @Query Paging paging) throws TwitterException;
 
     @GET("/statusnet/groups/timeline/{group_name}.json")
-    ResponseList<Status> getGroupStatuses(@Path("group_name") String name, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getGroupStatusesByName(@Path("group_name") String name, @Query Paging paging) throws TwitterException;
 
     @GET("/statusnet/groups/show.json")
-    Group showGroup(@Query("group_id") long groupId) throws TwitterException;
+    Group showGroup(@Query("group_id") String groupId) throws TwitterException;
 
     @GET("/statusnet/groups/show.json")
-    Group showGroup(@Query("group_name") String groupName) throws TwitterException;
+    Group showGroupByName(@Query("group_name") String groupName) throws TwitterException;
 
     @GET("/statusnet/groups/membership.json")
-    ResponseList<User> getGroupMembers(@Query("group_id") long groupId) throws TwitterException;
+    ResponseList<User> getGroupMembers(@Query("group_id") String groupId, @Query Paging paging) throws TwitterException;
 
     @GET("/statusnet/groups/membership.json")
-    ResponseList<User> getGroupMembers(@Query("group_name") String groupName) throws TwitterException;
+    ResponseList<User> getGroupMembersByName(@Query("group_name") String groupName, @Query Paging paging) throws TwitterException;
 
     @GET("/statusnet/groups/list.json")
     ResponseList<Group> getGroupsByScreenName(@Query("screen_name") String screenName) throws TwitterException;

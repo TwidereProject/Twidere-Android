@@ -90,6 +90,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_SCHEDULED_STATUSES = "scheduled_statuses";
     String AUTHORITY_USER_LIST = "user_list";
     String AUTHORITY_USER_LIST_TIMELINE = "user_list_timeline";
+    String AUTHORITY_GROUP = "group";
+    String AUTHORITY_GROUP_TIMELINE = "group_timeline";
     String AUTHORITY_USER_LIST_MEMBERS = "user_list_members";
     String AUTHORITY_USER_LIST_SUBSCRIBERS = "user_list_subscribers";
     String AUTHORITY_USER_LIST_MEMBERSHIPS = "user_list_memberships";
@@ -118,6 +120,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String QUERY_PARAM_USER_ID = "user_id";
     String QUERY_PARAM_USER_KEY = "user_key";
     String QUERY_PARAM_LIST_ID = "list_id";
+    String QUERY_PARAM_GROUP_ID = "group_id";
+    String QUERY_PARAM_GROUP_NAME = "group_name";
     String QUERY_PARAM_SCREEN_NAME = "screen_name";
     String QUERY_PARAM_LIST_NAME = "list_name";
     String QUERY_PARAM_QUERY = "query";

@@ -21,7 +21,7 @@ public class ParcelableGroup implements Parcelable, Comparable<ParcelableGroup> 
     public UserKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "id")
-    public long id;
+    public String id;
 
     @ParcelableThisPlease
     @JsonField(name = "nickname")
@@ -120,15 +120,15 @@ public class ParcelableGroup implements Parcelable, Comparable<ParcelableGroup> 
 
         ParcelableGroup that = (ParcelableGroup) o;
 
-        if (id != that.id) return false;
-        return account_key.equals(that.account_key);
+        if (!account_key.equals(that.account_key)) return false;
+        return id.equals(that.id);
 
     }
 
     @Override
     public int hashCode() {
         int result = account_key.hashCode();
-        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + id.hashCode();
         return result;
     }
 

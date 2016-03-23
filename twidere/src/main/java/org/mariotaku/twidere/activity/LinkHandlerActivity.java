@@ -317,6 +317,10 @@ public class LinkHandlerActivity extends BaseActivity implements SystemWindowsIn
                 setTitle(R.string.user_list);
                 break;
             }
+            case LINK_ID_GROUP: {
+                setTitle(R.string.group);
+                break;
+            }
             case LINK_ID_USER_LISTS: {
                 setTitle(R.string.user_lists);
                 break;

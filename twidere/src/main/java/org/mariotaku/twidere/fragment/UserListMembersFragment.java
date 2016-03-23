@@ -23,22 +23,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader;
 import org.mariotaku.twidere.loader.UserListMembersLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
-import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
-import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
 
 public class UserListMembersFragment extends CursorSupportUsersListFragment {
 
@@ -83,15 +74,6 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
             mUserList = args.getParcelable(EXTRA_USER_LIST);
         }
         super.onActivityCreated(savedInstanceState);
-        if (mUserList == null && args != null) {
-            final long listId = args.getLong(EXTRA_LIST_ID, -1);
-            final UserKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            final String userId = args.getString(EXTRA_USER_ID);
-            final String screenName = args.getString(EXTRA_SCREEN_NAME);
-            final String listName = args.getString(EXTRA_LIST_NAME);
-            AsyncTaskUtils.executeTask(new GetUserListTask(accountId, listId, listName, userId,
-                    screenName));
-        }
     }
 
     @Override
@@ -113,50 +95,4 @@ public class UserListMembersFragment extends CursorSupportUsersListFragment {
         super.onStop();
     }
 
-    private class GetUserListTask extends AsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
-
-        @Nullable
-        private final UserKey mAccountKey;
-        private final String mUserId;
-        private final long mListId;
-        private final String mScreenName, mListName;
-
-        private GetUserListTask(@Nullable final UserKey accountKey, final long listId,
-                                final String listName, final String userId, final String screenName) {
-            this.mAccountKey = accountKey;
-            this.mUserId = userId;
-            this.mListId = listId;
-            this.mScreenName = screenName;
-            this.mListName = listName;
-        }
-
-        @Override
-        @NonNull
-        protected SingleResponse<ParcelableUserList> doInBackground(final Object... params) {
-            if (mAccountKey == null)
-                return SingleResponse.getInstance(new TwitterException("No Account"));
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getActivity(), mAccountKey, true);
-            if (twitter == null) return SingleResponse.getInstance();
-            try {
-                final UserList list;
-                if (mListId > 0) {
-                    list = twitter.showUserList(mListId);
-                } else if (mUserId != null) {
-                    list = twitter.showUserList(mListName, mUserId);
-                } else if (mScreenName != null) {
-                    list = twitter.showUserList(mListName, mScreenName);
-                } else
-                    throw new TwitterException("list_id or list_name and user_id (or screen_name) required");
-                return SingleResponse.getInstance(ParcelableUserListUtils.from(list, mAccountKey));
-            } catch (final TwitterException e) {
-                return SingleResponse.getInstance(e);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(final SingleResponse<ParcelableUserList> result) {
-            if (mUserList != null) return;
-            mUserList = result.getData();
-        }
-    }
 }

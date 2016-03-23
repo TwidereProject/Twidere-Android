@@ -102,8 +102,8 @@ public class ParcelableGroupsAdapter extends LoadMoreSupportAdapter<RecyclerView
     }
 
     @Override
-    public long getGroupId(int position) {
-        if (position == getGroupsCount()) return -1;
+    public String getGroupId(int position) {
+        if (position == getGroupsCount()) return null;
         return mData.get(position).id;
     }
 

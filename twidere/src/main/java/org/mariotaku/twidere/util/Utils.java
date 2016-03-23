@@ -130,6 +130,7 @@ import org.mariotaku.twidere.fragment.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.DraftsFragment;
 import org.mariotaku.twidere.fragment.FiltersFragment;
+import org.mariotaku.twidere.fragment.GroupFragment;
 import org.mariotaku.twidere.fragment.IncomingFriendshipsFragment;
 import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.ItemsListFragment;
@@ -246,6 +247,7 @@ public final class Utils implements Constants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_INTERACTIONS, null, LINK_ID_INTERACTIONS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_PUBLIC_TIMELINE, null, LINK_ID_PUBLIC_TIMELINE);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_LIST, null, LINK_ID_USER_LIST);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_GROUP, null, LINK_ID_GROUP);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_LIST_TIMELINE, null, LINK_ID_USER_LIST_TIMELINE);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_LIST_MEMBERS, null, LINK_ID_USER_LIST_MEMBERS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_USER_LIST_SUBSCRIBERS, null, LINK_ID_USER_LIST_SUBSCRIBERS);
@@ -636,6 +638,15 @@ public final class Utils implements Constants {
                 args.putString(EXTRA_USER_ID, paramUserId);
                 args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 args.putString(EXTRA_LIST_NAME, paramListName);
+                break;
+            }
+            case LINK_ID_GROUP: {
+                fragment = new GroupFragment();
+                final String paramGroupId = uri.getQueryParameter(QUERY_PARAM_GROUP_ID);
+                final String paramGroupName = uri.getQueryParameter(QUERY_PARAM_GROUP_NAME);
+                if (isEmpty(paramGroupId) && isEmpty(paramGroupName)) return null;
+                args.putString(EXTRA_GROUP_ID, paramGroupId);
+                args.putString(EXTRA_GROUP_NAME, paramGroupName);
                 break;
             }
             case LINK_ID_USER_LISTS: {

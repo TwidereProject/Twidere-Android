@@ -33,7 +33,7 @@ public interface IGroupsAdapter<Data> extends IContentCardAdapter {
 
     ParcelableGroup getGroup(int position);
 
-    long getGroupId(int position);
+    String getGroupId(int position);
 
     int getGroupsCount();
 

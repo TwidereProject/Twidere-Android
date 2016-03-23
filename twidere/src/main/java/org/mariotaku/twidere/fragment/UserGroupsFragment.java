@@ -21,4 +21,5 @@ public class UserGroupsFragment extends ParcelableGroupsFragment {
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         return new UserGroupsLoader(context, accountKey, userId, screenName, getData());
     }
+
 }

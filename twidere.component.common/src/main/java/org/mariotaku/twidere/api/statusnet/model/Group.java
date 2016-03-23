@@ -22,7 +22,7 @@ public class Group {
     @JsonField(name = "created", typeConverter = TwitterDateConverter.class)
     Date created;
     @JsonField(name = "id")
-    long id;
+    String id;
     @JsonField(name = "homepage")
     String homepage;
     @JsonField(name = "fullname")
@@ -64,7 +64,7 @@ public class Group {
         return created;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -146,12 +146,12 @@ public class Group {
 
         Group group = (Group) o;
 
-        return id == group.id;
+        return id.equals(group.id);
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        return id.hashCode();
     }
 }

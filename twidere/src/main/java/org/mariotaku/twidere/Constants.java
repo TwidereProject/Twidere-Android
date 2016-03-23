@@ -58,7 +58,8 @@ public interface Constants extends TwidereConstants {
     int LINK_ID_USER_LIST_MEMBERS = 13;
     int LINK_ID_USER_LIST_SUBSCRIBERS = 14;
     int LINK_ID_USER_LIST_MEMBERSHIPS = 15;
-    int LINK_ID_USER_GROUPS = 16;
+    int LINK_ID_GROUP = 16;
+    int LINK_ID_USER_GROUPS = 17;
     int LINK_ID_SAVED_SEARCHES = 19;
     int LINK_ID_ITEMS = 20;
     int LINK_ID_USER_MENTIONS = 21;

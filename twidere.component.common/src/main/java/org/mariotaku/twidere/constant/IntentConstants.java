@@ -107,6 +107,7 @@ public interface IntentConstants {
     String EXTRA_USER_ID = "user_id";
     String EXTRA_USER_IDS = "user_ids";
     String EXTRA_LIST_ID = "list_id";
+    String EXTRA_GROUP_ID = "group_id";
     String EXTRA_MAX_ID = "max_id";
     String EXTRA_SINCE_ID = "since_id";
     String EXTRA_MAX_SORT_ID = "max_sort_id";
@@ -115,6 +116,8 @@ public interface IntentConstants {
     String EXTRA_SCREEN_NAME = "screen_name";
     String EXTRA_SCREEN_NAMES = "screen_names";
     String EXTRA_LIST_NAME = "list_name";
+    String EXTRA_GROUP_NAME = "group_name";
+    String EXTRA_GROUP = "group";
     String EXTRA_DESCRIPTION = "description";
     String EXTRA_IN_REPLY_TO_ID = "in_reply_to_id";
     String EXTRA_IN_REPLY_TO_NAME = "in_reply_to_name";

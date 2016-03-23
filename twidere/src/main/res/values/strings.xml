@@ -771,4 +771,5 @@
     <string name="new_document_api">New Document API</string>
     <string name="new_document_api_summary">Open profile and media in new task</string>
     <string name="drawer_toggle">Drawer toggle</string>
+    <string name="group">Group</string>
 </resources>
