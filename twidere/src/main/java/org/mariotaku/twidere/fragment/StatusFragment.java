@@ -1927,9 +1927,17 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 setTypeCount(ITEM_IDX_REPLY, 0);
                 mReplyStart = -1;
             } else {
+                long sortId = status.sort_id;
+                if (status.is_retweet) {
+                    for (ParcelableStatus item : data) {
+                        if (TextUtils.equals(status.retweet_id, item.id)) {
+                            sortId = item.sort_id;
+                            break;
+                        }
+                    }
+                }
                 int conversationCount = 0, replyCount = 0;
                 int replyStart = -1;
-                final long sortId = status.sort_id;
                 for (int i = 0, j = data.size(); i < j; i++) {
                     ParcelableStatus item = data.get(i);
                     if (item.sort_id < sortId) {
