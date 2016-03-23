@@ -102,7 +102,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         mShowCardActions = !mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
         mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
         mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME, false);
-        mLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this));
+        mLinkify = new TwidereLinkify(new StatusAdapterLinkClickHandler<>(this, mPreferences));
         setShowInReplyTo(true);
         setHasStableIds(true);
     }

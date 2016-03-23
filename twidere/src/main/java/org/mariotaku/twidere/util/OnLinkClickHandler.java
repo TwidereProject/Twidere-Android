@@ -44,10 +44,14 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     protected final Context context;
     @Nullable
     protected final MultiSelectManager manager;
+    @NonNull
+    protected final SharedPreferencesWrapper preferences;
 
-    public OnLinkClickHandler(@NonNull final Context context, @Nullable final MultiSelectManager manager) {
+    public OnLinkClickHandler(@NonNull final Context context, @Nullable final MultiSelectManager manager,
+                              @NonNull SharedPreferencesWrapper preferences) {
         this.context = context;
         this.manager = manager;
+        this.preferences = preferences;
     }
 
     @Override
@@ -64,7 +68,8 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(context, accountKey, null, link, null, true,
+                IntentUtils.openUserProfile(context, accountKey, null, link, null,
+                        preferences.getBoolean(KEY_NEW_DOCUMENT_API),
                         UserFragment.Referral.USER_MENTION);
                 break;
             }
@@ -98,7 +103,8 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                                 }
                                 final String screenName = orig.substring(1, length);
                                 IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(id),
-                                        screenName, null, true, UserFragment.Referral.USER_MENTION);
+                                        screenName, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                                        UserFragment.Referral.USER_MENTION);
                                 break;
                             }
                         } else if (TwidereLinkify.isHashSymbol(ch) &&
@@ -126,7 +132,8 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
                 IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, null,
-                        true, UserFragment.Referral.USER_MENTION);
+                        preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                        UserFragment.Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_STATUS: {

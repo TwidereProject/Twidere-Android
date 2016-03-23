@@ -34,8 +34,9 @@ public class DirectMessageOnLinkClickHandler extends OnLinkClickHandler {
     private static final String[] SHORT_LINK_SERVICES = new String[]{"bit.ly", "ow.ly", "tinyurl.com", "goo.gl",
             "k6.kz", "is.gd", "tr.im", "x.co", "weepp.ru"};
 
-    public DirectMessageOnLinkClickHandler(final Context context, final MultiSelectManager manager) {
-        super(context, manager);
+    public DirectMessageOnLinkClickHandler(final Context context, final MultiSelectManager manager,
+                                           SharedPreferencesWrapper preferences) {
+        super(context, manager, preferences);
     }
 
     @Override

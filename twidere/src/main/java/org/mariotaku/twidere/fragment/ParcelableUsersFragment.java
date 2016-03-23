@@ -167,7 +167,8 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
         final ParcelableUser user = getAdapter().getUser(position);
         final FragmentActivity activity = getActivity();
         if (UserKeyUtils.isSameHost(user.account_key, user.key)) {
-            IntentUtils.openUserProfile(activity, user, null, true, getUserReferral());
+            IntentUtils.openUserProfile(activity, user, null,
+                    mPreferences.getBoolean(KEY_NEW_DOCUMENT_API), getUserReferral());
         } else if (user.extras != null && user.extras.statusnet_profile_url != null) {
             final Uri uri = Uri.parse(user.extras.statusnet_profile_url);
             final Intent intent = new Intent(Intent.ACTION_VIEW, uri);

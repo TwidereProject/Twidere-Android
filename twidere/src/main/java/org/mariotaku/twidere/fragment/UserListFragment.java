@@ -336,7 +336,8 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 final ParcelableUserList userList = mUserList;
                 if (userList == null) return;
                 IntentUtils.openUserProfile(getActivity(), userList.account_key,
-                        userList.user_key, userList.user_screen_name, null, true, null);
+                        userList.user_key, userList.user_screen_name, null,
+                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API), null);
                 break;
             }
         }

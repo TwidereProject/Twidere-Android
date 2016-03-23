@@ -421,7 +421,8 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         final FragmentActivity activity = getActivity();
         final ParcelableStatus status = getAdapter().getStatus(position);
         IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
-                status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
+                status.user_screen_name, null, mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                UserFragment.Referral.TIMELINE_STATUS);
     }
 
     @Override

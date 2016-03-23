@@ -87,7 +87,7 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     public ParcelableActivitiesAdapter(Context context, boolean compact, boolean byFriends) {
         super(context);
         mStatusAdapterDelegate = new DummyItemAdapter(context,
-                new TwidereLinkify(new OnLinkClickHandler(context, null)), this);
+                new TwidereLinkify(new OnLinkClickHandler(context, null, mPreferences)), this);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
@@ -495,7 +495,8 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
             final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
             assert status != null;
             IntentUtils.openUserProfile(context, status.account_key, status.user_key,
-                    status.user_screen_name, null, true, UserFragment.Referral.TIMELINE_STATUS);
+                    status.user_screen_name, null, adapter.mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                    UserFragment.Referral.TIMELINE_STATUS);
         }
 
         @Override

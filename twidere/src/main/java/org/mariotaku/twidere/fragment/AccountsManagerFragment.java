@@ -155,11 +155,13 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         if (context == null) return;
         final ParcelableAccount account = mAdapter.getAccount(position);
         if (account.account_user != null) {
-            IntentUtils.openUserProfile(context, account.account_user, null, true,
+            IntentUtils.openUserProfile(context, account.account_user, null,
+                    mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
                     UserFragment.Referral.SELF_PROFILE);
         } else {
             IntentUtils.openUserProfile(context, account.account_key, account.account_key,
-                    account.screen_name, null, true, UserFragment.Referral.SELF_PROFILE);
+                    account.screen_name, null, mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                    UserFragment.Referral.SELF_PROFILE);
         }
     }
 

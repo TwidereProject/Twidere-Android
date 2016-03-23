@@ -700,7 +700,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     @Referral
                     final String referral = getArguments().getString(EXTRA_REFERRAL);
                     IntentUtils.openUserProfile(getActivity(), accountKey, user.key,
-                            user.screen_name, null, true, referral);
+                            user.screen_name, null, mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                            referral);
                 }
                 break;
             }
@@ -1382,8 +1383,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (user == null) return;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
-                IntentUtils.openUserProfile(getActivity(), user.account_key, null, link, null, true,
-                        Referral.USER_MENTION);
+                IntentUtils.openUserProfile(getActivity(), user.account_key, null, link, null,
+                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.USER_MENTION);
                 break;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {

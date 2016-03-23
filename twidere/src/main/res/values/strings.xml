@@ -767,4 +767,6 @@
     <string name="provider_default">Twidere</string>
     <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
     <string name="provider_fanfou">Fanfou</string>
+    <string name="new_document_api">New Document API</string>
+    <string name="new_document_api_summary">Open profile and media in new task</string>
 </resources>

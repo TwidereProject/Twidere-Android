@@ -57,7 +57,7 @@ public class StatusLinkClickHandler extends OnLinkClickHandler {
         mStatus = status;
     }
 
-    public StatusLinkClickHandler(Context context, MultiSelectManager manager) {
-        super(context, manager);
+    public StatusLinkClickHandler(Context context, MultiSelectManager manager, SharedPreferencesWrapper preferences) {
+        super(context, manager, preferences);
     }
 }

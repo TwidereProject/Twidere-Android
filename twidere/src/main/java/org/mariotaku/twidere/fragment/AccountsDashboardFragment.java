@@ -228,11 +228,13 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 if (account == null) return;
                 final FragmentActivity activity = getActivity();
                 if (account.account_user != null) {
-                    IntentUtils.openUserProfile(activity, account.account_user, null, true,
+                    IntentUtils.openUserProfile(activity, account.account_user, null,
+                            mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
                             UserFragment.Referral.SELF_PROFILE);
                 } else {
                     IntentUtils.openUserProfile(activity, account.account_key,
-                            account.account_key, account.screen_name, null, true,
+                            account.account_key, account.screen_name, null,
+                            mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
                             UserFragment.Referral.SELF_PROFILE);
                 }
                 break;

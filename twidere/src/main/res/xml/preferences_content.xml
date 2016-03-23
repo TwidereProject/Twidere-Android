@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidElementNotAllowed -->
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -68,6 +69,13 @@
             android:key="timeline_sync_service"
             android:summary="%s"
             android:title="@string/timeline_sync_service"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:enabled="@bool/support_new_document_intent"
+            android:key="new_document_api"
+            android:summary="@string/new_document_api_summary"
+            android:title="@string/new_document_api"/>
 
     </PreferenceCategory>
 

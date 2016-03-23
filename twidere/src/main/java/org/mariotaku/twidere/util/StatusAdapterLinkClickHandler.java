@@ -33,8 +33,9 @@ public class StatusAdapterLinkClickHandler<D> extends OnLinkClickHandler {
 
     private final IStatusesAdapter<D> adapter;
 
-    public StatusAdapterLinkClickHandler(IStatusesAdapter<D> adapter) {
-        super(adapter.getContext(), null);
+    public StatusAdapterLinkClickHandler(IStatusesAdapter<D> adapter,
+                                         SharedPreferencesWrapper preferences) {
+        super(adapter.getContext(), null, preferences);
         this.adapter = adapter;
     }
 

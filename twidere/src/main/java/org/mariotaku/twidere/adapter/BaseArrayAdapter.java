@@ -28,6 +28,7 @@ import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.OnLinkClickHandler;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
@@ -53,6 +54,8 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
     protected MediaLoaderWrapper mImageLoader;
     @Inject
     protected MultiSelectManager mMultiSelectManager;
+    @Inject
+    protected SharedPreferencesWrapper mPreferences;
 
     public BaseArrayAdapter(final Context context, final int layoutRes) {
         this(context, layoutRes, null);
@@ -63,7 +66,7 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter
         //noinspection unchecked
         GeneralComponentHelper.build(context).inject((BaseArrayAdapter<Object>) this);
         final TwidereApplication app = TwidereApplication.getInstance(context);
-        mLinkify = new TwidereLinkify(new OnLinkClickHandler(context, mMultiSelectManager));
+        mLinkify = new TwidereLinkify(new OnLinkClickHandler(context, mMultiSelectManager, mPreferences));
         mNicknamePrefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mColorPrefs = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mNicknamePrefs.registerOnSharedPreferenceChangeListener(this);

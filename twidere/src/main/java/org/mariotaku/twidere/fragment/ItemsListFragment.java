@@ -53,7 +53,8 @@ public class ItemsListFragment extends AbsContentListRecyclerViewFragment<Variou
             public void onUserClick(UserViewHolder holder, int position) {
                 final ParcelableUser user = dummyItemAdapter.getUser(position);
                 if (user == null) return;
-                IntentUtils.openUserProfile(getContext(), user, null, true,
+                IntentUtils.openUserProfile(getContext(), user, null,
+                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
                         UserFragment.Referral.TIMELINE_STATUS);
             }
         });

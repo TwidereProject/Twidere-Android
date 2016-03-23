@@ -168,14 +168,15 @@ public class QuickSearchBarActivity extends BaseActivity implements OnClickListe
         switch (mUsersSearchAdapter.getItemViewType(position)) {
             case SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM: {
                 IntentUtils.openUserProfile(this, getSelectedAccountKey(),
-                        UserKey.valueOf(item.extra_id), item.summary, null, true,
+                        UserKey.valueOf(item.extra_id), item.summary, null,
+                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
                         UserFragment.Referral.DIRECT);
                 finish();
                 break;
             }
             case SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME: {
-                IntentUtils.openUserProfile(this, getSelectedAccountKey(), null, item.title, null, true,
-                        UserFragment.Referral.DIRECT);
+                IntentUtils.openUserProfile(this, getSelectedAccountKey(), null, item.title, null,
+                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API), UserFragment.Referral.DIRECT);
                 finish();
                 break;
             }
