@@ -85,5 +85,10 @@
         <item>mentions</item>
         <item>inbox</item>
     </string-array>
+    <string-array name="values_compose_location">
+        <item>none</item>
+        <item>place</item>
+        <item>coordinate</item>
+    </string-array>
 
 </resources>

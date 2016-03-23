@@ -371,6 +371,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             extra.setInReplyToStatus(item.in_reply_to_status);
             extra.setIsPossiblySensitive(item.is_possibly_sensitive);
             extra.setRepostStatusId(item.repost_status_id);
+            extra.setDisplayCoordinates(item.display_coordinates);
             draft.action_extras = extra;
             final ContentResolver resolver = getContentResolver();
             final Uri draftUri = resolver.insert(Drafts.CONTENT_URI, DraftValuesCreator.create(draft));
@@ -652,6 +653,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     }
                     if (statusUpdate.location != null) {
                         status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location));
+                        status.displayCoordinates(statusUpdate.display_coordinates);
                     }
                     if (uploader == null && hasMedia) {
                         if (uploadOnSocialPlatform(resolver, builder, shortener, uploader,

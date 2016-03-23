@@ -48,6 +48,9 @@ public class ParcelableStatusUpdate implements Parcelable {
     @JsonField(name = "location")
     @ParcelableThisPlease
     public ParcelableLocation location;
+    @JsonField(name = "display_coordinates")
+    @ParcelableThisPlease
+    public boolean display_coordinates = true;
     @JsonField(name = "in_reply_to_status")
     @ParcelableThisPlease
     public ParcelableStatus in_reply_to_status;
@@ -68,6 +71,7 @@ public class ParcelableStatusUpdate implements Parcelable {
                 ", media=" + Arrays.toString(media) +
                 ", text='" + text + '\'' +
                 ", location=" + location +
+                ", display_coordinates=" + display_coordinates +
                 ", in_reply_to_status=" + in_reply_to_status +
                 ", is_possibly_sensitive=" + is_possibly_sensitive +
                 ", repost_status_id='" + repost_status_id + '\'' +

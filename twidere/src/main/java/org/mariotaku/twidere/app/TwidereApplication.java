@@ -77,6 +77,7 @@ import org.mariotaku.twidere.util.theme.TimelineContentTextViewViewProcessor;
 import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
 import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.TabPagerIndicator;
+import org.mariotaku.twidere.view.ThemedMultiValueSwitch;
 import org.mariotaku.twidere.view.TimelineContentTextView;
 
 public class TwidereApplication extends Application implements Constants,
@@ -154,6 +155,7 @@ public class TwidereApplication extends Application implements Constants,
                 new IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_ACTIVATED));
         ATE.registerTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_DISABLED,
                 new IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_DISABLED));
+        ATE.registerTagProcessor(ThemedMultiValueSwitch.PREFIX_TINT, new ThemedMultiValueSwitch.TintTagProcessor());
         final SharedPreferences preferences = getSharedPreferences();
 
 

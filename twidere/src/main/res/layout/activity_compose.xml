@@ -62,31 +62,28 @@
                     android:id="@+id/edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:background="@null"
                     android:gravity="top"
                     android:hint="@string/status_hint"
                     android:inputType="textMultiLine|textLongMessage|textCapSentences"
                     android:minLines="@integer/default_compose_min_lines"
                     android:padding="@dimen/element_spacing_normal"
-                    android:singleLine="false"/>
+                    android:singleLine="false"
+                    tools:minLines="@integer/media_compose_min_lines"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/attached_media_preview"
                     android:layout_width="match_parent"
                     android:layout_height="128dp"
-                    android:layout_weight="0"
                     android:clipChildren="false"
                     tools:listitem="@layout/grid_item_media_editor"/>
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/location_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
                     android:background="?selectableItemBackground"
-                    android:clickable="true"
-                    android:gravity="center"
+                    android:clickable="false"
                     android:orientation="horizontal"
                     android:padding="@dimen/element_spacing_normal">
 
@@ -94,6 +91,9 @@
                         android:id="@+id/location_icon"
                         android:layout_width="@dimen/element_size_small"
                         android:layout_height="@dimen/element_size_small"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/element_spacing_normal"
                         android:layout_marginRight="@dimen/element_spacing_normal"
                         android:src="@drawable/ic_action_location"
@@ -103,12 +103,31 @@
 
                     <TextView
                         android:id="@+id/location_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/element_spacing_normal"
-                        android:layout_marginRight="@dimen/element_spacing_normal"/>
+                        android:layout_marginRight="@dimen/element_spacing_normal"
+                        android:layout_toEndOf="@+id/location_icon"
+                        android:layout_toLeftOf="@+id/location_switch"
+                        android:layout_toRightOf="@+id/location_icon"
+                        android:layout_toStartOf="@+id/location_switch"
+                        android:singleLine="true"
+                        tools:text="11.4, 51.4"/>
 
-                </LinearLayout>
+                    <org.mariotaku.twidere.view.ThemedMultiValueSwitch
+                        android:id="@+id/location_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:entryValues="@array/values_compose_location"
+                        android:tag="mvs_tint|accent_color"
+                        app:switchMinWidth="72dp"
+                        tools:position="1"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
         </ScrollView>
@@ -175,7 +194,8 @@
                     android:layout_gravity="center"
                     app:sivBackgroundColor="?android:colorBackground"
                     app:sivBorder="true"
-                    app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"/>
+                    app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
+                    tools:src="@mipmap/ic_launcher"/>
             </org.mariotaku.twidere.view.SquareFrameLayout>
 
             <org.mariotaku.twidere.view.BadgeView
@@ -241,12 +261,12 @@
             <org.mariotaku.twidere.view.IconActionView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:color="?android:textColorSecondary"
                 android:contentDescription="@string/send"
                 android:cropToPadding="false"
                 android:padding="@dimen/element_spacing_xsmall"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_action_send"/>
+                android:src="@drawable/ic_action_send"
+                tools:tint="?android:textColorSecondary"/>
 
         </LinearLayout>
     </RelativeLayout>

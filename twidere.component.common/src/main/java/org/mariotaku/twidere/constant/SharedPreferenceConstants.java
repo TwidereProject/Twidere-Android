@@ -151,6 +151,8 @@ public interface SharedPreferenceConstants {
     String KEY_LEFTSIDE_COMPOSE_BUTTON = "leftside_compose_button";
     @Preference(type = BOOLEAN, exportable = false, hasDefault = true, defaultBoolean = false)
     String KEY_ATTACH_LOCATION = "attach_location";
+    @Preference(type = BOOLEAN, exportable = false, hasDefault = true, defaultBoolean = true)
+    String KEY_ATTACH_PRECISE_LOCATION = "attach_precise_location";
     @Preference(type = STRING)
     String KEY_QUOTE_FORMAT = "quote_format";
     @Preference(type = BOOLEAN)

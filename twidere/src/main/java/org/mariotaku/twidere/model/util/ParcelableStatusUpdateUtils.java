@@ -22,6 +22,7 @@ public class ParcelableStatusUpdateUtils implements Constants {
             final UpdateStatusActionExtra extra = (UpdateStatusActionExtra) draft.action_extras;
             statusUpdate.in_reply_to_status = extra.getInReplyToStatus();
             statusUpdate.is_possibly_sensitive = extra.isPossiblySensitive();
+            statusUpdate.display_coordinates = extra.getDisplayCoordinates();
         }
         return statusUpdate;
     }

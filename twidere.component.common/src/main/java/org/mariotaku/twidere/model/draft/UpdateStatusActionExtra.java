@@ -24,6 +24,9 @@ public class UpdateStatusActionExtra implements ActionExtra {
     @ParcelableThisPlease
     @JsonField(name = "repost_status_id")
     String repostStatusId;
+    @ParcelableThisPlease
+    @JsonField(name = "display_coordinates")
+    boolean displayCoordinates;
 
     public ParcelableStatus getInReplyToStatus() {
         return inReplyToStatus;
@@ -47,6 +50,14 @@ public class UpdateStatusActionExtra implements ActionExtra {
 
     public void setRepostStatusId(String repostStatusId) {
         this.repostStatusId = repostStatusId;
+    }
+
+    public boolean getDisplayCoordinates() {
+        return displayCoordinates;
+    }
+
+    public void setDisplayCoordinates(boolean displayCoordinates) {
+        this.displayCoordinates = displayCoordinates;
     }
 
     @Override
