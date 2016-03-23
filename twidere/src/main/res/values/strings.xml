@@ -261,6 +261,8 @@
     <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> added <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g> to list.</string>
     <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g>.</string>
     <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g>.</string>
+    <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> joined Twitter.</string>
+    <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> joined Twitter.</string>
     <string name="status_not_updated">Tweet not sent.</string>
     <string name="status_not_updated_summary">Tweet not sent, and saved to drafts.</string>
     <string name="incoming_friendships">Pending follow requests</string>

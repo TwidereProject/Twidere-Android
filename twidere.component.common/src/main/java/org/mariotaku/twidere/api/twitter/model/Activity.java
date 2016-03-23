@@ -40,7 +40,7 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
     Status[] targetObjectStatuses, targetStatuses;
     UserList[] targetUserLists, targetObjectUserLists;
     String maxPosition = null, minPosition = null;
-    long maxSortPosition =-1, minSortPosition = -1;
+    long maxSortPosition = -1, minSortPosition = -1;
     int targetObjectsSize, targetsSize, sourcesSize;
 
     Activity() {
@@ -175,38 +175,38 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
             Action.FAVORITED_MENTION, Action.JOINED_TWITTER, Action.MEDIA_TAGGED,
             Action.FAVORITED_MEDIA_TAGGED, Action.RETWEETED_MEDIA_TAGGED})
     public @interface Action {
-        String FAVORITE = ("favorite");
+        String FAVORITE = "favorite";
         /**
          * Sources: followers to targets (User)
          * Targets: following user (User)
          */
-        String FOLLOW = ("follow");
+        String FOLLOW = "follow";
         /**
          * Targets: mentioned users (User)
          * Target objects: mention status (Status)
          */
-        String MENTION = ("mention");
+        String MENTION = "mention";
         /**
          * Targets: reply status (Status)
          * Target objects: in reply to status (Status)
          */
-        String REPLY = ("reply");
-        String RETWEET = ("retweet");
-        String LIST_MEMBER_ADDED = ("list_member_added");
-        String LIST_CREATED = ("list_created");
-        String FAVORITED_RETWEET = ("favorited_retweet");
-        String RETWEETED_RETWEET = ("retweeted_retweet");
+        String REPLY = "reply";
+        String RETWEET = "retweet";
+        String LIST_MEMBER_ADDED = "list_member_added";
+        String LIST_CREATED = "list_created";
+        String FAVORITED_RETWEET = "favorited_retweet";
+        String RETWEETED_RETWEET = "retweeted_retweet";
         /**
          * Targets: Quote result (Status)
          * Target objects: Original status (Status)
          */
-        String QUOTE = ("quote");
-        String RETWEETED_MENTION = ("retweeted_mention");
-        String FAVORITED_MENTION = ("favorited_mention");
-        String JOINED_TWITTER = ("joined_twitter");
-        String MEDIA_TAGGED = ("media_tagged");
-        String FAVORITED_MEDIA_TAGGED = ("favorited_media_tagged");
-        String RETWEETED_MEDIA_TAGGED = ("retweeted_media_tagged");
+        String QUOTE = "quote";
+        String RETWEETED_MENTION = "retweeted_mention";
+        String FAVORITED_MENTION = "favorited_mention";
+        String JOINED_TWITTER = "joined_twitter";
+        String MEDIA_TAGGED = "media_tagged";
+        String FAVORITED_MEDIA_TAGGED = "favorited_media_tagged";
+        String RETWEETED_MEDIA_TAGGED = "retweeted_media_tagged";
 
         String[] MENTION_ACTIONS = {MENTION, REPLY, QUOTE};
     }

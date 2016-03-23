@@ -42,15 +42,15 @@ public class ActivityTitleSummaryMessage {
         final Resources resources = context.getResources();
         switch (activity.action) {
             case Activity.Action.FOLLOW: {
-                int typeIcon = (R.drawable.ic_activity_action_follow);
+                int typeIcon = R.drawable.ic_activity_action_follow;
                 int color = ContextCompat.getColor(context, R.color.highlight_follow);
                 CharSequence title;
                 if (byFriends) {
                     title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_follow,
                             R.string.activity_by_friends_follow_multi, sources, activity.target_users, nameFirst);
                 } else {
-                    title = (getTitleStringAboutMe(resources, manager, R.string.activity_about_me_follow,
-                            R.string.activity_about_me_follow_multi, sources, nameFirst));
+                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_follow,
+                            R.string.activity_about_me_follow_multi, sources, nameFirst);
                 }
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, null);
             }
@@ -59,25 +59,25 @@ public class ActivityTitleSummaryMessage {
                 int color;
                 CharSequence title;
                 if (shouldUseStarsForLikes) {
-                    typeIcon = (R.drawable.ic_activity_action_favorite);
+                    typeIcon = R.drawable.ic_activity_action_favorite;
                     color = ContextCompat.getColor(context, R.color.highlight_favorite);
                     if (byFriends) {
                         title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_favorite,
                                 R.string.activity_by_friends_favorite_multi, sources, activity.target_statuses, nameFirst);
                     } else {
-                        title = (getTitleStringAboutMe(resources, manager, R.string.activity_about_me_favorite,
-                                R.string.activity_about_me_favorite_multi, sources, nameFirst));
+                        title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_favorite,
+                                R.string.activity_about_me_favorite_multi, sources, nameFirst);
                     }
                 } else {
-                    typeIcon = (R.drawable.ic_activity_action_like);
+                    typeIcon = R.drawable.ic_activity_action_like;
                     color = ContextCompat.getColor(context, R.color.highlight_like);
 
                     if (byFriends) {
-                        title = (getTitleStringByFriends(resources, manager, R.string.activity_by_friends_like,
-                                R.string.activity_by_friends_like_multi, sources, activity.target_statuses, nameFirst));
+                        title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_like,
+                                R.string.activity_by_friends_like_multi, sources, activity.target_statuses, nameFirst);
                     } else {
-                        title = (getTitleStringAboutMe(resources, manager, R.string.activity_about_me_like,
-                                R.string.activity_about_me_like_multi, sources, nameFirst));
+                        title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_like,
+                                R.string.activity_about_me_like_multi, sources, nameFirst);
                     }
                 }
                 final StringBuilder summaryBuilder = new StringBuilder();
@@ -92,7 +92,7 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summaryBuilder.toString());
             }
             case Activity.Action.RETWEET: {
-                int typeIcon = (R.drawable.ic_activity_action_retweet);
+                int typeIcon = R.drawable.ic_activity_action_retweet;
                 int color = ContextCompat.getColor(context, R.color.highlight_retweet);
                 CharSequence title;
                 if (byFriends) {
@@ -111,12 +111,12 @@ public class ActivityTitleSummaryMessage {
                 int color;
                 CharSequence title;
                 if (shouldUseStarsForLikes) {
-                    typeIcon = (R.drawable.ic_activity_action_favorite);
+                    typeIcon = R.drawable.ic_activity_action_favorite;
                     color = ContextCompat.getColor(context, R.color.highlight_favorite);
                     title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_favorited_retweet,
                             R.string.activity_about_me_favorited_retweet_multi, sources, nameFirst);
                 } else {
-                    typeIcon = (R.drawable.ic_activity_action_like);
+                    typeIcon = R.drawable.ic_activity_action_like;
                     color = ContextCompat.getColor(context, R.color.highlight_like);
                     title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_liked_retweet,
                             R.string.activity_about_me_liked_retweet_multi, sources, nameFirst);
@@ -126,19 +126,19 @@ public class ActivityTitleSummaryMessage {
             }
             case Activity.Action.RETWEETED_RETWEET: {
                 if (byFriends) return null;
-                int typeIcon = (R.drawable.ic_activity_action_retweet);
+                int typeIcon = R.drawable.ic_activity_action_retweet;
                 int color = ContextCompat.getColor(context, R.color.highlight_retweet);
-                CharSequence title = (getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_retweet,
-                        R.string.activity_about_me_retweeted_retweet_multi, sources, nameFirst));
+                CharSequence title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_retweet,
+                        R.string.activity_about_me_retweeted_retweet_multi, sources, nameFirst);
                 final String summary = activity.target_statuses[0].text_unescaped;
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.RETWEETED_MENTION: {
                 if (byFriends) return null;
-                int typeIcon = (R.drawable.ic_activity_action_retweet);
+                int typeIcon = R.drawable.ic_activity_action_retweet;
                 int color = ContextCompat.getColor(context, R.color.highlight_retweet);
-                CharSequence title = (getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_mention,
-                        R.string.activity_about_me_retweeted_mention_multi, sources, nameFirst));
+                CharSequence title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_mention,
+                        R.string.activity_about_me_retweeted_mention_multi, sources, nameFirst);
                 final String summary = activity.target_statuses[0].text_unescaped;
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
@@ -148,25 +148,25 @@ public class ActivityTitleSummaryMessage {
                 int color;
                 CharSequence title;
                 if (shouldUseStarsForLikes) {
-                    typeIcon = (R.drawable.ic_activity_action_favorite);
+                    typeIcon = R.drawable.ic_activity_action_favorite;
                     color = ContextCompat.getColor(context, R.color.highlight_favorite);
-                    title = (getTitleStringAboutMe(resources, manager, R.string.activity_about_me_favorited_mention,
-                            R.string.activity_about_me_favorited_mention_multi, sources, nameFirst));
+                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_favorited_mention,
+                            R.string.activity_about_me_favorited_mention_multi, sources, nameFirst);
                 } else {
-                    typeIcon = (R.drawable.ic_activity_action_like);
+                    typeIcon = R.drawable.ic_activity_action_like;
                     color = ContextCompat.getColor(context, R.color.highlight_like);
-                    title = (getTitleStringAboutMe(resources, manager, R.string.activity_about_me_liked_mention,
-                            R.string.activity_about_me_liked_mention_multi, sources, nameFirst));
+                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_liked_mention,
+                            R.string.activity_about_me_liked_mention_multi, sources, nameFirst);
                 }
                 final String summary = activity.target_statuses[0].text_unescaped;
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.LIST_CREATED: {
                 if (!byFriends) return null;
-                int typeIcon = (R.drawable.ic_activity_action_list_added);
-                CharSequence title = (getTitleStringByFriends(resources, manager, R.string.activity_by_friends_list_created,
+                int typeIcon = R.drawable.ic_activity_action_list_added;
+                CharSequence title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_list_created,
                         R.string.activity_by_friends_list_created_multi, sources,
-                        activity.target_object_user_lists, nameFirst));
+                        activity.target_object_user_lists, nameFirst);
                 boolean firstLine = true;
                 StringBuilder sb = new StringBuilder();
                 for (ParcelableUserList item : activity.target_object_user_lists) {
@@ -182,8 +182,8 @@ public class ActivityTitleSummaryMessage {
                 if (byFriends) return null;
                 CharSequence title;
                 int icon = R.drawable.ic_activity_action_list_added;
-                if (sources.length == 1 && activity.target_object_user_lists != null
-                        && activity.target_object_user_lists.length == 1) {
+                if ((sources.length == 1) && (activity.target_object_user_lists != null)
+                        && (activity.target_object_user_lists.length == 1)) {
                     final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(
                             sources[0], nameFirst));
                     final SpannableString listName = new SpannableString(activity.target_object_user_lists[0].name);
@@ -210,6 +210,14 @@ public class ActivityTitleSummaryMessage {
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 return new ActivityTitleSummaryMessage(0, 0, title, status.text_unescaped);
             }
+            case Activity.Action.JOINED_TWITTER: {
+                int typeIcon = R.drawable.ic_activity_action_follow;
+                int color = ContextCompat.getColor(context, R.color.highlight_follow);
+                CharSequence title = getTitleStringAboutMe(resources, manager,
+                        R.string.activity_joined_twitter, R.string.activity_joined_twitter_multi,
+                        sources, nameFirst);
+                return new ActivityTitleSummaryMessage(typeIcon, color, title, null);
+            }
         }
         return null;
     }
@@ -217,7 +225,7 @@ public class ActivityTitleSummaryMessage {
     private static Spanned getTitleStringAboutMe(Resources resources, UserColorNameManager manager,
                                                  int stringRes, int stringResMulti,
                                                  ParcelableUser[] sources, boolean nameFirst) {
-        if (sources == null || sources.length == 0) return null;
+        if ((sources == null) || (sources.length == 0)) return null;
         final Configuration configuration = resources.getConfiguration();
         final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(sources[0],
                 nameFirst));
@@ -243,7 +251,7 @@ public class ActivityTitleSummaryMessage {
     private static Spanned getTitleStringByFriends(Resources resources, UserColorNameManager manager,
                                                    int stringRes, int stringResMulti,
                                                    ParcelableUser[] sources, Object[] targets, boolean nameFirst) {
-        if (sources == null || sources.length == 0) return null;
+        if ((sources == null) || (sources.length == 0)) return null;
         final Configuration configuration = resources.getConfiguration();
         final SpannableString firstSourceName = new SpannableString(manager.getDisplayName(
                 sources[0], nameFirst));
