@@ -326,4 +326,6 @@ public interface SharedPreferenceConstants {
     String KEY_EMOJI_SUPPORT = "emoji_support";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_NEW_DOCUMENT_API = "new_document_api";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
+    String KEY_DRAWER_TOGGLE = "drawer_toggle";
 }

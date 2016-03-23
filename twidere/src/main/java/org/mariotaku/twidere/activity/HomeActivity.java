@@ -400,6 +400,12 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
         mTabIndicator.setDisplayBadge(mPreferences.getBoolean(KEY_UNREAD_COUNT, true));
         mTabIndicator.updateAppearance();
 
+        if (mPreferences.getBoolean(KEY_DRAWER_TOGGLE)) {
+            mDrawerToggleButton.setVisibility(View.VISIBLE);
+        } else {
+            mDrawerToggleButton.setVisibility(View.GONE);
+        }
+
         mHomeContent.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
