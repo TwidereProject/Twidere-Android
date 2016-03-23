@@ -64,7 +64,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         ViewCompat.setOverScrollMode(this, ViewCompat.OVER_SCROLL_NEVER);
         setHorizontalScrollBarEnabled(false);
         setVerticalScrollBarEnabled(false);
-        setLayoutManager(mLayoutManager = new TabLayoutManager(context));
+        setLayoutManager(mLayoutManager = new TabLayoutManager(context, this));
         setItemContext(context);
         setAdapter(mIndicatorAdapter);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TabPagerIndicator);
@@ -489,9 +489,11 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
     private static class TabLayoutManager extends FixedLinearLayoutManager {
 
         private boolean mTabExpandEnabled;
+        private final RecyclerView mRecyclerView;
 
-        public TabLayoutManager(Context context) {
+        public TabLayoutManager(Context context, RecyclerView recyclerView) {
             super(context, HORIZONTAL, false);
+            mRecyclerView = recyclerView;
             setAutoMeasureEnabled(true);
         }
 
@@ -502,7 +504,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
             if (!isTabExpandEnabled()) return;
             final int count = getItemCount();
             if (count == 0) return;
-            final int parentHeight = getHeight(), parentWidth = getWidth();
+            final int parentHeight = mRecyclerView.getHeight(), parentWidth = mRecyclerView.getWidth();
             final int decoratedWidth = getDecoratedMeasuredWidth(child);
             final int measuredWidth = child.getMeasuredWidth();
             final int decoratorWidth = decoratedWidth - measuredWidth;

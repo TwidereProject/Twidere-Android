@@ -665,6 +665,7 @@
     <string name="reset_to_default">Reset to default</string>
     <string name="reset_keyboard_shortcuts_confirm">Reset keyboard shortcuts to default?</string>
     <string name="open_accounts_dashboard">Open accounts dashboard</string>
+    <string name="close_accounts_dashboard">Close accounts dashboard</string>
     <string name="previous_tab">Previous tab</string>
     <string name="next_tab">Next tab</string>
     <string name="keyboard_shortcut_back">Back</string>

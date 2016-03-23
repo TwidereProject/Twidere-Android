@@ -42,14 +42,31 @@
         app:contentInsetEnd="0dp"
         app:contentInsetStart="0dp">
 
-        <org.mariotaku.twidere.view.TabPagerIndicator
-            android:id="@+id/main_tabs"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:tabDisplayOption="icon"
-            app:tabExpandEnabled="true"
-            app:tabHorizontalPadding="@dimen/element_spacing_normal"
-            tools:listitem="@layout/layout_tab_item"/>
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/drawer_toggle"
+                style="?borderlessButtonStyle"
+                android:layout_width="?actionBarSize"
+                android:layout_height="?actionBarSize"
+                android:layout_weight="0"
+                android:tag="tint|primary_color_dependent"
+                android:background="?actionBarItemBackground"
+                android:contentDescription="@string/open_accounts_dashboard"/>
+
+            <org.mariotaku.twidere.view.TabPagerIndicator
+                android:id="@+id/main_tabs"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:tabDisplayOption="icon"
+                app:tabExpandEnabled="true"
+                app:tabHorizontalPadding="@dimen/element_spacing_normal"
+                tools:listitem="@layout/layout_tab_item"/>
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <View
