@@ -20,6 +20,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -32,13 +33,13 @@
         android:id="@+id/progress_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true">
+        android:clickable="false">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:layout_width="@dimen/element_size_mlarge"
+            android:layout_height="@dimen/element_size_mlarge"
+            android:layout_gravity="center"
+            app:matProg_progressIndeterminate="true"/>
     </FrameLayout>
 
 </RelativeLayout>

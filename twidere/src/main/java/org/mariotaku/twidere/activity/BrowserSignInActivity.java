@@ -37,10 +37,13 @@ import android.widget.Toast;
 import org.attoparser.AttoParseException;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
@@ -189,12 +192,12 @@ public class BrowserSignInActivity extends BaseActivity {
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
             final Uri uri = Uri.parse(url);
             if (url.startsWith(OAUTH_CALLBACK_URL)) {
-                final String oauth_verifier = uri.getQueryParameter(EXTRA_OAUTH_VERIFIER);
+                final String oauthVerifier = uri.getQueryParameter(EXTRA_OAUTH_VERIFIER);
                 final BrowserSignInActivity activity = (BrowserSignInActivity) getActivity();
                 final OAuthToken requestToken = activity.mRequestToken;
-                if (oauth_verifier != null && requestToken != null) {
+                if (oauthVerifier != null && requestToken != null) {
                     final Intent intent = new Intent();
-                    intent.putExtra(EXTRA_OAUTH_VERIFIER, oauth_verifier);
+                    intent.putExtra(EXTRA_OAUTH_VERIFIER, oauthVerifier);
                     intent.putExtra(EXTRA_REQUEST_TOKEN, requestToken.getOauthToken());
                     intent.putExtra(EXTRA_REQUEST_TOKEN_SECRET, requestToken.getOauthTokenSecret());
                     activity.setResult(RESULT_OK, intent);
@@ -207,7 +210,7 @@ public class BrowserSignInActivity extends BaseActivity {
 
     }
 
-    static class GetRequestTokenTask extends AsyncTask<Object, Object, OAuthToken> {
+    static class GetRequestTokenTask extends AsyncTask<Object, Object, SingleResponse<OAuthToken>> {
 
         private final String mConsumerKey, mConsumerSecret;
         private final BrowserSignInActivity mActivity;
@@ -222,35 +225,38 @@ public class BrowserSignInActivity extends BaseActivity {
         }
 
         @Override
-        protected OAuthToken doInBackground(final Object... params) {
+        protected SingleResponse<OAuthToken> doInBackground(final Object... params) {
             if (isEmpty(mConsumerKey) || isEmpty(mConsumerSecret)) {
-                return null;
+                return SingleResponse.getInstance();
             }
             try {
                 final Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat, true);
                 final Authorization auth = new OAuthAuthorization(mConsumerKey, mConsumerSecret);
                 final TwitterOAuth twitter = TwitterAPIFactory.getInstance(mActivity, endpoint,
                         auth, TwitterOAuth.class);
-                return twitter.getRequestToken(OAUTH_CALLBACK_OOB);
-            } catch (final Exception e) {
-                Log.w(LOGTAG, e);
+                return SingleResponse.getInstance(twitter.getRequestToken(OAUTH_CALLBACK_OOB));
+            } catch (final TwitterException e) {
+                return SingleResponse.getInstance(e);
             }
-            return null;
         }
 
         @Override
-        protected void onPostExecute(final OAuthToken data) {
+        protected void onPostExecute(final SingleResponse<OAuthToken> result) {
             mActivity.setLoadProgressShown(false);
-            mActivity.setRequestToken(data);
-            if (data == null) {
+            if (result.hasData()) {
+                final OAuthToken token = result.getData();
+                mActivity.setRequestToken(token);
+                final Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat, true);
+                mActivity.loadUrl(endpoint.construct("/oauth/authorize", new String[]{"oauth_token", token.getOauthToken()}));
+            } else {
+                if (BuildConfig.DEBUG && result.hasException()) {
+                    Log.w(LOGTAG, "Exception while browser sign in", result.getException());
+                }
                 if (!mActivity.isFinishing()) {
                     Toast.makeText(mActivity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
                     mActivity.finish();
                 }
-                return;
             }
-            final Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat, true);
-            mActivity.loadUrl(endpoint.construct("/oauth/authorize", new String[]{"oauth_token", data.getOauthToken()}));
         }
 
         @Override

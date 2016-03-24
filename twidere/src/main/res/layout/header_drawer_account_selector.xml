@@ -28,7 +28,7 @@
     tools:layout_height="160dp"
     tools:layout_width="280dp">
 
-    <org.mariotaku.twidere.view.ForegroundImageView
+    <ViewSwitcher
         android:id="@+id/account_profile_banner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,7 +38,7 @@
         android:focusable="false"
         android:foreground="@color/drawer_banner_foreground"
         android:scaleType="centerCrop"
-        tools:src="@drawable/nyan_stars_background"/>
+        tools:background="@drawable/nyan_stars_background"/>
 
     <FrameLayout
         android:id="@+id/profile_container"
@@ -80,7 +80,9 @@
                 android:layout_toEndOf="@id/profile_image"
                 android:layout_toRightOf="@id/profile_image"
                 android:focusable="false"
-                tools:visibility="invisible"/>
+                tools:listitem="@layout/adapter_item_dashboard_account"
+                tools:paddingStart="@dimen/element_spacing_large"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,7 +127,9 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/element_size_normal"
-                    android:focusable="false">
+                    android:focusable="false"
+                    android:foregroundGravity="center"
+                    tools:foreground="@drawable/ic_action_status_compose">
 
                     <android.support.v7.widget.ActionMenuView
                         android:id="@+id/account_dashboard_menu"

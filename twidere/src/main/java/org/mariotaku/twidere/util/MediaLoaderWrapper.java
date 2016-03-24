@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions.Builder;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.twidere.Constants;
@@ -37,6 +36,7 @@ import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.imageloader.OvalBitmapDisplayer;
 import org.mariotaku.twidere.util.media.MediaExtra;
 
@@ -77,7 +77,6 @@ public class MediaLoaderWrapper implements Constants {
         bannerOptsBuilder.cacheInMemory(true);
         bannerOptsBuilder.cacheOnDisk(true);
         bannerOptsBuilder.bitmapConfig(Bitmap.Config.RGB_565);
-        bannerOptsBuilder.displayer(new FadeInBitmapDisplayer(200, true, true, true));
         final DisplayImageOptions.Builder dashboardProfileOptsBuilder = new DisplayImageOptions.Builder();
         dashboardProfileOptsBuilder.cacheInMemory(true);
         dashboardProfileOptsBuilder.cacheOnDisk(true);
@@ -142,6 +141,21 @@ public class MediaLoaderWrapper implements Constants {
 
     public void displayProfileBanner(final ImageView view, final String baseUrl, final int width) {
         displayProfileBanner(view, getBestBannerUrl(baseUrl, width));
+    }
+
+
+    public void displayProfileBanner(final ImageView view, final ParcelableAccount account, final int width) {
+        displayProfileBanner(view, getBestBannerUrl(getBannerUrl(account), width));
+    }
+
+    private String getBannerUrl(ParcelableAccount account) {
+        String bannerUrl = account.profile_banner_url;
+        if (bannerUrl == null && ParcelableAccount.Type.FANFOU.equals(account.account_type)) {
+            if (account.account_user != null) {
+                bannerUrl = ParcelableUserUtils.getProfileBannerUrl(account.account_user);
+            }
+        }
+        return bannerUrl;
     }
 
     public void displayOriginalProfileImage(final ImageView view, final ParcelableUser user) {

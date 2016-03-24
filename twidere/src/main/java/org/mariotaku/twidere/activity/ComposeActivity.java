@@ -1560,7 +1560,6 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
                 loader.displayProfileImage(iconView, account);
             }
             iconView.setBorderColor(account.color);
-            iconView.setTag(account.profile_image_url);
             nameView.setText(adapter.isNameFirst() ? account.name : ("@" + account.screen_name));
         }
 

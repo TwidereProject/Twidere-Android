@@ -50,7 +50,8 @@
                     android:background="?android:panelColorBackground"
                     android:ellipsize="end"
                     android:padding="@dimen/element_spacing_normal"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    tools:text="In reply to name: A quick brown fox jumps over the lazy dog"/>
 
                 <View
                     android:id="@+id/reply_label_divider"
@@ -85,7 +86,10 @@
                     android:background="?selectableItemBackground"
                     android:clickable="false"
                     android:orientation="horizontal"
-                    android:padding="@dimen/element_spacing_normal">
+                    android:paddingBottom="@dimen/element_spacing_normal"
+                    android:paddingLeft="@dimen/element_spacing_normal"
+                    android:paddingRight="@dimen/element_spacing_normal"
+                    android:paddingTop="@dimen/element_spacing_normal">
 
                     <org.mariotaku.twidere.view.IconActionView
                         android:id="@+id/location_icon"
@@ -94,12 +98,11 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/element_spacing_normal"
-                        android:layout_marginRight="@dimen/element_spacing_normal"
                         android:src="@drawable/ic_action_location"
                         android:tag="iab_activated_color|accent_color"
                         app:iabActivatedColor="?colorAccent"
-                        app:iabColor="?android:textColorSecondary"/>
+                        app:iabColor="?android:textColorSecondary"
+                        tools:activated="true"/>
 
                     <TextView
                         android:id="@+id/location_text"
@@ -112,6 +115,8 @@
                         android:layout_toLeftOf="@+id/location_switch"
                         android:layout_toRightOf="@+id/location_icon"
                         android:layout_toStartOf="@+id/location_switch"
+                        android:paddingLeft="@dimen/element_spacing_normal"
+                        android:paddingRight="@dimen/element_spacing_normal"
                         android:singleLine="true"
                         tools:text="11.4, 51.4"/>
 
@@ -124,7 +129,6 @@
                         android:layout_centerVertical="true"
                         android:entryValues="@array/values_compose_location"
                         android:tag="mvs_tint|accent_color"
-                        app:switchMinWidth="72dp"
                         tools:position="1"/>
 
                 </RelativeLayout>
