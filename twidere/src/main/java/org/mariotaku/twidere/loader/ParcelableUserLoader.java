@@ -45,7 +45,7 @@ import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.task.UpdateAccountInfoTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;

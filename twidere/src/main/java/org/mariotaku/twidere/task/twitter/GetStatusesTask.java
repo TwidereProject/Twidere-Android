@@ -32,9 +32,9 @@ import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.twidere.task.AbstractTask;
+import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.task.CacheUsersStatusesTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
@@ -89,7 +89,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     protected abstract String getTimelineType();
 
     @Override
-    public void afterExecute(RefreshTaskParam params, List<TwitterWrapper.StatusListResponse> result) {
+    public void afterExecute(List<TwitterWrapper.StatusListResponse> result) {
         bus.post(new GetStatusesTaskEvent(getContentUri(), false, AsyncTwitterWrapper.getException(result)));
     }
 

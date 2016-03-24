@@ -8,6 +8,7 @@ import android.util.Log;
 import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
@@ -144,7 +145,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
     }
 
     @Override
-    protected void afterExecute(RefreshTaskParam params, List<TwitterWrapper.MessageListResponse> result) {
+    protected void afterExecute(List<TwitterWrapper.MessageListResponse> result) {
         bus.post(new GetMessagesTaskEvent(getDatabaseUri(), false, AsyncTwitterWrapper.getException(result)));
     }
 }

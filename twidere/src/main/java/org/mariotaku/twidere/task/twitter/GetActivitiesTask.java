@@ -26,7 +26,7 @@ import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
-import org.mariotaku.twidere.task.AbstractTask;
+import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
@@ -193,7 +193,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             throws TwitterException;
 
     @Override
-    public void afterExecute(RefreshTaskParam params, Object result) {
+    public void afterExecute(Object result) {
         bus.post(new GetActivitiesTaskEvent(getContentUri(), false, null));
     }
 

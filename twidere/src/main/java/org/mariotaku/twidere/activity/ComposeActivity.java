@@ -130,8 +130,8 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.service.BackgroundOperationService;
-import org.mariotaku.twidere.task.AbstractTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.text.MarkForDeleteSpan;
 import org.mariotaku.twidere.text.style.EmojiSpan;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
@@ -1895,13 +1895,13 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
 
         @Override
-        protected void afterExecute(TextView textView, ParcelableLocation location, List<Address> addresses) {
+        protected void afterExecute(TextView textView, List<Address> addresses) {
             final SharedPreferencesWrapper preferences = context.mPreferences;
             final boolean attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION);
             final boolean attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION);
             if (attachLocation) {
                 if (attachPreciseLocation) {
-                    textView.setText(ParcelableLocationUtils.getHumanReadableString(location, 3));
+                    textView.setText(ParcelableLocationUtils.getHumanReadableString(getParams(), 3));
                 } else if (addresses == null || addresses.isEmpty()) {
                     textView.setText(R.string.your_coarse_location);
                 } else {

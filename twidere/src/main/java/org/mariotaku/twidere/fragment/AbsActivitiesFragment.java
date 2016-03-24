@@ -56,8 +56,8 @@ import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
-import org.mariotaku.twidere.task.AbstractTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -453,7 +453,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
             }
 
             @Override
-            public void afterExecute(RecyclerView recyclerView, Object params, Boolean result) {
+            public void afterExecute(RecyclerView recyclerView, Boolean result) {
                 if (result) {
                     recyclerView.addOnScrollListener(mActiveHotMobiScrollTracker = mHotMobiScrollTracker);
                 }

@@ -9,6 +9,7 @@ import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableUser;

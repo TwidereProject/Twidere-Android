@@ -67,7 +67,7 @@ import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.task.UpdateAccountInfoTask;
 import org.mariotaku.twidere.task.UpdateProfileBannerImageTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;

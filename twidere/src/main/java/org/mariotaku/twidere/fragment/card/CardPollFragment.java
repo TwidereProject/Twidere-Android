@@ -55,8 +55,8 @@ import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;
-import org.mariotaku.twidere.task.AbstractTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.support.ViewSupport;
 
@@ -169,7 +169,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                                 = new AbstractTask<CardDataMap, ParcelableCardEntity, CardPollFragment>() {
 
                             @Override
-                            public void afterExecute(CardPollFragment handler, CardDataMap params, ParcelableCardEntity result) {
+                            public void afterExecute(CardPollFragment handler, ParcelableCardEntity result) {
                                 handler.displayAndReloadPoll(result, status);
                             }
 

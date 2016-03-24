@@ -89,7 +89,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.BackgroundOperationService;
-import org.mariotaku.twidere.task.AbstractTask;
+import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.task.AcceptFriendshipTask;
 import org.mariotaku.twidere.task.CreateFriendshipTask;
 import org.mariotaku.twidere.task.CreateUserBlockTask;
@@ -106,7 +106,7 @@ import org.mariotaku.twidere.task.GetSavedSearchesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.ReportSpamAndBlockTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
-import org.mariotaku.twidere.task.util.TaskStarter;
+import org.mariotaku.abstask.library.TaskStarter;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -502,7 +502,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             }
 
             @Override
-            public void afterExecute(Bus handler, Object params, SingleResponse<Relationship> result) {
+            public void afterExecute(Bus handler, SingleResponse<Relationship> result) {
                 if (result.hasData()) {
                     handler.post(new FriendshipUpdatedEvent(accountKey, userId, result.getData()));
                 } else if (result.hasException()) {

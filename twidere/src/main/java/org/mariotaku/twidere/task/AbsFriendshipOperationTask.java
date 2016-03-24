@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.otto.Bus;
 
+import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -60,7 +61,8 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
     }
 
     @Override
-    protected final void afterExecute(Arguments params, SingleResponse<ParcelableUser> result) {
+    protected final void afterExecute(SingleResponse<ParcelableUser> result) {
+        final Arguments params = getParams();
         twitter.removeUpdatingRelationshipId(params.accountKey, params.userKey);
         final FriendshipTaskEvent event = new FriendshipTaskEvent(action, params.accountKey,
                 params.userKey);
