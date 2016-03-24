@@ -25,8 +25,6 @@ public interface IThemedActivity {
 
     String getCurrentThemeBackgroundOption();
 
-    int getCurrentThemeColor();
-
     int getThemeBackgroundAlpha();
 
     String getThemeBackgroundOption();

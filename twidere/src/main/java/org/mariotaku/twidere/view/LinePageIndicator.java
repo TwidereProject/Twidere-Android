@@ -24,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
@@ -66,8 +67,8 @@ public class LinePageIndicator extends View implements PagerIndicator {
         final Resources res = getResources();
 
         // Load defaults from resources
-        final int defaultSelectedColor = res.getColor(R.color.default_line_indicator_selected_color);
-        final int defaultUnselectedColor = res.getColor(R.color.default_line_indicator_unselected_color);
+        final int defaultSelectedColor = ContextCompat.getColor(context, R.color.default_line_indicator_selected_color);
+        final int defaultUnselectedColor = ContextCompat.getColor(context, R.color.default_line_indicator_unselected_color);
         final float defaultLineWidth = res.getDimension(R.dimen.default_line_indicator_line_width);
         final float defaultGapWidth = res.getDimension(R.dimen.default_line_indicator_gap_width);
         final float defaultStrokeWidth = res.getDimension(R.dimen.default_line_indicator_stroke_width);

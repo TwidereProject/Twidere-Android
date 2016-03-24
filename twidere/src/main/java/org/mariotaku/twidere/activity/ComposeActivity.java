@@ -102,6 +102,8 @@ import com.twitter.Extractor;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.multivalueswitch.library.MultiValueSwitch;
 import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.BuildConfig;
@@ -130,8 +132,6 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.service.BackgroundOperationService;
-import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.text.MarkForDeleteSpan;
 import org.mariotaku.twidere.text.style.EmojiSpan;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
@@ -1763,12 +1763,13 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             final ComposeActivity activity = mActivityRef.get();
             if (activity == null) return;
             activity.setProgressVisible(false);
-            activity.addMedia(new ParcelableMediaUpdate(dst.toString(), mMediaType));
-            activity.setMenu();
-            activity.updateTextCount();
-            if (!result) {
+            if (result) {
+                activity.addMedia(new ParcelableMediaUpdate(dst.toString(), mMediaType));
+            } else {
                 Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
             }
+            activity.setMenu();
+            activity.updateTextCount();
         }
 
         @Override

@@ -87,6 +87,8 @@ import com.afollestad.appthemeengine.util.ATEUtil;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.AccountSelectorActivity;
@@ -127,8 +129,6 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
-import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -566,7 +566,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         } else if (user.link_color != 0) {
             setUiColor(user.link_color);
         } else if (activity instanceof IThemedActivity) {
-            setUiColor(((IThemedActivity) activity).getCurrentThemeColor());
         }
         final int defWidth = resources.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
@@ -845,11 +844,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         setupBaseActionBar();
         setupUserPages();
-
-        if (activity instanceof IThemedActivity) {
-            ViewSupport.setBackground(mPagerOverlay, ThemeUtils.getNormalWindowContentOverlay(activity));
-            setUiColor(((IThemedActivity) activity).getCurrentThemeColor());
-        }
 
         getUserInfo(accountId, userId, screenName, false);
     }
