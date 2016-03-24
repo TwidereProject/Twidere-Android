@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -220,7 +221,7 @@ public class CacheProvider extends ContentProvider implements TwidereConstants {
         @Override
         public String getExtension(@Nullable String mimeType) {
             if (mimeType == null) return null;
-            return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            return MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType.toLowerCase(Locale.US));
         }
 
         @Override
