@@ -643,9 +643,9 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     private void setConversation(List<ParcelableStatus> data) {
-        mHasMoreConversation = data != null && !data.isEmpty();
         final ReadPosition readPosition = saveReadPosition();
-        mStatusAdapter.setData(data);
+        final boolean changed = mStatusAdapter.setData(data);
+        mHasMoreConversation = data != null && changed;
         restoreReadPosition(readPosition);
     }
 
@@ -1930,9 +1930,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         }
 
         @Override
-        public void setData(List<ParcelableStatus> data) {
+        public boolean setData(List<ParcelableStatus> data) {
             final ParcelableStatus status = mStatus;
-            if (status == null) return;
+            if (status == null) return false;
+            boolean changed = !CompareUtils.objectEquals(mData, data);
             mData = data;
             if (data == null || data.isEmpty()) {
                 setTypeCount(ITEM_IDX_CONVERSATION, 0);
@@ -1967,6 +1968,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
             notifyDataSetChanged();
             updateItemDecoration();
+            return changed;
         }
 
         @Override

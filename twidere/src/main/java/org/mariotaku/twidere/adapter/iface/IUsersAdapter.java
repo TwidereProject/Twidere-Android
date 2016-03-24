@@ -38,7 +38,7 @@ public interface IUsersAdapter<Data> extends IContentCardAdapter {
 
     int getUserCount();
 
-    void setData(Data data);
+    boolean setData(Data data);
 
     @Nullable
     UserClickListener getUserClickListener();

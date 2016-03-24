@@ -320,8 +320,8 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
     }
 
     @Override
-    public void setData(Object o) {
-
+    public boolean setData(Object o) {
+        return false;
     }
 
 

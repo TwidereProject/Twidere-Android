@@ -210,7 +210,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         return mData.get(dataPosition).account_key;
     }
 
-    public void setData(List<ParcelableStatus> data) {
+    public boolean setData(List<ParcelableStatus> data) {
         mData = data;
         if (data instanceof ObjectCursor || data == null || data.isEmpty()) {
             mLastItemFiltered = false;
@@ -218,6 +218,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
             mLastItemFiltered = data.get(data.size() - 1).is_filtered;
         }
         notifyDataSetChanged();
+        return true;
     }
 
     public List<ParcelableStatus> getData() {

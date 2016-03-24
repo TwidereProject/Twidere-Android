@@ -50,7 +50,7 @@ public interface IStatusesAdapter<Data> extends IContentCardAdapter, IGapSupport
 
     boolean isSensitiveContentEnabled();
 
-    void setData(Data data);
+    boolean setData(Data data);
 
     boolean shouldShowAccountsColor();
 

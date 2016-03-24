@@ -713,8 +713,9 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
 
         if (savedInstanceState != null) {
             // Restore from previous saved state
-            mAccountsAdapter.setSelectedAccountIds(Utils.newParcelableArray(
-                    savedInstanceState.getParcelableArray(EXTRA_ACCOUNT_KEY), UserKey.CREATOR));
+            final UserKey[] selected = Utils.newParcelableArray(savedInstanceState
+                    .getParcelableArray(EXTRA_ACCOUNT_KEYS), UserKey.CREATOR);
+            mAccountsAdapter.setSelectedAccountIds(selected);
             mIsPossiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE);
             final ArrayList<ParcelableMediaUpdate> mediaList = savedInstanceState.getParcelableArrayList(EXTRA_MEDIA);
             if (mediaList != null) {

@@ -71,9 +71,10 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
 
 
     @Override
-    public void setData(List<ParcelableUserList> data) {
+    public boolean setData(List<ParcelableUserList> data) {
         mData = data;
         notifyDataSetChanged();
+        return true;
     }
 
     protected void bindUserList(UserListViewHolder holder, int position) {

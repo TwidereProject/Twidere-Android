@@ -37,7 +37,7 @@ public interface IUserListsAdapter<Data> extends IContentCardAdapter {
 
     int getUserListsCount();
 
-    void setData(Data data);
+    boolean setData(Data data);
 
     boolean shouldShowAccountsColor();
 

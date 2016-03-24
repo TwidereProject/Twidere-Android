@@ -111,20 +111,20 @@ public final class TwidereLinkify implements Constants {
     }
 
     public void applyAllLinks(@Nullable Spannable text, final UserKey accountKey,
-                                   final long extraId, final boolean sensitive,
-                                   final boolean skipLinksInText) {
+                              final long extraId, final boolean sensitive,
+                              final boolean skipLinksInText) {
         applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive,
                 mHighlightOption, skipLinksInText);
     }
 
     public void applyAllLinks(@Nullable Spannable text, final UserKey accountKey,
-                                   final boolean sensitive, final boolean skipLinksInText) {
+                              final boolean sensitive, final boolean skipLinksInText) {
         applyAllLinks(text, mOnLinkClickListener, accountKey, -1, sensitive, mHighlightOption, skipLinksInText);
     }
 
     public void applyAllLinks(@Nullable Spannable text, final UserKey accountKey,
-                                   final long extraId, final boolean sensitive,
-                                   final int highlightOption, final boolean skipLinksInText) {
+                              final long extraId, final boolean sensitive,
+                              final int highlightOption, final boolean skipLinksInText) {
         applyAllLinks(text, mOnLinkClickListener, accountKey, extraId, sensitive, highlightOption, skipLinksInText);
     }
 
@@ -258,6 +258,7 @@ public final class TwidereLinkify implements Constants {
                 break;
             }
             case LINK_TYPE_STATUS: {
+                if (!USER_TYPE_TWITTER_COM.equals(accountKey.getHost())) break;
                 final int length = string.length();
                 final URLSpan[] spans = string.getSpans(0, length, URLSpan.class);
                 for (final URLSpan span : spans) {
