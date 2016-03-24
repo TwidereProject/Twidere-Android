@@ -48,8 +48,9 @@
         android:layout_weight="1"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
+        android:textSize="16sp"
         tools:text="@string/settings"/>
 
 </LinearLayout>
