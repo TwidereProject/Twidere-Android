@@ -36,9 +36,9 @@ import java.io.File;
 /**
  * Created by mariotaku on 15/12/28.
  */
-public class SaveImageToGalleryTask extends ProgressSaveFileTask {
+public class SaveMediaToGalleryTask extends ProgressSaveFileTask {
 
-    public SaveImageToGalleryTask(@NonNull Activity activity, @NonNull Uri source, @NonNull File destination, String type) {
+    public SaveMediaToGalleryTask(@NonNull Activity activity, @NonNull Uri source, @NonNull File destination, String type) {
         super(activity, source, destination, new CacheProvider.CacheFileTypeCallback(activity, type));
     }
 
@@ -60,7 +60,7 @@ public class SaveImageToGalleryTask extends ProgressSaveFileTask {
             }
         }
         final File saveDir = new File(pubDir, "Twidere");
-        return new SaveImageToGalleryTask(activity, source, saveDir, type);
+        return new SaveMediaToGalleryTask(activity, source, saveDir, type);
     }
 
     @Override

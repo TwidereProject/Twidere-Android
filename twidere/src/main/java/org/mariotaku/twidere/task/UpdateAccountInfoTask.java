@@ -64,12 +64,15 @@ public class UpdateAccountInfoTask extends AbstractTask<Pair<ParcelableAccount, 
 
         final ContentValues accountKeyValues = new ContentValues();
         accountKeyValues.put(AccountSupportColumns.ACCOUNT_KEY, String.valueOf(user.key));
+        final String accountKeyWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).getSQL();
+        final String[] accountKeyWhereArgs = {account.account_key.toString()};
 
-        resolver.update(Statuses.CONTENT_URI, accountKeyValues, accountWhere, accountWhereArgs);
-        resolver.update(Activities.AboutMe.CONTENT_URI, accountKeyValues, accountWhere, accountWhereArgs);
-        resolver.update(DirectMessages.Inbox.CONTENT_URI, accountKeyValues, accountWhere, accountWhereArgs);
-        resolver.update(DirectMessages.Outbox.CONTENT_URI, accountKeyValues, accountWhere, accountWhereArgs);
-        resolver.update(CachedRelationships.CONTENT_URI, accountKeyValues, accountWhere, accountWhereArgs);
+
+        resolver.update(Statuses.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs);
+        resolver.update(Activities.AboutMe.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs);
+        resolver.update(DirectMessages.Inbox.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs);
+        resolver.update(DirectMessages.Outbox.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs);
+        resolver.update(CachedRelationships.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs);
 
         updateTabs(context, resolver, user.key);
 

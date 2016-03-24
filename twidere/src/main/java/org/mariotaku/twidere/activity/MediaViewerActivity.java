@@ -88,7 +88,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.CacheProvider;
 import org.mariotaku.twidere.task.SaveFileTask;
-import org.mariotaku.twidere.task.SaveImageToGalleryTask;
+import org.mariotaku.twidere.task.SaveMediaToGalleryTask;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MenuUtils;
@@ -527,9 +527,11 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         final boolean hasMedia = cacheUri != null;
         if (!hasMedia) return;
         if (f instanceof ImagePageFragment) {
-            mSaveFileTask = SaveImageToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE);
+            mSaveFileTask = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE);
         } else if (f instanceof VideoPageFragment) {
-            mSaveFileTask = SaveImageToGalleryTask.create(this, cacheUri, CacheProvider.Type.VIDEO);
+            mSaveFileTask = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.VIDEO);
+        } else if (f instanceof GifPageFragment) {
+            mSaveFileTask = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE);
         } else {
             throw new UnsupportedOperationException();
         }
