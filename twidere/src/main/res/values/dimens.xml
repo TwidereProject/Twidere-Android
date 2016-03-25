@@ -98,4 +98,6 @@
     <dimen name="height_player_control_panel">40dp</dimen>
     <dimen name="toolbar_elevation">8dp</dimen>
 
+    <dimen name="element_size_quick_search_bar_item_icon">42dp</dimen>
+
 </resources>

@@ -22,6 +22,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:minHeight="?android:listPreferredItemHeightSmall"
     android:orientation="horizontal"
@@ -30,10 +31,11 @@
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@android:id/icon"
         style="?profileImageStyle"
-        android:layout_width="@dimen/element_size_normal"
-        android:layout_height="@dimen/element_size_normal"
+        android:layout_width="@dimen/element_size_quick_search_bar_item_icon"
+        android:layout_height="@dimen/element_size_quick_search_bar_item_icon"
         android:contentDescription="@string/icon"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        tools:src="@mipmap/ic_launcher"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,6 +53,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:textColorPrimary"
             tools:text="Mariotaku"/>
 
         <TextView
@@ -61,6 +64,7 @@
             android:layout_marginStart="@dimen/element_spacing_small"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:textColorSecondary"
             tools:text="\@mariotaku"/>
     </LinearLayout>
 

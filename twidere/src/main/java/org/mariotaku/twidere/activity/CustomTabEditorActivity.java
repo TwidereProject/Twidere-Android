@@ -123,6 +123,7 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
     public void onClick(final View v) {
         final CustomTabConfiguration conf = mTabConfiguration;
         final Object value = mSecondaryFieldValue;
+        final UserKey accountKey = getAccountKey();
         switch (v.getId()) {
             case R.id.secondary_field: {
                 if (conf == null) return;
@@ -130,14 +131,14 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
                     case CustomTabConfiguration.FIELD_TYPE_USER: {
                         final Intent intent = new Intent(this, UserListSelectorActivity.class);
                         intent.setAction(INTENT_ACTION_SELECT_USER);
-                        intent.putExtra(EXTRA_ACCOUNT_KEY, getAccountKey());
+                        intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
                         startActivityForResult(intent, REQUEST_SELECT_USER);
                         break;
                     }
                     case CustomTabConfiguration.FIELD_TYPE_USER_LIST: {
                         final Intent intent = new Intent(this, UserListSelectorActivity.class);
                         intent.setAction(INTENT_ACTION_SELECT_USER_LIST);
-                        intent.putExtra(EXTRA_ACCOUNT_KEY, getAccountKey());
+                        intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
                         startActivityForResult(intent, REQUEST_SELECT_USER_LIST);
                         break;
                     }
@@ -165,7 +166,7 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
                     final boolean accountIdRequired = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_REQUIRED;
                     final boolean noAccountId = conf.getAccountRequirement() == CustomTabConfiguration.ACCOUNT_NONE;
                     final boolean secondaryFieldRequired = conf.getSecondaryFieldType() != CustomTabConfiguration.FIELD_TYPE_NONE;
-                    final boolean accountIdInvalid = getAccountKey() == null;
+                    final boolean accountIdInvalid = accountKey == null;
                     final boolean secondaryFieldInvalid = mSecondaryFieldValue == null;
                     if (accountIdRequired && accountIdInvalid) {
                         Toast.makeText(this, R.string.no_account_selected, Toast.LENGTH_SHORT).show();
@@ -178,7 +179,11 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
                     final TabArguments args = CustomTabUtils.newTabArguments(getTabType());
                     if (args != null) {
                         if (!noAccountId) {
-                            args.setAccountKeys(new UserKey[]{getAccountKey()});
+                            if (accountKey == null) {
+                                args.setAccountKeys(null);
+                            } else {
+                                args.setAccountKeys(new UserKey[]{accountKey});
+                            }
                         }
                         if (secondaryFieldRequired) {
                             addSecondaryFieldValueToArguments(args);

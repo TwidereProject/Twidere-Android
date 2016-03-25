@@ -74,13 +74,26 @@ public class TwidereQueryBuilder {
                     Expression.equalsArgs(relationshipsAccountId.getSQL())
             );
             qb.join(new Join(false, Operation.LEFT, new Table(CachedRelationships.TABLE_NAME), on));
+            final Expression userTypeExpression;
+            final String host = accountKey.getHost();
+            final String[] accountKeyArgs;
+            if (host == null) {
+                userTypeExpression = Expression.notLikeRaw(new Column(new Table(CachedUsers.TABLE_NAME),
+                        CachedUsers.USER_KEY), "'%@%'");
+                accountKeyArgs = new String[]{accountKey.toString()};
+            } else {
+                userTypeExpression = Expression.likeRaw(new Column(new Table(CachedUsers.TABLE_NAME),
+                        CachedUsers.USER_KEY), "'%@'||?");
+                accountKeyArgs = new String[]{accountKey.toString(), host};
+            }
             if (selection != null) {
-                qb.where(new Expression(selection));
+                qb.where(Expression.and(userTypeExpression, new Expression(selection)));
+            } else {
+                qb.where(userTypeExpression);
             }
             if (sortOrder != null) {
                 qb.orderBy(new OrderBy(sortOrder));
             }
-            final String[] accountKeyArgs = {accountKey.toString()};
             final String[] mergedArgs = new String[TwidereArrayUtils.arraysLength(accountKeyArgs, selectionArgs)];
             TwidereArrayUtils.mergeArray(mergedArgs, accountKeyArgs, selectionArgs);
             return Pair.create(qb.build(), mergedArgs);

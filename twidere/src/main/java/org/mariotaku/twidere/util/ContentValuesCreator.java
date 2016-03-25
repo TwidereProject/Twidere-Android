@@ -220,6 +220,8 @@ public final class ContentValuesCreator implements TwidereConstants {
             activity.status_retweet_user_nickname = status.retweet_user_nickname;
             activity.status_quoted_user_nickname = status.quoted_user_nickname;
 
+        } else {
+            activity.account_color = credentials.color;
         }
         ParcelableActivityValuesCreator.writeTo(activity, values);
         return values;

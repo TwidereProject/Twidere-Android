@@ -50,6 +50,7 @@
             android:scaleType="centerInside"
             android:visibility="gone"
             tools:src="@drawable/ic_activity_action_retweet"
+            tools:tint="?android:textColorSecondary"
             tools:visibility="visible"/>
 
         <org.mariotaku.twidere.view.ActionIconThemedTextView
@@ -298,15 +299,20 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_reply"
                     app:iabActivatedColor="@color/highlight_reply"
-                    app:iabColor="?android:textColorTertiary"/>
+                    app:iabColor="?android:textColorTertiary"
+                    tools:tint="?android:textColorSecondary"/>
 
                 <org.mariotaku.twidere.view.ActionIconThemedTextView
                     android:id="@+id/reply_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/element_spacing_minus_small"
+                    android:layout_marginStart="@dimen/element_spacing_minus_small"
+                    android:ellipsize="end"
                     android:focusable="false"
                     android:gravity="center"
                     android:minHeight="@dimen/button_size_content_card_compact"
+                    android:singleLine="true"
                     android:tag="font_family|user"
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="255"/>
@@ -330,15 +336,20 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_retweet"
                     app:iabActivatedColor="@color/highlight_retweet"
-                    app:iabColor="?android:textColorTertiary"/>
+                    app:iabColor="?android:textColorTertiary"
+                    tools:tint="?android:textColorSecondary"/>
 
                 <org.mariotaku.twidere.view.ActionIconThemedTextView
                     android:id="@+id/retweet_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/element_spacing_minus_small"
+                    android:layout_marginStart="@dimen/element_spacing_minus_small"
+                    android:ellipsize="end"
                     android:focusable="false"
                     android:gravity="center"
                     android:minHeight="@dimen/button_size_content_card_compact"
+                    android:singleLine="true"
                     android:tag="font_family|user"
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="255"/>
@@ -361,17 +372,23 @@
                     android:focusable="false"
                     android:gravity="center"
                     android:scaleType="centerInside"
+
                     android:src="@drawable/ic_action_heart"
                     app:iabActivatedColor="@color/highlight_like"
-                    app:iabColor="?android:textColorTertiary"/>
+                    app:iabColor="?android:textColorTertiary"
+                    tools:tint="?android:textColorSecondary"/>
 
                 <org.mariotaku.twidere.view.ActionIconThemedTextView
                     android:id="@+id/favorite_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/element_spacing_minus_small"
+                    android:layout_marginStart="@dimen/element_spacing_minus_small"
+                    android:ellipsize="end"
                     android:focusable="false"
                     android:gravity="center"
                     android:minHeight="@dimen/button_size_content_card_compact"
+                    android:singleLine="true"
                     android:tag="font_family|user"
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="255"/>

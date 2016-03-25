@@ -91,7 +91,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:listSelector="?selectableItemBackground"
-                tools:listitem="@layout/list_item_user"/>
+                tools:listitem="@layout/list_item_suggestion_search"/>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

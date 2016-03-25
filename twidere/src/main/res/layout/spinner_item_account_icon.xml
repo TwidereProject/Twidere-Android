@@ -32,6 +32,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:contentDescription="@string/profile_image"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        tools:src="@mipmap/ic_launcher"/>
 
 </org.mariotaku.twidere.view.SquareFrameLayout>
