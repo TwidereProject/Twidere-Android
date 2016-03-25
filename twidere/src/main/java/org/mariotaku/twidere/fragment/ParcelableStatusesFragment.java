@@ -118,9 +118,12 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
         return (!TextUtils.equals(mLastId, mLastId = list.get(list.size() - 1).id));
     }
 
+    @NonNull
     @Override
     protected UserKey[] getAccountKeys() {
-        return Utils.getAccountKeys(getContext(), getArguments());
+        final UserKey[] accountKeys = Utils.getAccountKeys(getContext(), getArguments());
+        if (accountKeys == null) return new UserKey[0];
+        return accountKeys;
     }
 
     @Override

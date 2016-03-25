@@ -821,7 +821,7 @@ public final class Utils implements Constants {
             }
             final UserKey accountKey = UserKeyUtils.findById(context, accountId);
             args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
-            if (accountKey == null) return new UserKey[0];
+            if (accountKey == null) return new UserKey[]{new UserKey(accountId, null)};
             return new UserKey[]{accountKey};
         }
         return null;

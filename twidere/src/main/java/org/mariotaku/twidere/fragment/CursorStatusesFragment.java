@@ -181,6 +181,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     }
 
+    @NonNull
     @Override
     protected UserKey[] getAccountKeys() {
         final Bundle args = getArguments();

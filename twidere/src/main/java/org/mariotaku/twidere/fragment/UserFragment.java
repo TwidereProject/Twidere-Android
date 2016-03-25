@@ -30,7 +30,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -49,7 +48,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
@@ -82,6 +80,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.appthemeengine.ATEActivity;
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.util.ATEUtil;
 import com.squareup.otto.Subscribe;
@@ -96,7 +95,6 @@ import org.mariotaku.twidere.activity.BaseActivity;
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.LinkHandlerActivity;
 import org.mariotaku.twidere.activity.UserListSelectorActivity;
-import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -165,7 +163,6 @@ import org.mariotaku.twidere.view.TintedStatusFrameLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -176,8 +173,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener, KeyboardShortcutCallback,
         UserColorChangedListener, UserNicknameChangedListener, IToolBarSupportFragment {
 
-    public static final String TRANSITION_NAME_PROFILE_IMAGE = "profile_image";
-    public static final String TRANSITION_NAME_PROFILE_TYPE = "profile_type";
     private static final ArgbEvaluator sArgbEvaluator = new ArgbEvaluator();
     private static final int LOADER_ID_USER = 1;
     private static final int LOADER_ID_FRIENDSHIP = 2;
@@ -207,9 +202,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private HeaderDrawerLayout mHeaderDrawerLayout;
     private ViewPager mViewPager;
     private TabPagerIndicator mPagerIndicator;
-    private View mPagerOverlay;
     private View mWindowOverlay;
-    private View mErrorOverlay;
     private View mProfileBannerContainer;
     private ExtendedRelativeLayout mProfileContentContainer;
     private Button mFollowButton;
@@ -298,7 +291,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         @Override
         public void onLoadFinished(final Loader<SingleResponse<ParcelableUser>> loader,
                                    final SingleResponse<ParcelableUser> data) {
-            if (getActivity() == null) return;
+            final FragmentActivity activity = getActivity();
+            if (activity == null) return;
             if (data.hasData()) {
                 final ParcelableUser user = data.getData();
                 mCardContent.setVisibility(View.VISIBLE);
@@ -313,19 +307,23 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
                     getLoaderManager().restartLoader(LOADER_ID_USER, args, this);
                 }
+                setHasOptionsMenu(true);
             } else if (mUser != null && mUser.is_cache) {
                 mCardContent.setVisibility(View.VISIBLE);
                 mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
                 displayUser(mUser);
+                setHasOptionsMenu(true);
             } else {
                 if (data.hasException()) {
-                    mHeaderErrorTextView.setText(Utils.getErrorMessage(getActivity(), data.getException()));
+                    mHeaderErrorTextView.setText(Utils.getErrorMessage(activity, data.getException()));
                     mHeaderErrorTextView.setVisibility(View.VISIBLE);
                 }
                 mCardContent.setVisibility(View.GONE);
                 mHeaderErrorContainer.setVisibility(View.VISIBLE);
                 mProgressContainer.setVisibility(View.GONE);
+                displayUser(null);
+                setHasOptionsMenu(false);
             }
         }
 
@@ -508,9 +506,18 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @UiThread
     public void displayUser(final ParcelableUser user) {
-        mUser = user;
         final FragmentActivity activity = getActivity();
-        if (user == null || user.key == null || activity == null) return;
+        if (activity == null) return;
+        mUser = user;
+        if (user == null || user.key == null) {
+            mProfileImageView.setVisibility(View.GONE);
+            mProfileTypeView.setVisibility(View.GONE);
+            if (activity instanceof ATEActivity) {
+                setUiColor(Config.primaryColor(activity, ((ATEActivity) activity).getATEKey()));
+            }
+            return;
+        }
+        mProfileImageView.setVisibility(View.VISIBLE);
         final Resources resources = getResources();
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
@@ -565,7 +572,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             setUiColor(user.color);
         } else if (user.link_color != 0) {
             setUiColor(user.link_color);
-        } else if (activity instanceof IThemedActivity) {
+        } else if (activity instanceof ATEActivity) {
+            setUiColor(Config.primaryColor(activity, ((ATEActivity) activity).getATEKey()));
         }
         final int defWidth = resources.getDisplayMetrics().widthPixels;
         final int width = mBannerWidth > 0 ? mBannerWidth : defWidth;
@@ -717,7 +725,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         final FragmentActivity activity = getActivity();
-        setHasOptionsMenu(true);
         mUserColorNameManager.registerColorChangedListener(this);
         mUserColorNameManager.registerNicknameChangedListener(this);
         mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
@@ -749,42 +756,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 });
             }
         });
-
-        activity.setEnterSharedElementCallback(new SharedElementCallback() {
-
-            @Override
-            public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
-                final int idx = sharedElementNames.indexOf(TRANSITION_NAME_PROFILE_IMAGE);
-                if (idx != -1) {
-                    final View view = sharedElements.get(idx);
-                    int[] location = new int[2];
-                    final RectF bounds = new RectF(0, 0, view.getWidth(), view.getHeight());
-                    view.getLocationOnScreen(location);
-                    bounds.offsetTo(location[0], location[1]);
-                    mProfileImageView.setTransitionSource(bounds);
-                }
-                super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
-            }
-
-            @Override
-            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
-                int idx = sharedElementNames.indexOf(TRANSITION_NAME_PROFILE_IMAGE);
-                if (idx != -1) {
-                    final View view = sharedElements.get(idx);
-                    int[] location = new int[2];
-                    final RectF bounds = new RectF(0, 0, view.getWidth(), view.getHeight());
-                    view.getLocationOnScreen(location);
-                    bounds.offsetTo(location[0], location[1]);
-                    mProfileImageView.setTransitionDestination(bounds);
-                }
-                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-            }
-
-        });
-
-        ViewCompat.setTransitionName(mProfileImageView, TRANSITION_NAME_PROFILE_IMAGE);
-        ViewCompat.setTransitionName(mProfileTypeView, TRANSITION_NAME_PROFILE_TYPE);
-//        ViewCompat.setTransitionName(mCardView, TRANSITION_NAME_CARD);
 
 
         mTintedStatusFrameLayout.setWindowInsetsListener(new TintedStatusFrameLayout.WindowInsetsListener() {
@@ -1177,8 +1148,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mProfileBannerSpace = (ProfileBannerSpace) headerView.findViewById(R.id.profile_banner_space);
         mViewPager = (ViewPager) contentView.findViewById(R.id.view_pager);
         mPagerIndicator = (TabPagerIndicator) contentView.findViewById(R.id.toolbar_tabs);
-        mPagerOverlay = contentView.findViewById(R.id.pager_window_overlay);
-        mErrorOverlay = contentView.findViewById(R.id.error_window_overlay);
         mFollowButton = (Button) headerView.findViewById(R.id.follow);
         mFollowProgress = (ProgressBar) headerView.findViewById(R.id.follow_progress);
         mWindowOverlay = view.findViewById(R.id.window_overlay);
@@ -1497,11 +1466,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (mActionBarBackground != null) {
             mActionBarBackground.setColor(mPrimaryColor);
         }
+        int taskColor;
+        if (Config.coloredActionBar(activity, activity.getATEKey())) {
+            taskColor = color;
+        } else {
+            taskColor = Config.toolbarColor(activity, activity.getATEKey(), mToolbar);
+        }
         if (mUser != null) {
             final String name = mUserColorNameManager.getDisplayName(mUser, mNameFirst);
-            ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(name, null, color));
+            ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(name, null, taskColor));
         } else {
-            ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(null, null, color));
+            ActivitySupport.setTaskDescription(activity, new TaskDescriptionCompat(null, null, taskColor));
         }
         final int optimalAccentColor = ThemeUtils.getOptimalAccentColor(color,
                 mDescriptionView.getCurrentTextColor());

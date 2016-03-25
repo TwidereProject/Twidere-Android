@@ -200,7 +200,7 @@ public final class TwidereLinkify implements Constants {
     /**
      * Applies a regex to the text of a TextView turning the matches into links.
      */
-    private void addLinks(final Spannable string, final UserKey accountKey, final long extraId, final int type,
+    private void addLinks(final Spannable string, @Nullable final UserKey accountKey, final long extraId, final int type,
                           final boolean sensitive, final OnLinkClickListener listener, final int highlightOption) {
         switch (type) {
             case LINK_TYPE_MENTION: {
@@ -221,7 +221,7 @@ public final class TwidereLinkify implements Constants {
                     }
                     string.removeSpan(span);
                     String url = span.getURL();
-                    if (USER_TYPE_FANFOU_COM.equals(accountKey.getHost())) {
+                    if (accountKey != null && USER_TYPE_FANFOU_COM.equals(accountKey.getHost())) {
                         // Fix search path
                         if (url.startsWith("/")) {
                             url = "http://fanfou.com" + url;
@@ -258,7 +258,9 @@ public final class TwidereLinkify implements Constants {
                 break;
             }
             case LINK_TYPE_STATUS: {
-                if (!USER_TYPE_TWITTER_COM.equals(accountKey.getHost())) break;
+                if (accountKey == null || !USER_TYPE_TWITTER_COM.equals(accountKey.getHost())) {
+                    break;
+                }
                 final int length = string.length();
                 final URLSpan[] spans = string.getSpans(0, length, URLSpan.class);
                 for (final URLSpan span : spans) {
