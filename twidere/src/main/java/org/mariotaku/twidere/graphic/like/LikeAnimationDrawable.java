@@ -354,6 +354,7 @@ public class LikeAnimationDrawable extends Drawable implements Animatable, Drawa
             mIconDrawable.setBounds(left, top, right, bottom);
         }
 
+        @NonNull
         @Override
         public Drawable newDrawable() {
             return new LikeAnimationDrawable(this);

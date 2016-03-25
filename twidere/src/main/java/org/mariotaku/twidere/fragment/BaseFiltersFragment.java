@@ -295,6 +295,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
                 public void onShow(DialogInterface dialog) {
                     AlertDialog alertDialog = (AlertDialog) dialog;
                     final AutoCompleteTextView editText = (AutoCompleteTextView) alertDialog.findViewById(R.id.edit_text);
+                    assert editText != null;
                     final Bundle args = getArguments();
                     final int autoCompleteType;
                     autoCompleteType = args.getInt(EXTRA_AUTO_COMPLETE_TYPE, 0);
@@ -318,6 +319,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         protected String getText() {
             AlertDialog alertDialog = (AlertDialog) getDialog();
             final AutoCompleteTextView editText = (AutoCompleteTextView) alertDialog.findViewById(R.id.edit_text);
+            assert editText != null;
             return ParseUtils.parseString(editText.getText());
         }
 

@@ -33,55 +33,55 @@ import org.mariotaku.twidere.util.HtmlEscapeHelper;
 
 public class SourceAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
 
-	private static final String[] COLUMNS = new String[] { CachedStatuses._ID, CachedStatuses.SOURCE };
-	private static final String[] FROM = new String[0];
-	private static final int[] TO = new int[0];
+    private static final String[] COLUMNS = new String[]{CachedStatuses._ID, CachedStatuses.SOURCE};
+    private static final String[] FROM = new String[0];
+    private static final int[] TO = new int[0];
 
-	private final SQLiteDatabase mDatabase;
+    private final SQLiteDatabase mDatabase;
 
-	private int mSourceIdx;
+    private int mSourceIdx;
 
-	public SourceAutoCompleteAdapter(final Context context) {
-		super(context, android.R.layout.simple_list_item_1, null, FROM, TO, 0);
-		final TwidereApplication app = TwidereApplication.getInstance(context);
-		mDatabase = app != null ? app.getSQLiteDatabase() : null;
-	}
+    public SourceAutoCompleteAdapter(final Context context) {
+        super(context, android.R.layout.simple_list_item_1, null, FROM, TO, 0);
+        final TwidereApplication app = TwidereApplication.getInstance(context);
+        mDatabase = app.getSQLiteDatabase();
+    }
 
-	@Override
-	public void bindView(final View view, final Context context, final Cursor cursor) {
-		if (isCursorClosed()) return;
-		final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-		text1.setText(convertToString(cursor));
-		super.bindView(view, context, cursor);
-	}
+    @Override
+    public void bindView(final View view, final Context context, final Cursor cursor) {
+        if (isCursorClosed()) return;
+        final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+        text1.setText(convertToString(cursor));
+        super.bindView(view, context, cursor);
+    }
 
-	@Override
-	public CharSequence convertToString(final Cursor cursor) {
-		if (isCursorClosed() || mSourceIdx == -1) return null;
-		return HtmlEscapeHelper.toPlainText(cursor.getString(mSourceIdx));
-	}
+    @Override
+    public CharSequence convertToString(final Cursor cursor) {
+        if (isCursorClosed() || mSourceIdx == -1) return null;
+        return HtmlEscapeHelper.toPlainText(cursor.getString(mSourceIdx));
+    }
 
-	public boolean isCursorClosed() {
-		final Cursor cursor = getCursor();
-		return cursor == null || cursor.isClosed();
-	}
+    public boolean isCursorClosed() {
+        final Cursor cursor = getCursor();
+        return cursor == null || cursor.isClosed();
+    }
 
-	@Override
-	public Cursor runQueryOnBackgroundThread(final CharSequence constraint) {
-		final String constraint_escaped = constraint != null ? constraint.toString().replaceAll("_", "^_") : null;
-		final String selection = constraint != null ? CachedStatuses.SOURCE + " LIKE '%\">'||?||'%</a>' ESCAPE '^'"
-				: null;
-		final String[] selectionArgs = constraint != null ? new String[] { constraint_escaped } : null;
-		return mDatabase.query(true, CachedStatuses.TABLE_NAME, COLUMNS, selection, selectionArgs,
-				CachedStatuses.SOURCE, null, null, null);
-	}
+    @Override
+    public Cursor runQueryOnBackgroundThread(final CharSequence constraint) {
+        final String constraint_escaped = constraint != null ? constraint.toString().replaceAll("_", "^_") : null;
+        final String selection = constraint != null ? CachedStatuses.SOURCE + " LIKE '%\">'||?||'%</a>' ESCAPE '^'"
+                : null;
+        final String[] selectionArgs = constraint != null ? new String[]{constraint_escaped} : null;
+        return mDatabase.query(true, CachedStatuses.TABLE_NAME, COLUMNS, selection, selectionArgs,
+                CachedStatuses.SOURCE, null, null, null);
+    }
 
-	@Override
-	public Cursor swapCursor(final Cursor cursor) {
-		if (cursor != null) {
-			mSourceIdx = cursor.getColumnIndex(CachedStatuses.SOURCE);
-		}
-		return super.swapCursor(cursor);
-	}
+    @Override
+    public Cursor swapCursor(final Cursor cursor) {
+        if (cursor != null) {
+            mSourceIdx = cursor.getColumnIndex(CachedStatuses.SOURCE);
+        }
+        return super.swapCursor(cursor);
+    }
 
 }

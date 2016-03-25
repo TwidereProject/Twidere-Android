@@ -27,7 +27,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,6 +38,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -87,6 +87,7 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
@@ -103,13 +104,6 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator;
 
 import java.lang.ref.WeakReference;
-
-import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.util.DataStoreUtils.getActivatedAccountKeys;
-import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
-import static org.mariotaku.twidere.util.Utils.isUserLoggedIn;
-import static org.mariotaku.twidere.util.Utils.showErrorMessage;
-import static org.mariotaku.twidere.util.Utils.trim;
 
 public class SignInActivity extends BaseActivity implements OnClickListener, TextWatcher {
 
@@ -218,7 +212,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                final UserKey[] accountKeys = getActivatedAccountKeys(this);
+                final UserKey[] accountKeys = DataStoreUtils.getActivatedAccountKeys(this);
                 if (accountKeys.length > 0) {
                     onBackPressed();
                 }
@@ -303,8 +297,8 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             mAPIUrlFormat = savedInstanceState.getString(Accounts.API_URL_FORMAT);
             mAuthType = savedInstanceState.getInt(Accounts.AUTH_TYPE);
             mSameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL);
-            mConsumerKey = trim(savedInstanceState.getString(Accounts.CONSUMER_KEY));
-            mConsumerSecret = trim(savedInstanceState.getString(Accounts.CONSUMER_SECRET));
+            mConsumerKey = Utils.trim(savedInstanceState.getString(Accounts.CONSUMER_KEY));
+            mConsumerSecret = Utils.trim(savedInstanceState.getString(Accounts.CONSUMER_SECRET));
             mUsername = savedInstanceState.getString(Accounts.SCREEN_NAME);
             mPassword = savedInstanceState.getString(Accounts.PASSWORD);
             mAPIChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE);
@@ -321,8 +315,8 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
         mSignUpButton.setOnClickListener(this);
 
-        final Resources resources = getResources();
-        final ColorStateList color = ColorStateList.valueOf(resources.getColor(R.color.material_light_green));
+        final ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(this,
+                R.color.material_light_green));
         ViewCompat.setBackgroundTintList(mSignInButton, color);
         setSignInButton();
 
@@ -378,13 +372,13 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
     private void setDefaultAPI() {
         final long apiLastChange = mPreferences.getLong(KEY_API_LAST_CHANGE, mAPIChangeTimestamp);
         final boolean defaultApiChanged = apiLastChange != mAPIChangeTimestamp;
-        final String apiUrlFormat = getNonEmptyString(mPreferences, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
+        final String apiUrlFormat = Utils.getNonEmptyString(mPreferences, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
         final int authType = mPreferences.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_OAUTH);
         final boolean sameOAuthSigningUrl = mPreferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean noVersionSuffix = mPreferences.getBoolean(KEY_NO_VERSION_SUFFIX, false);
-        final String consumerKey = getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
-        final String consumerSecret = getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
-        if (isEmpty(mAPIUrlFormat) || defaultApiChanged) {
+        final String consumerKey = Utils.getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+        final String consumerSecret = Utils.getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
+        if (TextUtils.isEmpty(mAPIUrlFormat) || defaultApiChanged) {
             mAPIUrlFormat = apiUrlFormat;
         }
         if (defaultApiChanged) {
@@ -396,10 +390,10 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         if (defaultApiChanged) {
             mNoVersionSuffix = noVersionSuffix;
         }
-        if (isEmpty(mConsumerKey) || defaultApiChanged) {
+        if (TextUtils.isEmpty(mConsumerKey) || defaultApiChanged) {
             mConsumerKey = consumerKey;
         }
-        if (isEmpty(mConsumerSecret) || defaultApiChanged) {
+        if (TextUtils.isEmpty(mConsumerSecret) || defaultApiChanged) {
             mConsumerSecret = consumerSecret;
         }
         if (defaultApiChanged) {
@@ -448,9 +442,9 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 } else if (result.exception instanceof LoginVerificationException) {
                     Toast.makeText(this, R.string.login_verification_failed, Toast.LENGTH_SHORT).show();
                 } else if (result.exception instanceof AuthenticationException) {
-                    showErrorMessage(this, getString(R.string.action_signing_in), result.exception.getCause(), true);
+                    Utils.showErrorMessage(this, getString(R.string.action_signing_in), result.exception.getCause(), true);
                 } else {
-                    showErrorMessage(this, getString(R.string.action_signing_in), result.exception, true);
+                    Utils.showErrorMessage(this, getString(R.string.action_signing_in), result.exception, true);
                 }
             }
         }
@@ -610,7 +604,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                         Twitter.class);
                 final User user = twitter.verifyCredentials();
                 final int color = analyseUserProfileColor(user);
-                return new SignInResponse(isUserLoggedIn(context, user.getId()), auth, user,
+                return new SignInResponse(Utils.isUserLoggedIn(context, user.getId()), auth, user,
                         ParcelableCredentials.AUTH_TYPE_OAUTH, color, apiUrlFormat, sameOauthSigningUrl,
                         noVersionSuffix, detectAccountType(twitter, user));
             } catch (final TwitterException e) {
@@ -735,7 +729,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             final String userId = user.getId();
             if (userId == null) return new SignInResponse(false, false, null);
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(activity, userId), username, password, user,
+            return new SignInResponse(Utils.isUserLoggedIn(activity, userId), username, password, user,
                     color, apiUrlFormat, noVersionSuffix, detectAccountType(twitter, user));
         }
 
@@ -751,7 +745,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             final String userId = user.getId();
             if (userId == null) return new SignInResponse(false, false, null);
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(activity, userId), user, color, apiUrlFormat,
+            return new SignInResponse(Utils.isUserLoggedIn(activity, userId), user, color, apiUrlFormat,
                     noVersionSuffix, detectAccountType(twitter, user));
         }
 
@@ -762,7 +756,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
             final User user = twitter.verifyCredentials();
             final int color = analyseUserProfileColor(user);
-            return new SignInResponse(isUserLoggedIn(activity, userId), auth, user, authType, color,
+            return new SignInResponse(Utils.isUserLoggedIn(activity, userId), auth, user, authType, color,
                     apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix, detectAccountType(twitter, user));
         }
 
@@ -874,6 +868,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 case DialogInterface.BUTTON_POSITIVE: {
                     final AlertDialog alertDialog = (AlertDialog) dialog;
                     final EditText editVerification = (EditText) alertDialog.findViewById(R.id.edit_verification_code);
+                    assert editVerification != null;
                     callback.setChallengeResponse(ParseUtils.parseString(editVerification.getText()));
                     break;
                 }

@@ -123,6 +123,10 @@
         <attr name="android:showDefault"/>
         <attr name="android:showSilent"/>
     </declare-styleable>
+    <declare-styleable name="ForegroundView">
+        <attr name="android:foreground"/>
+        <attr name="android:foregroundGravity"/>
+    </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>

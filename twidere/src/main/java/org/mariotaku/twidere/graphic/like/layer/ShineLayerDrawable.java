@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 
@@ -118,6 +119,7 @@ public class ShineLayerDrawable extends AnimationLayerDrawable {
             return mPaint;
         }
 
+        @NonNull
         @Override
         public Drawable newDrawable() {
             return new ShineLayerDrawable(mIntrinsicWidth, mIntrinsicHeight, mPalette);

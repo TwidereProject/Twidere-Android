@@ -218,7 +218,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         }
         mViewPager = view;
         mPagerProvider = adapter;
-        view.setOnPageChangeListener(this);
+        view.addOnPageChangeListener(this);
         mIndicatorAdapter.setTabProvider((TabProvider) adapter);
     }
 

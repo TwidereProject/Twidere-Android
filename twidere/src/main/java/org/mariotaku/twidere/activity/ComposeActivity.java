@@ -540,7 +540,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         mAttachedMediaPreview = (RecyclerView) findViewById(R.id.attached_media_preview);
         mMenuBar = (ActionMenuView) findViewById(R.id.menu_bar);
         mSendView = findViewById(R.id.send);
-        mSendTextCountView = (StatusTextCountView) mSendView.findViewById(R.id.status_text_count);
+        mSendTextCountView = (StatusTextCountView) findViewById(R.id.status_text_count);
         mLocationSwitch = (MultiValueSwitch) findViewById(R.id.location_switch);
         mAccountSelector = (RecyclerView) findViewById(R.id.account_selector);
         mAccountSelectorContainer = findViewById(R.id.account_selector_container);

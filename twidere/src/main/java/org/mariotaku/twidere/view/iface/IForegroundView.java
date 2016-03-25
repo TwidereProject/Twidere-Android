@@ -31,6 +31,8 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 
+import org.mariotaku.twidere.R;
+
 public interface IForegroundView {
 
     /**
@@ -75,12 +77,11 @@ public interface IForegroundView {
 
         public ForegroundViewHelper(final View view, final Context context, final AttributeSet attrs, final int defStyle) {
             mView = view;
-            final TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.foreground,
-                    android.R.attr.foregroundGravity}, defStyle, 0);
+            final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ForegroundView, defStyle, 0);
 
-            mForegroundGravity = a.getInt(1, mForegroundGravity);
+            mForegroundGravity = a.getInt(R.styleable.ForegroundView_android_foregroundGravity, mForegroundGravity);
 
-            final Drawable d = a.getDrawable(0);
+            final Drawable d = a.getDrawable(R.styleable.ForegroundView_android_foreground);
             if (d != null) {
                 setForeground(d);
             }

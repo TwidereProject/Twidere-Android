@@ -24,7 +24,7 @@ package org.mariotaku.twidere.nyan;
  */
 public interface NyanConstants {
 
-    public static final String SHARED_PREFERENCES_NAME = "nyan_preferences";
+    String SHARED_PREFERENCES_NAME = "nyan_preferences";
 
-    public static final String KEY_LIVE_WALLPAPER_SCALE = "live_wallpaper_scale";
+    String KEY_LIVE_WALLPAPER_SCALE = "live_wallpaper_scale";
 }

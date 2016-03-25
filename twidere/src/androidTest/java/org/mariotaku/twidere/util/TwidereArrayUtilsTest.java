@@ -17,7 +17,9 @@ public class TwidereArrayUtilsTest {
         String[] array2 = {"1", "2"};
         String[] array3 = null;
 
+        //noinspection ConstantConditions
         String[] merged = new String[TwidereArrayUtils.arraysLength(array1, array2, array3)];
+        //noinspection ConstantConditions
         TwidereArrayUtils.mergeArray(merged, array1, array2, array3);
         String[] expected = {"1", "2", "1", "2"};
         assertArrayEquals(expected, merged);
@@ -28,6 +30,7 @@ public class TwidereArrayUtilsTest {
         String[] array1 = {"1", "2"};
         String[] array2 = {"1", "2"};
         String[] array3 = null;
+        //noinspection ConstantConditions
         assertEquals(4, TwidereArrayUtils.arraysLength(array1, array2, array3));
         assertEquals(6, TwidereArrayUtils.arraysLength(array1, array2, array2));
     }

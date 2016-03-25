@@ -236,7 +236,7 @@ public class ThemeUtils implements Constants {
         if (!context.getTheme().resolveAttribute(attr, outValue, true))
             return def;
         if (outValue.type == TypedValue.TYPE_REFERENCE)
-            return context.getResources().getColor(attr);
+            return ContextCompat.getColor(context, attr);
         return outValue.data;
     }
 
@@ -290,7 +290,7 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static String getThemeFontFamily(@NonNull  final SharedPreferences pref) {
+    public static String getThemeFontFamily(@NonNull final SharedPreferences pref) {
         final String fontFamily = pref.getString(KEY_THEME_FONT_FAMILY, VALUE_THEME_FONT_FAMILY_REGULAR);
         if (!TextUtils.isEmpty(fontFamily)) return fontFamily;
         return VALUE_THEME_FONT_FAMILY_REGULAR;

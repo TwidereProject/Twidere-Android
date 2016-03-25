@@ -31,6 +31,7 @@ import android.view.View;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -53,11 +54,16 @@ public class GoogleMapFragment extends SupportMapFragment implements Constants, 
         if (args == null || !args.containsKey(EXTRA_LATITUDE) || !args.containsKey(EXTRA_LONGITUDE))
             return;
         final double lat = args.getDouble(EXTRA_LATITUDE, 0.0), lng = args.getDouble(EXTRA_LONGITUDE, 0.0);
-        mMapView = getMap();
-        final MarkerOptions marker = new MarkerOptions();
-        marker.position(new LatLng(lat, lng));
-        mMapView.addMarker(marker);
-        center(false);
+        getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMapView = googleMap;
+                final MarkerOptions marker = new MarkerOptions();
+                marker.position(new LatLng(lat, lng));
+                mMapView.addMarker(marker);
+                center(false);
+            }
+        });
     }
 
     @Override

@@ -425,18 +425,18 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 public void onShow(DialogInterface dialog) {
 
                     AlertDialog alertDialog = (AlertDialog) dialog;
-                    MaterialEditText mEditName = (MaterialEditText) alertDialog.findViewById(R.id.name);
-                    MaterialEditText mEditDescription = (MaterialEditText) alertDialog.findViewById(R.id.description);
-                    CheckBox mPublicCheckBox = (CheckBox) alertDialog.findViewById(R.id.is_public);
-
-                    mEditName.addValidator(new UserListNameValidator(getString(R.string.invalid_list_name)));
+                    MaterialEditText editName = (MaterialEditText) alertDialog.findViewById(R.id.name);
+                    MaterialEditText editDescription = (MaterialEditText) alertDialog.findViewById(R.id.description);
+                    CheckBox editPublic = (CheckBox) alertDialog.findViewById(R.id.is_public);
+                    assert editName != null && editDescription != null && editPublic != null;
+                    editName.addValidator(new UserListNameValidator(getString(R.string.invalid_list_name)));
                     if (mName != null) {
-                        mEditName.setText(mName);
+                        editName.setText(mName);
                     }
                     if (mDescription != null) {
-                        mEditDescription.setText(mDescription);
+                        editDescription.setText(mDescription);
                     }
-                    mPublicCheckBox.setChecked(mIsPublic);
+                    editPublic.setChecked(mIsPublic);
                 }
             });
             return dialog;

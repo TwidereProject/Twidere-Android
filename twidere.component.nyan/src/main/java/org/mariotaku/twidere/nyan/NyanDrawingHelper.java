@@ -248,10 +248,10 @@ public class NyanDrawingHelper {
 
     }
 
-    public static interface IDrawingHelper {
-        public void dispatchOnDraw(final Canvas canvas);
+    public interface IDrawingHelper {
+        void dispatchOnDraw(final Canvas canvas);
 
-        public void dispatchSizeChanged(final int w, final int h);
+        void dispatchSizeChanged(final int w, final int h);
     }
 
     public static final class TileBitmapDrawable extends BitmapDrawable {
@@ -477,7 +477,7 @@ public class NyanDrawingHelper {
                             0, 0, 0, 0, 0, 0, 0
                     }
             };
-            static final byte[][] FRAME2 = {
+            byte[][] FRAME2 = {
                     {
                             0, 0, 0, 0, 0, 0, 0
                     },
@@ -500,7 +500,7 @@ public class NyanDrawingHelper {
                             0, 0, 0, 0, 0, 0, 0
                     }
             };
-            static final byte[][] FRAME3 = {
+            byte[][] FRAME3 = {
                     {
                             0, 0, 0, 0, 0, 0, 0
                     },
@@ -523,7 +523,7 @@ public class NyanDrawingHelper {
                             0, 0, 0, 0, 0, 0, 0
                     }
             };
-            static final byte[][] FRAME4 = {
+            byte[][] FRAME4 = {
                     {
                             0, 0, 0, 1, 0, 0, 0
                     },
@@ -546,7 +546,7 @@ public class NyanDrawingHelper {
                             0, 0, 0, 1, 0, 0, 0
                     }
             };
-            static final byte[][] FRAME5 = {
+            byte[][] FRAME5 = {
                     {
                             0, 0, 0, 1, 0, 0, 0
                     },
@@ -569,7 +569,7 @@ public class NyanDrawingHelper {
                             0, 0, 0, 1, 0, 0, 0
                     }
             };
-            static final byte[][] FRAME6 = {
+            byte[][] FRAME6 = {
                     {
                             0, 0, 0, 1, 0, 0, 0
                     },

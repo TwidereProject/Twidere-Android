@@ -244,6 +244,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
             return mBody.length();
         }
 
+        @NonNull
         @Override
         public InputStream getStream() throws IOException {
             return mBody.stream();

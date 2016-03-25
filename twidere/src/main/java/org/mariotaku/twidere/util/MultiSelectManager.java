@@ -65,7 +65,7 @@ public class MultiSelectManager implements Constants {
         return mSelectedItems.contains(object);
     }
 
-    public boolean isStatusSelected(final long statusId) {
+    public boolean isStatusSelected(final String statusId) {
         return mSelectedStatusIds.contains(statusId);
     }
 

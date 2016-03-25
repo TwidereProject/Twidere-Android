@@ -366,7 +366,7 @@ public class ShapedImageView extends ImageView {
     public void setBackground(Drawable background) {
     }
 
-    @Deprecated
+    @SuppressWarnings("deprecation")
     @Override
     public void setBackgroundDrawable(Drawable background) {
         // No-op
