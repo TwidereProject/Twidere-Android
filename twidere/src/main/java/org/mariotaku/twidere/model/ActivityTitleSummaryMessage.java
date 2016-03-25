@@ -218,6 +218,44 @@ public class ActivityTitleSummaryMessage {
                         sources, nameFirst);
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, null);
             }
+            case Activity.Action.MEDIA_TAGGED: {
+                if (byFriends) return null;
+                int typeIcon = R.drawable.ic_activity_action_media_tagged;
+                int color = ContextCompat.getColor(context, R.color.highlight_tagged);
+                CharSequence title;
+                title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_media_tagged,
+                        R.string.activity_about_me_media_tagged_multi, sources, nameFirst);
+                final String summary = activity.target_statuses[0].text_unescaped;
+                return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
+            }
+            case Activity.Action.FAVORITED_MEDIA_TAGGED: {
+                if (byFriends) return null;
+                int typeIcon;
+                int color;
+                CharSequence title;
+                if (shouldUseStarsForLikes) {
+                    typeIcon = R.drawable.ic_activity_action_favorite;
+                    color = ContextCompat.getColor(context, R.color.highlight_favorite);
+                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_favorited_media_tagged,
+                            R.string.activity_about_me_favorited_media_tagged_multi, sources, nameFirst);
+                } else {
+                    typeIcon = R.drawable.ic_activity_action_like;
+                    color = ContextCompat.getColor(context, R.color.highlight_like);
+                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_liked_media_tagged,
+                            R.string.activity_about_me_liked_media_tagged_multi, sources, nameFirst);
+                }
+                final String summary = activity.target_statuses[0].text_unescaped;
+                return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
+            }
+            case Activity.Action.RETWEETED_MEDIA_TAGGED: {
+                if (byFriends) return null;
+                int typeIcon = R.drawable.ic_activity_action_retweet;
+                int color = ContextCompat.getColor(context, R.color.highlight_retweet);
+                CharSequence title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_media_tagged,
+                        R.string.activity_about_me_retweeted_media_tagged_multi, sources, nameFirst);
+                final String summary = activity.target_statuses[0].text_unescaped;
+                return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
+            }
         }
         return null;
     }
