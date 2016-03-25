@@ -29,6 +29,7 @@
     <color name="highlight_like">@color/material_pink</color>
     <color name="highlight_reply">@color/material_light_blue</color>
     <color name="highlight_follow">@color/material_light_blue</color>
+    <color name="highlight_tagged">@color/material_light_blue</color>
     <color name="unread_color">@color/material_red</color>
     <color name="branding_color">@color/material_cyan</color>
     <color name="bg_color_tab_pressed">#40808080</color>
