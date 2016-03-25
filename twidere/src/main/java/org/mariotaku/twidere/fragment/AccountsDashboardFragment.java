@@ -280,7 +280,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         }
         ParcelableAccount selectedAccount = null;
         for (ParcelableAccount account : accounts) {
-            if (account.account_key.equals(accountKey)) {
+            if (account.account_key.maybeEquals(accountKey)) {
                 selectedAccount = account;
                 break;
             }
@@ -292,8 +292,11 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             mAccountActionProvider.setAccounts(accounts);
         }
         updateAccountActions();
-        displayAccountBanner(selectedAccount);
-        displayCurrentAccount(null);
+        ParcelableAccount currentAccount = mAccountsAdapter.getSelectedAccount();
+        if (currentAccount != null) {
+            displayAccountBanner(currentAccount);
+            displayCurrentAccount(null);
+        }
         updateDefaultAccountState();
     }
 
@@ -507,7 +510,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         rectF.set(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
     }
 
-    private void onAccountSelected(AccountProfileImageViewHolder holder, final ParcelableAccount account) {
+    private void onAccountSelected(AccountProfileImageViewHolder holder, @NonNull final ParcelableAccount account) {
         if (mSwitchAccountAnimationPlaying) return;
         final ImageView snapshotView = mFloatingProfileImageSnapshotView;
         final ShapedImageView profileImageView = mAccountProfileImageView;
@@ -605,7 +608,7 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
 
     }
 
-    protected void displayAccountBanner(ParcelableAccount account) {
+    protected void displayAccountBanner(@NonNull ParcelableAccount account) {
         final int bannerWidth = mAccountProfileBannerView.getWidth();
         final Resources res = getResources();
         final int defWidth = res.getDisplayMetrics().widthPixels;

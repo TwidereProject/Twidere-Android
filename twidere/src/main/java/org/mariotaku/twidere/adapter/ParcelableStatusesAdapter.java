@@ -160,7 +160,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     @Override
     public String getStatusId(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
-        if (dataPosition < 0 || dataPosition >= getStatusCount()) return null;
+        if (dataPosition < 0 || dataPosition >= getRawStatusCount()) return null;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
@@ -172,7 +172,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     @Override
     public long getStatusTimestamp(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
-        if (dataPosition < 0 || dataPosition >= getStatusCount()) return -1;
+        if (dataPosition < 0 || dataPosition >= getRawStatusCount()) return -1;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
@@ -184,7 +184,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     @Override
     public long getStatusPositionKey(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
-        if (dataPosition < 0 || dataPosition >= getStatusCount()) return -1;
+        if (dataPosition < 0 || dataPosition >= getRawStatusCount()) return -1;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
@@ -201,7 +201,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     @Override
     public UserKey getAccountKey(int adapterPosition) {
         int dataPosition = adapterPosition - getStatusStartIndex();
-        if (dataPosition < 0 || dataPosition >= getStatusCount()) return null;
+        if (dataPosition < 0 || dataPosition >= getRawStatusCount()) return null;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
