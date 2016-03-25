@@ -1890,8 +1890,27 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         @Override
         protected void beforeExecute(ParcelableLocation location) {
             final TextView textView = getCallback();
-            if (textView != null) {
-                textView.setText(R.string.getting_location);
+            if (textView == null) return;
+
+            final SharedPreferencesWrapper preferences = context.mPreferences;
+            final boolean attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION);
+            final boolean attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION);
+            if (attachLocation) {
+                if (attachPreciseLocation) {
+                    textView.setText(ParcelableLocationUtils.getHumanReadableString(location, 3));
+                    textView.setTag(location);
+                } else {
+                    Object tag = textView.getTag();
+                    if (tag instanceof Address) {
+                        textView.setText(((Address) tag).getLocality());
+                    } else if (tag instanceof NoAddress) {
+                        textView.setText(R.string.your_coarse_location);
+                    } else {
+                        textView.setText(R.string.getting_location);
+                    }
+                }
+            } else {
+                textView.setText(R.string.no_location);
             }
         }
 
@@ -1902,15 +1921,29 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             final boolean attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION);
             if (attachLocation) {
                 if (attachPreciseLocation) {
-                    textView.setText(ParcelableLocationUtils.getHumanReadableString(getParams(), 3));
+                    final ParcelableLocation location = getParams();
+                    textView.setText(ParcelableLocationUtils.getHumanReadableString(location, 3));
+                    textView.setTag(location);
                 } else if (addresses == null || addresses.isEmpty()) {
-                    textView.setText(R.string.your_coarse_location);
+                    Object tag = textView.getTag();
+                    if (tag instanceof Address) {
+                        textView.setText(((Address) tag).getLocality());
+                    } else {
+                        textView.setText(R.string.your_coarse_location);
+                        textView.setTag(new NoAddress());
+                    }
                 } else {
-                    textView.setText(addresses.get(0).getLocality());
+                    final Address address = addresses.get(0);
+                    textView.setTag(address);
+                    textView.setText(address.getLocality());
                 }
             } else {
                 textView.setText(R.string.no_location);
             }
+        }
+
+        static class NoAddress {
+
         }
     }
 
