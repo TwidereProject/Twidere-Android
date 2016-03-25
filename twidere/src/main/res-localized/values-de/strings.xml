@@ -235,6 +235,8 @@
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> haben deinen Tweet retweeted.</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> hat deinen Retweet retweeted.</string>
   <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> haben deinen Retweet retweeted.</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> hat einen Tweet in dem du getagged wurdest retweetet.</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> haben einen Tweet in dem du getagged wurdest retweetet.</string>
   <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweetete einen Tweet, in dem du erwähnt wurdest.</string>
   <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> retweeteten einen Tweet, in dem du erwähnt wurdest.</string>
   <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> hat einen Tweet favorisiert, in dem du erwähnt wurdest.</string>
@@ -244,6 +246,12 @@
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> hat Dich zur Liste hinzugefügt.</string>
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> hat Dich zur Liste "<xliff:g id="list">%2$s</xliff:g>\" hinzugefügt.</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> haben Dich zu ihren Listen hinzugefügt.</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> hat dich getagged.</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> haben dich getagged.</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> gefällt ein Tweet in dem du getagged wurdest.</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> gefällt ein Tweet in dem du getagged wurdest.</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> favorisierte ein Tweet in dem du getagged wurdest.</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> und <xliff:g id="other">%2$s</xliff:g> favorisierten ein Tweet in dem du getagged wurdest.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> favorisierte <xliff:g id="target">%2$s</xliff:g>s tweet.</string>
   <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> hat Tweets von <xliff:g id="target">%2$s</xliff:g> und <xliff:g id="other">%3$s</xliff:g> favorisiert.</string>
   <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> gefällt der Tweet von <xliff:g id="target">%2$s</xliff:g>.</string>
