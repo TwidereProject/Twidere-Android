@@ -42,6 +42,7 @@ public class UpdateAccountInfoTask extends AbstractTask<Pair<ParcelableAccount, 
         final ContentResolver resolver = context.getContentResolver();
         final ParcelableAccount account = params.first;
         final ParcelableUser user = params.second;
+        if (account == null || user == null) return null;
         if (user.is_cache) {
             return null;
         }

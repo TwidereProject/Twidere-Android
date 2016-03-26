@@ -170,10 +170,12 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         if (data.hasData()) {
             final ParcelableUser user = data.getData();
             if (user.is_cache) return;
-            final UpdateAccountInfoTask task = new UpdateAccountInfoTask(getContext());
             final ParcelableAccount account = data.getExtras().getParcelable(EXTRA_ACCOUNT);
-            task.setParams(Pair.create(account, user));
-            TaskStarter.execute(task);
+            if (account != null) {
+                final UpdateAccountInfoTask task = new UpdateAccountInfoTask(getContext());
+                task.setParams(Pair.create(account, user));
+                TaskStarter.execute(task);
+            }
         }
     }
 }
