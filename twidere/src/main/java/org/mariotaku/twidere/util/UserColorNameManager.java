@@ -119,7 +119,7 @@ public class UserColorNameManager implements TwidereConstants {
                 Statuses.RETWEETED_BY_USER_KEY, color, cv);
 
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_USER_COLOR,
-                Activities.STATUS_USER_ID, color, cv);
+                Activities.STATUS_USER_KEY, color, cv);
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_RETWEET_USER_COLOR,
                 Activities.STATUS_RETWEETED_BY_USER_ID, color, cv);
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_QUOTED_USER_COLOR,
@@ -137,7 +137,7 @@ public class UserColorNameManager implements TwidereConstants {
                 Statuses.RETWEETED_BY_USER_KEY, nickname, cv);
 
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_USER_NICKNAME,
-                Activities.STATUS_USER_ID, nickname, cv);
+                Activities.STATUS_USER_KEY, nickname, cv);
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_RETWEET_USER_NICKNAME,
                 Activities.STATUS_RETWEETED_BY_USER_ID, nickname, cv);
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_QUOTED_USER_NICKNAME,

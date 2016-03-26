@@ -926,7 +926,7 @@ public interface TwidereDataStore {
         String TIMESTAMP = "timestamp";
         String STATUS_ID = "status_id";
         String STATUS_RETWEET_ID = "status_retweet_id";
-        String STATUS_USER_ID = "status_user_id";
+        String STATUS_USER_KEY = "status_user_id";
         String STATUS_RETWEETED_BY_USER_ID = "status_retweeted_by_user_id";
         String STATUS_QUOTED_USER_ID = "status_quoted_user_id";
         String STATUS_SOURCE = "status_source";
@@ -964,7 +964,7 @@ public interface TwidereDataStore {
 
         String POSITION_KEY = "position_key";
 
-        String[] COLUMNS = {_ID, ACCOUNT_KEY, ACTION, TIMESTAMP, STATUS_ID, STATUS_USER_ID,
+        String[] COLUMNS = {_ID, ACCOUNT_KEY, ACTION, TIMESTAMP, STATUS_ID, STATUS_USER_KEY,
                 STATUS_RETWEETED_BY_USER_ID, STATUS_QUOTED_USER_ID, STATUS_SOURCE, STATUS_QUOTE_SOURCE,
                 STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_SPANS, STATUS_QUOTE_SPANS,
                 IS_GAP, MIN_SORT_POSITION, MAX_SORT_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
