@@ -524,7 +524,7 @@ public class DataStoreUtils implements Constants {
                 }
                 int total = 0;
                 cur.moveToFirst();
-                while (cur.isAfterLast()) {
+                while (!cur.isAfterLast()) {
                     final String string = cur.getString(0);
                     if (TextUtils.isEmpty(string)) continue;
                     boolean hasFollowing = false;
