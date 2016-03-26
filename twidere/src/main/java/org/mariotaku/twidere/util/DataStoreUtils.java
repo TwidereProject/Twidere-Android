@@ -23,13 +23,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import com.bluelinelabs.logansquare.JsonMapper;
@@ -99,7 +97,6 @@ import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
  */
 public class DataStoreUtils implements Constants {
     static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-    static Map<UserKey, Integer> sAccountColors = new HashMap<>();
     static Map<UserKey, String> sAccountScreenNames = new HashMap<>();
     static Map<UserKey, String> sAccountNames = new HashMap<>();
 
@@ -665,28 +662,6 @@ public class DataStoreUtils implements Constants {
         return filterExpression;
     }
 
-    @WorkerThread
-    public static int getAccountColor(final Context context, final UserKey accountKey) {
-        if (context == null) return Color.TRANSPARENT;
-        final Integer cached = sAccountColors.get(accountKey);
-        if (cached != null) return cached;
-        final String[] projection = {Accounts.COLOR};
-        String[] whereArgs = {accountKey.toString()};
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
-                Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).getSQL(), whereArgs, null);
-        if (cur == null) return Color.TRANSPARENT;
-        try {
-            if (cur.getCount() > 0 && cur.moveToFirst()) {
-                final int color = cur.getInt(0);
-                sAccountColors.put(accountKey, color);
-                return color;
-            }
-            return Color.TRANSPARENT;
-        } finally {
-            cur.close();
-        }
-    }
-
     public static int[] getAccountColors(final Context context, final long[] accountIds) {
         if (context == null || accountIds == null) return new int[0];
         final String[] cols = new String[]{Accounts.ACCOUNT_KEY, Accounts.COLOR};
@@ -839,10 +814,6 @@ public class DataStoreUtils implements Constants {
                     SQLQueryBuilder.select(SQLFunctions.MIN(new Column(BaseColumns._ID))).from(qb.build()).build());
             resolver.delete(uri, where.getSQL(), null);
         }
-    }
-
-    public static void clearAccountColor() {
-        sAccountColors.clear();
     }
 
     public static void clearAccountName() {

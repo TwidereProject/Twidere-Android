@@ -41,6 +41,8 @@ import android.view.View;
 
 import com.squareup.otto.Subscribe;
 
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -56,8 +58,6 @@ import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
-import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -551,6 +551,13 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         if (mReadStateManager.setPosition(readPositionTag, activity.timestamp)) {
             mTwitterWrapper.setActivitiesAboutMeUnreadAsync(getAccountKeys(), activity.timestamp);
         }
+
+        for (UserKey accountKey : getAccountKeys()) {
+            final String tag = Utils.getReadPositionTagWithAccounts(getReadPositionTag(),
+                    accountKey);
+            mReadStateManager.setPosition(tag, activity.timestamp);
+        }
+
         mReadStateManager.setPosition(getCurrentReadPositionTag(), activity.timestamp, true);
     }
 

@@ -1336,10 +1336,12 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             if (attachPreciseLocation) {
                 mLocationText.setText(ParcelableLocationUtils.getHumanReadableString(location, 3));
             } else {
-                DisplayPlaceNameTask task = new DisplayPlaceNameTask(this);
-                task.setParams(location);
-                task.setResultHandler(mLocationText);
-                TaskStarter.execute(task);
+                if (mLocationText.getTag() == null || !location.equals(mRecentLocation)) {
+                    DisplayPlaceNameTask task = new DisplayPlaceNameTask(this);
+                    task.setParams(location);
+                    task.setResultHandler(mLocationText);
+                    TaskStarter.execute(task);
+                }
             }
         } else {
             mLocationText.setText(R.string.unknown_location);
@@ -1358,8 +1360,13 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         if (!attachLocation) {
             return false;
         }
+        final boolean attachPreciseLocation = mPreferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION);
         final Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        if (attachPreciseLocation) {
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        } else {
+            criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        }
         final String provider = mLocationManager.getBestProvider(criteria, true);
         if (provider != null) {
             mLocationText.setText(R.string.getting_location);

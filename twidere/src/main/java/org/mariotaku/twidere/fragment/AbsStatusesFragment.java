@@ -549,6 +549,11 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         if (status == null) return;
         final long positionKey = status.position_key > 0 ? status.position_key : status.timestamp;
         mReadStateManager.setPosition(readPositionTag, positionKey);
+        for (UserKey accountKey : getAccountKeys()) {
+            final String tag = Utils.getReadPositionTagWithAccounts(getReadPositionTagWithArguments(),
+                    accountKey);
+            mReadStateManager.setPosition(tag, positionKey);
+        }
         mReadStateManager.setPosition(getCurrentReadPositionTag(), positionKey, true);
     }
 
