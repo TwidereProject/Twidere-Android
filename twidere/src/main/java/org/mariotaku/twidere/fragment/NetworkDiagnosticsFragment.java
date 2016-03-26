@@ -50,9 +50,11 @@ import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Locale;
 
 
 /**
+ * Network diagnostics
  * Created by mariotaku on 16/2/9.
  */
 public class NetworkDiagnosticsFragment extends BaseSupportFragment {
@@ -94,22 +96,24 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
         switch (message.state) {
             case LogText.State.OK: {
                 coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,
-                                R.color.material_light_green)), 0, coloredText.length(),
+                        R.color.material_light_green)), 0, coloredText.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
             }
             case LogText.State.ERROR: {
                 coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,
-                                R.color.material_red)), 0, coloredText.length(),
+                        R.color.material_red)), 0, coloredText.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
             }
             case LogText.State.WARNING: {
                 coloredText.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,
-                                R.color.material_amber)), 0, coloredText.length(),
+                        R.color.material_amber)), 0, coloredText.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
             }
+            case LogText.State.DEFAULT:
+                break;
         }
         mLogTextView.append(coloredText);
         Selection.setSelection(mLogTextView.getEditableText(), mLogTextView.length());
@@ -185,7 +189,12 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                 publishProgress(new LogText("Testing Network connectivity"));
                 publishProgress(LogText.LINEBREAK);
 
-                final String baseUrl = TwitterAPIFactory.getApiBaseUrl(credentials.api_url_format, "api");
+                final String baseUrl;
+                if (credentials.api_url_format != null) {
+                    baseUrl = TwitterAPIFactory.getApiBaseUrl(credentials.api_url_format, "api");
+                } else {
+                    baseUrl = TwitterAPIFactory.getApiBaseUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api");
+                }
                 RestHttpClient client = RestAPIFactory.getRestClient(twitter).getRestClient();
                 HttpResponse response = null;
                 try {
@@ -195,8 +204,8 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                     builder.url(baseUrl);
                     final long start = SystemClock.uptimeMillis();
                     response = client.newCall(builder.build()).execute();
-                    publishProgress(new LogText(String.format(" OK (%d ms)", SystemClock.uptimeMillis()
-                            - start), LogText.State.OK));
+                    publishProgress(new LogText(String.format(Locale.US, " OK (%d ms)",
+                            SystemClock.uptimeMillis() - start), LogText.State.OK));
                 } catch (IOException e) {
                     publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
                 }
@@ -207,8 +216,8 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                         final long start = SystemClock.uptimeMillis();
                         final CountOutputStream os = new CountOutputStream();
                         response.getBody().writeTo(os);
-                        publishProgress(new LogText(String.format(" %d bytes (%d ms)", os.getTotal(),
-                                SystemClock.uptimeMillis() - start), LogText.State.OK));
+                        publishProgress(new LogText(String.format(Locale.US, " %d bytes (%d ms)",
+                                os.getTotal(), SystemClock.uptimeMillis() - start), LogText.State.OK));
                     }
                 } catch (IOException e) {
                     publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
@@ -272,8 +281,8 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
             try {
                 final long start = SystemClock.uptimeMillis();
                 publishProgress(new LogText(String.valueOf(dns.lookupResolver(host))));
-                publishProgress(new LogText(String.format(" OK (%d ms)", SystemClock.uptimeMillis()
-                        - start), LogText.State.OK));
+                publishProgress(new LogText(String.format(Locale.US, " OK (%d ms)",
+                        SystemClock.uptimeMillis() - start), LogText.State.OK));
             } catch (UnknownHostException e) {
                 publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
             }
@@ -285,8 +294,8 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
             try {
                 final long start = SystemClock.uptimeMillis();
                 publishProgress(new LogText(Arrays.toString(InetAddress.getAllByName(host))));
-                publishProgress(new LogText(String.format(" OK (%d ms)", SystemClock.uptimeMillis()
-                        - start), LogText.State.OK));
+                publishProgress(new LogText(String.format(Locale.US, " OK (%d ms)",
+                        SystemClock.uptimeMillis() - start), LogText.State.OK));
             } catch (UnknownHostException e) {
                 publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
             }
@@ -298,8 +307,8 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
             try {
                 final long start = SystemClock.uptimeMillis();
                 test.execute(twitter);
-                publishProgress(new LogText(String.format("OK (%d ms)", SystemClock.uptimeMillis()
-                        - start), LogText.State.OK));
+                publishProgress(new LogText(String.format(Locale.US, "OK (%d ms)",
+                        SystemClock.uptimeMillis() - start), LogText.State.OK));
             } catch (TwitterException e) {
                 publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
             }

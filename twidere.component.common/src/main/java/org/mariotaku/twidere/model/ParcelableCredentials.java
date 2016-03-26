@@ -21,6 +21,7 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -87,6 +88,7 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
     @ParcelableThisPlease
     @JsonField(name = "api_url_format")
     @CursorField(Accounts.API_URL_FORMAT)
+    @Nullable
     public String api_url_format;
     @ParcelableThisPlease
     @JsonField(name = "same_oauth_signing_url")
