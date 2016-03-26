@@ -36,7 +36,7 @@ public class UnitConvertUtils {
             }
             value = value / 1000.0;
         }
-        if (value < 10) {
+        if (value < 10 && (value % 1.0) >= 0.049 && (value % 1.0) < 0.5) {
             return String.format(Locale.getDefault(), "%.1f %s", value, countUnits[index]);
         } else {
             return String.format(Locale.getDefault(), "%.0f %s", value, countUnits[index]);

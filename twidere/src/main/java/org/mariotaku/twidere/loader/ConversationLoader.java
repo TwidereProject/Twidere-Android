@@ -82,7 +82,11 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
             }
             case ParcelableAccount.Type.STATUSNET: {
                 mCanLoadAllReplies = true;
-                return twitter.getStatusNetConversation(status.id, paging);
+                if (status.extras != null && status.extras.statusnet_conversation_id != null) {
+                    return twitter.getStatusNetConversation(status.extras.statusnet_conversation_id,
+                            paging);
+                }
+                return twitter.showConversation(status.id, paging);
             }
             case ParcelableAccount.Type.FANFOU: {
                 mCanLoadAllReplies = true;

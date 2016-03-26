@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name" translatable="false">Twidere</string>
     <string name="theme_twidere">@string/app_name</string>
     <string name="nyan_sakamoto" translatable="false">Nyan Sakamoto!</string>
     <string name="kuma_union" translatable="false">熊孩子联盟</string>

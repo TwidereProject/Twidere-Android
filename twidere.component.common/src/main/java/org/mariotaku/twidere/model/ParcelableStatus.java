@@ -499,6 +499,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         @JsonField(name = "external_url")
         @ParcelableThisPlease
         public String external_url;
+        @JsonField(name = "statusnet_conversation_id")
+        @ParcelableThisPlease
+        public String statusnet_conversation_id;
         @JsonField(name = "support_entities")
         @ParcelableThisPlease
         public boolean support_entities;

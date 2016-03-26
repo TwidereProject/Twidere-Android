@@ -3,12 +3,12 @@ package org.mariotaku.twidere.model.util;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.URLSpan;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.statusnet.model.Attention;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.Place;
@@ -20,7 +20,6 @@ import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwitterContentUtils;
@@ -32,7 +31,7 @@ import java.util.List;
 /**
  * Created by mariotaku on 16/1/3.
  */
-public class ParcelableStatusUtils {
+public class ParcelableStatusUtils implements Constants {
 
     public static void makeOriginalStatus(@NonNull ParcelableStatus status) {
         if (!status.is_retweet) return;
@@ -47,6 +46,7 @@ public class ParcelableStatusUtils {
 
     public static ParcelableStatus fromStatus(final Status orig, final UserKey accountKey,
                                               final boolean isGap) {
+
         final ParcelableStatus result = new ParcelableStatus();
         result.is_gap = isGap;
         result.account_key = accountKey;
@@ -57,6 +57,7 @@ public class ParcelableStatusUtils {
         result.extras = new ParcelableStatus.Extras();
         result.extras.external_url = orig.getExternalUrl();
         result.extras.support_entities = orig.getEntities() != null;
+        result.extras.statusnet_conversation_id = orig.getStatusnetConversationId();
 
         final Status retweetedStatus = orig.getRetweetedStatus();
         result.is_retweet = orig.isRetweet();
@@ -77,12 +78,14 @@ public class ParcelableStatusUtils {
             final User quotedUser = quoted.getUser();
             result.quoted_id = quoted.getId();
 
-            String quotedText = quoted.getText();
+            final String quotedText = quoted.getHtmlText();
             // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
             // We should treat this as an html
-            if (quotedText.contains("<") && quotedText.contains(">")) {
-                result.quoted_text_unescaped = HtmlEscapeHelper.toPlainText(quotedText);
+            if (isHtml(quotedText)) {
+                final CharSequence html = HtmlSpanBuilder.fromHtml(quotedText, quoted.getText());
+                result.quoted_text_unescaped = html.toString();
                 result.quoted_text_plain = result.quoted_text_unescaped;
+                result.quoted_spans = getSpanItems(html);
             } else {
                 final Pair<String, List<SpanItem>> textWithIndices = InternalTwitterContentUtils.formatStatusTextWithIndices(quoted);
                 result.quoted_text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(quotedText);
@@ -140,18 +143,14 @@ public class ParcelableStatusUtils {
         if (result.extras.user_profile_image_url_profile_size == null) {
             result.extras.user_profile_image_url_profile_size = user.getProfileImageUrlLarge();
         }
-        String text = status.getText();
+        final String text = status.getHtmlText();
         // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
         // We should treat this as an html
-        if (text.contains("<") && text.contains(">")) {
-            final Spannable html = HtmlSpanBuilder.fromHtml(text);
+        if (isHtml(text)) {
+            final CharSequence html = HtmlSpanBuilder.fromHtml(text, status.getText());
             result.text_unescaped = html.toString();
             result.text_plain = result.text_unescaped;
-            URLSpan[] spans = html.getSpans(0, html.length(), URLSpan.class);
-            result.spans = new SpanItem[spans.length];
-            for (int i = 0, j = spans.length; i < j; i++) {
-                result.spans[i] = SpanItem.from(html, spans[i]);
-            }
+            result.spans = getSpanItems(html);
         } else {
             final Pair<String, List<SpanItem>> textWithIndices = InternalTwitterContentUtils.formatStatusTextWithIndices(status);
             result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(text);
@@ -175,6 +174,25 @@ public class ParcelableStatusUtils {
         result.card_name = result.card != null ? result.card.name : null;
         result.lang = status.getLang();
         return result;
+    }
+
+    private static SpanItem[] getSpanItems(CharSequence html) {
+        if (!(html instanceof Spanned)) return null;
+        Spanned spanned = (Spanned) html;
+        URLSpan[] spans = spanned.getSpans(0, html.length(), URLSpan.class);
+        SpanItem[] items = new SpanItem[spans.length];
+        for (int i = 0, j = spans.length; i < j; i++) {
+            items[i] = SpanItem.from(spanned, spans[i]);
+        }
+        return items;
+    }
+
+    private static boolean isHtml(String text) {
+        return text.contains("<") && text.contains(">");
+    }
+
+    private static boolean isFanfouStatus(UserKey accountKey) {
+        return USER_TYPE_FANFOU_COM.equals(accountKey.getHost());
     }
 
     @Nullable
