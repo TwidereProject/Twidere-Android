@@ -9,8 +9,6 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
-import org.mariotaku.twidere.util.net.TwidereDns;
-import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -55,8 +53,6 @@ public class HttpClientFactory implements Constants {
                                                      final ConnectionPool connectionPool) {
         final boolean enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false);
         builder.connectTimeout(prefs.getInt(KEY_CONNECTION_TIMEOUT, 10), TimeUnit.SECONDS);
-        final boolean retryOnConnectionFailure = prefs.getBoolean(KEY_RETRY_ON_NETWORK_ISSUE);
-        builder.retryOnConnectionFailure(retryOnConnectionFailure);
         builder.connectionPool(connectionPool);
         if (enableProxy) {
             final String proxyType = prefs.getString(KEY_PROXY_TYPE, null);
@@ -66,11 +62,7 @@ public class HttpClientFactory implements Constants {
                     TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE)) {
                 final Proxy.Type type = getProxyType(proxyType);
                 if (type != Proxy.Type.DIRECT) {
-                    if (TwidereDns.isValidIpAddress(proxyHost) && !retryOnConnectionFailure) {
-                        builder.proxy(new Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
-                    } else {
-                        builder.proxySelector(new TwidereProxySelector(context, type, proxyHost, proxyPort));
-                    }
+                    builder.proxy(new Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
                 }
             }
             final String username = prefs.getString(KEY_PROXY_USERNAME, null);

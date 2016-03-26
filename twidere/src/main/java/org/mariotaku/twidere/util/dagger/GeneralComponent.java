@@ -55,7 +55,6 @@ import org.mariotaku.twidere.task.twitter.GetStatusesTask;
 import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
-import org.mariotaku.twidere.util.net.TwidereProxySelector;
 
 import javax.inject.Singleton;
 
@@ -112,8 +111,6 @@ public interface GeneralComponent {
     void inject(EmojiEditableFactory object);
 
     void inject(AccountsListPreference.AccountItemPreference object);
-
-    void inject(TwidereProxySelector object);
 
     void inject(MessagesConversationFragment.SetReadStateTask object);
 

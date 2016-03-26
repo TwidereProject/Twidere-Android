@@ -35,11 +35,6 @@
             android:summary="@string/custom_host_mapping_summary"
             android:title="@string/custom_host_mapping"/>
 
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="retry_on_network_issue"
-            android:summary="@string/retry_on_network_issue_summary"
-            android:title="@string/retry_on_network_issue"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="category_proxy"
