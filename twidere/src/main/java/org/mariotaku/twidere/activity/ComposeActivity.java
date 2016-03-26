@@ -1125,8 +1125,8 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
 
     private boolean handleReplyIntent(final ParcelableStatus status) {
         if (status == null || status.id == null) return false;
-        final String myScreenName = DataStoreUtils.getAccountScreenName(this, status.account_key);
-        if (TextUtils.isEmpty(myScreenName)) return false;
+        final ParcelableAccount account = ParcelableAccountUtils.getAccount(this, status.account_key);
+        if (account == null) return false;
         int selectionStart = 0;
         final Collection<String> mentions = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         mEditText.append("@" + status.user_screen_name + " ");
@@ -1159,7 +1159,8 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
 
         for (final String mention : mentions) {
-            if (mention.equalsIgnoreCase(status.user_screen_name)) {
+            if (mention.equalsIgnoreCase(status.user_screen_name) ||
+                    mention.equalsIgnoreCase(account.screen_name)) {
                 continue;
             }
             mEditText.append("@" + mention + " ");
