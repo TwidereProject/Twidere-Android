@@ -30,7 +30,6 @@ import android.support.v7.app.AlertDialog;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 public class DestroyUserListDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
 
@@ -53,8 +52,8 @@ public class DestroyUserListDialogFragment extends BaseSupportDialogFragment imp
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-        final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+        final Context context = getActivity();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final ParcelableUserList userList = getUserList();
         if (userList != null) {
             builder.setTitle(getString(R.string.delete_user_list, userList.name));

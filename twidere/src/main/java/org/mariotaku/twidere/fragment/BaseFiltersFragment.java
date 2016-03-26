@@ -64,7 +64,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
@@ -282,8 +281,8 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final FragmentActivity activity = getActivity();
-            final Context wrapped = ThemeUtils.getDialogThemedContext(activity);
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+            final Context context = activity;
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setView(R.layout.dialog_auto_complete_textview);
 
             builder.setTitle(R.string.add_rule);

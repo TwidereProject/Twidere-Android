@@ -53,7 +53,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 import java.util.Map;
 
@@ -229,8 +228,8 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
         @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+            final Context context = getActivity();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setView(R.layout.dialog_host_mapping);
             builder.setTitle(R.string.add_host_mapping);
             builder.setPositiveButton(android.R.string.ok, this);

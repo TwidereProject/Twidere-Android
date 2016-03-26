@@ -449,8 +449,8 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Bundle args = getArguments();
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+            final Context context = getActivity();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(args.getString(EXTRA_TITLE));
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, null);

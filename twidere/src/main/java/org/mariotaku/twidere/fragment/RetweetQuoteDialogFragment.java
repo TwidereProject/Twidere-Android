@@ -74,8 +74,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-        final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         final Context context = builder.getContext();
         final LayoutInflater inflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_status_quote_retweet, null);
@@ -84,7 +83,8 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         final IStatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
         assert status != null;
-        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(wrapped, status.account_key);
+        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(),
+                status.account_key);
         assert credentials != null;
 
         builder.setView(view);

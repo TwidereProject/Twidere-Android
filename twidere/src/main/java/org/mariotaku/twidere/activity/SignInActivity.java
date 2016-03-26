@@ -57,6 +57,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.restfu.http.Authorization;
@@ -96,7 +97,6 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.LoginVerificationEx
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserAgentUtils;
@@ -618,8 +618,8 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+            final Context context = getActivity();
+            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
             builder.setTitle(R.string.sign_in_method_introduction_title);
             builder.setMessage(R.string.sign_in_method_introduction);
             builder.setPositiveButton(android.R.string.ok, null);

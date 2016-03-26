@@ -31,7 +31,6 @@ import android.support.v7.app.AlertDialog;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.ThemeUtils;
 
 public class ReportSpamDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
 
@@ -55,8 +54,8 @@ public class ReportSpamDialogFragment extends BaseSupportDialogFragment implemen
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final FragmentActivity activity = getActivity();
-        final Context wrapped = ThemeUtils.getDialogThemedContext(activity);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+        final Context context = activity;
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final ParcelableUser user = getUser();
         if (user != null) {
             final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);

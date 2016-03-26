@@ -31,7 +31,6 @@ import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.IntentUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.Utils;
 
 public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFragment implements
@@ -62,8 +61,8 @@ public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFrag
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-        final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+        final Context context = getActivity();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(android.R.string.dialog_alert_title);
         builder.setMessage(R.string.sensitive_content_warning);
         builder.setPositiveButton(android.R.string.ok, this);

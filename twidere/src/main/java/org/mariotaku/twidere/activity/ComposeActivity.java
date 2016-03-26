@@ -2087,8 +2087,8 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         @NonNull
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+            final Context context = getActivity();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage(R.string.quote_protected_status_warning_message);
             builder.setPositiveButton(R.string.send_anyway, this);
             builder.setNegativeButton(android.R.string.cancel, null);

@@ -72,7 +72,6 @@ import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 
@@ -413,8 +412,8 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
             mName = bundle != null ? bundle.getString(EXTRA_LIST_NAME) : null;
             mDescription = bundle != null ? bundle.getString(EXTRA_DESCRIPTION) : null;
             mIsPublic = bundle == null || bundle.getBoolean(EXTRA_IS_PUBLIC, true);
-            final Context wrapped = ThemeUtils.getDialogThemedContext(getActivity());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(wrapped);
+            final Context context = getActivity();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setView(R.layout.dialog_user_list_detail_editor);
             builder.setTitle(R.string.user_list);
             builder.setPositiveButton(android.R.string.ok, this);

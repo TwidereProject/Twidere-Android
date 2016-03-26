@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -37,6 +36,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
+
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
@@ -270,7 +271,7 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             mAPIConfigs = CustomAPIConfig.listDefault(getContext());
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getContext());
             String[] entries = new String[mAPIConfigs.length];
             for (int i = 0, mAPIConfigsLength = mAPIConfigs.length; i < mAPIConfigsLength; i++) {
                 entries[i] = mAPIConfigs[i].getName();

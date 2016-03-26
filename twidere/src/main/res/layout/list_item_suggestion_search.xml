@@ -26,7 +26,10 @@
     android:gravity="center_vertical"
     android:minHeight="?android:listPreferredItemHeightSmall"
     android:orientation="horizontal"
-    android:padding="@dimen/element_spacing_small">
+    android:paddingBottom="@dimen/element_spacing_xsmall"
+    android:paddingLeft="@dimen/element_spacing_small"
+    android:paddingRight="@dimen/element_spacing_small"
+    android:paddingTop="@dimen/element_spacing_xsmall">
 
     <org.mariotaku.twidere.view.IconActionButton
         android:id="@android:id/icon"

@@ -182,10 +182,6 @@ public class ThemeUtils implements Constants {
         return getColorFromAttribute(context, android.R.attr.colorForeground, 0);
     }
 
-    public static Context getDialogThemedContext(final Context context) {
-        return new ContextThemeWrapper(context, R.style.Theme_Twidere_Dialog);
-    }
-
     public static Drawable getImageHighlightDrawable(final Context context) {
         final Drawable d = getSelectableItemBackgroundDrawable(context);
         if (d != null) {
