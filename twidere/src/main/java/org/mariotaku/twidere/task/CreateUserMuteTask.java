@@ -16,6 +16,7 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.Utils;
@@ -48,7 +49,16 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
             );
             final String[] whereArgs = {args.accountKey.toString(), args.userKey.toString()};
             resolver.delete(uri, where.getSQL(), whereArgs);
-
+        }
+        if (!user.is_following) {
+            for (final Uri uri : TwidereDataStore.ACTIVITIES_URIS) {
+                final Expression where = Expression.and(
+                        Expression.equalsArgs(Activities.ACCOUNT_KEY),
+                        Expression.equalsArgs(Activities.STATUS_USER_KEY)
+                );
+                final String[] whereArgs = {args.accountKey.toString(), args.userKey.toString()};
+                resolver.delete(uri, where.getSQL(), whereArgs);
+            }
         }
         // I bet you don't want to see this user in your auto complete list.
         final ContentValues values = new ContentValues();
