@@ -17,6 +17,7 @@
     <dimen name="element_spacing_mlarge">12dp</dimen>
     <dimen name="element_spacing_large">16dp</dimen>
     <dimen name="element_spacing_xlarge">24dp</dimen>
+    <dimen name="element_spacing_minus_xsmall">-2dp</dimen>
     <dimen name="element_spacing_minus_small">-4dp</dimen>
     <dimen name="element_spacing_minus_msmall">-6dp</dimen>
     <dimen name="element_spacing_minus_normal">-8dp</dimen>

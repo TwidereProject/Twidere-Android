@@ -443,7 +443,8 @@
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
             android:focusable="false"
-            android:src="@drawable/ic_action_more_vertical"/>
+            android:src="@drawable/ic_action_more_horizontal"
+            tools:tint="?android:textColorSecondary"/>
 
     </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 </merge>
