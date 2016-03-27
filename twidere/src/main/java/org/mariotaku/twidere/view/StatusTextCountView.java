@@ -82,7 +82,7 @@ public class StatusTextCountView extends AppCompatTextView {
     }
 
     public void updateTextCount() {
-        if (mMaxLength < 0) {
+        if (mMaxLength <= 0) {
             setText(null);
             return;
         }

@@ -22,7 +22,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     defaultConfig {
-        applicationId "org.mariotaku.extension.twitlonger"
+        applicationId "org.mariotaku.twidere.extension.twitlonger"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 7
