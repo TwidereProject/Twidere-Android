@@ -65,6 +65,8 @@ import android.widget.ImageButton;
 
 import com.squareup.otto.Subscribe;
 
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -85,8 +87,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.service.StreamingService;
-import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;

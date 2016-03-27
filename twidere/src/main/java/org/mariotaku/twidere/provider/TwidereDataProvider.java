@@ -1190,12 +1190,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         return !mActivityTracker.isHomeActivityStarted();
     }
 
-    private void notifyContentObserver(final Uri uri) {
+    private void notifyContentObserver(@NonNull final Uri uri) {
+        if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return;
         mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final ContentResolver cr = getContentResolver();
-                if (uri == null || cr == null) return;
+                if (cr == null) return;
                 cr.notifyChange(uri, null);
             }
         });
@@ -1219,8 +1220,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
         }
-        if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return;
         notifyContentObserver(Utils.getNotificationUri(tableId, uri));
+
     }
 
     private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues values) {
@@ -1232,7 +1233,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (uri == null || valuesArray == null || valuesArray.length == 0 || context == null)
             return;
         preloadImages(valuesArray);
-        if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return;
         switch (tableId) {
             case TABLE_ID_STATUSES: {
                 mBackgroundExecutor.execute(new Runnable() {
