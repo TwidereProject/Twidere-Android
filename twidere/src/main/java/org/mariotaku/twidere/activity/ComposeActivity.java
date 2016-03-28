@@ -87,6 +87,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -367,6 +368,11 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
                 setAccountSelectorVisible(!isAccountSelectorVisible());
                 break;
             }
+            case R.id.reply_label: {
+                if (mReplyLabel.getVisibility() != View.VISIBLE) return;
+                mReplyLabel.setSingleLine(mReplyLabel.getLineCount() > 1);
+                break;
+            }
         }
     }
 
@@ -641,6 +647,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         setupEditText();
         mAccountSelectorContainer.setOnClickListener(this);
         mAccountSelectorButton.setOnClickListener(this);
+        mReplyLabel.setOnClickListener(this);
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
         final boolean attachPreciseLocation = mPreferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION);
         if (attachLocation) {

@@ -7,8 +7,6 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.util.UriUtils;
 
-import java.util.Locale;
-
 /**
  * Created by darkwhite on 1/16/16.
  */
@@ -27,8 +25,8 @@ public class TwitterMediaProvider implements Provider {
         media.url = link;
         if (path.startsWith("/media/")) {
             media.type = ParcelableMedia.Type.IMAGE;
-            media.preview_url = String.format(Locale.ROOT, "%s:medium", link);
-            media.media_url = String.format(Locale.ROOT, "%s:orig", link);
+            media.preview_url = getMediaForSize(link, "medium");
+            media.media_url = getMediaForSize(link, "orig");
         } else if (path.startsWith("/tweet_video/")) {
             // Video is not supported yet
             return null;
@@ -44,6 +42,10 @@ public class TwitterMediaProvider implements Provider {
     @Override
     public ParcelableMedia from(@NonNull String link, @NonNull RestHttpClient client, @Nullable Object extra) {
         return from(link);
+    }
+
+    public static String getMediaForSize(@NonNull String link, @NonNull String size) {
+        return link + ":" + size;
     }
 
     public static boolean isSupported(@NonNull String link) {

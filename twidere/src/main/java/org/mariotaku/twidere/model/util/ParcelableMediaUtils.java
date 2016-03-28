@@ -64,9 +64,10 @@ public class ParcelableMediaUtils {
 
     private static ParcelableMedia fromMediaEntity(MediaEntity entity) {
         final ParcelableMedia media = new ParcelableMedia();
-        media.url = InternalTwitterContentUtils.getMediaUrl(entity);
-        media.media_url = InternalTwitterContentUtils.getMediaUrl(entity);
-        media.preview_url = InternalTwitterContentUtils.getMediaUrl(entity);
+        final String mediaUrl = InternalTwitterContentUtils.getMediaUrl(entity);
+        media.url = mediaUrl;
+        media.media_url = mediaUrl;
+        media.preview_url = mediaUrl;
         media.start = entity.getStart();
         media.end = entity.getEnd();
         media.type = ParcelableMediaUtils.getTypeInt(entity.getType());
