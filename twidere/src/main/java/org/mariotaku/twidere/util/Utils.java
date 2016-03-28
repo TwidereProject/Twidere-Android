@@ -1652,9 +1652,13 @@ public final class Utils implements Constants {
     }
 
     public static boolean isNetworkAvailable(final Context context) {
-        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo info = cm.getActiveNetworkInfo();
-        return info != null && info.isConnected();
+        try {
+            final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo info = cm.getActiveNetworkInfo();
+            return info != null && info.isConnected();
+        } catch (SecurityException e) {
+            return true;
+        }
     }
 
     @Deprecated

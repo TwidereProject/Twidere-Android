@@ -60,7 +60,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.view.Window;
 import android.widget.ImageButton;
 
 import com.squareup.otto.Subscribe;
@@ -861,10 +860,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow_start, GravityCompat.START);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerLayout.addDrawerListener(this);
-        final Window window = getWindow();
-        ThemeUtils.applyWindowBackground(this, mHomeContent,
-                getThemeBackgroundOption(), getCurrentThemeBackgroundAlpha());
-        window.setBackgroundDrawable(new EmptyDrawable());
     }
 
     private void showDataProfilingRequest() {

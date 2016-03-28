@@ -1398,7 +1398,11 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     private void requestOrUpdateLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            startLocationUpdateIfEnabled();
+            try {
+                startLocationUpdateIfEnabled();
+            } catch (SecurityException e) {
+                Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show();
+            }
         } else {
             final String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION};

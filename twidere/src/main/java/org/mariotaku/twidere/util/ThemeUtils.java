@@ -107,20 +107,9 @@ public class ThemeUtils implements Constants {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
             window.setBackgroundDrawable(getWindowBackgroundFromThemeApplyAlpha(context, alpha));
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
-            window.setBackgroundDrawable(new ColorDrawable(!isLightTheme(context) ? Color.BLACK : Color.WHITE));
+            window.setBackgroundDrawable(new ColorDrawable(isLightTheme(context) ? Color.WHITE : Color.BLACK));
         } else {
             window.setBackgroundDrawable(getWindowBackgroundFromTheme(context));
-        }
-    }
-
-    public static void applyWindowBackground(Context context, View window, String option, int alpha) {
-        if (isWindowFloating(context)) return;
-        if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
-            ViewSupport.setBackground(window, getWindowBackgroundFromThemeApplyAlpha(context, alpha));
-        } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
-            ViewSupport.setBackground(window, new ColorDrawable(!isLightTheme(context) ? Color.BLACK : Color.WHITE));
-        } else {
-            ViewSupport.setBackground(window, getWindowBackgroundFromTheme(context));
         }
     }
 
