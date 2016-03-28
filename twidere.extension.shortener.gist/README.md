@@ -1,0 +1,1 @@
+# Moved to [Twidere-Android-Extension-Gist](https://github.com/TwidereProject/Twidere-Android-Extension-Gist) #

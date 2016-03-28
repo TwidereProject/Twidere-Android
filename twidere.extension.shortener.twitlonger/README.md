@@ -1,0 +1,1 @@
+# Moved to [Twidere-Android-Extension-TwitLonger](https://github.com/TwidereProject/Twidere-Android-Extension-TwitLonger) #
