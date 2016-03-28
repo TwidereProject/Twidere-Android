@@ -193,6 +193,9 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     public static final String LOCATION_VALUE_COORDINATE = "coordinate";
     public static final String LOCATION_VALUE_NONE = "none";
 
+    private static final String[] LOCATION_OPTIONS = {LOCATION_VALUE_NONE, LOCATION_VALUE_PLACE,
+            LOCATION_VALUE_COORDINATE};
+
     // Utility classes
     @Inject
     Extractor mExtractor;
@@ -647,26 +650,31 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         mAccountSelectorContainer.setOnClickListener(this);
         mAccountSelectorButton.setOnClickListener(this);
         mReplyLabel.setOnClickListener(this);
+        mLocationSwitch.setMax(LOCATION_OPTIONS.length);
         final boolean attachLocation = mPreferences.getBoolean(KEY_ATTACH_LOCATION);
         final boolean attachPreciseLocation = mPreferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION);
         if (attachLocation) {
             if (attachPreciseLocation) {
-                mLocationSwitch.setValue(LOCATION_VALUE_COORDINATE);
+                mLocationSwitch.setCheckedPosition(ArrayUtils.indexOf(LOCATION_OPTIONS,
+                        LOCATION_VALUE_COORDINATE));
             } else {
-                mLocationSwitch.setValue(LOCATION_VALUE_PLACE);
+                mLocationSwitch.setCheckedPosition(ArrayUtils.indexOf(LOCATION_OPTIONS,
+                        LOCATION_VALUE_PLACE));
             }
         } else {
-            mLocationSwitch.setValue(LOCATION_VALUE_NONE);
+            mLocationSwitch.setCheckedPosition(ArrayUtils.indexOf(LOCATION_OPTIONS,
+                    LOCATION_VALUE_NONE));
         }
         mLocationSwitch.setOnCheckedChangeListener(new MultiValueSwitch.OnCheckedChangeListener() {
             @Override
             public void onCheckedChange(int position) {
-                final String value = String.valueOf(mLocationSwitch.getValue());
+                final String value = LOCATION_OPTIONS[mLocationSwitch.getCheckedPosition()];
                 boolean attachLocation = false, attachPreciseLocation = false;
                 switch (value) {
                     case LOCATION_VALUE_COORDINATE: {
                         attachLocation = true;
                         attachPreciseLocation = true;
+                        mLocationText.setTag(null);
                         break;
                     }
                     case LOCATION_VALUE_PLACE: {
@@ -1333,7 +1341,8 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             editor.putBoolean(KEY_ATTACH_LOCATION, false);
             editor.putBoolean(KEY_ATTACH_PRECISE_LOCATION, false);
             editor.apply();
-            mLocationSwitch.setValue(LOCATION_VALUE_NONE);
+            mLocationSwitch.setCheckedPosition(ArrayUtils.indexOf(LOCATION_OPTIONS,
+                    LOCATION_VALUE_NONE));
         }
     }
 

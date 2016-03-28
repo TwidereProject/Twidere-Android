@@ -127,9 +127,9 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:entryValues="@array/values_compose_location"
                         android:tag="mvs_tint|accent_color"
-                        tools:position="1"/>
+                        tools:max="3"
+                        tools:position="2"/>
 
                 </RelativeLayout>
 
