@@ -38,6 +38,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
 
     private final String[] mBackgroundEntries, mBackgroundValues;
     private String mValue;
+    private String mDefaultValue;
 
 
     public ThemeBackgroundPreference(Context context) {
@@ -54,7 +55,8 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
 
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        setValue(restorePersistedValue ? getPersistedString(null) : (String) defaultValue);
+        mDefaultValue = (String) defaultValue;
+        setValue(restorePersistedValue ? getPersistedString(null) : mDefaultValue);
         updateSummary();
     }
 
@@ -107,7 +109,11 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
     }
 
     private void setSelectedOption(int which) {
-        setValue(mBackgroundValues[which]);
+        if (which < 0) {
+            setValue(mDefaultValue);
+        } else {
+            setValue(mBackgroundValues[which]);
+        }
     }
 
     public static class InternalDialogFragment extends PreferenceDialogFragmentCompat {

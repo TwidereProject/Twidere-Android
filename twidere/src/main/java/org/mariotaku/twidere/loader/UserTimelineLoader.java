@@ -22,6 +22,7 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
@@ -41,16 +42,15 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
 
     private final String mUserId;
     private final String mUserScreenName;
-    private final boolean mIsMyTimeline;
 
-    public UserTimelineLoader(final Context context, final UserKey accountId, final String userId,
-                              final String screenName, final String sinceId, final String maxId,
+    public UserTimelineLoader(final Context context, @Nullable final UserKey accountId,
+                              final String userId, final String screenName,
+                              final String sinceId, final String maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                               final int tabPosition, boolean fromUser, boolean loadingMore) {
         super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser, loadingMore);
         mUserId = userId;
         mUserScreenName = screenName;
-        mIsMyTimeline = TextUtils.equals(accountId.getId(), userId);
     }
 
     @NonNull
@@ -62,14 +62,16 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
             return twitter.getUserTimeline(mUserId, paging);
         } else if (mUserScreenName != null) {
             return twitter.getUserTimelineByScreenName(mUserScreenName, paging);
-        } else
+        } else {
             throw new TwitterException("Invalid user");
+        }
     }
 
     @WorkerThread
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        if (mIsMyTimeline) return false;
+        final UserKey accountId = getAccountKey();
+        if (accountId != null && TextUtils.equals(accountId.getId(), mUserId)) return false;
         final UserKey retweetUserId = status.is_retweet ? status.user_key : null;
         return InternalTwitterContentUtils.isFiltered(database, retweetUserId, status.text_plain,
                 status.spans, status.source, null, status.quoted_user_key);
