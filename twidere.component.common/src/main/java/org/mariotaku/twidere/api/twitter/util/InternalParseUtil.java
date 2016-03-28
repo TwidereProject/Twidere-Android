@@ -36,34 +36,34 @@ public final class InternalParseUtil {
 
     @TwitterResponse.AccessLevel
     public static int toAccessLevel(final HttpResponse res) {
-        if (res == null) return TwitterResponse.NONE;
+        if (res == null) return TwitterResponse.AccessLevel.NONE;
         final String xAccessLevel = res.getHeader("X-Access-Level");
         int accessLevel;
         if (null == xAccessLevel) {
-            accessLevel = TwitterResponse.NONE;
+            accessLevel = TwitterResponse.AccessLevel.NONE;
         } else {
             // https://dev.twitter.com/pages/application-permission-model-faq#how-do-we-know-what-the-access-level-of-a-user-token-is
             switch (xAccessLevel.length()) {
                 // “read” (Read-only)
                 case 4:
-                    accessLevel = TwitterResponse.READ;
+                    accessLevel = TwitterResponse.AccessLevel.READ;
                     break;
                 case 10:
                     // “read-write” (Read & Write)
-                    accessLevel = TwitterResponse.READ_WRITE;
+                    accessLevel = TwitterResponse.AccessLevel.READ_WRITE;
                     break;
                 case 25:
                     // “read-write-directmessages” (Read, Write, & Direct
                     // Message)
-                    accessLevel = TwitterResponse.READ_WRITE_DIRECTMESSAGES;
+                    accessLevel = TwitterResponse.AccessLevel.READ_WRITE_DIRECTMESSAGES;
                     break;
                 case 26:
                     // “read-write-privatemessages” (Read, Write, & Direct
                     // Message)
-                    accessLevel = TwitterResponse.READ_WRITE_DIRECTMESSAGES;
+                    accessLevel = TwitterResponse.AccessLevel.READ_WRITE_DIRECTMESSAGES;
                     break;
                 default:
-                    accessLevel = TwitterResponse.NONE;
+                    accessLevel = TwitterResponse.AccessLevel.NONE;
                     // unknown access level;
             }
         }

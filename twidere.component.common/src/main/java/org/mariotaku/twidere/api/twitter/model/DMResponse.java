@@ -5,6 +5,8 @@ import android.support.annotation.StringDef;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Map;
 
 /**
@@ -74,6 +76,7 @@ public class DMResponse {
     }
 
     @StringDef({DMResponse.Status.HAS_MORE, DMResponse.Status.AT_END})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Status {
         String HAS_MORE = "HAS_MORE";
         String AT_END = "AT_END";

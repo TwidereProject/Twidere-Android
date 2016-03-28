@@ -261,7 +261,7 @@ public final class Twidere implements TwidereConstants {
     }
 
     @IntDef({Permission.DENIED, Permission.NONE, Permission.GRANTED})
-    @Retention(RetentionPolicy.CLASS)
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Permission {
         int NONE = 0;
         int GRANTED = 1;

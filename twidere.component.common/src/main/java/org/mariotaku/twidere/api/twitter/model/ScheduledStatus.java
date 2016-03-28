@@ -95,9 +95,9 @@ public class ScheduledStatus {
     }
 
     @StringDef({State.SCHEDULED, State.FAILED, State.CANCELED})
-    @Retention(RetentionPolicy.CLASS)
+    @Retention(RetentionPolicy.SOURCE)
     public @interface State {
-        String SCHEDULED = ("scheduled"), FAILED = ("failed"), CANCELED = ("canceled");
+        String SCHEDULED = "scheduled", FAILED = "failed", CANCELED = "canceled";
 
     }
 }

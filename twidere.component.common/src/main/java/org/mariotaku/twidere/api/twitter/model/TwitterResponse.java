@@ -23,20 +23,10 @@ import android.support.annotation.IntDef;
 
 import org.mariotaku.restfu.http.HttpResponse;
 
-/**
- * Super interface of Twitter Response data interfaces which indicates that rate
- * limit status is avaialble.
- *
- * @author Yusuke Yamamoto - yusuke at mac.com
- * @see DirectMessage
- * @see Status
- * @see User
- */
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public interface TwitterResponse {
-    int NONE = 0;
-    int READ = 1;
-    int READ_WRITE = 2;
-    int READ_WRITE_DIRECTMESSAGES = 3;
 
     void processResponseHeader(HttpResponse resp);
 
@@ -45,8 +35,13 @@ public interface TwitterResponse {
 
     RateLimitStatus getRateLimitStatus();
 
-    @IntDef({NONE, READ, READ_WRITE, READ_WRITE_DIRECTMESSAGES})
+    @IntDef({AccessLevel.NONE, AccessLevel.READ, AccessLevel.READ_WRITE, AccessLevel.READ_WRITE_DIRECTMESSAGES})
+    @Retention(RetentionPolicy.SOURCE)
     @interface AccessLevel {
 
+        int NONE = 0;
+        int READ = 1;
+        int READ_WRITE = 2;
+        int READ_WRITE_DIRECTMESSAGES = 3;
     }
 }

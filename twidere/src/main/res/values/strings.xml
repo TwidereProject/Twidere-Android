@@ -245,11 +245,11 @@
     <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweeted a tweet you were tagged in.</string>
     <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet you were tagged in.</string>
     <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweeted a tweet you were mentioned in.</string>
-    <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet you were mentioned in.</string>
+    <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet you were mentioned in.</string>
     <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> favorited a tweet you were mentioned in.</string>
-    <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited a tweet you were mentioned in.</string>
+    <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited a tweet you were mentioned in.</string>
     <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> liked a tweet you were mentioned in.</string>
-    <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked a tweet you were mentioned in.</string>
+    <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked a tweet you were mentioned in.</string>
     <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> added you to list.</string>
     <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> added you to list <xliff:g id="list">%2$s</xliff:g>".</string>
     <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> added you to their lists.</string>
@@ -768,6 +768,7 @@
     <string name="translation">Translation</string>
     <string name="shortener_version_incompatible">Incompatible tweet shortener</string>
     <string name="uploader_version_incompatible">Incompatible media uploader</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
     <string name="groups">Groups</string>
     <string name="public_timeline">Public timeline</string>
     <string name="external_user_host_format">External user at <xliff:g id="host">%s</xliff:g></string>
@@ -781,6 +782,7 @@
     <string name="new_document_api">New Document API</string>
     <string name="new_document_api_summary">Open profile and media in new task</string>
     <string name="drawer_toggle">Drawer toggle</string>
+    <!-- GNU social group like https://quitter.se/group/qvitter -->
     <string name="group">Group</string>
     <string name="your_coarse_location">Your coarse location</string>
 </resources>

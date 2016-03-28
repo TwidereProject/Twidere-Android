@@ -377,6 +377,15 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, NAME, PATH};
     }
 
+    interface Messages extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
+
+        interface Entries extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
+            String CONVERSATION_ID = "conversation_id";
+            String UPDATED_AT = "updated_at";
+            String TEXT_CONTENT = "text_content";
+        }
+    }
+
     interface DirectMessages extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
 
         String TABLE_NAME = "messages";

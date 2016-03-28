@@ -38,6 +38,9 @@ import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 @CursorObject(valuesCreator = true)
 @ParcelablePlease(allFields = false)
 @JsonObject
@@ -173,8 +176,8 @@ public class ParcelableAccount implements Parcelable {
     }
 
     @StringDef({Type.TWITTER, Type.STATUSNET, Type.FANFOU})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
-
         String TWITTER = "twitter";
         String STATUSNET = "statusnet";
         String FANFOU = "fanfou";
