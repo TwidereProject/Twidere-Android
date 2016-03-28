@@ -316,7 +316,8 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     public static boolean verifyApiFormat(@NonNull String format) {
-        return URLUtil.isValidUrl(getApiBaseUrl(format, "test"));
+        final String url = getApiBaseUrl(format, "test");
+        return URLUtil.isHttpsUrl(url) || URLUtil.isHttpUrl(url);
     }
 
     @NonNull
@@ -339,7 +340,10 @@ public class TwitterAPIFactory implements TwidereConstants {
 
     @NonNull
     static String substituteLegacyApiBaseUrl(@NonNull String format, String domain) {
-        final int startOfHost = format.indexOf("://") + 3;
+        final int idxOfSlash = format.indexOf("://");
+        // Not an url
+        if (idxOfSlash < 0) return format;
+        final int startOfHost = idxOfSlash + 3;
         if (startOfHost < 0) return getApiBaseUrl("https://[DOMAIN.]twitter.com/", domain);
         final int endOfHost = format.indexOf('/', startOfHost);
         final String host = endOfHost != -1 ? format.substring(startOfHost, endOfHost) : format.substring(startOfHost);

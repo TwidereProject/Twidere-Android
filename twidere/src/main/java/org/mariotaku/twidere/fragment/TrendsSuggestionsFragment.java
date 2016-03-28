@@ -35,7 +35,7 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.adapter.TrendsAdapter;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
+import org.mariotaku.twidere.model.message.TrendsRefreshedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
@@ -124,14 +124,8 @@ public class TrendsSuggestionsFragment extends AbsContentListViewFragment<Trends
     }
 
     @Subscribe
-    public void notifyTaskStateChanged(TaskStateChangedEvent event) {
-        updateRefreshState();
-    }
-
-    protected void updateRefreshState() {
-        final AsyncTwitterWrapper twitter = mTwitterWrapper;
-        if (twitter == null || !getUserVisibleHint()) return;
-        setRefreshing(twitter.isLocalTrendsRefreshing());
+    public void onTrendsRefreshedEvent(TrendsRefreshedEvent event) {
+        setRefreshing(false);
     }
 
 }

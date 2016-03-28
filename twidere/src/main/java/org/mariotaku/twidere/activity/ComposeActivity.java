@@ -87,7 +87,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1582,7 +1581,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         @Override
         public void onClick(View v) {
             ((CheckableLinearLayout) itemView).toggle();
-            adapter.toggleSelection(getAdapterPosition());
+            adapter.toggleSelection(getLayoutPosition());
         }
 
 
@@ -1683,7 +1682,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
 
         private void toggleSelection(int position) {
-            if (mAccounts == null) return;
+            if (mAccounts == null || position < 0) return;
             final ParcelableCredentials account = mAccounts[position];
             mSelection.put(account.account_key, !Boolean.TRUE.equals(mSelection.get(account.account_key)));
             mActivity.notifyAccountSelectionChanged();

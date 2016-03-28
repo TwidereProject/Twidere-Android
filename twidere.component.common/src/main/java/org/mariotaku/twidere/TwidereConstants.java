@@ -231,7 +231,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String TASK_TAG_GET_SENT_DIRECT_MESSAGES = "get_sent_direct_messages";
     String TASK_TAG_GET_RECEIVED_DIRECT_MESSAGES = "get_received_direct_messages";
     String TASK_TAG_GET_TRENDS = "get_trends";
-    String TASK_TAG_STORE_TRENDS = "store_trends";
 
     String METADATA_KEY_EXTENSION = "org.mariotaku.twidere.extension";
     String METADATA_KEY_EXTENSION_PERMISSIONS = "org.mariotaku.twidere.extension.permissions";

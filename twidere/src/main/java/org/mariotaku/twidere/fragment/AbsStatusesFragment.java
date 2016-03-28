@@ -41,6 +41,8 @@ import android.view.View;
 
 import com.squareup.otto.Subscribe;
 
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
@@ -53,8 +55,6 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
-import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -549,10 +549,13 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         if (status == null) return;
         final long positionKey = status.position_key > 0 ? status.position_key : status.timestamp;
         mReadStateManager.setPosition(readPositionTag, positionKey);
-        for (UserKey accountKey : getAccountKeys()) {
-            final String tag = Utils.getReadPositionTagWithAccounts(getReadPositionTagWithArguments(),
-                    accountKey);
-            mReadStateManager.setPosition(tag, positionKey);
+        final UserKey[] accountKeys = getAccountKeys();
+        if (accountKeys.length > 1) {
+            for (UserKey accountKey : accountKeys) {
+                final String tag = Utils.getReadPositionTagWithAccounts(getReadPositionTagWithArguments(),
+                        accountKey);
+                mReadStateManager.setPosition(tag, positionKey);
+            }
         }
         mReadStateManager.setPosition(getCurrentReadPositionTag(), positionKey, true);
     }

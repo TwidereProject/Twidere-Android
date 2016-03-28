@@ -357,11 +357,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.hasRunningTasksForTag(TASK_TAG_GET_HOME_TIMELINE);
     }
 
-    public boolean isLocalTrendsRefreshing() {
-        return mAsyncTaskManager.hasRunningTasksForTag(TASK_TAG_GET_TRENDS)
-                || mAsyncTaskManager.hasRunningTasksForTag(TASK_TAG_STORE_TRENDS);
-    }
-
     public boolean isReceivedDirectMessagesRefreshing() {
         return mAsyncTaskManager.hasRunningTasksForTag(TASK_TAG_GET_RECEIVED_DIRECT_MESSAGES);
     }

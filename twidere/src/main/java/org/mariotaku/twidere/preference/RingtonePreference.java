@@ -45,6 +45,10 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static android.text.TextUtils.isEmpty;
 
 public class RingtonePreference extends DialogPreference implements IDialogPreference {
@@ -52,7 +56,6 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
     private final int mRingtoneType;
     private final boolean mShowDefault;
     private final boolean mShowSilent;
-    private int mSelectedItem;
 
     public RingtonePreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -64,12 +67,16 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
         a.recycle();
     }
 
-    public int getItem() {
-        return mSelectedItem;
+    public int getRingtoneType() {
+        return mRingtoneType;
     }
 
-    public void setItem(final int selected) {
-        mSelectedItem = selected;
+    public boolean isShowDefault() {
+        return mShowDefault;
+    }
+
+    public boolean isShowSilent() {
+        return mShowSilent;
     }
 
     @Override
@@ -83,6 +90,7 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
             implements LoaderManager.LoaderCallbacks<Cursor> {
         private MediaPlayer mMediaPlayer;
         private SimpleCursorAdapter mAdapter;
+        private Uri mCurrentUri;
 
         public static RingtonePreferenceDialogFragment newInstance(String key) {
             final RingtonePreferenceDialogFragment df = new RingtonePreferenceDialogFragment();
@@ -94,6 +102,12 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
 
         @Override
         public void onDialogClosed(boolean positive) {
+            if (positive && mCurrentUri != null) {
+                final RingtonePreference preference = (RingtonePreference) getPreference();
+                if (preference.isPersistent()) {
+                    preference.persistString(mCurrentUri.toString());
+                }
+            }
             if (mMediaPlayer != null) {
                 if (mMediaPlayer.isPlaying()) {
                     mMediaPlayer.stop();
@@ -151,8 +165,9 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setLooping(false);
                     final String ringtone = cursor.getString(cursor.getColumnIndex(Audio.Media.DATA));
-                    final Uri def_uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    final Uri uri = isEmpty(ringtone) ? def_uri : Uri.parse(ringtone);
+                    final Uri defUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    final Uri uri = isEmpty(ringtone) ? defUri : Uri.parse(ringtone);
+                    mCurrentUri = uri;
                     try {
                         mMediaPlayer.setDataSource(getContext(), uri);
                         mMediaPlayer.prepare();
@@ -169,8 +184,29 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             final String[] cols = new String[]{Audio.Media._ID, Audio.Media.DATA, Audio.Media.TITLE};
-            final String selection = Expression.equalsArgs(Audio.Media.IS_NOTIFICATION).getSQL();
-            final String[] selectionArgs = {"1"};
+            RingtonePreference preference = (RingtonePreference) getPreference();
+            int ringtoneType = preference.getRingtoneType();
+            List<Expression> expressions = new ArrayList<>();
+            if ((ringtoneType & RingtoneManager.TYPE_NOTIFICATION) != 0) {
+                expressions.add(Expression.equalsArgs(Audio.Media.IS_NOTIFICATION));
+            }
+            if ((ringtoneType & RingtoneManager.TYPE_RINGTONE) != 0) {
+                expressions.add(Expression.equalsArgs(Audio.Media.IS_RINGTONE));
+            }
+            if ((ringtoneType & RingtoneManager.TYPE_ALARM) != 0) {
+                expressions.add(Expression.equalsArgs(Audio.Media.IS_ALARM));
+            }
+            final String selection;
+            final String[] selectionArgs;
+            if (expressions.isEmpty()) {
+                selection = null;
+                selectionArgs = null;
+            } else {
+                final int size = expressions.size();
+                selection = Expression.or(expressions.toArray(new Expression[size])).getSQL();
+                selectionArgs = new String[size];
+                Arrays.fill(selectionArgs, "1");
+            }
             return new CursorLoader(getContext(), Audio.Media.INTERNAL_CONTENT_URI, cols, selection,
                     selectionArgs, Audio.Media.DEFAULT_SORT_ORDER);
         }

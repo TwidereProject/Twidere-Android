@@ -6,18 +6,24 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.squareup.otto.Bus;
+
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.message.TrendsRefreshedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Created by mariotaku on 16/2/24.
@@ -27,7 +33,11 @@ public abstract class GetTrendsTask extends AbstractTask<Object, Object, Object>
     private final Context mContext;
     private final UserKey mAccountId;
 
+    @Inject
+    protected Bus mBus;
+
     public GetTrendsTask(Context context, final UserKey accountKey) {
+        GeneralComponentHelper.build(context).inject(this);
         this.mContext = context;
         this.mAccountId = accountKey;
     }
@@ -45,6 +55,11 @@ public abstract class GetTrendsTask extends AbstractTask<Object, Object, Object>
         } catch (final TwitterException e) {
             return null;
         }
+    }
+
+    @Override
+    protected void afterExecute(Object o) {
+        mBus.post(new TrendsRefreshedEvent());
     }
 
     protected abstract Uri getContentUri();

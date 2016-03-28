@@ -49,6 +49,7 @@ import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.service.RefreshService;
 import org.mariotaku.twidere.task.AbsFriendshipOperationTask;
 import org.mariotaku.twidere.task.GetDirectMessagesTask;
+import org.mariotaku.twidere.task.GetTrendsTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.task.twitter.GetStatusesTask;
@@ -135,4 +136,6 @@ public interface GeneralComponent {
     void inject(ParcelableUserLoader loader);
 
     void inject(ParcelableStatusLoader loader);
+
+    void inject(GetTrendsTask task);
 }

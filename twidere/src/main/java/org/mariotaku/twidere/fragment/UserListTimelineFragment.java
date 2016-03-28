@@ -101,6 +101,8 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
             }
             sb.append('_');
             sb.append(listName);
+        } else {
+            return null;
         }
         return sb.toString();
     }

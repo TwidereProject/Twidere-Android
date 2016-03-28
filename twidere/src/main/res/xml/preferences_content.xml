@@ -43,7 +43,7 @@
             android:title="@string/read_from_bottom"/>
 
         <org.mariotaku.twidere.preference.TrendsLocationPreference
-            android:key="trends_location"
+            android:key="local_trends_woeid"
             android:summary="@string/trends_location_summary"
             android:title="@string/trends_location"/>
 
