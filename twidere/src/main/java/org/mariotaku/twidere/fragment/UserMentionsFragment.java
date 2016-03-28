@@ -27,7 +27,9 @@ import android.support.v4.content.Loader;
 import org.mariotaku.twidere.loader.UserMentionsLoader;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -52,15 +54,19 @@ public class UserMentionsFragment extends StatusesSearchFragment {
                 loadingMore);
     }
 
+
     @Override
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
-        if (args == null) return null;
-        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final String screen_name = args.getString(EXTRA_SCREEN_NAME);
-        return new String[]{AUTHORITY_USER_MENTIONS, "account" + accountKey, "screen_name" + screen_name};
+        assert args != null;
+        final UserKey accountKey = Utils.getAccountKey(getContext(), args);
+        final String screenName = args.getString(EXTRA_SCREEN_NAME);
+        final List<String> result = new ArrayList<>();
+        result.add(AUTHORITY_USER_MENTIONS);
+        result.add("account=" + accountKey);
+        result.add("screen_name=" + screenName);
+        return result.toArray(new String[result.size()]);
     }
-
 
     @NonNull
     @Override

@@ -29,6 +29,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -60,11 +61,13 @@ public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
     @Override
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
-        if (args == null) return null;
-        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        return new String[]{AUTHORITY_RETWEETS_OF_ME, "account" + accountKey};
+        assert args != null;
+        final UserKey accountKey = Utils.getAccountKey(getContext(), args);
+        List<String> result = new ArrayList<>();
+        result.add(AUTHORITY_RETWEETS_OF_ME);
+        result.add("account=" + accountKey);
+        return result.toArray(new String[result.size()]);
     }
-
 
     @NonNull
     @Override

@@ -29,6 +29,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -65,11 +66,21 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
     @Override
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
-        if (args == null) return null;
-        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        assert args != null;
+        final UserKey accountKey = Utils.getAccountKey(getContext(), args);
         final String userId = args.getString(EXTRA_USER_ID);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        return new String[]{AUTHORITY_USER_TIMELINE, "account" + accountKey, "user" + userId + "name" + screenName};
+        final List<String> result = new ArrayList<>();
+        result.add(AUTHORITY_USER_TIMELINE);
+        result.add("account=" + accountKey);
+        if (userId != null) {
+            result.add("user_id=" + userId);
+        } else if (screenName != null) {
+            result.add("screen_name=" + screenName);
+        } else {
+            return null;
+        }
+        return result.toArray(new String[result.size()]);
     }
 
     @Override

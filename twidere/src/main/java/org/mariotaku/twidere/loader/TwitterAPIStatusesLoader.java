@@ -141,7 +141,8 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             final Paging paging = new Paging();
             processPaging(credentials, loadItemLimit, paging);
             statuses = getStatuses(twitter, credentials, paging);
-            if (!Utils.isOfficialCredentials(context, credentials)) {
+            if (TwitterAPIFactory.isTwitterCredentials(credentials) &&
+                    !Utils.isOfficialCredentials(context, credentials)) {
                 InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
             }
         } catch (final TwitterException e) {

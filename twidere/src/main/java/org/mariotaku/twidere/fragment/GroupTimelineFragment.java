@@ -36,6 +36,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -97,11 +98,20 @@ public class GroupTimelineFragment extends ParcelableStatusesFragment {
     protected String[] getSavedStatusesFileArgs() {
         final Bundle args = getArguments();
         assert args != null;
-        final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        final UserKey accountKey = Utils.getAccountKey(getContext(), args);
         final String groupId = args.getString(EXTRA_GROUP_ID);
         final String groupName = args.getString(EXTRA_GROUP_NAME);
-        return new String[]{AUTHORITY_GROUP_TIMELINE, "account" + accountKey, "group_id" + groupId,
-                "group_name" + groupName};
+        final List<String> result = new ArrayList<>();
+        result.add(AUTHORITY_GROUP_TIMELINE);
+        result.add("account=" + accountKey);
+        if (groupId != null) {
+            result.add("group_id=" + groupId);
+        } else if (groupName != null) {
+            result.add("group_name=" + groupName);
+        } else {
+            return null;
+        }
+        return result.toArray(new String[result.size()]);
     }
 
     @Override
