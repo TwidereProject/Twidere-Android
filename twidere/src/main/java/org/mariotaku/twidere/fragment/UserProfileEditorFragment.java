@@ -49,6 +49,7 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.twitter.Validator;
 
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.ThemedImagePickerActivity;
@@ -67,7 +68,6 @@ import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.task.UpdateAccountInfoTask;
 import org.mariotaku.twidere.task.UpdateProfileBannerImageTask;
-import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
@@ -171,8 +171,8 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
     public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
         mProgressContainer.setVisibility(View.VISIBLE);
         mEditProfileContent.setVisibility(View.GONE);
-        return new ParcelableUserLoader(getActivity(), mAccountId, mAccountId.getId(), null,
-                getArguments(), false, false);
+        return new ParcelableUserLoader(getActivity(), mAccountId, mAccountId, null, getArguments(),
+                false, false);
     }
 
     @Override

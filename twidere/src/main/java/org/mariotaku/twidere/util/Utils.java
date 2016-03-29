@@ -136,6 +136,7 @@ import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.ItemsListFragment;
 import org.mariotaku.twidere.fragment.ListsFragment;
 import org.mariotaku.twidere.fragment.MessagesConversationFragment;
+import org.mariotaku.twidere.fragment.MessagesEntriesFragment;
 import org.mariotaku.twidere.fragment.MutesUsersListFragment;
 import org.mariotaku.twidere.fragment.PublicTimelineFragment;
 import org.mariotaku.twidere.fragment.SavedSearchesListFragment;
@@ -502,11 +503,15 @@ public final class Utils implements Constants {
                 fragment = new UserFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
                 final String paramUserId = uri.getQueryParameter(QUERY_PARAM_USER_ID);
+                final UserKey paramUserKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_USER_KEY));
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
                 if (!args.containsKey(EXTRA_USER_ID)) {
                     args.putString(EXTRA_USER_ID, paramUserId);
+                }
+                if (!args.containsKey(EXTRA_USER_KEY)) {
+                    args.putParcelable(EXTRA_USER_KEY, paramUserKey);
                 }
                 args.putString(EXTRA_REFERRAL, intent.getStringExtra(EXTRA_REFERRAL));
                 break;
@@ -614,7 +619,11 @@ public final class Utils implements Constants {
                 break;
             }
             case LINK_ID_DIRECT_MESSAGES: {
-                fragment = new DirectMessagesFragment();
+                if (BuildConfig.DEBUG) {
+                    fragment = new MessagesEntriesFragment();
+                } else {
+                    fragment = new DirectMessagesFragment();
+                }
                 break;
             }
             case LINK_ID_INTERACTIONS: {

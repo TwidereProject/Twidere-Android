@@ -35,6 +35,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -43,6 +44,7 @@ import org.mariotaku.twidere.fragment.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.HomeTimelineFragment;
 import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.InvalidTabFragment;
+import org.mariotaku.twidere.fragment.MessagesEntriesFragment;
 import org.mariotaku.twidere.fragment.RetweetsOfMeFragment;
 import org.mariotaku.twidere.fragment.StatusesSearchFragment;
 import org.mariotaku.twidere.fragment.TrendsSuggestionsFragment;
@@ -84,9 +86,15 @@ public class CustomTabUtils implements Constants {
                 ExtraConfiguration.newBoolean(EXTRA_MY_FOLLOWING_ONLY, R.string.following_only, false),
                 ExtraConfiguration.newBoolean(EXTRA_MENTIONS_ONLY, R.string.mentions_only, false)));
 
-        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
-                DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
-                CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
+        if (BuildConfig.DEBUG) {
+            CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
+                    DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
+                    CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
+        } else {
+            CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
+                    MessagesEntriesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
+                    CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
+        }
 
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.TRENDS_SUGGESTIONS, new CustomTabConfiguration(
                 TrendsSuggestionsFragment.class, R.string.trends, R.drawable.ic_action_hashtag,

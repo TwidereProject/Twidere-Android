@@ -820,6 +820,10 @@ public class DataStoreUtils implements Constants {
         sAccountScreenNames.clear();
     }
 
+    public static boolean isFilteringUser(Context context, UserKey userKey) {
+        return isFilteringUser(context, userKey.toString());
+    }
+
     public static boolean isFilteringUser(Context context, String userKey) {
         final ContentResolver cr = context.getContentResolver();
         final Expression where = Expression.equalsArgs(Filters.Users.USER_KEY);

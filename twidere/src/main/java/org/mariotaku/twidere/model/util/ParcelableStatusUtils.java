@@ -140,6 +140,7 @@ public class ParcelableStatusUtils implements Constants {
         result.user_is_verified = user.isVerified();
         result.user_is_following = user.isFollowing();
         result.extras.user_profile_image_url_profile_size = user.getProfileImageUrlProfileSize();
+        result.extras.user_statusnet_profile_url = user.getStatusnetProfileUrl();
         if (result.extras.user_profile_image_url_profile_size == null) {
             result.extras.user_profile_image_url_profile_size = user.getProfileImageUrlLarge();
         }

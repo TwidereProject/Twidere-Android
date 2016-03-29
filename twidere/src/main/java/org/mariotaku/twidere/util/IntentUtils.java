@@ -59,17 +59,11 @@ public class IntentUtils implements Constants {
                                        @UserFragment.Referral final String referral) {
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_USER, user);
-        final Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_TWIDERE);
-        builder.authority(AUTHORITY_USER);
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString());
-        if (user.key != null) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, user.key.toString());
+        if (user.extras != null) {
+            extras.putString(EXTRA_PROFILE_URL, user.extras.statusnet_profile_url);
         }
-        if (user.screen_name != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, user.screen_name);
-        }
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        final Uri uri = LinkCreator.getTwidereUserLink(user.account_key, user.key, user.screen_name);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.setExtrasClassLoader(context.getClassLoader());
         intent.putExtras(extras);
         intent.putExtra(EXTRA_REFERRAL, referral);
@@ -87,10 +81,8 @@ public class IntentUtils implements Constants {
                                        final UserKey userKey, final String screenName,
                                        final Bundle activityOptions, final boolean newDocument,
                                        @UserFragment.Referral final String referral) {
-        if (userKey == null && isEmpty(screenName)) return;
-        final Uri uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.putExtra(EXTRA_REFERRAL, referral);
+        final Intent intent = userProfile(accountKey, userKey, screenName, referral, null);
+        if (intent == null) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         }
@@ -99,6 +91,16 @@ public class IntentUtils implements Constants {
         } else {
             context.startActivity(intent);
         }
+    }
+
+    public static Intent userProfile(@Nullable UserKey accountKey, UserKey userKey, String screenName,
+                                     @UserFragment.Referral String referral, String profileUrl) {
+        if (userKey == null && isEmpty(screenName)) return null;
+        final Uri uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.putExtra(EXTRA_REFERRAL, referral);
+        intent.putExtra(EXTRA_PROFILE_URL, profileUrl);
+        return intent;
     }
 
     public static void openItems(@NonNull final Context context, final List<Parcelable> items) {
@@ -661,5 +663,11 @@ public class IntentUtils implements Constants {
         intent.setData(builder.build());
         intent.setPackage(BuildConfig.APPLICATION_ID);
         context.startActivity(intent);
+    }
+
+    public static void applyNewDocument(Intent intent, boolean enable) {
+        if (enable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        }
     }
 }

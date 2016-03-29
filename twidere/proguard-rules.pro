@@ -47,3 +47,10 @@
 -keepclassmembers class org.mariotaku.twidere.activity.BrowserSignInActivity.InjectorJavaScriptInterface {
     public *;
 }
+
+# Fuck shitsung
+-keep class !android.support.v7.view.menu.*MenuBuilder*, android.support.v7.** { *; }
+-keep interface android.support.v7.* { *; }
+
+# Fuck xiaomi
+-keep class !org.apache.commons.lang3.** { *; }

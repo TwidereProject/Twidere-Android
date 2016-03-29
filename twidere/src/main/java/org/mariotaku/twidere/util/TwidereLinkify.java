@@ -232,7 +232,7 @@ public final class TwidereLinkify implements Constants {
                             // Extend selection
                             if (isAtSymbol(ch)) {
                                 start = start - 1;
-                            } else if (isHashSymbol(ch) && end < length - 1 && isHashSymbol(string.charAt(end))) {
+                            } else if (isHashSymbol(ch) && end < length && isHashSymbol(string.charAt(end))) {
                                 start = start - 1;
                                 end = end + 1;
                             }

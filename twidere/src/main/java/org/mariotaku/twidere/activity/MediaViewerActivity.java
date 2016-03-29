@@ -382,6 +382,10 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
                         shareMedia(CacheProvider.Type.VIDEO);
                     } else if (object instanceof ImagePageFragment) {
                         shareMedia(CacheProvider.Type.IMAGE);
+                    } else if (object instanceof GifPageFragment) {
+                        shareMedia(CacheProvider.Type.IMAGE);
+                    } else {
+                        throw new UnsupportedOperationException("Unsupported fragment " + object);
                     }
                 } else {
                     final ParcelableMedia media = getMedia()[currentItem];

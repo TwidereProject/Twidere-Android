@@ -215,12 +215,24 @@ public class User extends TwitterResponseObject implements Comparable<User> {
 
     @JsonField(name = "statusnet_profile_url")
     String statusnetProfileUrl;
+
     @JsonField(name = "ostatus_uri")
     String ostatusUri;
+
     @JsonField(name = "profile_image_url_original")
     String profileImageUrlOriginal;
+
     @JsonField(name = "profile_image_url_profile_size")
     String profileImageUrlProfileSize;
+
+    @JsonField(name = "follows_you")
+    boolean followsYou;
+
+    @JsonField(name = "blocks_you")
+    boolean blocksYou;
+
+    @JsonField(name = "statusnet_blocking")
+    boolean statusnetBlocking;
 
     public boolean canMediaTag() {
         return canMediaTag;
@@ -500,10 +512,23 @@ public class User extends TwitterResponseObject implements Comparable<User> {
         return uniqueId;
     }
 
+    public boolean isStatusnetBlocking() {
+        return statusnetBlocking;
+    }
+
+    public boolean isBlocksYou() {
+        return blocksYou;
+    }
+
+    public boolean isFollowsYou() {
+        return followsYou;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id='" + id + '\'' +
+                ", uniqueId='" + uniqueId + '\'' +
                 ", name='" + name + '\'' +
                 ", screenName='" + screenName + '\'' +
                 ", location='" + location + '\'' +
@@ -515,6 +540,7 @@ public class User extends TwitterResponseObject implements Comparable<User> {
                 ", followersCount=" + followersCount +
                 ", friendsCount=" + friendsCount +
                 ", listedCount=" + listedCount +
+                ", groupsCount=" + groupsCount +
                 ", createdAt=" + createdAt +
                 ", favouritesCount=" + favouritesCount +
                 ", utcOffset=" + utcOffset +
@@ -523,6 +549,7 @@ public class User extends TwitterResponseObject implements Comparable<User> {
                 ", isVerified=" + isVerified +
                 ", statusesCount=" + statusesCount +
                 ", mediaCount=" + mediaCount +
+                ", photoCount=" + photoCount +
                 ", lang='" + lang + '\'' +
                 ", status=" + status +
                 ", contributorsEnabled=" + contributorsEnabled +
@@ -535,6 +562,7 @@ public class User extends TwitterResponseObject implements Comparable<User> {
                 ", profileBackgroundTile=" + profileBackgroundTile +
                 ", profileImageUrl='" + profileImageUrl + '\'' +
                 ", profileImageUrlHttps='" + profileImageUrlHttps + '\'' +
+                ", profileImageUrlLarge='" + profileImageUrlLarge + '\'' +
                 ", profileBannerUrl='" + profileBannerUrl + '\'' +
                 ", coverPhoto='" + coverPhoto + '\'' +
                 ", profileLinkColor='" + profileLinkColor + '\'' +
@@ -557,6 +585,9 @@ public class User extends TwitterResponseObject implements Comparable<User> {
                 ", ostatusUri='" + ostatusUri + '\'' +
                 ", profileImageUrlOriginal='" + profileImageUrlOriginal + '\'' +
                 ", profileImageUrlProfileSize='" + profileImageUrlProfileSize + '\'' +
+                ", followsYou=" + followsYou +
+                ", blocksYou=" + blocksYou +
+                ", statusnetBlocking=" + statusnetBlocking +
                 "} " + super.toString();
     }
 

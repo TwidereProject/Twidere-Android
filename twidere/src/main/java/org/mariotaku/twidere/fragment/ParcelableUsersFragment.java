@@ -20,8 +20,6 @@
 package org.mariotaku.twidere.fragment;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,12 +41,10 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
-import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.ParcelUtils;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
@@ -166,18 +162,8 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
     public void onUserClick(UserViewHolder holder, int position) {
         final ParcelableUser user = getAdapter().getUser(position);
         final FragmentActivity activity = getActivity();
-        if (UserKeyUtils.isSameHost(user.account_key, user.key)) {
-            IntentUtils.openUserProfile(activity, user, null,
-                    mPreferences.getBoolean(KEY_NEW_DOCUMENT_API), getUserReferral());
-        } else if (user.extras != null && user.extras.statusnet_profile_url != null) {
-            final Uri uri = Uri.parse(user.extras.statusnet_profile_url);
-            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-        } else {
-            final Uri uri = LinkCreator.getTwitterUserLink(user.screen_name);
-            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-        }
+        IntentUtils.openUserProfile(activity, user, null, mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                getUserReferral());
     }
 
     @Override

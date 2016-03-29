@@ -73,6 +73,7 @@ import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.DirectMessagesFragment;
+import org.mariotaku.twidere.fragment.MessagesEntriesFragment;
 import org.mariotaku.twidere.fragment.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
@@ -886,6 +887,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
         final SupportTabSpec tab = mPagerAdapter.getTab(position);
         if (DirectMessagesFragment.class == tab.cls) {
             IntentUtils.openMessageConversation(this, null, null);
+        } else if (MessagesEntriesFragment.class == tab.cls) {
+            IntentUtils.openMessageConversation(this, null, null);
         } else if (TrendsSuggestionsFragment.class == tab.cls) {
             openSearchView(null);
         } else {
@@ -900,6 +903,9 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
         if (mPagerAdapter.getCount() == 0) return;
         final SupportTabSpec tab = mPagerAdapter.getTab(position);
         if (DirectMessagesFragment.class == tab.cls) {
+            icon = R.drawable.ic_action_add;
+            title = R.string.new_direct_message;
+        } else if (MessagesEntriesFragment.class == tab.cls) {
             icon = R.drawable.ic_action_add;
             title = R.string.new_direct_message;
         } else if (TrendsSuggestionsFragment.class == tab.cls) {

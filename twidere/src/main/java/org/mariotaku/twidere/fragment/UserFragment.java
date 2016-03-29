@@ -110,6 +110,7 @@ import org.mariotaku.twidere.loader.ParcelableUserLoader;
 import org.mariotaku.twidere.model.CachedRelationship;
 import org.mariotaku.twidere.model.CachedRelationshipValuesCreator;
 import org.mariotaku.twidere.model.ConsumerKeyType;
+import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
@@ -124,6 +125,7 @@ import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
+import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
@@ -243,8 +245,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mFollowProgress.setVisibility(View.VISIBLE);
                     mFollowingYouIndicator.setVisibility(View.GONE);
                     final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-                    final String userId = args.getString(EXTRA_USER_ID);
-                    return new UserRelationshipLoader(getActivity(), accountKey, userId);
+                    final ParcelableUser user = args.getParcelable(EXTRA_USER);
+                    return new UserRelationshipLoader(getActivity(), accountKey, user);
                 }
 
                 @Override
@@ -268,7 +270,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         public Loader<SingleResponse<ParcelableUser>> onCreateLoader(final int id, final Bundle args) {
             final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
             final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            final String userId = args.getString(EXTRA_USER_ID);
+            final UserKey userId = args.getParcelable(EXTRA_USER_KEY);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
             if (mUser == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
                 mCardContent.setVisibility(View.GONE);
@@ -278,7 +280,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mHeaderErrorTextView.setVisibility(View.GONE);
             }
             final ParcelableUser user = mUser;
-            final boolean loadFromCache = user == null || !user.is_cache && user.key.check(userId, null);
+            final boolean loadFromCache = user == null || !user.is_cache && user.key.maybeEquals(userId);
             return new ParcelableUserLoader(getActivity(), accountKey, userId, screenName, getArguments(),
                     omitIntentExtra, loadFromCache);
         }
@@ -303,6 +305,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     final Bundle args = new Bundle();
                     args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
                     args.putString(EXTRA_USER_ID, user.key.getId());
+                    args.putParcelable(EXTRA_USER_KEY, user.key);
                     args.putString(EXTRA_SCREEN_NAME, user.screen_name);
                     args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
                     getLoaderManager().restartLoader(LOADER_ID_USER, args, this);
@@ -348,14 +351,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mRelationship = userRelationship;
         }
         invalidateOptionsMenu();
-        final Relationship relationship = userRelationship.relationship;
-        mFollowButton.setEnabled(relationship.isSourceBlockingTarget() ||
-                !relationship.isSourceBlockedByTarget());
-        if (relationship.isSourceBlockedByTarget()) {
+        mFollowButton.setEnabled(userRelationship.blocking || !userRelationship.blocked_by);
+        if (userRelationship.blocked_by) {
             mPagesErrorContainer.setVisibility(View.GONE);
             mPagesErrorText.setText(null);
             mPagesContent.setVisibility(View.VISIBLE);
-        } else if (!relationship.isSourceFollowingTarget() && user.is_protected) {
+        } else if (!userRelationship.following && user.is_protected) {
             mPagesErrorContainer.setVisibility(View.VISIBLE);
             mPagesErrorText.setText(R.string.user_protected_summary);
             mPagesErrorIcon.setImageResource(R.drawable.ic_info_locked);
@@ -365,9 +366,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mPagesErrorText.setText(null);
             mPagesContent.setVisibility(View.VISIBLE);
         }
-        if (relationship.isSourceBlockingTarget()) {
+        if (userRelationship.blocking) {
             mFollowButton.setText(R.string.unblock);
-        } else if (relationship.isSourceFollowingTarget()) {
+        } else if (userRelationship.following) {
             mFollowButton.setText(R.string.unfollow);
         } else if (user.is_follow_request_sent) {
             mFollowButton.setText(R.string.requested);
@@ -375,10 +376,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mFollowButton.setText(R.string.follow);
         }
         mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
-        mFollowingYouIndicator.setVisibility(relationship.isTargetFollowingSource() ? View.VISIBLE : View.GONE);
+        mFollowingYouIndicator.setVisibility(userRelationship.followed_by ? View.VISIBLE : View.GONE);
 
         final CacheUserInfoRunnable task = new CacheUserInfoRunnable(getContext().getApplicationContext());
-        task.setParams(Pair.create(user, relationship));
+        task.setParams(Pair.create(user, userRelationship));
         TaskStarter.execute(task);
         mFollowButton.setVisibility(View.VISIBLE);
     }
@@ -625,14 +626,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return mUser;
     }
 
-    public void getUserInfo(final UserKey accountId, final String userId, final String screenName,
+    public void getUserInfo(final UserKey accountId, final UserKey userId, final String screenName,
                             final boolean omitIntentExtra) {
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, accountId);
-        args.putString(EXTRA_USER_ID, userId);
+        args.putParcelable(EXTRA_USER_ID, userId);
         args.putString(EXTRA_SCREEN_NAME, screenName);
         args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra);
         if (!mGetUserInfoLoaderInitialized) {
@@ -735,13 +736,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mActionBarShadowColor = 0xA0000000;
         final Bundle args = getArguments();
         UserKey accountId = null;
-        String userId = null;
+        UserKey userId = null;
         String screenName = null;
         if (savedInstanceState != null) {
             args.putAll(savedInstanceState);
         } else {
             accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            userId = args.getString(EXTRA_USER_ID);
+            userId = args.getParcelable(EXTRA_USER_KEY);
             screenName = args.getString(EXTRA_SCREEN_NAME);
         }
 
@@ -895,28 +896,26 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         final UserRelationship userRelationship = mRelationship;
         if (!isMyself && userRelationship != null) {
-            final Relationship relationship = userRelationship.relationship;
-            MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, relationship.canSourceDMTarget());
+            MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, userRelationship.can_dm);
             MenuUtils.setMenuItemAvailability(menu, R.id.block, true);
             MenuUtils.setMenuItemAvailability(menu, R.id.mute_user, true);
             final MenuItem blockItem = menu.findItem(R.id.block);
             if (blockItem != null) {
-                final boolean blocking = relationship.isSourceBlockingTarget();
-                ActionIconDrawable.setMenuHighlight(blockItem, new TwidereMenuInfo(blocking));
-                blockItem.setTitle(blocking ? R.string.unblock : R.string.block);
+                ActionIconDrawable.setMenuHighlight(blockItem, new TwidereMenuInfo(userRelationship.blocking));
+                blockItem.setTitle(userRelationship.blocking ? R.string.unblock : R.string.block);
             }
             final MenuItem muteItem = menu.findItem(R.id.mute_user);
             if (muteItem != null) {
-                muteItem.setChecked(relationship.isSourceMutingTarget());
+                muteItem.setChecked(userRelationship.muting);
             }
             final MenuItem filterItem = menu.findItem(R.id.add_to_filter);
             if (filterItem != null) {
-                ActionIconDrawable.setMenuHighlight(filterItem, new TwidereMenuInfo(userRelationship.isFiltering));
-                filterItem.setTitle(userRelationship.isFiltering ? R.string.remove_from_filter : R.string.add_to_filter);
+                ActionIconDrawable.setMenuHighlight(filterItem, new TwidereMenuInfo(userRelationship.filtering));
+                filterItem.setTitle(userRelationship.filtering ? R.string.remove_from_filter : R.string.add_to_filter);
             }
             final MenuItem wantRetweetsItem = menu.findItem(R.id.enable_retweets);
             if (wantRetweetsItem != null) {
-                wantRetweetsItem.setChecked(relationship.isSourceWantRetweetsFromTarget());
+                wantRetweetsItem.setChecked(userRelationship.retweet_enabled);
             }
         } else {
             MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, false);
@@ -951,7 +950,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         switch (item.getItemId()) {
             case R.id.block: {
                 if (userRelationship == null) return true;
-                if (userRelationship.relationship.isSourceBlockingTarget()) {
+                if (userRelationship.blocking) {
                     twitter.destroyBlockAsync(user.account_key, user.key);
                 } else {
                     CreateUserBlockDialogFragment.show(getFragmentManager(), user);
@@ -965,7 +964,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             case R.id.add_to_filter: {
                 if (userRelationship == null) return true;
                 final ContentResolver cr = getContentResolver();
-                if (userRelationship.isFiltering) {
+                if (userRelationship.filtering) {
                     final String where = Expression.equalsArgs(Filters.Users.USER_KEY).getSQL();
                     final String[] whereArgs = {user.key.toString()};
                     cr.delete(Filters.Users.CONTENT_URI, where, whereArgs);
@@ -978,7 +977,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.mute_user: {
                 if (userRelationship == null) return true;
-                if (userRelationship.relationship.isSourceMutingTarget()) {
+                if (userRelationship.muting) {
                     twitter.destroyMuteAsync(user.account_key, user.key);
                 } else {
                     CreateUserMuteDialogFragment.show(getFragmentManager(), user);
@@ -1040,11 +1039,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.follow: {
                 if (userRelationship == null) return true;
-                final boolean isFollowing = userRelationship.relationship.isSourceFollowingTarget();
                 final boolean updatingRelationship = twitter.isUpdatingRelationship(user.account_key,
                         user.key);
                 if (!updatingRelationship) {
-                    if (isFollowing) {
+                    if (userRelationship.following) {
                         DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
                     } else {
                         twitter.createFriendshipAsync(user.account_key, user.key);
@@ -1275,9 +1273,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final UserRelationship userRelationship = mRelationship;
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 if (userRelationship == null || twitter == null) return;
-                if (userRelationship.relationship.isSourceBlockingTarget()) {
+                if (userRelationship.blocking) {
                     twitter.destroyBlockAsync(user.account_key, user.key);
-                } else if (userRelationship.relationship.isSourceFollowingTarget()) {
+                } else if (userRelationship.following) {
                     DestroyFriendshipDialogFragment.show(getFragmentManager(), user);
                 } else {
                     twitter.createFriendshipAsync(user.account_key, user.key);
@@ -1433,7 +1431,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
-        args.putString(EXTRA_USER_ID, user.key.getId());
+        args.putParcelable(EXTRA_USER, user);
         if (!mGetFriendShipLoaderInitialized) {
             lm.initLoader(LOADER_ID_FRIENDSHIP, args, mFriendshipLoaderCallbacks);
             mGetFriendShipLoaderInitialized = true;
@@ -1445,7 +1443,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private void getUserInfo(final boolean omitIntentExtra) {
         final ParcelableUser user = mUser;
         if (user == null) return;
-        getUserInfo(user.account_key, user.key.getId(), user.screen_name, omitIntentExtra);
+        getUserInfo(user.account_key, user.key, user.screen_name, omitIntentExtra);
     }
 
     private void setUiColor(int color) {
@@ -1730,39 +1728,51 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     static class UserRelationshipLoader extends AsyncTaskLoader<SingleResponse<UserRelationship>> {
 
         private final Context context;
+        @Nullable
         private final UserKey mAccountKey;
-        private final String mUserId;
+        @Nullable
+        private final ParcelableUser mUser;
 
         public UserRelationshipLoader(final Context context, @Nullable final UserKey accountKey,
-                                      final String userId) {
+                                      @Nullable final ParcelableUser user) {
             super(context);
             this.context = context;
             this.mAccountKey = accountKey;
-            this.mUserId = userId;
+            this.mUser = user;
         }
 
         @Override
         public SingleResponse<UserRelationship> loadInBackground() {
-            if (mAccountKey == null) {
+            if (mAccountKey == null || mUser == null) {
+                return SingleResponse.getInstance(new TwitterException("Null parameters"));
+            }
+            final boolean isFiltering = DataStoreUtils.isFilteringUser(context, mUser.key);
+            if (mAccountKey.equals(mUser.key))
+                return SingleResponse.getInstance();
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
+                    mAccountKey);
+            if (credentials == null) {
                 return SingleResponse.getInstance(new TwitterException("No Account"));
             }
-            final boolean isFiltering = DataStoreUtils.isFilteringUser(context, mUserId);
-            if (mAccountKey.getId().equals(mUserId))
-                return SingleResponse.getInstance();
+            if (TwitterAPIFactory.isStatusNetCredentials(credentials)) {
+                if (!UserKeyUtils.isSameHost(mAccountKey, mUser.key)) {
+                    return SingleResponse.getInstance(new UserRelationship(mUser, isFiltering));
+                }
+            }
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountKey, false);
             if (twitter == null) {
                 return SingleResponse.getInstance(new TwitterException("No Account"));
             }
             try {
-                final Relationship relationship = twitter.showFriendship(mUserId);
-                final UserKey userKey = new UserKey(mUserId, mAccountKey.getHost());
+                final Relationship relationship = twitter.showFriendship(mUser.key.getId());
+                final UserKey userKey = mUser.key;
                 if (relationship.isSourceBlockingTarget() || relationship.isSourceBlockedByTarget()) {
                     Utils.setLastSeen(context, userKey, -1);
                 } else {
                     Utils.setLastSeen(context, userKey, System.currentTimeMillis());
                 }
                 Utils.updateRelationship(context, mAccountKey, userKey, relationship);
-                return SingleResponse.getInstance(new UserRelationship(relationship, isFiltering));
+                return SingleResponse.getInstance(new UserRelationship(mAccountKey, relationship, isFiltering));
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
             }
@@ -1774,27 +1784,45 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
     }
 
-    static class UserRelationship {
-        @NonNull
-        Relationship relationship;
-        boolean isFiltering;
+    static class UserRelationship extends CachedRelationship {
+        final String source, target;
+        boolean filtering;
+        boolean can_dm;
 
-        public UserRelationship(@NonNull Relationship relationship, boolean isFiltering) {
-            this.relationship = relationship;
-            this.isFiltering = isFiltering;
+        public UserRelationship(@NonNull UserKey accountKey, @NonNull Relationship relationship,
+                                boolean filtering) {
+            super(accountKey, relationship.getTargetUserId(), relationship);
+            this.source = relationship.getSourceUserId();
+            this.target = relationship.getTargetUserId();
+            this.filtering = filtering;
+            this.can_dm = relationship.canSourceDMTarget();
+        }
+
+        public UserRelationship(@NonNull ParcelableUser user, boolean filtering) {
+            this.source = user.account_key.getId();
+            this.target = user.key.getId();
+            this.filtering = filtering;
+            if (user.extras != null) {
+                this.following = user.is_following;
+                this.followed_by = user.extras.statusnet_followed_by;
+                this.blocking = user.extras.statusnet_blocking;
+                this.blocked_by = user.extras.statusnet_blocked_by;
+                this.can_dm = user.extras.statusnet_followed_by;
+            }
         }
 
         public boolean check(@NonNull ParcelableUser user) {
-            if (!TextUtils.equals(relationship.getSourceUserId(), user.account_key.getId())) {
+            if (!TextUtils.equals(source, user.account_key.getId())) {
                 return false;
             }
-            final String targetUserId = relationship.getTargetUserId();
-            return (user.extras != null && TextUtils.equals(targetUserId, user.extras.unique_id))
-                    || TextUtils.equals(targetUserId, user.key.getId());
+            return (user.extras != null && TextUtils.equals(target, user.extras.unique_id))
+                    || TextUtils.equals(target, user.key.getId());
         }
+
     }
 
-    private static class CacheUserInfoRunnable extends AbstractTask<Pair<ParcelableUser, Relationship>, Object, Object> {
+    private static class CacheUserInfoRunnable extends AbstractTask<Pair<ParcelableUser,
+            ? extends CachedRelationship>, Object, Object> {
         private final Context context;
 
         public CacheUserInfoRunnable(Context context) {
@@ -1802,12 +1830,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
         @Override
-        public Object doLongOperation(Pair<ParcelableUser, Relationship> args) {
+        public Object doLongOperation(Pair<ParcelableUser, ? extends CachedRelationship> args) {
             final ContentResolver resolver = context.getContentResolver();
             final ParcelableUser user = args.first;
             resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user));
-            resolver.insert(CachedRelationships.CONTENT_URI, CachedRelationshipValuesCreator.create(
-                    new CachedRelationship(user.account_key, user.key.getId(), args.second)));
+            resolver.insert(CachedRelationships.CONTENT_URI,
+                    CachedRelationshipValuesCreator.create(args.second));
             return null;
         }
     }

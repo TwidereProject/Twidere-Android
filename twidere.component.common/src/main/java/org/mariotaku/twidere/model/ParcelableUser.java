@@ -252,9 +252,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @Override
     public String toString() {
         return "ParcelableUser{" +
-                "account_id=" + account_key +
+                "account_key=" + account_key +
                 ", account_color=" + account_color +
-                ", id=" + key +
+                ", key=" + key +
                 ", created_at=" + created_at +
                 ", position=" + position +
                 ", is_protected=" + is_protected +
@@ -267,6 +267,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
                 ", location='" + location + '\'' +
                 ", profile_image_url='" + profile_image_url + '\'' +
                 ", profile_banner_url='" + profile_banner_url + '\'' +
+                ", profile_background_url='" + profile_background_url + '\'' +
                 ", url='" + url + '\'' +
                 ", url_expanded='" + url_expanded + '\'' +
                 ", description_html='" + description_html + '\'' +
@@ -284,6 +285,8 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
                 ", is_cache=" + is_cache +
                 ", is_basic=" + is_basic +
                 ", extras=" + extras +
+                ", color=" + color +
+                ", nickname='" + nickname + '\'' +
                 '}';
     }
 
@@ -319,6 +322,15 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "unique_id")
         @ParcelableThisPlease
         public String unique_id;
+        @JsonField(name = "statusnet_blocking")
+        @ParcelableThisPlease
+        public boolean statusnet_blocking;
+        @JsonField(name = "statusnet_blocked_by")
+        @ParcelableThisPlease
+        public boolean statusnet_blocked_by;
+        @JsonField(name = "statusnet_followed_by")
+        @ParcelableThisPlease
+        public boolean statusnet_followed_by;
 
 
         @Override
@@ -329,6 +341,21 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             ParcelableUser$ExtrasParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        @Override
+        public String toString() {
+            return "Extras{" +
+                    "statusnet_profile_url='" + statusnet_profile_url + '\'' +
+                    ", ostatus_uri='" + ostatus_uri + '\'' +
+                    ", profile_image_url_original='" + profile_image_url_original + '\'' +
+                    ", profile_image_url_profile_size='" + profile_image_url_profile_size + '\'' +
+                    ", groups_count=" + groups_count +
+                    ", unique_id='" + unique_id + '\'' +
+                    ", statusnet_blocking=" + statusnet_blocking +
+                    ", statusnet_blocked_by=" + statusnet_blocked_by +
+                    ", statusnet_followed_by=" + statusnet_followed_by +
+                    '}';
         }
 
         public static final Creator<Extras> CREATOR = new Creator<Extras>() {
