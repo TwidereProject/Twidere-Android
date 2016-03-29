@@ -45,11 +45,7 @@ public class NetworkEvent extends BaseEvent implements Parcelable {
     public static NetworkEvent create(Context context) {
         final NetworkEvent event = new NetworkEvent();
         event.markStart(context);
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
-        if (activeNetworkInfo != null) {
-            event.setNetworkType(activeNetworkInfo.getType());
-        }
+        event.setNetworkType(getActivateNetworkType(context));
         return event;
     }
 
@@ -74,13 +70,29 @@ public class NetworkEvent extends BaseEvent implements Parcelable {
         NetworkEventParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    public static int getActivateNetworkType(Context context) {
+        try {
+            final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+            if (activeNetworkInfo != null) {
+                return activeNetworkInfo.getType();
+            }
+            return -1;
+        } catch (SecurityException e) {
+            return -1;
+        }
+
+    }
+
     public static final Creator<NetworkEvent> CREATOR = new Creator<NetworkEvent>() {
+        @Override
         public NetworkEvent createFromParcel(Parcel source) {
             NetworkEvent target = new NetworkEvent();
             NetworkEventParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public NetworkEvent[] newArray(int size) {
             return new NetworkEvent[size];
         }

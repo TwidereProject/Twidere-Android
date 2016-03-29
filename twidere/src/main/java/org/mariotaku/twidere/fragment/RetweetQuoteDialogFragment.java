@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,7 +32,6 @@ import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +55,6 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.EditTextEnterHandler;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.view.ComposeEditText;
 import org.mariotaku.twidere.view.StatusTextCountView;
@@ -76,34 +73,28 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         final Context context = builder.getContext();
-        final LayoutInflater inflater = LayoutInflater.from(context);
-        @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.dialog_status_quote_retweet, null);
-        final DummyItemAdapter adapter = new DummyItemAdapter(context);
-        adapter.setShouldShowAccountsColor(true);
-        final IStatusViewHolder holder = new StatusViewHolder(adapter, view.findViewById(R.id.item_content));
         final ParcelableStatus status = getStatus();
         assert status != null;
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(),
                 status.account_key);
         assert credentials != null;
 
-        builder.setView(view);
+        builder.setView(R.layout.dialog_status_quote_retweet);
         builder.setTitle(R.string.retweet_quote_confirm_title);
-        if (isMyRetweet(status)) {
-            builder.setPositiveButton(R.string.cancel_retweet, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+        builder.setPositiveButton(R.string.retweet, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                final Dialog dialog = (Dialog) dialogInterface;
+                final ComposeEditText editComment = (ComposeEditText) dialog.findViewById(R.id.edit_comment);
+                if (editComment.length() > 0) {
+                    retweetOrQuote(mTwitterWrapper, credentials, status);
+                } else if (isMyRetweet(status)) {
                     mTwitterWrapper.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
-                }
-            });
-        } else if (!status.user_is_protected) {
-            builder.setPositiveButton(R.string.retweet, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                } else if (!status.user_is_protected) {
                     retweetOrQuote(mTwitterWrapper, credentials, status);
                 }
-            });
-        }
+            }
+        });
         builder.setNeutralButton(R.string.quote, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -117,91 +108,95 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         });
         builder.setNegativeButton(android.R.string.cancel, null);
 
-        holder.displayStatus(status, false, true);
-
-
-        final StatusTextCountView textCountView = (StatusTextCountView) view.findViewById(R.id.comment_text_count);
-
-        textCountView.setMaxLength(TwidereValidator.getTextLimit(credentials));
-
-        view.findViewById(R.id.item_menu).setVisibility(View.GONE);
-        view.findViewById(R.id.action_buttons).setVisibility(View.GONE);
-        view.findViewById(R.id.item_content).setFocusable(false);
-        view.findViewById(R.id.comment_container).setVisibility(status.user_is_protected ? View.GONE : View.VISIBLE);
-        final ComposeEditText editComment = (ComposeEditText) view.findViewById(R.id.edit_comment);
-        editComment.setAccountKey(status.account_key);
-
-        final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
-        final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(editComment, new EditTextEnterHandler.EnterListener() {
-            @Override
-            public boolean shouldCallListener() {
-                return true;
-            }
-
-            @Override
-            public boolean onHitEnter() {
-                final AsyncTwitterWrapper twitter = mTwitterWrapper;
-                final ParcelableStatus status = getStatus();
-                if (twitter == null || status == null) return false;
-                retweetOrQuote(twitter, credentials, status);
-                dismiss();
-                return true;
-            }
-        }, sendByEnter);
-        enterHandler.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateTextCount(getDialog(), s, status, credentials);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        final View commentMenu = view.findViewById(R.id.comment_menu);
-
-        mPopupMenu = new PopupMenu(context, commentMenu, Gravity.NO_GRAVITY,
-                R.attr.actionOverflowMenuStyle, 0);
-        commentMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopupMenu.show();
-            }
-        });
-        commentMenu.setOnTouchListener(mPopupMenu.getDragToOpenListener());
-        mPopupMenu.inflate(R.menu.menu_dialog_comment);
-        final Menu menu = mPopupMenu.getMenu();
-        MenuUtils.setMenuItemAvailability(menu, R.id.quote_original_status,
-                status.retweet_id != null || status.quoted_id != null);
-        mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.isCheckable()) {
-                    item.setChecked(!item.isChecked());
-                    return true;
-                }
-                return false;
-            }
-        });
-
         final Dialog dialog = builder.create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onShow(DialogInterface dialog) {
-                updateTextCount(dialog, editComment.getText(), status, credentials);
+            public void onShow(DialogInterface dialogInterface) {
+                Dialog dialog = (Dialog) dialogInterface;
+                final DummyItemAdapter adapter = new DummyItemAdapter(context);
+                adapter.setShouldShowAccountsColor(true);
+                final IStatusViewHolder holder = new StatusViewHolder(adapter, dialog.findViewById(R.id.item_content));
+                holder.displayStatus(status, false, true);
+
+
+                final StatusTextCountView textCountView = (StatusTextCountView) dialog.findViewById(R.id.comment_text_count);
+
+                textCountView.setMaxLength(TwidereValidator.getTextLimit(credentials));
+
+                dialog.findViewById(R.id.item_menu).setVisibility(View.GONE);
+                dialog.findViewById(R.id.action_buttons).setVisibility(View.GONE);
+                dialog.findViewById(R.id.item_content).setFocusable(false);
+                dialog.findViewById(R.id.comment_container).setVisibility(status.user_is_protected ? View.GONE : View.VISIBLE);
+                final ComposeEditText editComment = (ComposeEditText) dialog.findViewById(R.id.edit_comment);
+                editComment.setAccountKey(status.account_key);
+
+                final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
+                final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(editComment, new EditTextEnterHandler.EnterListener() {
+                    @Override
+                    public boolean shouldCallListener() {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onHitEnter() {
+                        final AsyncTwitterWrapper twitter = mTwitterWrapper;
+                        final ParcelableStatus status = getStatus();
+                        if (twitter == null || status == null) return false;
+                        retweetOrQuote(twitter, credentials, status);
+                        dismiss();
+                        return true;
+                    }
+                }, sendByEnter);
+                enterHandler.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        updateTextCount(getDialog(), s, status);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                final View commentMenu = dialog.findViewById(R.id.comment_menu);
+
+                mPopupMenu = new PopupMenu(context, commentMenu, Gravity.NO_GRAVITY,
+                        R.attr.actionOverflowMenuStyle, 0);
+                commentMenu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPopupMenu.show();
+                    }
+                });
+                commentMenu.setOnTouchListener(mPopupMenu.getDragToOpenListener());
+                mPopupMenu.inflate(R.menu.menu_dialog_comment);
+                final Menu menu = mPopupMenu.getMenu();
+                MenuUtils.setMenuItemAvailability(menu, R.id.quote_original_status,
+                        status.retweet_id != null || status.quoted_id != null);
+                mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.isCheckable()) {
+                            item.setChecked(!item.isChecked());
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+
+                updateTextCount(dialog, editComment.getText(), status);
             }
         });
         return dialog;
     }
 
-    private void updateTextCount(DialogInterface dialog, CharSequence s, ParcelableStatus status,
-                                 ParcelableAccount account) {
+    private void updateTextCount(DialogInterface dialog, CharSequence s, ParcelableStatus status) {
         if (!(dialog instanceof AlertDialog)) return;
         final AlertDialog alertDialog = (AlertDialog) dialog;
         final Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -226,7 +221,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
     private void retweetOrQuote(AsyncTwitterWrapper twitter, ParcelableAccount account, ParcelableStatus status) {
         final Dialog dialog = getDialog();
         if (dialog == null) return;
-        final EditText editComment = ((EditText) dialog.findViewById(R.id.edit_comment));
+        final EditText editComment = (EditText) dialog.findViewById(R.id.edit_comment);
         if (useQuote(editComment.length() > 0, account)) {
             final Menu menu = mPopupMenu.getMenu();
             final MenuItem itemQuoteOriginalStatus = menu.findItem(R.id.quote_original_status);

@@ -27,6 +27,11 @@ public class MediaDownloadEvent extends BaseEvent implements Parcelable {
     String mediaUrl;
     @JsonField(name = "size")
     long size;
+    @JsonField(name = "network_type")
+    int networkType;
+    long nonce;
+    @JsonField(name = "opened_time")
+    long openedTime;
 
     public void setMedia(ParcelableMedia media) {
         this.type = media.type;
@@ -36,6 +41,22 @@ public class MediaDownloadEvent extends BaseEvent implements Parcelable {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public void setOpenedTime(long openedTime) {
+        this.openedTime = openedTime;
+    }
+
+    public void setNetworkType(int networkType) {
+        this.networkType = networkType;
+    }
+
+    public long getNonce() {
+        return nonce;
+    }
+
+    public void setNonce(long nonce) {
+        this.nonce = nonce;
     }
 
     @NonNull
@@ -61,26 +82,32 @@ public class MediaDownloadEvent extends BaseEvent implements Parcelable {
                 ", url='" + url + '\'' +
                 ", mediaUrl='" + mediaUrl + '\'' +
                 ", size=" + size +
+                ", networkType=" + networkType +
+                ", nonce=" + nonce +
+                ", openedTime=" + openedTime +
                 "} " + super.toString();
     }
 
+    public static MediaDownloadEvent create(Context context, ParcelableMedia media, long nonce) {
+        final MediaDownloadEvent event = new MediaDownloadEvent();
+        event.markStart(context);
+        event.setMedia(media);
+        event.setNonce(nonce);
+        event.setNetworkType(NetworkEvent.getActivateNetworkType(context));
+        return event;
+    }
+
     public static final Creator<MediaDownloadEvent> CREATOR = new Creator<MediaDownloadEvent>() {
+        @Override
         public MediaDownloadEvent createFromParcel(Parcel source) {
             MediaDownloadEvent target = new MediaDownloadEvent();
             MediaDownloadEventParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public MediaDownloadEvent[] newArray(int size) {
             return new MediaDownloadEvent[size];
         }
     };
-
-    public static MediaDownloadEvent create(Context context, ParcelableMedia media, long total) {
-        final MediaDownloadEvent event = new MediaDownloadEvent();
-        event.markStart(context);
-        event.setMedia(media);
-        event.setSize(total);
-        return event;
-    }
 }

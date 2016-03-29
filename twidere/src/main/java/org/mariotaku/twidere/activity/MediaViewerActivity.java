@@ -957,20 +957,29 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         }
 
         @Override
-        public void onDownloadStart(long total) {
-            super.onDownloadStart(total);
+        public void onDownloadRequested(long nonce) {
+            super.onDownloadRequested(nonce);
             final Context context = getContext();
             if (context != null) {
-                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), total);
+                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), nonce);
             } else {
                 mMediaDownloadEvent = null;
             }
         }
 
         @Override
-        public void onDownloadFinished() {
-            super.onDownloadFinished();
-            if (mMediaDownloadEvent != null) {
+        public void onDownloadStart(long total, long nonce) {
+            super.onDownloadStart(total, nonce);
+            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
+                mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
+                mMediaDownloadEvent.setSize(nonce);
+            }
+        }
+
+        @Override
+        public void onDownloadFinished(long nonce) {
+            super.onDownloadFinished(nonce);
+            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
                 mMediaDownloadEvent.markEnd();
                 HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
                 mMediaDownloadEvent = null;
@@ -981,6 +990,7 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
     public static class GifPageFragment extends CacheDownloadMediaViewerFragment {
 
         private GifTextureView mGifView;
+        private MediaDownloadEvent mMediaDownloadEvent;
 
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -1036,6 +1046,45 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
         @Override
         protected void recycleMedia() {
             mGifView.setInputSource(null);
+        }
+
+
+        private ParcelableMedia getMedia() {
+            return getArguments().getParcelable(EXTRA_MEDIA);
+        }
+
+        private UserKey getAccountKey() {
+            return getArguments().getParcelable(EXTRA_ACCOUNT_KEY);
+        }
+
+        @Override
+        public void onDownloadRequested(long nonce) {
+            super.onDownloadRequested(nonce);
+            final Context context = getContext();
+            if (context != null) {
+                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), nonce);
+            } else {
+                mMediaDownloadEvent = null;
+            }
+        }
+
+        @Override
+        public void onDownloadStart(long total, long nonce) {
+            super.onDownloadStart(total, nonce);
+            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
+                mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
+                mMediaDownloadEvent.setSize(nonce);
+            }
+        }
+
+        @Override
+        public void onDownloadFinished(long nonce) {
+            super.onDownloadFinished(nonce);
+            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
+                mMediaDownloadEvent.markEnd();
+                HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
+                mMediaDownloadEvent = null;
+            }
         }
     }
 
@@ -1298,22 +1347,34 @@ public final class MediaViewerActivity extends AbsMediaViewerActivity implements
             return inflater.inflate(R.layout.layout_media_viewer_texture_video_view, container, false);
         }
 
+
         @Override
-        public void onDownloadStart(long total) {
-            super.onDownloadStart(total);
+        public void onDownloadRequested(long nonce) {
+            super.onDownloadRequested(nonce);
             final Context context = getContext();
             if (context != null) {
-                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), total);
+                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), nonce);
             } else {
                 mMediaDownloadEvent = null;
             }
         }
 
         @Override
-        public void onDownloadFinished() {
-            super.onDownloadFinished();
-            if (mMediaDownloadEvent != null) {
+        public void onDownloadStart(long total, long nonce) {
+            super.onDownloadStart(total, nonce);
+            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
+                mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
+                mMediaDownloadEvent.setSize(nonce);
+            }
+        }
+
+        @Override
+        public void onDownloadFinished(long nonce) {
+            super.onDownloadFinished(nonce);
+            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
+                mMediaDownloadEvent.markEnd();
                 HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
+                mMediaDownloadEvent = null;
             }
         }
 
