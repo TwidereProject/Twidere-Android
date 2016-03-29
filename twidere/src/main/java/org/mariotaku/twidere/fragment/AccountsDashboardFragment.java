@@ -659,17 +659,17 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             }
             case R.id.favorites: {
                 IntentUtils.openUserFavorites(getActivity(), account.account_key,
-                        account.account_key.getId(), account.screen_name);
+                        account.account_key, account.screen_name);
                 break;
             }
             case R.id.lists: {
                 IntentUtils.openUserLists(getActivity(), account.account_key,
-                        account.account_key.getId(), account.screen_name);
+                        account.account_key, account.screen_name);
                 break;
             }
             case R.id.groups: {
                 IntentUtils.openUserGroups(getActivity(), account.account_key,
-                        account.account_key.getId(), account.screen_name);
+                        account.account_key, account.screen_name);
                 break;
             }
             case R.id.public_timeline: {

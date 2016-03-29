@@ -36,15 +36,15 @@ import java.util.List;
 public class UserListMembersLoader extends CursorSupportUsersLoader {
 
     private final long mListId;
-    private final String mUserId;
+    private final UserKey mUserKey;
     private final String mScreenName, mListName;
 
     public UserListMembersLoader(final Context context, final UserKey accountKey, final long listId,
-                                 final String userId, final String screenName, final String listName,
+                                 final UserKey userKey, final String screenName, final String listName,
                                  final List<ParcelableUser> data, boolean fromUser) {
         super(context, accountKey, data, fromUser);
         mListId = listId;
-        mUserId = userId;
+        mUserKey = userKey;
         mScreenName = screenName;
         mListName = listName;
     }
@@ -55,8 +55,8 @@ public class UserListMembersLoader extends CursorSupportUsersLoader {
             throws TwitterException {
         if (mListId > 0)
             return twitter.getUserListMembers(mListId, paging);
-        else if (mUserId != null)
-            return twitter.getUserListMembers(mListName.replace(' ', '-'), mUserId, paging);
+        else if (mUserKey != null)
+            return twitter.getUserListMembers(mListName.replace(' ', '-'), mUserKey.getId(), paging);
         else if (mScreenName != null)
             return twitter.getUserListMembersByScreenName(mListName.replace(' ', '-'), mScreenName, paging);
         throw new TwitterException("list_id or list_name and user_id (or screen_name) required");

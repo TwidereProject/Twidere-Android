@@ -56,12 +56,12 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         final UserKey accountKey = Utils.getAccountKey(context, args);
         final String maxId = args.getString(EXTRA_MAX_ID);
         final String sinceId = args.getString(EXTRA_SINCE_ID);
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false);
-        return new UserListTimelineLoader(getActivity(), accountKey, listId, userId, screenName,
+        return new UserListTimelineLoader(getActivity(), accountKey, listId, userKey, screenName,
                 listName, sinceId, maxId, getAdapterData(), getSavedStatusesFileArgs(), tabPosition,
                 fromUser, loadingMore);
     }
@@ -72,7 +72,7 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         assert args != null;
         final UserKey accountKey = Utils.getAccountKey(getContext(), args);
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final List<String> result = new ArrayList<>();
@@ -81,8 +81,8 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         if (listId > 0) {
             result.add("list_id=" + listId);
         } else if (listName != null) {
-            if (userId != null) {
-                result.add("user_id=" + userId);
+            if (userKey != null) {
+                result.add("user_id=" + userKey);
             } else if (screenName != null) {
                 result.add("screen_name=" + screenName);
             }
@@ -105,10 +105,10 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         if (listId > 0) {
             sb.append(listId);
         } else if (listName != null) {
-            final String userId = args.getString(EXTRA_USER_ID);
+            final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
             final String screenName = args.getString(EXTRA_SCREEN_NAME);
-            if (userId != null) {
-                sb.append(userId);
+            if (userKey != null) {
+                sb.append(userKey);
             } else if (screenName != null) {
                 sb.append(screenName);
             } else {

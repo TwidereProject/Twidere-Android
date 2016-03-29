@@ -43,8 +43,10 @@ public class UserMentionsLoader extends TweetSearchLoader {
     @NonNull
     @Override
     protected String processQuery(ParcelableCredentials credentials, @NonNull final String query) {
+        final UserKey accountKey = getAccountKey();
+        if (accountKey == null) return query;
         final String screenName = query.startsWith("@") ? query.substring(1) : query;
-        if (TwitterAPIFactory.isTwitterCredentials(getContext(), getAccountKey())) {
+        if (TwitterAPIFactory.isTwitterCredentials(getContext(), accountKey)) {
             return String.format(Locale.ROOT, "to:%s exclude:retweets", screenName);
         }
         return String.format(Locale.ROOT, "@%s -RT", screenName);

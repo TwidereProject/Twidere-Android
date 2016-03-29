@@ -40,11 +40,13 @@ import java.util.List;
 
 public class UserTimelineLoader extends TwitterAPIStatusesLoader {
 
-    private final String mUserId;
+    @Nullable
+    private final UserKey mUserId;
+    @Nullable
     private final String mUserScreenName;
 
     public UserTimelineLoader(final Context context, @Nullable final UserKey accountId,
-                              final String userId, final String screenName,
+                              @Nullable final UserKey userId, @Nullable final String screenName,
                               final String sinceId, final String maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                               final int tabPosition, boolean fromUser, boolean loadingMore) {
@@ -59,7 +61,7 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
                                                @NonNull ParcelableCredentials credentials,
                                                @NonNull final Paging paging) throws TwitterException {
         if (mUserId != null) {
-            return twitter.getUserTimeline(mUserId, paging);
+            return twitter.getUserTimeline(mUserId.getId(), paging);
         } else if (mUserScreenName != null) {
             return twitter.getUserTimelineByScreenName(mUserScreenName, paging);
         } else {
@@ -71,7 +73,8 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
         final UserKey accountId = getAccountKey();
-        if (accountId != null && TextUtils.equals(accountId.getId(), mUserId)) return false;
+        if (accountId != null && mUserId != null && TextUtils.equals(accountId.getId(), mUserId.getId()))
+            return false;
         final UserKey retweetUserId = status.is_retweet ? status.user_key : null;
         return InternalTwitterContentUtils.isFiltered(database, retweetUserId, status.text_plain,
                 status.spans, status.source, null, status.quoted_user_key);

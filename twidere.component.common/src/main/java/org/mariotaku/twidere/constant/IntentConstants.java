@@ -100,7 +100,6 @@ public interface IntentConstants {
     String EXTRA_DATA = "data";
     String EXTRA_QUERY = "query";
     String EXTRA_USER_KEY = "user_key";
-    String EXTRA_USER_ID = "user_id";
     String EXTRA_USER_IDS = "user_ids";
     String EXTRA_LIST_ID = "list_id";
     String EXTRA_GROUP_ID = "group_id";

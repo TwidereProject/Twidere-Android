@@ -35,10 +35,10 @@ public class UserListMembershipsFragment extends ParcelableUserListsFragment {
     public Loader<List<ParcelableUserList>> onCreateUserListsLoader(final Context context,
                                                                     final Bundle args, final boolean fromUser) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final long cursor = args.getLong(EXTRA_NEXT_CURSOR, -1);
-        return new UserListMembershipsLoader(getActivity(), accountKey, userId, screenName, cursor, getData());
+        return new UserListMembershipsLoader(getActivity(), accountKey, userKey, screenName, cursor, getData());
     }
 
 }

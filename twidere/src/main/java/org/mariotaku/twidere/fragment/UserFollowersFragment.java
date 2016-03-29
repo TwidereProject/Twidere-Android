@@ -35,9 +35,9 @@ public class UserFollowersFragment extends CursorSupportUsersListFragment {
                                                         @NonNull final Bundle args,
                                                         final boolean fromUser) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        final UserFollowersLoader loader = new UserFollowersLoader(context, accountKey, userId,
+        final UserFollowersLoader loader = new UserFollowersLoader(context, accountKey, userKey,
                 screenName, getData(), fromUser);
         loader.setCursor(getNextCursor());
         loader.setPage(getNextPage());

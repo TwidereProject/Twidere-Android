@@ -129,7 +129,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                     final ParcelableUserList userList = mUserList;
                     final UserKey accountKey = data.getParcelableExtra(EXTRA_KEY);
                     IntentUtils.openUserListDetails(getActivity(), accountKey, userList.id,
-                            userList.user_key.getId(), userList.user_screen_name, userList.name);
+                            userList.user_key, userList.user_screen_name, userList.name);
                 }
                 break;
             }
@@ -165,13 +165,13 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
             final ParcelableUserList userList = args.getParcelable(EXTRA_USER_LIST);
             assert userList != null;
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userList.account_key);
-            tabArgs.putString(EXTRA_USER_ID, userList.user_key.getId());
+            tabArgs.putParcelable(EXTRA_USER_KEY, userList.user_key);
             tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name);
             tabArgs.putLong(EXTRA_LIST_ID, userList.id);
             tabArgs.putString(EXTRA_LIST_NAME, userList.name);
         } else {
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
-            tabArgs.getString(EXTRA_USER_ID, args.getString(EXTRA_USER_ID));
+            tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable(EXTRA_USER_KEY));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
             tabArgs.putLong(EXTRA_LIST_ID, args.getLong(EXTRA_LIST_ID, -1));
             tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME));
@@ -324,13 +324,13 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
     @Override
     public Loader<SingleResponse<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final long listId = args.getLong(EXTRA_LIST_ID, -1);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
         return new ParcelableUserListLoader(getActivity(), omitIntentExtra, getArguments(), accountKey, listId,
-                listName, userId, screenName);
+                listName, userKey, screenName);
     }
 
     @Override
@@ -453,19 +453,19 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
         private final boolean mOmitIntentExtra;
         private final Bundle mExtras;
         private final UserKey mAccountKey;
-        private final String mUserId;
+        private final UserKey mUserKey;
         private final long mListId;
         private final String mScreenName, mListName;
 
         private ParcelableUserListLoader(final Context context, final boolean omitIntentExtra,
                                          final Bundle extras, final UserKey accountKey,
                                          final long listId, final String listName,
-                                         final String userId, final String screenName) {
+                                         final UserKey userKey, final String screenName) {
             super(context);
             mOmitIntentExtra = omitIntentExtra;
             mExtras = extras;
             mAccountKey = accountKey;
-            mUserId = userId;
+            mUserKey = userKey;
             mListId = listId;
             mScreenName = screenName;
             mListName = listName;
@@ -484,8 +484,8 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 final UserList list;
                 if (mListId > 0) {
                     list = twitter.showUserList(mListId);
-                } else if (mUserId != null) {
-                    list = twitter.showUserList(mListName, mUserId);
+                } else if (mUserKey != null) {
+                    list = twitter.showUserList(mListName, mUserKey.getId());
                 } else if (mScreenName != null) {
                     list = twitter.showUserListByScrenName(mListName, mScreenName);
                 } else

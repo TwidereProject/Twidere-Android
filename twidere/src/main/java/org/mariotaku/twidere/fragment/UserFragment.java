@@ -310,7 +310,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (user.is_cache) {
                     final Bundle args = new Bundle();
                     args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
-                    args.putString(EXTRA_USER_ID, user.key.getId());
                     args.putParcelable(EXTRA_USER_KEY, user.key);
                     args.putString(EXTRA_SCREEN_NAME, user.screen_name);
                     args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
@@ -632,14 +631,14 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         return mUser;
     }
 
-    public void getUserInfo(final UserKey accountId, final UserKey userId, final String screenName,
+    public void getUserInfo(final UserKey accountKey, final UserKey userKey, final String screenName,
                             final boolean omitIntentExtra) {
         final LoaderManager lm = getLoaderManager();
         lm.destroyLoader(LOADER_ID_USER);
         lm.destroyLoader(LOADER_ID_FRIENDSHIP);
         final Bundle args = new Bundle();
-        args.putParcelable(EXTRA_ACCOUNT_KEY, accountId);
-        args.putParcelable(EXTRA_USER_ID, userId);
+        args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
+        args.putParcelable(EXTRA_USER_KEY, userKey);
         args.putString(EXTRA_SCREEN_NAME, screenName);
         args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra);
         if (!mGetUserInfoLoaderInitialized) {
@@ -648,7 +647,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         } else {
             lm.restartLoader(LOADER_ID_USER, args, mUserInfoLoaderCallbacks);
         }
-        if (accountId == null || userId == null && screenName == null) {
+        if (accountKey == null || userKey == null && screenName == null) {
             mCardContent.setVisibility(View.GONE);
             mHeaderErrorContainer.setVisibility(View.GONE);
         }
@@ -1002,8 +1001,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final Uri.Builder builder = new Uri.Builder();
                 builder.scheme(SCHEME_TWIDERE);
                 builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION);
-                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, String.valueOf(user.account_key));
-                builder.appendQueryParameter(QUERY_PARAM_USER_ID, String.valueOf(user.key));
+                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString());
+                builder.appendQueryParameter(QUERY_PARAM_USER_KEY, user.key.toString());
                 final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
                 intent.putExtra(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(getActivity(), user.account_key));
                 intent.putExtra(EXTRA_USER, user);
@@ -1308,22 +1307,22 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 break;
             }
             case R.id.listed_container: {
-                IntentUtils.openUserLists(getActivity(), user.account_key, user.key.getId(),
+                IntentUtils.openUserLists(getActivity(), user.account_key, user.key,
                         user.screen_name);
                 break;
             }
             case R.id.groups_container: {
-                IntentUtils.openUserGroups(getActivity(), user.account_key, user.key.getId(),
+                IntentUtils.openUserGroups(getActivity(), user.account_key, user.key,
                         user.screen_name);
                 break;
             }
             case R.id.followers_container: {
-                IntentUtils.openUserFollowers(getActivity(), user.account_key, user.key.getId(),
+                IntentUtils.openUserFollowers(getActivity(), user.account_key, user.key,
                         user.screen_name);
                 break;
             }
             case R.id.friends_container: {
-                IntentUtils.openUserFriends(getActivity(), user.account_key, user.key.getId(),
+                IntentUtils.openUserFriends(getActivity(), user.account_key, user.key,
                         user.screen_name);
                 break;
             }
@@ -1519,11 +1518,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final ParcelableUser user = args.getParcelable(EXTRA_USER);
         if (user != null) {
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
-            tabArgs.putString(EXTRA_USER_ID, user.key.getId());
+            tabArgs.putParcelable(EXTRA_USER_KEY, user.key);
             tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name);
         } else {
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
-            tabArgs.putString(EXTRA_USER_ID, args.getString(EXTRA_USER_ID));
+            tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable(EXTRA_USER_KEY));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
         }
         mPagerAdapter.addTab(UserTimelineFragment.class, tabArgs, getString(R.string.statuses),

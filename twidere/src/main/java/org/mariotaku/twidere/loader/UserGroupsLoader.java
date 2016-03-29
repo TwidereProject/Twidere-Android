@@ -32,22 +32,24 @@ import java.util.List;
 
 public class UserGroupsLoader extends BaseGroupsLoader {
 
-    private final String mUserId;
+    private final UserKey mUserKey;
     private final String mScreenName;
 
-    public UserGroupsLoader(final Context context, final UserKey accountKey, final String userId,
+    public UserGroupsLoader(final Context context, final UserKey accountKey, final UserKey userKey,
                             final String screenName, final List<ParcelableGroup> data) {
         super(context, accountKey, 0, data);
-        mUserId = userId;
+        mUserKey = userKey;
         mScreenName = screenName;
     }
 
     @Override
     public ResponseList<Group> getGroups(final Twitter twitter) throws TwitterException {
         if (twitter == null) return null;
-        if (mUserId != null)
-            return twitter.getGroups(mUserId);
-        else if (mScreenName != null) return twitter.getGroups(mScreenName);
+        if (mUserKey != null) {
+            return twitter.getGroups(mUserKey.getId());
+        } else if (mScreenName != null) {
+            return twitter.getGroups(mScreenName);
+        }
         return null;
     }
 

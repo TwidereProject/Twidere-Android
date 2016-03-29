@@ -117,7 +117,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String QUERY_PARAM_ACCOUNT_KEY = "account_key";
     String QUERY_PARAM_ACCOUNT_NAME = "account_name";
     String QUERY_PARAM_STATUS_ID = "status_id";
-    String QUERY_PARAM_USER_ID = "user_id";
     String QUERY_PARAM_USER_KEY = "user_key";
     String QUERY_PARAM_LIST_ID = "list_id";
     String QUERY_PARAM_GROUP_ID = "group_id";

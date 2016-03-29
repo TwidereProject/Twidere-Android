@@ -102,12 +102,12 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final String maxId = args.getString(EXTRA_MAX_ID);
         final String sinceId = args.getString(EXTRA_SINCE_ID);
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean fromUser = args.getBoolean(EXTRA_FROM_USER);
         final boolean loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false);
-        return new MediaTimelineLoader(context, accountKey, userId, screenName, sinceId, maxId,
+        return new MediaTimelineLoader(context, accountKey, userKey, screenName, sinceId, maxId,
                 getAdapter().getData(), null, tabPosition, fromUser, loadingMore);
     }
 

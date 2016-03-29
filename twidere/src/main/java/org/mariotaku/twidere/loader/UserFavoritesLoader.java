@@ -37,24 +37,24 @@ import java.util.List;
 
 public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
 
-    private final String mUserId;
+    private final UserKey mUserKey;
     private final String mUserScreenName;
 
-    public UserFavoritesLoader(final Context context, final UserKey accountKey, final String userId,
+    public UserFavoritesLoader(final Context context, final UserKey accountKey, final UserKey userKey,
                                final String screenName, final String sinceId, final String maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, boolean fromUser, boolean loadingMore) {
         super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser,
                 loadingMore);
-        mUserId = userId;
+        mUserKey = userKey;
         mUserScreenName = screenName;
     }
 
     @NonNull
     @Override
     public ResponseList<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
-        if (mUserId != null) {
-            return twitter.getFavorites(mUserId, paging);
+        if (mUserKey != null) {
+            return twitter.getFavorites(mUserKey.getId(), paging);
         } else if (mUserScreenName != null) {
             return twitter.getFavoritesByScreenName(mUserScreenName, paging);
         }

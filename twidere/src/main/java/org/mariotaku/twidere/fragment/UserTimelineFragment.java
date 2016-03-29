@@ -55,11 +55,11 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
         final UserKey accountKey = Utils.getAccountKey(context, args);
         final String maxId = args.getString(EXTRA_MAX_ID);
         final String sinceId = args.getString(EXTRA_SINCE_ID);
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         final boolean loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false);
-        return new UserTimelineLoader(context, accountKey, userId, screenName, sinceId, maxId, data,
+        return new UserTimelineLoader(context, accountKey, userKey, screenName, sinceId, maxId, data,
                 getSavedStatusesFileArgs(), tabPosition, fromUser, loadingMore);
     }
 
@@ -68,13 +68,13 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
         final Bundle args = getArguments();
         assert args != null;
         final UserKey accountKey = Utils.getAccountKey(getContext(), args);
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final List<String> result = new ArrayList<>();
         result.add(AUTHORITY_USER_TIMELINE);
         result.add("account=" + accountKey);
-        if (userId != null) {
-            result.add("user_id=" + userId);
+        if (userKey != null) {
+            result.add("user_id=" + userKey);
         } else if (screenName != null) {
             result.add("screen_name=" + screenName);
         } else {
@@ -91,10 +91,10 @@ public class UserTimelineFragment extends ParcelableStatusesFragment {
         StringBuilder sb = new StringBuilder("user_timeline_");
         if (tabPosition < 0) return null;
 
-        final String userId = args.getString(EXTRA_USER_ID);
+        final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
-        if (userId != null) {
-            sb.append(userId);
+        if (userKey != null) {
+            sb.append(userKey);
         } else if (screenName != null) {
             sb.append(screenName);
         } else {

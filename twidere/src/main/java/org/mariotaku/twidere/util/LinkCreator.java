@@ -67,7 +67,6 @@ public class LinkCreator implements Constants {
         }
         if (userKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString());
-            builder.appendQueryParameter(QUERY_PARAM_USER_ID, userKey.getId());
         }
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);

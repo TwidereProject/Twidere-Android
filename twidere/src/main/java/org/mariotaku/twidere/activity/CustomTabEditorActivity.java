@@ -395,7 +395,7 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
         if (value == null || args == null || conf == null) return;
         if (value instanceof ParcelableUser && args instanceof UserArguments) {
             final ParcelableUser user = (ParcelableUser) value;
-            ((UserArguments) args).setUserId(user.key.getId());
+            ((UserArguments) args).setUserKey(user.key);
         } else if (value instanceof ParcelableUserList && args instanceof UserListArguments) {
             final ParcelableUserList userList = (ParcelableUserList) value;
             ((UserListArguments) args).setListId(userList.id);

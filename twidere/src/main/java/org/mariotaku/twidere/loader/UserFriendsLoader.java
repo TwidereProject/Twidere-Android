@@ -37,14 +37,14 @@ import java.util.List;
 
 public class UserFriendsLoader extends CursorSupportUsersLoader {
 
-    private final String mUserId;
+    private final UserKey mUserKey;
     private final String mScreenName;
 
-    public UserFriendsLoader(final Context context, final UserKey accountKey, final String userId,
+    public UserFriendsLoader(final Context context, final UserKey accountKey, final UserKey userKey,
                              final String screenName, final List<ParcelableUser> userList,
                              boolean fromUser) {
         super(context, accountKey, userList, fromUser);
-        mUserId = userId;
+        mUserKey = userKey;
         mScreenName = screenName;
     }
 
@@ -54,22 +54,22 @@ public class UserFriendsLoader extends CursorSupportUsersLoader {
             throws TwitterException {
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
             case ParcelableAccount.Type.STATUSNET: {
-                if (mUserId != null) {
-                    return twitter.getStatusesFriendsList(mUserId, paging);
+                if (mUserKey != null) {
+                    return twitter.getStatusesFriendsList(mUserKey.getId(), paging);
                 } else if (mScreenName != null) {
                     return twitter.getStatusesFriendsListByScreenName(mScreenName, paging);
                 }
             }
             case ParcelableAccount.Type.FANFOU: {
-                if (mUserId != null) {
-                    return twitter.getUsersFriends(mUserId, paging);
+                if (mUserKey != null) {
+                    return twitter.getUsersFriends(mUserKey.getId(), paging);
                 } else if (mScreenName != null) {
                     return twitter.getUsersFriends(mScreenName, paging);
                 }
             }
             default: {
-                if (mUserId != null) {
-                    return twitter.getFriendsList(mUserId, paging);
+                if (mUserKey != null) {
+                    return twitter.getFriendsList(mUserKey.getId(), paging);
                 } else if (mScreenName != null) {
                     return twitter.getFriendsListByScreenName(mScreenName, paging);
                 }

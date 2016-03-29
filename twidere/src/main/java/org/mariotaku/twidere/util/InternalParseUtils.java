@@ -99,7 +99,7 @@ public class InternalParseUtils {
     private static boolean shouldUseString(final String key) {
         switch (key) {
             case CompatibilityConstants.EXTRA_ACCOUNT_ID:
-            case IntentConstants.EXTRA_USER_ID:
+            case CompatibilityConstants.EXTRA_USER_ID:
                 return true;
         }
         return IntentConstants.EXTRA_LIST_ID.equals(key);

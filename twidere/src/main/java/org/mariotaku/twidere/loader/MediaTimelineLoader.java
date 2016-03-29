@@ -22,6 +22,7 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
@@ -49,18 +50,20 @@ import java.util.List;
 
 public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
 
-    private final String mUserId;
+    @Nullable
+    private final UserKey mUserKey;
+    @Nullable
     private final String mUserScreenName;
 
     private User mUser;
 
-    public MediaTimelineLoader(final Context context, final UserKey accountKey, final String userId,
-                               final String screenName, final String sinceId, final String maxId,
+    public MediaTimelineLoader(final Context context, final UserKey accountKey, @Nullable final UserKey userKey,
+                               @Nullable final String screenName, final String sinceId, final String maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, final boolean fromUser, boolean loadingMore) {
         super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser,
                 loadingMore);
-        mUserId = userId;
+        mUserKey = userKey;
         mUserScreenName = screenName;
     }
 
@@ -73,8 +76,8 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
             case ParcelableAccount.Type.TWITTER: {
                 if (Utils.isOfficialCredentials(context, credentials)) {
-                    if (mUserId != null) {
-                        return twitter.getMediaTimeline(mUserId, paging);
+                    if (mUserKey != null) {
+                        return twitter.getMediaTimeline(mUserKey.getId(), paging);
                     }
                     if (mUserScreenName != null) {
                         return twitter.getMediaTimelineByScreenName(mUserScreenName, paging);
@@ -83,12 +86,14 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
                     final String screenName;
                     if (mUserScreenName != null) {
                         screenName = mUserScreenName;
-                    } else {
+                    } else if (mUserKey != null) {
                         if (mUser == null) {
-                            mUser = TwitterWrapper.tryShowUser(twitter, mUserId, null,
+                            mUser = TwitterWrapper.tryShowUser(twitter, mUserKey.getId(), null,
                                     credentials.account_type);
                         }
                         screenName = mUser.getScreenName();
+                    } else {
+                        throw new TwitterException("Invalid parameters");
                     }
                     final SearchQuery query;
                     if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
@@ -100,7 +105,7 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
                     final ResponseList<Status> result = new ResponseList<>();
                     for (Status status : twitter.search(query)) {
                         final User user = status.getUser();
-                        if (TextUtils.equals(user.getId(), mUserId) ||
+                        if ((mUserKey != null && TextUtils.equals(user.getId(), mUserKey.getId())) ||
                                 StringUtils.endsWithIgnoreCase(user.getScreenName(), mUserScreenName)) {
                             result.add(status);
                         }
@@ -110,8 +115,8 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
                 throw new TwitterException("Wrong user");
             }
             case ParcelableAccount.Type.FANFOU: {
-                if (mUserId != null) {
-                    return twitter.getPhotosUserTimeline(mUserId, paging);
+                if (mUserKey != null) {
+                    return twitter.getPhotosUserTimeline(mUserKey.getId(), paging);
                 }
                 if (mUserScreenName != null) {
                     return twitter.getPhotosUserTimeline(mUserScreenName, paging);
@@ -131,10 +136,12 @@ public class MediaTimelineLoader extends TwitterAPIStatusesLoader {
     }
 
     private boolean isMyTimeline() {
-        if (mUserId != null) {
-            return getAccountKey().check(mUserId, null);
+        final UserKey accountKey = getAccountKey();
+        if (accountKey == null) return false;
+        if (mUserKey != null) {
+            return mUserKey.maybeEquals(accountKey);
         } else {
-            final String accountScreenName = DataStoreUtils.getAccountScreenName(getContext(), getAccountKey());
+            final String accountScreenName = DataStoreUtils.getAccountScreenName(getContext(), accountKey);
             return accountScreenName != null && accountScreenName.equalsIgnoreCase(mUserScreenName);
         }
     }
