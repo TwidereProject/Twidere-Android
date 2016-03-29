@@ -241,11 +241,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 @Override
                 public Loader<SingleResponse<UserRelationship>> onCreateLoader(final int id, final Bundle args) {
                     invalidateOptionsMenu();
-                    mFollowButton.setVisibility(View.GONE);
-                    mFollowProgress.setVisibility(View.VISIBLE);
-                    mFollowingYouIndicator.setVisibility(View.GONE);
                     final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
                     final ParcelableUser user = args.getParcelable(EXTRA_USER);
+                    if (user != null && user.key.equals(accountKey)) {
+                        mFollowingYouIndicator.setVisibility(View.GONE);
+                        mFollowButton.setVisibility(View.VISIBLE);
+                        mFollowProgress.setVisibility(View.VISIBLE);
+                    } else {
+                        mFollowingYouIndicator.setVisibility(View.GONE);
+                        mFollowButton.setVisibility(View.GONE);
+                        mFollowProgress.setVisibility(View.VISIBLE);
+                    }
                     return new UserRelationshipLoader(getActivity(), accountKey, user);
                 }
 
@@ -1785,22 +1791,19 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     static class UserRelationship extends CachedRelationship {
-        final String source, target;
         boolean filtering;
         boolean can_dm;
 
         public UserRelationship(@NonNull UserKey accountKey, @NonNull Relationship relationship,
                                 boolean filtering) {
             super(accountKey, relationship.getTargetUserId(), relationship);
-            this.source = relationship.getSourceUserId();
-            this.target = relationship.getTargetUserId();
             this.filtering = filtering;
             this.can_dm = relationship.canSourceDMTarget();
         }
 
         public UserRelationship(@NonNull ParcelableUser user, boolean filtering) {
-            this.source = user.account_key.getId();
-            this.target = user.key.getId();
+            this.account_key = user.account_key;
+            this.user_id = user.key.getId();
             this.filtering = filtering;
             if (user.extras != null) {
                 this.following = user.is_following;
@@ -1812,11 +1815,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         }
 
         public boolean check(@NonNull ParcelableUser user) {
-            if (!TextUtils.equals(source, user.account_key.getId())) {
+            if (!account_key.equals(user.account_key)) {
                 return false;
             }
-            return (user.extras != null && TextUtils.equals(target, user.extras.unique_id))
-                    || TextUtils.equals(target, user.key.getId());
+            return (user.extras != null && TextUtils.equals(user_id, user.extras.unique_id))
+                    || TextUtils.equals(user_id, user.key.getId());
         }
 
     }

@@ -45,7 +45,7 @@ public class CachedRelationship {
         account_key = accountId;
         user_id = userId;
         following = relationship.isSourceFollowingTarget();
-        following = relationship.isSourceFollowedByTarget();
+        followed_by = relationship.isSourceFollowedByTarget();
         blocking = relationship.isSourceBlockingTarget();
         blocked_by = relationship.isSourceBlockedByTarget();
         muting = relationship.isSourceMutingTarget();
