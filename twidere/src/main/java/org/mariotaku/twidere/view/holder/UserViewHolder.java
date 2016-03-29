@@ -25,6 +25,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,7 +59,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     private final TextView descriptionView, locationView, urlView,
             statusesCountView, followersCountView, friendsCountView;
 
-    private final View acceptRequestButton, denyRequestButton, followButton;
+    private final ImageButton acceptRequestButton, denyRequestButton, followButton;
     private final View actionsProgressContainer;
     private final View actionsContainer;
     private final View processingRequestProgress;
@@ -83,9 +84,9 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         friendsCountView = (TextView) itemView.findViewById(R.id.friends_count);
         actionsProgressContainer = itemView.findViewById(R.id.actions_progress_container);
         actionsContainer = itemView.findViewById(R.id.actions_container);
-        acceptRequestButton = itemView.findViewById(R.id.accept_request);
-        denyRequestButton = itemView.findViewById(R.id.deny_request);
-        followButton = itemView.findViewById(R.id.follow);
+        acceptRequestButton = (ImageButton) itemView.findViewById(R.id.accept_request);
+        denyRequestButton = (ImageButton) itemView.findViewById(R.id.deny_request);
+        followButton = (ImageButton) itemView.findViewById(R.id.follow);
         processingRequestProgress = itemView.findViewById(R.id.processing_request);
     }
 
@@ -141,6 +142,8 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
                     .key.getHost()));
         }
 
+        followButton.setImageResource(user.is_following ? R.drawable.ic_action_confirm :
+                R.drawable.ic_action_add);
         followButton.setActivated(user.is_following);
 
         final boolean isMySelf = user.account_key.equals(user.key);

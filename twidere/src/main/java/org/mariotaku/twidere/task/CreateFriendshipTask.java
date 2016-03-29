@@ -38,6 +38,7 @@ public class CreateFriendshipTask extends AbsFriendshipOperationTask {
 
     @Override
     protected void succeededWorker(@NonNull Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args, @NonNull ParcelableUser user) {
+        user.is_following = true;
         Utils.setLastSeen(context, user.key, System.currentTimeMillis());
     }
 

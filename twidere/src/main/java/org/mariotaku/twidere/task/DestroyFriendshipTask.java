@@ -40,6 +40,7 @@ public class DestroyFriendshipTask extends AbsFriendshipOperationTask {
 
     @Override
     protected void succeededWorker(@NonNull Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args, @NonNull ParcelableUser user) {
+        user.is_following = false;
         Utils.setLastSeen(context, user.key, -1);
         final Expression where = Expression.and(Expression.equalsArgs(TwidereDataStore.Statuses.ACCOUNT_KEY),
                 Expression.or(Expression.equalsArgs(TwidereDataStore.Statuses.USER_KEY),
