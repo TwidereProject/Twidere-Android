@@ -15,12 +15,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--dontobfuscate
+
+#-dontobfuscate
 
 -dontwarn sun.net.spi.**
 -dontwarn java.nio.file.**
 -dontwarn org.codehaus.mojo.**
 -dontwarn com.makeramen.roundedimageview.**
+-dontwarn com.squareup.haha.**
+-dontwarn com.google.android.gms.**
+-dontwarn com.google.android.youtube.**
+-dontwarn jnamed**
+-dontwarn com.bluelinelabs.logansquare.**
 
 -keepattributes *Annotation*
 -keepattributes EnclosingMethod
@@ -36,21 +42,10 @@
     @com.squareup.otto.Produce public *;
 }
 
--keepclassmembers class android.support.v7.internal.app.WindowDecorActionBar {
-    private android.support.v7.internal.widget.ActionBarContextView mContextView;
-    private android.support.v7.internal.widget.DecorToolbar mDecorToolbar;
-}
--keepclassmembers class android.support.v7.internal.widget.ActionBarOverlayLayout {
-    private android.graphics.drawable.Drawable mWindowContentOverlay;
-}
-
--keepclassmembers class org.mariotaku.twidere.activity.BrowserSignInActivity.InjectorJavaScriptInterface {
+-keepclassmembers class org.mariotaku.twidere.activity.BrowserSignInActivity$InjectorJavaScriptInterface {
     public *;
 }
 
-# Fuck shitsung
--keep class !android.support.v7.view.menu.*MenuBuilder*, android.support.v7.** { *; }
--keep interface android.support.v7.* { *; }
-
-# Fuck xiaomi
--keep class !org.apache.commons.lang3.** { *; }
+# Fuck shitsung http://stackoverflow.com/a/34896262/859190
+# ... and fuck xiaomi http://crashes.to/s/675ac9aff5e
+-keep class !android.support.v7.view.menu.MenuBuilder, !org.apache.commons.** { *; }

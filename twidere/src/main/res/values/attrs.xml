@@ -13,7 +13,6 @@
         <attr name="quoteIndicatorBackgroundColor" format="color"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
         <attr name="ateThemeKey" format="string"/>
-        <attr name="windowNormalBackground" format="reference"/>
     </declare-styleable>
     <declare-styleable name="ColorLabelView">
         <attr name="ignorePadding" format="boolean"/>
