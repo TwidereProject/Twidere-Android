@@ -168,11 +168,6 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
     }
 
     @Override
-    public void onItemActionClick(RecyclerView.ViewHolder holder, int id, int position) {
-
-    }
-
-    @Override
     public void onStatusClick(IStatusViewHolder holder, int position) {
         IntentUtils.openStatus(getContext(), getAdapter().getStatus(position), null);
     }
@@ -183,12 +178,17 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
     }
 
     @Override
-    public void onItemMenuClick(RecyclerView.ViewHolder holder, View menuView, int position) {
+    public void onUserProfileClick(IStatusViewHolder holder, int position) {
 
     }
 
     @Override
-    public void onUserProfileClick(IStatusViewHolder holder, int position) {
+    public void onItemActionClick(RecyclerView.ViewHolder holder, int id, int position) {
+
+    }
+
+    @Override
+    public void onItemMenuClick(RecyclerView.ViewHolder holder, View menuView, int position) {
 
     }
 }

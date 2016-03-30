@@ -101,8 +101,8 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
     }
 
     @Override
-    public long getUserListId(int position) {
-        if (position == getUserListsCount()) return -1;
+    public String getUserListId(int position) {
+        if (position == getUserListsCount()) return null;
         return mData.get(position).id;
     }
 
@@ -193,8 +193,6 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
                                                               int cardBackgroundColor) {
         final View view;
         view = inflater.inflate(R.layout.card_item_user_list_compact, parent, false);
-        final View itemContent = view.findViewById(R.id.item_content);
-        itemContent.setBackgroundColor(cardBackgroundColor);
         final UserListViewHolder holder = new UserListViewHolder(adapter, view);
         holder.setOnClickListeners();
         holder.setupViewOptions();

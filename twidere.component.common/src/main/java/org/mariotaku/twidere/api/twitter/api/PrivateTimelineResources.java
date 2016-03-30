@@ -35,8 +35,10 @@ import org.mariotaku.twidere.api.twitter.model.Status;
         @KeyValue(key = "include_cards", valueKey = "include_cards"),
         @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
         @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
-        @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
-public interface PrivateTimelinesResources extends PrivateResources {
+        @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
+        @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text")
+})
+public interface PrivateTimelineResources extends PrivateResources {
 
     @GET("/statuses/media_timeline.json")
     ResponseList<Status> getMediaTimeline(@Query("user_id") String userId, @Query Paging paging) throws TwitterException;

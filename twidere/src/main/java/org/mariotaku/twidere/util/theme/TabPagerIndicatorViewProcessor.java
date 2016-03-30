@@ -5,9 +5,9 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 
 import com.afollestad.appthemeengine.Config;
-import com.afollestad.appthemeengine.util.ATEUtil;
 import com.afollestad.appthemeengine.viewprocessors.ViewProcessor;
 
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
 /**
@@ -17,7 +17,7 @@ public class TabPagerIndicatorViewProcessor implements ViewProcessor<TabPagerInd
     @Override
     public void process(@NonNull Context context, String key, TabPagerIndicator target, Object extra) {
         final int primaryColor = Config.primaryColor(context, key);
-        final boolean isDark = !ATEUtil.isColorLight(primaryColor);
+        final boolean isDark = !ThemeUtils.isLightColor(primaryColor);
         final int primaryColorDependent = isDark ? Color.WHITE : Color.BLACK;
         target.setIconColor(primaryColorDependent);
         target.setLabelColor(primaryColorDependent);

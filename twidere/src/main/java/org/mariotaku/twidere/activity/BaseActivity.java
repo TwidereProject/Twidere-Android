@@ -32,6 +32,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback;
 import android.support.v7.view.menu.ActionMenuItemView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.TwidereActionMenuView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -39,7 +40,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
+import com.afollestad.appthemeengine.ATE;
 import com.afollestad.appthemeengine.ATEActivity;
+import com.afollestad.appthemeengine.Config;
+import com.afollestad.appthemeengine.customizers.ATEStatusBarCustomizer;
+import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.twidere.BuildConfig;
@@ -73,7 +78,8 @@ import javax.inject.Inject;
 @SuppressLint("Registered")
 public class BaseActivity extends ATEActivity implements Constants, IExtendedActivity,
         IThemedActivity, IAppCompatActivity, IControlBarActivity, OnFitSystemWindowsListener,
-        SystemWindowsInsetsCallback, KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback {
+        SystemWindowsInsetsCallback, KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback,
+        ATEToolbarCustomizer, ATEStatusBarCustomizer {
 
     private static final String[] sClassPrefixList = {
             "android.widget.",
@@ -277,11 +283,6 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         super.onApplyThemeResource(theme, resId, first);
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
         final Window window = getWindow();
         if (window != null && shouldApplyWindowBackground()) {
             ThemeUtils.applyWindowBackground(this, window, getThemeBackgroundOption(),
@@ -369,5 +370,27 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int getStatusBarColor() {
+        return ATE.USE_DEFAULT;
+    }
+
+    @Override
+    public int getToolbarColor(@Nullable Toolbar toolbar) {
+        return ATE.USE_DEFAULT;
+    }
+
+    @Override
+    public int getLightStatusBarMode() {
+        //noinspection WrongConstant
+        return ThemeUtils.getLightStatusBarMode(Config.statusBarColor(this, getATEKey()));
+    }
+
+    @Override
+    public int getLightToolbarMode(@Nullable Toolbar toolbar) {
+        //noinspection WrongConstant
+        return ThemeUtils.getLightToolbarMode(Config.toolbarColor(this, getATEKey(), toolbar));
     }
 }

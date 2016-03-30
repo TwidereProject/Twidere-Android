@@ -122,7 +122,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 if (mentionList.length != 2) {
                     break;
                 }
-                IntentUtils.openUserListDetails(context, accountKey, -1, null, mentionList[0],
+                IntentUtils.openUserListDetails(context, accountKey, null, null, mentionList[0],
                         mentionList[1]);
                 break;
             }

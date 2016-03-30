@@ -4,16 +4,11 @@ import android.os.Bundle;
 import android.util.JsonWriter;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.constant.CompatibilityConstants;
-import org.mariotaku.twidere.constant.IntentConstants;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
@@ -59,54 +54,6 @@ public class InternalParseUtils {
         } finally {
             RestFuUtils.closeSilently(json);
         }
-    }
-
-    public static Bundle jsonToBundle(final String string) {
-        final Bundle bundle = new Bundle();
-        if (string == null) return bundle;
-        try {
-            final JSONObject json = new JSONObject(string);
-            final Iterator<?> it = json.keys();
-            while (it.hasNext()) {
-                final Object key_obj = it.next();
-                if (key_obj == null) {
-                    continue;
-                }
-                final String key = key_obj.toString();
-                final Object value = json.get(key);
-                if (shouldUseString(key)) {
-                    bundle.putString(key, json.optString(key));
-                } else if (shouldPutLong(key)) {
-                    bundle.putLong(key, json.optLong(key));
-                } else if (value instanceof Boolean) {
-                    bundle.putBoolean(key, json.optBoolean(key));
-                } else if (value instanceof Integer) {
-                    bundle.putInt(key, json.optInt(key));
-                } else if (value instanceof Long) {
-                    bundle.putLong(key, json.optLong(key));
-                } else if (value instanceof String) {
-                    bundle.putString(key, json.optString(key));
-                } else {
-                    Log.w(TwidereConstants.LOGTAG, "Unknown type " + value.getClass().getSimpleName() + " in arguments key " + key);
-                }
-            }
-        } catch (final JSONException | ClassCastException e) {
-            e.printStackTrace();
-        }
-        return bundle;
-    }
-
-    private static boolean shouldUseString(final String key) {
-        switch (key) {
-            case CompatibilityConstants.EXTRA_ACCOUNT_ID:
-            case CompatibilityConstants.EXTRA_USER_ID:
-                return true;
-        }
-        return IntentConstants.EXTRA_LIST_ID.equals(key);
-    }
-
-    private static boolean shouldPutLong(final String key) {
-        return IntentConstants.EXTRA_LIST_ID.equals(key);
     }
 
     public static String parsePrettyDecimal(double num, int decimalDigits) {

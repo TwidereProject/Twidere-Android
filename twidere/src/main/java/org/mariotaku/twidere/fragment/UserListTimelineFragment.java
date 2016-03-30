@@ -52,7 +52,7 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
                                                                     final boolean fromUser) {
         setRefreshing(true);
         if (args == null) return null;
-        final long listId = args.getLong(EXTRA_LIST_ID, -1);
+        final String listId = args.getString(EXTRA_LIST_ID);
         final UserKey accountKey = Utils.getAccountKey(context, args);
         final String maxId = args.getString(EXTRA_MAX_ID);
         final String sinceId = args.getString(EXTRA_SINCE_ID);
@@ -71,14 +71,14 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         final Bundle args = getArguments();
         assert args != null;
         final UserKey accountKey = Utils.getAccountKey(getContext(), args);
-        final long listId = args.getLong(EXTRA_LIST_ID, -1);
+        final String listId = args.getString(EXTRA_LIST_ID);
         final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final List<String> result = new ArrayList<>();
         result.add(AUTHORITY_USER_LIST_TIMELINE);
         result.add("account=" + accountKey);
-        if (listId > 0) {
+        if (listId != null) {
             result.add("list_id=" + listId);
         } else if (listName != null) {
             if (userKey != null) {
@@ -100,9 +100,9 @@ public class UserListTimelineFragment extends ParcelableStatusesFragment {
         final int tabPosition = args.getInt(EXTRA_TAB_POSITION, -1);
         StringBuilder sb = new StringBuilder("user_list_");
         if (tabPosition < 0) return null;
-        final long listId = args.getLong(EXTRA_LIST_ID, -1);
+        final String listId = args.getString(EXTRA_LIST_ID);
         final String listName = args.getString(EXTRA_LIST_NAME);
-        if (listId > 0) {
+        if (listId != null) {
             sb.append(listId);
         } else if (listName != null) {
             final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);

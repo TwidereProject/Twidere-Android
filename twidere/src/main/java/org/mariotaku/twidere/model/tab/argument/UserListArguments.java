@@ -12,20 +12,20 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class UserListArguments extends TabArguments {
     @JsonField(name = "list_id")
-    long listId;
+    String listId;
 
-    public long getListId() {
+    public String getListId() {
         return listId;
     }
 
-    public void setListId(long listId) {
+    public void setListId(String listId) {
         this.listId = listId;
     }
 
     @Override
     public void copyToBundle(@NonNull Bundle bundle) {
         super.copyToBundle(bundle);
-        bundle.putLong(EXTRA_LIST_ID, listId);
+        bundle.putString(EXTRA_LIST_ID, listId);
     }
 
     @Override

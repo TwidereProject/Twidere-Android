@@ -48,7 +48,7 @@ public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<Parcelabl
 
     @Override
     public long getItemId(final int position) {
-        return getItem(position) != null ? getItem(position).id : -1;
+        return getItem(position) != null ? getItem(position).hashCode() : -1;
     }
 
     @Override
@@ -80,13 +80,14 @@ public class SimpleParcelableUserListsAdapter extends BaseArrayAdapter<Parcelabl
         return view;
     }
 
-    public void setData(final List<ParcelableUserList> data, final boolean clear_old) {
-        if (clear_old) {
+    public void setData(final List<ParcelableUserList> data, final boolean clearOld) {
+        if (clearOld) {
             clear();
         }
         if (data == null) return;
         for (final ParcelableUserList user : data) {
-            if (clear_old || findItemPosition(user.id) < 0) {
+            //TODO improve compare
+            if (clearOld || findItemPosition(user.hashCode()) < 0) {
                 add(user);
             }
         }

@@ -39,7 +39,7 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
     public UserKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "id")
-    public long id;
+    public String id;
     @ParcelableThisPlease
     @JsonField(name = "is_public")
     public boolean is_public;
@@ -93,33 +93,33 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ParcelableUserList that = (ParcelableUserList) o;
+        ParcelableUserList userList = (ParcelableUserList) o;
 
-        if (id != that.id) return false;
-        return account_key.equals(that.account_key);
+        if (!account_key.equals(userList.account_key)) return false;
+        return id.equals(userList.id);
 
     }
 
     @Override
     public int hashCode() {
         int result = account_key.hashCode();
-        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + id.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "ParcelableUserList{" +
-                "members_count=" + members_count +
-                ", subscribers_count=" + subscribers_count +
-                ", account_key=" + account_key +
-                ", id=" + id +
-                ", user_id=" + user_key +
-                ", position=" + position +
+                "account_key=" + account_key +
+                ", id='" + id + '\'' +
                 ", is_public=" + is_public +
                 ", is_following=" + is_following +
                 ", description='" + description + '\'' +
                 ", name='" + name + '\'' +
+                ", position=" + position +
+                ", members_count=" + members_count +
+                ", subscribers_count=" + subscribers_count +
+                ", user_key=" + user_key +
                 ", user_screen_name='" + user_screen_name + '\'' +
                 ", user_name='" + user_name + '\'' +
                 ", user_profile_image_url='" + user_profile_image_url + '\'' +
@@ -137,12 +137,14 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
     }
 
     public static final Creator<ParcelableUserList> CREATOR = new Creator<ParcelableUserList>() {
+        @Override
         public ParcelableUserList createFromParcel(Parcel source) {
             ParcelableUserList target = new ParcelableUserList();
             ParcelableUserListParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableUserList[] newArray(int size) {
             return new ParcelableUserList[size];
         }

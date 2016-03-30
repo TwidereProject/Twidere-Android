@@ -84,6 +84,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         sConstantPoll.put("full_text", "true");
         sConstantPoll.put("model_version", "7");
         sConstantPoll.put("skip_aggregation", "false");
+        sConstantPoll.put("include_ext_alt_text", "true");
     }
 
     @WorkerThread

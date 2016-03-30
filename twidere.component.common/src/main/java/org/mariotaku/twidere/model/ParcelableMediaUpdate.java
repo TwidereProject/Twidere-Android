@@ -19,17 +19,15 @@ public class ParcelableMediaUpdate implements Parcelable {
     @JsonField(name = "type")
     public int type;
 
+    @JsonField(name = "alt_text")
+    public String alt_text;
+
     public ParcelableMediaUpdate() {
     }
 
     public ParcelableMediaUpdate(@NonNull final String uri, final int type) {
         this.uri = uri;
         this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "ParcelableMediaUpdate{uri=" + uri + ", type=" + type + "}";
     }
 
     @Override
@@ -40,7 +38,8 @@ public class ParcelableMediaUpdate implements Parcelable {
         ParcelableMediaUpdate that = (ParcelableMediaUpdate) o;
 
         if (type != that.type) return false;
-        return uri.equals(that.uri);
+        if (!uri.equals(that.uri)) return false;
+        return alt_text != null ? alt_text.equals(that.alt_text) : that.alt_text == null;
 
     }
 
@@ -48,7 +47,17 @@ public class ParcelableMediaUpdate implements Parcelable {
     public int hashCode() {
         int result = uri.hashCode();
         result = 31 * result + type;
+        result = 31 * result + (alt_text != null ? alt_text.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ParcelableMediaUpdate{" +
+                "uri='" + uri + '\'' +
+                ", type=" + type +
+                ", alt_text='" + alt_text + '\'' +
+                '}';
     }
 
     @Override
@@ -62,12 +71,14 @@ public class ParcelableMediaUpdate implements Parcelable {
     }
 
     public static final Creator<ParcelableMediaUpdate> CREATOR = new Creator<ParcelableMediaUpdate>() {
+        @Override
         public ParcelableMediaUpdate createFromParcel(Parcel source) {
             ParcelableMediaUpdate target = new ParcelableMediaUpdate();
             ParcelableMediaUpdateParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableMediaUpdate[] newArray(int size) {
             return new ParcelableMediaUpdate[size];
         }

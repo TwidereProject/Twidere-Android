@@ -30,12 +30,14 @@ public class Location {
 
     @JsonField(name = "woeid")
     int woeid;
+    @JsonField(name = "parentid")
+    int parentId;
     @JsonField(name = "country")
     String countryName;
     @JsonField(name = "countryCode")
     String countryCode;
     @JsonField(name = "placeType")
-    PlaceTypeImpl placeType;
+    PlaceType placeType;
     @JsonField(name = "name")
     String name;
     @JsonField(name = "url")
@@ -43,6 +45,10 @@ public class Location {
 
     public int getWoeid() {
         return woeid;
+    }
+
+    public long getParentId() {
+        return parentId;
     }
 
     public String getCountryName() {
@@ -53,7 +59,7 @@ public class Location {
         return countryCode;
     }
 
-    public PlaceTypeImpl getPlaceType() {
+    public PlaceType getPlaceType() {
         return placeType;
     }
 
@@ -65,11 +71,27 @@ public class Location {
         return url;
     }
 
-    @JsonObject
-    public static class PlaceTypeImpl {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Location location = (Location) o;
+
+        return woeid == location.woeid;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return woeid;
+    }
+
+    @JsonObject
+    public static class PlaceType {
         @JsonField(name = "name")
         String name;
+
         @JsonField(name = "code")
         int code;
 
@@ -79,6 +101,14 @@ public class Location {
 
         public String getName() {
             return name;
+        }
+
+        @Override
+        public String toString() {
+            return "PlaceType{" +
+                    "name='" + name + '\'' +
+                    ", code=" + code +
+                    '}';
         }
     }
 }

@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -9,7 +10,12 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.adapter.VariousItemsAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -17,6 +23,11 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.IntentUtils;
+import org.mariotaku.twidere.util.LinkCreator;
+import org.mariotaku.twidere.util.MenuUtils;
+import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.ExtendedRecyclerView;
+import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
@@ -30,6 +41,7 @@ public class ItemsListFragment extends AbsContentListRecyclerViewFragment<Variou
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        registerForContextMenu(getRecyclerView());
         getLoaderManager().initLoader(0, null, this);
         setRefreshEnabled(false);
         showContent();
@@ -46,6 +58,24 @@ public class ItemsListFragment extends AbsContentListRecyclerViewFragment<Variou
                 final ParcelableStatus status = dummyItemAdapter.getStatus(position);
                 if (status == null) return;
                 IntentUtils.openStatus(getContext(), status, null);
+            }
+
+            @Override
+            public void onItemActionClick(RecyclerView.ViewHolder holder, int id, int position) {
+                final Context context = getContext();
+                if (context == null) return;
+                final ParcelableStatus status = dummyItemAdapter.getStatus(position);
+                if (status == null) return;
+                AbsStatusesFragment.handleStatusActionClick(context, getFragmentManager(),
+                        mTwitterWrapper, (StatusViewHolder) holder, status, id);
+            }
+
+            @Override
+            public void onItemMenuClick(RecyclerView.ViewHolder holder, View menuView, int position) {
+                if (getActivity() == null) return;
+                final View view = getLayoutManager().findViewByPosition(position);
+                if (view == null) return;
+                getRecyclerView().showContextMenuForChild(view);
             }
         });
         dummyItemAdapter.setUserClickListener(new IUsersAdapter.SimpleUserClickListener() {
@@ -117,6 +147,53 @@ public class ItemsListFragment extends AbsContentListRecyclerViewFragment<Variou
 
     @Override
     public boolean isRefreshing() {
+        return false;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (!getUserVisibleHint() || menuInfo == null) return;
+        final MenuInflater inflater = new MenuInflater(getContext());
+        final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
+                (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
+        final int position = contextMenuInfo.getPosition();
+        final VariousItemsAdapter adapter = getAdapter();
+        switch (adapter.getItemViewType(position)) {
+            case VariousItemsAdapter.VIEW_TYPE_STATUS: {
+                final DummyItemAdapter dummyAdapter = getAdapter().getDummyAdapter();
+                final ParcelableStatus status = dummyAdapter.getStatus(contextMenuInfo.getPosition());
+                if (status == null) break;
+                inflater.inflate(R.menu.action_status, menu);
+                MenuUtils.setupForStatus(getContext(), mPreferences, menu, status,
+                        mTwitterWrapper);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (!getUserVisibleHint()) return false;
+        final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
+                (ExtendedRecyclerView.ContextMenuInfo) item.getMenuInfo();
+        final int position = contextMenuInfo.getPosition();
+        final VariousItemsAdapter adapter = getAdapter();
+        switch (adapter.getItemViewType(position)) {
+            case VariousItemsAdapter.VIEW_TYPE_STATUS: {
+                final DummyItemAdapter dummyAdapter = adapter.getDummyAdapter();
+                final ParcelableStatus status = dummyAdapter.getStatus(position);
+                if (status == null) return false;
+                if (item.getItemId() == R.id.share) {
+                    final Intent shareIntent = Utils.createStatusShareIntent(getActivity(), status);
+                    final Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share_status));
+                    Utils.addCopyLinkIntent(getContext(), chooser, LinkCreator.getStatusWebLink(status));
+                    startActivity(chooser);
+                    return true;
+                }
+                return MenuUtils.handleStatusClick(getActivity(), this, getFragmentManager(),
+                        mUserColorNameManager, mTwitterWrapper, status, item);
+            }
+        }
         return false;
     }
 

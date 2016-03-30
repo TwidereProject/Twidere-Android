@@ -40,9 +40,9 @@ public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
 
     private final UserKey mUserKey;
     private final String mScreenName, mListName;
-    private final long mListId;
+    private final String mListId;
 
-    public UserListTimelineLoader(final Context context, final UserKey accountKey, final long listId,
+    public UserListTimelineLoader(final Context context, final UserKey accountKey, final String listId,
                                   final UserKey userKey, final String screenName, final String listName,
                                   final String sinceId, final String maxId, final List<ParcelableStatus> data,
                                   final String[] savedStatusesArgs, final int tabPosition, boolean fromUser, boolean loadingMore) {
@@ -56,7 +56,7 @@ public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
     @NonNull
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
-        if (mListId > 0)
+        if (mListId != null)
             return twitter.getUserListStatuses(mListId, paging);
         else if (mListName == null)
             throw new TwitterException("No list name or id given");

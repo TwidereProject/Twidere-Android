@@ -1,5 +1,7 @@
 package org.mariotaku.twidere.model.util;
 
+import android.text.TextUtils;
+
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.model.ParcelableUserList;
@@ -41,5 +43,21 @@ public class ParcelableUserListUtils {
             result[i] = from(userLists[i], accountKey);
         }
         return result;
+    }
+
+    public static boolean check(ParcelableUserList userList, UserKey accountKey, String listId,
+                                UserKey userKey, String screenName, String listName) {
+        if (!userList.account_key.equals(accountKey)) return false;
+        if (listId != null) {
+            return TextUtils.equals(listId, userList.id);
+        } else if (listName != null) {
+            if (!TextUtils.equals(listName, userList.name)) return false;
+            if (userKey != null) {
+                return userKey.equals(userList.user_key);
+            } else if (screenName != null) {
+                return TextUtils.equals(screenName, userList.user_screen_name);
+            }
+        }
+        return false;
     }
 }

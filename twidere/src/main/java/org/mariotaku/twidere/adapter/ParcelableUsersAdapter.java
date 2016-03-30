@@ -236,8 +236,6 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
                                                       LayoutInflater inflater, ViewGroup parent,
                                                       int cardBackgroundColor) {
         final View view = inflater.inflate(R.layout.card_item_user_compact, parent, false);
-        final View itemContent = view.findViewById(R.id.item_content);
-        itemContent.setBackgroundColor(cardBackgroundColor);
         final UserViewHolder holder = new UserViewHolder(adapter, view);
         holder.setOnClickListeners();
         holder.setupViewOptions();

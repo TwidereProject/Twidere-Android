@@ -37,7 +37,7 @@ import java.util.Date;
 @JsonObject
 public class UserList extends TwitterResponseObject implements Comparable<UserList>, TwitterResponse {
     @JsonField(name = "id")
-    long id;
+    String id;
 
     @JsonField(name = "name")
     String name;
@@ -73,7 +73,7 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
     @JsonField(name = "user")
     User user;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -125,10 +125,7 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
 
     @Override
     public int compareTo(@NonNull UserList another) {
-        final long diff = id - another.id;
-        if (diff > Integer.MAX_VALUE) return Integer.MAX_VALUE;
-        if (diff < Integer.MIN_VALUE) return Integer.MIN_VALUE;
-        return (int) diff;
+        return id.compareTo(another.id);
     }
 
     @Override

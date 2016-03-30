@@ -34,6 +34,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
@@ -50,12 +51,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.afollestad.appthemeengine.util.ATEUtil;
+import com.afollestad.appthemeengine.Config;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
+import org.mariotaku.twidere.graphic.WindowBackgroundDrawable;
 import org.mariotaku.twidere.graphic.iface.DoNotWrapDrawable;
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -108,7 +110,7 @@ public class ThemeUtils implements Constants {
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
             window.setBackgroundDrawable(new ColorDrawable(isLightTheme(context) ? Color.WHITE : Color.BLACK));
         } else {
-            window.setBackgroundDrawable(getWindowBackgroundFromTheme(context));
+            window.setBackgroundDrawable(getWindowBackground(context));
         }
     }
 
@@ -302,7 +304,7 @@ public class ThemeUtils implements Constants {
         return Typeface.create(Typeface.DEFAULT, fontStyle);
     }
 
-    public static Drawable getWindowBackgroundFromTheme(final Context context) {
+    public static Drawable getWindowBackground(final Context context) {
         final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.windowBackground});
         try {
             return a.getDrawable(0);
@@ -311,13 +313,27 @@ public class ThemeUtils implements Constants {
         }
     }
 
+    public static int getColorBackground(final Context context) {
+        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.colorBackground});
+        try {
+            return a.getColor(0, Color.TRANSPARENT);
+        } finally {
+            a.recycle();
+        }
+    }
+
     public static Drawable getWindowBackgroundFromThemeApplyAlpha(final Context context, final int alpha) {
-        final Drawable d = getWindowBackgroundFromTheme(context);
-        if (d == null) return null;
-        d.mutate();
-        d.setAlpha(TwidereMathUtils.clamp(alpha, ThemeBackgroundPreference.MIN_ALPHA,
-                ThemeBackgroundPreference.MAX_ALPHA));
-        return d;
+        int backgroundColor;
+        final Drawable d = getWindowBackground(context);
+        if (d instanceof ColorDrawable) {
+            backgroundColor = ((ColorDrawable) d).getColor();
+        } else {
+            backgroundColor = getColorBackground(context);
+        }
+        backgroundColor &= 0x00FFFFFF;
+        backgroundColor |= TwidereMathUtils.clamp(alpha, ThemeBackgroundPreference.MIN_ALPHA,
+                ThemeBackgroundPreference.MAX_ALPHA) << 24;
+        return new WindowBackgroundDrawable(backgroundColor);
     }
 
     public static boolean isLightTheme(final Context context) {
@@ -421,7 +437,7 @@ public class ThemeUtils implements Constants {
     public static int getActionIconColor(Context context, int backgroundColor) {
         final int colorDark = ContextCompat.getColor(context, R.color.action_icon_dark);
         final int colorLight = ContextCompat.getColor(context, R.color.action_icon_light);
-        return ATEUtil.isColorLight(backgroundColor) ? colorDark : colorLight;
+        return isLightColor(backgroundColor) ? colorDark : colorLight;
     }
 
     public static void setLightStatusBar(@NonNull Window window, boolean lightStatusBar) {
@@ -581,9 +597,33 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getColorDependent(int color) {
-        final boolean isDark = !ATEUtil.isColorLight(color);
+        final boolean isDark = !isLightColor(color);
         return isDark ? Color.WHITE : Color.BLACK;
     }
 
 
+    @Config.LightStatusBarMode
+    public static int getLightStatusBarMode(int statusBarColor) {
+        if (isLightColor(statusBarColor)) {
+            return Config.LIGHT_STATUS_BAR_ON;
+        }
+        return Config.LIGHT_STATUS_BAR_OFF;
+    }
+
+    @Config.LightToolbarMode
+    public static int getLightToolbarMode(int themeColor) {
+        if (isLightColor(themeColor)) {
+            return Config.LIGHT_TOOLBAR_ON;
+        }
+        return Config.LIGHT_TOOLBAR_OFF;
+    }
+
+    public static boolean isLightColor(int color) {
+        return ColorUtils.calculateLuminance(color) * 0xFF > ACCENT_COLOR_THRESHOLD;
+    }
+
+    public static int getOptimalAccentColor(int themeColor) {
+        return getOptimalAccentColor(themeColor, getContrastColor(themeColor, Color.BLACK,
+                Color.WHITE));
+    }
 }

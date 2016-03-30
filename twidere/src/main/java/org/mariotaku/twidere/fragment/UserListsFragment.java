@@ -114,7 +114,7 @@ public class UserListsFragment extends ParcelableUserListsFragment {
         removeUserList(event.userList.id);
     }
 
-    private void removeUserList(final long id) {
+    private void removeUserList(final String id) {
         final ParcelableUserListsAdapter adapter = getAdapter();
 //        final int listsIdx = adapter.findItemPosition(id);
 //        if (listsIdx >= 0) {

@@ -219,8 +219,7 @@ public class MenuUtils implements Constants {
         if (translate != null) {
             final boolean isOfficialKey = Utils.isOfficialCredentials(context, account);
             final SharedPreferencesWrapper prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-            final boolean forcePrivateApis = prefs.getBoolean(SharedPreferenceConstants.KEY_FORCE_USING_PRIVATE_APIS, false);
-            setMenuItemAvailability(menu, R.id.translate, forcePrivateApis || isOfficialKey);
+            setMenuItemAvailability(menu, R.id.translate, isOfficialKey);
         }
         menu.removeGroup(Constants.MENU_GROUP_STATUS_EXTENSION);
         Utils.addIntentToMenuForExtension(context, menu, Constants.MENU_GROUP_STATUS_EXTENSION, IntentConstants.INTENT_ACTION_EXTENSION_OPEN_STATUS,

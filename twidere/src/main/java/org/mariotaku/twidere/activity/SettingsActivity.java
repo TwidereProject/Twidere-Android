@@ -55,7 +55,6 @@ import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.ExtensionsListFragment;
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
 import org.mariotaku.twidere.fragment.SupportBrowserFragment;
-import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 
@@ -239,6 +238,7 @@ public class SettingsActivity extends BaseActivity implements OnItemClickListene
     }
 
     protected void openDetails(int position) {
+        if (isFinishing()) return;
         final Entry entry = mEntriesAdapter.getItem(position);
         if (!(entry instanceof PreferenceEntry)) return;
         final PreferenceEntry pe = (PreferenceEntry) entry;

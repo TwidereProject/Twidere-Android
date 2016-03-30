@@ -25,7 +25,6 @@ import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
-import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -38,7 +37,9 @@ import org.mariotaku.twidere.api.twitter.model.Status;
         @KeyValue(key = "include_cards", valueKey = "include_cards"),
         @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
         @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
-        @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
+        @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
+        @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text")
+})
 public interface FavoritesResources {
 
     @POST("/favorites/create.json")

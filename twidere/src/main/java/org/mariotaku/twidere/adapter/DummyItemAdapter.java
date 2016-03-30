@@ -310,8 +310,8 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
     }
 
     @Override
-    public long getUserListId(int position) {
-        return 0;
+    public String getUserListId(int position) {
+        return null;
     }
 
     @Override

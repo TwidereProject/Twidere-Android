@@ -61,13 +61,19 @@ public class ParcelableMedia implements Parcelable {
     @ParcelableThisPlease
     @JsonField(name = "open_browser")
     public boolean open_browser;
+    @ParcelableThisPlease
+    @JsonField(name = "alt_text")
+    public String alt_text;
+
     public static final Creator<ParcelableMedia> CREATOR = new Creator<ParcelableMedia>() {
+        @Override
         public ParcelableMedia createFromParcel(Parcel source) {
             ParcelableMedia target = new ParcelableMedia();
             ParcelableMediaParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableMedia[] newArray(int size) {
             return new ParcelableMedia[size];
         }
@@ -185,12 +191,14 @@ public class ParcelableMedia implements Parcelable {
         @JsonField(name = "duration")
         public long duration;
         public static final Creator<VideoInfo> CREATOR = new Creator<VideoInfo>() {
+            @Override
             public VideoInfo createFromParcel(Parcel source) {
                 VideoInfo target = new VideoInfo();
                 ParcelableMedia$VideoInfoParcelablePlease.readFromParcel(target, source);
                 return target;
             }
 
+            @Override
             public VideoInfo[] newArray(int size) {
                 return new VideoInfo[size];
             }
@@ -261,12 +269,14 @@ public class ParcelableMedia implements Parcelable {
             @JsonField(name = "bitrate")
             public long bitrate;
             public static final Creator<Variant> CREATOR = new Creator<Variant>() {
+                @Override
                 public Variant createFromParcel(Parcel source) {
                     Variant target = new Variant();
                     ParcelableMedia$VideoInfo$VariantParcelablePlease.readFromParcel(target, source);
                     return target;
                 }
 
+                @Override
                 public Variant[] newArray(int size) {
                     return new Variant[size];
                 }

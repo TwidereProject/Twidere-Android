@@ -167,13 +167,13 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userList.account_key);
             tabArgs.putParcelable(EXTRA_USER_KEY, userList.user_key);
             tabArgs.putString(EXTRA_SCREEN_NAME, userList.user_screen_name);
-            tabArgs.putLong(EXTRA_LIST_ID, userList.id);
+            tabArgs.putString(EXTRA_LIST_ID, userList.id);
             tabArgs.putString(EXTRA_LIST_NAME, userList.name);
         } else {
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable(EXTRA_ACCOUNT_KEY));
             tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable(EXTRA_USER_KEY));
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME));
-            tabArgs.putLong(EXTRA_LIST_ID, args.getLong(EXTRA_LIST_ID, -1));
+            tabArgs.putString(EXTRA_LIST_ID, args.getString(EXTRA_LIST_ID));
             tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME));
         }
         adapter.addTab(UserListTimelineFragment.class, tabArgs, getString(R.string.statuses), null, 0, null);
@@ -181,7 +181,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
         adapter.addTab(UserListSubscribersFragment.class, tabArgs, getString(R.string.subscribers), null, 2, null);
     }
 
-    private ParcelableUserList getUserList() {
+    public ParcelableUserList getUserList() {
         return mUserList;
     }
 
@@ -266,7 +266,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 args.putString(EXTRA_LIST_NAME, userList.name);
                 args.putString(EXTRA_DESCRIPTION, userList.description);
                 args.putBoolean(EXTRA_IS_PUBLIC, userList.is_public);
-                args.putLong(EXTRA_LIST_ID, userList.id);
+                args.putString(EXTRA_LIST_ID, userList.id);
                 final DialogFragment f = new EditUserListDialogFragment();
                 f.setArguments(args);
                 f.show(getFragmentManager(), "edit_user_list_details");
@@ -325,7 +325,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
     public Loader<SingleResponse<ParcelableUserList>> onCreateLoader(final int id, final Bundle args) {
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
-        final long listId = args.getLong(EXTRA_LIST_ID, -1);
+        final String listId = args.getString(EXTRA_LIST_ID);
         final String listName = args.getString(EXTRA_LIST_NAME);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);
         final boolean omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
@@ -353,7 +353,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
     @Subscribe
     public void onUserListUpdated(UserListUpdatedEvent event) {
         if (mUserList == null) return;
-        if (event.getUserList().id == mUserList.id) {
+        if (TextUtils.equals(event.getUserList().id, mUserList.id)) {
             getUserListInfo(true);
         }
     }
@@ -361,7 +361,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
     @Subscribe
     public void onUserListSubscriptionChanged(UserListSubscriptionEvent event) {
         if (mUserList == null) return;
-        if (event.getUserList().id == mUserList.id) {
+        if (TextUtils.equals(event.getUserList().id, mUserList.id)) {
             getUserListInfo(true);
         }
     }
@@ -371,7 +371,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
 
         private String mName, mDescription;
         private UserKey mAccountKey;
-        private long mListId;
+        private String mListId;
         private boolean mIsPublic;
 
         @Override
@@ -403,7 +403,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Bundle bundle = savedInstanceState == null ? getArguments() : savedInstanceState;
             mAccountKey = bundle != null ? bundle.<UserKey>getParcelable(EXTRA_ACCOUNT_KEY) : null;
-            mListId = bundle != null ? bundle.getLong(EXTRA_LIST_ID, -1) : -1;
+            mListId = bundle != null ? bundle.getString(EXTRA_LIST_ID) : null;
             mName = bundle != null ? bundle.getString(EXTRA_LIST_NAME) : null;
             mDescription = bundle != null ? bundle.getString(EXTRA_DESCRIPTION) : null;
             mIsPublic = bundle == null || bundle.getBoolean(EXTRA_IS_PUBLIC, true);
@@ -439,7 +439,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
         @Override
         public void onSaveInstanceState(final Bundle outState) {
             outState.putParcelable(EXTRA_ACCOUNT_KEY, mAccountKey);
-            outState.putLong(EXTRA_LIST_ID, mListId);
+            outState.putString(EXTRA_LIST_ID, mListId);
             outState.putString(EXTRA_LIST_NAME, mName);
             outState.putString(EXTRA_DESCRIPTION, mDescription);
             outState.putBoolean(EXTRA_IS_PUBLIC, mIsPublic);
@@ -454,12 +454,12 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
         private final Bundle mExtras;
         private final UserKey mAccountKey;
         private final UserKey mUserKey;
-        private final long mListId;
+        private final String mListId;
         private final String mScreenName, mListName;
 
         private ParcelableUserListLoader(final Context context, final boolean omitIntentExtra,
                                          final Bundle extras, final UserKey accountKey,
-                                         final long listId, final String listName,
+                                         final String listId, final String listName,
                                          final UserKey userKey, final String screenName) {
             super(context);
             mOmitIntentExtra = omitIntentExtra;
@@ -482,7 +482,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final UserList list;
-                if (mListId > 0) {
+                if (mListId != null) {
                     list = twitter.showUserList(mListId);
                 } else if (mUserKey != null) {
                     list = twitter.showUserList(mListName, mUserKey.getId());

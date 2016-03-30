@@ -60,6 +60,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterUpload;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
+import org.mariotaku.twidere.api.twitter.model.NewMediaMetadata;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
 import org.mariotaku.twidere.app.TwidereApplication;
@@ -758,7 +759,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                 if (upload == null) {
                     throw new UpdateStatusException("Twitter instance is null");
                 }
-                final long[] mediaIds = new long[statusUpdate.media.length];
+                final String[] mediaIds = new String[statusUpdate.media.length];
 
                 for (int i = 0, j = mediaIds.length; i < j; i++) {
                     final ParcelableMediaUpdate media = statusUpdate.media[i];
@@ -767,6 +768,10 @@ public class BackgroundOperationService extends IntentService implements Constan
                     try {
                         body = getBodyFromMedia(resolver, builder, media, statusUpdate);
                         uploadResp = upload.uploadMedia(body);
+                        if (!TextUtils.isEmpty(media.alt_text)) {
+                            upload.createMetadata(new NewMediaMetadata(uploadResp.getId(),
+                                    media.alt_text));
+                        }
                     } finally {
                         Utils.closeSilently(body);
                     }
