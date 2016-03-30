@@ -56,6 +56,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
+import org.mariotaku.twidere.graphic.WindowBackgroundDrawable;
 import org.mariotaku.twidere.graphic.iface.DoNotWrapDrawable;
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
@@ -108,7 +109,7 @@ public class ThemeUtils implements Constants {
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
             window.setBackgroundDrawable(new ColorDrawable(isLightTheme(context) ? Color.WHITE : Color.BLACK));
         } else {
-            window.setBackgroundDrawable(getWindowBackgroundFromTheme(context));
+            window.setBackgroundDrawable(getWindowBackground(context));
         }
     }
 
@@ -302,7 +303,7 @@ public class ThemeUtils implements Constants {
         return Typeface.create(Typeface.DEFAULT, fontStyle);
     }
 
-    public static Drawable getWindowBackgroundFromTheme(final Context context) {
+    public static Drawable getWindowBackground(final Context context) {
         final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.windowBackground});
         try {
             return a.getDrawable(0);
@@ -311,13 +312,27 @@ public class ThemeUtils implements Constants {
         }
     }
 
+    public static int getColorBackground(final Context context) {
+        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.colorBackground});
+        try {
+            return a.getColor(0, Color.TRANSPARENT);
+        } finally {
+            a.recycle();
+        }
+    }
+
     public static Drawable getWindowBackgroundFromThemeApplyAlpha(final Context context, final int alpha) {
-        final Drawable d = getWindowBackgroundFromTheme(context);
-        if (d == null) return null;
-        d.mutate();
-        d.setAlpha(TwidereMathUtils.clamp(alpha, ThemeBackgroundPreference.MIN_ALPHA,
-                ThemeBackgroundPreference.MAX_ALPHA));
-        return d;
+        int backgroundColor;
+        final Drawable d = getWindowBackground(context);
+        if (d instanceof ColorDrawable) {
+            backgroundColor = ((ColorDrawable) d).getColor();
+        } else {
+            backgroundColor = getColorBackground(context);
+        }
+        backgroundColor &= 0x00FFFFFF;
+        backgroundColor |= TwidereMathUtils.clamp(alpha, ThemeBackgroundPreference.MIN_ALPHA,
+                ThemeBackgroundPreference.MAX_ALPHA) << 24;
+        return new WindowBackgroundDrawable(backgroundColor);
     }
 
     public static boolean isLightTheme(final Context context) {

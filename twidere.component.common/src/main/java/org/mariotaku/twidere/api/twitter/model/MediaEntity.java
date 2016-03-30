@@ -19,9 +19,14 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.support.annotation.IntDef;
+import android.support.annotation.StringDef;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +66,8 @@ public class MediaEntity extends UrlEntity {
     VideoInfo videoInfo;
     @JsonField(name = "features")
     HashMap<String, Feature> features;
+    @JsonField(name = "ext_alt_text")
+    String altText;
 
     public Map<String, Feature> getFeatures() {
         return features;
@@ -78,14 +85,17 @@ public class MediaEntity extends UrlEntity {
         return mediaUrlHttps;
     }
 
+    @Override
     public String getExpandedUrl() {
         return expandedUrl;
     }
 
+    @Override
     public String getDisplayUrl() {
         return displayUrl;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
@@ -99,16 +109,22 @@ public class MediaEntity extends UrlEntity {
         return sizes;
     }
 
+    @Override
     public int getEnd() {
         return indices.getEnd();
     }
 
+    @Override
     public int getStart() {
         return indices.getStart();
     }
 
     public long getId() {
         return id;
+    }
+
+    public String getAltText() {
+        return altText;
     }
 
     @Override
@@ -251,6 +267,16 @@ public class MediaEntity extends UrlEntity {
                 return bitrate;
             }
         }
+    }
+
+    @StringDef({Size.THUMB, Size.SMALL, Size.MEDIUM, Size.LARGE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SizeType {
+    }
+
+    @IntDef({Size.FIT, Size.CROP})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ScaleType {
     }
 
 

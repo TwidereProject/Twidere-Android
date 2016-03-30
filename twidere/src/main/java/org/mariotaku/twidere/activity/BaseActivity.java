@@ -277,11 +277,6 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
         mCurrentThemeBackgroundAlpha = getThemeBackgroundAlpha();
         mCurrentThemeBackgroundOption = getThemeBackgroundOption();
         super.onApplyThemeResource(theme, resId, first);
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
         final Window window = getWindow();
         if (window != null && shouldApplyWindowBackground()) {
             ThemeUtils.applyWindowBackground(this, window, getThemeBackgroundOption(),

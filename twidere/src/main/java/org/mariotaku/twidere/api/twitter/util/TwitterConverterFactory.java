@@ -26,8 +26,11 @@ import com.bluelinelabs.logansquare.JsonMapper;
 import com.fasterxml.jackson.core.JsonParseException;
 
 import org.mariotaku.restfu.RestConverter;
+import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.restfu.http.mime.SimpleBody;
+import org.mariotaku.restfu.http.mime.StringBody;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
@@ -50,7 +53,6 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         sResponseConverters.put(ResponseCode.class, new ResponseCode.ResponseConverter());
         sResponseConverters.put(OAuthToken.class, new OAuthToken.ResponseConverter());
 
-//        sBodyConverters.put(CardDataMap.class, new CardDataMap.BodyConverter());
     }
 
     @NonNull
@@ -81,7 +83,7 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         } catch (LoganSquareMapperFinder.ClassLoaderDeadLockException e) {
             throw new RestConverter.ConvertException(e);
         }
-        return new JsonConverter(mapper);
+        return new JsonResponseConverter(mapper);
     }
 
     @Override
@@ -90,7 +92,14 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         if (converter != null) {
             return converter;
         }
-        return super.forRequest(type);
+        if (SimpleBody.supports(type)) {
+            return new SimpleBodyConverter<>(type);
+        }
+        try {
+            return new JsonRequestConverter(LoganSquareMapperFinder.mapperFor(type));
+        } catch (LoganSquareMapperFinder.ClassLoaderDeadLockException e) {
+            throw new RestConverter.ConvertException(e);
+        }
     }
 
     public static class UnsupportedTypeException extends UnsupportedOperationException {
@@ -99,10 +108,10 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
         }
     }
 
-    public static class JsonConverter implements RestConverter<HttpResponse, Object, TwitterException> {
+    public static class JsonResponseConverter implements RestConverter<HttpResponse, Object, TwitterException> {
         private final JsonMapper<?> mapper;
 
-        public JsonConverter(JsonMapper<?> mapper) {
+        public JsonResponseConverter(JsonMapper<?> mapper) {
             this.mapper = mapper;
         }
 
@@ -113,6 +122,19 @@ public class TwitterConverterFactory extends RestConverter.SimpleFactory<Twitter
                 ((TwitterResponse) object).processResponseHeader(httpResponse);
             }
             return object;
+        }
+    }
+
+    public static class JsonRequestConverter implements RestConverter<Object, Body, TwitterException> {
+        private final JsonMapper<Object> mapper;
+
+        public JsonRequestConverter(JsonMapper<Object> mapper) {
+            this.mapper = mapper;
+        }
+
+        @Override
+        public Body convert(Object request) throws IOException, ConvertException, TwitterException {
+            return new StringBody(mapper.serialize(request), ContentType.parse("application/json"));
         }
     }
 

@@ -122,7 +122,9 @@ public interface ListResources {
             @KeyValue(key = "include_cards", valueKey = "include_cards"),
             @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
             @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
-            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
+            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
+            @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text")
+    })
     ResponseList<Status> getUserListStatuses(@Query("list_id") long listId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/statuses.json")
@@ -132,7 +134,9 @@ public interface ListResources {
             @KeyValue(key = "include_cards", valueKey = "include_cards"),
             @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
             @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
-            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
+            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
+            @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text")
+    })
     ResponseList<Status> getUserListStatuses(@Query("slug") String slug, @Query("owner_id") long ownerId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/statuses.json")
@@ -142,7 +146,9 @@ public interface ListResources {
             @KeyValue(key = "include_cards", valueKey = "include_cards"),
             @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
             @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
-            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count")})
+            @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
+            @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text")
+    })
     ResponseList<Status> getUserListStatuses(@Query("slug") String slug, @Query("owner_screen_name") String ownerScreenName, @Query Paging paging)
             throws TwitterException;
 

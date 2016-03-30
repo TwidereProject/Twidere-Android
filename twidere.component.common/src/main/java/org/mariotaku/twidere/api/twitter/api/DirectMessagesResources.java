@@ -56,17 +56,17 @@ public interface DirectMessagesResources {
     @POST("/direct_messages/new.json")
     @BodyType(BodyType.FORM)
     DirectMessage sendDirectMessage(@Param("user_id") String userId, @Param("text") String text,
-                                    @Param("media_id") long mediaId) throws TwitterException;
+                                    @Param("media_id") String mediaId) throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @BodyType(BodyType.FORM)
-    DirectMessage sendDirectMessageForScreenName(@Param("screen_name") String screenName, @Param("text") String text)
+    DirectMessage sendDirectMessageToScreenName(@Param("screen_name") String screenName, @Param("text") String text)
             throws TwitterException;
 
     @POST("/direct_messages/new.json")
     @BodyType(BodyType.FORM)
-    DirectMessage sendDirectMessageForScreenName(@Param("screen_name") String screenName, @Param("text") String text,
-                                                 @Param("media_id") long mediaId) throws TwitterException;
+    DirectMessage sendDirectMessageToScreenName(@Param("screen_name") String screenName, @Param("text") String text,
+                                                @Param("media_id") String mediaId) throws TwitterException;
 
     @GET("/direct_messages/show.json")
     DirectMessage showDirectMessage(@Query("id") String id) throws TwitterException;
