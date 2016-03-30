@@ -75,6 +75,7 @@ import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
 import org.mariotaku.twidere.model.message.UserListCreatedEvent;
 import org.mariotaku.twidere.model.message.UserListDestroyedEvent;
+import org.mariotaku.twidere.model.message.UserListMembersChangedEvent;
 import org.mariotaku.twidere.model.message.UserListSubscriptionEvent;
 import org.mariotaku.twidere.model.message.UserListUpdatedEvent;
 import org.mariotaku.twidere.model.message.UsersBlockedEvent;
@@ -158,7 +159,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
     }
 
-    public int addUserListMembersAsync(final UserKey accountKey, final long listId, final ParcelableUser... users) {
+    public int addUserListMembersAsync(final UserKey accountKey, final String listId, @NonNull final ParcelableUser... users) {
         final AddUserListMembersTask task = new AddUserListMembersTask(accountKey, listId, users);
         return mAsyncTaskManager.add(task, true);
     }
@@ -225,12 +226,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int createUserListSubscriptionAsync(final UserKey accountKey, final long listId) {
+    public int createUserListSubscriptionAsync(final UserKey accountKey, final String listId) {
         final CreateUserListSubscriptionTask task = new CreateUserListSubscriptionTask(accountKey, listId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int deleteUserListMembersAsync(final UserKey accountKey, final long listId, final ParcelableUser... users) {
+    public int deleteUserListMembersAsync(final UserKey accountKey, final String listId, final ParcelableUser... users) {
         final DeleteUserListMembersTask task = new DeleteUserListMembersTask(accountKey, listId, users);
         return mAsyncTaskManager.add(task, true);
     }
@@ -284,12 +285,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyUserListAsync(final UserKey accountKey, final long listId) {
+    public int destroyUserListAsync(final UserKey accountKey, final String listId) {
         final DestroyUserListTask task = new DestroyUserListTask(mContext, accountKey, listId);
         return mAsyncTaskManager.add(task, true);
     }
 
-    public int destroyUserListSubscriptionAsync(final UserKey accountKey, final long listId) {
+    public int destroyUserListSubscriptionAsync(final UserKey accountKey, final String listId) {
         final DestroyUserListSubscriptionTask task = new DestroyUserListSubscriptionTask(accountKey, listId);
         return mAsyncTaskManager.add(task, true);
     }
@@ -470,7 +471,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return 0;
     }
 
-    public int updateUserListDetails(final UserKey accountKey, final long listId,
+    public int updateUserListDetails(final UserKey accountKey, final String listId,
                                      final UserListUpdate update) {
         final UpdateUserListDetailsTask task = new UpdateUserListDetailsTask(mContext, accountKey,
                 listId, update);
@@ -602,26 +603,29 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class AddUserListMembersTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final UserKey mAccountKey;
-        private final long listId;
-        private final ParcelableUser[] users;
+        private final String mListId;
+        @NonNull
+        private final ParcelableUser[] mUsers;
 
-        public AddUserListMembersTask(final UserKey accountKey, final long listId, final ParcelableUser[] users) {
+        public AddUserListMembersTask(@NonNull final UserKey accountKey,
+                                      final String listId,
+                                      @NonNull final ParcelableUser[] users) {
             super(mContext);
             this.mAccountKey = accountKey;
-            this.listId = listId;
-            this.users = users;
+            this.mListId = listId;
+            this.mUsers = users;
         }
 
         @Override
         protected SingleResponse<ParcelableUserList> doInBackground(final Object... params) {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, false);
-            if (twitter == null || users == null) return SingleResponse.getInstance();
+            if (twitter == null) return SingleResponse.getInstance();
             try {
-                final UserKey[] userIds = new UserKey[users.length];
-                for (int i = 0, j = users.length; i < j; i++) {
-                    userIds[i] = users[i].key;
+                final UserKey[] userIds = new UserKey[mUsers.length];
+                for (int i = 0, j = mUsers.length; i < j; i++) {
+                    userIds[i] = mUsers[i].key;
                 }
-                final UserList result = twitter.addUserListMembers(listId, UserKey.getIds(userIds));
+                final UserList result = twitter.addUserListMembers(mListId, UserKey.getIds(userIds));
                 final ParcelableUserList list = ParcelableUserListUtils.from(result, mAccountKey);
                 return SingleResponse.getInstance(list, null);
             } catch (final TwitterException e) {
@@ -631,28 +635,26 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableUserList> result) {
-            final boolean succeed = result.hasData() && result.getData().id > 0;
+            final boolean succeed = result.hasData();
             if (succeed) {
                 final String message;
-                if (users.length == 1) {
-                    final ParcelableUser user = users[0];
+                if (mUsers.length == 1) {
+                    final ParcelableUser user = mUsers[0];
                     final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
                     final String displayName = mUserColorNameManager.getDisplayName(user.key, user.name,
                             user.screen_name, nameFirst);
                     message = mContext.getString(R.string.added_user_to_list, displayName, result.getData().name);
                 } else {
                     final Resources res = mContext.getResources();
-                    message = res.getQuantityString(R.plurals.added_N_users_to_list, users.length, users.length,
+                    message = res.getQuantityString(R.plurals.added_N_users_to_list, mUsers.length, mUsers.length,
                             result.getData().name);
                 }
                 Utils.showOkMessage(mContext, message, false);
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_adding_member, result.getException(), true);
             }
-            final Intent intent = new Intent(BROADCAST_USER_LIST_MEMBERS_ADDED);
-            intent.putExtra(EXTRA_USER_LIST, result.getData());
-            intent.putExtra(EXTRA_USERS, users);
-            mContext.sendBroadcast(intent);
+            bus.post(new UserListMembersChangedEvent(UserListMembersChangedEvent.Action.ADDED,
+                    result.getData(), mUsers));
             super.onPostExecute(result);
         }
 
@@ -887,12 +889,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class CreateUserListSubscriptionTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final UserKey mAccountKey;
-        private final long listId;
+        private final String mListId;
 
-        public CreateUserListSubscriptionTask(final UserKey accountKey, final long listId) {
+        public CreateUserListSubscriptionTask(final UserKey accountKey, final String listId) {
             super(mContext);
             this.mAccountKey = accountKey;
-            this.listId = listId;
+            this.mListId = listId;
         }
 
         @Override
@@ -900,7 +902,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
-                final UserList userList = twitter.createUserListSubscription(listId);
+                final UserList userList = twitter.createUserListSubscription(mListId);
                 final ParcelableUserList list = ParcelableUserListUtils.from(userList, mAccountKey);
                 return SingleResponse.getInstance(list);
             } catch (final TwitterException e) {
@@ -975,10 +977,10 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class DeleteUserListMembersTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final UserKey mAccountKey;
-        private final long mUserListId;
+        private final String mUserListId;
         private final ParcelableUser[] users;
 
-        public DeleteUserListMembersTask(final UserKey accountKey, final long userListId, final ParcelableUser[] users) {
+        public DeleteUserListMembersTask(final UserKey accountKey, final String userListId, final ParcelableUser[] users) {
             super(mContext);
             mAccountKey = accountKey;
             mUserListId = userListId;
@@ -1004,7 +1006,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected void onPostExecute(final SingleResponse<ParcelableUserList> result) {
-            final boolean succeed = result.hasData() && result.getData().id > 0;
+            final boolean succeed = result.hasData();
             final String message;
             if (succeed) {
                 if (users.length == 1) {
@@ -1019,11 +1021,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     message = res.getQuantityString(R.plurals.deleted_N_users_from_list, users.length, users.length,
                             result.getData().name);
                 }
+                bus.post(new UserListMembersChangedEvent(UserListMembersChangedEvent.Action.REMOVED,
+                        result.getData(), users));
                 Utils.showInfoMessage(mContext, message, false);
-                final Intent intent = new Intent(BROADCAST_USER_LIST_MEMBERS_DELETED);
-                intent.putExtra(EXTRA_USER_LIST, result.getData());
-                intent.putExtra(EXTRA_USERS, users);
-                mContext.sendBroadcast(intent);
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_deleting, result.getException(), true);
             }
@@ -1342,9 +1342,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     class DestroyUserListSubscriptionTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final UserKey mAccountKey;
-        private final long mListId;
+        private final String mListId;
 
-        public DestroyUserListSubscriptionTask(@NonNull final UserKey accountKey, final long listId) {
+        public DestroyUserListSubscriptionTask(@NonNull final UserKey accountKey, final String listId) {
             super(mContext);
             mAccountKey = accountKey;
             mListId = listId;
@@ -1383,9 +1383,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     static class DestroyUserListTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final UserKey mAccountKey;
-        private final long mListId;
+        private final String mListId;
 
-        public DestroyUserListTask(Context context, final UserKey accountKey, final long listId) {
+        public DestroyUserListTask(Context context, final UserKey accountKey, final String listId) {
             super(context);
             mAccountKey = accountKey;
             mListId = listId;
@@ -1570,12 +1570,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     static class UpdateUserListDetailsTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUserList>> {
 
         private final UserKey mAccountKey;
-        private final long listId;
+        private final String listId;
         private final UserListUpdate update;
         private Context mContext;
 
         public UpdateUserListDetailsTask(Context context, final UserKey accountKey,
-                                         final long listId, UserListUpdate update) {
+                                         final String listId, UserListUpdate update) {
             super(context);
             this.mAccountKey = accountKey;
             this.listId = listId;

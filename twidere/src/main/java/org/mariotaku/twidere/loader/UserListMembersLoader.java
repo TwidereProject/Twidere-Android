@@ -35,11 +35,11 @@ import java.util.List;
 
 public class UserListMembersLoader extends CursorSupportUsersLoader {
 
-    private final long mListId;
+    private final String mListId;
     private final UserKey mUserKey;
     private final String mScreenName, mListName;
 
-    public UserListMembersLoader(final Context context, final UserKey accountKey, final long listId,
+    public UserListMembersLoader(final Context context, final UserKey accountKey, final String listId,
                                  final UserKey userKey, final String screenName, final String listName,
                                  final List<ParcelableUser> data, boolean fromUser) {
         super(context, accountKey, data, fromUser);
@@ -53,7 +53,7 @@ public class UserListMembersLoader extends CursorSupportUsersLoader {
     @Override
     public PageableResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging)
             throws TwitterException {
-        if (mListId > 0)
+        if (mListId != null)
             return twitter.getUserListMembers(mListId, paging);
         else if (mUserKey != null)
             return twitter.getUserListMembers(mListName.replace(' ', '-'), mUserKey.getId(), paging);

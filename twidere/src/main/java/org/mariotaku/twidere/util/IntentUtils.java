@@ -480,7 +480,8 @@ public class IntentUtils implements Constants {
     }
 
     public static void openUserListDetails(@NonNull final Context context,
-                                           @Nullable final UserKey accountKey, final long listId,
+                                           @Nullable final UserKey accountKey,
+                                           @Nullable final String listId,
                                            @Nullable final UserKey userId,
                                            @Nullable final String screenName, final String listName) {
         final Uri.Builder builder = new Uri.Builder();
@@ -489,8 +490,8 @@ public class IntentUtils implements Constants {
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString());
         }
-        if (listId > 0) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
+        if (listId != null) {
+            builder.appendQueryParameter(QUERY_PARAM_LIST_ID, listId);
         }
         if (userId != null) {
             builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userId.toString());
@@ -508,7 +509,7 @@ public class IntentUtils implements Constants {
     public static void openUserListDetails(@NonNull final Context context,
                                            @NonNull final ParcelableUserList userList) {
         final UserKey userKey = userList.user_key;
-        final long listId = userList.id;
+        final String listId = userList.id;
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_USER_LIST, userList);
         final Uri.Builder builder = new Uri.Builder();
@@ -516,7 +517,7 @@ public class IntentUtils implements Constants {
         builder.authority(AUTHORITY_USER_LIST);
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, userList.account_key.toString());
         builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString());
-        builder.appendQueryParameter(QUERY_PARAM_LIST_ID, String.valueOf(listId));
+        builder.appendQueryParameter(QUERY_PARAM_LIST_ID, listId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setExtrasClassLoader(context.getClassLoader());
         intent.putExtras(extras);

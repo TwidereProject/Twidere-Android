@@ -36,43 +36,43 @@ import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 
 public interface ListResources {
     @POST("/lists/members/create.json")
-    UserList addUserListMember(@Query("list_id") long listId, @Query("user_id") long userId) throws TwitterException;
+    UserList addUserListMember(@Query("list_id") String listId, @Query("user_id") String userId) throws TwitterException;
 
     @POST("/lists/members/create.json")
-    UserList addUserListMember(@Query("list_id") long listId, @Query("screen_name") String userScreenName) throws TwitterException;
+    UserList addUserListMemberByScreenName(@Query("list_id") String listId, @Query("screen_name") String userScreenName) throws TwitterException;
 
     @POST("/lists/members/create_all.json")
-    UserList addUserListMembers(@Param("list_id") long listId, @Param(value = "user_id", arrayDelimiter = ',') long[] userIds) throws TwitterException;
+    UserList addUserListMembers(@Param("list_id") String listId, @Param(value = "user_id", arrayDelimiter = ',') String[] userIds) throws TwitterException;
 
     @POST("/lists/members/create_all.json")
-    UserList addUserListMembers(@Param("list_id") long listId, @Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
+    UserList addUserListMembersByScreenName(@Param("list_id") String listId, @Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
 
     @POST("/lists/create.json")
     UserList createUserList(@Param UserListUpdate update) throws TwitterException;
 
     @POST("/lists/subscribers/create.json")
-    UserList createUserListSubscription(@Param("list_id") long listId) throws TwitterException;
+    UserList createUserListSubscription(@Param("list_id") String listId) throws TwitterException;
 
     @POST("/lists/members/destroy.json")
-    UserList deleteUserListMember(@Query("list_id") long listId, @Query("user_id") long userId) throws TwitterException;
+    UserList deleteUserListMember(@Query("list_id") String listId, @Query("user_id") String userId) throws TwitterException;
 
     @POST("/lists/members/destroy.json")
-    UserList deleteUserListMember(@Query("list_id") long listId, @Param("screen_name") String screenName) throws TwitterException;
+    UserList deleteUserListMemberByScreenName(@Query("list_id") String listId, @Param("screen_name") String screenName) throws TwitterException;
 
     @POST("/lists/members/destroy_all.json")
-    UserList deleteUserListMembers(@Param("list_id") long listId, @Param(value = "user_id", arrayDelimiter = ',') long[] userIds) throws TwitterException;
+    UserList deleteUserListMembers(@Param("list_id") String listId, @Param(value = "user_id", arrayDelimiter = ',') String[] userIds) throws TwitterException;
 
     @POST("/lists/members/destroy_all.json")
-    UserList deleteUserListMembers(@Query("list_id") long listId, @Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
+    UserList deleteUserListMembersByScreenName(@Query("list_id") String listId, @Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
 
     @POST("/lists/destroy.json")
-    UserList destroyUserList(@Param("list_id") long listId) throws TwitterException;
+    UserList destroyUserList(@Param("list_id") String listId) throws TwitterException;
 
     @POST("/lists/subscribers/destroy.json")
-    UserList destroyUserListSubscription(@Param("list_id") long listId) throws TwitterException;
+    UserList destroyUserListSubscription(@Param("list_id") String listId) throws TwitterException;
 
     @GET("/lists/members.json")
-    PageableResponseList<User> getUserListMembers(@Query("list_id") long listId, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getUserListMembers(@Query("list_id") String listId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/members.json")
     PageableResponseList<User> getUserListMembers(@Query("slug") String slug,
@@ -103,10 +103,10 @@ public interface ListResources {
     PageableResponseList<UserList> getUserListOwnerships(@Query Paging paging) throws TwitterException;
 
     @GET("/lists/ownerships.json")
-    PageableResponseList<UserList> getUserListOwnerships(@Query("user_id") long listMemberId, @Query Paging paging) throws TwitterException;
+    PageableResponseList<UserList> getUserListOwnerships(@Query("user_id") String listMemberId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/ownerships.json")
-    PageableResponseList<UserList> getUserListOwnerships(@Query("screen_name") String listMemberScreenName, @Query Paging paging)
+    PageableResponseList<UserList> getUserListOwnershipsByScreenName(@Query("screen_name") String listMemberScreenName, @Query Paging paging)
             throws TwitterException;
 
     @GET("/lists/list.json")
@@ -125,7 +125,7 @@ public interface ListResources {
             @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
             @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text")
     })
-    ResponseList<Status> getUserListStatuses(@Query("list_id") long listId, @Query Paging paging) throws TwitterException;
+    ResponseList<Status> getUserListStatuses(@Query("list_id") String listId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/statuses.json")
     @Queries({@KeyValue(key = "include_my_retweet", valueKey = "include_my_retweet"),
@@ -153,7 +153,7 @@ public interface ListResources {
             throws TwitterException;
 
     @GET("/lists/subscribers.json")
-    PageableResponseList<User> getUserListSubscribers(@Query("list_id") long listId, @Query Paging paging) throws TwitterException;
+    PageableResponseList<User> getUserListSubscribers(@Query("list_id") String listId, @Query Paging paging) throws TwitterException;
 
     @GET("/lists/subscribers.json")
     PageableResponseList<User> getUserListSubscribers(@Query("list_id") String slug, @Query("owner_id") String ownerId, @Query Paging paging)
@@ -165,15 +165,15 @@ public interface ListResources {
 
 
     @GET("/lists/subscriptions.json")
-    PageableResponseList<UserList> getUserListSubscriptions(@Query("screen_name") String listOwnerScreenName, long cursor)
+    PageableResponseList<UserList> getUserListSubscriptionsByScreenName(@Query("screen_name") String listOwnerScreenName, long cursor)
             throws TwitterException;
 
     @GET("/lists/subscriptions.json")
-    PageableResponseList<UserList> getUserListSubscriptions(@Query("user_id") long userId, long cursor)
+    PageableResponseList<UserList> getUserListSubscriptions(@Query("user_id") String userId, long cursor)
             throws TwitterException;
 
     @GET("/lists/show.json")
-    UserList showUserList(@Query("list_id") long listId) throws TwitterException;
+    UserList showUserList(@Query("list_id") String listId) throws TwitterException;
 
     @GET("/lists/show.json")
     UserList showUserList(@Query("slug") String slug, @Query("owner_id") String ownerId) throws TwitterException;
@@ -182,5 +182,5 @@ public interface ListResources {
     UserList showUserListByScrenName(@Query("slug") String slug, @Query("owner_screen_name") String ownerScreenName) throws TwitterException;
 
     @POST("/lists/update.json")
-    UserList updateUserList(@Param("list_id") long listId, @Param UserListUpdate update) throws TwitterException;
+    UserList updateUserList(@Param("list_id") String listId, @Param UserListUpdate update) throws TwitterException;
 }

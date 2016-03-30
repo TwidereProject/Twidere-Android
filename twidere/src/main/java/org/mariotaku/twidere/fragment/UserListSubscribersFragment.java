@@ -31,7 +31,7 @@ public class UserListSubscribersFragment extends CursorSupportUsersListFragment 
 
     @Override
     public CursorSupportUsersLoader onCreateUsersLoader(final Context context, @NonNull final Bundle args, boolean fromUser) {
-        final long listId = args.getLong(EXTRA_LIST_ID, -1);
+        final String listId = args.getString(EXTRA_LIST_ID);
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         final UserKey userKey = args.getParcelable(EXTRA_USER_KEY);
         final String screenName = args.getString(EXTRA_SCREEN_NAME);

@@ -605,8 +605,8 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
             startActivity(chooser);
             return true;
         }
-        return MenuUtils.handleStatusClick(getActivity(), AbsStatusesFragment.this,
-                getFragmentManager(), mUserColorNameManager, mTwitterWrapper, status, item);
+        return MenuUtils.handleStatusClick(getActivity(), this, getFragmentManager(),
+                mUserColorNameManager, mTwitterWrapper, status, item);
     }
 
     private String getCurrentReadPositionTag() {

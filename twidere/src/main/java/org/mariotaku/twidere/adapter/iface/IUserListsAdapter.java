@@ -33,7 +33,7 @@ public interface IUserListsAdapter<Data> extends IContentCardAdapter {
 
     ParcelableUserList getUserList(int position);
 
-    long getUserListId(int position);
+    String getUserListId(int position);
 
     int getUserListsCount();
 
