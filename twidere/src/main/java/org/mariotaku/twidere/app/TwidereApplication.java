@@ -39,8 +39,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.ActionBarContextView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.afollestad.appthemeengine.ATE;
 import com.afollestad.appthemeengine.Config;
@@ -66,16 +69,17 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
 import org.mariotaku.twidere.util.theme.ActionBarContextViewViewProcessor;
-import org.mariotaku.twidere.util.theme.ExtendedSwipeRefreshLayoutViewProcessor;
 import org.mariotaku.twidere.util.theme.FloatingActionButtonViewProcessor;
 import org.mariotaku.twidere.util.theme.FontFamilyTagProcessor;
 import org.mariotaku.twidere.util.theme.IconActionButtonTagProcessor;
+import org.mariotaku.twidere.util.theme.ImageViewViewProcessor;
 import org.mariotaku.twidere.util.theme.OptimalLinkColorTagProcessor;
 import org.mariotaku.twidere.util.theme.ProfileImageViewViewProcessor;
 import org.mariotaku.twidere.util.theme.ProgressWheelViewProcessor;
+import org.mariotaku.twidere.util.theme.SwipeRefreshLayoutViewProcessor;
 import org.mariotaku.twidere.util.theme.TabPagerIndicatorViewProcessor;
+import org.mariotaku.twidere.util.theme.TextViewViewProcessor;
 import org.mariotaku.twidere.util.theme.TimelineContentTextViewViewProcessor;
-import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
 import org.mariotaku.twidere.view.ProfileImageView;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 import org.mariotaku.twidere.view.ThemedMultiValueSwitch;
@@ -144,8 +148,10 @@ public class TwidereApplication extends Application implements Constants,
         ATE.registerViewProcessor(TabPagerIndicator.class, new TabPagerIndicatorViewProcessor());
         ATE.registerViewProcessor(FloatingActionButton.class, new FloatingActionButtonViewProcessor());
         ATE.registerViewProcessor(ActionBarContextView.class, new ActionBarContextViewViewProcessor());
-        ATE.registerViewProcessor(ExtendedSwipeRefreshLayout.class, new ExtendedSwipeRefreshLayoutViewProcessor());
+        ATE.registerViewProcessor(SwipeRefreshLayout.class, new SwipeRefreshLayoutViewProcessor());
         ATE.registerViewProcessor(TimelineContentTextView.class, new TimelineContentTextViewViewProcessor());
+        ATE.registerViewProcessor(TextView.class, new TextViewViewProcessor());
+        ATE.registerViewProcessor(ImageView.class, new ImageViewViewProcessor());
         ATE.registerViewProcessor(ProgressWheel.class, new ProgressWheelViewProcessor());
         ATE.registerViewProcessor(ProfileImageView.class, mProfileImageViewViewProcessor);
         ATE.registerTagProcessor(OptimalLinkColorTagProcessor.TAG, new OptimalLinkColorTagProcessor());
@@ -166,16 +172,17 @@ public class TwidereApplication extends Application implements Constants,
         final int themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,
                 R.color.branding_color));
         if (!ATE.config(this, VALUE_THEME_NAME_LIGHT).isConfigured()) {
+            //noinspection WrongConstant
             ATE.config(this, VALUE_THEME_NAME_LIGHT)
                     .primaryColor(themeColor)
-                    .accentColor(themeColor)
+                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
                     .coloredActionBar(true)
                     .coloredStatusBar(true)
                     .commit();
         }
         if (!ATE.config(this, VALUE_THEME_NAME_DARK).isConfigured()) {
             ATE.config(this, VALUE_THEME_NAME_DARK)
-                    .accentColor(themeColor)
+                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
                     .coloredActionBar(false)
                     .coloredStatusBar(true)
                     .statusBarColor(Color.BLACK)
@@ -183,7 +190,7 @@ public class TwidereApplication extends Application implements Constants,
         }
         if (!ATE.config(this, null).isConfigured()) {
             ATE.config(this, null)
-                    .accentColor(themeColor)
+                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
                     .coloredActionBar(false)
                     .coloredStatusBar(false)
                     .commit();
@@ -347,20 +354,21 @@ public class TwidereApplication extends Application implements Constants,
             case KEY_THEME_COLOR: {
                 final int themeColor = preferences.getInt(key, ContextCompat.getColor(this,
                         R.color.branding_color));
+                //noinspection WrongConstant
                 ATE.config(this, VALUE_THEME_NAME_LIGHT)
                         .primaryColor(themeColor)
-                        .accentColor(themeColor)
+                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
                         .coloredActionBar(true)
                         .coloredStatusBar(true)
                         .commit();
                 ATE.config(this, VALUE_THEME_NAME_DARK)
-                        .accentColor(themeColor)
+                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
                         .coloredActionBar(false)
                         .coloredStatusBar(true)
                         .statusBarColor(Color.BLACK)
                         .commit();
                 ATE.config(this, null)
-                        .accentColor(themeColor)
+                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
                         .coloredActionBar(false)
                         .coloredStatusBar(false)
                         .commit();

@@ -34,6 +34,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
@@ -50,7 +51,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.afollestad.appthemeengine.util.ATEUtil;
+import com.afollestad.appthemeengine.Config;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
@@ -436,7 +437,7 @@ public class ThemeUtils implements Constants {
     public static int getActionIconColor(Context context, int backgroundColor) {
         final int colorDark = ContextCompat.getColor(context, R.color.action_icon_dark);
         final int colorLight = ContextCompat.getColor(context, R.color.action_icon_light);
-        return ATEUtil.isColorLight(backgroundColor) ? colorDark : colorLight;
+        return isLightColor(backgroundColor) ? colorDark : colorLight;
     }
 
     public static void setLightStatusBar(@NonNull Window window, boolean lightStatusBar) {
@@ -596,9 +597,33 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getColorDependent(int color) {
-        final boolean isDark = !ATEUtil.isColorLight(color);
+        final boolean isDark = !isLightColor(color);
         return isDark ? Color.WHITE : Color.BLACK;
     }
 
 
+    @Config.LightStatusBarMode
+    public static int getLightStatusBarMode(int statusBarColor) {
+        if (isLightColor(statusBarColor)) {
+            return Config.LIGHT_STATUS_BAR_ON;
+        }
+        return Config.LIGHT_STATUS_BAR_OFF;
+    }
+
+    @Config.LightToolbarMode
+    public static int getLightToolbarMode(int themeColor) {
+        if (isLightColor(themeColor)) {
+            return Config.LIGHT_TOOLBAR_ON;
+        }
+        return Config.LIGHT_TOOLBAR_OFF;
+    }
+
+    public static boolean isLightColor(int color) {
+        return ColorUtils.calculateLuminance(color) * 0xFF > ACCENT_COLOR_THRESHOLD;
+    }
+
+    public static int getOptimalAccentColor(int themeColor) {
+        return getOptimalAccentColor(themeColor, getContrastColor(themeColor, Color.BLACK,
+                Color.WHITE));
+    }
 }

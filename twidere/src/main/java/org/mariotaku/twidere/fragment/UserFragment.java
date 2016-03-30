@@ -1556,7 +1556,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 ATEUtil.darkenColor(mPrimaryColorDark));
         final Window window = activity.getWindow();
         mTintedStatusFrameLayout.setStatusBarColor(statusBarColor);
-        ThemeUtils.setLightStatusBar(window, ATEUtil.isColorLight(statusBarColor));
+        ThemeUtils.setLightStatusBar(window, ThemeUtils.isLightColor(statusBarColor));
         int stackedTabColor = mPrimaryColor;
 
 
@@ -1583,7 +1583,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
         final Drawable tabBackground = mPagerIndicator.getBackground();
         ((ColorDrawable) tabBackground).setColor(currentTabColor);
-        final boolean tabItemIsDark = ATEUtil.isColorLight(currentTabColor);
+        final boolean tabItemIsDark = ThemeUtils.isLightColor(currentTabColor);
 
         if (mPreviousTabItemIsDark == 0 || (tabItemIsDark ? 1 : -1) != mPreviousTabItemIsDark) {
             final int tabContrastColor = ThemeUtils.getColorDependent(currentTabColor);
@@ -1597,11 +1597,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             mPagerIndicator.updateAppearance();
         }
-        mPreviousTabItemIsDark = (tabItemIsDark ? 1 : -1);
+        mPreviousTabItemIsDark = tabItemIsDark ? 1 : -1;
 
         final int currentActionBarColor = (Integer) sArgbEvaluator.evaluate(factor, mActionBarShadowColor,
                 stackedTabColor);
-        final boolean actionItemIsDark = ATEUtil.isColorLight(currentActionBarColor);
+        final boolean actionItemIsDark = ThemeUtils.isLightColor(currentActionBarColor);
         if (mPreviousActionBarItemIsDark == 0 || (actionItemIsDark ? 1 : -1) != mPreviousActionBarItemIsDark) {
             ThemeUtils.applyToolbarItemColor(activity, mToolbar, currentActionBarColor);
         }

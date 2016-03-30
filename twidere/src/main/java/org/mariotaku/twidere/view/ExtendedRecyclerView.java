@@ -91,7 +91,7 @@ public class ExtendedRecyclerView extends RecyclerView {
                 } else {
                     hScroll = 0f;
                 }
-                if ((vScroll != 0 || hScroll != 0)) {
+                if (vScroll != 0 || hScroll != 0) {
                     final float scrollFactor = getScrollFactorBackport();
                     float horizontalDirection = mMouseScrollDirectionDecider.getHorizontalDirection();
                     float verticalDirection = mMouseScrollDirectionDecider.getVerticalDirection();

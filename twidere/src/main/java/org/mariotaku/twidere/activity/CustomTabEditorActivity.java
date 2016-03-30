@@ -315,8 +315,7 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
                 mAccountsAdapter.add(ParcelableAccount.dummyCredentials());
             }
             final boolean officialKeyOnly = intent.getBooleanExtra(EXTRA_OFFICIAL_KEY_ONLY, false);
-            final boolean forcePrivateAPIs = intent.getBooleanExtra(KEY_FORCE_USING_PRIVATE_APIS, false);
-            mAccountsAdapter.addAll(DataStoreUtils.getCredentialsList(this, false, !forcePrivateAPIs && officialKeyOnly));
+            mAccountsAdapter.addAll(DataStoreUtils.getCredentialsList(this, false, officialKeyOnly));
             mAccountsAdapter.setDummyItemText(R.string.activated_accounts);
             switch (conf.getSecondaryFieldType()) {
                 case CustomTabConfiguration.FIELD_TYPE_USER: {
