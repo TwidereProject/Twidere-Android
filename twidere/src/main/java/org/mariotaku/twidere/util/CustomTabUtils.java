@@ -88,11 +88,11 @@ public class CustomTabUtils implements Constants {
 
         if (BuildConfig.DEBUG) {
             CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
-                    DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
+                    MessagesEntriesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
                     CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
         } else {
             CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
-                    MessagesEntriesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
+                    DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
                     CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
         }
 

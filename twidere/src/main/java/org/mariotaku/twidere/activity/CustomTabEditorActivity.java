@@ -61,6 +61,7 @@ import org.mariotaku.twidere.model.tab.argument.TabArguments;
 import org.mariotaku.twidere.model.tab.argument.TextQueryArguments;
 import org.mariotaku.twidere.model.tab.argument.UserArguments;
 import org.mariotaku.twidere.model.tab.argument.UserListArguments;
+import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.util.CustomTabUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.InternalParseUtils;
@@ -349,7 +350,10 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
             iconKey = intent.getStringExtra(EXTRA_ICON);
             mEditTabName.setText(intent.getStringExtra(EXTRA_NAME));
             if (savedInstanceState == null && intent.hasExtra(EXTRA_EXTRAS)) {
-                mExtrasBundle.putAll(InternalParseUtils.jsonToBundle(intent.getStringExtra(EXTRA_EXTRAS)));
+                TabExtras extras = CustomTabUtils.parseTabExtras(type, intent.getStringExtra(EXTRA_EXTRAS));
+                if (extras != null) {
+                    extras.copyToBundle(mExtrasBundle);
+                }
             }
         }
         final int selection = mTabIconsAdapter.getIconPosition(iconKey);

@@ -76,7 +76,8 @@
                     android:layout_weight="0"
                     android:background="?actionBarItemBackground"
                     android:color="?menuIconColor"
-                    android:src="@drawable/ic_action_search"/>
+                    android:src="@drawable/ic_action_search"
+                    tools:tint="?menuIconColor"/>
 
             </LinearLayout>
 

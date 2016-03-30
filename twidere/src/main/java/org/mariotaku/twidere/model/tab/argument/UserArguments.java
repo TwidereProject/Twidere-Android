@@ -26,7 +26,7 @@ public class UserArguments extends TabArguments {
     public void copyToBundle(@NonNull Bundle bundle) {
         super.copyToBundle(bundle);
         if (userKey == null) {
-            bundle.putParcelable(EXTRA_USER_ID, UserKey.valueOf(userId));
+            bundle.putParcelable(EXTRA_USER_KEY, UserKey.valueOf(userId));
         } else {
             bundle.putParcelable(EXTRA_USER_KEY, userKey);
         }

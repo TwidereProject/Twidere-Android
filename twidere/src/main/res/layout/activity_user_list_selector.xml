@@ -94,15 +94,17 @@
                     android:ems="10"
                     android:singleLine="true"/>
 
-                <ImageButton
+                <org.mariotaku.twidere.view.IconActionButton
                     android:id="@+id/screen_name_confirm"
                     android:layout_width="@dimen/minimum_element_size"
                     android:layout_height="@dimen/minimum_element_size"
                     android:layout_weight="0"
                     android:background="?selectableItemBackground"
+                    android:color="?menuIconColor"
                     android:contentDescription="@string/search"
                     android:onClick="onClick"
-                    android:src="@android:drawable/ic_menu_search"/>
+                    android:src="@drawable/ic_action_search"
+                    tools:tint="?menuIconColor"/>
             </LinearLayout>
 
         </LinearLayout>
