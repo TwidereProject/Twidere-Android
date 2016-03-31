@@ -102,7 +102,7 @@ public class AccountSelectorActivity extends BaseActivity implements
         final String[] whereArgs;
         if (isOAuthOnly()) {
             where = Expression.equalsArgs(Accounts.AUTH_TYPE).getSQL();
-            whereArgs = new String[]{String.valueOf(ParcelableCredentials.AUTH_TYPE_OAUTH)};
+            whereArgs = new String[]{String.valueOf(ParcelableCredentials.AuthType.OAUTH)};
         } else {
             where = null;
             whereArgs = null;

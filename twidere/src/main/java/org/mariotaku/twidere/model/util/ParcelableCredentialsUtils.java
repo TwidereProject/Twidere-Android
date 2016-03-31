@@ -17,8 +17,8 @@ import org.mariotaku.twidere.util.DataStoreUtils;
 public class ParcelableCredentialsUtils {
     public static boolean isOAuth(int authType) {
         switch (authType) {
-            case ParcelableCredentials.AUTH_TYPE_OAUTH:
-            case ParcelableCredentials.AUTH_TYPE_XAUTH: {
+            case ParcelableCredentials.AuthType.OAUTH:
+            case ParcelableCredentials.AuthType.XAUTH: {
                 return true;
             }
         }

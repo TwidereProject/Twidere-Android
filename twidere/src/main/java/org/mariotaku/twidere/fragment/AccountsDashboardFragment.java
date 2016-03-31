@@ -719,6 +719,10 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
         mAccountProfileContainer.setPadding(0, top, 0, 0);
     }
 
+    public RecyclerView getAccountsSelector() {
+        return mAccountsSelector;
+    }
+
     static class AccountProfileImageViewHolder extends ViewHolder implements OnClickListener {
 
         private final AccountSelectorAdapter adapter;

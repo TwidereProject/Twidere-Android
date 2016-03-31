@@ -149,7 +149,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
     @Override
     public void onLoadMoreContents(int position) {
         // Only supports load from end, skip START flag
-        if ((position & IndicatorPosition.START) != 0) return;
+        if ((position & IndicatorPosition.START) != 0 || isRefreshing()) return;
         super.onLoadMoreContents(position);
         if (position == 0) return;
         final ParcelableStatusesAdapter adapter = getAdapter();

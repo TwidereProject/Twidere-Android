@@ -23,6 +23,9 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import org.mariotaku.twidere.model.ParcelableActivityTableInfo;
+import org.mariotaku.twidere.model.ParcelableStatusTableInfo;
+
 @SuppressWarnings("unused")
 public interface TwidereDataStore {
 
@@ -855,10 +858,8 @@ public interface TwidereDataStore {
 
         String CARD_NAME = "card_type";
 
-        String DEFAULT_SORT_ORDER = STATUS_TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + STATUS_ID
-                + " DESC";
-
         String QUOTED_ID = "quoted_id";
+
         String QUOTED_TEXT_PLAIN = "quoted_text_plain";
         String QUOTED_TEXT_UNESCAPED = "quoted_text_unescaped";
         String QUOTED_MEDIA_JSON = "quoted_media_json";
@@ -872,52 +873,32 @@ public interface TwidereDataStore {
         String QUOTED_USER_IS_PROTECTED = "quoted_user_is_protected";
         String QUOTED_LOCATION = "quoted_location";
         String QUOTED_PLACE_FULL_NAME = "quoted_place_full_name";
-
         String RETWEETED = "retweeted";
 
         String EXTRAS = "extras";
+
         String SPANS = "spans";
         String QUOTED_SPANS = "quoted_spans";
-
         String POSITION_KEY = "position_key";
 
         String ACCOUNT_COLOR = "account_color";
+
         String USER_COLOR = "user_color";
         String QUOTED_USER_COLOR = "quoted_user_color";
         String RETWEET_USER_COLOR = "retweet_user_color";
-
         String USER_NICKNAME = "user_nickname";
+
         String QUOTED_USER_NICKNAME = "quoted_user_nickname";
         String RETWEET_USER_NICKNAME = "retweet_user_nickname";
         String IN_REPLY_TO_USER_NICKNAME = "in_reply_to_user_nickname";
 
-        String[] COLUMNS = {_ID, ACCOUNT_KEY, STATUS_ID, SORT_ID, USER_KEY, STATUS_TIMESTAMP,
-                TEXT_PLAIN, TEXT_UNESCAPED, USER_NAME, USER_SCREEN_NAME, USER_PROFILE_IMAGE_URL,
-                IN_REPLY_TO_STATUS_ID, IN_REPLY_TO_USER_ID, IN_REPLY_TO_USER_NAME, IN_REPLY_TO_USER_SCREEN_NAME,
-                SOURCE, LOCATION, RETWEET_COUNT, FAVORITE_COUNT, REPLY_COUNT,
-                RETWEET_ID, RETWEET_TIMESTAMP, RETWEETED_BY_USER_KEY, RETWEETED_BY_USER_NAME,
-                RETWEETED_BY_USER_SCREEN_NAME, RETWEETED_BY_USER_PROFILE_IMAGE, QUOTED_ID,
-                QUOTED_TEXT_PLAIN, QUOTED_TEXT_UNESCAPED, QUOTED_TIMESTAMP, QUOTED_SOURCE,
-                QUOTED_USER_KEY, QUOTED_USER_NAME, QUOTED_USER_SCREEN_NAME, QUOTED_USER_PROFILE_IMAGE,
-                QUOTED_USER_IS_VERIFIED, QUOTED_USER_IS_PROTECTED, MY_RETWEET_ID, IS_RETWEET,
-                IS_QUOTE, IS_FAVORITE, IS_PROTECTED, IS_VERIFIED, IS_FOLLOWING, IS_GAP,
-                IS_POSSIBLY_SENSITIVE, MEDIA_JSON, MENTIONS_JSON, QUOTED_MEDIA_JSON, CARD_NAME, CARD,
-                PLACE_FULL_NAME, LANG, RETWEETED, QUOTED_LOCATION, QUOTED_PLACE_FULL_NAME, INSERTED_DATE,
-                EXTRAS, POSITION_KEY, /*spans*/ SPANS, QUOTED_SPANS, /*colors*/ ACCOUNT_COLOR, USER_COLOR,
-                QUOTED_USER_COLOR, RETWEET_USER_COLOR, /*nicknames*/ USER_NICKNAME,
-                QUOTED_USER_NICKNAME, RETWEET_USER_NICKNAME, IN_REPLY_TO_USER_NICKNAME};
 
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT,
-                TYPE_TEXT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT,
-                TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_TEXT, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, INSERTED_DATE_TYPE, TYPE_TEXT,
-                TYPE_INT, /*spans*/ TYPE_TEXT, TYPE_TEXT, /*colors*/ TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_INT, /*nicknames*/TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT};
+        String DEFAULT_SORT_ORDER = STATUS_TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + STATUS_ID
+                + " DESC";
+
+        String[] COLUMNS = ParcelableStatusTableInfo.COLUMNS;
+
+        String[] TYPES = ParcelableStatusTableInfo.TYPES;
 
     }
 
@@ -928,8 +909,8 @@ public interface TwidereDataStore {
         String STATUS_ID = "status_id";
         String STATUS_RETWEET_ID = "status_retweet_id";
         String STATUS_USER_KEY = "status_user_id";
-        String STATUS_RETWEETED_BY_USER_ID = "status_retweeted_by_user_id";
-        String STATUS_QUOTED_USER_ID = "status_quoted_user_id";
+        String STATUS_RETWEETED_BY_USER_KEY = "status_retweeted_by_user_id";
+        String STATUS_QUOTED_USER_KEY = "status_quoted_user_id";
         String STATUS_SOURCE = "status_source";
         String STATUS_QUOTE_SOURCE = "status_quote_source";
         String STATUS_TEXT_PLAIN = "status_text_plain";
@@ -965,22 +946,8 @@ public interface TwidereDataStore {
 
         String POSITION_KEY = "position_key";
 
-        String[] COLUMNS = {_ID, ACCOUNT_KEY, ACTION, TIMESTAMP, STATUS_ID, STATUS_USER_KEY,
-                STATUS_RETWEETED_BY_USER_ID, STATUS_QUOTED_USER_ID, STATUS_SOURCE, STATUS_QUOTE_SOURCE,
-                STATUS_TEXT_PLAIN, STATUS_QUOTE_TEXT_PLAIN, STATUS_SPANS, STATUS_QUOTE_SPANS,
-                IS_GAP, MIN_SORT_POSITION, MAX_SORT_POSITION, SOURCES, SOURCE_IDS, TARGET_STATUSES, TARGET_USERS,
-                TARGET_USER_LISTS, TARGET_OBJECT_STATUSES, TARGET_OBJECT_USER_LISTS, TARGET_OBJECT_USERS,
-                STATUS_RETWEET_ID, STATUS_USER_FOLLOWING, INSERTED_DATE, MIN_REQUEST_POSITION,
-                MAX_REQUEST_POSITION, POSITION_KEY, ACCOUNT_COLOR, STATUS_USER_COLOR,
-                STATUS_QUOTED_USER_COLOR, STATUS_RETWEET_USER_COLOR, STATUS_USER_NICKNAME,
-                STATUS_QUOTED_USER_NICKNAME, STATUS_RETWEET_USER_NICKNAME,
-                STATUS_IN_REPLY_TO_USER_NICKNAME};
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_BOOLEAN, INSERTED_DATE_TYPE, TYPE_TEXT,
-                TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT};
+        String[] COLUMNS = ParcelableActivityTableInfo.COLUMNS;
+        String[] TYPES = ParcelableActivityTableInfo.TYPES;
 
         String DEFAULT_SORT_ORDER = TIMESTAMP + " DESC";
 

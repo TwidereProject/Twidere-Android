@@ -189,7 +189,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
     @Override
     public void onLoadMoreContents(@IndicatorPosition int position) {
         // Only supports load from end, skip START flag
-        if ((position & IndicatorPosition.START) != 0) return;
+        if ((position & IndicatorPosition.START) != 0 || isRefreshing()) return;
         super.onLoadMoreContents(position);
         if (position == 0) return;
         getActivities(new SimpleRefreshTaskParam() {

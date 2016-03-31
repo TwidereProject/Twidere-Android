@@ -141,14 +141,14 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             if (mExtras != null && UserFragment.Referral.SELF_PROFILE.equals(mExtras.getString(EXTRA_REFERRAL))) {
                 twitterUser = twitter.verifyCredentials();
             } else {
-                String mProfileUrl = null;
+                String profileUrl = null;
                 if (mExtras != null) {
-                    mProfileUrl = mExtras.getString(EXTRA_PROFILE_URL);
+                    profileUrl = mExtras.getString(EXTRA_PROFILE_URL);
                 }
                 if (TwitterAPIFactory.isStatusNetCredentials(credentials) && mUserKey != null &&
-                        mProfileUrl != null && !TextUtils.equals(credentials.account_key.getHost(),
+                        profileUrl != null && !TextUtils.equals(credentials.account_key.getHost(),
                         mUserKey.getHost())) {
-                    twitterUser = twitter.showExternalProfile(mProfileUrl);
+                    twitterUser = twitter.showExternalProfile(profileUrl);
                 } else {
                     final String id = mUserKey != null ? mUserKey.getId() : null;
                     twitterUser = TwitterWrapper.tryShowUser(twitter, id, mScreenName,

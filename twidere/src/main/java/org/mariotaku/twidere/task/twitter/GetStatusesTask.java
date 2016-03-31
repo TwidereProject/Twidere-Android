@@ -3,7 +3,6 @@ package org.mariotaku.twidere.task.twitter;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -12,9 +11,10 @@ import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.abstask.library.AbstractTask;
+import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.sqliteqb.library.SQLFunctions;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -32,9 +32,7 @@ import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.task.CacheUsersStatusesTask;
-import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
@@ -44,7 +42,6 @@ import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -189,6 +186,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         final ContentValues[] values = new ContentValues[statuses.size()];
         final String[] statusIds = new String[statuses.size()];
         int minIdx = -1;
+        long minPositionKey = -1;
         boolean hasIntersection = false;
         if (!statuses.isEmpty()) {
             final long firstSortId = statuses.get(0).getSortId();
@@ -203,10 +201,11 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
                 ParcelableStatusUtils.updateExtraInformation(status, credentials, manager);
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, j);
+                status.inserted_date = System.currentTimeMillis();
                 values[i] = ParcelableStatusValuesCreator.create(status);
-                values[i].put(Statuses.INSERTED_DATE, System.currentTimeMillis());
                 if (minIdx == -1 || item.compareTo(statuses.get(minIdx)) < 0) {
                     minIdx = i;
+                    minPositionKey = status.position_key;
                 }
                 if (sinceId != null && item.getSortId() <= sinceSortId) {
                     hasIntersection = true;
@@ -218,22 +217,16 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         final Expression accountWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY);
         final Expression statusWhere = Expression.inArgs(new Columns.Column(Statuses.STATUS_ID),
                 statusIds.length);
-        final String countWhere = Expression.and(accountWhere, statusWhere).getSQL();
-        final String[] whereArgs = new String[statusIds.length + 1];
-        System.arraycopy(statusIds, 0, whereArgs, 1, statusIds.length);
-        whereArgs[0] = accountKey.toString();
-        final String[] projection = {SQLFunctions.COUNT()};
-        final int rowsDeleted;
-        final Cursor countCur = resolver.query(uri, projection, countWhere, whereArgs, null);
-        try {
-            if (countCur != null && countCur.moveToFirst()) {
-                rowsDeleted = countCur.getInt(0);
-            } else {
-                rowsDeleted = 0;
-            }
-        } finally {
-            Utils.closeSilently(countCur);
+        final String deleteWhere = Expression.and(accountWhere, statusWhere).getSQL();
+        final String[] deleteWhereArgs = new String[statusIds.length + 1];
+        System.arraycopy(statusIds, 0, deleteWhereArgs, 1, statusIds.length);
+        deleteWhereArgs[0] = accountKey.toString();
+        int olderCount = -1;
+        if (minPositionKey > 0) {
+            olderCount = DataStoreUtils.getStatusesCount(context, uri, minPositionKey,
+                    Statuses.POSITION_KEY, false, accountKey);
         }
+        final int rowsDeleted = resolver.delete(uri, deleteWhere, deleteWhereArgs);
 
         // BEGIN HotMobi
         final RefreshEvent event = RefreshEvent.create(context, statusIds, getTimelineType());
@@ -244,8 +237,8 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId);
         final boolean noRowsDeleted = rowsDeleted == 0;
         // Why loadItemLimit / 2? because it will not acting strange in most cases
-        final boolean insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
-                && !hasIntersection && statuses.size() > loadItemLimit / 2;
+        final boolean insertGap = minIdx != -1 && olderCount > 0 && (noRowsDeleted || deletedOldGap)
+                && !noItemsBefore && !hasIntersection && statuses.size() > loadItemLimit / 2;
         if (insertGap) {
             values[minIdx].put(Statuses.IS_GAP, true);
         }

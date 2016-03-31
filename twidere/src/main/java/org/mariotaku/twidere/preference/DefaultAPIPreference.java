@@ -117,12 +117,12 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
                         @Override
                         public void onCheckedChanged(RadioGroup group, int checkedId) {
                             final int authType = APIEditorActivity.getCheckedAuthType(checkedId);
-                            final boolean isOAuth = authType == ParcelableCredentials.AUTH_TYPE_OAUTH || authType == ParcelableCredentials.AUTH_TYPE_XAUTH;
+                            final boolean isOAuth = authType == ParcelableCredentials.AuthType.OAUTH || authType == ParcelableCredentials.AuthType.XAUTH;
                             mEditSameOAuthSigningUrl.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
                             mEditConsumerKey.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
                             mEditConsumerSecret.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
                             if (!mEditNoVersionSuffixChanged) {
-                                mEditNoVersionSuffix.setChecked(authType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
+                                mEditNoVersionSuffix.setChecked(authType == ParcelableCredentials.AuthType.TWIP_O_MODE);
                             }
                         }
                     });
@@ -144,7 +144,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
                     } else {
                         final SharedPreferences preferences = preference.getSharedPreferences();
                         final String apiUrlFormat = preferences.getString(KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
-                        final int authType = preferences.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_OAUTH);
+                        final int authType = preferences.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AuthType.OAUTH);
                         final boolean sameOAuthSigningUrl = preferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, true);
                         final boolean noVersionSuffix = preferences.getBoolean(KEY_NO_VERSION_SUFFIX, false);
                         final String consumerKey = trim(preferences.getString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY));
@@ -201,10 +201,10 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
             mEditConsumerKey.setText(consumerKey);
             mEditConsumerSecret.setText(consumerSecret);
 
-            mButtonOAuth.setChecked(authType == ParcelableCredentials.AUTH_TYPE_OAUTH);
-            mButtonxAuth.setChecked(authType == ParcelableCredentials.AUTH_TYPE_XAUTH);
-            mButtonBasic.setChecked(authType == ParcelableCredentials.AUTH_TYPE_BASIC);
-            mButtonTwipOMode.setChecked(authType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
+            mButtonOAuth.setChecked(authType == ParcelableCredentials.AuthType.OAUTH);
+            mButtonxAuth.setChecked(authType == ParcelableCredentials.AuthType.XAUTH);
+            mButtonBasic.setChecked(authType == ParcelableCredentials.AuthType.BASIC);
+            mButtonTwipOMode.setChecked(authType == ParcelableCredentials.AuthType.TWIP_O_MODE);
             if (mEditAuthType.getCheckedRadioButtonId() == -1) {
                 mButtonOAuth.setChecked(true);
             }

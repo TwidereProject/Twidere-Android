@@ -5,19 +5,22 @@ import android.support.annotation.NonNull;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
+import org.mariotaku.twidere.provider.TwidereDataProvider;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 
 /**
  * Created by mariotaku on 16/2/1.
  */
-@CursorObject(valuesCreator = true)
+@CursorObject(valuesCreator = true, tableInfo = true)
 public class CachedRelationship {
 
-    @CursorField(CachedRelationships.ACCOUNT_KEY)
+    @CursorField(value = CachedRelationships.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
     public UserKey account_key;
 
-    @CursorField(CachedRelationships.USER_KEY)
-    public String user_id;
+    @CursorField(value = CachedRelationships.USER_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey user_key;
 
     @CursorField(CachedRelationships.FOLLOWING)
     public boolean following;
@@ -37,13 +40,16 @@ public class CachedRelationship {
     @CursorField(CachedRelationships.RETWEET_ENABLED)
     public boolean retweet_enabled;
 
+    @CursorField(value = CachedRelationships._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
+    public long _id;
+
     public CachedRelationship() {
 
     }
 
-    public CachedRelationship(UserKey accountId, String userId, @NonNull Relationship relationship) {
-        account_key = accountId;
-        user_id = userId;
+    public CachedRelationship(@NonNull Relationship relationship, @NonNull UserKey accountKey, @NonNull UserKey userKey) {
+        account_key = accountKey;
+        user_key = userKey;
         following = relationship.isSourceFollowingTarget();
         followed_by = relationship.isSourceFollowedByTarget();
         blocking = relationship.isSourceBlockingTarget();

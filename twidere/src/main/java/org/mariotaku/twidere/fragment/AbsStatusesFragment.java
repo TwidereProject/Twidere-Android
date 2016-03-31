@@ -33,6 +33,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
@@ -43,6 +44,7 @@ import com.squareup.otto.Subscribe;
 
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.abstask.library.TaskStarter;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
@@ -330,6 +332,9 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     public void onGapClick(GapViewHolder holder, int position) {
         final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(position);
+        if (BuildConfig.DEBUG) {
+            Log.v(LOGTAG, "Load activity gap " + status);
+        }
         if (status == null) return;
         final UserKey[] accountIds = {status.account_key};
         final String[] maxIds = {status.id};

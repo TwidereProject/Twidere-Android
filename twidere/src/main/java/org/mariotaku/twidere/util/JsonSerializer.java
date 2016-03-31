@@ -26,6 +26,7 @@ import com.bluelinelabs.logansquare.JsonMapper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
@@ -116,11 +117,19 @@ public class JsonSerializer {
         //noinspection TryFinallyCanBeTryWithResources
         try {
             is = new FileInputStream(file);
-            return LoganSquareMapperFinder.mapperFor(cls).parseList(is);
+            return parseList(is, cls);
         } catch (IOException e) {
             return null;
         } finally {
             Utils.closeSilently(is);
+        }
+    }
+
+    public static <E> List<E> parseList(InputStream stream, Class<E> cls) {
+        try {
+            return LoganSquareMapperFinder.mapperFor(cls).parseList(stream);
+        } catch (IOException e) {
+            return null;
         }
     }
 

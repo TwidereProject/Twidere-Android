@@ -17,7 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.v4.widget.DrawerLayout
+<org.mariotaku.twidere.view.HomeDrawerLayout
     android:id="@+id/home_menu"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -38,4 +38,4 @@
         android:layout_gravity="start"
         tools:layout="@layout/fragment_accounts_dashboard"/>
 
-</android.support.v4.widget.DrawerLayout>
+</org.mariotaku.twidere.view.HomeDrawerLayout>

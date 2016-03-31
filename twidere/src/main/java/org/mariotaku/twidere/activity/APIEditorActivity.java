@@ -66,16 +66,16 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
     public static int getCheckedAuthType(final int checkedId) {
         switch (checkedId) {
             case R.id.xauth: {
-                return ParcelableCredentials.AUTH_TYPE_XAUTH;
+                return ParcelableCredentials.AuthType.XAUTH;
             }
             case R.id.basic: {
-                return ParcelableCredentials.AUTH_TYPE_BASIC;
+                return ParcelableCredentials.AuthType.BASIC;
             }
             case R.id.twip_o: {
-                return ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE;
+                return ParcelableCredentials.AuthType.TWIP_O_MODE;
             }
             default: {
-                return ParcelableCredentials.AUTH_TYPE_OAUTH;
+                return ParcelableCredentials.AuthType.OAUTH;
             }
         }
     }
@@ -83,12 +83,12 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
     @Override
     public void onCheckedChanged(final RadioGroup group, final int checkedId) {
         final int authType = getCheckedAuthType(checkedId);
-        final boolean isOAuth = authType == ParcelableCredentials.AUTH_TYPE_OAUTH || authType == ParcelableCredentials.AUTH_TYPE_XAUTH;
+        final boolean isOAuth = authType == ParcelableCredentials.AuthType.OAUTH || authType == ParcelableCredentials.AuthType.XAUTH;
         mEditSameOAuthSigningUrl.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
         mEditConsumerKey.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
         mEditConsumerSecret.setVisibility(isOAuth ? View.VISIBLE : View.GONE);
         if (!mEditNoVersionSuffixChanged) {
-            mEditNoVersionSuffix.setChecked(authType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
+            mEditNoVersionSuffix.setChecked(authType == ParcelableCredentials.AuthType.TWIP_O_MODE);
         }
     }
 
@@ -193,7 +193,7 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
 
         final SharedPreferences pref = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         final String prefApiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
-        final int prefAuthType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AUTH_TYPE_OAUTH);
+        final int prefAuthType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AuthType.OAUTH);
         final boolean prefSameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean prefNoVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
         final String prefConsumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
@@ -227,10 +227,10 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
         mEditConsumerKey.setText(consumerKey);
         mEditConsumerSecret.setText(consumerSecret);
 
-        mButtonOAuth.setChecked(authType == ParcelableCredentials.AUTH_TYPE_OAUTH);
-        mButtonXAuth.setChecked(authType == ParcelableCredentials.AUTH_TYPE_XAUTH);
-        mButtonBasic.setChecked(authType == ParcelableCredentials.AUTH_TYPE_BASIC);
-        mButtonTWIPOMode.setChecked(authType == ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE);
+        mButtonOAuth.setChecked(authType == ParcelableCredentials.AuthType.OAUTH);
+        mButtonXAuth.setChecked(authType == ParcelableCredentials.AuthType.XAUTH);
+        mButtonBasic.setChecked(authType == ParcelableCredentials.AuthType.BASIC);
+        mButtonTWIPOMode.setChecked(authType == ParcelableCredentials.AuthType.TWIP_O_MODE);
         if (mEditAuthType.getCheckedRadioButtonId() == -1) {
             mButtonOAuth.setChecked(true);
         }
@@ -239,13 +239,13 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
 
     private int getAuthTypeId(final int authType) {
         switch (authType) {
-            case ParcelableCredentials.AUTH_TYPE_XAUTH: {
+            case ParcelableCredentials.AuthType.XAUTH: {
                 return R.id.xauth;
             }
-            case ParcelableCredentials.AUTH_TYPE_BASIC: {
+            case ParcelableCredentials.AuthType.BASIC: {
                 return R.id.basic;
             }
-            case ParcelableCredentials.AUTH_TYPE_TWIP_O_MODE: {
+            case ParcelableCredentials.AuthType.TWIP_O_MODE: {
                 return R.id.twip_o;
             }
             default: {
@@ -270,11 +270,12 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            mAPIConfigs = CustomAPIConfig.listDefault(getContext());
-            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getContext());
+            final Context context = getContext();
+            mAPIConfigs = CustomAPIConfig.listDefault(context);
+            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
             String[] entries = new String[mAPIConfigs.length];
             for (int i = 0, mAPIConfigsLength = mAPIConfigs.length; i < mAPIConfigsLength; i++) {
-                entries[i] = mAPIConfigs[i].getName();
+                entries[i] = mAPIConfigs[i].getLocalizedName(context);
             }
             builder.setItems(entries, this);
             return builder.create();

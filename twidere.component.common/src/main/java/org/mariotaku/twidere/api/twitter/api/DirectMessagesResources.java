@@ -49,22 +49,18 @@ public interface DirectMessagesResources {
     ResponseList<DirectMessage> getSentDirectMessages(@Query Paging paging) throws TwitterException;
 
     @POST("/direct_messages/new.json")
-    @BodyType(BodyType.FORM)
     DirectMessage sendDirectMessage(@Param("user_id") String userId, @Param("text") String text)
             throws TwitterException;
 
     @POST("/direct_messages/new.json")
-    @BodyType(BodyType.FORM)
     DirectMessage sendDirectMessage(@Param("user_id") String userId, @Param("text") String text,
                                     @Param("media_id") String mediaId) throws TwitterException;
 
     @POST("/direct_messages/new.json")
-    @BodyType(BodyType.FORM)
     DirectMessage sendDirectMessageToScreenName(@Param("screen_name") String screenName, @Param("text") String text)
             throws TwitterException;
 
     @POST("/direct_messages/new.json")
-    @BodyType(BodyType.FORM)
     DirectMessage sendDirectMessageToScreenName(@Param("screen_name") String screenName, @Param("text") String text,
                                                 @Param("media_id") String mediaId) throws TwitterException;
 

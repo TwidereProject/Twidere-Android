@@ -58,6 +58,7 @@ import org.mariotaku.twidere.api.fanfou.model.PhotoStatusUpdate;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterUpload;
+import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
 import org.mariotaku.twidere.api.twitter.model.NewMediaMetadata;
@@ -454,30 +455,42 @@ public class BackgroundOperationService extends IntentService implements Constan
                                                                       final String recipientId,
                                                                       final String text,
                                                                       final String imageUri) {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, accountKey, true, true);
-        final TwitterUpload twitterUpload = TwitterAPIFactory.getTwitterInstance(this, accountKey, true, true, TwitterUpload.class);
+        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(this,
+                accountKey);
+        if (credentials == null) return SingleResponse.getInstance();
+        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(this, credentials, true, true);
+        final TwitterUpload twitterUpload = TwitterAPIFactory.getTwitterInstance(this, credentials,
+                true, true, TwitterUpload.class);
         if (twitter == null || twitterUpload == null) return SingleResponse.getInstance();
         try {
             final ParcelableDirectMessage directMessage;
-            if (imageUri != null) {
-                final String path = getImagePathFromUri(this, Uri.parse(imageUri));
-                if (path == null) throw new FileNotFoundException();
-                final BitmapFactory.Options o = new BitmapFactory.Options();
-                o.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(path, o);
-                final File file = new File(path);
-                BitmapUtils.downscaleImageIfNeeded(file, 100);
-                final ContentLengthInputStream is = new ContentLengthInputStream(file);
-                is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager, builder, text));
-//                final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
-                final MediaUploadResponse uploadResp = twitterUpload.uploadMedia(file);
-                directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text,
-                        uploadResp.getId()), accountKey, true);
-                if (!file.delete()) {
-                    Log.d(LOGTAG, String.format("unable to delete %s", path));
+            if (USER_TYPE_FANFOU_COM.equals(credentials.account_type)) {
+                if (imageUri != null) {
+                    throw new TwitterException("Can't send image DM on Fanfou");
                 }
+                final DirectMessage dm = twitter.sendFanfouDirectMessage(recipientId, text, null);
+                directMessage = ParcelableDirectMessageUtils.fromDirectMessage(dm, accountKey, true);
             } else {
-                directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text), accountKey, true);
+                if (imageUri != null) {
+                    final String path = getImagePathFromUri(this, Uri.parse(imageUri));
+                    if (path == null) throw new FileNotFoundException();
+                    final BitmapFactory.Options o = new BitmapFactory.Options();
+                    o.inJustDecodeBounds = true;
+                    BitmapFactory.decodeFile(path, o);
+                    final File file = new File(path);
+                    BitmapUtils.downscaleImageIfNeeded(file, 100);
+                    final ContentLengthInputStream is = new ContentLengthInputStream(file);
+                    is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager, builder, text));
+//                final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
+                    final MediaUploadResponse uploadResp = twitterUpload.uploadMedia(file);
+                    directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text,
+                            uploadResp.getId()), accountKey, true);
+                    if (!file.delete()) {
+                        Log.d(LOGTAG, String.format("unable to delete %s", path));
+                    }
+                } else {
+                    directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text), accountKey, true);
+                }
             }
             Utils.setLastSeen(this, new UserKey(recipientId, accountKey.getHost()),
                     System.currentTimeMillis());

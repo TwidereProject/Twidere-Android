@@ -121,9 +121,9 @@ public class UserColorNameManager implements TwidereConstants {
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_USER_COLOR,
                 Activities.STATUS_USER_KEY, color, cv);
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_RETWEET_USER_COLOR,
-                Activities.STATUS_RETWEETED_BY_USER_ID, color, cv);
+                Activities.STATUS_RETWEETED_BY_USER_KEY, color, cv);
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_QUOTED_USER_COLOR,
-                Activities.STATUS_QUOTED_USER_ID, color, cv);
+                Activities.STATUS_QUOTED_USER_KEY, color, cv);
     }
 
     private void updateNickname(String userKey, String nickname) {
@@ -139,9 +139,9 @@ public class UserColorNameManager implements TwidereConstants {
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_USER_NICKNAME,
                 Activities.STATUS_USER_KEY, nickname, cv);
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_RETWEET_USER_NICKNAME,
-                Activities.STATUS_RETWEETED_BY_USER_ID, nickname, cv);
+                Activities.STATUS_RETWEETED_BY_USER_KEY, nickname, cv);
         updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_QUOTED_USER_NICKNAME,
-                Activities.STATUS_QUOTED_USER_ID, nickname, cv);
+                Activities.STATUS_QUOTED_USER_KEY, nickname, cv);
     }
 
     private static void updateColumn(ContentResolver cr, Uri uri, String userKey, String valueColumn,

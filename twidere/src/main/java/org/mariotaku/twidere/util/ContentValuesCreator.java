@@ -30,6 +30,8 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.Trend;
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.twidere.model.CachedRelationship;
+import org.mariotaku.twidere.model.CachedRelationshipValuesCreator;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
@@ -43,15 +45,12 @@ import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
-import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
@@ -69,15 +68,8 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createCachedRelationship(final Relationship relationship,
                                                          final UserKey accountKey,
                                                          final UserKey userKey) {
-        final ContentValues values = new ContentValues();
-        values.put(CachedRelationships.ACCOUNT_KEY, accountKey.toString());
-        values.put(CachedRelationships.USER_KEY, userKey.toString());
-        values.put(CachedRelationships.FOLLOWING, relationship.isSourceFollowingTarget());
-        values.put(CachedRelationships.FOLLOWED_BY, relationship.isSourceFollowedByTarget());
-        values.put(CachedRelationships.BLOCKING, relationship.isSourceBlockingTarget());
-        values.put(CachedRelationships.BLOCKED_BY, relationship.isSourceBlockedByTarget());
-        values.put(CachedRelationships.MUTING, relationship.isSourceMutingTarget());
-        return values;
+        CachedRelationship cached = new CachedRelationship(relationship, accountKey, userKey);
+        return CachedRelationshipValuesCreator.create(cached);
     }
 
     public static ContentValues createCachedUser(final User user) {
@@ -206,11 +198,26 @@ public final class ContentValuesCreator implements TwidereConstants {
                                                ParcelableCredentials credentials, UserColorNameManager manager) {
         final ContentValues values = new ContentValues();
         final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
+
+        activity.account_color = credentials.color;
+
         if (status != null) {
             ParcelableStatusUtils.updateExtraInformation(status, credentials, manager);
-            createStatusActivity(status, values);
 
-            activity.account_color = status.account_color;
+            if (status.is_retweet) {
+                activity.status_retweeted_by_user_key = status.retweeted_by_user_key;
+            } else if (status.is_quote) {
+                activity.status_quote_spans = status.quoted_spans;
+                activity.status_quote_text_plain = status.quoted_text_plain;
+                activity.status_quote_source = status.quoted_source;
+                activity.status_quoted_user_key = status.quoted_user_key;
+            }
+            activity.status_user_key = status.user_key;
+            activity.status_user_following = status.user_is_following;
+            activity.status_spans = status.spans;
+            activity.status_text_plain = status.text_plain;
+            activity.status_source = status.source;
+
             activity.status_user_color = status.user_color;
             activity.status_retweet_user_color = status.retweet_user_color;
             activity.status_quoted_user_color = status.quoted_user_color;
@@ -219,31 +226,10 @@ public final class ContentValuesCreator implements TwidereConstants {
             activity.status_in_reply_to_user_nickname = status.in_reply_to_user_nickname;
             activity.status_retweet_user_nickname = status.retweet_user_nickname;
             activity.status_quoted_user_nickname = status.quoted_user_nickname;
-
-        } else {
-            activity.account_color = credentials.color;
         }
         ParcelableActivityValuesCreator.writeTo(activity, values);
         return values;
     }
-
-    public static void createStatusActivity(@NonNull final ParcelableStatus status,
-                                            @NonNull final ContentValues values) {
-        if (status.is_retweet) {
-            values.put(Activities.STATUS_RETWEETED_BY_USER_ID, String.valueOf(status.retweeted_by_user_key));
-        } else if (status.is_quote) {
-            values.put(Activities.STATUS_QUOTE_SPANS, JsonSerializer.serialize(status.quoted_spans, SpanItem.class));
-            values.put(Activities.STATUS_QUOTE_TEXT_PLAIN, status.quoted_text_plain);
-            values.put(Activities.STATUS_QUOTE_SOURCE, status.quoted_source);
-            values.put(Activities.STATUS_QUOTED_USER_ID, String.valueOf(status.quoted_user_key));
-        }
-        values.put(Activities.STATUS_USER_KEY, String.valueOf(status.user_key));
-        values.put(Activities.STATUS_USER_FOLLOWING, status.user_is_following);
-        values.put(Activities.STATUS_SPANS, JsonSerializer.serialize(status.spans, SpanItem.class));
-        values.put(Activities.STATUS_TEXT_PLAIN, status.text_plain);
-        values.put(Activities.STATUS_SOURCE, status.source);
-    }
-
 
     public static ContentValues[] createTrends(final List<Trends> trendsList) {
         if (trendsList == null) return new ContentValues[0];
@@ -259,5 +245,6 @@ public final class ContentValuesCreator implements TwidereConstants {
         }
         return resultList.toArray(new ContentValues[resultList.size()]);
     }
+
 
 }

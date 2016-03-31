@@ -152,9 +152,9 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             } else {
                 deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_sort_position);
             }
+            parcelableActivity.inserted_date = System.currentTimeMillis();
             final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity,
                     credentials, userColorNameManager);
-            values.put(Activities.INSERTED_DATE, System.currentTimeMillis());
             valuesList.add(values);
         }
         final Uri contentUri = UriUtils.appendQueryParameters(getContentUri(), QUERY_PARAM_NOTIFY,

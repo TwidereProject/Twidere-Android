@@ -276,7 +276,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         }
         final String endpointUrl;
         endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
-        if (credentials.auth_type == ParcelableCredentials.AUTH_TYPE_XAUTH || credentials.auth_type == ParcelableCredentials.AUTH_TYPE_OAUTH) {
+        if (credentials.auth_type == ParcelableCredentials.AuthType.XAUTH || credentials.auth_type == ParcelableCredentials.AuthType.OAUTH) {
             final String signEndpointUrl;
             if (!sameOAuthSigningUrl) {
                 signEndpointUrl = getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix);
@@ -292,8 +292,8 @@ public class TwitterAPIFactory implements TwidereConstants {
     public static Authorization getAuthorization(@Nullable ParcelableCredentials credentials) {
         if (credentials == null) return null;
         switch (credentials.auth_type) {
-            case ParcelableCredentials.AUTH_TYPE_OAUTH:
-            case ParcelableCredentials.AUTH_TYPE_XAUTH: {
+            case ParcelableCredentials.AuthType.OAUTH:
+            case ParcelableCredentials.AuthType.XAUTH: {
                 final String consumerKey = TextUtils.isEmpty(credentials.consumer_key) ?
                         TWITTER_CONSUMER_KEY_LEGACY : credentials.consumer_key;
                 final String consumerSecret = TextUtils.isEmpty(credentials.consumer_secret) ?
@@ -304,7 +304,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                     return new OAuthAuthorization(consumerKey, consumerSecret, accessToken);
                 return new OAuthAuthorization(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, accessToken);
             }
-            case ParcelableCredentials.AUTH_TYPE_BASIC: {
+            case ParcelableCredentials.AuthType.BASIC: {
                 final String screenName = credentials.screen_name;
                 final String username = credentials.basic_auth_username;
                 final String loginName = username != null ? username : screenName;

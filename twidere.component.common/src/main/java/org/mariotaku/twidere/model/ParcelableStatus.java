@@ -37,13 +37,14 @@ import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 
-@CursorObject(valuesCreator = true)
+@CursorObject(valuesCreator = true, tableInfo = true)
 @JsonObject
 @ParcelablePlease
 public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus>, Cloneable {
@@ -68,29 +69,38 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             return new ParcelableStatus[size];
         }
     };
+    @CursorField(value = Statuses._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
+    long _id;
+
+    @SuppressWarnings("NullableProblems")
     @ParcelableThisPlease
     @JsonField(name = "id")
     @CursorField(Statuses.STATUS_ID)
+    @NonNull
     public String id;
+    @SuppressWarnings("NullableProblems")
+    @ParcelableThisPlease
+    @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
+    @CursorField(value = Statuses.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
+    @NonNull
+    public UserKey account_key;
     @ParcelableThisPlease
     @JsonField(name = "sort_id")
     @CursorField(Statuses.SORT_ID)
     public long sort_id = -1;
     @ParcelableThisPlease
-    @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
-    @CursorField(value = Statuses.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
-    public UserKey account_key;
-    @ParcelableThisPlease
-    @JsonField(name = "timestamp")
-    @CursorField(Statuses.STATUS_TIMESTAMP)
-    public long timestamp;
-    @ParcelableThisPlease
     @JsonField(name = "position_key")
     @CursorField(Statuses.POSITION_KEY)
     public long position_key;
     @ParcelableThisPlease
+    @JsonField(name = "timestamp")
+    @CursorField(Statuses.STATUS_TIMESTAMP)
+    public long timestamp;
+    @SuppressWarnings("NullableProblems")
+    @ParcelableThisPlease
     @JsonField(name = "user_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Statuses.USER_KEY, converter = UserKeyCursorFieldConverter.class)
+    @NonNull
     public UserKey user_key;
     @ParcelableThisPlease
     @JsonField(name = "retweet_id")
@@ -266,11 +276,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public String quoted_user_profile_image;
     @ParcelableThisPlease
     @JsonField(name = "quoted_location")
-    @CursorField(value = Statuses.LOCATION, converter = ParcelableLocation.Converter.class)
+    @CursorField(value = Statuses.QUOTED_LOCATION, converter = ParcelableLocation.Converter.class)
     public ParcelableLocation quoted_location;
     @ParcelableThisPlease
     @JsonField(name = "quoted_place_full_name")
-    @CursorField(value = Statuses.PLACE_FULL_NAME, converter = LoganSquareCursorFieldConverter.class)
+    @CursorField(value = Statuses.QUOTED_PLACE_FULL_NAME, converter = LoganSquareCursorFieldConverter.class)
     public String quoted_place_full_name;
     @ParcelableThisPlease
     @JsonField(name = "location")
@@ -343,9 +353,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.IN_REPLY_TO_USER_NICKNAME)
     public String in_reply_to_user_nickname;
 
-    @CursorField(value = Statuses._ID, excludeWrite = true)
-    long _id;
-
+    @CursorField(Statuses.INSERTED_DATE)
+    public long inserted_date;
 
     public ParcelableStatus() {
     }

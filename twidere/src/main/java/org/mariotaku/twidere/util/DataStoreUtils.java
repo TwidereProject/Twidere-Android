@@ -460,22 +460,22 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static int getStatusesCount(final Context context, final Uri uri, final long since,
-                                       String sinceColumn, UserKey... accountKeys) {
+    public static int getStatusesCount(final Context context, final Uri uri, final long compare,
+                                       String compareColumn, boolean greaterThan, UserKey... accountKeys) {
         if (context == null) return 0;
         if (accountKeys == null) {
             accountKeys = getActivatedAccountKeys(context);
         }
         final Expression selection = Expression.and(
                 Expression.inArgs(new Column(Statuses.ACCOUNT_KEY), accountKeys.length),
-                Expression.greaterThanArgs(sinceColumn),
+                greaterThan ? Expression.greaterThanArgs(compareColumn) : Expression.lesserThanArgs(compareColumn),
                 buildStatusFilterWhereClause(getTableNameByUri(uri), null)
         );
         final String[] whereArgs = new String[accountKeys.length + 1];
         for (int i = 0; i < accountKeys.length; i++) {
             whereArgs[i] = accountKeys[i].toString();
         }
-        whereArgs[accountKeys.length] = String.valueOf(since);
+        whereArgs[accountKeys.length] = String.valueOf(compare);
         return queryCount(context, uri, selection.getSQL(), whereArgs);
     }
 
@@ -618,8 +618,8 @@ public class DataStoreUtils implements Constants {
                 .build();
         final Expression filteredUsersWhere = Expression.or(
                 Expression.in(new Column(new Table(table), Activities.STATUS_USER_KEY), filteredUsersQuery),
-                Expression.in(new Column(new Table(table), Activities.STATUS_RETWEETED_BY_USER_ID), filteredUsersQuery),
-                Expression.in(new Column(new Table(table), Activities.STATUS_QUOTED_USER_ID), filteredUsersQuery)
+                Expression.in(new Column(new Table(table), Activities.STATUS_RETWEETED_BY_USER_KEY), filteredUsersQuery),
+                Expression.in(new Column(new Table(table), Activities.STATUS_QUOTED_USER_KEY), filteredUsersQuery)
         );
         final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
                 .select(new Column(new Table(table), Activities._ID))
@@ -648,9 +648,9 @@ public class DataStoreUtils implements Constants {
                 .from(new Tables(table, Filters.Links.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Activities.STATUS_SPANS),
-                                "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'"),
+                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'"),
                         Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_SPANS),
-                                "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'")
+                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'")
                 ));
         final Expression filterExpression = Expression.or(
                 Expression.notIn(new Column(new Table(table), Activities._ID), filteredIdsQueryBuilder.build()),

@@ -35,30 +35,37 @@ import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeysConverter;
 import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 
 import java.util.Arrays;
 
 @ParcelablePlease(allFields = false)
 @JsonObject
-@CursorObject(valuesCreator = true)
+@CursorObject(valuesCreator = true, tableInfo = true)
 public class ParcelableActivity implements Comparable<ParcelableActivity>, Parcelable {
 
     public static final Creator<ParcelableActivity> CREATOR = new Creator<ParcelableActivity>() {
+        @Override
         public ParcelableActivity createFromParcel(Parcel source) {
             ParcelableActivity target = new ParcelableActivity();
             ParcelableActivityParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableActivity[] newArray(int size) {
             return new ParcelableActivity[size];
         }
     };
 
     @ParcelableThisPlease
-    @CursorField(value = Activities._ID, excludeWrite = true)
+    @CursorField(value = Activities._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
     public long _id;
+    @ParcelableThisPlease
+    @JsonField(name = "position_key")
+    @CursorField(Activities.POSITION_KEY)
+    public long position_key;
     @ParcelableThisPlease
     @JsonField(name = "account_id", typeConverter = UserKeyConverter.class)
     @CursorField(value = Activities.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
@@ -164,6 +171,42 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @CursorField(Activities.STATUS_IN_REPLY_TO_USER_NICKNAME)
     public String status_in_reply_to_user_nickname;
 
+
+    @CursorField(value = Activities.STATUS_QUOTE_SPANS, converter = LoganSquareCursorFieldConverter.class)
+    public SpanItem[] status_quote_spans;
+
+    @CursorField(Activities.STATUS_QUOTE_TEXT_PLAIN)
+    public String status_quote_text_plain;
+
+    @CursorField(Activities.STATUS_QUOTE_SOURCE)
+    public String status_quote_source;
+
+    @CursorField(value = Activities.STATUS_QUOTED_USER_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey status_quoted_user_key;
+
+    @CursorField(value = Activities.STATUS_USER_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey status_user_key;
+
+    @CursorField(value = Activities.STATUS_SPANS, converter = LoganSquareCursorFieldConverter.class)
+    public SpanItem[] status_spans;
+
+    @CursorField(Activities.STATUS_TEXT_PLAIN)
+    public String status_text_plain;
+
+    @CursorField(Activities.STATUS_SOURCE)
+    public String status_source;
+
+    @CursorField(value = Activities.STATUS_RETWEETED_BY_USER_KEY, converter = UserKeyCursorFieldConverter.class)
+    public UserKey status_retweeted_by_user_key;
+
+    @CursorField(Activities.INSERTED_DATE)
+    public long inserted_date;
+
+    @CursorField(Activities.STATUS_ID)
+    public String status_id;
+
+    @CursorField(Activities.STATUS_RETWEET_ID)
+    public String status_retweet_id;
 
     public transient UserKey[] after_filtered_source_ids;
     public transient ParcelableUser[] after_filtered_sources;
