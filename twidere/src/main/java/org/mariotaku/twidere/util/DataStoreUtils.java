@@ -344,10 +344,10 @@ public class DataStoreUtils implements Constants {
                 .select(new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Links.TABLE_NAME))
                 .where(Expression.or(
-                        Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_HTML),
-                                "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'"),
-                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_TEXT_HTML),
-                                "'%>%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%</a>%'")
+                        Expression.likeRaw(new Column(new Table(table), Statuses.SPANS),
+                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'"),
+                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_SPANS),
+                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'")
                 ));
         final Expression filterExpression = Expression.or(
                 Expression.notIn(new Column(new Table(table), Statuses._ID), filteredIdsQueryBuilder.build()),
