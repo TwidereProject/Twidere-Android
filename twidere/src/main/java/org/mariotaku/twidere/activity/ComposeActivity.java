@@ -460,7 +460,6 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
                         if (INTENT_ACTION_EXTENSION_COMPOSE.equals(action)) {
                             final UserKey[] accountKeys = mAccountsAdapter.getSelectedAccountKeys();
                             intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(mEditText.getText()));
-                            intent.putExtra(EXTRA_ACCOUNT_IDS, UserKey.getIds(accountKeys));
                             intent.putExtra(EXTRA_ACCOUNT_KEYS, accountKeys);
                             if (accountKeys.length > 0) {
                                 final UserKey accountKey = accountKeys[0];

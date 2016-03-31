@@ -8,6 +8,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.UserKey;
 
@@ -19,18 +20,10 @@ import java.util.Arrays;
 @JsonObject
 public class TabArguments implements TwidereConstants {
     @JsonField(name = "account_id")
-    String accountId = null;
+    String accountId;
 
     @JsonField(name = "account_keys")
     UserKey[] accountKeys;
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
 
     public UserKey[] getAccountKeys() {
         return accountKeys;
@@ -38,6 +31,10 @@ public class TabArguments implements TwidereConstants {
 
     public void setAccountKeys(UserKey[] accountKeys) {
         this.accountKeys = accountKeys;
+    }
+
+    public String getAccountId() {
+        return accountId;
     }
 
     @CallSuper
@@ -48,7 +45,12 @@ public class TabArguments implements TwidereConstants {
             }
             bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountKeys);
         } else if (accountId != null) {
-            bundle.putString(EXTRA_ACCOUNT_ID, accountId);
+            final long id = NumberUtils.toLong(accountId, Long.MIN_VALUE);
+            if (id != Long.MIN_VALUE && id <= 0) {
+                bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, new UserKey[0]);
+                return;
+            }
+            bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, new UserKey[]{UserKey.valueOf(accountId)});
         }
     }
 

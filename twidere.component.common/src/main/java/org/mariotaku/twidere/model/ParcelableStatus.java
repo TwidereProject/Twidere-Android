@@ -56,12 +56,14 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         }
     };
     public static final Creator<ParcelableStatus> CREATOR = new Creator<ParcelableStatus>() {
+        @Override
         public ParcelableStatus createFromParcel(Parcel source) {
             ParcelableStatus target = new ParcelableStatus();
             ParcelableStatusParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableStatus[] newArray(int size) {
             return new ParcelableStatus[size];
         }
@@ -385,22 +387,24 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @Override
     public String toString() {
         return "ParcelableStatus{" +
-                "id=" + id +
+                "id='" + id + '\'' +
+                ", sort_id=" + sort_id +
                 ", account_key=" + account_key +
                 ", timestamp=" + timestamp +
-                ", user_id=" + user_key +
-                ", retweet_id=" + retweet_id +
-                ", retweeted_by_user_id=" + retweeted_by_user_key +
+                ", position_key=" + position_key +
+                ", user_key=" + user_key +
+                ", retweet_id='" + retweet_id + '\'' +
+                ", retweeted_by_user_key=" + retweeted_by_user_key +
                 ", retweet_timestamp=" + retweet_timestamp +
                 ", retweet_count=" + retweet_count +
                 ", favorite_count=" + favorite_count +
                 ", reply_count=" + reply_count +
-                ", in_reply_to_status_id=" + in_reply_to_status_id +
+                ", in_reply_to_status_id='" + in_reply_to_status_id + '\'' +
                 ", in_reply_to_user_id=" + in_reply_to_user_id +
-                ", my_retweet_id=" + my_retweet_id +
-                ", quoted_id=" + quoted_id +
+                ", my_retweet_id='" + my_retweet_id + '\'' +
+                ", quoted_id='" + quoted_id + '\'' +
                 ", quoted_timestamp=" + quoted_timestamp +
-                ", quoted_user_id=" + quoted_user_key +
+                ", quoted_user_key=" + quoted_user_key +
                 ", is_gap=" + is_gap +
                 ", is_retweet=" + is_retweet +
                 ", retweeted=" + retweeted +
@@ -440,6 +444,17 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", quoted_media=" + Arrays.toString(quoted_media) +
                 ", card=" + card +
                 ", extras=" + extras +
+                ", spans=" + Arrays.toString(spans) +
+                ", quoted_spans=" + Arrays.toString(quoted_spans) +
+                ", is_filtered=" + is_filtered +
+                ", account_color=" + account_color +
+                ", user_color=" + user_color +
+                ", quoted_user_color=" + quoted_user_color +
+                ", retweet_user_color=" + retweet_user_color +
+                ", user_nickname='" + user_nickname + '\'' +
+                ", quoted_user_nickname='" + quoted_user_nickname + '\'' +
+                ", retweet_user_nickname='" + retweet_user_nickname + '\'' +
+                ", in_reply_to_user_nickname='" + in_reply_to_user_nickname + '\'' +
                 ", _id=" + _id +
                 '}';
     }
@@ -486,12 +501,14 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public static class Extras implements Parcelable {
 
         public static final Creator<Extras> CREATOR = new Creator<Extras>() {
+            @Override
             public Extras createFromParcel(Parcel source) {
                 Extras target = new Extras();
                 ParcelableStatus$ExtrasParcelablePlease.readFromParcel(target, source);
                 return target;
             }
 
+            @Override
             public Extras[] newArray(int size) {
                 return new Extras[size];
             }

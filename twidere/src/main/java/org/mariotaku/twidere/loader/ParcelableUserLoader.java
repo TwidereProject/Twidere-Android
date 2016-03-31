@@ -114,9 +114,11 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
             if (mUserKey != null) {
                 where = Expression.equalsArgs(CachedUsers.USER_KEY);
                 whereArgs = new String[]{mUserKey.toString()};
-            } else {
+            } else if (mScreenName != null) {
                 where = Expression.equalsArgs(CachedUsers.SCREEN_NAME);
                 whereArgs = new String[]{mScreenName};
+            } else {
+                return SingleResponse.getInstance();
             }
             final Cursor cur = resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS,
                     where.getSQL(), whereArgs, null);
