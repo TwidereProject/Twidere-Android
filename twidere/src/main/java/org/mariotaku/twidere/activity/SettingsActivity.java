@@ -37,6 +37,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,8 @@ import java.util.List;
 
 public class SettingsActivity extends BaseActivity implements OnItemClickListener,
         OnPreferenceStartFragmentCallback {
+
+    public static final String EXTRA_INITIAL_TAG = "initial_tag";
 
     private static final int RESULT_SETTINGS_CHANGED = 10;
 
@@ -106,49 +109,63 @@ public class SettingsActivity extends BaseActivity implements OnItemClickListene
         mEntriesListView.setOnItemClickListener(this);
 
         if (savedInstanceState == null) {
+            String initialTag = getIntent().getStringExtra(EXTRA_INITIAL_TAG);
+            int initialItem = -1, firstEntry = -1;
             for (int i = 0, j = mEntriesAdapter.getCount(); i < j; i++) {
-                if (mEntriesAdapter.getItemViewType(i) == EntriesAdapter.VIEW_TYPE_PREFERENCE_ENTRY) {
-                    openDetails(i);
-                    mEntriesListView.setItemChecked(i, true);
-                    break;
+                Entry entry = mEntriesAdapter.getItem(i);
+                if (entry instanceof PreferenceEntry) {
+                    if (firstEntry == -1) {
+                        firstEntry = i;
+                    }
+                    if (TextUtils.equals(initialTag, ((PreferenceEntry) entry).tag)) {
+                        initialItem = i;
+                        break;
+                    }
                 }
+            }
+            if (initialItem == -1) {
+                initialItem = firstEntry;
+            }
+            if (initialItem != -1) {
+                openDetails(initialItem);
+                mEntriesListView.setItemChecked(initialItem, true);
             }
         }
     }
 
     private void initEntries() {
         mEntriesAdapter.addHeader(getString(R.string.appearance));
-        mEntriesAdapter.addPreference(R.drawable.ic_action_color_palette, getString(R.string.theme),
+        mEntriesAdapter.addPreference("theme", R.drawable.ic_action_color_palette, getString(R.string.theme),
                 R.xml.preferences_theme);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_card, getString(R.string.cards),
+        mEntriesAdapter.addPreference("cards", R.drawable.ic_action_card, getString(R.string.cards),
                 R.xml.preferences_cards);
 
         mEntriesAdapter.addHeader(getString(R.string.function));
-        mEntriesAdapter.addPreference(R.drawable.ic_action_tab, getString(R.string.tabs),
+        mEntriesAdapter.addPreference("tabs", R.drawable.ic_action_tab, getString(R.string.tabs),
                 CustomTabsFragment.class);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_extension, getString(R.string.extensions),
+        mEntriesAdapter.addPreference("extension", R.drawable.ic_action_extension, getString(R.string.extensions),
                 ExtensionsListFragment.class);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_refresh, getString(R.string.refresh),
+        mEntriesAdapter.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.refresh),
                 R.xml.preferences_refresh);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_notification, getString(R.string.notifications),
+        mEntriesAdapter.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.notifications),
                 R.xml.preferences_notifications);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_web, getString(R.string.network),
+        mEntriesAdapter.addPreference("network", R.drawable.ic_action_web, getString(R.string.network),
                 R.xml.preferences_network);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_status_compose, getString(R.string.compose),
+        mEntriesAdapter.addPreference("compose", R.drawable.ic_action_status_compose, getString(R.string.compose),
                 R.xml.preferences_compose);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_twidere_square, getString(R.string.content),
+        mEntriesAdapter.addPreference("content", R.drawable.ic_action_twidere_square, getString(R.string.content),
                 R.xml.preferences_content);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_storage, getString(R.string.storage),
+        mEntriesAdapter.addPreference("storage", R.drawable.ic_action_storage, getString(R.string.storage),
                 R.xml.preferences_storage);
-        mEntriesAdapter.addPreference(R.drawable.ic_action_more_horizontal, getString(R.string.other_settings),
+        mEntriesAdapter.addPreference("other", R.drawable.ic_action_more_horizontal, getString(R.string.other_settings),
                 R.xml.preferences_other);
 
         mEntriesAdapter.addHeader(getString(R.string.about));
-        mEntriesAdapter.addPreference(R.drawable.ic_action_info, getString(R.string.about),
+        mEntriesAdapter.addPreference("about", R.drawable.ic_action_info, getString(R.string.about),
                 R.xml.preferences_about);
         final Bundle browserArgs = new Bundle();
         browserArgs.putString(EXTRA_URI, "file:///android_asset/gpl-3.0-standalone.html");
-        mEntriesAdapter.addPreference(R.drawable.ic_action_open_source, getString(R.string.open_source_license),
+        mEntriesAdapter.addPreference("license", R.drawable.ic_action_open_source, getString(R.string.open_source_license),
                 SupportBrowserFragment.class, browserArgs);
     }
 
@@ -275,19 +292,19 @@ public class SettingsActivity extends BaseActivity implements OnItemClickListene
             mEntries = new ArrayList<>();
         }
 
-        public void addPreference(@DrawableRes int icon, String title, @XmlRes int preference) {
-            mEntries.add(new PreferenceEntry(icon, title, preference, null, null));
+        public void addPreference(String tag, @DrawableRes int icon, String title, @XmlRes int preference) {
+            mEntries.add(new PreferenceEntry(tag, icon, title, preference, null, null));
             notifyDataSetChanged();
         }
 
-        public void addPreference(@DrawableRes int icon, String title, Class<? extends Fragment> cls) {
-            addPreference(icon, title, cls, null);
+        public void addPreference(String tag, @DrawableRes int icon, String title, Class<? extends Fragment> cls) {
+            addPreference(tag, icon, title, cls, null);
         }
 
 
-        public void addPreference(@DrawableRes int icon, String title, Class<? extends Fragment> cls,
+        public void addPreference(String tag, @DrawableRes int icon, String title, Class<? extends Fragment> cls,
                                   @Nullable Bundle args) {
-            mEntries.add(new PreferenceEntry(icon, title, 0, cls.getName(), args));
+            mEntries.add(new PreferenceEntry(tag, icon, title, 0, cls.getName(), args));
             notifyDataSetChanged();
         }
 
@@ -365,6 +382,8 @@ public class SettingsActivity extends BaseActivity implements OnItemClickListene
     }
 
     static class PreferenceEntry extends Entry {
+        @NonNull
+        private final String tag;
         private final int icon;
         private final String title;
         private final int preference;
@@ -372,7 +391,8 @@ public class SettingsActivity extends BaseActivity implements OnItemClickListene
 
         private final Bundle args;
 
-        public PreferenceEntry(int icon, String title, int preference, String fragment, Bundle args) {
+        public PreferenceEntry(@NonNull String tag, int icon, String title, int preference, String fragment, Bundle args) {
+            this.tag = tag;
             this.icon = icon;
             this.title = title;
             this.preference = preference;

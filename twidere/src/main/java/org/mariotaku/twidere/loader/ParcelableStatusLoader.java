@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -31,13 +32,13 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT;
-import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 
 /**
@@ -84,6 +85,11 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
             extras.putParcelable(EXTRA_ACCOUNT, credentials);
             return response;
         } catch (final TwitterException e) {
+            if (e.getErrorCode() == ErrorInfo.STATUS_NOT_FOUND) {
+                // Delete all deleted status
+                DataStoreUtils.deleteStatus(getContext().getContentResolver(), mAccountId,
+                        mStatusId, null);
+            }
             return SingleResponse.getInstance(e);
         }
     }

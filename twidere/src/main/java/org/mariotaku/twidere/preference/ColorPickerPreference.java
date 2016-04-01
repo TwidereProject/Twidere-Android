@@ -146,6 +146,7 @@ public class ColorPickerPreference extends DialogPreference implements Constants
             if (preference.isPersistent()) {
                 preference.persistInt(color);
             }
+            preference.callChangeListener(color);
             preference.notifyChanged();
         }
 

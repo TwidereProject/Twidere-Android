@@ -178,14 +178,14 @@ public class TwidereApplication extends Application implements Constants,
             //noinspection WrongConstant
             ATE.config(this, VALUE_THEME_NAME_LIGHT)
                     .primaryColor(themeColor)
-                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
+                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK))
                     .coloredActionBar(true)
                     .coloredStatusBar(true)
                     .commit();
         }
         if (!ATE.config(this, VALUE_THEME_NAME_DARK).isConfigured()) {
             ATE.config(this, VALUE_THEME_NAME_DARK)
-                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
+                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.WHITE))
                     .coloredActionBar(false)
                     .coloredStatusBar(true)
                     .statusBarColor(Color.BLACK)
@@ -193,7 +193,7 @@ public class TwidereApplication extends Application implements Constants,
         }
         if (!ATE.config(this, null).isConfigured()) {
             ATE.config(this, null)
-                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
+                    .accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.WHITE))
                     .coloredActionBar(false)
                     .coloredStatusBar(false)
                     .commit();
@@ -360,18 +360,18 @@ public class TwidereApplication extends Application implements Constants,
                 //noinspection WrongConstant
                 ATE.config(this, VALUE_THEME_NAME_LIGHT)
                         .primaryColor(themeColor)
-                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
+                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK))
                         .coloredActionBar(true)
                         .coloredStatusBar(true)
                         .commit();
                 ATE.config(this, VALUE_THEME_NAME_DARK)
-                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
+                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.WHITE))
                         .coloredActionBar(false)
                         .coloredStatusBar(true)
                         .statusBarColor(Color.BLACK)
                         .commit();
                 ATE.config(this, null)
-                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor))
+                        .accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK))
                         .coloredActionBar(false)
                         .coloredStatusBar(false)
                         .commit();

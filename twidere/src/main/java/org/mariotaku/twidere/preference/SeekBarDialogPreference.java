@@ -126,6 +126,7 @@ public class SeekBarDialogPreference extends DialogPreference implements IDialog
         if (progress != mProgress) {
             mProgress = progress;
             persistInt(progress);
+            callChangeListener(progress);
             notifyChanged();
         }
     }

@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.afollestad.appthemeengine.Config;
+import com.afollestad.appthemeengine.util.ATEUtil;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.twidere.Constants;
@@ -143,6 +146,12 @@ public class SettingsWizardActivity extends BaseActivity implements Constants {
     }
 
     @Override
+    public int getStatusBarColor() {
+        if (VALUE_THEME_NAME_DARK.equals(getATEKey())) return Color.BLACK;
+        return ATEUtil.darkenColor(ThemeUtils.getColorBackground(this));
+    }
+
+    @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case REQUEST_IMPORT_SETTINGS: {
@@ -222,6 +231,8 @@ public class SettingsWizardActivity extends BaseActivity implements Constants {
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            final PreferenceManager preferenceManager = getPreferenceManager();
+            preferenceManager.setSharedPreferencesName(SHARED_PREFERENCES_NAME);
             addPreferencesFromResource(getPreferenceResource());
 
             final Context context = getActivity();
@@ -257,13 +268,6 @@ public class SettingsWizardActivity extends BaseActivity implements Constants {
             for (int i = 0, j = screen.getPreferenceCount(); i < j; i++) {
                 screen.getPreference(i).setOnPreferenceChangeListener(listener);
             }
-        }
-
-        @Override
-        public void onActivityCreated(final Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-
-
         }
 
         @Override
@@ -435,10 +439,9 @@ public class SettingsWizardActivity extends BaseActivity implements Constants {
         public boolean onPreferenceClick(final Preference preference) {
             final String key = preference.getKey();
             if (WIZARD_PREFERENCE_KEY_EDIT_CUSTOM_TABS.equals(key)) {
-//                final Intent intent = new Intent(getActivity(), SettingsActivity.class);
-//                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, CustomTabsFragment.class.getName());
-//                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.tabs);
-//                startActivityForResult(intent, REQUEST_CUSTOM_TABS);
+                final Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                intent.putExtra(SettingsActivity.EXTRA_INITIAL_TAG, "tabs");
+                startActivityForResult(intent, REQUEST_CUSTOM_TABS);
             } else if (WIZARD_PREFERENCE_KEY_USE_DEFAULTS.equals(key)) {
                 applyInitialTabSettings();
             }

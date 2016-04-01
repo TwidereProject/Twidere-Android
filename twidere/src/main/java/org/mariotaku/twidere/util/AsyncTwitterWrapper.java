@@ -577,7 +577,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<ParcelableUser> doLongOperation(final Object  params) {
+        protected SingleResponse<ParcelableUser> doLongOperation(final Object params) {
             try {
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, true);
                 TwitterWrapper.updateProfileImage(mContext, twitter, mImageUri, mDeleteImage);
@@ -1304,16 +1304,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             } catch (final TwitterException e) {
                 exception = e;
             }
-            if (status != null || (exception != null && exception.getErrorCode() == HttpResponseCode.NOT_FOUND)) {
-                final ContentValues values = new ContentValues();
-                values.put(Statuses.MY_RETWEET_ID, -1);
-                if (status != null) {
-                    values.put(Statuses.RETWEET_COUNT, status.retweet_count - 1);
-                }
-                for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
-                    mResolver.delete(uri, Expression.equalsArgs(Statuses.STATUS_ID).getSQL(), new String[]{mStatusId});
-                    mResolver.update(uri, values, Expression.equalsArgs(Statuses.MY_RETWEET_ID).getSQL(), new String[]{mStatusId});
-                }
+            if (status != null || (exception != null && exception.getErrorCode() == ErrorInfo.STATUS_NOT_FOUND)) {
+                DataStoreUtils.deleteStatus(mResolver, mAccountKey, mStatusId, status);
             }
             return SingleResponse.getInstance(status, exception);
         }

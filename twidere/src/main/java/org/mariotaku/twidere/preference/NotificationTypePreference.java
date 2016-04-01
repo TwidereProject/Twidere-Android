@@ -130,6 +130,7 @@ public class NotificationTypePreference extends DialogPreference implements Cons
                 }
             }
             preference.persistInt(value);
+            preference.callChangeListener(value);
             preference.notifyChanged();
         }
 

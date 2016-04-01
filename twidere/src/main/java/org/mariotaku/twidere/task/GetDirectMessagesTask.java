@@ -13,9 +13,9 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.Twitter;
-import org.mariotaku.twidere.api.twitter.TwitterErrorCode;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
+import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.model.RefreshTaskParam;
@@ -98,7 +98,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
                 storeMessages(accountKey, messages, isOutgoing(), true);
                 errorInfoStore.remove(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey);
             } catch (final TwitterException e) {
-                if (e.getErrorCode() == TwitterErrorCode.NO_DM_PERMISSION) {
+                if (e.getErrorCode() == ErrorInfo.NO_DIRECT_MESSAGE_PERMISSION) {
                     errorInfoStore.put(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey,
                             ErrorInfoStore.CODE_NO_DM_PERMISSION);
                 } else if (e.isCausedByNetworkIssue()) {
