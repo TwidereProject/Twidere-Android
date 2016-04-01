@@ -93,7 +93,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     }
 
     @Override
-    protected void beforeExecute(RefreshTaskParam refreshTaskParam) {
+    protected void beforeExecute() {
         bus.post(new GetStatusesTaskEvent(getContentUri(), true, null));
     }
 

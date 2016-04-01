@@ -19,13 +19,16 @@
 
 package org.mariotaku.twidere.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
+import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.api.twitter.Twitter;
@@ -44,6 +47,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
@@ -174,13 +178,34 @@ public class TwitterWrapper implements Constants {
 
     public static void updateProfileBannerImage(final Context context, final Twitter twitter,
                                                 final Uri imageUri, final boolean deleteImage)
-            throws FileNotFoundException, TwitterException {
-        InputStream is = null;
+            throws IOException, TwitterException {
+        FileBody fileBody = null;
         try {
-            is = context.getContentResolver().openInputStream(imageUri);
-            twitter.updateProfileBannerImage(new FileBody(is, "image", -1, null));
+            fileBody = getFileBody(context, imageUri);
+            twitter.updateProfileBannerImage(fileBody);
         } finally {
-            Utils.closeSilently(is);
+            Utils.closeSilently(fileBody);
+            if (deleteImage && "file".equals(imageUri.getScheme())) {
+                final File file = new File(imageUri.getPath());
+                if (!file.delete()) {
+                    Log.w(LOGTAG, String.format("Unable to delete %s", file));
+                }
+            }
+        }
+    }
+
+    public static void updateProfileBackgroundImage(@NonNull final Context context,
+                                                    @NonNull final Twitter twitter,
+                                                    @NonNull final Uri imageUri,
+                                                    final boolean tile,
+                                                    final boolean deleteImage)
+            throws IOException, TwitterException {
+        FileBody fileBody = null;
+        try {
+            fileBody = getFileBody(context, imageUri);
+            twitter.updateProfileBackgroundImage(fileBody, tile);
+        } finally {
+            Utils.closeSilently(fileBody);
             if (deleteImage && "file".equals(imageUri.getScheme())) {
                 final File file = new File(imageUri.getPath());
                 if (!file.delete()) {
@@ -192,13 +217,13 @@ public class TwitterWrapper implements Constants {
 
     public static User updateProfileImage(final Context context, final Twitter twitter,
                                           final Uri imageUri, final boolean deleteImage)
-            throws FileNotFoundException, TwitterException {
-        InputStream is = null;
+            throws IOException, TwitterException {
+        FileBody fileBody = null;
         try {
-            is = context.getContentResolver().openInputStream(imageUri);
-            return twitter.updateProfileImage(new FileBody(is, "image", -1, null));
+            fileBody = getFileBody(context, imageUri);
+            return twitter.updateProfileImage(fileBody);
         } finally {
-            Utils.closeSilently(is);
+            Utils.closeSilently(fileBody);
             if (deleteImage && "file".equals(imageUri.getScheme())) {
                 final File file = new File(imageUri.getPath());
                 if (!file.delete()) {
@@ -206,6 +231,33 @@ public class TwitterWrapper implements Constants {
                 }
             }
         }
+    }
+
+    private static FileBody getFileBody(Context context, Uri imageUri) throws IOException {
+        final ContentResolver cr = context.getContentResolver();
+        String type = cr.getType(imageUri);
+        if (type == null) {
+            type = Utils.getImageMimeType(cr, imageUri);
+        }
+        final ContentType contentType;
+        final String extension;
+        if (type != null) {
+            contentType = ContentType.parse(type);
+            extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(type);
+        } else {
+            contentType = null;
+            extension = null;
+        }
+        final InputStream is = cr.openInputStream(imageUri);
+        if (is == null) throw new FileNotFoundException(imageUri.toString());
+
+        final String fileName;
+        if (extension != null) {
+            fileName = "image." + extension;
+        } else {
+            fileName = "image";
+        }
+        return new FileBody(is, fileName, is.available(), contentType);
     }
 
     public static final class MessageListResponse extends TwitterListResponse<DirectMessage> {

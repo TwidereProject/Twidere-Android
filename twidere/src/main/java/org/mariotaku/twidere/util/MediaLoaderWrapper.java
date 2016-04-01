@@ -222,12 +222,8 @@ public class MediaLoaderWrapper implements Constants {
     }
 
 
-    public void displayImage(final ImageView view, final String url, DisplayImageOptions options) {
-        mImageLoader.displayImage(url, view, options);
-    }
-
-    public DisplayImageOptions getProfileImageDisplayOptions() {
-        return mProfileImageDisplayOptions;
+    public void displayImage(final ImageView view, final String url) {
+        mImageLoader.displayImage(url, view);
     }
 
     public void displayProfileImage(final ImageView view, final String url, final ImageLoadingListener listener) {

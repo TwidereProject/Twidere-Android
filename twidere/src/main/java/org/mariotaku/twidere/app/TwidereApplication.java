@@ -48,6 +48,7 @@ import android.widget.TextView;
 import com.afollestad.appthemeengine.ATE;
 import com.afollestad.appthemeengine.Config;
 import com.pnikosis.materialishprogress.ProgressWheel;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
@@ -73,6 +74,7 @@ import org.mariotaku.twidere.util.theme.FloatingActionButtonViewProcessor;
 import org.mariotaku.twidere.util.theme.FontFamilyTagProcessor;
 import org.mariotaku.twidere.util.theme.IconActionButtonTagProcessor;
 import org.mariotaku.twidere.util.theme.ImageViewViewProcessor;
+import org.mariotaku.twidere.util.theme.MaterialEditTextViewProcessor;
 import org.mariotaku.twidere.util.theme.OptimalLinkColorTagProcessor;
 import org.mariotaku.twidere.util.theme.ProfileImageViewViewProcessor;
 import org.mariotaku.twidere.util.theme.ProgressWheelViewProcessor;
@@ -152,6 +154,7 @@ public class TwidereApplication extends Application implements Constants,
         ATE.registerViewProcessor(TimelineContentTextView.class, new TimelineContentTextViewViewProcessor());
         ATE.registerViewProcessor(TextView.class, new TextViewViewProcessor());
         ATE.registerViewProcessor(ImageView.class, new ImageViewViewProcessor());
+        ATE.registerViewProcessor(MaterialEditText.class, new MaterialEditTextViewProcessor());
         ATE.registerViewProcessor(ProgressWheel.class, new ProgressWheelViewProcessor());
         ATE.registerViewProcessor(ProfileImageView.class, mProfileImageViewViewProcessor);
         ATE.registerTagProcessor(OptimalLinkColorTagProcessor.TAG, new OptimalLinkColorTagProcessor());

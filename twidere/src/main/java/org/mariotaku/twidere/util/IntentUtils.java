@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -193,6 +195,27 @@ public class IntentUtils implements Constants {
         } else {
             return status.media;
         }
+    }
+
+    public static String getDefaultBrowserPackage(Context context) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(SCHEME_HTTP);
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        int range = 'z' - 'a';
+        for (int i = 0; i < 20; i++) {
+            sb.append((char) ('a' + (Math.abs(random.nextInt()) % range)));
+        }
+        sb.append(".com");
+        builder.authority(sb.toString());
+        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        List<ResolveInfo> info = context.getPackageManager().queryIntentActivities(intent, 0);
+        if (info.isEmpty()) return null;
+        for (ResolveInfo item : info) {
+            if (item.isDefault) return item.activityInfo.packageName;
+        }
+        return info.get(0).activityInfo.packageName;
     }
 
     public static void openMediaDirectly(@NonNull final Context context,

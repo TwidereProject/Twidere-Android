@@ -52,7 +52,8 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
 
 
     @Override
-    protected final void beforeExecute(Arguments params) {
+    protected final void beforeExecute() {
+        Arguments params = getParams();
         twitter.addUpdatingRelationshipId(params.accountKey, params.userKey);
         final FriendshipTaskEvent event = new FriendshipTaskEvent(action, params.accountKey,
                 params.userKey);

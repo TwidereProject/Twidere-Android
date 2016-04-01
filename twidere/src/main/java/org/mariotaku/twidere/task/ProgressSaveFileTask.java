@@ -40,6 +40,7 @@ public abstract class ProgressSaveFileTask extends SaveFileTask {
         super(context, source, destination, getMimeType);
     }
 
+    @Override
     protected void showProgress() {
         final Context context = getContext();
         if (context == null) return;
@@ -53,6 +54,7 @@ public abstract class ProgressSaveFileTask extends SaveFileTask {
         });
     }
 
+    @Override
     protected void dismissProgress() {
         final Context context = getContext();
         if (context == null) return;

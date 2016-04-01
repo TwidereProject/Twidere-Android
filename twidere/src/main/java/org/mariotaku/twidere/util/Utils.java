@@ -41,7 +41,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
@@ -75,13 +74,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.system.ErrnoException;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.text.style.CharacterStyle;
-import android.text.style.StyleSpan;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -1239,6 +1235,23 @@ public final class Utils implements Constants {
         return o.outMimeType;
     }
 
+    @Nullable
+    public static String getImageMimeType(ContentResolver cr, final Uri uri) {
+        if (uri == null) return null;
+        final BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        InputStream is = null;
+        try {
+            is = cr.openInputStream(uri);
+            BitmapFactory.decodeStream(is, null, o);
+            return o.outMimeType;
+        } catch (IOException e) {
+            return null;
+        } finally {
+            closeSilently(is);
+        }
+    }
+
     public static String getImagePathFromUri(final Context context, final Uri uri) {
         if (context == null || uri == null) return null;
 
@@ -1288,28 +1301,6 @@ public final class Utils implements Constants {
         final File cacheDir = new File(externalCacheDir, cacheDirName);
         if (cacheDir.isDirectory() || cacheDir.mkdirs()) return cacheDir;
         return new File(context.getCacheDir(), cacheDirName);
-    }
-
-    public static CharSequence getKeywordBoldedText(final CharSequence orig, final String... keywords) {
-        return getKeywordHighlightedText(orig, new StyleSpan(Typeface.BOLD), keywords);
-    }
-
-    public static CharSequence getKeywordHighlightedText(final CharSequence orig, final CharacterStyle style,
-                                                         final String... keywords) {
-        if (keywords == null || keywords.length == 0 || orig == null) return orig;
-        final SpannableStringBuilder sb = SpannableStringBuilder.valueOf(orig);
-        final StringBuilder patternBuilder = new StringBuilder();
-        for (int i = 0, j = keywords.length; i < j; i++) {
-            if (i != 0) {
-                patternBuilder.append('|');
-            }
-            patternBuilder.append(Pattern.quote(keywords[i]));
-        }
-        final Matcher m = Pattern.compile(patternBuilder.toString(), Pattern.CASE_INSENSITIVE).matcher(orig);
-        while (m.find()) {
-            sb.setSpan(style, m.start(), m.end(), SpannableStringBuilder.SPAN_INCLUSIVE_INCLUSIVE);
-        }
-        return sb;
     }
 
     public static String getLinkHighlightingStyleName(final Context context) {
@@ -1785,7 +1776,7 @@ public final class Utils implements Constants {
         if (absListView == null) return;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             if (absListView instanceof ListView) {
-                final ListView listView = ((ListView) absListView);
+                final ListView listView = (ListView) absListView;
                 listView.setSelectionFromTop(position, offset);
             } else {
                 absListView.setSelection(position);
@@ -1794,7 +1785,7 @@ public final class Utils implements Constants {
         } else {
             stopListView(absListView);
             if (absListView instanceof ListView) {
-                final ListView listView = ((ListView) absListView);
+                final ListView listView = (ListView) absListView;
                 listView.setSelectionFromTop(position, offset);
             } else {
                 absListView.setSelection(position);
@@ -1929,6 +1920,9 @@ public final class Utils implements Constants {
                             .getMessage(context, te.getStatusCode(), te.getErrorCode());
                     message = context.getString(R.string.error_message_with_action, action, msg != null ? msg
                             : trimLineBreak(te.getMessage()));
+                } else if (!TextUtils.isEmpty(te.getErrorMessage())) {
+                    message = context.getString(R.string.error_message_with_action, action,
+                            trimLineBreak(te.getErrorMessage()));
                 } else if (te.getCause() instanceof SSLException) {
                     final String msg = te.getCause().getMessage();
                     if (msg != null && msg.contains("!=")) {
@@ -2148,8 +2142,8 @@ public final class Utils implements Constants {
 
     public static boolean isCustomConsumerKeySecret(String consumerKey, String consumerSecret) {
         if (TextUtils.isEmpty(consumerKey) || TextUtils.isEmpty(consumerSecret)) return false;
-        return (!TWITTER_CONSUMER_KEY.equals(consumerKey) && !TWITTER_CONSUMER_SECRET.equals(consumerKey))
-                && (!TWITTER_CONSUMER_KEY_LEGACY.equals(consumerKey) && !TWITTER_CONSUMER_SECRET_LEGACY.equals(consumerSecret));
+        return !TWITTER_CONSUMER_KEY.equals(consumerKey) && !TWITTER_CONSUMER_SECRET.equals(consumerKey)
+                && !TWITTER_CONSUMER_KEY_LEGACY.equals(consumerKey) && !TWITTER_CONSUMER_SECRET_LEGACY.equals(consumerSecret);
     }
 
     public static boolean isStreamingEnabled() {

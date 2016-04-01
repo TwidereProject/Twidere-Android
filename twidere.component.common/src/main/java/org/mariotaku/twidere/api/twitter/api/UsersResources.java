@@ -98,7 +98,6 @@ public interface UsersResources {
     ResponseList<User> lookupUsersByScreenName(@Param(value = "screen_name", arrayDelimiter = ',') String[] screenNames) throws TwitterException;
 
     @POST("/account/remove_profile_banner.json")
-    @BodyType(BodyType.FORM)
     ResponseCode removeProfileBannerImage() throws TwitterException;
 
     @GET("/users/search.json")
@@ -111,34 +110,27 @@ public interface UsersResources {
     User showUserByScreenName(@Query("screen_name") String screenName) throws TwitterException;
 
     @POST("/account/settings.json")
-    @BodyType(BodyType.FORM)
     AccountSettings updateAccountSettings(@Param SettingsUpdate settingsUpdate) throws TwitterException;
 
     @POST("/account/update_profile.json")
-    @BodyType(BodyType.FORM)
     User updateProfile(@Param ProfileUpdate profileUpdate) throws TwitterException;
 
     @POST("/account/update_profile_background_image.json")
-    @BodyType(BodyType.MULTIPART)
     User updateProfileBackgroundImage(@Param("image") FileBody data, @Param("tile") boolean tile) throws TwitterException;
 
     @POST("/account/update_profile_background_image.json")
-    @BodyType(BodyType.FORM)
     User updateProfileBackgroundImage(@Param("media_id") long mediaId, @Param("tile") boolean tile) throws TwitterException;
 
     @POST("/account/update_profile_banner.json")
-    @BodyType(BodyType.MULTIPART)
     ResponseCode updateProfileBannerImage(@Param("banner") FileBody data, @Param("width") int width,
                                           @Param("height") int height, @Param("offset_left") int offsetLeft,
                                           @Param("offset_top") int offsetTop)
             throws TwitterException;
 
     @POST("/account/update_profile_banner.json")
-    @BodyType(BodyType.MULTIPART)
     ResponseCode updateProfileBannerImage(@Param("banner") FileBody data) throws TwitterException;
 
     @POST("/account/update_profile_image.json")
-    @BodyType(BodyType.MULTIPART)
     User updateProfileImage(@Param("image") FileBody data) throws TwitterException;
 
     @GET("/account/verify_credentials.json")

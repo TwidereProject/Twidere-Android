@@ -32,9 +32,9 @@ import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
+import org.mariotaku.twidere.fragment.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
-import org.mariotaku.twidere.fragment.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.MessagesConversationFragment;
@@ -51,10 +51,13 @@ import org.mariotaku.twidere.task.AbsFriendshipOperationTask;
 import org.mariotaku.twidere.task.GetDirectMessagesTask;
 import org.mariotaku.twidere.task.GetTrendsTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
+import org.mariotaku.twidere.task.UpdateProfileBackgroundImageTask;
+import org.mariotaku.twidere.task.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.task.twitter.GetStatusesTask;
 import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
+import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MultiSelectEventHandler;
 
 import javax.inject.Singleton;
@@ -138,4 +141,10 @@ public interface GeneralComponent {
     void inject(ParcelableStatusLoader loader);
 
     void inject(GetTrendsTask task);
+
+    void inject(UpdateProfileBackgroundImageTask<Object> task);
+
+    void inject(UpdateProfileBannerImageTask<Object> task);
+
+    void inject(AsyncTwitterWrapper.UpdateProfileImageTask<Object> task);
 }

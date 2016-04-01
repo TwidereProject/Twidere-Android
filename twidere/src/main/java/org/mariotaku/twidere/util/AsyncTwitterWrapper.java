@@ -110,11 +110,14 @@ import org.mariotaku.twidere.task.GetSavedSearchesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.ReportSpamAndBlockTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -552,7 +555,11 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return mUpdatingRelationshipIds.contains(ParcelableUser.calculateHashCode(accountId, userId));
     }
 
-    public static class UpdateProfileImageTask extends ManagedAsyncTask<Object, Object, SingleResponse<ParcelableUser>> {
+    public static class UpdateProfileImageTask<ResultHandler> extends AbstractTask<Object,
+            SingleResponse<ParcelableUser>, ResultHandler> {
+
+        @Inject
+        protected Bus mBus;
 
         private final UserKey mAccountKey;
         private final Uri mImageUri;
@@ -561,7 +568,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         public UpdateProfileImageTask(final Context context, final UserKey accountKey,
                                       final Uri imageUri, final boolean deleteImage) {
-            super(context);
+            //noinspection unchecked
+            GeneralComponentHelper.build(context).inject((UpdateProfileImageTask<Object>) this);
             this.mContext = context;
             this.mAccountKey = accountKey;
             this.mImageUri = imageUri;
@@ -569,7 +577,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<ParcelableUser> doInBackground(final Object... params) {
+        protected SingleResponse<ParcelableUser> doLongOperation(final Object  params) {
             try {
                 final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, true);
                 TwitterWrapper.updateProfileImage(mContext, twitter, mImageUri, mDeleteImage);
@@ -582,17 +590,17 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 final User user = twitter.verifyCredentials();
                 return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey));
-            } catch (TwitterException | FileNotFoundException e) {
+            } catch (TwitterException | IOException e) {
                 return SingleResponse.getInstance(e);
             }
         }
 
         @Override
-        protected void onPostExecute(final SingleResponse<ParcelableUser> result) {
-            super.onPostExecute(result);
+        protected void afterExecute(SingleResponse<ParcelableUser> result) {
+            super.afterExecute(result);
             if (result.hasData()) {
                 Utils.showOkMessage(mContext, R.string.profile_image_updated, false);
-                bus.post(new ProfileUpdatedEvent(result.getData()));
+                mBus.post(new ProfileUpdatedEvent(result.getData()));
             } else {
                 Utils.showErrorMessage(mContext, R.string.action_updating_profile_image, result.getException(), true);
             }

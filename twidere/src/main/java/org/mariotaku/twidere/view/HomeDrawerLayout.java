@@ -40,6 +40,9 @@ public class HomeDrawerLayout extends DrawerLayout implements ViewInterface {
     }
 
     private void init(Context context, @Nullable ATEActivity keyContext) {
+        if (keyContext == null && context instanceof ATEActivity) {
+            keyContext = (ATEActivity) context;
+        }
         final String key = keyContext != null ? keyContext.getATEKey() : null;
         if (Config.coloredStatusBar(context, key)) {
             // Sets the status bar overlayed by the DrawerLayout

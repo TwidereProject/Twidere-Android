@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -15,8 +16,10 @@ import android.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.util.BugReporter;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.Utils;
-import org.mariotaku.twidere.util.support.IntentSupport;
 
 import java.util.List;
 
@@ -97,20 +100,20 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
             startActivity(handled.first);
         } else {
             if (!handled.second) {
-//                BugReporter.error(new TwitterLinkException("Unable to handle twitter uri " + uri));
+                BugReporter.logException(new TwitterLinkException("Unable to handle twitter uri " + uri));
             }
-            final String packageName = mPreferences.getString(KEY_FALLBACK_TWITTER_LINK_HANDLER, null);
             final Intent fallbackIntent = new Intent(Intent.ACTION_VIEW, uri);
-            IntentSupport.setSelector(intent, new Intent(Intent.ACTION_VIEW).addCategory(IntentSupport.CATEGORY_APP_BROWSER));
-            fallbackIntent.setPackage(packageName);
-            if (TextUtils.isEmpty(packageName) || packageManager.queryIntentActivities(fallbackIntent, 0).isEmpty()) {
-                final Intent pickIntent = new Intent(INTENT_ACTION_PICK_ACTIVITY);
-                pickIntent.putExtra(EXTRA_INTENT, new Intent(Intent.ACTION_VIEW, uri));
-                pickIntent.putExtra(EXTRA_BLACKLIST, new String[]{getPackageName()});
-                startActivityForResult(pickIntent, REQUEST_PICK_ACTIVITY);
-                return;
-            } else {
+            fallbackIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+            fallbackIntent.setPackage(IntentUtils.getDefaultBrowserPackage(this));
+            final ComponentName componentName = fallbackIntent.resolveActivity(packageManager);
+            if (componentName == null) {
+                final Intent targetIntent = new Intent(Intent.ACTION_VIEW, uri);
+                targetIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+                startActivity(Intent.createChooser(targetIntent, getString(R.string.open_in_browser)));
+            } else if (!TextUtils.equals(getPackageName(), componentName.getPackageName())) {
                 startActivity(fallbackIntent);
+            } else {
+                // TODO show error
             }
         }
         finish();
@@ -180,6 +183,7 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
         return Pair.create(null, false);
     }
 
+    @NonNull
     private Pair<Intent, Boolean> handleUserSpecificPageIntent(Uri uri, List<String> pathSegments, String screenName) {
         final int segsSize = pathSegments.size();
         if (segsSize == 1) {

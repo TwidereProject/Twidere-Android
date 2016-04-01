@@ -29,7 +29,7 @@ import javax.inject.Inject;
 /**
  * Created by mariotaku on 16/3/11.
  */
-public class UpdateProfileBannerImageTask<ResultHandler> extends AbstractTask<Object,
+public class UpdateProfileBackgroundImageTask<ResultHandler> extends AbstractTask<Object,
         SingleResponse<ParcelableUser>, ResultHandler> implements Constants {
 
     @Inject
@@ -37,27 +37,31 @@ public class UpdateProfileBannerImageTask<ResultHandler> extends AbstractTask<Ob
 
     private final UserKey mAccountKey;
     private final Uri mImageUri;
+    private boolean mTile;
     private final boolean mDeleteImage;
     private final Context mContext;
 
-    public UpdateProfileBannerImageTask(final Context context, final UserKey accountKey,
-                                        final Uri imageUri, final boolean deleteImage) {
+    public UpdateProfileBackgroundImageTask(final Context context, final UserKey accountKey,
+                                            final Uri imageUri, final boolean tile,
+                                            final boolean deleteImage) {
         //noinspection unchecked
-        GeneralComponentHelper.build(context).inject((UpdateProfileBannerImageTask<Object>) this);
+        GeneralComponentHelper.build(context).inject((UpdateProfileBackgroundImageTask<Object>) this);
         mContext = context;
         mAccountKey = accountKey;
         mImageUri = imageUri;
         mDeleteImage = deleteImage;
+        mTile = tile;
     }
 
     @Override
-    protected void afterExecute(final SingleResponse<ParcelableUser> result) {
+    protected void afterExecute(SingleResponse<ParcelableUser> result) {
         super.afterExecute(result);
         if (result.hasData()) {
             Utils.showOkMessage(mContext, R.string.profile_banner_image_updated, false);
             mBus.post(new ProfileUpdatedEvent(result.getData()));
         } else {
-            Utils.showErrorMessage(mContext, R.string.action_updating_profile_banner_image, result.getException(),
+            Utils.showErrorMessage(mContext, R.string.action_updating_profile_background_image,
+                    result.getException(),
                     true);
         }
     }
@@ -67,7 +71,8 @@ public class UpdateProfileBannerImageTask<ResultHandler> extends AbstractTask<Ob
         try {
             final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey,
                     true);
-            TwitterWrapper.updateProfileBannerImage(mContext, twitter, mImageUri, mDeleteImage);
+            TwitterWrapper.updateProfileBackgroundImage(mContext, twitter, mImageUri, mTile,
+                    mDeleteImage);
             // Wait for 5 seconds, see
             // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
             try {

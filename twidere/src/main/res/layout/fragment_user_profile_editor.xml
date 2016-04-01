@@ -59,7 +59,8 @@
                         android:layout_height="@dimen/element_size_mlarge"
                         android:layout_gravity="center"
                         android:foreground="?selectableItemBackground"
-                        android:scaleType="centerCrop"/>
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/ic_launcher_web"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -81,7 +82,9 @@
                     android:background="?selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/element_spacing_normal">
+                    android:padding="@dimen/element_spacing_normal"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <org.mariotaku.twidere.view.ForegroundImageView
                         android:id="@+id/profile_banner"
@@ -89,7 +92,8 @@
                         android:layout_height="@dimen/element_size_mlarge"
                         android:layout_gravity="center"
                         android:foreground="?selectableItemBackground"
-                        android:scaleType="centerCrop"/>
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/nyan_stars_background_tile"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -97,6 +101,37 @@
                         android:layout_marginLeft="@dimen/element_spacing_normal"
                         android:layout_marginStart="@dimen/element_spacing_normal"
                         android:text="@string/profile_banner"
+                        android:textAllCaps="true"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="?android:textColorPrimary"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/edit_profile_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/element_spacing_normal">
+
+                    <org.mariotaku.twidere.view.ForegroundImageView
+                        android:id="@+id/profile_background"
+                        android:layout_width="@dimen/element_size_mlarge"
+                        android:layout_height="@dimen/element_size_mlarge"
+                        android:layout_gravity="center"
+                        android:foreground="?selectableItemBackground"
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/nyan_stars_background_tile"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/element_spacing_normal"
+                        android:layout_marginStart="@dimen/element_spacing_normal"
+                        android:text="@string/profile_background"
                         android:textAllCaps="true"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorPrimary"
@@ -116,7 +151,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/element_spacing_normal">
 
-                <org.mariotaku.twidere.view.themed.BackgroundTintMaterialEditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -125,9 +160,11 @@
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/name"
-                    app:met_maxCharacters="20"/>
+                    app:met_maxCharacters="20"
+                    app:met_primaryColor="?colorAccent"
+                    tools:text="TwidereProject"/>
 
-                <org.mariotaku.twidere.view.themed.BackgroundTintMaterialEditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -137,9 +174,11 @@
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/description"
-                    app:met_maxCharacters="160"/>
+                    app:met_maxCharacters="160"
+                    app:met_primaryColor="?colorAccent"
+                    tools:text="@string/sample_status_text"/>
 
-                <org.mariotaku.twidere.view.themed.BackgroundTintMaterialEditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -148,9 +187,11 @@
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/location"
-                    app:met_maxCharacters="30"/>
+                    app:met_maxCharacters="30"
+                    app:met_primaryColor="?colorAccent"
+                    tools:text="Earth"/>
 
-                <org.mariotaku.twidere.view.themed.BackgroundTintMaterialEditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/url"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -159,7 +200,9 @@
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/url"
-                    app:met_maxCharacters="100"/>
+                    app:met_maxCharacters="100"
+                    app:met_primaryColor="?colorAccent"
+                    tools:text="https://github.com/TwidereProject/"/>
             </LinearLayout>
 
             <Space
@@ -185,7 +228,8 @@
                         android:id="@+id/link_color"
                         android:layout_width="@dimen/element_size_normal"
                         android:layout_height="@dimen/element_size_normal"
-                        android:layout_weight="0"/>
+                        android:layout_weight="0"
+                        tools:color="@color/branding_color"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -214,7 +258,8 @@
                         android:id="@+id/background_color"
                         android:layout_width="@dimen/element_size_normal"
                         android:layout_height="@dimen/element_size_normal"
-                        android:layout_weight="0"/>
+                        android:layout_weight="0"
+                        tools:color="@color/branding_color"/>
 
                     <TextView
                         android:layout_width="match_parent"

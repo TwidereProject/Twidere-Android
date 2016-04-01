@@ -1914,7 +1914,8 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
 
         @Override
-        protected void beforeExecute(ParcelableLocation location) {
+        protected void beforeExecute() {
+            ParcelableLocation location = getParams();
             final TextView textView = getCallback();
             if (textView == null) return;
 

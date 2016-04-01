@@ -206,7 +206,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
 
     @UiThread
     @Override
-    public void beforeExecute(RefreshTaskParam params) {
+    public void beforeExecute() {
         bus.post(new GetActivitiesTaskEvent(getContentUri(), true, null));
     }
 }
