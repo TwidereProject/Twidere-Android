@@ -42,6 +42,7 @@ import android.view.View;
 
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.BuildConfig;
@@ -405,9 +406,9 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         final ParcelableActivity activity = getAdapter().getActivity(position);
         if (activity == null) return;
         final List<Parcelable> list = new ArrayList<>();
-        if (activity.target_object_statuses != null) {
+        if (!ArrayUtils.isEmpty(activity.target_object_statuses)) {
             Collections.addAll(list, activity.target_object_statuses);
-        } else if (activity.target_statuses != null) {
+        } else if (!ArrayUtils.isEmpty(activity.target_statuses)) {
             Collections.addAll(list, activity.target_statuses);
         }
         Collections.addAll(list, ParcelableActivityUtils.getAfterFilteredSources(activity));
