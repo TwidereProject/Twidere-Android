@@ -758,7 +758,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final ParcelableUser user = getUser();
                 if (user == null) return null;
                 return new NdefMessage(new NdefRecord[]{
-                        NdefRecord.createUri(LinkCreator.getTwitterUserLink(user.screen_name)),
+                        NdefRecord.createUri(LinkCreator.getUserWebLink(user)),
                 });
             }
         });
