@@ -209,7 +209,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         public void onMediaClick(View view, ParcelableMedia media, UserKey accountKey, long extraId) {
             final MessageConversationAdapter adapter = adapterRef.get();
             IntentUtils.openMedia(adapter.getContext(), adapter.getDirectMessage((int) extraId), media,
-                    null, true);
+                    null, adapter.mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
         }
 
     }

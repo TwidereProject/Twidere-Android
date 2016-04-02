@@ -149,7 +149,8 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
     protected void openMedia(UserKey accountKey, long extraId, boolean sensitive, String link, int start, int end) {
         final ParcelableMedia[] media = {ParcelableMediaUtils.image(link)};
-        IntentUtils.openMedia(context, accountKey, sensitive, null, media, null, true);
+        IntentUtils.openMedia(context, accountKey, sensitive, null, media, null,
+                preferences.getBoolean(KEY_NEW_DOCUMENT_API));
     }
 
     protected void openLink(final String link) {

@@ -417,7 +417,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
         final ParcelableStatus status = mStatusAdapter.getStatus(statusPosition);
         if (status == null) return;
-        IntentUtils.openMedia(getActivity(), status, media, null, true);
+        IntentUtils.openMedia(getActivity(), status, media, null,
+                mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
 
         MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.DETAILS,
                 mStatusAdapter.isMediaPreviewEnabled());
@@ -462,7 +463,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     public void onMediaClick(View view, ParcelableMedia media, UserKey accountKey, long extraId) {
         final ParcelableStatus status = mStatusAdapter.getStatus();
         if (status == null) return;
-        IntentUtils.openMediaDirectly(getActivity(), accountKey, status, media, null, true);
+        IntentUtils.openMediaDirectly(getActivity(), accountKey, status, media, null,
+                mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
         // BEGIN HotMobi
         MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
                 mStatusAdapter.isMediaPreviewEnabled());
@@ -1621,7 +1623,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             private void expandOrOpenMedia(ParcelableMedia current) {
                 if (adapter.isDetailMediaExpanded()) {
-                    IntentUtils.openMedia(adapter.getContext(), adapter.getStatus(), current, null, true);
+                    IntentUtils.openMedia(adapter.getContext(), adapter.getStatus(), current, null,
+                            preferences.getBoolean(KEY_NEW_DOCUMENT_API));
                     return;
                 }
                 adapter.setDetailMediaExpanded(true);

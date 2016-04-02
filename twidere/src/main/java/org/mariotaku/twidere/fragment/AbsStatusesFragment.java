@@ -347,7 +347,8 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         final ParcelableStatusesAdapter adapter = getAdapter();
         final ParcelableStatus status = adapter.getStatus(statusPosition);
         if (status == null) return;
-        IntentUtils.openMedia(getActivity(), status, media, null, true);
+        IntentUtils.openMedia(getActivity(), status, media, null,
+                mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
         // BEGIN HotMobi
         final MediaEvent event = MediaEvent.create(getActivity(), status, media, getTimelineType(),
                 adapter.isMediaPreviewEnabled());
