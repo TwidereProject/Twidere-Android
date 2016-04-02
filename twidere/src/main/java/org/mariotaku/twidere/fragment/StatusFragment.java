@@ -342,7 +342,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (status == null) return;
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
-                    final UserKey accountKey = data.getParcelableExtra(EXTRA_KEY);
+                    final UserKey accountKey = data.getParcelableExtra(EXTRA_ACCOUNT_KEY);
                     IntentUtils.openStatus(activity, accountKey, status.id);
                 }
                 break;

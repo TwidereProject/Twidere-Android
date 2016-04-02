@@ -127,7 +127,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
                     final ParcelableUserList userList = mUserList;
-                    final UserKey accountKey = data.getParcelableExtra(EXTRA_KEY);
+                    final UserKey accountKey = data.getParcelableExtra(EXTRA_ACCOUNT_KEY);
                     IntentUtils.openUserListDetails(getActivity(), accountKey, userList.id,
                             userList.user_key, userList.user_screen_name, userList.name);
                 }

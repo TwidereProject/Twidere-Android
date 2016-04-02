@@ -23,12 +23,7 @@
     android:clipChildren="false"
     android:descendantFocusability="blocksDescendants"
     android:minHeight="?android:attr/listPreferredItemHeight"
-    android:paddingBottom="@dimen/element_spacing_normal"
-    android:paddingEnd="@dimen/element_spacing_normal"
-    android:paddingLeft="0dp"
-    android:paddingRight="@dimen/element_spacing_normal"
-    android:paddingStart="0dp"
-    android:paddingTop="@dimen/element_spacing_normal"
+    android:padding="@dimen/element_spacing_normal"
     app:ignorePadding="true">
 
     <View
@@ -38,8 +33,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
         android:layout_weight="0"
         android:background="@drawable/list_drag_handle"
+        android:visibility="visible"
         tools:layout_height="?android:attr/listPreferredItemHeight"/>
 
     <org.mariotaku.twidere.view.ProfileImageView
@@ -80,11 +78,12 @@
 
         <TextView
             android:id="@android:id/text1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?android:textColorPrimary"/>
+            android:textColor="?android:textColorPrimary"
+            tools:text="Name"/>
 
         <TextView
             android:id="@android:id/text2"
@@ -92,7 +91,8 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:textColorSecondary"/>
+            android:textColor="?android:textColorSecondary"
+            tools:text="\@screenname"/>
     </LinearLayout>
 
     <com.lnikkila.extendedtouchview.ExtendedTouchView

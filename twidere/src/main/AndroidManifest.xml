@@ -388,7 +388,7 @@
             android:label="@string/import_settings"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
-            android:name=".activity.TwitterLinkHandlerActivity"
+            android:name=".activity.WebLinkHandlerActivity"
             android:excludeFromRecents="true"
             android:taskAffinity=":twidere_twitter_link_handler"
             android:theme="@style/Theme.Twidere.NoDisplay">
@@ -399,6 +399,7 @@
                 <data android:host="twitter.com"/>
                 <data android:host="www.twitter.com"/>
                 <data android:host="mobile.twitter.com"/>
+                <data android:host="fanfou.com"/>
 
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>

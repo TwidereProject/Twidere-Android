@@ -709,7 +709,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (user == null) return;
                 if (resultCode == Activity.RESULT_OK) {
                     if (data == null || !data.hasExtra(EXTRA_ID)) return;
-                    final UserKey accountKey = data.getParcelableExtra(EXTRA_KEY);
+                    final UserKey accountKey = data.getParcelableExtra(EXTRA_ACCOUNT_KEY);
                     @Referral
                     final String referral = getArguments().getString(EXTRA_REFERRAL);
                     IntentUtils.openUserProfile(getActivity(), accountKey, user.key,
@@ -1039,6 +1039,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final Intent intent = new Intent(INTENT_ACTION_SELECT_ACCOUNT);
                 intent.setClass(getActivity(), AccountSelectorActivity.class);
                 intent.putExtra(EXTRA_SINGLE_SELECTION, true);
+                intent.putExtra(EXTRA_ACCOUNT_HOST, user.key.getHost());
                 startActivityForResult(intent, REQUEST_SELECT_ACCOUNT);
                 break;
             }

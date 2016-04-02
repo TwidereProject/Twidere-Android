@@ -198,13 +198,14 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
         final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
         if (adapter != null && adapter.isEnabled()) {
             final PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(this,
-                    TwitterLinkHandlerActivity.class), 0);
+                    WebLinkHandlerActivity.class), 0);
             final IntentFilter intentFilter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
             intentFilter.addDataScheme("http");
             intentFilter.addDataScheme("https");
             intentFilter.addDataAuthority("twitter.com", null);
             intentFilter.addDataAuthority("www.twitter.com", null);
             intentFilter.addDataAuthority("mobile.twitter.com", null);
+            intentFilter.addDataAuthority("fanfou.com", null);
             try {
                 adapter.enableForegroundDispatch(this, intent, new IntentFilter[]{intentFilter}, null);
             } catch (SecurityException e) {

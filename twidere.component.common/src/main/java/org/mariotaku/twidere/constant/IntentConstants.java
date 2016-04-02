@@ -93,6 +93,7 @@ public interface IntentConstants {
     String EXTRA_URI_ORIG = "uri_orig";
     String EXTRA_MENTIONS = "mentions";
     String EXTRA_ACCOUNT_KEY = "account_key";
+    String EXTRA_ACCOUNT_HOST = "account_host";
     String EXTRA_ACCOUNT_KEYS = "account_keys";
     String EXTRA_PAGE = "page";
     String EXTRA_DATA = "data";
@@ -204,9 +205,10 @@ public interface IntentConstants {
     String EXTRA_NEW_DOCUMENT = "new_document";
     String EXTRA_MAKE_GAP = "make_gap";
     String EXTRA_QUOTE_ORIGINAL_STATUS = "quote_original_status";
-    String EXTRA_KEY = "key";
     String EXTRA_CARD = "card";
     String EXTRA_IS_POSSIBLY_SENSITIVE = "is_possibly_sensitive";
     String EXTRA_REFERRAL = "referral";
     String EXTRA_LOADING_MORE = "loading_more";
+    String EXTRA_START_INTENT = "start_intent";
+    String EXTRA_SELECT_ONLY_ITEM = "select_only_item";
 }

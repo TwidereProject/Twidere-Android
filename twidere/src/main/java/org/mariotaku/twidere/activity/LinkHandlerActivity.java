@@ -167,7 +167,23 @@ public class LinkHandlerActivity extends BaseActivity implements SystemWindowsIn
         final Uri uri = intent.getData();
         final int linkId = matchLinkId(uri);
         intent.setExtrasClassLoader(getClassLoader());
-        final Fragment fragment = createFragmentForIntent(this, linkId, intent);
+        final Fragment fragment;
+        try {
+            fragment = createFragmentForIntent(this, linkId, intent);
+        } catch (Utils.NoAccountException e) {
+            super.onCreate(savedInstanceState);
+            Intent selectIntent = new Intent(this, AccountSelectorActivity.class);
+            String accountHost = intent.getStringExtra(EXTRA_ACCOUNT_HOST);
+            if (accountHost == null) {
+                accountHost = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_HOST);
+            }
+            selectIntent.putExtra(EXTRA_SINGLE_SELECTION, true);
+            selectIntent.putExtra(EXTRA_ACCOUNT_HOST, accountHost);
+            selectIntent.putExtra(EXTRA_START_INTENT, intent);
+            startActivity(selectIntent);
+            finish();
+            return;
+        }
         if (fragment instanceof IToolBarSupportFragment) {
             if (!((IToolBarSupportFragment) fragment).setupWindow(this)) {
                 supportRequestWindowFeature(Window.FEATURE_NO_TITLE);

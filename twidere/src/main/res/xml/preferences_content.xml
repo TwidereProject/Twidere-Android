@@ -51,7 +51,7 @@
             android:key="translation_destination"
             android:title="@string/translation_destination"/>
         <org.mariotaku.twidere.preference.ComponentStatePreference
-            android:name="org.mariotaku.twidere.activity.TwitterLinkHandlerActivity"
+            android:name="org.mariotaku.twidere.activity.WebLinkHandlerActivity"
             android:key="twitter_link_handler"
             android:title="@string/open_twitter_links"/>
         <Preference

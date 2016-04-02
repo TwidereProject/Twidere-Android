@@ -136,7 +136,8 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
         ParcelableCredentialsParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    @IntDef({AuthType.OAUTH, AuthType.XAUTH, AuthType.BASIC, AuthType.TWIP_O_MODE})
+    @IntDef({AuthType.OAUTH, AuthType.XAUTH, AuthType.BASIC, AuthType.TWIP_O_MODE,
+            AuthType.OAUTH2})
     @Retention(RetentionPolicy.SOURCE)
     public @interface AuthType {
 
@@ -144,5 +145,6 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
         int XAUTH = 1;
         int BASIC = 2;
         int TWIP_O_MODE = 3;
+        int OAUTH2 = 4;
     }
 }

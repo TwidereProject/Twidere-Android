@@ -37,6 +37,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterCaps;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
+import org.mariotaku.twidere.api.twitter.TwitterOAuth2;
 import org.mariotaku.twidere.api.twitter.TwitterUpload;
 import org.mariotaku.twidere.api.twitter.TwitterUserStream;
 import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
@@ -264,7 +265,10 @@ public class TwitterAPIFactory implements TwidereConstants {
             versionSuffix = noVersionSuffix ? null : "/1.1/";
         } else if (TwitterOAuth.class.isAssignableFrom(cls)) {
             domain = "api";
-            versionSuffix = "/oauth";
+            versionSuffix = null;
+        } else if (TwitterOAuth2.class.isAssignableFrom(cls)) {
+            domain = "api";
+            versionSuffix = null;
         } else if (TwitterUserStream.class.isAssignableFrom(cls)) {
             domain = "userstream";
             versionSuffix = noVersionSuffix ? null : "/1.1/";

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.api.twitter.TwitterException;
@@ -48,14 +49,17 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
 
     private final boolean mOmitIntentExtra;
     private final Bundle mExtras;
+    @Nullable
     private final UserKey mAccountId;
+    @Nullable
     private final String mStatusId;
 
     @Inject
     UserColorNameManager mUserColorNameManager;
 
     public ParcelableStatusLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                  final UserKey accountId, final String statusId) {
+                                  @Nullable final UserKey accountId,
+                                  @Nullable final String statusId) {
         super(context);
         GeneralComponentHelper.build(context).inject(this);
         mOmitIntentExtra = omitIntentExtra;
@@ -66,6 +70,7 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
 
     @Override
     public SingleResponse<ParcelableStatus> loadInBackground() {
+        if (mAccountId == null || mStatusId == null) return SingleResponse.getInstance();
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableStatus cache = mExtras.getParcelable(IntentConstants.EXTRA_STATUS);
             if (cache != null) {

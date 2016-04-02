@@ -63,6 +63,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.annotation.WorkerThread;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -443,12 +444,7 @@ public final class Utils implements Constants {
         return colors;
     }
 
-    public static Fragment createFragmentForIntent(final Context context, final Intent intent) {
-        final Uri uri = intent.getData();
-        return createFragmentForIntent(context, matchLinkId(uri), intent);
-    }
-
-    public static Fragment createFragmentForIntent(final Context context, final int linkId, final Intent intent) {
+    public static Fragment createFragmentForIntent(final Context context, final int linkId, final Intent intent) throws NoAccountException {
         intent.setExtrasClassLoader(context.getClassLoader());
         final Bundle extras = intent.getExtras();
         final Uri uri = intent.getData();
@@ -461,14 +457,17 @@ public final class Utils implements Constants {
         boolean isAccountIdRequired = true;
         switch (linkId) {
             case LINK_ID_ACCOUNTS: {
+                isAccountIdRequired = false;
                 fragment = new AccountsManagerFragment();
                 break;
             }
             case LINK_ID_DRAFTS: {
+                isAccountIdRequired = false;
                 fragment = new DraftsFragment();
                 break;
             }
             case LINK_ID_FILTERS: {
+                isAccountIdRequired = false;
                 fragment = new FiltersFragment();
                 break;
             }
@@ -477,6 +476,7 @@ public final class Utils implements Constants {
                 break;
             }
             case LINK_ID_MAP: {
+                isAccountIdRequired = false;
                 if (!args.containsKey(EXTRA_LATITUDE) && !args.containsKey(EXTRA_LONGITUDE)) {
                     final double lat = NumberUtils.toDouble(uri.getQueryParameter(QUERY_PARAM_LAT), Double.NaN);
                     final double lng = NumberUtils.toDouble(uri.getQueryParameter(QUERY_PARAM_LNG), Double.NaN);
@@ -775,7 +775,10 @@ public final class Utils implements Constants {
                 return null;
             }
         }
-        UserKey accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
+        UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
+        if (accountKey == null) {
+            accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
+        }
         if (accountKey == null) {
             final String accountId = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_ID);
             final String paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME);
@@ -784,17 +787,19 @@ public final class Utils implements Constants {
                 args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
             } else if (paramAccountName != null) {
                 accountKey = DataStoreUtils.findAccountKeyByScreenName(context, paramAccountName);
-            } else {
-                accountKey = getDefaultAccountKey(context);
             }
         }
 
         if (isAccountIdRequired && accountKey == null) {
-            return null;
+            throw new NoAccountException();
         }
         args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static class NoAccountException extends Exception {
+
     }
 
     public static String getUserKeyParam(Uri uri) {
@@ -915,10 +920,11 @@ public final class Utils implements Constants {
     }
 
     @NonNull
-    public static ParcelableStatus findStatus(final Context context, final UserKey accountKey,
-                                              final String statusId)
+    @WorkerThread
+    public static ParcelableStatus findStatus(@NonNull final Context context,
+                                              @NonNull final UserKey accountKey,
+                                              @NonNull final String statusId)
             throws TwitterException {
-        if (context == null) throw new NullPointerException();
         final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
         if (cached != null) return cached;
         final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
@@ -934,9 +940,10 @@ public final class Utils implements Constants {
     }
 
     @Nullable
-    public static ParcelableStatus findStatusInDatabases(final Context context, final UserKey accountKey,
-                                                         final String statusId) {
-        if (context == null) return null;
+    @WorkerThread
+    public static ParcelableStatus findStatusInDatabases(@NonNull final Context context,
+                                                         @NonNull final UserKey accountKey,
+                                                         @NonNull final String statusId) {
         final ContentResolver resolver = context.getContentResolver();
         ParcelableStatus status = null;
         final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),

@@ -914,14 +914,14 @@ public class DataStoreUtils implements Constants {
         if (host != null) {
             for (final Uri uri : STATUSES_URIS) {
                 final String deleteWhere = Expression.and(
-                        Expression.likeRaw(new Column(Statuses.ACCOUNT_KEY), "%@?"),
+                        Expression.likeRaw(new Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
                         Expression.or(
                                 Expression.equalsArgs(Statuses.STATUS_ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)
                         )).getSQL();
                 cr.delete(uri, deleteWhere, new String[]{host, statusId, statusId});
                 final String updateWhere = Expression.and(
-                        Expression.likeRaw(new Column(Statuses.ACCOUNT_KEY), "%@?"),
+                        Expression.likeRaw(new Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
                         Expression.equalsArgs(Statuses.MY_RETWEET_ID)
                 ).getSQL();
                 if (status != null) {
