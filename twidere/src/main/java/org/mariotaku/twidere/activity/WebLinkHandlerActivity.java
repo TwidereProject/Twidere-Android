@@ -168,7 +168,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);
                     builder.authority(AUTHORITY_SEARCH);
-                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, "twitter.com");
+                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
                     builder.appendQueryParameter(QUERY_PARAM_QUERY, uri.getQueryParameter("q"));
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
                 }
@@ -211,6 +211,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
             final Uri.Builder builder = new Uri.Builder();
             builder.scheme(SCHEME_TWIDERE);
             builder.authority(AUTHORITY_USER);
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
             return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
         } else if (segsSize == 2) {
@@ -219,7 +220,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);
                     builder.authority(AUTHORITY_USER_FRIENDS);
-                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, "twitter.com");
+                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
                     builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
                 }
@@ -227,7 +228,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);
                     builder.authority(AUTHORITY_USER_FOLLOWERS);
-                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, "twitter.com");
+                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
                     builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
                 }
@@ -235,7 +236,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);
                     builder.authority(AUTHORITY_USER_FAVORITES);
-                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, "twitter.com");
+                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
                     builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
                 }
@@ -243,7 +244,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
                     final Uri.Builder builder = new Uri.Builder();
                     builder.scheme(SCHEME_TWIDERE);
                     builder.authority(AUTHORITY_USER_LIST);
-                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, "twitter.com");
+                    builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
                     builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
                     builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, pathSegments.get(1));
                     return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
@@ -255,7 +256,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
                 final Uri.Builder builder = new Uri.Builder();
                 builder.scheme(SCHEME_TWIDERE);
                 builder.authority(AUTHORITY_STATUS);
-                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, "twitter.com");
+                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
                 builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, pathSegments.get(2));
                 return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
             } else {
@@ -264,7 +265,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
                         final Uri.Builder builder = new Uri.Builder();
                         builder.scheme(SCHEME_TWIDERE);
                         builder.authority(AUTHORITY_USER_LIST_MEMBERS);
-                        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, "twitter.com");
+                        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
                         builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
                         builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, pathSegments.get(1));
                         return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);
@@ -273,7 +274,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
                         final Uri.Builder builder = new Uri.Builder();
                         builder.scheme(SCHEME_TWIDERE);
                         builder.authority(AUTHORITY_USER_LIST_SUBSCRIBERS);
-                        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, "twitter.com");
+                        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM);
                         builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName);
                         builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, pathSegments.get(1));
                         return Pair.create(new Intent(Intent.ACTION_VIEW, builder.build()), true);

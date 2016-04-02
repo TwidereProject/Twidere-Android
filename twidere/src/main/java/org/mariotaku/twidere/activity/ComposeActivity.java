@@ -1102,7 +1102,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
 
     private boolean handleQuoteIntent(final ParcelableStatus status) {
         if (status == null) return false;
-        mEditText.setText(Utils.getQuoteStatus(this, status.id, status.user_screen_name, status.text_plain));
+        mEditText.setText(Utils.getQuoteStatus(this, status));
         mEditText.setSelection(0);
         mAccountsAdapter.setSelectedAccountIds(status.account_key);
         showQuoteLabel(status);

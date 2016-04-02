@@ -77,6 +77,7 @@ public class ParcelableStatusUtils implements Constants {
         if (quoted != null) {
             final User quotedUser = quoted.getUser();
             result.quoted_id = quoted.getId();
+            result.extras.quoted_external_url = quoted.getExternalUrl();
 
             final String quotedText = quoted.getHtmlText();
             // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
@@ -110,6 +111,7 @@ public class ParcelableStatusUtils implements Constants {
         final Status status;
         if (retweetedStatus != null) {
             status = retweetedStatus;
+            result.extras.retweeted_external_url = retweetedStatus.getExternalUrl();
             result.reply_count = retweetedStatus.getReplyCount();
             result.retweet_count = retweetedStatus.getRetweetCount();
             result.favorite_count = retweetedStatus.getFavoriteCount();

@@ -1415,16 +1415,16 @@ public final class Utils implements Constants {
         return VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP;
     }
 
-    public static String getQuoteStatus(final Context context, String statusId, final String screenName, final String text) {
+    public static String getQuoteStatus(final Context context, final ParcelableStatus status) {
         if (context == null) return null;
         String quoteFormat = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(
                 KEY_QUOTE_FORMAT, DEFAULT_QUOTE_FORMAT);
         if (isEmpty(quoteFormat)) {
             quoteFormat = DEFAULT_QUOTE_FORMAT;
         }
-        String result = quoteFormat.replace(FORMAT_PATTERN_LINK, LinkCreator.getTwitterStatusLink(screenName, statusId).toString());
-        result = result.replace(FORMAT_PATTERN_NAME, screenName);
-        result = result.replace(FORMAT_PATTERN_TEXT, text);
+        String result = quoteFormat.replace(FORMAT_PATTERN_LINK, LinkCreator.getStatusWebLink(status).toString());
+        result = result.replace(FORMAT_PATTERN_NAME, status.user_screen_name);
+        result = result.replace(FORMAT_PATTERN_TEXT, status.text_plain);
         return result;
     }
 

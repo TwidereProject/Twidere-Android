@@ -251,11 +251,9 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
                 }
                 default: {
                     if (!status.is_quote || !quoteOriginalStatus) {
-                        statusLink = LinkCreator.getTwitterStatusLink(status.user_screen_name,
-                                status.id);
+                        statusLink = LinkCreator.getStatusWebLink(status);
                     } else {
-                        statusLink = LinkCreator.getTwitterStatusLink(status.quoted_user_screen_name,
-                                status.quoted_id);
+                        statusLink = LinkCreator.getQuotedStatusWebLink(status);
                     }
                     commentText = editingComment + " " + statusLink;
                     break;
