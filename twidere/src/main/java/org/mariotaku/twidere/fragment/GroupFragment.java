@@ -1,6 +1,10 @@
 package org.mariotaku.twidere.fragment;
 
 import android.content.Context;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -18,6 +22,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableGroupUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.Utils;
 
 /**
  * Created by mariotaku on 16/3/23.
@@ -37,6 +42,18 @@ public class GroupFragment extends AbsToolbarTabPagesFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Utils.setNdefPushMessageCallback(getActivity(), new NfcAdapter.CreateNdefMessageCallback() {
+
+            @Override
+            public NdefMessage createNdefMessage(NfcEvent event) {
+                final ParcelableGroup group = getGroup();
+                if (group == null || group.url == null) return null;
+                return new NdefMessage(new NdefRecord[]{
+                        NdefRecord.createUri(group.url),
+                });
+            }
+        });
+
         getGroupInfo(false);
     }
 
@@ -88,6 +105,10 @@ public class GroupFragment extends AbsToolbarTabPagesFragment implements
         } else {
             lm.restartLoader(0, args, this);
         }
+    }
+
+    public ParcelableGroup getGroup() {
+        return mGroup;
     }
 
     static class ParcelableGroupLoader extends AsyncTaskLoader<SingleResponse<ParcelableGroup>> {

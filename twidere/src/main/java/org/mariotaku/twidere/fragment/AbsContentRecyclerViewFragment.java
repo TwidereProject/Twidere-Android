@@ -71,7 +71,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
     // Callbacks and listeners
     private SimpleDrawerCallback mDrawerCallback;
-    private RecyclerViewScrollHandler mScrollListener;
+    protected RecyclerViewScrollHandler mScrollListener;
 
     // Data fields
     private Rect mSystemWindowsInsets = new Rect();
@@ -251,8 +251,8 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mRecyclerView.setAdapter(mAdapter);
 
         mScrollListener = new RecyclerViewScrollHandler(this, new RecyclerViewScrollHandler.RecyclerViewCallback(mRecyclerView));
-        mRecyclerView.setOnTouchListener(mScrollListener.getOnTouchListener());
         mScrollListener.setTouchSlop(ViewConfiguration.get(context).getScaledTouchSlop());
+        mRecyclerView.setOnTouchListener(mScrollListener.getOnTouchListener());
     }
 
     protected abstract void setupRecyclerView(Context context, boolean compact);

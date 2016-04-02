@@ -40,6 +40,7 @@ public class ContentScrollHandler {
     private int mScrollState;
     private int mScrollSum;
     private int mTouchSlop;
+    private boolean mReversed;
 
     private int mScrollDirection;
 
@@ -51,6 +52,10 @@ public class ContentScrollHandler {
 
     public void setTouchSlop(int touchSlop) {
         mTouchSlop = touchSlop;
+    }
+
+    public void setReversed(boolean inversed) {
+        mReversed = inversed;
     }
 
     public View.OnTouchListener getOnTouchListener() {
@@ -122,7 +127,7 @@ public class ContentScrollHandler {
         }
         mScrollSum += dy;
         if (Math.abs(mScrollSum) > mTouchSlop) {
-            mContentListSupport.setControlVisible(dy < 0);
+            mContentListSupport.setControlVisible(mReversed ^ dy < 0);
             mScrollSum = 0;
         }
         if (scrollState == idleState) {

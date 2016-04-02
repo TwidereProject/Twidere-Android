@@ -19,6 +19,10 @@ public class RecyclerViewScrollHandler extends RecyclerView.OnScrollListener {
         mScrollHandler = new ContentScrollHandler(contentListSupport, viewCallback);
     }
 
+    public void setReversed(boolean inversed) {
+        mScrollHandler.setReversed(inversed);
+    }
+
     public void setTouchSlop(int touchSlop) {
         mScrollHandler.setTouchSlop(touchSlop);
     }

@@ -504,6 +504,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mScrollListener.setReversed(mPreferences.getBoolean(KEY_READ_FROM_BOTTOM));
         final ParcelableActivitiesAdapter adapter = getAdapter();
         final RecyclerView recyclerView = getRecyclerView();
         final LinearLayoutManager layoutManager = getLayoutManager();
