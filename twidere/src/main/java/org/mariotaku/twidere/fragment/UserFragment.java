@@ -1089,11 +1089,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             case R.id.open_in_browser: {
                 final Uri uri = LinkCreator.getUserWebLink(user);
-                if (uri != null) {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    startActivity(intent);
-                }
+                final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setPackage(IntentUtils.getDefaultBrowserPackage(getContext()));
+                startActivity(intent);
                 return true;
             }
             default: {

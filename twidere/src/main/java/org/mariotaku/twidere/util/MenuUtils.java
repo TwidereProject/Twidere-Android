@@ -45,7 +45,6 @@ import android.view.MenuItem;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.activity.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.constant.IntentConstants;
@@ -64,8 +63,6 @@ import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 
 import java.util.List;
-
-import static org.mariotaku.twidere.TwidereConstants.*;
 
 /**
  * Created by mariotaku on 15/4/12.
@@ -345,6 +342,7 @@ public class MenuUtils implements Constants {
             case R.id.open_in_browser: {
                 final Intent intent = new Intent(Intent.ACTION_VIEW, LinkCreator.getStatusWebLink(status));
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setPackage(IntentUtils.getDefaultBrowserPackage(context));
 //                IntentSupport.setSelector(intent, new Intent(Intent.ACTION_VIEW).addCategory(IntentSupport.CATEGORY_APP_BROWSER));
                 context.startActivity(intent);
                 break;

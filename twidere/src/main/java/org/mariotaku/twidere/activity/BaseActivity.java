@@ -20,10 +20,14 @@
 package org.mariotaku.twidere.activity;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -189,7 +193,36 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+        if (adapter != null && adapter.isEnabled()) {
+            final PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(this,
+                    TwitterLinkHandlerActivity.class), 0);
+            final IntentFilter intentFilter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+            intentFilter.addDataScheme("http");
+            intentFilter.addDataScheme("https");
+            intentFilter.addDataAuthority("twitter.com", null);
+            intentFilter.addDataAuthority("www.twitter.com", null);
+            intentFilter.addDataAuthority("mobile.twitter.com", null);
+            try {
+                adapter.enableForegroundDispatch(this, intent, new IntentFilter[]{intentFilter}, null);
+            } catch (SecurityException e) {
+                // Ignore if blocked by modified roms
+            }
+        }
+    }
+
+    @Override
     protected void onPause() {
+        final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
+        if (adapter != null && adapter.isEnabled()) {
+            try {
+                adapter.disableForegroundDispatch(this);
+            } catch (SecurityException e) {
+                // Ignore if blocked by modified roms
+            }
+        }
         mActionHelper.dispatchOnPause();
         super.onPause();
     }

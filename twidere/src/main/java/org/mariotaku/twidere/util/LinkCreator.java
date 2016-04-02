@@ -58,7 +58,7 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
-    public static Uri getTwidereUserLink(@Nullable UserKey accountKey,@Nullable UserKey userKey, String screenName) {
+    public static Uri getTwidereUserLink(@Nullable UserKey accountKey, @Nullable UserKey userKey, String screenName) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);
         builder.authority(AUTHORITY_USER);
@@ -118,6 +118,7 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
+    @NonNull
     public static Uri getUserWebLink(@NonNull ParcelableUser user) {
         if (user.extras != null && user.extras.statusnet_profile_url != null) {
             return Uri.parse(user.extras.statusnet_profile_url);
