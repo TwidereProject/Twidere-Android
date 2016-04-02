@@ -3,10 +3,7 @@ package org.mariotaku.twidere.activity;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -43,7 +40,6 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
 
     private static final String AUTHORITY_TWITTER_COM = "twitter.com";
 
-    private SharedPreferences mPreferences;
 
     private static Uri regulateTwitterUri(Uri data) {
         final String encodedFragment = data.getEncodedFragment();
@@ -56,38 +52,11 @@ public class TwitterLinkHandlerActivity extends Activity implements Constants {
         return builder.build();
     }
 
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        switch (requestCode) {
-            case REQUEST_PICK_ACTIVITY: {
-                if (resultCode != RESULT_OK || data == null || !data.hasExtra(EXTRA_DATA)
-                        || !data.hasExtra(EXTRA_INTENT)) {
-                    finish();
-                    return;
-                }
-                final ResolveInfo resolveInfo = data.getParcelableExtra(EXTRA_DATA);
-                final Intent extraIntent = data.getParcelableExtra(EXTRA_INTENT);
-                final ActivityInfo activityInfo = resolveInfo.activityInfo;
-                if (activityInfo == null) {
-                    finish();
-                    return;
-                }
-                final SharedPreferences.Editor editor = mPreferences.edit();
-                editor.putString(KEY_FALLBACK_TWITTER_LINK_HANDLER, activityInfo.packageName);
-                editor.apply();
-                final Intent intent = new Intent(Intent.ACTION_VIEW, extraIntent.getData());
-                intent.setClassName(activityInfo.packageName, activityInfo.name);
-                startActivity(intent);
-                finish();
-            }
-        }
-    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final PackageManager packageManager = getPackageManager();
-        mPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         final Intent intent = getIntent();
         final Uri data = intent.getData();
         if (data == null) {
