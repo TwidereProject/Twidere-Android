@@ -197,8 +197,8 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
         super.onResume();
         final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
         if (adapter != null && adapter.isEnabled()) {
-            final PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(this,
-                    WebLinkHandlerActivity.class), 0);
+            final Intent linkIntent = new Intent(this, WebLinkHandlerActivity.class);
+            final PendingIntent intent = PendingIntent.getActivity(this, 0, linkIntent, 0);
             final IntentFilter intentFilter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
             intentFilter.addDataScheme("http");
             intentFilter.addDataScheme("https");
