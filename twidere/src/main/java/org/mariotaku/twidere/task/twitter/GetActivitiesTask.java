@@ -157,7 +157,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                     credentials, userColorNameManager);
             valuesList.add(values);
         }
-        final Uri contentUri = UriUtils.appendQueryParameters(getContentUri(), QUERY_PARAM_NOTIFY,
+        final Uri writeUri = UriUtils.appendQueryParameters(getContentUri(), QUERY_PARAM_NOTIFY,
                 notify);
         if (deleteBound[0] > 0 && deleteBound[1] > 0) {
             final Expression where = Expression.and(
@@ -167,7 +167,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             );
             final String[] whereArgs = {credentials.account_key.toString(), String.valueOf(deleteBound[0]),
                     String.valueOf(deleteBound[1])};
-            int rowsDeleted = cr.delete(contentUri, where.getSQL(), whereArgs);
+            int rowsDeleted = cr.delete(writeUri, where.getSQL(), whereArgs);
             // Why loadItemLimit / 2? because it will not acting strange in most cases
             boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
                     && rowsDeleted <= 0 && activities.size() > loadItemLimit / 2;
@@ -175,7 +175,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                 valuesList.get(valuesList.size() - 1).put(Activities.IS_GAP, true);
             }
         }
-        ContentResolverUtils.bulkInsert(cr, contentUri, valuesList);
+        ContentResolverUtils.bulkInsert(cr, writeUri, valuesList);
 
         if (maxId != null && sinceId == null) {
             final ContentValues noGapValues = new ContentValues();
@@ -184,7 +184,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                     Expression.equalsArgs(Activities.MIN_REQUEST_POSITION),
                     Expression.equalsArgs(Activities.MAX_REQUEST_POSITION)).getSQL();
             final String[] noGapWhereArgs = {credentials.toString(), maxId, maxId};
-            cr.update(contentUri, noGapValues, noGapWhere, noGapWhereArgs);
+            cr.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs);
         }
     }
 

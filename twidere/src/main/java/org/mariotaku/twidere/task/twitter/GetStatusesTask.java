@@ -181,6 +181,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
                              final long sinceSortId, final long maxSortId,
                              int loadItemLimit, final boolean notify) {
         final Uri uri = getContentUri();
+        final Uri writeUri = UriUtils.appendQueryParameters(uri, QUERY_PARAM_NOTIFY, notify);
         final ContentResolver resolver = context.getContentResolver();
         final boolean noItemsBefore = DataStoreUtils.getStatusCount(context, uri, accountKey) <= 0;
         final ContentValues[] values = new ContentValues[statuses.size()];
@@ -226,7 +227,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             olderCount = DataStoreUtils.getStatusesCount(context, uri, minPositionKey,
                     Statuses.POSITION_KEY, false, accountKey);
         }
-        final int rowsDeleted = resolver.delete(uri, deleteWhere, deleteWhereArgs);
+        final int rowsDeleted = resolver.delete(writeUri, deleteWhere, deleteWhereArgs);
 
         // BEGIN HotMobi
         final RefreshEvent event = RefreshEvent.create(context, statusIds, getTimelineType());
@@ -243,8 +244,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             values[minIdx].put(Statuses.IS_GAP, true);
         }
         // Insert previously fetched items.
-        final Uri insertUri = UriUtils.appendQueryParameters(uri, QUERY_PARAM_NOTIFY, notify);
-        ContentResolverUtils.bulkInsert(resolver, insertUri, values);
+        ContentResolverUtils.bulkInsert(resolver, writeUri, values);
 
         if (maxId != null && sinceId == null) {
             final ContentValues noGapValues = new ContentValues();
@@ -252,7 +252,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             final String noGapWhere = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                     Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
             final String[] noGapWhereArgs = {accountKey.toString(), maxId};
-            resolver.update(insertUri, noGapValues, noGapWhere, noGapWhereArgs);
+            resolver.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs);
         }
     }
 
