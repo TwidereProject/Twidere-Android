@@ -58,5 +58,14 @@
     "no_version_suffix": true,
     "consumer_key": "4a81cef8ec5d896c4602d0a9b62725de",
     "consumer_secret": "07e34108712788e31267a7d656242220"
+  },
+  {
+    "name": "status.vinilox.eu",
+    "api_url_format": "https://status.vinilox.eu/api/",
+    "auth_type": "oauth",
+    "same_oauth_url": true,
+    "no_version_suffix": true,
+    "consumer_key": "3f04dd3e588d3189ebe16904a1089e67",
+    "consumer_secret": "5a797b92a22481be94c9c81058d02124"
   }
 ]
