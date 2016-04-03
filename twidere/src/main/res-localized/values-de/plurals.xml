@@ -43,7 +43,7 @@
     <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> Tweets pro Tag)</item>
   </plurals>
   <plurals name="N_others">
-    <item quantity="one">mehr</item>
+    <item quantity="one">anderer</item>
     <item quantity="other"><xliff:g id="count">%d</xliff:g> andere</item>
   </plurals>
   <plurals name="N_statuses">

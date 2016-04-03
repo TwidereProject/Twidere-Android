@@ -4,7 +4,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <plurals name="Nitems_selected">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> item selected</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> item selected</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> items selected</item>
   </plurals>
   <plurals name="added_N_users_to_list">
     <item quantity="one">Added <xliff:g id="count">%1$d</xliff:g> user to list "<xliff:g id="list">%2$s</xliff:g>\".</item>

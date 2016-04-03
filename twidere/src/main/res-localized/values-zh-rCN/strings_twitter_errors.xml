@@ -4,7 +4,7 @@
   <!-- 32 Could not authenticate you: Your call could not be completed as dialed. -->
   <string name="error_twitter_32">无法验证到Twitter，你可能需要重新登录</string>
   <!-- 34 Sorry, that page does not exist: Corresponds with HTTP 404 - the specified resource was not found. -->
-  <string name="error_twitter_34">该推文、用户或页面不存在</string>
+  <string name="error_twitter_34">推文，用户或页面不存在</string>
   <!-- 88 Rate limit exceeded: The request limit for this resource has been reached for the current rate limit window. -->
   <string name="error_twitter_88">Twitter的调用次数超限，请稍后再试</string>
   <!-- 89 Invalid or expired token: The access token used in the request is incorrect or has expired. Used in API v1.1 -->

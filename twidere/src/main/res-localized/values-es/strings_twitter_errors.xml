@@ -30,7 +30,7 @@
   <!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->
   <string name="error_twitter_179">No puede ver este tuit porque está protegido por el usuario.</string>
   <!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->
-  <string name="error_twitter_187">Ya has enviado este tuit.</string>
+  <string name="error_twitter_187">Ya has enviado este tweet.</string>
   <string name="error_twitter_193">La foto que quieres subir es demasiado grande.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Es posible que necesites iniciar sesión otra vez.</string>

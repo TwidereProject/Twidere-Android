@@ -15,36 +15,33 @@
     <item quantity="other">زدودن ‫<xliff:g id="items">%1$d</xliff:g> کاربر از فهرست «<xliff:g id="list">%2$s</xliff:g>»؟</item>
   </plurals>
   <plurals name="N_new_statuses">
-    <item quantity="other"><xliff:g id="count">%Id</xliff:g> توییت جدید</item>
-  </plurals>
-  <plurals name="N_new_mentions">
-    <item quantity="other"><xliff:g id="items">%Id</xliff:g> اشارهٔ جدید</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> توییت جدید</item>
   </plurals>
   <plurals name="N_new_interactions">
-    <item quantity="other"><xliff:g id="items">%Id</xliff:g> تعامل جدید</item>
+    <item quantity="other"><xliff:g id="items">%d</xliff:g> تعامل جدید</item>
   </plurals>
   <plurals name="N_new_messages">
-    <item quantity="other"><xliff:g id="items">%Id</xliff:g> پیام جدید</item>
+    <item quantity="other"><xliff:g id="items">%d</xliff:g> پیام جدید</item>
   </plurals>
   <plurals name="N_media">
-    <item quantity="other"><xliff:g id="count">%Id</xliff:g> رسانه</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> رسانه</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
     <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> توییت در روز)</item>
   </plurals>
   <plurals name="N_others">
-    <item quantity="other"><xliff:g id="count">%Id</xliff:g> دیگر</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> دیگر</item>
   </plurals>
   <plurals name="N_statuses">
-    <item quantity="other"><xliff:g id="count">%Id</xliff:g> توییت</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> توییت</item>
   </plurals>
   <plurals name="N_favorites">
-    <item quantity="other"><xliff:g id="count">%Id</xliff:g> برگزیده</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> برگزیده</item>
   </plurals>
   <plurals name="N_likes">
-    <item quantity="other"><xliff:g id="count">%Id</xliff:g> پسند</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> پسند</item>
   </plurals>
   <plurals name="N_votes">
-    <item quantity="other"><xliff:g id="count">%Id</xliff:g> رأی</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> رأی</item>
   </plurals>
 </resources>

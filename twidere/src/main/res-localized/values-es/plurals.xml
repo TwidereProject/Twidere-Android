@@ -39,8 +39,8 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> medios</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
-    <item quantity="one"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tuit al día)</item>
-    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tuits al día)</item>
+    <item quantity="one"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet por día)</item>
+    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweets por día)</item>
   </plurals>
   <plurals name="N_others">
     <item quantity="one">otro</item>
