@@ -992,11 +992,13 @@ public class DataStoreUtils implements Constants {
                         for (ParcelableStatus[] statusesArray : statusesMatrix) {
                             if (statusesArray == null) continue;
                             for (ParcelableStatus status : statusesArray) {
-                                if (!statusId.equals(status.id)) continue;
-                                status.my_retweet_id = null;
-                                status.reply_count = result.reply_count;
-                                status.retweet_count = result.retweet_count - 1;
-                                status.favorite_count = result.favorite_count;
+                                if (statusId.equals(status.id) || statusId.equals(status.retweet_id)
+                                        || statusId.equals(status.my_retweet_id)) {
+                                    status.my_retweet_id = null;
+                                    status.reply_count = result.reply_count;
+                                    status.retweet_count = result.retweet_count - 1;
+                                    status.favorite_count = result.favorite_count;
+                                }
                             }
                         }
                     }

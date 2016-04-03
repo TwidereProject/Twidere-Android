@@ -1580,11 +1580,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         for (ParcelableStatus[] statusesArray : statusesMatrix) {
                             if (statusesArray == null) continue;
                             for (ParcelableStatus status : statusesArray) {
-                                if (!result.id.equals(status.id)) continue;
-                                status.my_retweet_id = result.id;
-                                status.reply_count = result.reply_count;
-                                status.retweet_count = result.retweet_count;
-                                status.favorite_count = result.favorite_count;
+                                if (mStatusId.equals(status.id) || mStatusId.equals(status.retweet_id)
+                                        || mStatusId.equals(status.my_retweet_id)) {
+                                    status.my_retweet_id = result.id;
+                                    status.reply_count = result.reply_count;
+                                    status.retweet_count = result.retweet_count;
+                                    status.favorite_count = result.favorite_count;
+                                }
                             }
                         }
                     }

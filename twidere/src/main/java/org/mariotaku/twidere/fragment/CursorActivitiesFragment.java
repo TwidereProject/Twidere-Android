@@ -324,11 +324,13 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
                 for (ParcelableStatus[] statusesArray : statusesMatrix) {
                     if (statusesArray == null) continue;
                     for (ParcelableStatus status : statusesArray) {
-                        if (!result.id.equals(status.id)) continue;
-                        status.is_favorite = result.is_favorite;
-                        status.reply_count = result.reply_count;
-                        status.retweet_count = result.retweet_count;
-                        status.favorite_count = result.favorite_count;
+                        if (result.id.equals(status.id) || result.id.equals(status.retweet_id)
+                                || result.id.equals(status.my_retweet_id)) {
+                            status.is_favorite = result.is_favorite;
+                            status.reply_count = result.reply_count;
+                            status.retweet_count = result.retweet_count;
+                            status.favorite_count = result.favorite_count;
+                        }
                     }
                 }
             }
