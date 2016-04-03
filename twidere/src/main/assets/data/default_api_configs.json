@@ -48,5 +48,15 @@
     "no_version_suffix": true,
     "consumer_key": "0d3f84140b97cefec01e9583d88dc760",
     "consumer_secret": "da3b203278ab34eadf7e578eb2f6f9d7"
+  },
+  {
+    "name": "GNU Social.de",
+    "localized_name": "@string/provider_gnusocial_de",
+    "api_url_format": "https://gnusocial.de/api/",
+    "auth_type": "oauth",
+    "same_oauth_url": true,
+    "no_version_suffix": true,
+    "consumer_key": "4a81cef8ec5d896c4602d0a9b62725de",
+    "consumer_secret": "07e34108712788e31267a7d656242220"
   }
 ]
