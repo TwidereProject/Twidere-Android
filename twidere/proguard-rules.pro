@@ -48,4 +48,4 @@
 
 # Fuck shitsung http://stackoverflow.com/a/34896262/859190
 # ... and fuck xiaomi http://crashes.to/s/675ac9aff5e
--keep class !android.support.v7.view.menu.MenuBuilder, !org.apache.commons.** { *; }
+-keep class !android.support.v7.view.menu.*MenuBuilder*, !org.apache.commons.** { *; }

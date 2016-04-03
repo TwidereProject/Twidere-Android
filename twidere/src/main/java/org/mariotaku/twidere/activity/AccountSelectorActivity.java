@@ -41,6 +41,7 @@ import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -238,7 +239,9 @@ public class AccountSelectorActivity extends BaseActivity implements
 
     private Intent getStartIntent() {
         final Intent intent = getIntent();
-        return intent.getParcelableExtra(EXTRA_START_INTENT);
+        final Intent startIntent = intent.getParcelableExtra(EXTRA_START_INTENT);
+        startIntent.setExtrasClassLoader(TwidereApplication.class.getClassLoader());
+        return startIntent;
     }
 
 }
