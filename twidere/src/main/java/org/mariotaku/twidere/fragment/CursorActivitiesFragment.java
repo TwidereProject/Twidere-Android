@@ -43,7 +43,6 @@ import org.mariotaku.twidere.activity.HomeActivity;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -55,7 +54,6 @@ import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent;
 import org.mariotaku.twidere.model.message.StatusDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
@@ -123,7 +121,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Activities.COLUMNS;
         return new CursorActivitiesLoader(context, uri, projection, selection, expression.whereArgs,
-                sortOrder, fromUser, accountKeys);
+                sortOrder, fromUser);
     }
 
     @Override
@@ -393,19 +391,17 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
     }
 
     public static class CursorActivitiesLoader extends ExtendedObjectCursorLoader<ParcelableActivity> {
-        private final UserKey[] mAccountKeys;
 
         public CursorActivitiesLoader(Context context, Uri uri, String[] projection,
-                                      String selection, String[] selectionArgs, String sortOrder,
-                                      boolean fromUser, UserKey[] accountKeys) {
-            super(context, ParcelableActivityCursorIndices.class, uri, projection, selection, selectionArgs, sortOrder, fromUser);
-            mAccountKeys = accountKeys;
+                                      String selection, String[] selectionArgs,
+                                      String sortOrder, boolean fromUser) {
+            super(context, ParcelableActivityCursorIndices.class, uri, projection, selection,
+                    selectionArgs, sortOrder, fromUser);
         }
 
         @Override
         protected ObjectCursor<ParcelableActivity> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<ParcelableActivity> indices) {
             final String[] filteredUserIds = DataStoreUtils.getFilteredUserIds(getContext());
-            final ParcelableAccount[] accounts = ParcelableAccountUtils.getAccounts(getContext(), mAccountKeys);
             return new ActivityCursor(cursor, indices, filteredUserIds);
         }
 

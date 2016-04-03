@@ -119,7 +119,7 @@ dependencies {
     compile 'com.android.support:preference-v14:23.2.1'
     compile 'com.twitter:twitter-text:1.13.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
     compile 'com.squareup:otto:1.3.8'
     compile 'dnsjava:dnsjava:2.1.7'
     compile 'com.commonsware.cwac:merge:1.1.1'

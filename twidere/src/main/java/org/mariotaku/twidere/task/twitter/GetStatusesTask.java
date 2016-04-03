@@ -193,7 +193,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             final long firstSortId = statuses.get(0).getSortId();
             final long lastSortId = statuses.get(statuses.size() - 1).getSortId();
             // Get id diff of first and last item
-            long sortDiff = firstSortId - lastSortId;
+            final long sortDiff = firstSortId - lastSortId;
 
             for (int i = 0, j = statuses.size(); i < j; i++) {
                 final Status item = statuses.get(i);

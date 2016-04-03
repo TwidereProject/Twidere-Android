@@ -486,6 +486,25 @@ public class DataStoreUtils implements Constants {
         return queryCount(context, uri, selection.getSQL(), whereArgs);
     }
 
+    public static int getActivitiesCount(final Context context, final Uri uri, final long compare,
+                                       String compareColumn, boolean greaterThan, UserKey... accountKeys) {
+        if (context == null) return 0;
+        if (accountKeys == null) {
+            accountKeys = getActivatedAccountKeys(context);
+        }
+        final Expression selection = Expression.and(
+                Expression.inArgs(new Column(Activities.ACCOUNT_KEY), accountKeys.length),
+                greaterThan ? Expression.greaterThanArgs(compareColumn) : Expression.lesserThanArgs(compareColumn),
+                buildActivityFilterWhereClause(getTableNameByUri(uri), null)
+        );
+        final String[] whereArgs = new String[accountKeys.length + 1];
+        for (int i = 0; i < accountKeys.length; i++) {
+            whereArgs[i] = accountKeys[i].toString();
+        }
+        whereArgs[accountKeys.length] = String.valueOf(compare);
+        return queryCount(context, uri, selection.getSQL(), whereArgs);
+    }
+
     public static int getActivitiesCount(@NonNull final Context context, final Uri uri,
                                          final Expression extraWhere, final String[] extraWhereArgs,
                                          final long since, String sinceColumn, boolean followingOnly,

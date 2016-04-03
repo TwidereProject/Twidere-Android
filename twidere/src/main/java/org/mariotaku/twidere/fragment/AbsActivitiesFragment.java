@@ -511,14 +511,35 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         final LinearLayoutManager layoutManager = getLayoutManager();
         adapter.setListener(this);
         registerForContextMenu(recyclerView);
-        mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager,
-                adapter, this);
+        mNavigationHelper = new RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
+                this);
         mPauseOnScrollListener = new PauseRecyclerViewOnScrollListener(adapter.getMediaLoader().getImageLoader(), false, true);
 
         final Bundle loaderArgs = new Bundle(getArguments());
         loaderArgs.putBoolean(EXTRA_FROM_USER, true);
         getLoaderManager().initLoader(0, loaderArgs, this);
         showProgress();
+    }
+
+    @Override
+    public boolean isReachingEnd() {
+        final LinearLayoutManager lm = getLayoutManager();
+        final ParcelableActivitiesAdapter adapter = getAdapter();
+        int lastPosition = lm.findLastCompletelyVisibleItemPosition();
+        final int itemCount = adapter.getItemCount();
+        int finalPos = itemCount - 1;
+        for (int i = lastPosition + 1; i < itemCount; i++) {
+            if (adapter.getItemViewType(i) != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY) {
+                finalPos = i - 1;
+                break;
+            }
+        }
+        return finalPos >= itemCount - 1;
+    }
+
+    @Override
+    public boolean isReachingStart() {
+        return super.isReachingStart();
     }
 
     protected Object createMessageBusCallback() {
@@ -578,11 +599,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     }
 
     @Override
-    protected void setupRecyclerView(Context context, boolean compact) {
-        if (compact) {
-            super.setupRecyclerView(context, true);
-            return;
-        }
+    protected void setupRecyclerView(Context context, final boolean compact) {
         final RecyclerView recyclerView = getRecyclerView();
         final ParcelableActivitiesAdapter adapter = getAdapter();
         // Dividers are drawn on bottom of view
@@ -595,7 +612,9 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
                     return false;
                 }
                 final int itemViewType = adapter.getItemViewType(childPos);
-                // Draw only if current item and next item is TITLE_SUMMARY
+                if (compact) {
+                    return itemViewType != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY;
+                }
                 if (shouldUseDividerFor(itemViewType)) {
                     if (shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
                         return true;

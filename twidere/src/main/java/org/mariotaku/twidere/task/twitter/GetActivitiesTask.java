@@ -71,6 +71,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
         if (param.shouldAbort()) return null;
         final UserKey[] accountIds = param.getAccountKeys();
         final String[] maxIds = param.getMaxIds();
+        final long[] maxSortIds = param.getMaxSortIds();
         final String[] sinceIds = param.getSinceIds();
         final ContentResolver cr = context.getContentResolver();
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT);
@@ -88,8 +89,12 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final Paging paging = new Paging();
             paging.count(loadItemLimit);
             String maxId = null;
+            long maxSortId = -1;
             if (maxIds != null) {
                 maxId = maxIds[i];
+                if (maxSortIds != null) {
+                    maxSortId = maxSortIds[i];
+                }
                 if (maxId != null) {
                     paging.maxId(maxId);
                 }
@@ -139,23 +144,44 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
         long[] deleteBound = new long[2];
         Arrays.fill(deleteBound, -1);
         List<ContentValues> valuesList = new ArrayList<>();
-        for (Activity activity : activities) {
-            final ParcelableActivity parcelableActivity = ParcelableActivityUtils.fromActivity(activity,
-                    credentials.account_key, false);
-            if (deleteBound[0] < 0) {
-                deleteBound[0] = parcelableActivity.min_sort_position;
-            } else {
-                deleteBound[0] = Math.min(deleteBound[0], parcelableActivity.min_sort_position);
+        int minIdx = -1;
+        long minPositionKey = -1;
+        if (!activities.isEmpty()) {
+            final long firstSortId = activities.get(0).getCreatedAt().getTime();
+            final long lastSortId = activities.get(activities.size() - 1).getCreatedAt().getTime();
+            // Get id diff of first and last item
+            final long sortDiff = firstSortId - lastSortId;
+            for (int i = 0, j = activities.size(); i < j; i++) {
+                Activity item = activities.get(i);
+                final ParcelableActivity activity = ParcelableActivityUtils.fromActivity(item,
+                        credentials.account_key, false);
+                activity.position_key = GetStatusesTask.getPositionKey(activity.timestamp,
+                        activity.timestamp, lastSortId, sortDiff, i, j);
+                if (deleteBound[0] < 0) {
+                    deleteBound[0] = activity.min_sort_position;
+                } else {
+                    deleteBound[0] = Math.min(deleteBound[0], activity.min_sort_position);
+                }
+                if (deleteBound[1] < 0) {
+                    deleteBound[1] = activity.max_sort_position;
+                } else {
+                    deleteBound[1] = Math.max(deleteBound[1], activity.max_sort_position);
+                }
+                if (minIdx == -1 || item.compareTo(activities.get(minIdx)) < 0) {
+                    minIdx = i;
+                    minPositionKey = activity.position_key;
+                }
+
+                activity.inserted_date = System.currentTimeMillis();
+                final ContentValues values = ContentValuesCreator.createActivity(activity,
+                        credentials, userColorNameManager);
+                valuesList.add(values);
             }
-            if (deleteBound[1] < 0) {
-                deleteBound[1] = parcelableActivity.max_sort_position;
-            } else {
-                deleteBound[1] = Math.max(deleteBound[1], parcelableActivity.max_sort_position);
-            }
-            parcelableActivity.inserted_date = System.currentTimeMillis();
-            final ContentValues values = ContentValuesCreator.createActivity(parcelableActivity,
-                    credentials, userColorNameManager);
-            valuesList.add(values);
+        }
+        int olderCount = -1;
+        if (minPositionKey > 0) {
+            olderCount = DataStoreUtils.getActivitiesCount(context, getContentUri(), minPositionKey,
+                    Activities.POSITION_KEY, false, credentials.account_key);
         }
         final Uri writeUri = UriUtils.appendQueryParameters(getContentUri(), QUERY_PARAM_NOTIFY,
                 notify);
@@ -169,7 +195,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                     String.valueOf(deleteBound[1])};
             int rowsDeleted = cr.delete(writeUri, where.getSQL(), whereArgs);
             // Why loadItemLimit / 2? because it will not acting strange in most cases
-            boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore
+            boolean insertGap = valuesList.size() >= loadItemLimit && !noItemsBefore && olderCount > 0
                     && rowsDeleted <= 0 && activities.size() > loadItemLimit / 2;
             if (insertGap && !valuesList.isEmpty()) {
                 valuesList.get(valuesList.size() - 1).put(Activities.IS_GAP, true);

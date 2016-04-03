@@ -741,6 +741,7 @@ public final class Utils implements Constants {
                 break;
             }
             case LINK_ID_ITEMS: {
+                isAccountIdRequired = false;
                 fragment = new ItemsListFragment();
                 break;
             }
