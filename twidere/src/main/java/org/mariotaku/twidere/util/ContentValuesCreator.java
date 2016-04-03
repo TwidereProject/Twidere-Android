@@ -204,6 +204,10 @@ public final class ContentValuesCreator implements TwidereConstants {
         if (status != null) {
             ParcelableStatusUtils.updateExtraInformation(status, credentials, manager);
 
+            activity.status_id = status.id;
+            activity.status_retweet_id = status.retweet_id;
+            activity.status_my_retweet_id = status.my_retweet_id;
+
             if (status.is_retweet) {
                 activity.status_retweeted_by_user_key = status.retweeted_by_user_key;
             } else if (status.is_quote) {

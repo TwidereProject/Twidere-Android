@@ -22,6 +22,7 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -203,10 +204,16 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     public long inserted_date;
 
     @CursorField(Activities.STATUS_ID)
+    @Nullable
     public String status_id;
 
     @CursorField(Activities.STATUS_RETWEET_ID)
+    @Nullable
     public String status_retweet_id;
+
+    @CursorField(Activities.STATUS_MY_RETWEET_ID)
+    @Nullable
+    public String status_my_retweet_id;
 
     public transient UserKey[] after_filtered_source_ids;
     public transient ParcelableUser[] after_filtered_sources;

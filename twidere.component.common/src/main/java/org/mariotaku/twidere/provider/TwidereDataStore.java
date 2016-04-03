@@ -908,6 +908,7 @@ public interface TwidereDataStore {
         String TIMESTAMP = "timestamp";
         String STATUS_ID = "status_id";
         String STATUS_RETWEET_ID = "status_retweet_id";
+        String STATUS_MY_RETWEET_ID = "status_my_retweet_id";
         String STATUS_USER_KEY = "status_user_id";
         String STATUS_RETWEETED_BY_USER_KEY = "status_retweeted_by_user_id";
         String STATUS_QUOTED_USER_KEY = "status_quoted_user_id";

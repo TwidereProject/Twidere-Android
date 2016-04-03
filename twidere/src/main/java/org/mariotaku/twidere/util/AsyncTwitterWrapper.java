@@ -57,6 +57,7 @@ import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -734,18 +735,35 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 values.put(Statuses.REPLY_COUNT, result.reply_count);
                 values.put(Statuses.RETWEET_COUNT, result.retweet_count);
                 values.put(Statuses.FAVORITE_COUNT, result.favorite_count);
-                final Expression where = Expression.and(
-                        Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
+                final String statusWhere = Expression.and(
+                        Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                         Expression.or(
                                 Expression.equalsArgs(Statuses.STATUS_ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)
                         )
-                );
-                final String[] whereArgs = {mAccountKey.toString(), String.valueOf(mStatusId),
+                ).getSQL();
+                final String[] statusWhereArgs = {mAccountKey.toString(), String.valueOf(mStatusId),
                         String.valueOf(mStatusId)};
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
-                    mResolver.update(uri, values, where.getSQL(), whereArgs);
+                    mResolver.update(uri, values, statusWhere, statusWhereArgs);
                 }
+                DataStoreUtils.updateActivityStatus(mResolver, mAccountKey, mStatusId, new DataStoreUtils.UpdateActivityAction() {
+                    @Override
+                    public void process(ParcelableActivity activity) {
+                        ParcelableStatus[][] statusesMatrix = {activity.target_statuses,
+                                activity.target_object_statuses};
+                        for (ParcelableStatus[] statusesArray : statusesMatrix) {
+                            if (statusesArray == null) continue;
+                            for (ParcelableStatus status : statusesArray) {
+                                if (!result.id.equals(status.id)) continue;
+                                status.is_favorite = true;
+                                status.reply_count = result.reply_count;
+                                status.retweet_count = result.retweet_count;
+                                status.favorite_count = result.favorite_count;
+                            }
+                        }
+                    }
+                });
                 return SingleResponse.getInstance(result);
             } catch (final TwitterException e) {
                 if (BuildConfig.DEBUG) {
@@ -754,6 +772,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return SingleResponse.getInstance(e);
             }
         }
+
 
         @Override
         protected void onPreExecute() {
@@ -1195,6 +1214,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, false);
                 values.put(Statuses.FAVORITE_COUNT, result.favorite_count - 1);
+                values.put(Statuses.RETWEET_COUNT, result.retweet_count);
+                values.put(Statuses.REPLY_COUNT, result.reply_count);
+
                 final Expression where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                         Expression.or(Expression.equalsArgs(Statuses.STATUS_ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)));
@@ -1202,6 +1224,24 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), whereArgs);
                 }
+
+                DataStoreUtils.updateActivityStatus(mResolver, mAccountKey, mStatusId, new DataStoreUtils.UpdateActivityAction() {
+                    @Override
+                    public void process(ParcelableActivity activity) {
+                        ParcelableStatus[][] statusesMatrix = {activity.target_statuses,
+                                activity.target_object_statuses};
+                        for (ParcelableStatus[] statusesArray : statusesMatrix) {
+                            if (statusesArray == null) continue;
+                            for (ParcelableStatus status : statusesArray) {
+                                if (!result.id.equals(status.id)) continue;
+                                status.is_favorite = false;
+                                status.reply_count = result.reply_count;
+                                status.retweet_count = result.retweet_count;
+                                status.favorite_count = result.favorite_count - 1;
+                            }
+                        }
+                    }
+                });
                 return SingleResponse.getInstance(result);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
@@ -1306,6 +1346,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             }
             if (status != null || (exception != null && exception.getErrorCode() == ErrorInfo.STATUS_NOT_FOUND)) {
                 DataStoreUtils.deleteStatus(mResolver, mAccountKey, mStatusId, status);
+                DataStoreUtils.deleteActivityStatus(mResolver, mAccountKey, mStatusId, status);
             }
             return SingleResponse.getInstance(status, exception);
         }
@@ -1514,14 +1555,14 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return SingleResponse.getInstance();
             }
             try {
-                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(twitter.retweetStatus(mStatusId),
+                final ParcelableStatus result = ParcelableStatusUtils.fromStatus(twitter.retweetStatus(mStatusId),
                         mAccountKey, false);
-                Utils.setLastSeen(mContext, status.mentions, System.currentTimeMillis());
+                Utils.setLastSeen(mContext, result.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
-                values.put(Statuses.MY_RETWEET_ID, status.id);
-                values.put(Statuses.REPLY_COUNT, status.reply_count);
-                values.put(Statuses.RETWEET_COUNT, status.retweet_count);
-                values.put(Statuses.FAVORITE_COUNT, status.favorite_count);
+                values.put(Statuses.MY_RETWEET_ID, result.id);
+                values.put(Statuses.REPLY_COUNT, result.reply_count);
+                values.put(Statuses.RETWEET_COUNT, result.retweet_count);
+                values.put(Statuses.FAVORITE_COUNT, result.favorite_count);
                 final Expression where = Expression.or(
                         Expression.equalsArgs(Statuses.STATUS_ID),
                         Expression.equalsArgs(Statuses.RETWEET_ID)
@@ -1530,7 +1571,25 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), whereArgs);
                 }
-                return SingleResponse.getInstance(status);
+
+                DataStoreUtils.updateActivityStatus(mResolver, mAccountKey, mStatusId, new DataStoreUtils.UpdateActivityAction() {
+                    @Override
+                    public void process(ParcelableActivity activity) {
+                        ParcelableStatus[][] statusesMatrix = {activity.target_statuses,
+                                activity.target_object_statuses};
+                        for (ParcelableStatus[] statusesArray : statusesMatrix) {
+                            if (statusesArray == null) continue;
+                            for (ParcelableStatus status : statusesArray) {
+                                if (!result.id.equals(status.id)) continue;
+                                status.my_retweet_id = result.id;
+                                status.reply_count = result.reply_count;
+                                status.retweet_count = result.retweet_count;
+                                status.favorite_count = result.favorite_count;
+                            }
+                        }
+                    }
+                });
+                return SingleResponse.getInstance(result);
             } catch (final TwitterException e) {
                 return SingleResponse.getInstance(e);
             }

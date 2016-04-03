@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.loader;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -50,7 +51,7 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
     private final boolean mOmitIntentExtra;
     private final Bundle mExtras;
     @Nullable
-    private final UserKey mAccountId;
+    private final UserKey mAccountKey;
     @Nullable
     private final String mStatusId;
 
@@ -58,32 +59,32 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
     UserColorNameManager mUserColorNameManager;
 
     public ParcelableStatusLoader(final Context context, final boolean omitIntentExtra, final Bundle extras,
-                                  @Nullable final UserKey accountId,
+                                  @Nullable final UserKey accountKey,
                                   @Nullable final String statusId) {
         super(context);
         GeneralComponentHelper.build(context).inject(this);
         mOmitIntentExtra = omitIntentExtra;
         mExtras = extras;
-        mAccountId = accountId;
+        mAccountKey = accountKey;
         mStatusId = statusId;
     }
 
     @Override
     public SingleResponse<ParcelableStatus> loadInBackground() {
-        if (mAccountId == null || mStatusId == null) return SingleResponse.getInstance();
+        if (mAccountKey == null || mStatusId == null) return SingleResponse.getInstance();
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableStatus cache = mExtras.getParcelable(IntentConstants.EXTRA_STATUS);
             if (cache != null) {
                 final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(cache);
                 final Bundle extras = response.getExtras();
-                extras.putParcelable(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(getContext(), mAccountId));
+                extras.putParcelable(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(getContext(), mAccountKey));
                 return response;
             }
         }
         try {
-            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), mAccountId);
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), mAccountKey);
             if (credentials == null) return SingleResponse.getInstance();
-            final ParcelableStatus status = findStatus(getContext(), mAccountId, mStatusId);
+            final ParcelableStatus status = findStatus(getContext(), mAccountKey, mStatusId);
             ParcelableStatusUtils.updateExtraInformation(status, credentials, mUserColorNameManager);
             final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(status);
             final Bundle extras = response.getExtras();
@@ -92,8 +93,10 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
         } catch (final TwitterException e) {
             if (e.getErrorCode() == ErrorInfo.STATUS_NOT_FOUND) {
                 // Delete all deleted status
-                DataStoreUtils.deleteStatus(getContext().getContentResolver(), mAccountId,
+                final ContentResolver cr = getContext().getContentResolver();
+                DataStoreUtils.deleteStatus(cr, mAccountKey,
                         mStatusId, null);
+                DataStoreUtils.deleteActivityStatus(cr, mAccountKey, mStatusId, null);
             }
             return SingleResponse.getInstance(e);
         }

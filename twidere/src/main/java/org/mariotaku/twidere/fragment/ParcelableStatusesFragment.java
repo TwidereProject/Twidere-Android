@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 
 import com.squareup.otto.Subscribe;
@@ -165,15 +166,24 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
         getStatuses(param);
     }
 
-    public final void replaceStatus(final ParcelableStatus status) {
-        final List<ParcelableStatus> data = getAdapterData();
-        if (status == null || data == null || data.isEmpty()) return;
-        for (int i = 0, j = data.size(); i < j; i++) {
-            if (status.equals(data.get(i))) {
-                data.set(i, status);
+    public final void replaceStatusStates(final ParcelableStatus status) {
+        if (status == null) return;
+        final LinearLayoutManager lm = getLayoutManager();
+        final ParcelableStatusesAdapter adapter = getAdapter();
+        int rangeStart = Math.max(adapter.getStatusStartIndex(), lm.findFirstVisibleItemPosition());
+        int rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.getStatusStartIndex()
+                + adapter.getStatusCount() - 1);
+        for (int i = rangeStart, j = rangeEnd + 1; i < j; i++) {
+            ParcelableStatus item = adapter.getStatus(i);
+            if (status.equals(item)) {
+                item.favorite_count = status.favorite_count;
+                item.retweet_count = status.retweet_count;
+                item.reply_count = status.reply_count;
+
+                item.is_favorite = status.is_favorite;
             }
         }
-        setAdapterData(data);
+        adapter.notifyItemRangeChanged(rangeStart, rangeEnd);
     }
 
     @Override
@@ -215,7 +225,7 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
     private void updateFavoritedStatus(ParcelableStatus status) {
         final Context context = getActivity();
         if (context == null) return;
-        replaceStatus(status);
+        replaceStatusStates(status);
     }
 
     private void updateRetweetedStatuses(ParcelableStatus status) {
@@ -239,7 +249,6 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
                 updateFavoritedStatus(event.getStatus());
             }
         }
-
 
         @Subscribe
         public void notifyStatusDestroyed(StatusDestroyedEvent event) {
