@@ -944,7 +944,7 @@ public class DataStoreUtils implements Constants {
             cr.delete(uri, deleteWhere, deleteWhereArgs);
             if (status != null) {
                 final ContentValues values = new ContentValues();
-                values.put(Statuses.MY_RETWEET_ID, -1);
+                values.putNull(Statuses.MY_RETWEET_ID);
                 values.put(Statuses.RETWEET_COUNT, status.retweet_count - 1);
                 cr.update(uri, values, updateWhere, updateWhereArgs);
             }
@@ -981,20 +981,20 @@ public class DataStoreUtils implements Constants {
         }
         for (final Uri uri : ACTIVITIES_URIS) {
             cr.delete(uri, deleteWhere, deleteWhereArgs);
-            if (result != null) {
-                updateActivity(cr, uri, updateWhere, updateWhereArgs, new UpdateActivityAction() {
+            updateActivity(cr, uri, updateWhere, updateWhereArgs, new UpdateActivityAction() {
 
-                    @Override
-                    public void process(ParcelableActivity activity) {
-                        activity.status_my_retweet_id = null;
-                        ParcelableStatus[][] statusesMatrix = {activity.target_statuses,
-                                activity.target_object_statuses};
-                        for (ParcelableStatus[] statusesArray : statusesMatrix) {
-                            if (statusesArray == null) continue;
-                            for (ParcelableStatus status : statusesArray) {
-                                if (statusId.equals(status.id) || statusId.equals(status.retweet_id)
-                                        || statusId.equals(status.my_retweet_id)) {
-                                    status.my_retweet_id = null;
+                @Override
+                public void process(ParcelableActivity activity) {
+                    activity.status_my_retweet_id = null;
+                    ParcelableStatus[][] statusesMatrix = {activity.target_statuses,
+                            activity.target_object_statuses};
+                    for (ParcelableStatus[] statusesArray : statusesMatrix) {
+                        if (statusesArray == null) continue;
+                        for (ParcelableStatus status : statusesArray) {
+                            if (statusId.equals(status.id) || statusId.equals(status.retweet_id)
+                                    || statusId.equals(status.my_retweet_id)) {
+                                status.my_retweet_id = null;
+                                if (result != null) {
                                     status.reply_count = result.reply_count;
                                     status.retweet_count = result.retweet_count - 1;
                                     status.favorite_count = result.favorite_count;
@@ -1002,8 +1002,8 @@ public class DataStoreUtils implements Constants {
                             }
                         }
                     }
-                });
-            }
+                }
+            });
         }
     }
 

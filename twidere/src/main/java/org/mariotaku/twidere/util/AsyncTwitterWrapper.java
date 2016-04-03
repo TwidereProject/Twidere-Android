@@ -1577,6 +1577,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     public void process(ParcelableActivity activity) {
                         ParcelableStatus[][] statusesMatrix = {activity.target_statuses,
                                 activity.target_object_statuses};
+                        activity.status_my_retweet_id = result.my_retweet_id;
                         for (ParcelableStatus[] statusesArray : statusesMatrix) {
                             if (statusesArray == null) continue;
                             for (ParcelableStatus status : statusesArray) {
