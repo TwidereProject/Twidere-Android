@@ -103,7 +103,6 @@ import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.time.FastDateParser;
 import org.json.JSONException;
 import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
@@ -2303,9 +2302,9 @@ public final class Utils implements Constants {
 
     public static boolean checkDeviceCompatible() {
         try {
-            MenuBuilder.class.getDeclaredField("mContext");
-            FastDateParser.class.getDeclaredMethod("parse", String.class);
-        } catch (Exception e) {
+            Menu.class.isAssignableFrom(MenuBuilder.class);
+            InternalParseUtils.parseISODateTime("2001-01-01T01:01:01Z", null);
+        } catch (Error e) {
             return false;
         }
         return true;
