@@ -503,18 +503,14 @@
             android:authorities="org.mariotaku.twidere.provider.SearchRecentSuggestions"
             tools:ignore="ExportedContentProvider"/>
         <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="twidere.file"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
-        </provider>
-        <provider
             android:name=".provider.CacheProvider"
             android:authorities="twidere.cache"
             android:exported="false"/>
+        <provider
+            android:name=".provider.ShareProvider"
+            android:authorities="twidere.share"
+            android:exported="false"
+            android:grantUriPermissions="true"/>
 
         <receiver android:name=".receiver.ConnectivityStateReceiver">
             <intent-filter>
