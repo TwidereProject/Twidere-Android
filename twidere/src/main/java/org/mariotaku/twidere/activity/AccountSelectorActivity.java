@@ -28,6 +28,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -237,10 +238,13 @@ public class AccountSelectorActivity extends BaseActivity implements
         return intent.getBooleanExtra(EXTRA_SELECT_ONLY_ITEM, false);
     }
 
+    @Nullable
     private Intent getStartIntent() {
         final Intent intent = getIntent();
         final Intent startIntent = intent.getParcelableExtra(EXTRA_START_INTENT);
-        startIntent.setExtrasClassLoader(TwidereApplication.class.getClassLoader());
+        if (startIntent != null) {
+            startIntent.setExtrasClassLoader(TwidereApplication.class.getClassLoader());
+        }
         return startIntent;
     }
 

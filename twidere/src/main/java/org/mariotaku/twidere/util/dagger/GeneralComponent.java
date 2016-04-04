@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.dagger;
 
 import android.support.v7.widget.RecyclerView;
 
+import org.mariotaku.twidere.activity.APIEditorActivity;
 import org.mariotaku.twidere.activity.BaseActivity;
 import org.mariotaku.twidere.activity.ComposeActivity;
 import org.mariotaku.twidere.activity.MediaViewerActivity;
@@ -147,4 +148,6 @@ public interface GeneralComponent {
     void inject(UpdateProfileBannerImageTask<Object> task);
 
     void inject(AsyncTwitterWrapper.UpdateProfileImageTask<Object> task);
+
+    void inject(APIEditorActivity.LoadDefaultsChooserDialogFragment.DefaultAPIConfigLoader loader);
 }

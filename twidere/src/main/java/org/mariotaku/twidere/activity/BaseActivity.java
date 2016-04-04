@@ -208,7 +208,7 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
             intentFilter.addDataAuthority("fanfou.com", null);
             try {
                 adapter.enableForegroundDispatch(this, intent, new IntentFilter[]{intentFilter}, null);
-            } catch (SecurityException e) {
+            } catch (Exception e) {
                 // Ignore if blocked by modified roms
             }
         }
@@ -220,7 +220,7 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
         if (adapter != null && adapter.isEnabled()) {
             try {
                 adapter.disableForegroundDispatch(this);
-            } catch (SecurityException e) {
+            } catch (Exception e) {
                 // Ignore if blocked by modified roms
             }
         }

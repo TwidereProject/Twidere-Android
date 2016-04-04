@@ -16,6 +16,7 @@ import org.mariotaku.twidere.util.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -95,14 +96,14 @@ public final class CustomAPIConfig implements Constants {
     }
 
     @NonNull
-    public static CustomAPIConfig[] listDefault(@NonNull Context context) {
+    public static List<CustomAPIConfig> listDefault(@NonNull Context context) {
         final AssetManager assets = context.getAssets();
         InputStream is = null;
         try {
             is = assets.open("data/default_api_configs.json");
             List<CustomAPIConfig> configList = JsonSerializer.parseList(is, CustomAPIConfig.class);
             if (configList == null) return listBuiltin(context);
-            return configList.toArray(new CustomAPIConfig[configList.size()]);
+            return configList;
         } catch (IOException e) {
             return listBuiltin(context);
         } finally {
@@ -110,10 +111,10 @@ public final class CustomAPIConfig implements Constants {
         }
     }
 
-    public static CustomAPIConfig[] listBuiltin(@NonNull Context context) {
-        return new CustomAPIConfig[]{new CustomAPIConfig(context.getString(R.string.provider_default),
+    public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {
+        return Collections.singletonList(new CustomAPIConfig(context.getString(R.string.provider_default),
                 DEFAULT_TWITTER_API_URL_FORMAT, ParcelableCredentials.AuthType.OAUTH, true, false,
-                TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)};
+                TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET));
     }
 
     static class AuthTypeConverter extends StringBasedTypeConverter<Integer> {
