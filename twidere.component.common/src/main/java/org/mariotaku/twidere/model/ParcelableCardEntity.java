@@ -47,12 +47,14 @@ import java.util.Map;
 public final class ParcelableCardEntity implements Parcelable {
 
     public static final Creator<ParcelableCardEntity> CREATOR = new Creator<ParcelableCardEntity>() {
+        @Override
         public ParcelableCardEntity createFromParcel(Parcel source) {
             ParcelableCardEntity target = new ParcelableCardEntity();
             ParcelableCardEntityParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableCardEntity[] newArray(int size) {
             return new ParcelableCardEntity[size];
         }
@@ -144,12 +146,14 @@ public final class ParcelableCardEntity implements Parcelable {
     public static final class ParcelableBindingValue implements Parcelable {
 
         public static final Creator<ParcelableBindingValue> CREATOR = new Creator<ParcelableBindingValue>() {
+            @Override
             public ParcelableBindingValue createFromParcel(Parcel source) {
                 ParcelableBindingValue target = new ParcelableBindingValue();
                 ParcelableCardEntity$ParcelableBindingValueParcelablePlease.readFromParcel(target, source);
                 return target;
             }
 
+            @Override
             public ParcelableBindingValue[] newArray(int size) {
                 return new ParcelableBindingValue[size];
             }
