@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -103,6 +102,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
 
     private static final int REQUEST_SHARE_MEDIA = 201;
     private static final int REQUEST_PERMISSION_SAVE_MEDIA = 202;
+    private static final int REQUEST_PERMISSION_SHARE_MEDIA = 203;
 
     @Inject
     FileCache mFileCache;
@@ -110,8 +110,8 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
     MediaDownloader mMediaDownloader;
 
     private ParcelableMedia[] mMedia;
-    private SaveFileTask mSaveFileTask;
     private int mSaveToStoragePosition = -1;
+    private int mShareMediaPosition = -1;
 
 
     private Helper mHelper;
@@ -193,15 +193,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
             }
             case R.id.share: {
                 if (object instanceof CacheDownloadMediaViewerFragment) {
-                    if (object instanceof VideoPageFragment) {
-                        shareMedia(CacheProvider.Type.VIDEO);
-                    } else if (object instanceof ImagePageFragment) {
-                        shareMedia(CacheProvider.Type.IMAGE);
-                    } else if (object instanceof GifPageFragment) {
-                        shareMedia(CacheProvider.Type.IMAGE);
-                    } else {
-                        throw new UnsupportedOperationException("Unsupported fragment " + object);
-                    }
+                    requestAndShareMedia(currentItem);
                 } else {
                     final ParcelableMedia media = getMedia()[currentItem];
                     final Intent intent = new Intent(Intent.ACTION_SEND);
@@ -241,6 +233,13 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
                 } else {
                     Toast.makeText(this, R.string.save_media_no_storage_permission_message, Toast.LENGTH_LONG).show();
                 }
+                return;
+            }
+            case REQUEST_PERMISSION_SHARE_MEDIA: {
+                if (!PermissionUtils.hasPermission(permissions, grantResults, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    Toast.makeText(this, R.string.share_media_no_storage_permission_message, Toast.LENGTH_LONG).show();
+                }
+                shareMedia();
                 return;
             }
         }
@@ -386,10 +385,43 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
         intent.putExtra(Intent.EXTRA_TEXT, IntentUtils.getStatusShareText(this, status));
     }
 
-    protected void shareMedia(@CacheProvider.Type final String type) {
+    protected void requestAndSaveToStorage(int position) {
+        mSaveToStoragePosition = position;
+        if (PermissionUtils.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            saveToStorage();
+        } else {
+            final String[] permissions;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE};
+            } else {
+                permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            }
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSION_SAVE_MEDIA);
+        }
+    }
+
+    protected void requestAndShareMedia(int position) {
+        mShareMediaPosition = position;
+        if (PermissionUtils.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            shareMedia();
+        } else {
+            final String[] permissions;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE};
+            } else {
+                permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            }
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSION_SHARE_MEDIA);
+        }
+    }
+
+    protected void shareMedia() {
+        if (mShareMediaPosition == -1) return;
         final ViewPager viewPager = findViewPager();
         final PagerAdapter adapter = viewPager.getAdapter();
-        final Object object = adapter.instantiateItem(viewPager, viewPager.getCurrentItem());
+        final Object object = adapter.instantiateItem(viewPager, mShareMediaPosition);
         if (!(object instanceof CacheDownloadMediaViewerFragment)) return;
         CacheDownloadLoader.Result result = ((CacheDownloadMediaViewerFragment) object).getDownloadResult();
         if (result == null || result.cacheUri == null) {
@@ -397,6 +429,17 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
             return;
         }
         final File destination = ShareProvider.getFilesDir(this);
+        if (destination == null) return;
+        String type;
+        if (object instanceof VideoPageFragment) {
+            type = CacheProvider.Type.VIDEO;
+        } else if (object instanceof ImagePageFragment) {
+            type = CacheProvider.Type.IMAGE;
+        } else if (object instanceof GifPageFragment) {
+            type = CacheProvider.Type.IMAGE;
+        } else {
+            throw new UnsupportedOperationException("Unsupported fragment " + object);
+        }
         final SaveFileTask task = new SaveFileTask(this, result.cacheUri, destination,
                 new CacheProvider.CacheFileTypeCallback(this, type)) {
             private static final String PROGRESS_FRAGMENT_TAG = "progress";
@@ -455,24 +498,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
                 Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
             }
         };
-        task.execute();
-    }
-
-
-    protected void requestAndSaveToStorage(int position) {
-        mSaveToStoragePosition = position;
-        if (PermissionUtils.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            saveToStorage();
-        } else {
-            final String[] permissions;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE};
-            } else {
-                permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            }
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSION_SAVE_MEDIA);
-        }
+        AsyncTaskUtils.executeTask(task);
     }
 
     protected void saveToStorage() {
@@ -484,20 +510,20 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
         final CacheDownloadMediaViewerFragment f = (CacheDownloadMediaViewerFragment) object;
         final CacheDownloadLoader.Result result = f.getDownloadResult();
         if (result == null) return;
-        if (mSaveFileTask != null && mSaveFileTask.getStatus() == AsyncTask.Status.RUNNING) return;
         final Uri cacheUri = result.cacheUri;
         final boolean hasMedia = cacheUri != null;
         if (!hasMedia) return;
+        SaveFileTask task;
         if (f instanceof ImagePageFragment) {
-            mSaveFileTask = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE);
+            task = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE);
         } else if (f instanceof VideoPageFragment) {
-            mSaveFileTask = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.VIDEO);
+            task = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.VIDEO);
         } else if (f instanceof GifPageFragment) {
-            mSaveFileTask = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE);
+            task = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE);
         } else {
             throw new UnsupportedOperationException();
         }
-        AsyncTaskUtils.executeTask(mSaveFileTask);
+        AsyncTaskUtils.executeTask(task);
     }
 
     public static class ImagePageFragment extends SubsampleImageViewerFragment {

@@ -1,10 +1,11 @@
 package org.mariotaku.twidere.provider;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore.MediaColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -31,16 +33,12 @@ public class ShareProvider extends ContentProvider {
         return true;
     }
 
-    @SuppressLint("SetWorldReadable")
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         try {
             final File file = getFile(uri);
             if (file == null) return null;
-            // Make world-readable intentionally since it will be deleted shortly
-            //noinspection ResultOfMethodCallIgnored
-            file.setReadable(true, false);
             if (projection == null) {
                 projection = COLUMNS;
             }
@@ -100,9 +98,16 @@ public class ShareProvider extends ContentProvider {
 
     @Nullable
     public static File getFilesDir(Context context) {
-        final File externalCacheDir = context.getExternalCacheDir();
-        if (externalCacheDir == null) return null;
-        return new File(externalCacheDir, "shared_files");
+        File cacheDir = context.getCacheDir();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED) {
+            final File externalCacheDir = context.getExternalCacheDir();
+            if (externalCacheDir != null && externalCacheDir.canWrite()) {
+                cacheDir = externalCacheDir;
+            }
+        }
+        if (cacheDir == null) return null;
+        return new File(cacheDir, "shared_files");
     }
 
     @Nullable
