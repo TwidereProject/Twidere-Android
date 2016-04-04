@@ -447,6 +447,10 @@
             android:label="@string/crop_image"
             android:theme="@style/Theme.Twidere.NoActionBar"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".activity.IncompatibleAlertActivity"
+            android:label="@string/error_title_device_incompatible"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog"/>
 
         <service
             android:name=".service.RefreshService"

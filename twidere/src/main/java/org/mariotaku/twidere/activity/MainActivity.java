@@ -28,6 +28,7 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.StrictModeUtils;
 import org.mariotaku.twidere.util.ThemeUtils;
+import org.mariotaku.twidere.util.Utils;
 
 public class MainActivity extends Activity implements Constants {
 
@@ -38,8 +39,13 @@ public class MainActivity extends Activity implements Constants {
             StrictModeUtils.detectAllThreadPolicy();
         }
         super.onCreate(savedInstanceState);
-        final Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        if (Utils.checkDeviceCompatible()) {
+            final Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        } else {
+            final Intent intent = new Intent(this, IncompatibleAlertActivity.class);
+            startActivity(intent);
+        }
         finish();
     }
 

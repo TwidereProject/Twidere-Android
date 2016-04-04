@@ -792,4 +792,6 @@
     <string name="group">Group</string>
     <string name="your_coarse_location">Your coarse location</string>
     <string name="location_countrywide">Countrywide</string>
+    <string name="error_title_device_incompatible">Incompatible device</string>
+    <string name="error_message_device_incompatible">This device is not compatible with Twidere, upgrade to latest Android OS is recommended.\nYou can send information below to help me add report this issue to device manufacturer.</string>
 </resources>

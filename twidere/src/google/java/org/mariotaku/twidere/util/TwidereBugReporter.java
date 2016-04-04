@@ -20,10 +20,12 @@
 package org.mariotaku.twidere.util;
 
 import android.app.Application;
+import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 
 import io.fabric.sdk.android.Fabric;
@@ -46,6 +48,14 @@ public class TwidereBugReporter extends BugReporter implements Constants {
     @Override
     protected void initImpl(final Application application) {
         Fabric.with(application, new Crashlytics());
+        Crashlytics.setBool("debug", BuildConfig.DEBUG);
+        Crashlytics.setString("build.brand", Build.BRAND);
+        Crashlytics.setString("build.device", Build.DEVICE);
+        Crashlytics.setString("build.display", Build.DISPLAY);
+        Crashlytics.setString("build.hardware", Build.HARDWARE);
+        Crashlytics.setString("build.manufacturer", Build.MANUFACTURER);
+        Crashlytics.setString("build.model", Build.MODEL);
+        Crashlytics.setString("build.product", Build.PRODUCT);
     }
 
 }
