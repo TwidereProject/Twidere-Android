@@ -61,6 +61,7 @@ public class IDs$$JsonObjectMapper extends JsonMapper<IDs> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void parseField(IDs instance, String fieldName, JsonParser jsonParser) throws IOException {
         if ("ids".equals(fieldName)) {
             parseIDsArray(instance, jsonParser);

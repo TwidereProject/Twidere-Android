@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.api.twitter.model;
 
 import org.mariotaku.restfu.http.HttpResponse;
+import org.mariotaku.twidere.api.twitter.annotation.NoObfuscate;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
 import java.util.AbstractList;
@@ -27,8 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Response list
  * Created by mariotaku on 15/5/7.
  */
+@NoObfuscate
 public class ResponseList<T> extends AbstractList<T> implements TwitterResponse {
 
     private List<T> list;

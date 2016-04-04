@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.menu.support;
+package org.mariotaku.twidere.menu;
 
 import android.content.Context;
 import android.content.Intent;

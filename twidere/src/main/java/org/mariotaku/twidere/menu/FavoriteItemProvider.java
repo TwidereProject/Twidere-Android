@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.menu.support;
+package org.mariotaku.twidere.menu;
 
 import android.content.Context;
 import android.graphics.PorterDuff;

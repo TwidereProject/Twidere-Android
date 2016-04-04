@@ -19,9 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import org.mariotaku.twidere.api.twitter.annotation.NoObfuscate;
+
 /**
+ * Response list supports cursor pagination
  * Created by mariotaku on 15/5/7.
  */
+@NoObfuscate
 public class PageableResponseList<T> extends ResponseList<T> implements TwitterResponse, CursorSupport {
 
     long previousCursor;

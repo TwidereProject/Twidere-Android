@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
+ * ObjectMapper for Activity object
  * Created by mariotaku on 15/10/21.
  */
 public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
@@ -74,6 +75,7 @@ public class Activity$$JsonObjectMapper extends JsonMapper<Activity> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void parseField(Activity instance, String fieldName, JsonParser jsonParser) throws IOException {
         if ("action".equals(fieldName)) {
             //noinspection ResourceType

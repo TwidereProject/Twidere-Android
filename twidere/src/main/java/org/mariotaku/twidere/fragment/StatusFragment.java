@@ -100,7 +100,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.TranslationResult;
 import org.mariotaku.twidere.loader.ConversationLoader;
 import org.mariotaku.twidere.loader.ParcelableStatusLoader;
-import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
+import org.mariotaku.twidere.menu.FavoriteItemProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;

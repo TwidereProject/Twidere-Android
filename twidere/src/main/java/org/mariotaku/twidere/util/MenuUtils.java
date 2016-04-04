@@ -55,7 +55,7 @@ import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.menu.SupportStatusShareProvider;
-import org.mariotaku.twidere.menu.support.FavoriteItemProvider;
+import org.mariotaku.twidere.menu.FavoriteItemProvider;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;

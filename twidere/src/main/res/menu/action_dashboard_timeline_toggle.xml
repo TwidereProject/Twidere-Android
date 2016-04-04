@@ -18,13 +18,15 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@id/compose"
         android:icon="@drawable/ic_action_status_compose"
         android:title="@string/compose"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
 
     <item
         android:id="@id/select_account"
@@ -32,8 +34,9 @@
         android:icon="@drawable/ic_action_more_vertical"
         android:title="@string/select_account"
         android:visible="false"
-        app:actionProviderClass="org.mariotaku.twidere.menu.support.AccountToggleProvider"
-        app:showAsAction="always" />
+        app:actionProviderClass="org.mariotaku.twidere.menu.AccountToggleProvider"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
 
 
 </menu>

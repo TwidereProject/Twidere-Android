@@ -18,7 +18,7 @@
         android:id="@id/favorite"
         android:icon="@drawable/ic_action_heart"
         android:title="@string/like"
-        app:actionProviderClass="org.mariotaku.twidere.menu.support.FavoriteItemProvider"
+        app:actionProviderClass="org.mariotaku.twidere.menu.FavoriteItemProvider"
         app:showAsAction="always"/>
     <item
         android:id="@id/share"

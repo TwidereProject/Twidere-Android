@@ -76,7 +76,7 @@ import org.mariotaku.twidere.activity.HomeActivity;
 import org.mariotaku.twidere.activity.QuickSearchBarActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.menu.support.AccountToggleProvider;
+import org.mariotaku.twidere.menu.AccountToggleProvider;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.UserKey;
