@@ -316,24 +316,28 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     }
 
 
+    @Override
     public MediaEntity[] getExtendedMediaEntities() {
         if (extendedEntities == null) return null;
         return extendedEntities.getMedia();
     }
 
 
+    @Override
     public HashtagEntity[] getHashtagEntities() {
         if (entities == null) return null;
         return entities.getHashtags();
     }
 
 
+    @Override
     public MediaEntity[] getMediaEntities() {
         if (entities == null) return null;
         return entities.getMedia();
     }
 
 
+    @Override
     public UrlEntity[] getUrlEntities() {
         if (entities == null) return null;
         return entities.getUrls();
@@ -343,6 +347,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return entities;
     }
 
+    @Override
     public UserMentionEntity[] getUserMentionEntities() {
         if (entities == null) return null;
         return entities.getUserMentions();

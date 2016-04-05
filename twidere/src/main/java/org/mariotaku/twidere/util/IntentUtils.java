@@ -17,7 +17,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -33,6 +32,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +141,7 @@ public class IntentUtils implements Constants {
                                  final ParcelableMedia current, final Bundle options,
                                  final boolean newDocument) {
         openMedia(context, status.account_key, status.is_possibly_sensitive, status, null, current,
-                getPrimaryMedia(status), options, newDocument);
+                ParcelableMediaUtils.getPrimaryMedia(status), options, newDocument);
     }
 
     public static void openMedia(@NonNull final Context context, @Nullable final UserKey accountKey, final boolean isPossiblySensitive,
@@ -185,16 +185,8 @@ public class IntentUtils implements Constants {
     public static void openMediaDirectly(@NonNull final Context context, @Nullable final UserKey accountKey,
                                          final ParcelableStatus status, final ParcelableMedia current,
                                          final Bundle options, final boolean newDocument) {
-        openMediaDirectly(context, accountKey, status, null, current, getPrimaryMedia(status),
+        openMediaDirectly(context, accountKey, status, null, current, ParcelableMediaUtils.getPrimaryMedia(status),
                 options, newDocument);
-    }
-
-    public static ParcelableMedia[] getPrimaryMedia(ParcelableStatus status) {
-        if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
-            return status.quoted_media;
-        } else {
-            return status.media;
-        }
     }
 
     public static String getDefaultBrowserPackage(Context context) {

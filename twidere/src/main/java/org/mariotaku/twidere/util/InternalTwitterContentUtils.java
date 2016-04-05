@@ -15,6 +15,7 @@ import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.EntitySupport;
+import org.mariotaku.twidere.api.twitter.model.ExtendedEntitySupport;
 import org.mariotaku.twidere.api.twitter.model.MediaEntity;
 import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
@@ -252,13 +253,19 @@ public class InternalTwitterContentUtils {
 
     private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
         // Format media.
-        final MediaEntity[] mediaEntities = entities.getMediaEntities();
+        MediaEntity[] mediaEntities = null;
+        if (entities instanceof ExtendedEntitySupport) {
+            mediaEntities = ((ExtendedEntitySupport) entities).getExtendedMediaEntities();
+        }
+        if (mediaEntities == null) {
+            mediaEntities = entities.getMediaEntities();
+        }
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
                 final int start = mediaEntity.getStart(), end = mediaEntity.getEnd();
                 final String mediaUrl = getMediaUrl(mediaEntity);
                 if (mediaUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(mediaUrl, mediaEntity.getDisplayUrl(), start, end);
+                    builder.addLink(mediaEntity.getExpandedUrl(), mediaEntity.getDisplayUrl(), start, end);
                 }
             }
         }

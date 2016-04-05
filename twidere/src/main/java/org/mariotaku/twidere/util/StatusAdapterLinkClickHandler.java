@@ -25,6 +25,7 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 
 /**
  * Created by mariotaku on 15/4/6.
@@ -44,13 +45,24 @@ public class StatusAdapterLinkClickHandler<D> extends OnLinkClickHandler {
                              final String link, final int start, final int end) {
         if (extraId == RecyclerView.NO_POSITION) return;
         final ParcelableStatus status = adapter.getStatus((int) extraId);
-        final ParcelableMedia current = StatusLinkClickHandler.findByLink(status.media, link);
+        final ParcelableMedia[] media = ParcelableMediaUtils.getAllMedia(status);
+        final ParcelableMedia current = StatusLinkClickHandler.findByLink(media, link);
         if (current != null && current.open_browser) {
             openLink(link);
         } else {
-            IntentUtils.openMedia(context, status, current, null,
-                    preferences.getBoolean(KEY_NEW_DOCUMENT_API));
+            final boolean newDocument = preferences.getBoolean(KEY_NEW_DOCUMENT_API);
+            IntentUtils.openMedia(context, status, current, null, newDocument);
         }
     }
 
+    @Override
+    protected boolean isMedia(String link, long extraId) {
+        if (extraId != RecyclerView.NO_POSITION) {
+            final ParcelableStatus status = adapter.getStatus((int) extraId);
+            final ParcelableMedia[] media = ParcelableMediaUtils.getAllMedia(status);
+            final ParcelableMedia current = StatusLinkClickHandler.findByLink(media, link);
+            return current != null && !current.open_browser;
+        }
+        return super.isMedia(link, extraId);
+    }
 }

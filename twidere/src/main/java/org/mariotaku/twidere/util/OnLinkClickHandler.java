@@ -78,7 +78,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_LINK_IN_TEXT: {
-                if (PreviewMediaExtractor.isSupported(link)) {
+                if (isMedia(link, extraId)) {
                     openMedia(accountKey, extraId, sensitive, link, start, end);
                 } else {
                     openLink(link);
@@ -86,7 +86,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 break;
             }
             case TwidereLinkify.LINK_TYPE_ENTITY_URL: {
-                if (PreviewMediaExtractor.isSupported(link)) {
+                if (isMedia(link, extraId)) {
                     openMedia(accountKey, extraId, sensitive, link, start, end);
                 } else {
                     if (orig != null && "fanfou.com".equals(UriUtils.getAuthority(link))) {
@@ -145,6 +145,10 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
     protected boolean isPrivateData() {
         return false;
+    }
+
+    protected boolean isMedia(String link, long extraId) {
+        return PreviewMediaExtractor.isSupported(link);
     }
 
     protected void openMedia(UserKey accountKey, long extraId, boolean sensitive, String link, int start, int end) {

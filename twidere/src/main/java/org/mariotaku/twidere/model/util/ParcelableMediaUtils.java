@@ -16,6 +16,7 @@ import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.UrlEntity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
+import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
@@ -68,6 +69,7 @@ public class ParcelableMediaUtils {
         media.url = mediaUrl;
         media.media_url = mediaUrl;
         media.preview_url = mediaUrl;
+        media.page_url = entity.getExpandedUrl();
         media.start = entity.getStart();
         media.end = entity.getEnd();
         media.type = ParcelableMediaUtils.getTypeInt(entity.getType());
@@ -265,5 +267,20 @@ public class ParcelableMediaUtils {
             if (url.equals(item.url)) return item;
         }
         return null;
+    }
+
+    public static ParcelableMedia[] getPrimaryMedia(ParcelableStatus status) {
+        if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
+            return status.quoted_media;
+        } else {
+            return status.media;
+        }
+    }
+
+    public static ParcelableMedia[] getAllMedia(ParcelableStatus status) {
+        ParcelableMedia[] result = new ParcelableMedia[TwidereArrayUtils.arraysLength(status.media,
+                status.quoted_media)];
+        TwidereArrayUtils.mergeArray(result, status.media, status.quoted_media);
+        return result;
     }
 }
