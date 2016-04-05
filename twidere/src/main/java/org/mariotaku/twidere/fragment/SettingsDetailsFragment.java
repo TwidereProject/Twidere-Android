@@ -34,6 +34,7 @@ import org.mariotaku.twidere.util.Utils;
 public class SettingsDetailsFragment extends BasePreferenceFragment implements Constants,
         OnSharedPreferenceChangeListener {
 
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         final PreferenceManager preferenceManager = getPreferenceManager();
@@ -62,25 +63,6 @@ public class SettingsDetailsFragment extends BasePreferenceFragment implements C
             addPreferencesFromResource(resId);
         }
 
-//        final Context context = preferenceScreen.getContext();
-//        if (args.containsKey(EXTRA_SETTINGS_INTENT_ACTION)) {
-//            final Intent hiddenEntryIntent = new Intent(args.getString(EXTRA_SETTINGS_INTENT_ACTION));
-//            final PackageManager pm = context.getPackageManager();
-//            for (ResolveInfo info : pm.queryIntentActivities(hiddenEntryIntent, PackageManager.MATCH_DEFAULT_ONLY)) {
-//                final Preference preference = new Preference(context);
-//                final Intent intent = new Intent(hiddenEntryIntent);
-//                intent.setPackage(info.resolvePackageName);
-//                intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-//                preference.setIntent(intent);
-//                preference.setTitle(info.loadLabel(pm));
-//                preferenceScreen.addPreference(preference);
-//            }
-//        }
-    }
-
-    @Override
-    public void onActivityCreated(final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -112,5 +94,6 @@ public class SettingsDetailsFragment extends BasePreferenceFragment implements C
             }
         }
     }
+
 
 }
