@@ -81,8 +81,7 @@ public class ActivityTitleSummaryMessage {
                                 R.string.activity_about_me_like_multi, sources, nameFirst);
                     }
                 }
-                final Spanned summary = generateStatusTextSummary(context, activity.target_statuses,
-                        nameFirst);
+                final CharSequence summary = generateTextOnlySummary(context, activity.target_statuses);
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.RETWEET: {
@@ -96,8 +95,8 @@ public class ActivityTitleSummaryMessage {
                     title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweet,
                             R.string.activity_about_me_retweet_multi, sources, nameFirst);
                 }
-                final Spanned summary = generateStatusTextSummary(context,
-                        activity.target_object_statuses, nameFirst);
+                final CharSequence summary = generateTextOnlySummary(context,
+                        activity.target_object_statuses);
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.FAVORITED_RETWEET: {
@@ -276,6 +275,20 @@ public class ActivityTitleSummaryMessage {
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             summaryBuilder.append(SpanFormatter.format(context.getString(R.string.title_summary_line_format),
                     displayName, status.text_unescaped.replace('\n', ' ')));
+            first = false;
+        }
+        return summaryBuilder;
+    }
+
+    public static CharSequence generateTextOnlySummary(Context context, ParcelableStatus[] statuses) {
+        if (statuses == null) return null;
+        final StringBuilder summaryBuilder = new StringBuilder();
+        boolean first = true;
+        for (ParcelableStatus status : statuses) {
+            if (!first) {
+                summaryBuilder.append('\n');
+            }
+            summaryBuilder.append(status.text_unescaped.replace('\n', ' '));
             first = false;
         }
         return summaryBuilder;

@@ -486,6 +486,9 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
                 intent.setDataAndType(fileUri, mimeType);
                 intent.putExtra(Intent.EXTRA_STREAM, fileUri);
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    intent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
+                }
                 activity.processShareIntent(intent);
                 startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.share)),
                         REQUEST_SHARE_MEDIA);
