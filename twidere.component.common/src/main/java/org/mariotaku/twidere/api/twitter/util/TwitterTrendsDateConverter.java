@@ -16,6 +16,7 @@ public class TwitterTrendsDateConverter implements TypeConverter<Date> {
     private static final SimpleDateFormat DATE_FORMAT_1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
     private static final SimpleDateFormat DATE_FORMAT_2 = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
 
+    @Override
     public Date parse(JsonParser jsonParser) throws IOException {
         String dateString = jsonParser.getValueAsString(null);
         if (dateString == null) throw new IOException();
@@ -35,6 +36,7 @@ public class TwitterTrendsDateConverter implements TypeConverter<Date> {
         }
     }
 
+    @Override
     public void serialize(Date object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) {
         throw new UnsupportedOperationException();
     }
