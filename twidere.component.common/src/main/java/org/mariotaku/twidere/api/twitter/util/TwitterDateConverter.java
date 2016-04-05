@@ -19,143 +19,41 @@
 
 package org.mariotaku.twidere.api.twitter.util;
 
-import android.util.Log;
-
 import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
 public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
 
-    private static final String[] WEEK_NAMES = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-    private static final String[] MONTH_NAMES = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
-            "Aug", "Sep", "Oct", "Nov", "Dec"};
+    static final DateFormat sFormat = new ThreadLocalSimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy",
+            Locale.ENGLISH);
 
-    private static final TimeZone TIME_ZONE = TimeZone.getTimeZone("UTC");
-    private static final Locale LOCALE = Locale.ENGLISH;
-    private final DateFormat mDateFormat;
-
-    public TwitterDateConverter() {
-        mDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", LOCALE);
-        mDateFormat.setLenient(true);
-        mDateFormat.setTimeZone(TIME_ZONE);
+    static {
+        sFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        sFormat.setLenient(true);
     }
 
     @Override
-    public Date getFromString(String string) {
-        Date date = null;
+    public Date getFromString(final String string) {
+        if (string == null) return null;
         try {
-            date = parseTwitterDate(string);
-        } catch (NumberFormatException e) {
-            Log.w("Twidere", e);
-            // Ignore
-        }
-        if (date != null) return date;
-        try {
-            date = mDateFormat.parse(string);
+            return sFormat.parse(string);
         } catch (ParseException e) {
             return null;
         }
-        return date;
-    }
-
-    private Date parseTwitterDate(String string) {
-        final List<String> segs = split(string, " ");
-        if (segs.size() != 6) {
-            return null;
-        }
-        final List<String> timeSegs = split(segs.get(3), ":");
-        if (timeSegs.size() != 3) {
-            return null;
-        }
-
-        final GregorianCalendar calendar = new GregorianCalendar(TIME_ZONE, LOCALE);
-        calendar.clear();
-        final int monthIdx = indexOf(MONTH_NAMES, segs.get(1));
-        if (monthIdx < 0) {
-            return null;
-        }
-        calendar.set(Calendar.YEAR, Integer.parseInt(segs.get(5)));
-        calendar.set(Calendar.MONTH, monthIdx);
-        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(segs.get(2)));
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSegs.get(0)));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(timeSegs.get(1)));
-        calendar.set(Calendar.SECOND, Integer.parseInt(timeSegs.get(2)));
-        calendar.setTimeZone(SimpleTimeZone.getTimeZone(getTimezoneText(segs.get(4))));
-        final Date date = calendar.getTime();
-        if (!WEEK_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1].equals(segs.get(0))) {
-            return null;
-        }
-        return date;
     }
 
     @Override
-    public String convertToString(Date date) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        final StringBuilder sb = new StringBuilder();
-        sb.append(WEEK_NAMES[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
-        sb.append(' ');
-        sb.append(MONTH_NAMES[calendar.get(Calendar.MONTH)]);
-        sb.append(' ');
-        sb.append(calendar.get(Calendar.DAY_OF_MONTH));
-        sb.append(' ');
-        sb.append(calendar.get(Calendar.HOUR_OF_DAY));
-        sb.append(':');
-        sb.append(calendar.get(Calendar.MINUTE));
-        sb.append(':');
-        sb.append(calendar.get(Calendar.SECOND));
-        sb.append(' ');
-        final long offset = TimeUnit.MILLISECONDS.toMinutes(calendar.get(Calendar.ZONE_OFFSET));
-        sb.append(offset > 0 ? '+' : '-');
-        sb.append(String.format(Locale.ROOT, "%02d%02d", Math.abs(offset) / 60, Math.abs(offset) % 60));
-        sb.append(' ');
-        sb.append(calendar.get(Calendar.YEAR));
-        return sb.toString();
-    }
-
-    private String getTimezoneText(String seg) {
-        if (seg.startsWith("GMT") || seg.startsWith("UTC")) return seg;
-        return "GMT" + seg;
-    }
-
-    public static List<String> split(String input, String delim) {
-        List<String> l = new ArrayList<>();
-        int offset = 0;
-
-        while (true) {
-            int index = input.indexOf(delim, offset);
-            if (index == -1) {
-                l.add(input.substring(offset));
-                return l;
-            } else {
-                l.add(input.substring(offset, index));
-                offset = (index + delim.length());
-            }
-        }
-    }
-
-    private static int indexOf(String[] input, String find) {
-        for (int i = 0, inputLength = input.length; i < inputLength; i++) {
-            if (find == null) {
-                if (input[i] == null) return i;
-            } else if (find.equals(input[i])) return i;
-        }
-        return -1;
+    public String convertToString(final Date date) {
+        if (date == null) return null;
+        return sFormat.format(date);
     }
 
 }

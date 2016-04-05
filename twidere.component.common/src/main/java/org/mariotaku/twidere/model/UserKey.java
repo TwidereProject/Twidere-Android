@@ -10,8 +10,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -164,7 +163,7 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
     @Nullable
     public static UserKey[] arrayOf(@Nullable String str) {
         if (str == null) return null;
-        List<String> split = TwitterDateConverter.split(str, ",");
+        List<String> split = split(str, ",");
         UserKey[] keys = new UserKey[split.size()];
         for (int i = 0, splitLength = split.size(); i < splitLength; i++) {
             keys[i] = valueOf(split.get(i));
@@ -181,7 +180,6 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         return result;
     }
 
-
     public static String escapeText(String host) {
         final StringBuilder sb = new StringBuilder();
         for (int i = 0, j = host.length(); i < j; i++) {
@@ -194,11 +192,28 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         return sb.toString();
     }
 
+
     private static boolean isSpecialChar(char ch) {
         return ch == '\\' || ch == '@' || ch == ',';
     }
 
     public boolean maybeEquals(@Nullable UserKey another) {
         return another != null && another.getId().equals(id);
+    }
+
+    public static List<String> split(String input, String delim) {
+        List<String> l = new ArrayList<>();
+        int offset = 0;
+
+        while (true) {
+            int index = input.indexOf(delim, offset);
+            if (index == -1) {
+                l.add(input.substring(offset));
+                return l;
+            } else {
+                l.add(input.substring(offset, index));
+                offset = index + delim.length();
+            }
+        }
     }
 }

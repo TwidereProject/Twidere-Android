@@ -8,17 +8,29 @@ import android.support.v4.util.ArrayMap;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.twitter.model.CardEntity;
+import org.mariotaku.twidere.api.twitter.util.ThreadLocalSimpleDateFormat;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.InternalParseUtils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by mariotaku on 16/2/24.
  */
 public class ParcelableCardEntityUtils implements TwidereConstants {
+
+    static final DateFormat sISOFormat = new ThreadLocalSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",
+            Locale.ENGLISH);
+
+    static {
+        sISOFormat.setLenient(true);
+        sISOFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     @Nullable
     public static ParcelableCardEntity fromCardEntity(@Nullable CardEntity card, @Nullable UserKey accountKey) {
@@ -74,8 +86,11 @@ public class ParcelableCardEntityUtils implements TwidereConstants {
     public static Date getAsDate(@NonNull ParcelableCardEntity obj, @NonNull String key, Date def) {
         final ParcelableCardEntity.ParcelableBindingValue value = obj.getValue(key);
         if (value == null) return def;
-        final String str = value.value;
-        return InternalParseUtils.parseISODateTime(str, def);
+        try {
+            return sISOFormat.parse(value.value);
+        } catch (ParseException e) {
+            return def;
+        }
     }
 
 }

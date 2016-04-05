@@ -4,15 +4,11 @@ import android.os.Bundle;
 import android.util.JsonWriter;
 import android.util.Log;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.TwidereConstants;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
@@ -71,18 +67,4 @@ public class InternalParseUtils {
         return result.substring(0, i == dotIdx ? dotIdx : i + 1);
     }
 
-    public static Date parseISODateTime(String str, Date def) {
-        try {
-            return DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.parse(str);
-        } catch (ParseException e) {
-            return def;
-        } catch (Error nsme) {
-            // Fuck Xiaomi http://crashes.to/s/a84a3d257dc
-            try {
-                return DateUtils.parseDate(str, Locale.ENGLISH, "yyyy-MM-dd'T'HH:mm:ssZZ");
-            } catch (ParseException e1) {
-                return def;
-            }
-        }
-    }
 }

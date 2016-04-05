@@ -2303,7 +2303,6 @@ public final class Utils implements Constants {
     public static boolean checkDeviceCompatible() {
         try {
             Menu.class.isAssignableFrom(MenuBuilder.class);
-            InternalParseUtils.parseISODateTime("2001-01-01T01:01:01Z", null);
         } catch (Error e) {
             TwidereBugReporter.logException(e);
             return false;
