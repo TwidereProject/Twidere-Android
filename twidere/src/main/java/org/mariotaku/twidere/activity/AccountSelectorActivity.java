@@ -151,6 +151,9 @@ public class AccountSelectorActivity extends BaseActivity implements
         }
         if (mAdapter.getCount() == 1 && shouldSelectOnlyItem()) {
             selectSingleAccount(0);
+        } else if (mAdapter.isEmpty()) {
+            Toast.makeText(this, R.string.no_account, Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
