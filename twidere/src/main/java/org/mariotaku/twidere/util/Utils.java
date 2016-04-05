@@ -2305,6 +2305,7 @@ public final class Utils implements Constants {
             Menu.class.isAssignableFrom(MenuBuilder.class);
             InternalParseUtils.parseISODateTime("2001-01-01T01:01:01Z", null);
         } catch (Error e) {
+            TwidereBugReporter.logException(e);
             return false;
         }
         return true;
