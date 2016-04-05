@@ -113,8 +113,19 @@ public class AccountSelectorActivity extends BaseActivity implements
         }
         final String accountHost = getAccountHost();
         if (!TextUtils.isEmpty(accountHost)) {
-            conditions.add(Expression.likeRaw(new Columns.Column(Accounts.ACCOUNT_KEY), "'%@'||?"));
-            conditionArgs.add(accountHost);
+            if (USER_TYPE_TWITTER_COM.equals(accountHost)) {
+                conditions.add(Expression.or(
+                        Expression.equalsArgs(Accounts.ACCOUNT_TYPE),
+                        Expression.isNull(new Columns.Column(Accounts.ACCOUNT_TYPE)),
+                        Expression.likeRaw(new Columns.Column(Accounts.ACCOUNT_KEY), "'%@'||?"),
+                        Expression.notLikeRaw(new Columns.Column(Accounts.ACCOUNT_KEY), "'%@%'")
+                ));
+                conditionArgs.add(ParcelableAccount.Type.TWITTER);
+                conditionArgs.add(accountHost);
+            } else {
+                conditions.add(Expression.likeRaw(new Columns.Column(Accounts.ACCOUNT_KEY), "'%@'||?"));
+                conditionArgs.add(accountHost);
+            }
         }
         final String where;
         final String[] whereArgs;
@@ -138,7 +149,7 @@ public class AccountSelectorActivity extends BaseActivity implements
                 mListView.setItemChecked(i, ArrayUtils.contains(activatedIds, mAdapter.getItemId(i)));
             }
         }
-        if (mAdapter.getCount() == 1 && isSingleSelection()) {
+        if (mAdapter.getCount() == 1 && shouldSelectOnlyItem()) {
             selectSingleAccount(0);
         }
     }

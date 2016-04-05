@@ -76,7 +76,7 @@ public class InternalParseUtils {
             return DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.parse(str);
         } catch (ParseException e) {
             return def;
-        } catch (NoSuchMethodError nsme) {
+        } catch (Error nsme) {
             // Fuck Xiaomi http://crashes.to/s/a84a3d257dc
             try {
                 return DateUtils.parseDate(str, Locale.ENGLISH, "yyyy-MM-dd'T'HH:mm:ssZZ");

@@ -178,6 +178,7 @@ public class LinkHandlerActivity extends BaseActivity implements SystemWindowsIn
                 accountHost = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_HOST);
             }
             selectIntent.putExtra(EXTRA_SINGLE_SELECTION, true);
+            selectIntent.putExtra(EXTRA_SELECT_ONLY_ITEM, true);
             selectIntent.putExtra(EXTRA_ACCOUNT_HOST, accountHost);
             selectIntent.putExtra(EXTRA_START_INTENT, intent);
             startActivity(selectIntent);
