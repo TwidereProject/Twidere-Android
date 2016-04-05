@@ -31,7 +31,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
@@ -97,7 +96,6 @@ import com.afollestad.appthemeengine.util.ATEUtil;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperToast.Duration;
 import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
-import com.nostra13.universalimageloader.utils.IoUtils;
 import com.twitter.Extractor;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -163,7 +161,6 @@ import org.mariotaku.twidere.view.helper.SimpleItemTouchHelperCallback;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -251,9 +248,10 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             case REQUEST_PICK_IMAGE:
             case REQUEST_OPEN_DOCUMENT: {
                 if (resultCode == Activity.RESULT_OK) {
-                    final Uri src = intent.getData();
-                    mTask = AsyncTaskUtils.executeTask(new AddMediaTask(this, src,
-                            createTempImageUri(), ParcelableMedia.Type.IMAGE, true));
+                    final Uri[] src = {intent.getData()};
+                    final Uri[] dst = {createTempImageUri(0)};
+                    mTask = AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst,
+                            ParcelableMedia.Type.IMAGE, true));
                 }
                 break;
             }
@@ -914,8 +912,8 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         setMenu();
     }
 
-    private Uri createTempImageUri() {
-        final File file = new File(getCacheDir(), "tmp_image_" + System.currentTimeMillis());
+    private Uri createTempImageUri(int extraNum) {
+        final File file = new File(getCacheDir(), "tmp_image_" + System.currentTimeMillis() + "_" + extraNum);
         return Uri.fromFile(file);
     }
 
@@ -950,32 +948,40 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         } else {
             hasAccountIds = false;
         }
-        mShouldSaveAccounts = !Intent.ACTION_SEND.equals(action)
-                && !Intent.ACTION_SEND_MULTIPLE.equals(action) && !hasAccountIds;
-        final Uri data = intent.getData();
+        if (Intent.ACTION_SEND.equals(action)) {
+            mShouldSaveAccounts = false;
+            final Uri[] src = {intent.getParcelableExtra(Intent.EXTRA_STREAM)};
+            final Uri[] dst = {createTempImageUri(0)};
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
+                    ParcelableMedia.Type.IMAGE), false));
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            mShouldSaveAccounts = false;
+            final List<Uri> extraStream = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+            final Uri[] src = extraStream.toArray(new Uri[extraStream.size()]);
+            final Uri[] dst = new Uri[extraStream.size()];
+            for (int i = 0; i < dst.length; i++) {
+                dst[i] = createTempImageUri(i);
+            }
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
+                    ParcelableMedia.Type.IMAGE), false));
+        } else {
+            final Uri[] src = {intent.getData()};
+            final Uri[] dst = {createTempImageUri(0)};
+            AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
+                    ParcelableMedia.Type.IMAGE), false));
+            mShouldSaveAccounts = !hasAccountIds;
+        }
         final CharSequence extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT);
         final CharSequence extraText = intent.getCharSequenceExtra(Intent.EXTRA_TEXT);
-        final Uri extraStream = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        //TODO handle share_screenshot extra (Bitmap)
-        if (extraStream != null) {
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, extraStream, createTempImageUri(), ParcelableMedia.Type.IMAGE, false));
-        } else if (data != null) {
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, data, createTempImageUri(), ParcelableMedia.Type.IMAGE, false));
-        } else if (intent.hasExtra(EXTRA_SHARE_SCREENSHOT) && Utils.useShareScreenshot()) {
-            final Bitmap bitmap = intent.getParcelableExtra(EXTRA_SHARE_SCREENSHOT);
-            if (bitmap != null) {
-                try {
-                    AsyncTaskUtils.executeTask(new AddBitmapTask(this, bitmap, createTempImageUri(), ParcelableMedia.Type.IMAGE));
-                } catch (IOException e) {
-                    // ignore
-                    bitmap.recycle();
-                }
-            }
-        }
         mEditText.setText(Utils.getShareStatus(this, extraSubject, extraText));
         final int selectionEnd = mEditText.length();
         mEditText.setSelection(selectionEnd);
         return true;
+    }
+
+    @ParcelableMedia.Type
+    private int getMediaType(String type, @ParcelableMedia.Type int defType) {
+        return defType;
     }
 
     private boolean handleEditDraftIntent(final Draft draft) {
@@ -1684,93 +1690,69 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
     }
 
-    static class AddBitmapTask extends AddMediaTask {
-
-        final Bitmap mBitmap;
-
-        AddBitmapTask(ComposeActivity activity, Bitmap bitmap, Uri dst, int media_type) throws IOException {
-            super(activity, Uri.fromFile(File.createTempFile("tmp_bitmap", null)), dst, media_type,
-                    true);
-            mBitmap = bitmap;
-        }
-
-        @Override
-        protected Boolean doInBackground(Object... params) {
-            if (mBitmap == null || mBitmap.isRecycled()) return false;
-            FileOutputStream os = null;
-            try {
-                os = new FileOutputStream(getSrc().getPath());
-                mBitmap.compress(Bitmap.CompressFormat.PNG, 0, os);
-                mBitmap.recycle();
-            } catch (IOException e) {
-                return false;
-            } finally {
-                IoUtils.closeSilently(os);
-            }
-            return super.doInBackground(params);
-        }
-
-    }
-
-    static class AddMediaTask extends AsyncTask<Object, Object, Boolean> {
+    static class AddMediaTask extends AsyncTask<Object, Object, boolean[]> {
 
         final WeakReference<ComposeActivity> mActivityRef;
         final int mMediaType;
-        final Uri src, dst;
+        final Uri[] mSources, mDestinations;
         final boolean mDeleteSrc;
 
-        AddMediaTask(final ComposeActivity activity, final Uri src, final Uri dst, final int mediaType,
+        AddMediaTask(final ComposeActivity activity, final Uri[] sources, final Uri[] destinations, final int mediaType,
                      final boolean deleteSrc) {
-            this.mActivityRef = new WeakReference<>(activity);
-            this.src = src;
-            this.dst = dst;
-            this.mMediaType = mediaType;
-            this.mDeleteSrc = deleteSrc;
+            mActivityRef = new WeakReference<>(activity);
+            mSources = sources;
+            mDestinations = destinations;
+            mMediaType = mediaType;
+            mDeleteSrc = deleteSrc;
         }
 
         @Override
-        protected Boolean doInBackground(final Object... params) {
-            final ComposeActivity activity = this.mActivityRef.get();
-            if (activity == null) return false;
-            InputStream is = null;
-            OutputStream os = null;
-            try {
-                final ContentResolver resolver = activity.getContentResolver();
-                is = resolver.openInputStream(src);
-                os = resolver.openOutputStream(dst);
-                if (is == null || os == null) throw new FileNotFoundException();
-                RestFuUtils.copyStream(is, os);
-                if (ContentResolver.SCHEME_FILE.equals(src.getScheme()) && mDeleteSrc) {
-                    final File file = new File(src.getPath());
-                    if (!file.delete()) {
-                        Log.d(LOGTAG, String.format("Unable to delete %s", file));
+        protected boolean[] doInBackground(final Object... params) {
+            final ComposeActivity activity = mActivityRef.get();
+            if (activity == null) return new boolean[0];
+            final boolean[] result = new boolean[mSources.length];
+            for (int i = 0, j = mSources.length; i < j; i++) {
+                Uri source = mSources[i], destination = mDestinations[i];
+                InputStream is = null;
+                OutputStream os = null;
+                try {
+                    final ContentResolver resolver = activity.getContentResolver();
+                    is = resolver.openInputStream(source);
+                    os = resolver.openOutputStream(destination);
+                    if (is == null || os == null) throw new FileNotFoundException();
+                    RestFuUtils.copyStream(is, os);
+                    if (ContentResolver.SCHEME_FILE.equals(source.getScheme()) && mDeleteSrc) {
+                        final File file = new File(source.getPath());
+                        if (!file.delete()) {
+                            Log.d(LOGTAG, String.format("Unable to delete %s", file));
+                        }
                     }
+                    result[i] = true;
+                } catch (final IOException e) {
+                    if (BuildConfig.DEBUG) {
+                        Log.w(LOGTAG, e);
+                    }
+                    result[i] = false;
+                } finally {
+                    Utils.closeSilently(os);
+                    Utils.closeSilently(is);
                 }
-            } catch (final IOException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.w(LOGTAG, e);
-                }
-                return false;
-            } finally {
-                Utils.closeSilently(os);
-                Utils.closeSilently(is);
+
             }
-            return true;
+            return result;
         }
 
-        Uri getSrc() {
-            return src;
+        Uri[] getSources() {
+            return mSources;
         }
 
         @Override
-        protected void onPostExecute(final Boolean result) {
+        protected void onPostExecute(final boolean[] result) {
             final ComposeActivity activity = mActivityRef.get();
             if (activity == null) return;
             activity.setProgressVisible(false);
-            if (result) {
-                activity.addMedia(new ParcelableMediaUpdate(dst.toString(), mMediaType));
-            } else {
-                Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show();
+            for (Uri destination : mDestinations) {
+                activity.addMedia(new ParcelableMediaUpdate(destination.toString(), mMediaType));
             }
             activity.setMenu();
             activity.updateTextCount();
