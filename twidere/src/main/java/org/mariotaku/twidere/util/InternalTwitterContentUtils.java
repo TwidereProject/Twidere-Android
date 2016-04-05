@@ -240,6 +240,7 @@ public class InternalTwitterContentUtils {
 
     public static Pair<String, List<SpanItem>> formatStatusTextWithIndices(final Status status) {
         if (status == null) return null;
+        //TODO handle twitter video url
         final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, false);
         parseEntities(builder, status);
         return builder.buildWithIndices();

@@ -950,26 +950,34 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
         if (Intent.ACTION_SEND.equals(action)) {
             mShouldSaveAccounts = false;
-            final Uri[] src = {intent.getParcelableExtra(Intent.EXTRA_STREAM)};
-            final Uri[] dst = {createTempImageUri(0)};
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
-                    ParcelableMedia.Type.IMAGE), false));
+            final Uri stream = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            if (stream != null) {
+                final Uri[] src = {stream};
+                final Uri[] dst = {createTempImageUri(0)};
+                AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
+                        ParcelableMedia.Type.IMAGE), false));
+            }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             mShouldSaveAccounts = false;
             final List<Uri> extraStream = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-            final Uri[] src = extraStream.toArray(new Uri[extraStream.size()]);
-            final Uri[] dst = new Uri[extraStream.size()];
-            for (int i = 0; i < dst.length; i++) {
-                dst[i] = createTempImageUri(i);
+            if (extraStream != null) {
+                final Uri[] src = extraStream.toArray(new Uri[extraStream.size()]);
+                final Uri[] dst = new Uri[extraStream.size()];
+                for (int i = 0; i < dst.length; i++) {
+                    dst[i] = createTempImageUri(i);
+                }
+                AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
+                        ParcelableMedia.Type.IMAGE), false));
             }
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
-                    ParcelableMedia.Type.IMAGE), false));
         } else {
-            final Uri[] src = {intent.getData()};
-            final Uri[] dst = {createTempImageUri(0)};
-            AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
-                    ParcelableMedia.Type.IMAGE), false));
             mShouldSaveAccounts = !hasAccountIds;
+            final Uri data = intent.getData();
+            if (data != null) {
+                final Uri[] src = {data};
+                final Uri[] dst = {createTempImageUri(0)};
+                AsyncTaskUtils.executeTask(new AddMediaTask(this, src, dst, getMediaType(intent.getType(),
+                        ParcelableMedia.Type.IMAGE), false));
+            }
         }
         final CharSequence extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT);
         final CharSequence extraText = intent.getCharSequenceExtra(Intent.EXTRA_TEXT);
