@@ -1614,10 +1614,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     expandOrOpenMedia(current);
                     return;
                 }
-                if (type == TwidereLinkify.LINK_TYPE_STATUS && TextUtils.equals(status.id, link)) {
-                    expandOrOpenMedia(null);
-                    return;
-                }
                 super.onLinkClick(link, orig, accountKey, extraId, type, sensitive, start, end);
             }
 

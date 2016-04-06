@@ -68,10 +68,9 @@ public final class TwidereLinkify implements Constants {
     public static final int LINK_TYPE_LIST = 6;
     public static final int LINK_TYPE_CASHTAG = 7;
     public static final int LINK_TYPE_USER_ID = 8;
-    public static final int LINK_TYPE_STATUS = 9;
 
     public static final int[] ALL_LINK_TYPES = new int[]{LINK_TYPE_ENTITY_URL, LINK_TYPE_LINK_IN_TEXT,
-            LINK_TYPE_MENTION, LINK_TYPE_HASHTAG, LINK_TYPE_STATUS, LINK_TYPE_CASHTAG};
+            LINK_TYPE_MENTION, LINK_TYPE_HASHTAG, LINK_TYPE_CASHTAG};
 
     public static final String AVAILABLE_URL_SCHEME_PREFIX = "(https?://)?";
 
@@ -83,15 +82,8 @@ public final class TwidereLinkify implements Constants {
 
     public static final Pattern PATTERN_TWITTER_PROFILE_IMAGES = Pattern.compile(STRING_PATTERN_TWITTER_PROFILE_IMAGES,
             Pattern.CASE_INSENSITIVE);
-    public static final int GROUP_ID_TWITTER_STATUS_SCREEN_NAME = 4;
-    public static final int GROUP_ID_TWITTER_STATUS_STATUS_ID = 6;
     public static final int GROUP_ID_TWITTER_LIST_SCREEN_NAME = 4;
     public static final int GROUP_ID_TWITTER_LIST_LIST_NAME = 5;
-    private static final String STRING_PATTERN_TWITTER_STATUS_NO_SCHEME = "((mobile|www)\\.)?twitter\\.com/(?:#!/)?(\\w+)/status(es)?/(\\d+)(/photo/\\d)?/?";
-    private static final String STRING_PATTERN_TWITTER_STATUS = AVAILABLE_URL_SCHEME_PREFIX
-            + STRING_PATTERN_TWITTER_STATUS_NO_SCHEME;
-    public static final Pattern PATTERN_TWITTER_STATUS = Pattern.compile(STRING_PATTERN_TWITTER_STATUS,
-            Pattern.CASE_INSENSITIVE);
     private static final String STRING_PATTERN_TWITTER_LIST_NO_SCHEME = "((mobile|www)\\.)?twitter\\.com/(?:#!/)?(\\w+)/lists/(.+)/?";
     private static final String STRING_PATTERN_TWITTER_LIST = AVAILABLE_URL_SCHEME_PREFIX
             + STRING_PATTERN_TWITTER_LIST_NO_SCHEME;
@@ -254,25 +246,6 @@ public final class TwidereLinkify implements Constants {
                     }
                     applyLink(entity.getValue(), null, start, end, string, accountKey, extraId,
                             LINK_TYPE_LINK_IN_TEXT, sensitive, highlightOption, listener);
-                }
-                break;
-            }
-            case LINK_TYPE_STATUS: {
-                if (accountKey == null || !USER_TYPE_TWITTER_COM.equals(accountKey.getHost())) {
-                    break;
-                }
-                final int length = string.length();
-                final URLSpan[] spans = string.getSpans(0, length, URLSpan.class);
-                for (final URLSpan span : spans) {
-                    final Matcher matcher = PATTERN_TWITTER_STATUS.matcher(span.getURL());
-                    if (matcher.matches()) {
-                        final int start = string.getSpanStart(span);
-                        final int end = string.getSpanEnd(span);
-                        final String url = matcherGroup(matcher, GROUP_ID_TWITTER_STATUS_STATUS_ID);
-                        string.removeSpan(span);
-                        applyLink(url, null, start, end, string, accountKey, extraId,
-                                LINK_TYPE_STATUS, sensitive, highlightOption, listener);
-                    }
                 }
                 break;
             }
