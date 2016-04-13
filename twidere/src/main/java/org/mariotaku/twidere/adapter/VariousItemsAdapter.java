@@ -68,15 +68,15 @@ public class VariousItemsAdapter extends LoadMoreSupportAdapter<RecyclerView.Vie
         final Object obj = mData.get(position);
         switch (getItemViewType(obj)) {
             case VIEW_TYPE_STATUS: {
-                ((StatusViewHolder) holder).displayStatus(((ParcelableStatus) obj), true);
+                ((StatusViewHolder) holder).displayStatus((ParcelableStatus) obj, true);
                 break;
             }
             case VIEW_TYPE_USER: {
-                ((UserViewHolder) holder).displayUser(((ParcelableUser) obj));
+                ((UserViewHolder) holder).displayUser((ParcelableUser) obj);
                 break;
             }
             case VIEW_TYPE_USER_LIST: {
-                ((UserListViewHolder) holder).displayUserList(((ParcelableUserList) obj));
+                ((UserListViewHolder) holder).displayUserList((ParcelableUserList) obj);
                 break;
             }
         }

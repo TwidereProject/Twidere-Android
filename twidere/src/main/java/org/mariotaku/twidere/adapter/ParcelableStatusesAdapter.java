@@ -364,7 +364,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case ITEM_VIEW_TYPE_STATUS: {
-                bindStatus(((IStatusViewHolder) holder), position);
+                bindStatus((IStatusViewHolder) holder, position);
                 break;
             }
         }

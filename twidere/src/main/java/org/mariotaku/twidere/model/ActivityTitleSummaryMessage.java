@@ -297,7 +297,7 @@ public class ActivityTitleSummaryMessage {
     private static Spanned getTitleStringAboutMe(Resources resources, UserColorNameManager manager,
                                                  int stringRes, int stringResMulti,
                                                  ParcelableUser[] sources, boolean nameFirst) {
-        if ((sources == null) || (sources.length == 0)) return null;
+        if (sources == null || sources.length == 0) return null;
         final Configuration configuration = resources.getConfiguration();
         final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(sources[0],
                 nameFirst));
@@ -323,7 +323,7 @@ public class ActivityTitleSummaryMessage {
     private static Spanned getTitleStringByFriends(Resources resources, UserColorNameManager manager,
                                                    int stringRes, int stringResMulti,
                                                    ParcelableUser[] sources, Object[] targets, boolean nameFirst) {
-        if ((sources == null) || (sources.length == 0)) return null;
+        if (sources == null || sources.length == 0) return null;
         final Configuration configuration = resources.getConfiguration();
         final SpannableString firstSourceName = new SpannableString(manager.getDisplayName(
                 sources[0], nameFirst));

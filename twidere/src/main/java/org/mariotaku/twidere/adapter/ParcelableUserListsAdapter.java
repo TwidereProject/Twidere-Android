@@ -155,7 +155,7 @@ public class ParcelableUserListsAdapter extends LoadMoreSupportAdapter<RecyclerV
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case ITEM_VIEW_TYPE_USER_LIST: {
-                bindUserList(((UserListViewHolder) holder), position);
+                bindUserList((UserListViewHolder) holder, position);
                 break;
             }
         }
