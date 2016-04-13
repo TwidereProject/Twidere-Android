@@ -615,10 +615,8 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
                 if (compact) {
                     return itemViewType != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY;
                 }
-                if (shouldUseDividerFor(itemViewType)) {
-                    if (shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
-                        return true;
-                    }
+                if (shouldUseDividerFor(itemViewType) && shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
+                    return true;
                 }
                 return false;
             }

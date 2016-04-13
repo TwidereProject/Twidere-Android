@@ -507,10 +507,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             public void afterExecute(Bus handler, SingleResponse<Relationship> result) {
                 if (result.hasData()) {
                     handler.post(new FriendshipUpdatedEvent(accountKey, userId, result.getData()));
-                } else if (result.hasException()) {
-                    if (BuildConfig.DEBUG) {
-                        Log.w(LOGTAG, "Unable to update friendship", result.getException());
-                    }
+                } else if (result.hasException() && BuildConfig.DEBUG) {
+                    Log.w(LOGTAG, "Unable to update friendship", result.getException());
                 }
             }
         }.setResultHandler(bus));

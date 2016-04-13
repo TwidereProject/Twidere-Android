@@ -146,13 +146,11 @@ public abstract class SaveFileTask extends AsyncTask<Object, Object, SaveFileTas
                                            char specialCharacter, @Nullable String suffix) {
         StringBuilder sb = new StringBuilder();
         int end = name.length();
-        if (extension != null) {
-            if (name.endsWith(extension)) {
-                for (int i = end - extension.length() - 1; i >= 0; i--) {
-                    if (name.charAt(i) != specialCharacter) {
-                        end = i + 1;
-                        break;
-                    }
+        if (extension != null && name.endsWith(extension)) {
+            for (int i = end - extension.length() - 1; i >= 0; i--) {
+                if (name.charAt(i) != specialCharacter) {
+                    end = i + 1;
+                    break;
                 }
             }
         }
