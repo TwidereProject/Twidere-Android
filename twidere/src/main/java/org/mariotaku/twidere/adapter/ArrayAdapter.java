@@ -344,7 +344,6 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
     private View createViewFromResource(int position, View convertView, ViewGroup parent,
                                         int resource) {
         View view;
-        TextView text;
 
         if (convertView == null) {
             view = mInflater.inflate(resource, parent, false);
@@ -464,7 +463,6 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
                         newValues.add(value);
                     } else {
                         final String[] words = valueText.split(" ");
-                        final int wordCount = words.length;
 
                         // Start at index 0, in case valueText starts with space(s)
                         for (String word : words) {
