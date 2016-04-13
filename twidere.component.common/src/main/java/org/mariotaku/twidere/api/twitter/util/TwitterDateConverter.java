@@ -19,41 +19,23 @@
 
 package org.mariotaku.twidere.api.twitter.util;
 
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
+import com.bluelinelabs.logansquare.typeconverters.DateTypeConverter;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
-public class TwitterDateConverter extends StringBasedTypeConverter<Date> {
-
-    static final DateFormat sFormat = new ThreadLocalSimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy",
-            Locale.ENGLISH);
-
-    static {
-        sFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        sFormat.setLenient(true);
-    }
+public class TwitterDateConverter extends DateTypeConverter {
 
     @Override
-    public Date getFromString(final String string) {
-        if (string == null) return null;
-        try {
-            return sFormat.parse(string);
-        } catch (ParseException e) {
-            return null;
-        }
+    public DateFormat getDateFormat() {
+        final DateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
+        format.setLenient(true);
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return format;
     }
-
-    @Override
-    public String convertToString(final Date date) {
-        if (date == null) return null;
-        return sFormat.format(date);
-    }
-
 }

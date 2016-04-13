@@ -459,7 +459,6 @@ public class ThemeUtils implements Constants {
         final int itemColor = TwidereColorUtils.getContrastYIQ(itemBackgroundColor, colorDark, colorLight);
         final int popupItemColor = TwidereColorUtils.getContrastYIQ(popupItemBackgroundColor, colorDark, colorLight);
         final Menu menu = view.getMenu();
-        final int childCount = view.getChildCount();
         for (int i = 0, j = menu.size(), k = 0; i < j; i++) {
             final MenuItem item = menu.getItem(i);
             wrapMenuItemIcon(item, itemColor, excludeGroups);
@@ -492,7 +491,6 @@ public class ThemeUtils implements Constants {
     public static void wrapToolbarMenuIcon(@Nullable ActionMenuView view, int itemColor, int popupItemColor, int... excludeGroups) {
         if (view == null) return;
         final Menu menu = view.getMenu();
-        final int childCount = view.getChildCount();
         for (int i = 0, j = menu.size(), k = 0; i < j; i++) {
             final MenuItem item = menu.getItem(i);
             wrapMenuItemIcon(item, itemColor, excludeGroups);

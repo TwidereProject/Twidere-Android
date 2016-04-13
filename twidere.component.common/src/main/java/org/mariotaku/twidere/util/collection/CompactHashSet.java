@@ -335,7 +335,6 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
      */
     @SuppressWarnings("unchecked")
     protected void rehash(int newCapacity) {
-        int oldCapacity = objects.length;
         @SuppressWarnings("unchecked")
         E[] newObjects = (E[]) new Object[newCapacity];
 

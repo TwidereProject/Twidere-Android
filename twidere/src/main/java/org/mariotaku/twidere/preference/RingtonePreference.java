@@ -150,7 +150,6 @@ public class RingtonePreference extends DialogPreference implements IDialogPrefe
                     RingtonePreferenceDialogFragment.this.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
                 }
             });
-            int checkedItem = -1;
             builder.adapter(mAdapter, new MaterialDialog.ListCallback() {
                 @Override
                 public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
