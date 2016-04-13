@@ -59,6 +59,8 @@ import java.util.Locale;
  */
 public class NetworkDiagnosticsFragment extends BaseSupportFragment {
 
+    private static final String OK_D_MS = " OK (%d ms)";
+    private static final String ERROR = "ERROR: ";
     private TextView mLogTextView;
     private Button mStartDiagnosticsButton;
 
@@ -204,10 +206,10 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                     builder.url(baseUrl);
                     final long start = SystemClock.uptimeMillis();
                     response = client.newCall(builder.build()).execute();
-                    publishProgress(new LogText(String.format(Locale.US, " OK (%d ms)",
+                    publishProgress(new LogText(String.format(Locale.US, OK_D_MS,
                             SystemClock.uptimeMillis() - start), LogText.State.OK));
                 } catch (IOException e) {
-                    publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
+                    publishProgress(new LogText(ERROR + e.getMessage(), LogText.State.ERROR));
                 }
                 publishProgress(LogText.LINEBREAK);
                 try {
@@ -220,7 +222,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                                 os.getTotal(), SystemClock.uptimeMillis() - start), LogText.State.OK));
                     }
                 } catch (IOException e) {
-                    publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
+                    publishProgress(new LogText(ERROR + e.getMessage(), LogText.State.ERROR));
                 } finally {
                     Utils.closeSilently(response);
                 }
@@ -281,10 +283,10 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
             try {
                 final long start = SystemClock.uptimeMillis();
                 publishProgress(new LogText(String.valueOf(dns.lookupResolver(host))));
-                publishProgress(new LogText(String.format(Locale.US, " OK (%d ms)",
+                publishProgress(new LogText(String.format(Locale.US, OK_D_MS,
                         SystemClock.uptimeMillis() - start), LogText.State.OK));
             } catch (UnknownHostException e) {
-                publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
+                publishProgress(new LogText(ERROR + e.getMessage(), LogText.State.ERROR));
             }
             publishProgress(LogText.LINEBREAK);
         }
@@ -294,10 +296,10 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
             try {
                 final long start = SystemClock.uptimeMillis();
                 publishProgress(new LogText(Arrays.toString(InetAddress.getAllByName(host))));
-                publishProgress(new LogText(String.format(Locale.US, " OK (%d ms)",
+                publishProgress(new LogText(String.format(Locale.US, OK_D_MS,
                         SystemClock.uptimeMillis() - start), LogText.State.OK));
             } catch (UnknownHostException e) {
-                publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
+                publishProgress(new LogText(ERROR + e.getMessage(), LogText.State.ERROR));
             }
             publishProgress(LogText.LINEBREAK);
         }
@@ -310,7 +312,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                 publishProgress(new LogText(String.format(Locale.US, "OK (%d ms)",
                         SystemClock.uptimeMillis() - start), LogText.State.OK));
             } catch (TwitterException e) {
-                publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
+                publishProgress(new LogText(ERROR + e.getMessage(), LogText.State.ERROR));
             }
             publishProgress(LogText.LINEBREAK);
         }

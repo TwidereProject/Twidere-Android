@@ -69,6 +69,7 @@ import javax.inject.Inject;
 
 public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader {
 
+    private static final String NO_ACCOUNT = "No Account";
     @Nullable
     private final UserKey mAccountKey;
     private final String mMaxId, mSinceId;
@@ -105,12 +106,12 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     public final ListResponse<ParcelableStatus> loadInBackground() {
         final Context context = getContext();
         if (mAccountKey == null) {
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new TwitterException(NO_ACCOUNT));
         }
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                 mAccountKey);
         if (credentials == null) {
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new TwitterException(NO_ACCOUNT));
         }
 
         List<ParcelableStatus> data = getData();
@@ -133,7 +134,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
         final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, credentials, true,
                 true);
         if (twitter == null) {
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new TwitterException(NO_ACCOUNT));
         }
         final List<? extends Status> statuses;
         final boolean noItemsBefore = data.isEmpty();

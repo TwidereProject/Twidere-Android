@@ -20,6 +20,8 @@ import java.util.ArrayList;
  */
 public class UserKeyUtils {
 
+    private static final String TWITTER_COM = "twitter.com";
+
     @Nullable
     public static UserKey findById(Context context, String id) {
         final String[] projection = {Accounts.ACCOUNT_KEY};
@@ -62,15 +64,15 @@ public class UserKeyUtils {
 
     public static boolean isFanfouUser(User user) {
         String url = user.getProfileImageUrlLarge();
-        if (url != null && isFanfouHost(getUserHost(url, "twitter.com"))) {
+        if (url != null && isFanfouHost(getUserHost(url, TWITTER_COM))) {
             return true;
         }
         url = user.getProfileImageUrl();
-        if (url != null && isFanfouHost(getUserHost(url, "twitter.com"))) {
+        if (url != null && isFanfouHost(getUserHost(url, TWITTER_COM))) {
             return true;
         }
         url = user.getProfileBackgroundImageUrl();
-        if (url != null && isFanfouHost(getUserHost(url, "twitter.com"))) {
+        if (url != null && isFanfouHost(getUserHost(url, TWITTER_COM))) {
             return true;
         }
         return false;

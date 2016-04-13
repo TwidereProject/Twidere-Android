@@ -104,6 +104,9 @@ import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
  */
 public class DataStoreUtils implements Constants {
     static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+    private static final String PATTERN1 = "||'</a>%'";
+    private static final String PATTERN2 = "||'%'";
+    private static final String PATTERN3 = "'%@'||?";
     static Map<UserKey, String> sAccountScreenNames = new HashMap<>();
     static Map<UserKey, String> sAccountNames = new HashMap<>();
 
@@ -334,27 +337,27 @@ public class DataStoreUtils implements Constants {
                 .from(new Tables(table, Filters.Sources.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Statuses.SOURCE),
-                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"),
+                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + PATTERN1),
                         Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_SOURCE),
-                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'")
+                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + PATTERN1)
                 ))
                 .union()
                 .select(new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Keywords.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_PLAIN),
-                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"),
+                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + PATTERN2),
                         Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_TEXT_PLAIN),
-                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'")
+                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + PATTERN2)
                 ))
                 .union()
                 .select(new Columns(new Column(new Table(table), Statuses._ID)))
                 .from(new Tables(table, Filters.Links.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Statuses.SPANS),
-                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'"),
+                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + PATTERN2),
                         Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_SPANS),
-                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'")
+                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + PATTERN2)
                 ));
         final Expression filterExpression = Expression.or(
                 Expression.notIn(new Column(new Table(table), Statuses._ID), filteredIdsQueryBuilder.build()),
@@ -656,27 +659,27 @@ public class DataStoreUtils implements Constants {
                 .from(new Tables(table, Filters.Sources.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Activities.STATUS_SOURCE),
-                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"),
+                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + PATTERN1),
                         Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_SOURCE),
-                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'")
+                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + PATTERN1)
                 ))
                 .union()
                 .select(new Columns(new Column(new Table(table), Activities._ID)))
                 .from(new Tables(table, Filters.Keywords.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Activities.STATUS_TEXT_PLAIN),
-                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"),
+                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + PATTERN2),
                         Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_TEXT_PLAIN),
-                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'")
+                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + PATTERN2)
                 ))
                 .union()
                 .select(new Columns(new Column(new Table(table), Activities._ID)))
                 .from(new Tables(table, Filters.Links.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(new Column(new Table(table), Activities.STATUS_SPANS),
-                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'"),
+                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + PATTERN2),
                         Expression.likeRaw(new Column(new Table(table), Activities.STATUS_QUOTE_SPANS),
-                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'")
+                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + PATTERN2)
                 ));
         final Expression filterExpression = Expression.or(
                 Expression.notIn(new Column(new Table(table), Activities._ID), filteredIdsQueryBuilder.build()),
@@ -939,14 +942,14 @@ public class DataStoreUtils implements Constants {
         final String[] deleteWhereArgs, updateWhereArgs;
         if (host != null) {
             deleteWhere = Expression.and(
-                    Expression.likeRaw(new Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
+                    Expression.likeRaw(new Column(Statuses.ACCOUNT_KEY), PATTERN3),
                     Expression.or(
                             Expression.equalsArgs(Statuses.STATUS_ID),
                             Expression.equalsArgs(Statuses.RETWEET_ID)
                     )).getSQL();
             deleteWhereArgs = new String[]{host, statusId, statusId};
             updateWhere = Expression.and(
-                    Expression.likeRaw(new Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
+                    Expression.likeRaw(new Column(Statuses.ACCOUNT_KEY), PATTERN3),
                     Expression.equalsArgs(Statuses.MY_RETWEET_ID)
             ).getSQL();
             updateWhereArgs = new String[]{host, statusId};
@@ -978,14 +981,14 @@ public class DataStoreUtils implements Constants {
         final String[] deleteWhereArgs, updateWhereArgs;
         if (host != null) {
             deleteWhere = Expression.and(
-                    Expression.likeRaw(new Column(Activities.ACCOUNT_KEY), "'%@'||?"),
+                    Expression.likeRaw(new Column(Activities.ACCOUNT_KEY), PATTERN3),
                     Expression.or(
                             Expression.equalsArgs(Activities.STATUS_ID),
                             Expression.equalsArgs(Activities.STATUS_RETWEET_ID)
                     )).getSQL();
             deleteWhereArgs = new String[]{host, statusId, statusId};
             updateWhere = Expression.and(
-                    Expression.likeRaw(new Column(Activities.ACCOUNT_KEY), "'%@'||?"),
+                    Expression.likeRaw(new Column(Activities.ACCOUNT_KEY), PATTERN3),
                     Expression.equalsArgs(Activities.STATUS_MY_RETWEET_ID)
             ).getSQL();
             updateWhereArgs = new String[]{host, statusId};

@@ -51,6 +51,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class OAuthAuthorization implements Authorization, OAuthSupport {
 
+    private static final String OAUTH_TOKEN = "oauth_token";
     private static final String DEFAULT_ENCODING = "UTF-8";
     private static final String OAUTH_SIGNATURE_METHOD = "HMAC-SHA1";
     private static final String OAUTH_VERSION = "1.0";
@@ -188,7 +189,7 @@ public class OAuthAuthorization implements Authorization, OAuthSupport {
         encodeParams.add(Pair.create("oauth_timestamp", String.valueOf(timestamp)));
         encodeParams.add(Pair.create("oauth_version", OAUTH_VERSION));
         if (oauthToken != null) {
-            encodeParams.add(Pair.create("oauth_token", oauthToken));
+            encodeParams.add(Pair.create(OAUTH_TOKEN, oauthToken));
         }
         Collections.sort(encodeParams, new Comparator<Pair<String, String>>() {
             @Override

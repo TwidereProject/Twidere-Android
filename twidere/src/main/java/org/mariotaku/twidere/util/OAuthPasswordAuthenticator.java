@@ -60,6 +60,10 @@ import okhttp3.Response;
 public class OAuthPasswordAuthenticator implements Constants {
 
     private static final IAttoParser PARSER = new MarkupAttoParser();
+    private static final String AUTHENTICITY_TOKEN = "authenticity_token";
+    private static final String REDIRECT_AFTER_LOGIN = "redirect_after_login";
+    private static final String USER_AGENT = "User-Agent";
+    private static final String OAUTH_TOKEN = "oauth_token";
 
     private final TwitterOAuth oauth;
     private final RestHttpClient client;
@@ -125,14 +129,14 @@ public class OAuthPasswordAuthenticator implements Constants {
             final AuthorizeRequestData data = new AuthorizeRequestData();
             final MultiValueMap<String> params = new MultiValueMap<>();
             final AuthorizeResponseData.Verification verification = authorizeResponseData.challenge;
-            params.add("authenticity_token", verification.authenticityToken);
+            params.add(AUTHENTICITY_TOKEN, verification.authenticityToken);
             params.add("user_id", verification.userId);
             params.add("challenge_id", verification.challengeId);
             params.add("challenge_type", verification.challengeType);
             params.add("platform", verification.platform);
-            params.add("redirect_after_login", verification.redirectAfterLogin);
+            params.add(REDIRECT_AFTER_LOGIN, verification.redirectAfterLogin);
             final MultiValueMap<String> requestHeaders = new MultiValueMap<>();
-            requestHeaders.add("User-Agent", userAgent);
+            requestHeaders.add(USER_AGENT, userAgent);
 
             if (!TextUtils.isEmpty(challengeResponse)) {
                 params.add("challenge_response", challengeResponse);
@@ -185,9 +189,9 @@ public class OAuthPasswordAuthenticator implements Constants {
                             final String name = attributes.get("name");
                             if (TextUtils.isEmpty(name)) break;
                             final String value = attributes.get("value");
-                            if (name.equals("authenticity_token")) {
+                            if (name.equals(AUTHENTICITY_TOKEN)) {
                                 data.authenticityToken = value;
-                            } else if (name.equals("redirect_after_login")) {
+                            } else if (name.equals(REDIRECT_AFTER_LOGIN)) {
                                 data.redirectAfterLogin = value;
                             }
                         }
@@ -213,16 +217,16 @@ public class OAuthPasswordAuthenticator implements Constants {
         try {
             final AuthorizeResponseData data = new AuthorizeResponseData();
             final MultiValueMap<String> params = new MultiValueMap<>();
-            params.add("oauth_token", requestToken.getOauthToken());
-            params.add("authenticity_token", authorizeRequestData.authenticityToken);
-            params.add("redirect_after_login", authorizeRequestData.redirectAfterLogin);
+            params.add(OAUTH_TOKEN, requestToken.getOauthToken());
+            params.add(AUTHENTICITY_TOKEN, authorizeRequestData.authenticityToken);
+            params.add(REDIRECT_AFTER_LOGIN, authorizeRequestData.redirectAfterLogin);
             if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
                 params.add("session[username_or_email]", username);
                 params.add("session[password]", password);
             }
             final FormBody authorizationResultBody = new FormBody(params);
             final MultiValueMap<String> requestHeaders = new MultiValueMap<>();
-            requestHeaders.add("User-Agent", userAgent);
+            requestHeaders.add(USER_AGENT, userAgent);
             data.referer = authorizeRequestData.referer;
 
             final HttpRequest.Builder authorizeResultBuilder = new HttpRequest.Builder();
@@ -290,7 +294,7 @@ public class OAuthPasswordAuthenticator implements Constants {
                                 if (TextUtils.isEmpty(name)) break;
                                 final String value = attributes.get("value");
                                 switch (name) {
-                                    case "authenticity_token": {
+                                    case AUTHENTICITY_TOKEN: {
                                         ensureVerification();
                                         data.challenge.authenticityToken = value;
                                         break;
@@ -315,7 +319,7 @@ public class OAuthPasswordAuthenticator implements Constants {
                                         data.challenge.userId = value;
                                         break;
                                     }
-                                    case "redirect_after_login": {
+                                    case REDIRECT_AFTER_LOGIN: {
                                         ensureVerification();
                                         data.challenge.redirectAfterLogin = value;
                                         break;
@@ -358,12 +362,12 @@ public class OAuthPasswordAuthenticator implements Constants {
             final AuthorizeRequestData data = new AuthorizeRequestData();
             final HttpRequest.Builder authorizePageBuilder = new HttpRequest.Builder();
             authorizePageBuilder.method(GET.METHOD);
-            authorizePageBuilder.url(endpoint.construct("/oauth/authorize", new String[]{"oauth_token",
+            authorizePageBuilder.url(endpoint.construct("/oauth/authorize", new String[]{OAUTH_TOKEN,
                     requestToken.getOauthToken()}));
             data.referer = Endpoint.constructUrl("https://api.twitter.com/oauth/authorize",
-                    new String[]{"oauth_token", requestToken.getOauthToken()});
+                    new String[]{OAUTH_TOKEN, requestToken.getOauthToken()});
             final MultiValueMap<String> requestHeaders = new MultiValueMap<>();
-            requestHeaders.add("User-Agent", userAgent);
+            requestHeaders.add(USER_AGENT, userAgent);
             authorizePageBuilder.headers(requestHeaders);
             final HttpRequest authorizePageRequest = authorizePageBuilder.build();
             response = client.newCall(authorizePageRequest).execute();

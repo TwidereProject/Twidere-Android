@@ -25,6 +25,7 @@ import java.util.List;
 @JsonObject
 public final class CustomAPIConfig implements Constants {
 
+    private static final String OAUTH = "oauth";
     @JsonField(name = "name")
     String name;
     @JsonField(name = "localized_name")
@@ -123,7 +124,7 @@ public final class CustomAPIConfig implements Constants {
         public Integer getFromString(String string) {
             if (string == null) return ParcelableCredentials.AuthType.OAUTH;
             switch (string) {
-                case "oauth": {
+                case OAUTH: {
                     return ParcelableCredentials.AuthType.OAUTH;
                 }
                 case "xauth": {
@@ -141,10 +142,10 @@ public final class CustomAPIConfig implements Constants {
 
         @Override
         public String convertToString(@ParcelableCredentials.AuthType Integer object) {
-            if (object == null) return "oauth";
+            if (object == null) return OAUTH;
             switch (object) {
                 case ParcelableCredentials.AuthType.OAUTH: {
-                    return "oauth";
+                    return OAUTH;
                 }
                 case ParcelableCredentials.AuthType.XAUTH: {
                     return "xauth";
@@ -156,7 +157,7 @@ public final class CustomAPIConfig implements Constants {
                     return "twip_o_mode";
                 }
             }
-            return "oauth";
+            return OAUTH;
         }
     }
 }

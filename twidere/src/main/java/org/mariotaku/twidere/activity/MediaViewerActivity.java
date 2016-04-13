@@ -103,6 +103,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
     private static final int REQUEST_SHARE_MEDIA = 201;
     private static final int REQUEST_PERMISSION_SAVE_MEDIA = 202;
     private static final int REQUEST_PERMISSION_SHARE_MEDIA = 203;
+    public static final String VIDEO_MP4 = "video/mp4";
 
     @Inject
     FileCache mFileCache;
@@ -754,11 +755,11 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
 
         static {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                SUPPORTED_VIDEO_TYPES = new String[]{"video/mp4"};
+                SUPPORTED_VIDEO_TYPES = new String[]{VIDEO_MP4};
             } else {
-                SUPPORTED_VIDEO_TYPES = new String[]{"video/webm", "video/mp4"};
+                SUPPORTED_VIDEO_TYPES = new String[]{"video/webm", VIDEO_MP4};
             }
-            FALLBACK_VIDEO_TYPES = new String[]{"video/mp4"};
+            FALLBACK_VIDEO_TYPES = new String[]{VIDEO_MP4};
         }
 
         private TextureVideoView mVideoView;
@@ -948,7 +949,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
                     return null;
                 }
                 case ParcelableMedia.Type.CARD_ANIMATED_GIF: {
-                    return Pair.create(media.media_url, "video/mp4");
+                    return Pair.create(media.media_url, VIDEO_MP4);
                 }
                 default: {
                     return null;

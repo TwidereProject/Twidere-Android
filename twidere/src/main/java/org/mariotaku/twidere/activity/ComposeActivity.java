@@ -193,6 +193,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
 
     private static final String[] LOCATION_OPTIONS = {LOCATION_VALUE_NONE, LOCATION_VALUE_PLACE,
             LOCATION_VALUE_COORDINATE};
+    private static final String UNABLE_TO_DELETE_S = "Unable to delete %s";
 
     // Utility classes
     @Inject
@@ -1732,7 +1733,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
                     if (ContentResolver.SCHEME_FILE.equals(source.getScheme()) && mDeleteSrc) {
                         final File file = new File(source.getPath());
                         if (!file.delete()) {
-                            Log.d(LOGTAG, String.format("Unable to delete %s", file));
+                            Log.d(LOGTAG, String.format(UNABLE_TO_DELETE_S, file));
                         }
                     }
                     result[i] = true;
@@ -1793,7 +1794,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
                     if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
                         final File file = new File(uri.getPath());
                         if (!file.delete()) {
-                            Log.d(LOGTAG, String.format("Unable to delete %s", file));
+                            Log.d(LOGTAG, String.format(UNABLE_TO_DELETE_S, file));
                         }
                     }
                 }
@@ -1840,7 +1841,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
                 if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
                     final File file = new File(uri.getPath());
                     if (!file.delete()) {
-                        Log.d(LOGTAG, String.format("Unable to delete %s", file));
+                        Log.d(LOGTAG, String.format(UNABLE_TO_DELETE_S, file));
                     }
                 }
             }
