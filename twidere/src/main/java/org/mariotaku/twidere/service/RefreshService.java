@@ -315,7 +315,7 @@ public class RefreshService extends Service implements Constants {
     private long getRefreshInterval() {
         if (mPreferences == null) return 0;
         final int prefValue = NumberUtils.toInt(mPreferences.getString(KEY_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL), -1);
-        return Math.max(prefValue, 3) * 60 * 1000;
+        return Math.max(prefValue, 3) * 60 * 1000L;
     }
 
     private boolean isHomeTimelineRefreshing() {

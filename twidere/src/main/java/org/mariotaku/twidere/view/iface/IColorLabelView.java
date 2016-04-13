@@ -146,8 +146,8 @@ public interface IColorLabelView {
             if (colors == null || colors.length == 0) return;
             for (int i = 0, len = colors.length; i < len; i++) {
                 mPaint.setColor(colors[i]);
-                final float colorLeft = left + i * (width / len);
-                final float colorRight = left + (i + 1) * (width / len);
+                final float colorLeft = left + i * (width * 1.0F / len);
+                final float colorRight = left + (i + 1) * (width * 1.0F / len);
                 canvas.drawRect(colorLeft, top, colorRight, top + height, mPaint);
             }
         }
@@ -157,8 +157,8 @@ public interface IColorLabelView {
             if (colors == null || colors.length == 0) return;
             for (int i = 0, len = colors.length; i < len; i++) {
                 mPaint.setColor(colors[i]);
-                final float colorTop = top + i * (height / len);
-                final float colorBottom = top + (i + 1) * (height / len);
+                final float colorTop = top + i * (height * 1.0F / len);
+                final float colorBottom = top + (i + 1) * (height * 1.0F / len);
                 canvas.drawRect(left, colorTop, left + width, colorBottom, mPaint);
             }
         }
