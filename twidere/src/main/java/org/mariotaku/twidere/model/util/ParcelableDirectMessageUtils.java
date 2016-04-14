@@ -16,6 +16,9 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
  */
 public class ParcelableDirectMessageUtils {
 
+    private ParcelableDirectMessageUtils() {
+    }
+
     public static ParcelableDirectMessage fromDirectMessage(DirectMessage message, UserKey accountKey, boolean isOutgoing) {
         ParcelableDirectMessage result = new ParcelableDirectMessage();
         result.account_key = accountKey;

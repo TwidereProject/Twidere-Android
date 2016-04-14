@@ -46,6 +46,9 @@ public class HtmlSpanBuilder {
 
     private static final IAttoParser PARSER = new MarkupAttoParser();
 
+    private HtmlSpanBuilder() {
+    }
+
     public static Spannable fromHtml(String html) throws ParseException {
         final HtmlParsingConfiguration conf = new HtmlParsingConfiguration();
         final HtmlSpanHandler handler = new HtmlSpanHandler(conf);

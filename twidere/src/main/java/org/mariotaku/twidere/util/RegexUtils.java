@@ -25,6 +25,9 @@ import java.util.regex.Matcher;
  * Created by mariotaku on 15/1/11.
  */
 public class RegexUtils {
+    private RegexUtils() {
+    }
+
     public static int matcherEnd(final Matcher matcher, final int group) {
         try {
             return matcher.end(group);

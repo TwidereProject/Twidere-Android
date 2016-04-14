@@ -26,6 +26,9 @@ import java.lang.reflect.Type;
  */
 public class Twidere_ParameterizedTypeAccessor {
 
+    private Twidere_ParameterizedTypeAccessor() {
+    }
+
     public static <T> ParameterizedType<T> create(Type type) {
         return new ParameterizedType.ConcreteParameterizedType<>(type);
     }

@@ -11,6 +11,9 @@ import org.mariotaku.twidere.util.InternalParseUtils;
  * Created by mariotaku on 16/3/8.
  */
 public class ParcelableLocationUtils {
+    private ParcelableLocationUtils() {
+    }
+
     public static String getHumanReadableString(ParcelableLocation obj, int decimalDigits) {
         return String.format("%s,%s", InternalParseUtils.parsePrettyDecimal(obj.latitude, decimalDigits),
                 InternalParseUtils.parsePrettyDecimal(obj.longitude, decimalDigits));

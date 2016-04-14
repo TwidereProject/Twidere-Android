@@ -50,6 +50,9 @@ import static org.mariotaku.sqliteqb.library.SQLQueryBuilder.select;
 
 public final class DatabaseUpgradeHelper {
 
+    private DatabaseUpgradeHelper() {
+    }
+
     public static void safeUpgrade(final SQLiteDatabase db, final String table, final String[] newColNames,
                                    final String[] newColTypes, final boolean dropDirectly,
                                    final Map<String, String> colAliases, final OnConflict onConflict,

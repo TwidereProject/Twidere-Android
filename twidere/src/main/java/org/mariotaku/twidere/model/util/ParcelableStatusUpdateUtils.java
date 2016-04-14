@@ -11,6 +11,8 @@ import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
  * Created by mariotaku on 16/2/12.
  */
 public class ParcelableStatusUpdateUtils implements Constants {
+    private ParcelableStatusUpdateUtils() {
+    }
 
     public static ParcelableStatusUpdate fromDraftItem(final Context context, final Draft draft) {
         ParcelableStatusUpdate statusUpdate = new ParcelableStatusUpdate();

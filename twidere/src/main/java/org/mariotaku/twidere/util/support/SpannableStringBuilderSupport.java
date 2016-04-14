@@ -7,6 +7,9 @@ import android.text.SpannableStringBuilder;
  */
 public class SpannableStringBuilderSupport {
 
+    private SpannableStringBuilderSupport() {
+    }
+
     public static void append(SpannableStringBuilder builder, CharSequence text, Object span, int flags) {
         int start = builder.length();
         builder.append(text);

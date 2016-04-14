@@ -34,6 +34,9 @@ public class HtmlEscapeHelper {
             new UnicodeControlCharacterToHtmlTranslator());
     public static final LookupTranslator ESCAPE_BASIC = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
+    private HtmlEscapeHelper() {
+    }
+
     public static String escape(final CharSequence text) {
         if (text == null) return null;
         return ESCAPE_HTML.translate(text);

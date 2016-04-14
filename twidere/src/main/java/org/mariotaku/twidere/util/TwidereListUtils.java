@@ -24,6 +24,9 @@ import java.util.List;
 
 public class TwidereListUtils {
 
+    private TwidereListUtils() {
+    }
+
     public static List<Long> fromArray(final long[] array) {
         if (array == null) return null;
         final List<Long> list = new ArrayList<>();

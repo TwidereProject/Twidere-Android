@@ -30,6 +30,9 @@ import org.mariotaku.twidere.util.support.graphics.OutlineCompat;
  */
 public class DrawableSupport {
 
+    private DrawableSupport() {
+    }
+
     public static void getOutline(Drawable drawable, OutlineCompat outlineCompat) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         DrawableSupportLollipop.getOutline(drawable, outlineCompat);

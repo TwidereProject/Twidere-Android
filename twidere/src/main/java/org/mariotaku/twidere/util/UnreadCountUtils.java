@@ -29,6 +29,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
 public class UnreadCountUtils implements Constants {
+	private UnreadCountUtils() {
+	}
 
 	public static int getUnreadCount(final Context context, final int position) {
 		if (context == null || position < 0) return 0;

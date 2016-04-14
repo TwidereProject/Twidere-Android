@@ -7,6 +7,9 @@ import android.view.View;
  * Created by mariotaku on 16/1/23.
  */
 public class TwidereViewUtils {
+    private TwidereViewUtils() {
+    }
+
     @UiThread
     public static boolean hitView(float x, float y, View view) {
         int[] location = new int[2];

@@ -22,6 +22,9 @@ package org.mariotaku.twidere.util;
 import android.support.v4.util.LongSparseArray;
 
 public class LongSparseArrayUtils {
+	private LongSparseArrayUtils() {
+	}
+
 	/**
 	 * @return A copy of all keys contained in the sparse array.
 	 */

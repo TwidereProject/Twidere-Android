@@ -12,6 +12,9 @@ import org.mariotaku.twidere.util.TwitterContentUtils;
  * Created by mariotaku on 16/3/5.
  */
 public class ParcelableUserListUtils {
+    private ParcelableUserListUtils() {
+    }
+
     public static ParcelableUserList from(UserList list, UserKey accountKey) {
         return from(list, accountKey, 0, false);
     }

@@ -44,6 +44,9 @@ import static android.text.TextUtils.isEmpty;
  * Created by mariotaku on 16/1/2.
  */
 public class IntentUtils implements Constants {
+    private IntentUtils() {
+    }
+
     public static String getStatusShareText(@NonNull final Context context, @NonNull final ParcelableStatus status) {
         final Uri link = LinkCreator.getStatusWebLink(status);
         return context.getString(R.string.status_share_text_format_with_link,

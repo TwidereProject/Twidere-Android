@@ -20,6 +20,9 @@ import java.util.ArrayList;
  */
 public class UserKeyUtils {
 
+    private UserKeyUtils() {
+    }
+
     @Nullable
     public static UserKey findById(Context context, String id) {
         final String[] projection = {Accounts.ACCOUNT_KEY};

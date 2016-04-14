@@ -27,6 +27,9 @@ public class PreviewMediaExtractor {
             new TwitterMediaProvider()
     };
 
+    private PreviewMediaExtractor() {
+    }
+
     @Nullable
     public static ParcelableMedia fromLink(@NonNull String link) {
         final Provider provider = providerFor(link);

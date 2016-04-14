@@ -30,6 +30,9 @@ import java.util.List;
  */
 public class Nullables {
 
+    private Nullables() {
+    }
+
     @NonNull
     public static <T> List<T> list(@Nullable List<T> list) {
         if (list == null) return Collections.emptyList();

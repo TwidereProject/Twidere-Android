@@ -29,6 +29,8 @@ import java.util.List;
  * Created by mariotaku on 15/10/20.
  */
 public class UriExtraUtils implements Constants {
+    private UriExtraUtils() {
+    }
 
     public static void addExtra(Uri.Builder builder, String key, Object value) {
         builder.appendQueryParameter(QUERY_PARAM_EXTRA, key + "=" + String.valueOf(value));

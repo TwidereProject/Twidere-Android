@@ -15,6 +15,9 @@ import org.mariotaku.twidere.util.DataStoreUtils;
  * Created by mariotaku on 16/3/4.
  */
 public class ParcelableCredentialsUtils {
+    private ParcelableCredentialsUtils() {
+    }
+
     public static boolean isOAuth(int authType) {
         switch (authType) {
             case ParcelableCredentials.AuthType.OAUTH:

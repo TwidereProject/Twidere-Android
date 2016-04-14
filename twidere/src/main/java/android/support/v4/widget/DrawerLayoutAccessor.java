@@ -26,6 +26,9 @@ import android.view.View;
  */
 public class DrawerLayoutAccessor {
 
+    private DrawerLayoutAccessor() {
+    }
+
     public static View findDrawerWithGravity(DrawerLayout layout, int gravity) {
         return layout.findDrawerWithGravity(gravity);
     }

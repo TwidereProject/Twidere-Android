@@ -28,6 +28,9 @@ import java.util.List;
  * Created by mariotaku on 16/2/13.
  */
 public class ParcelableMediaUtils {
+    private ParcelableMediaUtils() {
+    }
+
     @NonNull
     public static ParcelableMedia[] fromEntities(@Nullable final EntitySupport entities) {
         if (entities == null) return new ParcelableMedia[0];

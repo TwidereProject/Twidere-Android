@@ -37,6 +37,9 @@ import java.util.Map;
  */
 public class JsonSerializer {
 
+    private JsonSerializer() {
+    }
+
     @Nullable
     public static <T> String serialize(@Nullable final List<T> list, final Class<T> cls) {
         if (list == null) return null;

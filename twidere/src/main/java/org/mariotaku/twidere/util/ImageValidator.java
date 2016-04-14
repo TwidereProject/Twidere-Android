@@ -44,6 +44,9 @@ public class ImageValidator {
     private static final byte[] JPEG_HEAD = {(byte) 0xFF, (byte) 0xD8};
     private static final byte[] JPEG_TAIL = {(byte) 0xFF, (byte) 0xD9};
 
+    private ImageValidator() {
+    }
+
     public static boolean isValidForRegionDecoder(int validity) {
         return (validity & VALID_FOR_REGION_DECODER) != 0;
     }

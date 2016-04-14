@@ -30,6 +30,9 @@ import android.text.style.ImageSpan;
 
 public final class ClipboardUtils {
 
+    private ClipboardUtils() {
+    }
+
     public static boolean setText(final Context context, final CharSequence text) {
         if (context == null) return false;
         final ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -44,6 +47,8 @@ public final class ClipboardUtils {
     }
 
     private static class ClipboardUtilsAPI16 {
+        private ClipboardUtilsAPI16() {
+        }
 
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         public static String getImageUrl(final Context context) {

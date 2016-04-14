@@ -32,6 +32,8 @@ import java.util.List;
  * Created by mariotaku on 16/1/3.
  */
 public class ParcelableStatusUtils implements Constants {
+    private ParcelableStatusUtils() {
+    }
 
     public static void makeOriginalStatus(@NonNull ParcelableStatus status) {
         if (!status.is_retweet) return;

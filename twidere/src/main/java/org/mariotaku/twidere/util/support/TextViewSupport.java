@@ -28,6 +28,9 @@ import android.widget.TextView;
  * Created by mariotaku on 15/5/3.
  */
 public class TextViewSupport {
+    private TextViewSupport() {
+    }
+
     public static Drawable[] getCompoundDrawablesRelative(TextView view) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return view.getCompoundDrawables();

@@ -67,6 +67,9 @@ import java.util.List;
  * Created by mariotaku on 15/4/12.
  */
 public class MenuUtils implements Constants {
+    private MenuUtils() {
+    }
+
     public static void setMenuItemAvailability(final Menu menu, final int id, final boolean available) {
         if (menu == null) return;
         final MenuItem item = menu.findItem(id);

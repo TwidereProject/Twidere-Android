@@ -64,6 +64,8 @@ import java.util.List;
 import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 
 public final class ContentValuesCreator implements TwidereConstants {
+    private ContentValuesCreator() {
+    }
 
     public static ContentValues createCachedRelationship(final Relationship relationship,
                                                          final UserKey accountKey,

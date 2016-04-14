@@ -39,6 +39,9 @@ import android.view.View;
 public class TransitionUtils {
     private static int MAX_IMAGE_SIZE = (1024 * 1024);
 
+    private TransitionUtils() {
+    }
+
     static Animator mergeAnimators(Animator animator1, Animator animator2) {
         if (animator1 == null) {
             return animator2;

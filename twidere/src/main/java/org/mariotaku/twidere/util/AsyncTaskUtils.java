@@ -32,6 +32,9 @@ public class AsyncTaskUtils {
 
     public static final Executor DEFAULT_EXECUTOR = Executors.newFixedThreadPool(2);
 
+    private AsyncTaskUtils() {
+    }
+
     @SafeVarargs
     public static <T extends AsyncTask<Parameter, ?, ?>, Parameter> T executeTask(T task, Parameter... params) {
         task.executeOnExecutor(DEFAULT_EXECUTOR, params);
