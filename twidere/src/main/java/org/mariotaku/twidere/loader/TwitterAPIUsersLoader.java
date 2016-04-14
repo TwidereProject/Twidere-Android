@@ -40,6 +40,7 @@ import java.util.List;
 
 public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
+    private static final String NO_ACCOUNT = "No Account";
     @Nullable
     private final UserKey mAccountKey;
 
@@ -52,17 +53,17 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
     @Override
     public List<ParcelableUser> loadInBackground() {
         if (mAccountKey == null) {
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new TwitterException(NO_ACCOUNT));
         }
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(),
                 mAccountKey);
         if (credentials == null) {
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new TwitterException(NO_ACCOUNT));
         }
         final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), credentials, true,
                 true);
         if (twitter == null)
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new TwitterException(NO_ACCOUNT));
         final List<ParcelableUser> data = getData();
         final List<User> users;
         try {

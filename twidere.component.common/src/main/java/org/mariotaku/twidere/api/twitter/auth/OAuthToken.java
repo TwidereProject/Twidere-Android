@@ -38,6 +38,8 @@ import java.text.ParseException;
  */
 public class OAuthToken implements ValueMap {
 
+    private static final String OAUTH_TOKEN_SECRET = "oauth_token_secret";
+    private static final String OAUTH_TOKEN = "oauth_token";
     private String screenName;
     private String userId;
 
@@ -70,11 +72,11 @@ public class OAuthToken implements ValueMap {
             @Override
             public void consume(String key, String value) {
                 switch (key) {
-                    case "oauth_token": {
+                    case OAUTH_TOKEN: {
                         oauthToken = value;
                         break;
                     }
-                    case "oauth_token_secret": {
+                    case OAUTH_TOKEN_SECRET: {
                         oauthTokenSecret = value;
                         break;
                     }
@@ -96,7 +98,7 @@ public class OAuthToken implements ValueMap {
 
     @Override
     public boolean has(String key) {
-        return "oauth_token".equals(key) || "oauth_token_secret".equals(key);
+        return OAUTH_TOKEN.equals(key) || OAUTH_TOKEN_SECRET.equals(key);
     }
 
     @Override
@@ -111,9 +113,9 @@ public class OAuthToken implements ValueMap {
 
     @Override
     public String get(String key) {
-        if ("oauth_token".equals(key)) {
+        if (OAUTH_TOKEN.equals(key)) {
             return oauthToken;
-        } else if ("oauth_token_secret".equals(key)) {
+        } else if (OAUTH_TOKEN_SECRET.equals(key)) {
             return oauthTokenSecret;
         }
         return null;
@@ -121,7 +123,7 @@ public class OAuthToken implements ValueMap {
 
     @Override
     public String[] keys() {
-        return new String[]{"oauth_token", "oauth_token_secret"};
+        return new String[]{OAUTH_TOKEN, OAUTH_TOKEN_SECRET};
     }
 
     public static class ResponseConverter implements RestConverter<HttpResponse, OAuthToken, TwitterException> {

@@ -54,6 +54,8 @@ import java.util.Set;
 
 public class TwitterWrapper implements Constants {
 
+    public static final String UNABLE_TO_DELETE_MSG = "Unable to delete %s";
+
     public static int clearNotification(final Context context, final int notificationType, final UserKey accountId) {
         final Uri.Builder builder = Notifications.CONTENT_URI.buildUpon();
         builder.appendPath(String.valueOf(notificationType));
@@ -188,7 +190,7 @@ public class TwitterWrapper implements Constants {
             if (deleteImage && "file".equals(imageUri.getScheme())) {
                 final File file = new File(imageUri.getPath());
                 if (!file.delete()) {
-                    Log.w(LOGTAG, String.format("Unable to delete %s", file));
+                    Log.w(LOGTAG, String.format(UNABLE_TO_DELETE_MSG, file));
                 }
             }
         }
@@ -209,7 +211,7 @@ public class TwitterWrapper implements Constants {
             if (deleteImage && "file".equals(imageUri.getScheme())) {
                 final File file = new File(imageUri.getPath());
                 if (!file.delete()) {
-                    Log.w(LOGTAG, String.format("Unable to delete %s", file));
+                    Log.w(LOGTAG, String.format(UNABLE_TO_DELETE_MSG, file));
                 }
             }
         }
@@ -227,7 +229,7 @@ public class TwitterWrapper implements Constants {
             if (deleteImage && "file".equals(imageUri.getScheme())) {
                 final File file = new File(imageUri.getPath());
                 if (!file.delete()) {
-                    Log.w(LOGTAG, String.format("Unable to delete %s", file));
+                    Log.w(LOGTAG, String.format(UNABLE_TO_DELETE_MSG, file));
                 }
             }
         }

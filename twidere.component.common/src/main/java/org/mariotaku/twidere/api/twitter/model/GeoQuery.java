@@ -28,6 +28,9 @@ import org.mariotaku.restfu.http.ValueMap;
  */
 public final class GeoQuery implements ValueMap {
 
+    private static final String ACCURACY = "accuracy";
+    private static final String GRANULARITY = "granularity";
+    private static final String MAX_RESULTS = "max_results";
     private final GeoLocation location;
     private final String ip;
     private String accuracy;
@@ -172,13 +175,13 @@ public final class GeoQuery implements ValueMap {
             case "ip": {
                 return ip != null;
             }
-            case "accuracy": {
+            case ACCURACY: {
                 return accuracy != null;
             }
-            case "granularity": {
+            case GRANULARITY: {
                 return granularity != null;
             }
-            case "max_results": {
+            case MAX_RESULTS: {
                 return maxResults > 0;
             }
         }
@@ -199,13 +202,13 @@ public final class GeoQuery implements ValueMap {
             case "ip": {
                 return ip;
             }
-            case "accuracy": {
+            case ACCURACY: {
                 return accuracy;
             }
-            case "granularity": {
+            case GRANULARITY: {
                 return granularity;
             }
-            case "max_results": {
+            case MAX_RESULTS: {
                 if (maxResults <= 0) return null;
                 return String.valueOf(maxResults);
             }
@@ -215,6 +218,6 @@ public final class GeoQuery implements ValueMap {
 
     @Override
     public String[] keys() {
-        return new String[]{"lat", "long", "ip", "accuracy", "granularity", "max_results"};
+        return new String[]{"lat", "long", "ip", ACCURACY, GRANULARITY, MAX_RESULTS};
     }
 }

@@ -166,6 +166,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     public static final String TAG_OLDEST_MESSAGES = "oldest_messages";
     private static final Pattern PATTERN_SCREEN_NAME = Pattern.compile("(?i)[@\uFF20]?([a-z0-9_]{1,20})");
+    private static final String PATTERN = "?||'%'";
+    private static final String ACCESS_DATABASE = "Access database ";
     @Inject
     ReadStateManager mReadStateManager;
     @Inject
@@ -812,7 +814,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 new Column(SQLConstants.NULL, Suggestions.Search.EXTRA).getSQL(),
                 new Column(SearchHistory.QUERY, Suggestions.Search.VALUE).getSQL(),
         };
-        final Expression historySelection = Expression.likeRaw(new Column(SearchHistory.QUERY), "?||'%'", "^");
+        final Expression historySelection = Expression.likeRaw(new Column(SearchHistory.QUERY), PATTERN, "^");
         @SuppressLint("Recycle") final Cursor historyCursor = mDatabaseWrapper.query(true,
                 SearchHistory.TABLE_NAME, historyProjection, historySelection.getSQL(),
                 new String[]{queryEscaped}, null, null, SearchHistory.DEFAULT_SORT_ORDER,
@@ -849,8 +851,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             String queryTrimmed = queryEscaped.startsWith("@") ? queryEscaped.substring(1) : queryEscaped;
             final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, mUserColorNameManager);
             final Expression usersSelection = Expression.or(
-                    Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
-                    Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
+                    Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), PATTERN, "^"),
+                    Expression.likeRaw(new Column(CachedUsers.NAME), PATTERN, "^"),
                     Expression.inArgs(new Column(CachedUsers.USER_KEY), nicknameKeys.length));
             final String[] selectionArgs = new String[nicknameKeys.length + 2];
             selectionArgs[0] = selectionArgs[1] = queryTrimmed;
@@ -894,8 +896,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String queryEscaped = query.replace("_", "^_");
         if (Suggestions.AutoComplete.TYPE_USERS.equals(type)) {
             final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, mUserColorNameManager);
-            final Expression where = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
-                    Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
+            final Expression where = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), PATTERN, "^"),
+                    Expression.likeRaw(new Column(CachedUsers.NAME), PATTERN, "^"),
                     Expression.inArgs(new Column(CachedUsers.USER_KEY), nicknameKeys.length));
             final String[] whereArgs = new String[nicknameKeys.length + 2];
             whereArgs[0] = whereArgs[1] = queryEscaped;
@@ -915,7 +917,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             return query(Uri.withAppendedPath(CachedUsers.CONTENT_URI_WITH_SCORE, accountKey),
                     mappedProjection, where.getSQL(), whereArgs, new OrderBy(orderBy, ascending).getSQL());
         } else if (Suggestions.AutoComplete.TYPE_HASHTAGS.equals(type)) {
-            final Expression where = Expression.likeRaw(new Column(CachedHashtags.NAME), "?||'%'", "^");
+            final Expression where = Expression.likeRaw(new Column(CachedHashtags.NAME), PATTERN, "^");
             final String[] whereArgs = new String[]{queryEscaped};
             final String[] mappedProjection = {
                     new Column(CachedHashtags._ID, Suggestions._ID).getSQL(),
@@ -994,7 +996,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 // Only querying basic information
                 if (TwidereArrayUtils.contains(Accounts.COLUMNS_NO_CREDENTIALS, projection) && !checkPermission(PERMISSION_READ)) {
                     final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
-                    throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_READ, package: " + pkgName);
+                    throw new SecurityException(ACCESS_DATABASE + table + " requires level PERMISSION_LEVEL_READ, package: " + pkgName);
                 }
                 final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
                 final List<String> callingSensitiveCols = new ArrayList<>();
@@ -1014,7 +1016,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             case TABLE_ID_DIRECT_MESSAGES_CONVERSATION_SCREEN_NAME:
             case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES: {
                 if (!checkPermission(PERMISSION_DIRECT_MESSAGES))
-                    throw new SecurityException("Access database " + table
+                    throw new SecurityException(ACCESS_DATABASE + table
                             + " requires level PERMISSION_LEVEL_DIRECT_MESSAGES");
                 break;
             }
@@ -1031,7 +1033,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             case TABLE_ID_CACHED_STATUSES:
             case TABLE_ID_CACHED_HASHTAGS: {
                 if (!checkPermission(PERMISSION_READ))
-                    throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_READ");
+                    throw new SecurityException(ACCESS_DATABASE + table + " requires level PERMISSION_LEVEL_READ");
                 break;
             }
             default: {
@@ -1060,7 +1062,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             case TABLE_ID_DIRECT_MESSAGES_CONVERSATION_SCREEN_NAME:
             case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES: {
                 if (!checkPermission(PERMISSION_DIRECT_MESSAGES))
-                    throw new SecurityException("Access database " + table
+                    throw new SecurityException(ACCESS_DATABASE + table
                             + " requires level PERMISSION_LEVEL_DIRECT_MESSAGES");
                 break;
             }
@@ -1077,7 +1079,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             case TABLE_ID_CACHED_STATUSES:
             case TABLE_ID_CACHED_HASHTAGS: {
                 if (!checkPermission(PERMISSION_WRITE))
-                    throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_WRITE");
+                    throw new SecurityException(ACCESS_DATABASE + table + " requires level PERMISSION_LEVEL_WRITE");
                 break;
             }
             default: {

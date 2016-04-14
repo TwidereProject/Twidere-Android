@@ -73,6 +73,7 @@ public class TwitterAPIFactory implements TwidereConstants {
 
 
     private static final SimpleValueMap sConstantPoll = new SimpleValueMap();
+    public static final String VERSION_NO = "/1.1/";
 
     static {
         sConstantPoll.put("include_cards", "true");
@@ -259,10 +260,10 @@ public class TwitterAPIFactory implements TwidereConstants {
         final String domain, versionSuffix;
         if (Twitter.class.isAssignableFrom(cls)) {
             domain = "api";
-            versionSuffix = noVersionSuffix ? null : "/1.1/";
+            versionSuffix = noVersionSuffix ? null : VERSION_NO;
         } else if (TwitterUpload.class.isAssignableFrom(cls)) {
             domain = "upload";
-            versionSuffix = noVersionSuffix ? null : "/1.1/";
+            versionSuffix = noVersionSuffix ? null : VERSION_NO;
         } else if (TwitterOAuth.class.isAssignableFrom(cls)) {
             domain = "api";
             versionSuffix = null;
@@ -271,7 +272,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             versionSuffix = null;
         } else if (TwitterUserStream.class.isAssignableFrom(cls)) {
             domain = "userstream";
-            versionSuffix = noVersionSuffix ? null : "/1.1/";
+            versionSuffix = noVersionSuffix ? null : VERSION_NO;
         } else if (TwitterCaps.class.isAssignableFrom(cls)) {
             domain = "caps";
             versionSuffix = null;
@@ -331,7 +332,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         if (!matcher.find()) {
             // For backward compatibility
             format = substituteLegacyApiBaseUrl(format, domain);
-            if (!format.endsWith("/1.1") && !format.endsWith("/1.1/")) {
+            if (!format.endsWith("/1.1") && !format.endsWith(VERSION_NO)) {
                 return format;
             }
             final String versionSuffix = "/1.1";

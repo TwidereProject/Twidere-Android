@@ -72,6 +72,7 @@ public class CardPollFragment extends BaseSupportFragment implements
         LoaderManager.LoaderCallbacks<ParcelableCardEntity>, View.OnClickListener {
 
     public static final Pattern PATTERN_POLL_TEXT_ONLY = Pattern.compile("poll([\\d]+)choice_text_only");
+    private static final String CHOICE = "choice";
     private TableLayout mPollContainer;
     private TextView mPollSummary;
     private ParcelableCardEntity mCard;
@@ -143,7 +144,7 @@ public class CardPollFragment extends BaseSupportFragment implements
         final boolean showResult = countsAreFinal || isMyPoll || hasChoice;
         for (int i = 0; i < choicesCount; i++) {
             final int choiceIndex = i + 1;
-            votesSum += ParcelableCardEntityUtils.getAsInteger(card, "choice" + choiceIndex + "_count", 0);
+            votesSum += ParcelableCardEntityUtils.getAsInteger(card, CHOICE + choiceIndex + "_count", 0);
         }
 
         final View.OnClickListener clickListener = new View.OnClickListener() {
@@ -209,8 +210,8 @@ public class CardPollFragment extends BaseSupportFragment implements
             final RadioButton choiceRadioButton = (RadioButton) pollItem.findViewById(R.id.choice_button);
 
             final int choiceIndex = i + 1;
-            final String label = ParcelableCardEntityUtils.getAsString(card, "choice" + choiceIndex + "_label", null);
-            final int value = ParcelableCardEntityUtils.getAsInteger(card, "choice" + choiceIndex + "_count", 0);
+            final String label = ParcelableCardEntityUtils.getAsString(card, CHOICE + choiceIndex + "_label", null);
+            final int value = ParcelableCardEntityUtils.getAsInteger(card, CHOICE + choiceIndex + "_count", 0);
             if (label == null) throw new NullPointerException();
             final float choicePercent = votesSum == 0 ? 0 : value / (float) votesSum;
             choiceLabelView.setText(label);

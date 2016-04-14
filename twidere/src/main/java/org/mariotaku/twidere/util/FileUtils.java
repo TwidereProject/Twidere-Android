@@ -40,6 +40,8 @@ public final class FileUtils {
      * The file copy buffer size (30 MB)
      */
     private static final long FILE_COPY_BUFFER_SIZE = ONE_MB * 30;
+    private static final String SOURCE = "Source '";
+    private static final String DESTINATION = "Destination '";
 
     /**
      * Copies a file to a new location preserving the file date.
@@ -65,18 +67,18 @@ public final class FileUtils {
         if (srcFile == null) throw new NullPointerException("Source must not be null");
         if (destFile == null) throw new NullPointerException("Destination must not be null");
         if (!srcFile.exists())
-            throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
+            throw new FileNotFoundException(SOURCE + srcFile + "' does not exist");
         if (srcFile.isDirectory())
-            throw new IOException("Source '" + srcFile + "' exists but is a directory");
+            throw new IOException(SOURCE + srcFile + "' exists but is a directory");
         if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath()))
-            throw new IOException("Source '" + srcFile + "' and destination '" + destFile + "' are the same");
+            throw new IOException(SOURCE + srcFile + "' and destination '" + destFile + "' are the same");
         final File parentFile = destFile.getParentFile();
         if (parentFile != null) {
             if (!parentFile.mkdirs() && !parentFile.isDirectory())
-                throw new IOException("Destination '" + parentFile + "' directory cannot be created");
+                throw new IOException(DESTINATION + parentFile + "' directory cannot be created");
         }
         if (destFile.exists() && !destFile.canWrite())
-            throw new IOException("Destination '" + destFile + "' exists but is read-only");
+            throw new IOException(DESTINATION + destFile + "' exists but is read-only");
         doCopyFile(srcFile, destFile, true);
     }
 
@@ -105,7 +107,7 @@ public final class FileUtils {
     public static void copyFileToDirectory(final File srcFile, final File destDir) throws IOException {
         if (destDir == null) throw new NullPointerException("Destination must not be null");
         if (destDir.exists() && !destDir.isDirectory())
-            throw new IllegalArgumentException("Destination '" + destDir + "' is not a directory");
+            throw new IllegalArgumentException(DESTINATION + destDir + "' is not a directory");
         final File destFile = new File(destDir, srcFile.getName());
         copyFile(srcFile, destFile);
     }
@@ -212,7 +214,7 @@ public final class FileUtils {
     private static void doCopyFile(final File srcFile, final File destFile, final boolean preserveFileDate)
             throws IOException {
         if (destFile.exists() && destFile.isDirectory())
-            throw new IOException("Destination '" + destFile + "' exists but is a directory");
+            throw new IOException(DESTINATION + destFile + "' exists but is a directory");
 
         FileInputStream fis = null;
         FileOutputStream fos = null;
