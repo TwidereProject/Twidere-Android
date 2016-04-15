@@ -19,8 +19,11 @@ package org.mariotaku.twidere.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -38,6 +41,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,7 +59,9 @@ import android.widget.Toast;
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 import com.sprylab.android.widget.TextureVideoView;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -81,12 +87,14 @@ import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.PermissionUtils;
+import org.mariotaku.twidere.util.TwidereMathUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.media.MediaExtra;
-import org.mariotaku.twidere.util.media.preview.provider.TwitterMediaProvider;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -532,6 +540,52 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
     public static class ImagePageFragment extends SubsampleImageViewerFragment {
         private int mMediaLoadState;
         private MediaDownloadEvent mMediaDownloadEvent;
+        private CacheDownloadLoader.ResultCreator mResultCreator;
+
+        static Bitmap decodeBitmap(ContentResolver cr, Uri uri, BitmapFactory.Options o) throws IOException {
+            InputStream is = null;
+            try {
+                is = cr.openInputStream(uri);
+                return BitmapFactory.decodeStream(is, null, o);
+            } finally {
+                Utils.closeSilently(is);
+            }
+        }
+
+        static Uri replaceTwitterMediaUri(Uri downloadUri) {
+//            String uriString = downloadUri.toString();
+//            if (TwitterMediaProvider.isSupported(uriString)) {
+//                final String suffix = ".jpg";
+//                int lastIndexOfJpegSuffix = uriString.lastIndexOf(suffix);
+//                if (lastIndexOfJpegSuffix == -1) return downloadUri;
+//                final int endOfSuffix = lastIndexOfJpegSuffix + suffix.length();
+//                if (endOfSuffix == uriString.length()) {
+//                    return Uri.parse(uriString.substring(0, lastIndexOfJpegSuffix) + ".png");
+//                } else {
+//                    // Seems :orig suffix won't work jpegs -> pngs
+//                    String sizeSuffix = uriString.substring(endOfSuffix);
+//                    if (":orig".equals(sizeSuffix)) {
+//                        sizeSuffix = ":large";
+//                    }
+//                    return Uri.parse(uriString.substring(0, lastIndexOfJpegSuffix) + ".png" +
+//                            sizeSuffix);
+//                }
+//            }
+            return downloadUri;
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+        }
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            super.setUserVisibleHint(isVisibleToUser);
+            if (isVisibleToUser) {
+                getActivity().supportInvalidateOptionsMenu();
+            }
+        }
 
         @Override
         protected Object getDownloadExtra() {
@@ -547,42 +601,12 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
             return mediaExtra;
         }
 
-        @Override
-        public void setUserVisibleHint(boolean isVisibleToUser) {
-            super.setUserVisibleHint(isVisibleToUser);
-            if (isVisibleToUser) {
-                getActivity().supportInvalidateOptionsMenu();
-            }
-        }
-
         @Nullable
         @Override
         protected Uri getDownloadUri() {
             final Uri downloadUri = super.getDownloadUri();
             if (downloadUri == null) return null;
             return replaceTwitterMediaUri(downloadUri);
-        }
-
-        static Uri replaceTwitterMediaUri(Uri downloadUri) {
-            String uriString = downloadUri.toString();
-            if (TwitterMediaProvider.isSupported(uriString)) {
-                final String suffix = ".jpg";
-                int lastIndexOfJpegSuffix = uriString.lastIndexOf(suffix);
-                if (lastIndexOfJpegSuffix == -1) return downloadUri;
-                final int endOfSuffix = lastIndexOfJpegSuffix + suffix.length();
-                if (endOfSuffix == uriString.length()) {
-                    return Uri.parse(uriString.substring(0, lastIndexOfJpegSuffix) + ".png");
-                } else {
-                    // Seems :orig suffix won't work jpegs -> pngs
-                    String sizeSuffix = uriString.substring(endOfSuffix);
-                    if (":orig".equals(sizeSuffix)) {
-                        sizeSuffix = ":large";
-                    }
-                    return Uri.parse(uriString.substring(0, lastIndexOfJpegSuffix) + ".png" +
-                            sizeSuffix);
-                }
-            }
-            return downloadUri;
         }
 
         @Override
@@ -602,6 +626,33 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
         @Override
         protected void setupImageView(SubsamplingScaleImageView imageView) {
             imageView.setMaxScale(getResources().getDisplayMetrics().density);
+            imageView.setBitmapDecoderClass(PreviewBitmapDecoder.class);
+        }
+
+        @NonNull
+        @Override
+        protected ImageSource getImageSource(@NonNull CacheDownloadLoader.Result data) {
+            assert data.cacheUri != null;
+            if (data instanceof SizedResult) {
+                final ImageSource uri = ImageSource.uri(data.cacheUri);
+                uri.dimensions(((SizedResult) data).getWidth(), ((SizedResult) data).getHeight());
+                return uri;
+            }
+            return super.getImageSource(data);
+        }
+
+        @Override
+        protected ImageSource getPreviewImageSource(@NonNull CacheDownloadLoader.Result data) {
+            if (!(data instanceof SizedResult)) return null;
+            assert data.cacheUri != null;
+            return ImageSource.uri(data.cacheUri);
+        }
+
+        @Nullable
+        @Override
+        protected CacheDownloadLoader.ResultCreator getResultCreator() {
+            if (mResultCreator != null) return mResultCreator;
+            return mResultCreator = new SizedResultCreator(getContext());
         }
 
         private ParcelableMedia getMedia() {
@@ -640,6 +691,69 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
                 HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
                 mMediaDownloadEvent = null;
             }
+        }
+
+        static class SizedResult extends CacheDownloadLoader.Result {
+
+            private final int width, height;
+
+            public SizedResult(@NonNull Uri cacheUri, int width, int height) {
+                super(cacheUri, null);
+                this.width = width;
+                this.height = height;
+            }
+
+            public int getWidth() {
+                return width;
+            }
+
+            public int getHeight() {
+                return height;
+            }
+        }
+
+        static class SizedResultCreator implements CacheDownloadLoader.ResultCreator {
+
+            private final Context context;
+
+            SizedResultCreator(Context context) {
+                this.context = context;
+            }
+
+            @Override
+            public CacheDownloadLoader.Result create(Uri uri) {
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inJustDecodeBounds = true;
+                try {
+                    decodeBitmap(context.getContentResolver(), uri, o);
+                } catch (IOException e) {
+                    return CacheDownloadLoader.Result.getInstance(uri);
+                }
+                if (o.outWidth > 0 && o.outHeight > 0) {
+                    return new SizedResult(uri, o.outWidth, o.outHeight);
+                }
+                return CacheDownloadLoader.Result.getInstance(uri);
+            }
+
+        }
+
+        public static class PreviewBitmapDecoder implements ImageDecoder {
+            @Override
+            public Bitmap decode(Context context, Uri uri) throws Exception {
+                BitmapFactory.Options o = new BitmapFactory.Options();
+                o.inJustDecodeBounds = true;
+                o.inPreferredConfig = Bitmap.Config.RGB_565;
+                final ContentResolver cr = context.getContentResolver();
+                decodeBitmap(cr, uri, o);
+                final DisplayMetrics dm = context.getResources().getDisplayMetrics();
+                final int targetSize = Math.min(1024, Math.max(dm.widthPixels, dm.heightPixels));
+                o.inSampleSize = TwidereMathUtils.nextPowerOf2(Math.max(1, Math.min(o.outHeight, o.outWidth) / targetSize));
+                o.inJustDecodeBounds = false;
+                final Bitmap bitmap = decodeBitmap(cr, uri, o);
+                if (bitmap == null) throw new IOException();
+                return bitmap;
+            }
+
         }
     }
 

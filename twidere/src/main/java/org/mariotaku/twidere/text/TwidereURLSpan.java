@@ -33,7 +33,7 @@ public class TwidereURLSpan extends URLSpan implements Constants {
     private final int type, highlightStyle;
     private final UserKey accountKey;
     private final long extraId;
-    private final String url, orig;
+    private final String orig;
     private final boolean sensitive;
     private final OnLinkClickListener listener;
     private final int start, end;
@@ -42,7 +42,6 @@ public class TwidereURLSpan extends URLSpan implements Constants {
                           final int type, final boolean sensitive, final int highlightStyle, int start, int end,
                           final OnLinkClickListener listener) {
         super(url);
-        this.url = url;
         this.orig = orig;
         this.accountKey = accountKey;
         this.extraId = extraId;
@@ -57,7 +56,7 @@ public class TwidereURLSpan extends URLSpan implements Constants {
     @Override
     public void onClick(@NonNull final View widget) {
         if (listener != null) {
-            listener.onLinkClick(url, orig, accountKey, extraId, type, sensitive, start, end);
+            listener.onLinkClick(getURL(), orig, accountKey, extraId, type, sensitive, start, end);
         }
     }
 

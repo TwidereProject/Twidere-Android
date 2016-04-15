@@ -136,10 +136,6 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                         UserFragment.Referral.USER_MENTION);
                 break;
             }
-            case TwidereLinkify.LINK_TYPE_STATUS: {
-                IntentUtils.openStatus(context, accountKey, link);
-                break;
-            }
         }
     }
 

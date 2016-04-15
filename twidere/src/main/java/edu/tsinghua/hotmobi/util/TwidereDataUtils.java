@@ -43,8 +43,6 @@ public class TwidereDataUtils {
                 return "urlLink";
             case TwidereLinkify.LINK_TYPE_LIST:
                 return "userList";
-            case TwidereLinkify.LINK_TYPE_STATUS:
-                return "status";
             case TwidereLinkify.LINK_TYPE_USER_ID:
                 return "userID";
             case TwidereLinkify.LINK_TYPE_HASHTAG:
