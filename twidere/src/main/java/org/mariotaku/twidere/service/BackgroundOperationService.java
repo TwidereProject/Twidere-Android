@@ -394,7 +394,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     if (exception == null) {
                         exception = response.getException();
                     }
-                } else if (data.account_key != null) {
+                } else {
                     failedAccountIds.remove(data.account_key);
                     // BEGIN HotMobi
                     final TweetEvent event = TweetEvent.create(this, data, TimelineType.OTHER);

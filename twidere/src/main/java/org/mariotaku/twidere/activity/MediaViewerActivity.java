@@ -218,7 +218,10 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
             case R.id.open_in_browser: {
                 final ParcelableMedia media = getMedia()[currentItem];
                 try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(media.url)));
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(media.url));
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setPackage(IntentUtils.getDefaultBrowserPackage(this));
+                    startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     // TODO show error, or improve app url
                 }
