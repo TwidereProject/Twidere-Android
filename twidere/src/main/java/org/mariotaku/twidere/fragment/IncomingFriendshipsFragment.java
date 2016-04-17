@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,6 +71,7 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
         mTwitterWrapper.denyFriendshipAsync(user.account_key, user.key);
     }
 
+    @SuppressLint("SwitchIntDef")
     @Override
     protected boolean shouldRemoveUser(int position, FriendshipTaskEvent event) {
         if (!event.isSucceeded()) return false;

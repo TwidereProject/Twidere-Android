@@ -47,6 +47,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.ParcelUtils;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
 
 import java.util.List;
@@ -102,7 +103,11 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
     @Override
     protected ParcelableUsersAdapter onCreateAdapter(Context context, boolean compact) {
         final ParcelableUsersAdapter adapter = new ParcelableUsersAdapter(context);
-        adapter.setFollowClickListener(this);
+        if (Utils.isOfficialCredentials(context, Utils.getAccountKey(context, getArguments()))) {
+            adapter.setFollowClickListener(this);
+        } else {
+            adapter.setFollowClickListener(null);
+        }
         return adapter;
     }
 
@@ -209,10 +214,6 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
 
     protected boolean hasMoreData(List<ParcelableUser> data) {
         return data == null || !data.isEmpty();
-    }
-
-    protected void removeUsers(String... ids) {
-        //TODO remove from adapter
     }
 
     public final List<ParcelableUser> getData() {

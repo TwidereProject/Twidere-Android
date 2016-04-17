@@ -69,9 +69,13 @@ public class HtmlSpanBuilder {
     }
 
     private static void applyTag(SpannableStringBuilder sb, int start, int end, TagInfo info) {
-        final Object span = createSpan(info);
-        if (span == null) return;
-        sb.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (info.name.equalsIgnoreCase("br")) {
+            sb.append('\n');
+        } else {
+            final Object span = createSpan(info);
+            if (span == null) return;
+            sb.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
     }
 
     private static Object createSpan(TagInfo info) {
@@ -142,7 +146,7 @@ public class HtmlSpanBuilder {
 
         public HtmlSpanHandler(HtmlParsingConfiguration conf) {
             super(conf);
-            this.sb = new SpannableStringBuilder();
+            sb = new SpannableStringBuilder();
             tagInfo = new ArrayList<>();
         }
 
