@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.activity.WebLinkHandlerActivity;
 import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.UserKey;
@@ -55,10 +56,10 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final UserKey accountKey,
-                            final long extraId, final int type, final boolean sensitive,
-                            final int start, final int end) {
-        if (manager != null && manager.isActive()) return;
+    public boolean onLinkClick(final String link, final String orig, final UserKey accountKey,
+                               final long extraId, final int type, final boolean sensitive,
+                               final int start, final int end) {
+        if (manager != null && manager.isActive()) return false;
         if (!isPrivateData()) {
             // BEGIN HotMobi
             final LinkEvent event = LinkEvent.create(context, link, type);
@@ -71,11 +72,11 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 IntentUtils.openUserProfile(context, accountKey, null, link, null,
                         preferences.getBoolean(KEY_NEW_DOCUMENT_API),
                         UserFragment.Referral.USER_MENTION);
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
                 IntentUtils.openTweetSearch(context, accountKey, "#" + link);
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_LINK_IN_TEXT: {
                 if (isMedia(link, extraId)) {
@@ -83,60 +84,75 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                 } else {
                     openLink(link);
                 }
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_ENTITY_URL: {
                 if (isMedia(link, extraId)) {
                     openMedia(accountKey, extraId, sensitive, link, start, end);
                 } else {
-                    if (orig != null && "fanfou.com".equals(UriUtils.getAuthority(link))) {
-                        // Process special case for fanfou
-                        final char ch = orig.charAt(0);
-                        // Extend selection
-                        final int length = orig.length();
-                        if (TwidereLinkify.isAtSymbol(ch)) {
-                            String id = UriUtils.getPath(link);
-                            if (id != null) {
-                                int idxOfSlash = id.indexOf('/');
-                                if (idxOfSlash == 0) {
-                                    id = id.substring(1);
+                    final String authority = UriUtils.getAuthority(link);
+                    if (authority == null) {
+                        openLink(link);
+                        return true;
+                    }
+                    switch (authority) {
+                        case "fanfou.com": {
+                            if (orig != null) {
+                                // Process special case for fanfou
+                                final char ch = orig.charAt(0);
+                                // Extend selection
+                                final int length = orig.length();
+                                if (TwidereLinkify.isAtSymbol(ch)) {
+                                    String id = UriUtils.getPath(link);
+                                    if (id != null) {
+                                        int idxOfSlash = id.indexOf('/');
+                                        if (idxOfSlash == 0) {
+                                            id = id.substring(1);
+                                        }
+                                        final String screenName = orig.substring(1, length);
+                                        IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(id),
+                                                screenName, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                                                UserFragment.Referral.USER_MENTION);
+                                        return true;
+                                    }
+                                } else if (TwidereLinkify.isHashSymbol(ch) &&
+                                        TwidereLinkify.isHashSymbol(orig.charAt(length - 1))) {
+                                    IntentUtils.openSearch(context, accountKey, orig.substring(1, length - 1));
+                                    return true;
                                 }
-                                final String screenName = orig.substring(1, length);
-                                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(id),
-                                        screenName, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                                        UserFragment.Referral.USER_MENTION);
-                                break;
                             }
-                        } else if (TwidereLinkify.isHashSymbol(ch) &&
-                                TwidereLinkify.isHashSymbol(orig.charAt(length - 1))) {
-                            IntentUtils.openSearch(context, accountKey, orig.substring(1, length - 1));
                             break;
+                        }
+                        case "twitter.com": {
+                            openTwitterLink(link, accountKey);
+                            return true;
                         }
                     }
                     openLink(link);
                 }
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_LIST: {
                 final String[] mentionList = StringUtils.split(link, "/");
                 if (mentionList.length != 2) {
-                    break;
+                    return false;
                 }
                 IntentUtils.openUserListDetails(context, accountKey, null, null, mentionList[0],
                         mentionList[1]);
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_CASHTAG: {
                 IntentUtils.openTweetSearch(context, accountKey, link);
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_USER_ID: {
                 IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, null,
                         preferences.getBoolean(KEY_NEW_DOCUMENT_API),
                         UserFragment.Referral.USER_MENTION);
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     protected boolean isPrivateData() {
@@ -157,6 +173,20 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
         if (manager != null && manager.isActive()) return;
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setPackage(IntentUtils.getDefaultBrowserPackage(context));
+        try {
+            context.startActivity(intent);
+        } catch (final ActivityNotFoundException e) {
+            // TODO
+        }
+    }
+
+    protected void openTwitterLink(final String link, final UserKey accountKey) {
+        if (manager != null && manager.isActive()) return;
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClass(context, WebLinkHandlerActivity.class);
+        intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
         try {
             context.startActivity(intent);
         } catch (final ActivityNotFoundException e) {

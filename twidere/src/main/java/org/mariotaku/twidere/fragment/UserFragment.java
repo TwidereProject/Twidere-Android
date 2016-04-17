@@ -1354,20 +1354,20 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @Override
-    public void onLinkClick(final String link, final String orig, final UserKey accountKey,
+    public boolean onLinkClick(final String link, final String orig, final UserKey accountKey,
                             final long extraId, final int type, final boolean sensitive,
                             int start, int end) {
         final ParcelableUser user = getUser();
-        if (user == null) return;
+        if (user == null) return false;
         switch (type) {
             case TwidereLinkify.LINK_TYPE_MENTION: {
                 IntentUtils.openUserProfile(getActivity(), user.account_key, null, link, null,
                         mPreferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.USER_MENTION);
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
                 IntentUtils.openTweetSearch(getActivity(), user.account_key, "#" + link);
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_LINK_IN_TEXT:
             case TwidereLinkify.LINK_TYPE_ENTITY_URL: {
@@ -1379,7 +1379,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     intent = new Intent(Intent.ACTION_VIEW, uri.buildUpon().scheme("http").build());
                 }
                 startActivity(intent);
-                break;
+                return true;
             }
             case TwidereLinkify.LINK_TYPE_LIST: {
                 if (link == null) break;
@@ -1387,9 +1387,10 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 if (mentionList.length != 2) {
                     break;
                 }
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     @Override

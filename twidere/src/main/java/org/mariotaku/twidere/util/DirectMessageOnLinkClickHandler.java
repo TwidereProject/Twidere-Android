@@ -66,8 +66,8 @@ public class DirectMessageOnLinkClickHandler extends OnLinkClickHandler {
     }
 
     private boolean hasShortenedLinks(final String link) {
-        for (final String short_link_service : SHORT_LINK_SERVICES) {
-            if (link.contains(short_link_service)) return true;
+        for (final String shortLinkService : SHORT_LINK_SERVICES) {
+            if (link.contains(shortLinkService)) return true;
         }
         return false;
     }

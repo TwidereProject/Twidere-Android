@@ -1600,21 +1600,21 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
 
             @Override
-            public void onLinkClick(final String link, final String orig, final UserKey accountKey,
-                                    long extraId, int type, boolean sensitive, int start, int end) {
+            public boolean onLinkClick(final String link, final String orig, final UserKey accountKey,
+                                       long extraId, int type, boolean sensitive, int start, int end) {
                 final ParcelableStatus status = adapter.getStatus();
                 ParcelableMedia current;
                 if ((current = ParcelableMediaUtils.findByUrl(status.media, link)) != null &&
                         !current.open_browser) {
                     expandOrOpenMedia(current);
-                    return;
+                    return true;
                 }
                 if ((current = ParcelableMediaUtils.findByUrl(status.quoted_media, link)) != null &&
                         !current.open_browser) {
                     expandOrOpenMedia(current);
-                    return;
+                    return true;
                 }
-                super.onLinkClick(link, orig, accountKey, extraId, type, sensitive, start, end);
+                return super.onLinkClick(link, orig, accountKey, extraId, type, sensitive, start, end);
             }
 
             private void expandOrOpenMedia(ParcelableMedia current) {

@@ -85,6 +85,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
             }
         }
         if (handled.first != null) {
+            handled.first.putExtras(intent);
             startActivity(handled.first);
         } else {
             if (!handled.second) {
