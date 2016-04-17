@@ -37,6 +37,7 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.DataStoreUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mariotaku on 15/8/8.
@@ -79,7 +80,7 @@ public class SessionEvent extends BaseEvent implements Parcelable {
         return configuration;
     }
 
-    public HashMap<String, String> getPreferences() {
+    public Map<String, String> getPreferences() {
         return preferences;
     }
 
@@ -87,7 +88,7 @@ public class SessionEvent extends BaseEvent implements Parcelable {
         this.preferences = preferences;
     }
 
-    public HashMap<String, String> getDevicePreferences() {
+    public Map<String, String> getDevicePreferences() {
         return devicePreferences;
     }
 
