@@ -266,7 +266,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     mFollowProgress.setVisibility(View.GONE);
                     final ParcelableUser user = getUser();
                     final UserRelationship relationship = data.getData();
-                    showRelationship(user, relationship);
+                    displayRelationship(user, relationship);
+                    updateOptionsMenuVisibility();
                 }
 
             };
@@ -315,13 +316,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, true);
                     getLoaderManager().restartLoader(LOADER_ID_USER, args, this);
                 }
-                setHasOptionsMenu(true);
+                updateOptionsMenuVisibility();
             } else if (mUser != null && mUser.is_cache) {
                 mCardContent.setVisibility(View.VISIBLE);
                 mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
                 displayUser(mUser);
-                setHasOptionsMenu(true);
+                updateOptionsMenuVisibility();
             } else {
                 if (data.hasException()) {
                     mHeaderErrorTextView.setText(Utils.getErrorMessage(activity, data.getException()));
@@ -331,14 +332,18 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mHeaderErrorContainer.setVisibility(View.VISIBLE);
                 mProgressContainer.setVisibility(View.GONE);
                 displayUser(null);
-                setHasOptionsMenu(false);
+                updateOptionsMenuVisibility();
             }
         }
 
     };
 
-    private void showRelationship(@Nullable final ParcelableUser user,
-                                  @Nullable final UserRelationship userRelationship) {
+    private void updateOptionsMenuVisibility() {
+        setHasOptionsMenu(mUser != null && mRelationship != null);
+    }
+
+    private void displayRelationship(@Nullable final ParcelableUser user,
+                                     @Nullable final UserRelationship userRelationship) {
         if (user == null) {
             mRelationship = null;
             return;
@@ -346,7 +351,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         if (user.account_key.maybeEquals(user.key)) {
             mFollowButton.setText(R.string.edit);
             mFollowButton.setVisibility(View.VISIBLE);
-            mRelationship = null;
+            mRelationship = userRelationship;
             return;
         }
         if (userRelationship == null || !userRelationship.check(user)) {
@@ -898,39 +903,43 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         MenuUtils.setMenuItemAvailability(menu, R.id.saved_searches, isMyself);
         MenuUtils.setMenuItemAvailability(menu, R.id.scheduled_statuses, isMyself
                 && TwitterAPIFactory.getOfficialKeyType(getActivity(), user.account_key) == ConsumerKeyType.TWEETDECK);
+        MenuUtils.setMenuItemAvailability(menu, R.id.muted_users, isMyself);
+        MenuUtils.setMenuItemAvailability(menu, R.id.blocked_users, isMyself);
+
+        MenuUtils.setMenuItemAvailability(menu, R.id.block, !isMyself);
+        MenuUtils.setMenuItemAvailability(menu, R.id.mute_user, !isMyself);
+        MenuUtils.setMenuItemAvailability(menu, R.id.report_spam, !isMyself);
+        MenuUtils.setMenuItemAvailability(menu, R.id.enable_retweets, !isMyself);
 
         final UserRelationship userRelationship = mRelationship;
-        if (!isMyself && userRelationship != null) {
-            MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, userRelationship.can_dm);
-            MenuUtils.setMenuItemAvailability(menu, R.id.block, true);
-            MenuUtils.setMenuItemAvailability(menu, R.id.mute_user, true);
-            final MenuItem blockItem = menu.findItem(R.id.block);
-            if (blockItem != null) {
-                ActionIconDrawable.setMenuHighlight(blockItem, new TwidereMenuInfo(userRelationship.blocking));
-                blockItem.setTitle(userRelationship.blocking ? R.string.unblock : R.string.block);
-            }
-            final MenuItem muteItem = menu.findItem(R.id.mute_user);
-            if (muteItem != null) {
-                muteItem.setChecked(userRelationship.muting);
-            }
+        if (userRelationship != null) {
+
             final MenuItem filterItem = menu.findItem(R.id.add_to_filter);
             if (filterItem != null) {
-                ActionIconDrawable.setMenuHighlight(filterItem, new TwidereMenuInfo(userRelationship.filtering));
-                filterItem.setTitle(userRelationship.filtering ? R.string.remove_from_filter : R.string.add_to_filter);
+                filterItem.setChecked(userRelationship.filtering);
             }
-            final MenuItem wantRetweetsItem = menu.findItem(R.id.enable_retweets);
-            if (wantRetweetsItem != null) {
-                wantRetweetsItem.setChecked(userRelationship.retweet_enabled);
+            if (isMyself) {
+                MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, false);
+            } else {
+                MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, userRelationship.can_dm);
+                MenuUtils.setMenuItemAvailability(menu, R.id.block, true);
+                final MenuItem blockItem = menu.findItem(R.id.block);
+                if (blockItem != null) {
+                    ActionIconDrawable.setMenuHighlight(blockItem, new TwidereMenuInfo(userRelationship.blocking));
+                    blockItem.setTitle(userRelationship.blocking ? R.string.unblock : R.string.block);
+                }
+                final MenuItem muteItem = menu.findItem(R.id.mute_user);
+                if (muteItem != null) {
+                    muteItem.setChecked(userRelationship.muting);
+                }
+                final MenuItem wantRetweetsItem = menu.findItem(R.id.enable_retweets);
+                if (wantRetweetsItem != null) {
+                    wantRetweetsItem.setChecked(userRelationship.retweet_enabled);
+                }
             }
         } else {
             MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, false);
-            MenuUtils.setMenuItemAvailability(menu, R.id.enable_retweets, false);
-            MenuUtils.setMenuItemAvailability(menu, R.id.block, false);
-            MenuUtils.setMenuItemAvailability(menu, R.id.mute_user, false);
-            MenuUtils.setMenuItemAvailability(menu, R.id.report_spam, false);
         }
-        MenuUtils.setMenuItemAvailability(menu, R.id.muted_users, isMyself);
-        MenuUtils.setMenuItemAvailability(menu, R.id.blocked_users, isMyself);
         final Intent intent = new Intent(INTENT_ACTION_EXTENSION_OPEN_USER);
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_USER, user);
@@ -978,6 +987,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     cr.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.createFilteredUser(user));
                     Utils.showInfoMessage(getActivity(), R.string.message_user_muted, false);
                 }
+                getFriendship();
                 break;
             }
             case R.id.mute_user: {
@@ -1749,9 +1759,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             if (mAccountKey == null || mUser == null) {
                 return SingleResponse.getInstance(new TwitterException("Null parameters"));
             }
-            final boolean isFiltering = DataStoreUtils.isFilteringUser(context, mUser.key);
-            if (mAccountKey.equals(mUser.key))
-                return SingleResponse.getInstance();
+            final UserKey userKey = mUser.key;
+            final boolean isFiltering = DataStoreUtils.isFilteringUser(context, userKey);
+            if (mAccountKey.equals(mUser.key)) {
+                return SingleResponse.getInstance(new UserRelationship(mAccountKey, userKey,
+                        null, isFiltering));
+            }
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                     mAccountKey);
             if (credentials == null) {
@@ -1768,7 +1781,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             }
             try {
                 final Relationship relationship = twitter.showFriendship(mUser.key.getId());
-                final UserKey userKey = mUser.key;
                 if (relationship.isSourceBlockingTarget() || relationship.isSourceBlockedByTarget()) {
                     Utils.setLastSeen(context, userKey, -1);
                 } else {
@@ -1793,10 +1805,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         boolean can_dm;
 
         public UserRelationship(@NonNull UserKey accountKey, @NonNull UserKey userKey,
-                                @NonNull Relationship relationship, boolean filtering) {
+                                @Nullable Relationship relationship, boolean filtering) {
             super(relationship, accountKey, userKey);
             this.filtering = filtering;
-            this.can_dm = relationship.canSourceDMTarget();
+            if (relationship != null) {
+                this.can_dm = relationship.canSourceDMTarget();
+            }
         }
 
         public UserRelationship(@NonNull ParcelableUser user, boolean filtering) {

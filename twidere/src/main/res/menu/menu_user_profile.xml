@@ -26,6 +26,7 @@
         android:title="@string/set_nickname"/>
     <item
         android:id="@id/add_to_filter"
+        android:checkable="true"
         android:icon="@drawable/ic_action_speaker_muted"
         android:title="@string/add_to_filter"/>
     <item

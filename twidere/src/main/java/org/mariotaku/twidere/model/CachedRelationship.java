@@ -1,12 +1,12 @@
 package org.mariotaku.twidere.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.api.twitter.model.Relationship;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
-import org.mariotaku.twidere.provider.TwidereDataProvider;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 
@@ -47,14 +47,16 @@ public class CachedRelationship {
 
     }
 
-    public CachedRelationship(@NonNull Relationship relationship, @NonNull UserKey accountKey, @NonNull UserKey userKey) {
+    public CachedRelationship(@Nullable Relationship relationship, @NonNull UserKey accountKey, @NonNull UserKey userKey) {
         account_key = accountKey;
         user_key = userKey;
-        following = relationship.isSourceFollowingTarget();
-        followed_by = relationship.isSourceFollowedByTarget();
-        blocking = relationship.isSourceBlockingTarget();
-        blocked_by = relationship.isSourceBlockedByTarget();
-        muting = relationship.isSourceMutingTarget();
-        retweet_enabled = relationship.isSourceWantRetweetsFromTarget();
+        if (relationship != null) {
+            following = relationship.isSourceFollowingTarget();
+            followed_by = relationship.isSourceFollowedByTarget();
+            blocking = relationship.isSourceBlockingTarget();
+            blocked_by = relationship.isSourceBlockedByTarget();
+            muting = relationship.isSourceMutingTarget();
+            retweet_enabled = relationship.isSourceWantRetweetsFromTarget();
+        }
     }
 }
