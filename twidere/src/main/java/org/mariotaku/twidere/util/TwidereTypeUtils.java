@@ -8,6 +8,9 @@ import java.lang.reflect.Type;
  */
 public class TwidereTypeUtils {
 
+    private TwidereTypeUtils() {
+    }
+
     public static String toSimpleName(Type type) {
         final StringBuilder sb = new StringBuilder();
         buildSimpleName(type, sb);

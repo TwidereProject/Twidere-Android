@@ -42,6 +42,9 @@ public class TwitterCardUtils {
     public static final String CARD_NAME_AUDIO = "audio";
     public static final String CARD_NAME_ANIMATED_GIF = "animated_gif";
 
+    private TwitterCardUtils() {
+    }
+
     @Nullable
     public static Fragment createCardFragment(ParcelableStatus status) {
         final ParcelableCardEntity card = status.card;

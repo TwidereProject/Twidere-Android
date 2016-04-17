@@ -41,6 +41,9 @@ public final class FileUtils {
      */
     private static final long FILE_COPY_BUFFER_SIZE = ONE_MB * 30;
 
+    private FileUtils() {
+    }
+
     /**
      * Copies a file to a new location preserving the file date.
      * <p/>

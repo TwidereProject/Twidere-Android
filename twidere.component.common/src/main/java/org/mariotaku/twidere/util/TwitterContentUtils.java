@@ -38,6 +38,9 @@ import java.util.zip.CRC32;
  */
 public class TwitterContentUtils {
 
+    private TwitterContentUtils() {
+    }
+
     public static boolean isOfficialKey(final Context context, final String consumerKey,
                                         final String consumerSecret) {
         if (context == null || consumerKey == null || consumerSecret == null) return false;

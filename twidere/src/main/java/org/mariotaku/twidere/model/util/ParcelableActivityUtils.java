@@ -20,6 +20,9 @@ import java.util.List;
  */
 public class ParcelableActivityUtils {
 
+    private ParcelableActivityUtils() {
+    }
+
     /**
      * @param activity        Activity for processing
      * @param filteredUserIds Those ids will be removed from source_ids.

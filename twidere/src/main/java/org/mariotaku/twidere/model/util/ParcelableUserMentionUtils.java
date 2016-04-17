@@ -9,6 +9,9 @@ import org.mariotaku.twidere.model.UserKey;
  * Created by mariotaku on 16/3/7.
  */
 public class ParcelableUserMentionUtils {
+    private ParcelableUserMentionUtils() {
+    }
+
     public static ParcelableUserMention fromMentionEntity(final User user,
                                                           final UserMentionEntity entity) {
         ParcelableUserMention obj = new ParcelableUserMention();

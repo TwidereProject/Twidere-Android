@@ -137,6 +137,9 @@ public class CustomTabUtils implements Constants {
         CUSTOM_TABS_ICON_NAME_MAP.put("user", R.drawable.ic_action_user);
     }
 
+    private CustomTabUtils() {
+    }
+
     public static String findTabIconKey(final int iconRes) {
         for (final Entry<String, Integer> entry : getIconMap().entrySet()) {
             if (entry.getValue() == iconRes) return entry.getKey();

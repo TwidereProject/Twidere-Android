@@ -20,6 +20,9 @@ import edu.tsinghua.hotmobi.model.LatLng;
  * Created by mariotaku on 16/1/29.
  */
 public class LocationUtils implements HotMobiConstants, Constants {
+    private LocationUtils() {
+    }
+
     public static LatLng getCachedLatLng(final Context context) {
         final Context appContext = context.getApplicationContext();
         final SharedPreferences prefs = DependencyHolder.get(context).getPreferences();

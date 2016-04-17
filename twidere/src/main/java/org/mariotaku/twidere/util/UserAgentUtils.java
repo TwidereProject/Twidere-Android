@@ -36,6 +36,9 @@ import java.lang.reflect.Constructor;
  * Created by mariotaku on 15/4/12.
  */
 public class UserAgentUtils {
+    private UserAgentUtils() {
+    }
+
     // You may uncomment next line if using Android Annotations library, otherwise just be sure to run it in on the UI thread
     @UiThread
     public static String getDefaultUserAgentString(Context context) {
@@ -114,6 +117,9 @@ public class UserAgentUtils {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     static class NewApiWrapper {
+        private NewApiWrapper() {
+        }
+
         @UiThread
         static String getDefaultUserAgent(Context context) {
             return WebSettings.getDefaultUserAgent(context);

@@ -54,6 +54,9 @@ public class StatusCodeMessageUtils {
         HTTP_STATUS_CODE_MESSAGES.put(407, R.string.error_http_407);
     }
 
+    private StatusCodeMessageUtils() {
+    }
+
     public static boolean containsHttpStatus(final int code) {
         return HTTP_STATUS_CODE_MESSAGES.get(code, -1) != -1;
     }

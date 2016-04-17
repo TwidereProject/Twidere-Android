@@ -34,6 +34,9 @@ public final class ServiceUtils implements Constants {
 
     private static HashMap<Context, ServiceUtils.ServiceBinder> sConnectionMap = new HashMap<>();
 
+    private ServiceUtils() {
+    }
+
     public static ServiceToken bindToService(final Context context, final Intent intent) {
         return bindToService(context, intent, null);
     }

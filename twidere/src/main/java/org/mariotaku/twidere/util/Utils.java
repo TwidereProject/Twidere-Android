@@ -2225,6 +2225,9 @@ public final class Utils implements Constants {
 
     static class UtilsL {
 
+        private UtilsL() {
+        }
+
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         static void setSharedElementTransition(Context context, Window window, int transitionRes) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;

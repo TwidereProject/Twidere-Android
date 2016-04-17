@@ -31,6 +31,9 @@ public class StrictModeUtils {
     public static final String LOGTAG = "Twidere.StrictMode";
     public static final String CLASS_NAME = StrictModeUtils.class.getName();
 
+    private StrictModeUtils() {
+    }
+
     public static void checkDiskIO() {
         check("Disk IO");
     }

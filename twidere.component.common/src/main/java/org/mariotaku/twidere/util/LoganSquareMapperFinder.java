@@ -23,6 +23,9 @@ import java.util.concurrent.TimeoutException;
 public class LoganSquareMapperFinder {
     private static final ExecutorService pool = Executors.newSingleThreadExecutor();
 
+    private LoganSquareMapperFinder() {
+    }
+
     public static <T> JsonMapper<T> mapperFor(Class<T> cls) throws ClassLoaderDeadLockException {
         return mapperFor(Twidere_ParameterizedTypeAccessor.<T>create(cls));
     }

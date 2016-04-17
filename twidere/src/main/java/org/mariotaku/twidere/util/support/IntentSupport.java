@@ -31,6 +31,9 @@ public class IntentSupport {
     @SuppressLint("InlinedApi")
     public static final String CATEGORY_APP_BROWSER = Intent.CATEGORY_APP_BROWSER;
 
+    private IntentSupport() {
+    }
+
     public static void setSelector(Intent intent, Intent selector) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) return;
         IntentSupport15.setSelector(intent, selector);

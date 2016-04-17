@@ -30,6 +30,8 @@ import static android.text.TextUtils.isEmpty;
  * Created by mariotaku on 16/1/27.
  */
 public class HttpClientFactory implements Constants {
+    private HttpClientFactory() {
+    }
 
     public static RestHttpClient createRestHttpClient(final Context context,
                                                       final SharedPreferencesWrapper prefs, final Dns dns,

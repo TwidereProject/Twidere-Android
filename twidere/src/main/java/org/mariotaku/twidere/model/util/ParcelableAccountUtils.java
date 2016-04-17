@@ -23,6 +23,9 @@ import java.util.List;
  */
 public class ParcelableAccountUtils {
 
+    private ParcelableAccountUtils() {
+    }
+
     public static UserKey[] getAccountKeys(@NonNull ParcelableAccount[] accounts) {
         UserKey[] ids = new UserKey[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {

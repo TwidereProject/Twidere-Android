@@ -37,6 +37,9 @@ public class ContentResolverUtils {
 
     public static final int MAX_BULK_COUNT = 128;
 
+    private ContentResolverUtils() {
+    }
+
     public static <T> int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
                                      @NonNull final String inColumn, final Collection<T> colValues,
                                      final String extraWhere) {

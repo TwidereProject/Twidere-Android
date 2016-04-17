@@ -34,6 +34,9 @@ import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
  */
 public class EmojiSupportUtils {
 
+    private EmojiSupportUtils() {
+    }
+
     public static void initForTextView(TextView textView) {
         if (textView.isInEditMode()) return;
         textView.setSpannableFactory(new EmojiSpannableFactory(textView));

@@ -28,6 +28,8 @@ import java.util.Locale;
 import static android.text.TextUtils.isEmpty;
 
 public final class ParseUtils implements TwidereConstants {
+    private ParseUtils() {
+    }
 
     public static String parseString(final String object) {
         return object;

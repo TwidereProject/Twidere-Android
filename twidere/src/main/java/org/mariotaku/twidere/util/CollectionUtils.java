@@ -26,6 +26,9 @@ import java.util.Collection;
  */
 public class CollectionUtils {
 
+    private CollectionUtils() {
+    }
+
     public static <T> String toString(final Collection<T> collection, final char token, final boolean includeSpace) {
         final StringBuilder builder = new StringBuilder();
         int i = 0;

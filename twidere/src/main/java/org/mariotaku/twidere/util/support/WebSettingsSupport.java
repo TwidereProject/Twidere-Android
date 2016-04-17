@@ -25,6 +25,9 @@ import android.webkit.WebSettings;
 
 public class WebSettingsSupport {
 
+	private WebSettingsSupport() {
+	}
+
 	public static void setAllowUniversalAccessFromFileURLs(final WebSettings settings, final boolean flag) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return;
 		WebSettingsAccessorSDK16.setAllowUniversalAccessFromFileURLs(settings, flag);

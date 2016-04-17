@@ -28,6 +28,9 @@ import android.support.annotation.Nullable;
  */
 public class UriUtils {
 
+    private UriUtils() {
+    }
+
     public static Uri appendQueryParameters(final Uri uri, final String key, long value) {
         return appendQueryParameters(uri, key, ParseUtils.parseString(value));
     }

@@ -25,6 +25,9 @@ import org.apache.commons.lang3.ArrayUtils;
 
 public class CompareUtils {
 
+    private CompareUtils() {
+    }
+
     public static boolean bundleEquals(final Bundle bundle1, final Bundle bundle2, final String... ignoredKeys) {
         if (bundle1 == null || bundle2 == null) return bundle1 == bundle2;
         for (String key : bundle1.keySet()) {

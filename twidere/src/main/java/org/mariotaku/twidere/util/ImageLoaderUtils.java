@@ -31,6 +31,9 @@ import java.io.File;
  */
 public class ImageLoaderUtils {
 
+	private ImageLoaderUtils() {
+	}
+
 	/**
 	 * Get the size in bytes of a bitmap.
 	 * 
@@ -82,6 +85,9 @@ public class ImageLoaderUtils {
 
 	static class GetBitmapSizeAccessor {
 
+		private GetBitmapSizeAccessor() {
+		}
+
 		@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 		static int getBitmapSize(final Bitmap bitmap) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) return bitmap.getByteCount();
@@ -92,6 +98,9 @@ public class ImageLoaderUtils {
 
 	static class GetMemoryClassAccessor {
 
+		private GetMemoryClassAccessor() {
+		}
+
 		@TargetApi(Build.VERSION_CODES.ECLAIR)
 		public static int getMemoryClass(final Context context) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR)
@@ -101,6 +110,9 @@ public class ImageLoaderUtils {
 	}
 
 	static class GetUsableSpaceAccessor {
+
+		private GetUsableSpaceAccessor() {
+		}
 
 		@SuppressWarnings("deprecation")
 		@TargetApi(Build.VERSION_CODES.GINGERBREAD)

@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 public class FragmentAccessor {
 
+	private FragmentAccessor() {
+	}
+
 	public static Bundle getSavedFragmentState(final Fragment f) {
 		return f.mSavedFragmentState;
 	}

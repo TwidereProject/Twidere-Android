@@ -32,6 +32,9 @@ import android.graphics.Rect;
  */
 public class TwidereColorUtils {
 
+    private TwidereColorUtils() {
+    }
+
     public static Bitmap getColorPreviewBitmap(final Context context, final int color, final boolean border) {
         if (context == null) return null;
         final float density = context.getResources().getDisplayMetrics().density;

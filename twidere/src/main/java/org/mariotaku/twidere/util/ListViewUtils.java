@@ -27,6 +27,9 @@ import android.widget.ListView;
  */
 public class ListViewUtils {
 
+    private ListViewUtils() {
+    }
+
     public static int getFirstFullyVisiblePosition(final ListView listView) {
         final int firstVisiblePosition = listView.getFirstVisiblePosition();
         final View firstVisibleChild = listView.getChildAt(0);

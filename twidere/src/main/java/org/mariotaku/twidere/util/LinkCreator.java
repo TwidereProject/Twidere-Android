@@ -37,6 +37,9 @@ public class LinkCreator implements Constants {
     private static final String AUTHORITY_TWITTER = "twitter.com";
     private static final String AUTHORITY_FANFOU = "fanfou.com";
 
+    private LinkCreator() {
+    }
+
     public static Uri getTwidereStatusLink(UserKey accountKey, @NonNull String statusId) {
         final Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_TWIDERE);

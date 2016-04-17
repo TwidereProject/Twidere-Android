@@ -24,6 +24,8 @@ import org.mariotaku.twidere.util.UserColorNameManager;
  * Created by mariotaku on 16/2/24.
  */
 public class ParcelableUserUtils implements TwidereConstants {
+    private ParcelableUserUtils() {
+    }
 
     public static ParcelableUser fromUser(@NonNull User user, @Nullable UserKey accountKey) {
         return fromUser(user, accountKey, 0);

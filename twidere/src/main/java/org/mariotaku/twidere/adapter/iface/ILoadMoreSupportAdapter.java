@@ -47,6 +47,9 @@ public interface ILoadMoreSupportAdapter {
     }
 
     class IndicatorPositionUtils {
+        private IndicatorPositionUtils() {
+        }
+
         @IndicatorPosition
         public static int apply(@IndicatorPosition int orig, @IndicatorPosition int supported) {
             return orig & supported;

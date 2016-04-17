@@ -11,6 +11,9 @@ import java.lang.reflect.Field;
  */
 public class ParcelUtils {
 
+    private ParcelUtils() {
+    }
+
     public static <T extends Parcelable> T clone(@NonNull T object) {
         final Parcel parcel = Parcel.obtain();
         try {

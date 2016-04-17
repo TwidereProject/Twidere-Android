@@ -36,6 +36,9 @@ import java.io.FileOutputStream;
 
 public class BitmapUtils {
 
+    private BitmapUtils() {
+    }
+
     // Find the max x that 1 / x <= scale.
     public static int computeSampleSize(final float scale) {
         if (scale <= 0) return 1;

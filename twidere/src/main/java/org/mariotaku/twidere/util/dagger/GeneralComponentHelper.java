@@ -28,6 +28,9 @@ import android.support.annotation.NonNull;
 public class GeneralComponentHelper {
     private static GeneralComponent sGeneralComponent;
 
+    private GeneralComponentHelper() {
+    }
+
     @NonNull
     public static GeneralComponent build(@NonNull Context context) {
         if (sGeneralComponent != null) return sGeneralComponent;
