@@ -159,7 +159,7 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
         @Override
         public void onDialogClosed(boolean positiveResult) {
             if (!positiveResult) return;
-            DefaultAPIPreference preference = ((DefaultAPIPreference) getPreference());
+            DefaultAPIPreference preference = (DefaultAPIPreference) getPreference();
             final SharedPreferences preferences = preference.getSharedPreferences();
 
             final String apiUrlFormat = ParseUtils.parseString(mEditAPIUrlFormat.getText());

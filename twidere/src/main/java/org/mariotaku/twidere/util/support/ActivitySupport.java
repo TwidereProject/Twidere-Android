@@ -48,7 +48,7 @@ public class ActivitySupport {
          * @param colorPrimary A color to override the theme's primary color.  This color must be opaque.
          */
         public TaskDescriptionCompat(String label, Bitmap icon, int colorPrimary) {
-            if ((colorPrimary != 0) && (Color.alpha(colorPrimary) != 255)) {
+            if (colorPrimary != 0 && Color.alpha(colorPrimary) != 255) {
                 throw new RuntimeException("A TaskDescription's primary color should be opaque");
             }
 

@@ -116,6 +116,7 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseActivity imple
             mConflictLabel.setVisibility(View.VISIBLE);
             final String label = KeyboardShortcutsHandler.getActionLabel(this, oldAction);
             mConflictLabel.setText(getString(R.string.conflicts_with_name, label));
+            //noinspection UnnecessaryParentheses
             mButtonPositive.setText((R.string.overwrite));
         } else if (!TextUtils.isEmpty(oldGeneralAction) && !keyAction.equals(oldGeneralAction)) {
             // Conflicts with keys in root context
@@ -125,7 +126,7 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseActivity imple
             mButtonPositive.setText((R.string.overwrite));
         } else {
             mConflictLabel.setVisibility(View.GONE);
-            mButtonPositive.setText((android.R.string.ok));
+            mButtonPositive.setText(android.R.string.ok);
         }
         return true;
     }

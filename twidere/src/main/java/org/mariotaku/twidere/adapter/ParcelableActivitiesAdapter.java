@@ -480,7 +480,7 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
             final ParcelableActivitiesAdapter adapter = adapterRef.get();
             if (adapter == null) return;
             if (adapter.mActivityAdapterListener != null) {
-                adapter.mActivityAdapterListener.onStatusActionClick(((IStatusViewHolder) holder), id, position);
+                adapter.mActivityAdapterListener.onStatusActionClick((IStatusViewHolder) holder, id, position);
             }
         }
 

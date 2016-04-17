@@ -136,7 +136,7 @@ public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
         } else {
             users = getCursoredUsers(twitter, credentials, paging);
             if (users instanceof CursorSupport) {
-                setCursors(((CursorSupport) users));
+                setCursors((CursorSupport) users);
             }
         }
         incrementPage(users);

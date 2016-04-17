@@ -163,7 +163,7 @@ public class ParcelableGroupsAdapter extends LoadMoreSupportAdapter<RecyclerView
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case ITEM_VIEW_TYPE_USER_LIST: {
-                bindGroup(((GroupViewHolder) holder), position);
+                bindGroup((GroupViewHolder) holder, position);
                 break;
             }
         }

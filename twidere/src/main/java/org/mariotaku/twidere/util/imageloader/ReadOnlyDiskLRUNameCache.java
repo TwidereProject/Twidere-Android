@@ -65,8 +65,8 @@ public class ReadOnlyDiskLRUNameCache extends BaseDiskCache {
     protected File getFile(String imageUri) {
         String fileName = fileNameGenerator.generate(imageUri) + ".0";
         File dir = cacheDir;
-        if ((!cacheDir.exists()) && (!cacheDir.mkdirs()) &&
-                (reserveCacheDir != null) && ((reserveCacheDir.exists()) || (reserveCacheDir.mkdirs()))) {
+        if (!cacheDir.exists() && (!cacheDir.mkdirs()) &&
+                (reserveCacheDir != null) && (reserveCacheDir.exists() || reserveCacheDir.mkdirs())) {
             dir = reserveCacheDir;
         }
         return new File(dir, fileName);
