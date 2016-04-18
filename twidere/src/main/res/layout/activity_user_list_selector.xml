@@ -54,7 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_bar_height"
                 android:gravity="center"
-                android:onClick="onClick"
                 android:text="@string/new_user_list"/>
         </LinearLayout>
     </LinearLayout>
@@ -102,7 +101,6 @@
                     android:background="?selectableItemBackground"
                     android:color="?menuIconColor"
                     android:contentDescription="@string/search"
-                    android:onClick="onClick"
                     android:src="@drawable/ic_action_search"
                     tools:tint="?menuIconColor"/>
             </LinearLayout>

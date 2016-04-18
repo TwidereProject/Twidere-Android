@@ -999,7 +999,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             final int layoutPosition = getLayoutPosition();
             final boolean skipLinksInText = status.extras != null && status.extras.support_entities;
-            if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
+            if (status.is_quote) {
 
                 quoteOriginalLink.setVisibility(View.VISIBLE);
                 quotedNameView.setVisibility(View.VISIBLE);

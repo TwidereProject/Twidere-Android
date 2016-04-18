@@ -79,6 +79,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
 
     private Runnable mResumeFragmentRunnable;
     private boolean mFragmentsResumed;
+    private View mScreenNameConfirm, mCreateList;
 
     @Override
     public void onClick(final View v) {
@@ -109,6 +110,8 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
         mUserListsListView = (ListView) findViewById(R.id.user_lists_list);
         mUsersListView = (ListView) findViewById(R.id.users_list);
         mCreateUserListContainer = findViewById(R.id.create_list_container);
+        mScreenNameConfirm = findViewById(R.id.screen_name_confirm);
+        mCreateList = findViewById(R.id.create_list);
     }
 
     @Override
@@ -173,6 +176,8 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
         mUsersListView.setAdapter(mUsersAdapter = new SimpleParcelableUsersAdapter(this));
         mUserListsListView.setOnItemClickListener(this);
         mUsersListView.setOnItemClickListener(this);
+        mScreenNameConfirm.setOnClickListener(this);
+        mCreateList.setOnClickListener(this);
         if (selecting_user) {
             mUsersListContainer.setVisibility(View.VISIBLE);
             mUserListsContainer.setVisibility(View.GONE);
