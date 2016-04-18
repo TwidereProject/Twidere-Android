@@ -304,6 +304,7 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
         @Override
         public void onClick(DialogInterface dialog, int which) {
             ((APIEditorActivity) getActivity()).setAPIConfig(mAdapter.getItem(which));
+            dismiss();
         }
 
         @Override

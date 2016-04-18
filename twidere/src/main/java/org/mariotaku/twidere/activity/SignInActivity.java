@@ -57,7 +57,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
@@ -82,11 +81,12 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.ParcelableCredentials.AuthType;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.StatusNetAccountExtra;
 import org.mariotaku.twidere.model.TwitterAccountExtra;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -143,7 +143,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             case REQUEST_EDIT_API: {
                 if (resultCode == RESULT_OK) {
                     mAPIUrlFormat = data.getStringExtra(Accounts.API_URL_FORMAT);
-                    mAuthType = data.getIntExtra(Accounts.AUTH_TYPE, ParcelableCredentials.AuthType.OAUTH);
+                    mAuthType = data.getIntExtra(Accounts.AUTH_TYPE, AuthType.OAUTH);
                     mSameOAuthSigningUrl = data.getBooleanExtra(Accounts.SAME_OAUTH_SIGNING_URL, false);
                     mNoVersionSuffix = data.getBooleanExtra(Accounts.NO_VERSION_SUFFIX, false);
                     mConsumerKey = data.getStringExtra(Accounts.CONSUMER_KEY);
@@ -166,13 +166,13 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
     void updateSignInType() {
         switch (mAuthType) {
-            case ParcelableCredentials.AuthType.XAUTH:
-            case ParcelableCredentials.AuthType.BASIC: {
+            case AuthType.XAUTH:
+            case AuthType.BASIC: {
                 mUsernamePasswordContainer.setVisibility(View.VISIBLE);
                 mSignInSignUpContainer.setOrientation(LinearLayout.HORIZONTAL);
                 break;
             }
-            case ParcelableCredentials.AuthType.TWIP_O_MODE: {
+            case AuthType.TWIP_O_MODE: {
                 mUsernamePasswordContainer.setVisibility(View.GONE);
                 mSignInSignUpContainer.setOrientation(LinearLayout.VERTICAL);
                 break;
@@ -271,7 +271,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
     }
 
     boolean openBrowserLogin() {
-        if (mAuthType != ParcelableCredentials.AuthType.OAUTH || mTask != null
+        if (mAuthType != AuthType.OAUTH || mTask != null
                 && mTask.getStatus() == AsyncTask.Status.RUNNING) return true;
         final Intent intent = new Intent(this, BrowserSignInActivity.class);
         intent.putExtra(Accounts.CONSUMER_KEY, mConsumerKey);
@@ -286,7 +286,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
     public boolean onPrepareOptionsMenu(final Menu menu) {
         final MenuItem itemBrowser = menu.findItem(R.id.open_in_browser);
         if (itemBrowser != null) {
-            final boolean is_oauth = mAuthType == ParcelableCredentials.AuthType.OAUTH;
+            final boolean is_oauth = mAuthType == AuthType.OAUTH;
             itemBrowser.setVisible(is_oauth);
             itemBrowser.setEnabled(is_oauth);
         }
@@ -327,7 +327,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             mAPIChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE);
         }
 
-        final boolean isTwipOMode = mAuthType == ParcelableCredentials.AuthType.TWIP_O_MODE;
+        final boolean isTwipOMode = mAuthType == AuthType.TWIP_O_MODE;
         mUsernamePasswordContainer.setVisibility(isTwipOMode ? View.GONE : View.VISIBLE);
         mSignInSignUpContainer.setOrientation(isTwipOMode ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
 
@@ -362,7 +362,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             mTask.cancel(true);
         }
         setDefaultAPI();
-        if (mAuthType == ParcelableCredentials.AuthType.OAUTH && mEditUsername.length() <= 0) {
+        if (mAuthType == AuthType.OAUTH && mEditUsername.length() <= 0) {
             openBrowserLogin();
             return;
         }
@@ -396,7 +396,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         final long apiLastChange = mPreferences.getLong(KEY_API_LAST_CHANGE, mAPIChangeTimestamp);
         final boolean defaultApiChanged = apiLastChange != mAPIChangeTimestamp;
         final String apiUrlFormat = Utils.getNonEmptyString(mPreferences, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
-        final int authType = mPreferences.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AuthType.OAUTH);
+        final int authType = mPreferences.getInt(KEY_AUTH_TYPE, AuthType.OAUTH);
         final boolean sameOAuthSigningUrl = mPreferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean noVersionSuffix = mPreferences.getBoolean(KEY_NO_VERSION_SUFFIX, false);
         final String consumerKey = Utils.getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
@@ -426,13 +426,13 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
     private void setSignInButton() {
         switch (mAuthType) {
-            case ParcelableCredentials.AuthType.XAUTH:
-            case ParcelableCredentials.AuthType.BASIC: {
+            case AuthType.XAUTH:
+            case AuthType.BASIC: {
                 mPasswordSignInButton.setVisibility(View.GONE);
                 mSignInButton.setEnabled(mEditPassword.getText().length() > 0 && mEditUsername.getText().length() > 0);
                 break;
             }
-            case ParcelableCredentials.AuthType.OAUTH: {
+            case AuthType.OAUTH: {
                 mPasswordSignInButton.setVisibility(View.VISIBLE);
                 mSignInButton.setEnabled(true);
                 break;
@@ -521,7 +521,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         });
     }
 
-    @Nullable
+    @NonNull
     private static Pair<String, String> detectAccountType(Twitter twitter, User user) {
         try {
             // Get StatusNet specific resource
@@ -641,29 +641,19 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint, auth,
                         Twitter.class);
                 final User user = twitter.verifyCredentials();
-                final int color = analyseUserProfileColor(user);
-                return new SignInResponse(Utils.isUserLoggedIn(context, user.getId()), auth, user,
-                        ParcelableCredentials.AuthType.OAUTH, color, apiUrlFormat, sameOauthSigningUrl,
-                        noVersionSuffix, detectAccountType(twitter, user));
+                int color = analyseUserProfileColor(user);
+                final Pair<String, String> accountType = detectAccountType(twitter, user);
+                final ParcelableAccount account = ParcelableAccountUtils.getAccount(context,
+                        new UserKey(user.getId(), accountType.first));
+                if (account != null) {
+                    color = account.color;
+                }
+                return new SignInResponse(account != null, auth, user, AuthType.OAUTH, color,
+                        apiUrlFormat, sameOauthSigningUrl, noVersionSuffix, accountType);
             } catch (final TwitterException e) {
                 return new SignInResponse(false, false, e);
             }
         }
-    }
-
-    public static class SignInMethodIntroductionDialogFragment extends BaseSupportDialogFragment {
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            final Context context = getActivity();
-            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
-            builder.setTitle(R.string.sign_in_method_introduction_title);
-            builder.setMessage(R.string.sign_in_method_introduction);
-            builder.setPositiveButton(android.R.string.ok, null);
-            return builder.create();
-        }
-
     }
 
     public static class SignInTask extends AbstractSignInTask {
@@ -678,8 +668,9 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         private final InputLoginVerificationCallback verificationCallback;
         private final String userAgent;
 
-        public SignInTask(final SignInActivity activity, final String username, final String password, final int authType,
-                          final OAuthToken consumerKey, @NonNull final String apiUrlFormat, final boolean sameOAuthSigningUrl,
+        public SignInTask(final SignInActivity activity, final String username,
+                          final String password, final int authType, final OAuthToken consumerKey,
+                          @NonNull final String apiUrlFormat, final boolean sameOAuthSigningUrl,
                           final boolean noVersionSuffix) {
             super(activity);
             this.username = username;
@@ -697,13 +688,13 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         protected SignInResponse doInBackground(final Object... params) {
             try {
                 switch (authType) {
-                    case ParcelableCredentials.AuthType.OAUTH:
+                    case AuthType.OAUTH:
                         return authOAuth();
-                    case ParcelableCredentials.AuthType.XAUTH:
+                    case AuthType.XAUTH:
                         return authxAuth();
-                    case ParcelableCredentials.AuthType.BASIC:
+                    case AuthType.BASIC:
                         return authBasic();
-                    case ParcelableCredentials.AuthType.TWIP_O_MODE:
+                    case AuthType.TWIP_O_MODE:
                         return authTwipOMode();
                 }
                 return authOAuth();
@@ -721,14 +712,17 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             if (activity == null) return new SignInResponse(false, false, null);
             Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
                     sameOAuthSigningUrl);
-            OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
-            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
-            final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth, verificationCallback, userAgent);
+            OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(),
+                    consumerKey.getOauthTokenSecret());
+            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth,
+                    TwitterOAuth.class);
+            final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth,
+                    verificationCallback, userAgent);
             final OAuthToken accessToken = authenticator.getOAuthAccessToken(username, password);
             final String userId = accessToken.getUserId();
             if (userId == null) return new SignInResponse(false, false, null);
             return getOAuthSignInResponse(activity, accessToken, userId,
-                    ParcelableCredentials.AuthType.OAUTH);
+                    AuthType.OAUTH);
         }
 
         private SignInResponse authxAuth() throws TwitterException {
@@ -736,20 +730,23 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             if (activity == null) return new SignInResponse(false, false, null);
             Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
                     sameOAuthSigningUrl);
-            OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret());
-            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth, TwitterOAuth.class);
+            OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(),
+                    consumerKey.getOauthTokenSecret());
+            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth,
+                    TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password);
             final String userId = accessToken.getUserId();
             if (userId == null) return new SignInResponse(false, false, null);
             return getOAuthSignInResponse(activity, accessToken, userId,
-                    ParcelableCredentials.AuthType.XAUTH);
+                    AuthType.XAUTH);
         }
 
         private SignInResponse authBasic() throws TwitterException, AuthenticationException {
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
             final String versionSuffix = noVersionSuffix ? null : "1.1";
-            final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
+            final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api",
+                    versionSuffix));
             final Authorization auth = new BasicAuthorization(username, password);
             final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth,
                     Twitter.class);
@@ -766,9 +763,15 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             }
             final String userId = user.getId();
             if (userId == null) return new SignInResponse(false, false, null);
-            final int color = analyseUserProfileColor(user);
-            return new SignInResponse(Utils.isUserLoggedIn(activity, userId), username, password, user,
-                    color, apiUrlFormat, noVersionSuffix, detectAccountType(twitter, user));
+            int color = analyseUserProfileColor(user);
+            final Pair<String, String> accountType = detectAccountType(twitter, user);
+            final ParcelableAccount account = ParcelableAccountUtils.getAccount(activity,
+                    new UserKey(userId, accountType.first));
+            if (account != null) {
+                color = account.color;
+            }
+            return new SignInResponse(account != null, username, password, user,
+                    color, apiUrlFormat, noVersionSuffix, accountType);
         }
 
 
@@ -776,26 +779,45 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
             final String versionSuffix = noVersionSuffix ? null : "1.1";
-            final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api", versionSuffix));
+            final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api",
+                    versionSuffix));
             final Authorization auth = new EmptyAuthorization();
-            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
+            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth,
+                    Twitter.class);
             final User user = twitter.verifyCredentials();
             final String userId = user.getId();
             if (userId == null) return new SignInResponse(false, false, null);
-            final int color = analyseUserProfileColor(user);
-            return new SignInResponse(Utils.isUserLoggedIn(activity, userId), user, color, apiUrlFormat,
-                    noVersionSuffix, detectAccountType(twitter, user));
+            int color = analyseUserProfileColor(user);
+            final Pair<String, String> accountType = detectAccountType(twitter, user);
+            final ParcelableAccount account = ParcelableAccountUtils.getAccount(activity,
+                    new UserKey(userId, accountType.first));
+            if (account != null) {
+                color = account.color;
+            }
+            return new SignInResponse(account != null, user, color, apiUrlFormat,
+                    noVersionSuffix, accountType);
         }
 
-        private SignInResponse getOAuthSignInResponse(SignInActivity activity, OAuthToken accessToken,
-                                                      String userId, int authType) throws TwitterException {
-            final OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(), consumerKey.getOauthTokenSecret(), accessToken);
-            final Endpoint endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix);
-            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth, Twitter.class);
+        private SignInResponse getOAuthSignInResponse(final SignInActivity activity,
+                                                      final OAuthToken accessToken,
+                                                      final String userId, int authType)
+                throws TwitterException {
+            final OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(),
+                    consumerKey.getOauthTokenSecret(), accessToken);
+            final Endpoint endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat,
+                    sameOAuthSigningUrl, noVersionSuffix);
+            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth,
+                    Twitter.class);
             final User user = twitter.verifyCredentials();
-            final int color = analyseUserProfileColor(user);
-            return new SignInResponse(Utils.isUserLoggedIn(activity, userId), auth, user, authType, color,
-                    apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix, detectAccountType(twitter, user));
+            int color = analyseUserProfileColor(user);
+            final Pair<String, String> accountType = detectAccountType(twitter, user);
+            final ParcelableAccount account = ParcelableAccountUtils.getAccount(activity,
+                    new UserKey(userId, accountType.first));
+            if (account != null) {
+                color = account.color;
+            }
+            return new SignInResponse(account != null, auth, user, authType, color,
+                    apiUrlFormat, sameOAuthSigningUrl, noVersionSuffix, accountType);
         }
 
         static class WrongBasicCredentialException extends AuthenticationException {
@@ -872,7 +894,8 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
     }
 
-    public static class InputLoginVerificationDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener, DialogInterface.OnShowListener {
+    public static class InputLoginVerificationDialogFragment extends BaseSupportDialogFragment
+            implements DialogInterface.OnClickListener, DialogInterface.OnShowListener {
 
         private SignInTask.InputLoginVerificationCallback callback;
         private String challengeType;
@@ -1002,7 +1025,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                               final String apiUrlFormat, final boolean noVersionSuffix,
                               final Pair<String, String> accountType) {
             this(alreadyLoggedIn, true, null, basicUsername, basicPassword, null, user,
-                    ParcelableCredentials.AuthType.BASIC, color, apiUrlFormat, false,
+                    AuthType.BASIC, color, apiUrlFormat, false,
                     noVersionSuffix, accountType);
         }
 
@@ -1010,7 +1033,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                               final String apiUrlFormat, final boolean noVersionSuffix,
                               final Pair<String, String> accountType) {
             this(alreadyLoggedIn, true, null, null, null, null, user,
-                    ParcelableCredentials.AuthType.TWIP_O_MODE, color, apiUrlFormat, false,
+                    AuthType.TWIP_O_MODE, color, apiUrlFormat, false,
                     noVersionSuffix, accountType);
         }
 
@@ -1018,20 +1041,20 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             if (user == null) return null;
             final ContentValues values;
             switch (authType) {
-                case ParcelableCredentials.AuthType.BASIC: {
+                case AuthType.BASIC: {
                     values = new ContentValues();
                     values.put(Accounts.BASIC_AUTH_USERNAME, basicUsername);
                     values.put(Accounts.BASIC_AUTH_PASSWORD, basicPassword);
-                    values.put(Accounts.AUTH_TYPE, ParcelableCredentials.AuthType.BASIC);
+                    values.put(Accounts.AUTH_TYPE, AuthType.BASIC);
                     break;
                 }
-                case ParcelableCredentials.AuthType.TWIP_O_MODE: {
+                case AuthType.TWIP_O_MODE: {
                     values = new ContentValues();
-                    values.put(Accounts.AUTH_TYPE, ParcelableCredentials.AuthType.TWIP_O_MODE);
+                    values.put(Accounts.AUTH_TYPE, AuthType.TWIP_O_MODE);
                     break;
                 }
-                case ParcelableCredentials.AuthType.OAUTH:
-                case ParcelableCredentials.AuthType.XAUTH: {
+                case AuthType.OAUTH:
+                case AuthType.XAUTH: {
                     values = new ContentValues();
                     final OAuthToken accessToken = oauth.getOauthToken();
                     values.put(Accounts.OAUTH_TOKEN, accessToken.getOauthToken());
