@@ -104,7 +104,8 @@ public class ParcelableMediaUtils {
     public static ParcelableMedia[] fromStatus(@NonNull final Status status) {
         final ParcelableMedia[] fromEntities = fromEntities(status);
         final ParcelableMedia[] fromAttachments = fromAttachments(status);
-        final ParcelableMedia[] fromCard = fromCard(status.getCard(), status.getUrlEntities());
+        final ParcelableMedia[] fromCard = fromCard(status.getCard(), status.getUrlEntities(),
+                status.getMediaEntities(), status.getExtendedMediaEntities());
         final ParcelableMedia[] fromPhoto = fromPhoto(status);
         final ParcelableMedia[] merged = new ParcelableMedia[fromCard.length +
                 fromAttachments.length + fromEntities.length + fromPhoto.length];
@@ -150,7 +151,10 @@ public class ParcelableMediaUtils {
     }
 
     @NonNull
-    private static ParcelableMedia[] fromCard(@Nullable CardEntity card, @Nullable UrlEntity[] entities) {
+    private static ParcelableMedia[] fromCard(@Nullable CardEntity card,
+                                              @Nullable UrlEntity[] urlEntities,
+                                              @Nullable MediaEntity[] mediaEntities,
+                                              @Nullable MediaEntity[] extendedMediaEntities) {
         if (card == null) return new ParcelableMedia[0];
         final String name = card.getName();
         if ("animated_gif".equals(name) || "player".equals(name)) {
@@ -184,15 +188,7 @@ public class ParcelableMediaUtils {
                 media.width = NumberUtils.toInt(((CardEntity.StringValue) playerWidth).getValue(), -1);
                 media.height = NumberUtils.toInt(((CardEntity.StringValue) playerHeight).getValue(), -1);
             }
-            if (entities != null) {
-                for (UrlEntity entity : entities) {
-                    if (entity.getUrl().equals(media.url)) {
-                        media.start = entity.getStart();
-                        media.end = entity.getEnd();
-                        break;
-                    }
-                }
-            }
+            writeLinkInfo(media, urlEntities, mediaEntities, extendedMediaEntities);
             return new ParcelableMedia[]{media};
         } else if ("summary_large_image".equals(name)) {
             final CardEntity.BindingValue photoImageFullSize = card.getBindingValue("photo_image_full_size");
@@ -211,8 +207,8 @@ public class ParcelableMediaUtils {
             if (summaryPhotoImage instanceof CardEntity.ImageValue) {
                 media.preview_url = ((CardEntity.ImageValue) summaryPhotoImage).getUrl();
             }
-            if (entities != null) {
-                for (UrlEntity entity : entities) {
+            if (urlEntities != null) {
+                for (UrlEntity entity : urlEntities) {
                     if (entity.getUrl().equals(media.url)) {
                         media.start = entity.getStart();
                         media.end = entity.getEnd();
@@ -223,6 +219,24 @@ public class ParcelableMediaUtils {
             return new ParcelableMedia[]{media};
         }
         return new ParcelableMedia[0];
+    }
+
+    private static void writeLinkInfo(ParcelableMedia media, UrlEntity[]... entities) {
+        if (entities == null) return;
+        for (UrlEntity[] array : entities) {
+            if (array == null) continue;
+            for (UrlEntity entity : array) {
+                if (entity.getUrl().equals(media.url)) {
+                    media.page_url = entity.getExpandedUrl();
+                    if (media.page_url == null) {
+                        media.page_url = media.url;
+                    }
+                    media.start = entity.getStart();
+                    media.end = entity.getEnd();
+                    break;
+                }
+            }
+        }
     }
 
     private static boolean checkUrl(CardEntity.StringValue value) {
