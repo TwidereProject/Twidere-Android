@@ -96,6 +96,7 @@ import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
+import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.LoginVerificationCallback;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.LoginVerificationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -828,7 +829,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
         }
 
-        class InputLoginVerificationCallback implements OAuthPasswordAuthenticator.LoginVerificationCallback {
+        class InputLoginVerificationCallback implements LoginVerificationCallback {
 
             boolean isChallengeFinished;
             String challengeResponse;
