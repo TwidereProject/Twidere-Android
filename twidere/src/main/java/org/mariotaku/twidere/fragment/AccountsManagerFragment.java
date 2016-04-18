@@ -46,7 +46,6 @@ import org.mariotaku.twidere.activity.SignInActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox;
@@ -139,7 +138,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
             case R.id.delete: {
                 final AccountDeletionDialogFragment f = new AccountDeletionDialogFragment();
                 final Bundle args = new Bundle();
-                args.putParcelable(EXTRA_ACCOUNT_KEY, account.account_key);
+                args.putLong(EXTRA_ID, account.id);
                 f.setArguments(args);
                 f.show(getChildFragmentManager(), FRAGMENT_TAG_ACCOUNT_DELETION);
                 break;
@@ -311,14 +310,13 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         @Override
         public void onClick(final DialogInterface dialog, final int which) {
             final Bundle args = getArguments();
-            final UserKey accountId = args.getParcelable(EXTRA_ACCOUNT_KEY);
-            if (accountId == null) return;
+            final long id = args.getLong(EXTRA_ID);
             final ContentResolver resolver = getContentResolver();
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    final String where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY)
+                    final String where = Expression.equalsArgs(Accounts._ID)
                             .getSQL();
-                    final String[] whereArgs = {accountId.toString()};
+                    final String[] whereArgs = {String.valueOf(id)};
                     resolver.delete(Accounts.CONTENT_URI, where, whereArgs);
                     // Also delete tweets related to the account we previously
                     // deleted.
