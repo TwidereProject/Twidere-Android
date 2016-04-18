@@ -31,6 +31,7 @@ public class ParcelableActivityUtils {
      */
     public static boolean initAfterFilteredSourceIds(ParcelableActivity activity, String[] filteredUserIds,
                                                      boolean followingOnly) {
+        if (activity.sources == null) return false;
         if (activity.after_filtered_source_ids != null) return false;
         if (followingOnly || !ArrayUtils.isEmpty(filteredUserIds)) {
             List<UserKey> list = new ArrayList<>();

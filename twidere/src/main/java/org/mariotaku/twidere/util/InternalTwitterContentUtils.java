@@ -160,10 +160,10 @@ public class InternalTwitterContentUtils {
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final ParcelableStatus status,
-                                     final boolean filter_rts) {
+                                     final boolean filterRTs) {
         if (database == null || status == null) return false;
         return isFiltered(database, status.user_key, status.text_plain, status.spans, status.source,
-                status.retweeted_by_user_key, status.quoted_user_key, filter_rts);
+                status.retweeted_by_user_key, status.quoted_user_key, filterRTs);
     }
 
     @Nullable
