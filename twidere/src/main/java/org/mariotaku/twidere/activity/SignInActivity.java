@@ -58,6 +58,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.internal.MDButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.restfu.http.Authorization;
@@ -115,10 +118,10 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
     private String mAPIUrlFormat;
     private int mAuthType;
     private String mConsumerKey, mConsumerSecret;
-    private String mUsername, mPassword;
     private long mAPIChangeTimestamp;
     private boolean mSameOAuthSigningUrl, mNoVersionSuffix;
     private EditText mEditUsername, mEditPassword;
+    private View mPasswordSignInButton;
     private Button mSignInButton, mSignUpButton;
     private LinearLayout mSignInSignUpContainer, mUsernamePasswordContainer;
     private ContentResolver mResolver;
@@ -145,9 +148,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                     mNoVersionSuffix = data.getBooleanExtra(Accounts.NO_VERSION_SUFFIX, false);
                     mConsumerKey = data.getStringExtra(Accounts.CONSUMER_KEY);
                     mConsumerSecret = data.getStringExtra(Accounts.CONSUMER_SECRET);
-                    final boolean isTwipOMode = mAuthType == ParcelableCredentials.AuthType.TWIP_O_MODE;
-                    mUsernamePasswordContainer.setVisibility(isTwipOMode ? View.GONE : View.VISIBLE);
-                    mSignInSignUpContainer.setOrientation(isTwipOMode ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+                    updateSignInType();
                 }
                 setSignInButton();
                 invalidateOptionsMenu();
@@ -163,6 +164,27 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    void updateSignInType() {
+        switch (mAuthType) {
+            case ParcelableCredentials.AuthType.XAUTH:
+            case ParcelableCredentials.AuthType.BASIC: {
+                mUsernamePasswordContainer.setVisibility(View.VISIBLE);
+                mSignInSignUpContainer.setOrientation(LinearLayout.HORIZONTAL);
+                break;
+            }
+            case ParcelableCredentials.AuthType.TWIP_O_MODE: {
+                mUsernamePasswordContainer.setVisibility(View.GONE);
+                mSignInSignUpContainer.setOrientation(LinearLayout.VERTICAL);
+                break;
+            }
+            default: {
+                mUsernamePasswordContainer.setVisibility(View.GONE);
+                mSignInSignUpContainer.setOrientation(LinearLayout.VERTICAL);
+                break;
+            }
+        }
+    }
+
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
@@ -172,13 +194,17 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 break;
             }
             case R.id.sign_in: {
+                if (mUsernamePasswordContainer.getVisibility() != View.VISIBLE) {
+                    mEditUsername.setText(null);
+                    mEditPassword.setText(null);
+                }
                 doLogin();
                 break;
             }
-            case R.id.sign_in_method_introduction: {
+            case R.id.password_sign_in: {
                 final FragmentManager fm = getSupportFragmentManager();
-                new SignInMethodIntroductionDialogFragment().show(fm.beginTransaction(),
-                        "sign_in_method_introduction");
+                PasswordSignInDialogFragment df = new PasswordSignInDialogFragment();
+                df.show(fm.beginTransaction(), "password_sign_in");
                 break;
             }
         }
@@ -188,6 +214,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
     @Override
     public void onContentChanged() {
         super.onContentChanged();
+        mPasswordSignInButton = findViewById(R.id.password_sign_in);
         mEditUsername = (EditText) findViewById(R.id.username);
         mEditPassword = (EditText) findViewById(R.id.password);
         mSignInButton = (Button) findViewById(R.id.sign_in);
@@ -239,19 +266,20 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 startActivityForResult(intent, REQUEST_EDIT_API);
                 break;
             }
-            case R.id.open_in_browser: {
-                if (mAuthType != ParcelableCredentials.AuthType.OAUTH || mTask != null
-                        && mTask.getStatus() == AsyncTask.Status.RUNNING) return false;
-                saveEditedText();
-                final Intent intent = new Intent(this, BrowserSignInActivity.class);
-                intent.putExtra(Accounts.CONSUMER_KEY, mConsumerKey);
-                intent.putExtra(Accounts.CONSUMER_SECRET, mConsumerSecret);
-                intent.putExtra(Accounts.API_URL_FORMAT, mAPIUrlFormat);
-                startActivityForResult(intent, REQUEST_BROWSER_SIGN_IN);
-                break;
-            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    boolean openBrowserLogin() {
+        if (mAuthType != ParcelableCredentials.AuthType.OAUTH || mTask != null
+                && mTask.getStatus() == AsyncTask.Status.RUNNING) return true;
+        final Intent intent = new Intent(this, BrowserSignInActivity.class);
+        intent.putExtra(Accounts.CONSUMER_KEY, mConsumerKey);
+        intent.putExtra(Accounts.CONSUMER_SECRET, mConsumerSecret);
+        intent.putExtra(Accounts.API_URL_FORMAT, mAPIUrlFormat);
+        intent.putExtra(Accounts.SAME_OAUTH_SIGNING_URL, mSameOAuthSigningUrl);
+        startActivityForResult(intent, REQUEST_BROWSER_SIGN_IN);
+        return false;
     }
 
     @Override
@@ -267,7 +295,6 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        saveEditedText();
         setDefaultAPI();
         outState.putString(Accounts.API_URL_FORMAT, mAPIUrlFormat);
         outState.putInt(Accounts.AUTH_TYPE, mAuthType);
@@ -275,8 +302,6 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         outState.putBoolean(Accounts.NO_VERSION_SUFFIX, mNoVersionSuffix);
         outState.putString(Accounts.CONSUMER_KEY, mConsumerKey);
         outState.putString(Accounts.CONSUMER_SECRET, mConsumerSecret);
-        outState.putString(Accounts.SCREEN_NAME, mUsername);
-        outState.putString(Accounts.PASSWORD, mPassword);
         outState.putLong(EXTRA_API_LAST_CHANGE, mAPIChangeTimestamp);
         super.onSaveInstanceState(outState);
     }
@@ -299,8 +324,6 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             mSameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL);
             mConsumerKey = Utils.trim(savedInstanceState.getString(Accounts.CONSUMER_KEY));
             mConsumerSecret = Utils.trim(savedInstanceState.getString(Accounts.CONSUMER_SECRET));
-            mUsername = savedInstanceState.getString(Accounts.SCREEN_NAME);
-            mPassword = savedInstanceState.getString(Accounts.PASSWORD);
             mAPIChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE);
         }
 
@@ -308,17 +331,17 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         mUsernamePasswordContainer.setVisibility(isTwipOMode ? View.GONE : View.VISIBLE);
         mSignInSignUpContainer.setOrientation(isTwipOMode ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
 
-        mEditUsername.setText(mUsername);
         mEditUsername.addTextChangedListener(this);
-        mEditPassword.setText(mPassword);
         mEditPassword.addTextChangedListener(this);
 
+        mSignInButton.setOnClickListener(this);
         mSignUpButton.setOnClickListener(this);
+        mPasswordSignInButton.setOnClickListener(this);
 
         final ColorStateList color = ColorStateList.valueOf(ContextCompat.getColor(this,
                 R.color.material_light_green));
         ViewCompat.setBackgroundTintList(mSignInButton, color);
-        setSignInButton();
+
 
         final String consumerKey = mPreferences.getString(KEY_CONSUMER_KEY, null);
         final String consumerSecret = mPreferences.getString(KEY_CONSUMER_SECRET, null);
@@ -330,17 +353,24 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             df.show(getSupportFragmentManager(), "set_consumer_key_secret");
         }
 
+        updateSignInType();
+        setSignInButton();
     }
 
     private void doLogin() {
         if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
             mTask.cancel(true);
         }
-        saveEditedText();
         setDefaultAPI();
+        if (mAuthType == ParcelableCredentials.AuthType.OAUTH && mEditUsername.length() <= 0) {
+            openBrowserLogin();
+            return;
+        }
         final OAuthToken consumerKey = TwitterAPIFactory.getOAuthToken(mConsumerKey, mConsumerSecret);
         final String apiUrlFormat = TextUtils.isEmpty(mAPIUrlFormat) ? DEFAULT_TWITTER_API_URL_FORMAT : mAPIUrlFormat;
-        mTask = new SignInTask(this, mUsername, mPassword, mAuthType, consumerKey, apiUrlFormat,
+        final String username = String.valueOf(mEditUsername.getText());
+        final String password = String.valueOf(mEditPassword.getText());
+        mTask = new SignInTask(this, username, password, mAuthType, consumerKey, apiUrlFormat,
                 mSameOAuthSigningUrl, mNoVersionSuffix);
         AsyncTaskUtils.executeTask(mTask);
     }
@@ -350,7 +380,6 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
             mTask.cancel(true);
         }
-        saveEditedText();
         setDefaultAPI();
         final String verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER);
         final OAuthToken consumerKey = TwitterAPIFactory.getOAuthToken(mConsumerKey, mConsumerSecret);
@@ -362,12 +391,6 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         AsyncTaskUtils.executeTask(mTask);
     }
 
-
-    private void saveEditedText() {
-        if (mEditUsername == null || mEditPassword == null) return;
-        mUsername = ParseUtils.parseString(mEditUsername.getText());
-        mPassword = ParseUtils.parseString(mEditPassword.getText());
-    }
 
     private void setDefaultAPI() {
         final long apiLastChange = mPreferences.getLong(KEY_API_LAST_CHANGE, mAPIChangeTimestamp);
@@ -402,8 +425,23 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
     }
 
     private void setSignInButton() {
-        mSignInButton.setEnabled(mEditPassword.getText().length() > 0 && mEditUsername.getText().length() > 0
-                || mAuthType == ParcelableCredentials.AuthType.TWIP_O_MODE);
+        switch (mAuthType) {
+            case ParcelableCredentials.AuthType.XAUTH:
+            case ParcelableCredentials.AuthType.BASIC: {
+                mPasswordSignInButton.setVisibility(View.GONE);
+                mSignInButton.setEnabled(mEditPassword.getText().length() > 0 && mEditUsername.getText().length() > 0);
+                break;
+            }
+            case ParcelableCredentials.AuthType.OAUTH: {
+                mPasswordSignInButton.setVisibility(View.VISIBLE);
+                mSignInButton.setEnabled(true);
+                break;
+            }
+            default: {
+                mPasswordSignInButton.setVisibility(View.GONE);
+                mSignInButton.setEnabled(true);
+            }
+        }
     }
 
     void onSignInResult(final SignInResponse result) {
@@ -1069,5 +1107,63 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             });
             return dialog;
         }
+    }
+
+    public static class PasswordSignInDialogFragment extends BaseSupportDialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
+            builder.positiveText(R.string.sign_in);
+            builder.negativeText(android.R.string.cancel);
+            builder.customView(R.layout.dialog_password_sign_in, true);
+            builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    EditText editUsername = (EditText) dialog.findViewById(R.id.username);
+                    EditText editPassword = (EditText) dialog.findViewById(R.id.password);
+                    SignInActivity activity = (SignInActivity) getActivity();
+                    activity.setUsernamePassword(String.valueOf(editUsername.getText()),
+                            String.valueOf(editPassword.getText()));
+                    activity.doLogin();
+                }
+            });
+            builder.showListener(new DialogInterface.OnShowListener() {
+
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    final MaterialDialog materialDialog = (MaterialDialog) dialog;
+                    final EditText editUsername = (EditText) materialDialog.findViewById(R.id.username);
+                    final EditText editPassword = (EditText) materialDialog.findViewById(R.id.password);
+                    TextWatcher textWatcher = new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            MDButton button = materialDialog.getActionButton(DialogAction.POSITIVE);
+                            if (button == null) return;
+                            button.setEnabled(editUsername.length() > 0 && editPassword.length() > 0);
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    };
+
+                    editUsername.addTextChangedListener(textWatcher);
+                    editPassword.addTextChangedListener(textWatcher);
+                }
+            });
+            return builder.build();
+        }
+    }
+
+    private void setUsernamePassword(String username, String password) {
+        mEditUsername.setText(username);
+        mEditPassword.setText(password);
     }
 }

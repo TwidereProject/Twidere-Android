@@ -122,6 +122,7 @@ import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ImagePreloader;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
@@ -1369,6 +1370,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showInteractionsNotification(AccountPreferences pref, long position, boolean combined) {
         final Context context = getContext();
         if (context == null) return;
+        final SQLiteDatabase db = mDatabaseWrapper.getSQLiteDatabase();
         final UserKey accountKey = pref.getAccountKey();
         final String where = Expression.and(
                 Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
@@ -1406,6 +1408,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 final ParcelableActivity activity = ci.newObject(c);
                 if (pref.isNotificationMentionsOnly() && !ArrayUtils.contains(Activity.Action.MENTION_ACTIONS,
                         activity.action)) {
+                    continue;
+                }
+                if (activity.status_id != null && InternalTwitterContentUtils.isFiltered(db,
+                        activity.status_user_key, activity.status_text_plain,
+                        activity.status_quote_text_plain, activity.status_spans,
+                        activity.status_quote_spans, activity.status_source,
+                        activity.status_quote_source, activity.status_retweeted_by_user_key,
+                        activity.status_quoted_user_key)) {
                     continue;
                 }
                 final String[] filteredUserIds = DataStoreUtils.getFilteredUserIds(context);

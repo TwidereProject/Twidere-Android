@@ -85,17 +85,20 @@ public class InternalTwitterContentUtils {
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
-                                     final String textPlain, final SpanItem[] spans,
-                                     final String source, final UserKey retweetedById,
-                                     final UserKey quotedUserId) {
-        return isFiltered(database, userKey, textPlain, spans, source, retweetedById,
-                quotedUserId, true);
+                                     final String textPlain, final String quotedTextPlain,
+                                     final SpanItem[] spans, final SpanItem[] quotedSpans,
+                                     final String source, final String quotedSource,
+                                     final UserKey retweetedById, final UserKey quotedUserId) {
+        return isFiltered(database, userKey, textPlain, quotedTextPlain, spans, quotedSpans, source,
+                quotedSource, retweetedById, quotedUserId, true);
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
-                                     final String textPlain, final SpanItem[] spans,
-                                     final String source, final UserKey retweetedById,
-                                     final UserKey quotedUserId, final boolean filterRts) {
+                                     final String textPlain, final String quotedTextPlain,
+                                     final SpanItem[] spans, final SpanItem[] quotedSpans,
+                                     final String source, final String quotedSource,
+                                     final UserKey retweetedByKey, final UserKey quotedUserKey,
+                                     final boolean filterRts) {
         if (database == null) return false;
         if (textPlain == null && spans == null && userKey == null && source == null)
             return false;
@@ -104,50 +107,61 @@ public class InternalTwitterContentUtils {
         builder.append("SELECT ");
         if (textPlain != null) {
             selectionArgs.add(textPlain);
-            builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.VALUE
-                    + "||'%' FROM " + Filters.Keywords.TABLE_NAME + "))");
+            addTextPlainStatement(builder);
+        }
+        if (quotedTextPlain != null) {
+            if (!selectionArgs.isEmpty()) {
+                builder.append(" OR ");
+            }
+            selectionArgs.add(quotedTextPlain);
+            addTextPlainStatement(builder);
         }
         if (spans != null) {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            StringBuilder spansFlat = new StringBuilder();
-            for (SpanItem span : spans) {
-                spansFlat.append(span.link);
-                spansFlat.append(' ');
+            addSpansStatement(spans, builder, selectionArgs);
+        }
+        if (quotedSpans != null) {
+            if (!selectionArgs.isEmpty()) {
+                builder.append(" OR ");
             }
-            selectionArgs.add(spansFlat.toString());
-            builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||" + Filters.Links.TABLE_NAME + "."
-                    + Filters.VALUE + "||'%' FROM " + Filters.Links.TABLE_NAME + "))");
+            addSpansStatement(quotedSpans, builder, selectionArgs);
         }
         if (userKey != null) {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
             selectionArgs.add(String.valueOf(userKey));
-            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_KEY).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
+            createUserKeyStatement(builder);
         }
-        if (retweetedById != null) {
+        if (retweetedByKey != null) {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            selectionArgs.add(String.valueOf(retweetedById));
-            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_KEY).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
+            selectionArgs.add(String.valueOf(retweetedByKey));
+            createUserKeyStatement(builder);
         }
-        if (quotedUserId != null) {
+        if (quotedUserKey != null) {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
-            selectionArgs.add(String.valueOf(quotedUserId));
-            builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_KEY).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
+            selectionArgs.add(String.valueOf(quotedUserKey));
+            createUserKeyStatement(builder);
         }
         if (source != null) {
             if (!selectionArgs.isEmpty()) {
                 builder.append(" OR ");
             }
             selectionArgs.add(source);
-            builder.append("(SELECT 1 IN (SELECT ? LIKE '%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.VALUE
-                    + "||'</a>%' FROM " + Filters.Sources.TABLE_NAME + "))");
+            appendSourceStatement(builder);
+        }
+        if (quotedSource != null) {
+            if (!selectionArgs.isEmpty()) {
+                builder.append(" OR ");
+            }
+            selectionArgs.add(quotedSource);
+            appendSourceStatement(builder);
         }
         final Cursor cur = database.rawQuery(builder.toString(),
                 selectionArgs.toArray(new String[selectionArgs.size()]));
@@ -159,10 +173,43 @@ public class InternalTwitterContentUtils {
         }
     }
 
+    static void addTextPlainStatement(StringBuilder builder) {
+        builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||").append(Filters.Keywords.TABLE_NAME).append(".").append(Filters.VALUE).append("||'%' FROM ").append(Filters.Keywords.TABLE_NAME).append("))");
+    }
+
+    static void addSpansStatement(SpanItem[] spans, StringBuilder builder, List<String> selectionArgs) {
+        StringBuilder spansFlat = new StringBuilder();
+        for (SpanItem span : spans) {
+            spansFlat.append(span.link);
+            spansFlat.append(' ');
+        }
+        selectionArgs.add(spansFlat.toString());
+        builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||")
+                .append(Filters.Links.TABLE_NAME)
+                .append(".")
+                .append(Filters.VALUE)
+                .append("||'%' FROM ")
+                .append(Filters.Links.TABLE_NAME)
+                .append("))");
+    }
+
+    static void createUserKeyStatement(StringBuilder builder) {
+        builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_KEY).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
+    }
+
+    static void appendSourceStatement(StringBuilder builder) {
+        builder.append("(SELECT 1 IN (SELECT ? LIKE '%>'||")
+                .append(Filters.Sources.TABLE_NAME).append(".")
+                .append(Filters.VALUE).append("||'</a>%' FROM ")
+                .append(Filters.Sources.TABLE_NAME)
+                .append("))");
+    }
+
     public static boolean isFiltered(final SQLiteDatabase database, final ParcelableStatus status,
                                      final boolean filterRTs) {
         if (database == null || status == null) return false;
-        return isFiltered(database, status.user_key, status.text_plain, status.spans, status.source,
+        return isFiltered(database, status.user_key, status.text_plain, status.quoted_text_plain,
+                status.spans, status.quoted_spans, status.source, status.quoted_source,
                 status.retweeted_by_user_key, status.quoted_user_key, filterRTs);
     }
 

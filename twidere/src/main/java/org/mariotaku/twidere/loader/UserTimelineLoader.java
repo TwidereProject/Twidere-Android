@@ -77,6 +77,7 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
             return false;
         final UserKey retweetUserId = status.is_retweet ? status.user_key : null;
         return InternalTwitterContentUtils.isFiltered(database, retweetUserId, status.text_plain,
-                status.spans, status.source, null, status.quoted_user_key);
+                status.quoted_text_plain, status.spans, status.quoted_spans, status.source,
+                status.quoted_source, null, status.quoted_user_key);
     }
 }

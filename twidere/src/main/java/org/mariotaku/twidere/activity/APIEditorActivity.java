@@ -48,6 +48,7 @@ import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
@@ -294,7 +295,9 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
             mAdapter = new CustomAPIConfigArrayAdapter(context, configs);
             final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
             builder.setAdapter(mAdapter, this);
-            getLoaderManager().initLoader(0, null, this);
+            if (!BuildConfig.DEBUG) {
+                getLoaderManager().initLoader(0, null, this);
+            }
             return builder.create();
         }
 

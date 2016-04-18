@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools">
 
-    <item
-        android:id="@id/open_in_browser"
-        android:icon="@drawable/ic_action_web"
-        android:title="@string/browser_sign_in"
-        app:showAsAction="always"/>
     <item
         android:id="@id/edit_api"
         android:icon="@drawable/ic_action_server"
         android:title="@string/edit_api"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
     <item
         android:id="@id/settings"
         android:icon="@drawable/ic_action_settings"
