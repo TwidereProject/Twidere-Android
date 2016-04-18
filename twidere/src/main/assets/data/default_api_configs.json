@@ -67,5 +67,14 @@
     "no_version_suffix": true,
     "consumer_key": "3f04dd3e588d3189ebe16904a1089e67",
     "consumer_secret": "5a797b92a22481be94c9c81058d02124"
+  },
+  {
+    "name": "Quitter.se",
+    "api_url_format": "https://quitter.im/api/",
+    "auth_type": "oauth",
+    "same_oauth_url": true,
+    "no_version_suffix": true,
+    "consumer_key": "55c955ee84205e958093d9131bb47154",
+    "consumer_secret": "a13013cac18c9a13bd3f77e1a909f925"
   }
 ]
