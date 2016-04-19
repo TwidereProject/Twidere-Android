@@ -324,7 +324,6 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
         return false;
     }
 
-
     @Override
     public RequestClickListener getRequestClickListener() {
         return requestClickListener;

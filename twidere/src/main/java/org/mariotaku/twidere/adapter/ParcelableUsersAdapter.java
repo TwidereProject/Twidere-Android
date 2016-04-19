@@ -67,13 +67,13 @@ public class ParcelableUsersAdapter extends LoadMoreSupportAdapter<RecyclerView.
         mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);
     }
 
+    @Nullable
     public List<ParcelableUser> getData() {
         return mData;
     }
 
-
     @Override
-    public boolean setData(List<ParcelableUser> data) {
+    public boolean setData(@Nullable List<ParcelableUser> data) {
         mData = data;
         notifyDataSetChanged();
         return true;

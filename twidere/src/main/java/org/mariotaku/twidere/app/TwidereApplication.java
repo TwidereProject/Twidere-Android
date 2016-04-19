@@ -144,6 +144,10 @@ public class TwidereApplication extends Application implements Constants,
         if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy();
         }
+        final SharedPreferences preferences = getSharedPreferences();
+        resetTheme(preferences);
+        super.onCreate();
+
         mProfileImageViewViewProcessor = new ProfileImageViewViewProcessor();
         mFontFamilyTagProcessor = new FontFamilyTagProcessor();
 
@@ -166,7 +170,6 @@ public class TwidereApplication extends Application implements Constants,
         ATE.registerTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_DISABLED,
                 new IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_DISABLED));
         ATE.registerTagProcessor(ThemedMultiValueSwitch.PREFIX_TINT, new ThemedMultiValueSwitch.TintTagProcessor());
-        final SharedPreferences preferences = getSharedPreferences();
 
 
         mProfileImageViewViewProcessor.setStyle(Utils.getProfileImageStyle(preferences));
@@ -198,8 +201,6 @@ public class TwidereApplication extends Application implements Constants,
                     .coloredStatusBar(false)
                     .commit();
         }
-        resetTheme(preferences);
-        super.onCreate();
         initializeAsyncTask();
         initDebugMode();
         initBugReport();

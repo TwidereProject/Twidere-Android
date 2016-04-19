@@ -37,7 +37,7 @@ public class StatusLinkClickHandler extends OnLinkClickHandler {
                              final String link, final int start, final int end) {
         final ParcelableStatus status = mStatus;
         final ParcelableMedia current = findByLink(status.media, link);
-        if (current.open_browser) {
+        if (current == null || current.open_browser) {
             openLink(link);
         } else {
             IntentUtils.openMedia(context, status, current, null,

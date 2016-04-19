@@ -210,6 +210,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         return mData.get(dataPosition).account_key;
     }
 
+    @Override
     public boolean setData(List<ParcelableStatus> data) {
         mData = data;
         if (data instanceof ObjectCursor || data == null || data.isEmpty()) {
