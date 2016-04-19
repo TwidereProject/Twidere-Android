@@ -131,7 +131,8 @@ public class CardPollFragment extends BaseSupportFragment implements
     }
 
     private void displayPoll(final ParcelableCardEntity card, final ParcelableStatus status) {
-        if (card == null || status == null) return;
+        final Context context = getContext();
+        if (card == null || status == null || context == null) return;
         mCard = card;
         final int choicesCount = getChoicesCount(card);
         int votesSum = 0;
@@ -199,7 +200,7 @@ public class CardPollFragment extends BaseSupportFragment implements
             }
         };
 
-        final int color = ContextCompat.getColor(getContext(), R.color.material_light_blue_a200);
+        final int color = ContextCompat.getColor(context, R.color.material_light_blue_a200);
         final float radius = getResources().getDimension(R.dimen.element_spacing_small);
         for (int i = 0; i < choicesCount; i++) {
             final View pollItem = mPollContainer.getChildAt(i);
@@ -237,12 +238,13 @@ public class CardPollFragment extends BaseSupportFragment implements
 
         final String nVotes = getResources().getQuantityString(R.plurals.N_votes, votesSum, votesSum);
 
-        final CharSequence timeLeft = DateUtils.getRelativeTimeSpanString(getContext(),
+        final CharSequence timeLeft = DateUtils.getRelativeTimeSpanString(context,
                 endDatetimeUtc.getTime(), true);
         mPollSummary.setText(getString(R.string.poll_summary_format, nVotes, timeLeft));
     }
 
     private void displayAndReloadPoll(ParcelableCardEntity result, ParcelableStatus status) {
+        if (getHost() == null) return;
         displayPoll(result, status);
         getLoaderManager().restartLoader(0, null, this);
     }

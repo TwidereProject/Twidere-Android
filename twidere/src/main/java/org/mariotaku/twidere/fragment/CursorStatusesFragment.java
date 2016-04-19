@@ -267,7 +267,9 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
             @Nullable
             @Override
             public long[] getMaxSortIds() {
-                return DataStoreUtils.getOldestStatusSortIds(getContext(), getContentUri(),
+                final Context context = getContext();
+                if (context == null) return null;
+                return DataStoreUtils.getOldestStatusSortIds(context, getContentUri(),
                         getAccountKeys());
             }
 
@@ -307,7 +309,9 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
             @Nullable
             @Override
             public long[] getSinceSortIds() {
-                return DataStoreUtils.getNewestStatusSortIds(getContext(), getContentUri(),
+                final Context context = getContext();
+                if (context == null) return null;
+                return DataStoreUtils.getNewestStatusSortIds(context, getContentUri(),
                         getAccountKeys());
             }
 

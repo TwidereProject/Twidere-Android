@@ -685,7 +685,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
             super.onDownloadStart(total, nonce);
             if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
                 mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
-                mMediaDownloadEvent.setSize(nonce);
+                mMediaDownloadEvent.setSize(total);
             }
         }
 
@@ -755,8 +755,8 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
                     decodeBitmap(cr, uri, o);
                     final DisplayMetrics dm = context.getResources().getDisplayMetrics();
                     final int targetSize = Math.min(1024, Math.max(dm.widthPixels, dm.heightPixels));
-                    o.inSampleSize = TwidereMathUtils.nextPowerOf2((int) Math.max(1,
-                            Math.ceil(Math.min(o.outHeight, o.outWidth) / (float) targetSize)));
+                    o.inSampleSize = TwidereMathUtils.nextPowerOf2(Math.max(1,
+                            Math.round(Math.min(o.outHeight, o.outWidth) / (float) targetSize)));
                     o.inJustDecodeBounds = false;
                     final Bitmap bitmap = decodeBitmap(cr, uri, o);
                     if (bitmap == null) throw new IOException();
@@ -854,7 +854,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
             super.onDownloadStart(total, nonce);
             if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
                 mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
-                mMediaDownloadEvent.setSize(nonce);
+                mMediaDownloadEvent.setSize(total);
             }
         }
 
@@ -1153,7 +1153,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
             super.onDownloadStart(total, nonce);
             if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
                 mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
-                mMediaDownloadEvent.setSize(nonce);
+                mMediaDownloadEvent.setSize(total);
             }
         }
 
