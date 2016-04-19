@@ -100,10 +100,13 @@ public class ParcelableActivityUtils {
     public static ParcelableStatus getActivityStatus(@NonNull ParcelableActivity activity) {
         final ParcelableStatus status;
         if (Activity.Action.MENTION.equals(activity.action)) {
+            if (ArrayUtils.isEmpty(activity.target_object_statuses)) return null;
             status = activity.target_object_statuses[0];
         } else if (Activity.Action.REPLY.equals(activity.action)) {
+            if (ArrayUtils.isEmpty(activity.target_statuses)) return null;
             status = activity.target_statuses[0];
         } else if (Activity.Action.QUOTE.equals(activity.action)) {
+            if (ArrayUtils.isEmpty(activity.target_statuses)) return null;
             status = activity.target_statuses[0];
         } else {
             return null;
