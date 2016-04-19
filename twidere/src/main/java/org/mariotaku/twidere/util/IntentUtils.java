@@ -196,8 +196,8 @@ public class IntentUtils implements Constants {
                 options, newDocument);
     }
 
-    public static String getDefaultBrowserPackage(Context context, Uri uri) {
-        if (!isWebLinkHandled(context, uri)) {
+    public static String getDefaultBrowserPackage(Context context, Uri uri, boolean checkHandled) {
+        if (checkHandled && !isWebLinkHandled(context, uri)) {
             return null;
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW);

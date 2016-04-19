@@ -1102,7 +1102,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 final Uri uri = LinkCreator.getUserWebLink(user);
                 final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setPackage(IntentUtils.getDefaultBrowserPackage(getContext(), uri));
+                intent.setPackage(IntentUtils.getDefaultBrowserPackage(getContext(), uri, true));
                 startActivity(intent);
                 return true;
             }

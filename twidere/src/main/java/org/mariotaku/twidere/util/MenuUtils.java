@@ -347,7 +347,7 @@ public class MenuUtils implements Constants {
                 final Uri uri = LinkCreator.getStatusWebLink(status);
                 final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri));
+                intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri, true));
 //                IntentSupport.setSelector(intent, new Intent(Intent.ACTION_VIEW).addCategory(IntentSupport.CATEGORY_APP_BROWSER));
                 context.startActivity(intent);
                 break;

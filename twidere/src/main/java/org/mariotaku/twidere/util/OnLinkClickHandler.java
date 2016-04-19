@@ -177,7 +177,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
         final Uri uri = Uri.parse(link);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri));
+        intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri, true));
         try {
             context.startActivity(intent);
         } catch (final ActivityNotFoundException e) {

@@ -93,7 +93,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
             }
             final Intent fallbackIntent = new Intent(Intent.ACTION_VIEW, uri);
             fallbackIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-            fallbackIntent.setPackage(IntentUtils.getDefaultBrowserPackage(this, uri));
+            fallbackIntent.setPackage(IntentUtils.getDefaultBrowserPackage(this, uri, false));
             final ComponentName componentName = fallbackIntent.resolveActivity(packageManager);
             if (componentName == null) {
                 final Intent targetIntent = new Intent(Intent.ACTION_VIEW, uri);
