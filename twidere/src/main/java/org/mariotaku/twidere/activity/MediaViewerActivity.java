@@ -61,7 +61,7 @@ import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
+import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder;
 import com.sprylab.android.widget.TextureVideoView;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -88,6 +88,7 @@ import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.MenuUtils;
 import org.mariotaku.twidere.util.PermissionUtils;
 import org.mariotaku.twidere.util.TwidereMathUtils;
+import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.media.MediaExtra;
@@ -637,19 +638,20 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
         @Override
         protected ImageSource getImageSource(@NonNull CacheDownloadLoader.Result data) {
             assert data.cacheUri != null;
-            if (data instanceof SizedResult) {
-                final ImageSource uri = ImageSource.uri(data.cacheUri);
-                uri.dimensions(((SizedResult) data).getWidth(), ((SizedResult) data).getHeight());
-                return uri;
+            if (!(data instanceof SizedResult)) {
+                return super.getImageSource(data);
             }
-            return super.getImageSource(data);
+            final ImageSource imageSource = ImageSource.uri(data.cacheUri);
+            imageSource.tilingEnabled();
+            imageSource.dimensions(((SizedResult) data).getWidth(), ((SizedResult) data).getHeight());
+            return imageSource;
         }
 
         @Override
         protected ImageSource getPreviewImageSource(@NonNull CacheDownloadLoader.Result data) {
             if (!(data instanceof SizedResult)) return null;
             assert data.cacheUri != null;
-            return ImageSource.uri(data.cacheUri);
+            return ImageSource.uri(UriUtils.appendQueryParameters(data.cacheUri, QUERY_PARAM_PREVIEW, true));
         }
 
         @Nullable
@@ -741,21 +743,26 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
 
         }
 
-        public static class PreviewBitmapDecoder implements ImageDecoder {
+        public static class PreviewBitmapDecoder extends SkiaImageDecoder {
             @Override
             public Bitmap decode(Context context, Uri uri) throws Exception {
-                BitmapFactory.Options o = new BitmapFactory.Options();
-                o.inJustDecodeBounds = true;
-                o.inPreferredConfig = Bitmap.Config.RGB_565;
-                final ContentResolver cr = context.getContentResolver();
-                decodeBitmap(cr, uri, o);
-                final DisplayMetrics dm = context.getResources().getDisplayMetrics();
-                final int targetSize = Math.min(1024, Math.max(dm.widthPixels, dm.heightPixels));
-                o.inSampleSize = TwidereMathUtils.nextPowerOf2(Math.max(1, Math.min(o.outHeight, o.outWidth) / targetSize));
-                o.inJustDecodeBounds = false;
-                final Bitmap bitmap = decodeBitmap(cr, uri, o);
-                if (bitmap == null) throw new IOException();
-                return bitmap;
+                if (AUTHORITY_TWIDERE_CACHE.equals(uri.getAuthority())
+                        && uri.getBooleanQueryParameter(QUERY_PARAM_PREVIEW, false)) {
+                    BitmapFactory.Options o = new BitmapFactory.Options();
+                    o.inJustDecodeBounds = true;
+                    o.inPreferredConfig = Bitmap.Config.RGB_565;
+                    final ContentResolver cr = context.getContentResolver();
+                    decodeBitmap(cr, uri, o);
+                    final DisplayMetrics dm = context.getResources().getDisplayMetrics();
+                    final int targetSize = Math.min(1024, Math.max(dm.widthPixels, dm.heightPixels));
+                    o.inSampleSize = TwidereMathUtils.nextPowerOf2((int) Math.max(1,
+                            Math.ceil(Math.min(o.outHeight, o.outWidth) / (float) targetSize)));
+                    o.inJustDecodeBounds = false;
+                    final Bitmap bitmap = decodeBitmap(cr, uri, o);
+                    if (bitmap == null) throw new IOException();
+                    return bitmap;
+                }
+                return super.decode(context, uri);
             }
 
         }
