@@ -123,9 +123,12 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
                             }
                             break;
                         }
-                        case "twitter.com": {
-                            openTwitterLink(link, accountKey);
-                            return true;
+                        default: {
+                            if (IntentUtils.isWebLinkHandled(context, Uri.parse(link))) {
+                                openTwitterLink(link, accountKey);
+                                return true;
+                            }
+                            break;
                         }
                     }
                     openLink(link);
@@ -171,9 +174,10 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
 
     protected void openLink(final String link) {
         if (manager != null && manager.isActive()) return;
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        final Uri uri = Uri.parse(link);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setPackage(IntentUtils.getDefaultBrowserPackage(context));
+        intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri));
         try {
             context.startActivity(intent);
         } catch (final ActivityNotFoundException e) {

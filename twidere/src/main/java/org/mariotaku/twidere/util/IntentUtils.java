@@ -1,9 +1,12 @@
 package org.mariotaku.twidere.util;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -35,6 +38,7 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -192,9 +196,14 @@ public class IntentUtils implements Constants {
                 options, newDocument);
     }
 
-    public static String getDefaultBrowserPackage(Context context) {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME_HTTP);
+    public static String getDefaultBrowserPackage(Context context, Uri uri) {
+        if (!isWebLinkHandled(context, uri)) {
+            return null;
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        Uri.Builder testBuilder = new Uri.Builder();
+        testBuilder.scheme(SCHEME_HTTP);
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
         int range = 'z' - 'a';
@@ -202,15 +211,29 @@ public class IntentUtils implements Constants {
             sb.append((char) ('a' + (Math.abs(random.nextInt()) % range)));
         }
         sb.append(".com");
-        builder.authority(sb.toString());
-        final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        List<ResolveInfo> info = context.getPackageManager().queryIntentActivities(intent, 0);
-        if (info.isEmpty()) return null;
-        for (ResolveInfo item : info) {
-            if (item.isDefault) return item.activityInfo.packageName;
-        }
-        return info.get(0).activityInfo.packageName;
+        testBuilder.authority(sb.toString());
+        intent.setData(testBuilder.build());
+
+        final ComponentName componentName = intent.resolveActivity(context.getPackageManager());
+        if (componentName == null) return null;
+        return componentName.getPackageName();
+    }
+
+    public static boolean isWebLinkHandled(Context context, Uri uri) {
+        final IntentFilter filter = getWebLinkIntentFilter(context);
+        if (filter == null) return false;
+        return filter.match(Intent.ACTION_VIEW, null, uri.getScheme(), uri,
+                Collections.singleton(Intent.CATEGORY_BROWSABLE), LOGTAG) >= 0;
+    }
+
+    @Nullable
+    public static IntentFilter getWebLinkIntentFilter(Context context) {
+        Intent testIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/user_name"));
+        testIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+        testIntent.setPackage(context.getPackageName());
+        final ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(testIntent,
+                PackageManager.GET_RESOLVED_FILTER);
+        return resolveInfo != null ? resolveInfo.filter : null;
     }
 
     public static void openMediaDirectly(@NonNull final Context context,

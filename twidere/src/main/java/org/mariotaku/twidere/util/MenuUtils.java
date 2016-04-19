@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,8 +55,8 @@ import org.mariotaku.twidere.fragment.DestroyStatusDialogFragment;
 import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment;
 import org.mariotaku.twidere.graphic.ActionIconDrawable;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
-import org.mariotaku.twidere.menu.SupportStatusShareProvider;
 import org.mariotaku.twidere.menu.FavoriteItemProvider;
+import org.mariotaku.twidere.menu.SupportStatusShareProvider;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
@@ -343,9 +344,10 @@ public class MenuUtils implements Constants {
                 break;
             }
             case R.id.open_in_browser: {
-                final Intent intent = new Intent(Intent.ACTION_VIEW, LinkCreator.getStatusWebLink(status));
+                final Uri uri = LinkCreator.getStatusWebLink(status);
+                final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setPackage(IntentUtils.getDefaultBrowserPackage(context));
+                intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri));
 //                IntentSupport.setSelector(intent, new Intent(Intent.ACTION_VIEW).addCategory(IntentSupport.CATEGORY_APP_BROWSER));
                 context.startActivity(intent);
                 break;

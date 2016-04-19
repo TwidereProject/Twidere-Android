@@ -60,6 +60,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -197,19 +198,25 @@ public class BaseActivity extends ATEActivity implements Constants, IExtendedAct
         super.onResume();
         final NfcAdapter adapter = NfcAdapter.getDefaultAdapter(this);
         if (adapter != null && adapter.isEnabled()) {
-            final Intent linkIntent = new Intent(this, WebLinkHandlerActivity.class);
-            final PendingIntent intent = PendingIntent.getActivity(this, 0, linkIntent, 0);
-            final IntentFilter intentFilter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-            intentFilter.addDataScheme("http");
-            intentFilter.addDataScheme("https");
-            intentFilter.addDataAuthority("twitter.com", null);
-            intentFilter.addDataAuthority("www.twitter.com", null);
-            intentFilter.addDataAuthority("mobile.twitter.com", null);
-            intentFilter.addDataAuthority("fanfou.com", null);
-            try {
-                adapter.enableForegroundDispatch(this, intent, new IntentFilter[]{intentFilter}, null);
-            } catch (Exception e) {
-                // Ignore if blocked by modified roms
+
+            final IntentFilter handlerFilter = IntentUtils.getWebLinkIntentFilter(this);
+            if (handlerFilter != null) {
+                final Intent linkIntent = new Intent(this, WebLinkHandlerActivity.class);
+                final PendingIntent intent = PendingIntent.getActivity(this, 0, linkIntent, 0);
+                final IntentFilter intentFilter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+                for (int i = 0, j = handlerFilter.countDataSchemes(); i < j; i++) {
+                    intentFilter.addDataScheme(handlerFilter.getDataScheme(i));
+                }
+                for (int i = 0, j = handlerFilter.countDataAuthorities(); i < j; i++) {
+                    final IntentFilter.AuthorityEntry authorityEntry = handlerFilter.getDataAuthority(i);
+                    final int port = authorityEntry.getPort();
+                    intentFilter.addDataAuthority(authorityEntry.getHost(), port < 0 ? null : Integer.toString(port));
+                }
+                try {
+                    adapter.enableForegroundDispatch(this, intent, new IntentFilter[]{intentFilter}, null);
+                } catch (Exception e) {
+                    // Ignore if blocked by modified roms
+                }
             }
         }
     }
