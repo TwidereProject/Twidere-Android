@@ -358,7 +358,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int position) {
         final ParcelableActivitiesAdapter adapter = getAdapter();
         final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(adapter.getActivity(position));
-        if (status == null) return;
+        if (status == null || media == null) return;
         IntentUtils.openMedia(getActivity(), status, media, null,
                 mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
         // BEGIN HotMobi

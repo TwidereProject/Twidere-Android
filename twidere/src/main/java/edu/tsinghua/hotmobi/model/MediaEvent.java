@@ -71,7 +71,7 @@ public class MediaEvent extends BaseEvent implements Parcelable {
     @ParcelableThisPlease
     boolean previewEnabled;
 
-    public static MediaEvent create(Context context, ParcelableStatus status, ParcelableMedia media,
+    public static MediaEvent create(Context context, ParcelableStatus status,@NonNull ParcelableMedia media,
                                     @TimelineType String timelineType, boolean previewEnabled) {
         final MediaEvent event = new MediaEvent();
         event.markStart(context);
