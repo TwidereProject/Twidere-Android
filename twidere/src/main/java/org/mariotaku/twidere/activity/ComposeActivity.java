@@ -1435,7 +1435,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         } else if (!hasMedia && (TextUtils.isEmpty(text) || noReplyContent(text))) {
             mEditText.setError(getString(R.string.error_message_no_content));
             return;
-        } else if (maxLength <= 0 || (!mStatusShortenerUsed && tweetLength > maxLength)) {
+        } else if (maxLength > 0 && !mStatusShortenerUsed && tweetLength > maxLength) {
             mEditText.setError(getString(R.string.error_message_status_too_long));
             final int textLength = mEditText.length();
             mEditText.setSelection(textLength - (tweetLength - maxLength), textLength);
