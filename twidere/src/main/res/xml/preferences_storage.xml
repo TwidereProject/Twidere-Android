@@ -16,7 +16,7 @@
             android:summary="@string/database_item_limit_summary"
             android:title="@string/database_item_limit"
             app:max="500"
-            app:min="50"
+            app:min="@integer/min_database_item_limit"
             app:step="10"/>
 
         <org.mariotaku.twidere.preference.SeekBarDialogPreference

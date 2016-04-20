@@ -487,7 +487,7 @@ public class DataStoreUtils implements Constants {
     }
 
     public static int getActivitiesCount(final Context context, final Uri uri, final long compare,
-                                       String compareColumn, boolean greaterThan, UserKey... accountKeys) {
+                                         String compareColumn, boolean greaterThan, UserKey... accountKeys) {
         if (context == null) return 0;
         if (accountKeys == null) {
             accountKeys = getActivatedAccountKeys(context);
@@ -783,46 +783,47 @@ public class DataStoreUtils implements Constants {
                     continue;
                 }
                 final String table = getTableNameByUri(uri);
-                final Expression accountWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(Statuses._ID))
                         .from(new Tables(table))
-                        .where(accountWhere)
-                        .orderBy(new OrderBy(Statuses.STATUS_ID, false))
+                        .where(Expression.equalsArgs(Statuses.ACCOUNT_KEY))
+                        .orderBy(new OrderBy(Statuses.POSITION_KEY, false))
                         .limit(itemLimit);
-                final Expression where = Expression.and(Expression.lesserThan(new Column(Statuses._ID),
-                                SQLQueryBuilder.select(SQLFunctions.MIN(new Column(Statuses._ID))).from(qb.build()).build()),
-                        accountWhere);
+                final Expression where = Expression.and(
+                        Expression.notIn(new Column(Statuses._ID), qb.build()),
+                        Expression.equalsArgs(Statuses.ACCOUNT_KEY)
+                );
                 final String[] whereArgs = {String.valueOf(accountKey), String.valueOf(accountKey)};
                 resolver.delete(uri, where.getSQL(), whereArgs);
             }
             for (final Uri uri : ACTIVITIES_URIS) {
                 final String table = getTableNameByUri(uri);
-                final Expression accountWhere = Expression.equalsArgs(Accounts.ACCOUNT_KEY);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(Activities._ID))
                         .from(new Tables(table))
-                        .where(accountWhere)
+                        .where(Expression.equalsArgs(Activities.ACCOUNT_KEY))
                         .orderBy(new OrderBy(Activities.TIMESTAMP, false))
                         .limit(itemLimit);
-                final Expression where = Expression.and(Expression.lesserThan(new Column(Activities._ID),
-                        SQLQueryBuilder.select(SQLFunctions.MIN(new Column(Activities._ID)))
-                                .from(qb.build()).build()), accountWhere);
+                final Expression where = Expression.and(
+                        Expression.notIn(new Column(Activities._ID), qb.build()),
+                        Expression.equalsArgs(Activities.ACCOUNT_KEY)
+                );
                 final String[] whereArgs = {String.valueOf(accountKey), String.valueOf(accountKey)};
                 resolver.delete(uri, where.getSQL(), whereArgs);
             }
             for (final Uri uri : DIRECT_MESSAGES_URIS) {
                 final String table = getTableNameByUri(uri);
-                final Expression accountWhere = Expression.equalsArgs(Accounts.ACCOUNT_KEY);
+                final Expression accountWhere = Expression.equalsArgs(DirectMessages.ACCOUNT_KEY);
                 final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
                 qb.select(new Column(DirectMessages._ID))
                         .from(new Tables(table))
                         .where(accountWhere)
                         .orderBy(new OrderBy(DirectMessages.MESSAGE_ID, false))
                         .limit(itemLimit * 10);
-                final Expression where = Expression.and(Expression.lesserThan(new Column(DirectMessages._ID),
-                        SQLQueryBuilder.select(SQLFunctions.MIN(new Column(DirectMessages._ID)))
-                                .from(qb.build()).build()), accountWhere);
+                final Expression where = Expression.and(
+                        Expression.notIn(new Column(DirectMessages._ID), qb.build()),
+                        Expression.equalsArgs(DirectMessages.ACCOUNT_KEY)
+                );
                 final String[] whereArgs = {String.valueOf(accountKey), String.valueOf(accountKey)};
                 resolver.delete(uri, where.getSQL(), whereArgs);
             }
@@ -836,8 +837,7 @@ public class DataStoreUtils implements Constants {
                     .from(new Tables(table))
                     .orderBy(new OrderBy(BaseColumns._ID, false))
                     .limit(itemLimit * 20);
-            final Expression where = Expression.lesserThan(new Column(BaseColumns._ID),
-                    SQLQueryBuilder.select(SQLFunctions.MIN(new Column(BaseColumns._ID))).from(qb.build()).build());
+            final Expression where = Expression.notIn(new Column(BaseColumns._ID), qb.build());
             resolver.delete(uri, where.getSQL(), null);
         }
     }
