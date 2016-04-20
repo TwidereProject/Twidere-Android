@@ -367,7 +367,8 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
             case Activity.Action.LIST_MEMBER_ADDED:
             case Activity.Action.MEDIA_TAGGED:
             case Activity.Action.RETWEETED_MEDIA_TAGGED:
-            case Activity.Action.FAVORITED_MEDIA_TAGGED: {
+            case Activity.Action.FAVORITED_MEDIA_TAGGED:
+            case Activity.Action.JOINED_TWITTER: {
                 if (mMentionsOnly) return ITEM_VIEW_TYPE_EMPTY;
                 ParcelableActivityUtils.initAfterFilteredSourceIds(activity, mFilteredUserIds, mFollowingOnly);
                 if (ArrayUtils.isEmpty(activity.after_filtered_source_ids)) {
