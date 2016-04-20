@@ -29,6 +29,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.WebLinkHandlerActivity;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.UserKey;
@@ -191,6 +192,7 @@ public class OnLinkClickHandler implements OnLinkClickListener, Constants {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(context, WebLinkHandlerActivity.class);
         intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
+        intent.setExtrasClassLoader(TwidereApplication.class.getClassLoader());
         try {
             context.startActivity(intent);
         } catch (final ActivityNotFoundException e) {

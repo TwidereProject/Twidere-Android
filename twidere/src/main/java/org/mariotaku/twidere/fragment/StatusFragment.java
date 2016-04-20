@@ -688,7 +688,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
 
     private void loadActivity(ParcelableStatus status) {
-        if (status == null) return;
+        if (status == null || getHost() == null || isDetached()) return;
         final Bundle args = new Bundle();
         args.putParcelable(EXTRA_ACCOUNT_KEY, status.account_key);
         args.putString(EXTRA_STATUS_ID, status.is_retweet ? status.retweet_id : status.id);

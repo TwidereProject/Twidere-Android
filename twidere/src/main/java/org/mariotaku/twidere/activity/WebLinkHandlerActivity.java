@@ -14,6 +14,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.BugReporter;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -62,6 +63,7 @@ public class WebLinkHandlerActivity extends Activity implements Constants {
         super.onCreate(savedInstanceState);
         final PackageManager packageManager = getPackageManager();
         final Intent intent = getIntent();
+        intent.setExtrasClassLoader(TwidereApplication.class.getClassLoader());
         final Uri uri = intent.getData();
         if (uri == null || uri.getHost() == null) {
             finish();

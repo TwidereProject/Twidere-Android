@@ -509,8 +509,8 @@
         <provider
             android:name=".provider.ShareProvider"
             android:authorities="twidere.share"
-            android:exported="false"
-            android:grantUriPermissions="true"/>
+            android:exported="true"
+            tools:ignore="ExportedContentProvider"/>
 
         <receiver android:name=".receiver.ConnectivityStateReceiver">
             <intent-filter>

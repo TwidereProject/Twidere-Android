@@ -203,9 +203,14 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 break;
             }
             case R.id.password_sign_in: {
-                final FragmentManager fm = getSupportFragmentManager();
-                PasswordSignInDialogFragment df = new PasswordSignInDialogFragment();
-                df.show(fm.beginTransaction(), "password_sign_in");
+                executeAfterFragmentResumed(new Action() {
+                    @Override
+                    public void execute(IExtendedActivity activity) {
+                        final FragmentManager fm = getSupportFragmentManager();
+                        PasswordSignInDialogFragment df = new PasswordSignInDialogFragment();
+                        df.show(fm.beginTransaction(), "password_sign_in");
+                    }
+                });
                 break;
             }
         }

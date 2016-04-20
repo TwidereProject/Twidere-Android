@@ -990,16 +990,21 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
         }
 
         private void updateVolume() {
-            final MediaPlayer mp = mMediaPlayer;
-            if (mp == null || mp.isPlaying()) return;
+
             final ImageButton b = mVolumeButton;
             if (b != null) {
                 b.setImageResource(mPlayAudio ? R.drawable.ic_action_speaker_max : R.drawable.ic_action_speaker_muted);
             }
-            if (mPlayAudio) {
-                mp.setVolume(1, 1);
-            } else {
-                mp.setVolume(0, 0);
+            final MediaPlayer mp = mMediaPlayer;
+            if (mp == null) return;
+            try {
+                if (mPlayAudio) {
+                    mp.setVolume(1, 1);
+                } else {
+                    mp.setVolume(0, 0);
+                }
+            } catch (IllegalStateException e) {
+                // Ignore
             }
         }
 

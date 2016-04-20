@@ -348,8 +348,13 @@ public class MenuUtils implements Constants {
                 final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
                 intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri, true));
-//                IntentSupport.setSelector(intent, new Intent(Intent.ACTION_VIEW).addCategory(IntentSupport.CATEGORY_APP_BROWSER));
-                context.startActivity(intent);
+                try {
+                    context.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    intent.setPackage(null);
+                    context.startActivity(Intent.createChooser(intent,
+                            context.getString(R.string.open_in_browser)));
+                }
                 break;
             }
             default: {

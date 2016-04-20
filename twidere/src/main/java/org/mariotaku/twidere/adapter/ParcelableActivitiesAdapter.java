@@ -109,8 +109,10 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
             return false;
         }
         if (mData instanceof ObjectCursor) {
-            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
-            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
+            final Cursor cursor = ((ObjectCursor) mData).getCursor();
+            if (!cursor.moveToPosition(dataPosition)) return false;
+            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices)
+                    ((ObjectCursor) mData).getIndices();
             return cursor.getShort(indices.is_gap) == 1;
         }
         return mData.get(dataPosition).is_gap;
@@ -121,13 +123,16 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
         int dataPosition = adapterPosition - getActivityStartIndex();
         if (dataPosition < 0 || dataPosition >= getActivityCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
-            final Cursor cursor = ((ObjectCursor) mData).getCursor(dataPosition);
-            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
+            final Cursor cursor = ((ObjectCursor) mData).getCursor();
+            if (!cursor.moveToPosition(dataPosition)) return -1;
+            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices)
+                    ((ObjectCursor) mData).getIndices();
             final UserKey accountKey = UserKey.valueOf(cursor.getString(indices.account_key));
             final long timestamp = cursor.getLong(indices.timestamp);
             final long maxPosition = cursor.getLong(indices.max_position);
             final long minPosition = cursor.getLong(indices.min_position);
-            return ParcelableActivity.calculateHashCode(accountKey, timestamp, maxPosition, minPosition);
+            return ParcelableActivity.calculateHashCode(accountKey, timestamp, maxPosition,
+                    minPosition);
         }
         return mData.get(dataPosition).hashCode();
     }
@@ -137,8 +142,11 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
         int dataPosition = adapterPosition - getActivityStartIndex();
         if (dataPosition < 0 || dataPosition >= getActivityCount()) return null;
         if (mData instanceof ObjectCursor) {
-            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
-            return ((ObjectCursor) mData).getCursor(dataPosition).getString(indices.action);
+            final Cursor cursor = ((ObjectCursor) mData).getCursor();
+            if (!cursor.moveToPosition(dataPosition)) return null;
+            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices)
+                    ((ObjectCursor) mData).getIndices();
+            return cursor.getString(indices.action);
         }
         return mData.get(dataPosition).action;
     }
@@ -147,8 +155,11 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
         int dataPosition = adapterPosition - getActivityStartIndex();
         if (dataPosition < 0 || dataPosition >= getActivityCount()) return RecyclerView.NO_ID;
         if (mData instanceof ObjectCursor) {
-            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices) ((ObjectCursor) mData).getIndices();
-            return ((ObjectCursor) mData).getCursor(dataPosition).getLong(indices.timestamp);
+            final Cursor cursor = ((ObjectCursor) mData).getCursor();
+            if (!cursor.moveToPosition(dataPosition)) return -1;
+            final ParcelableActivityCursorIndices indices = (ParcelableActivityCursorIndices)
+                    ((ObjectCursor) mData).getIndices();
+            return cursor.getLong(indices.timestamp);
         }
         return mData.get(dataPosition).timestamp;
     }
