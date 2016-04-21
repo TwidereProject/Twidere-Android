@@ -729,6 +729,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                                 mAccountKey, false);
                     }
                 }
+                ParcelableStatusUtils.updateExtraInformation(result, credentials,
+                        mUserColorNameManager);
                 Utils.setLastSeen(mContext, result.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.IS_FAVORITE, true);
@@ -1334,13 +1336,19 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, false);
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mContext,
+                    mAccountKey);
+            if (credentials == null) return SingleResponse.getInstance();
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, credentials, true,
+                    true);
             if (twitter == null) return SingleResponse.getInstance();
             ParcelableStatus status = null;
             TwitterException exception = null;
             try {
                 status = ParcelableStatusUtils.fromStatus(twitter.destroyStatus(mStatusId),
                         mAccountKey, false);
+                ParcelableStatusUtils.updateExtraInformation(status, credentials,
+                        mUserColorNameManager);
             } catch (final TwitterException e) {
                 exception = e;
             }
@@ -1550,13 +1558,18 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey, true);
+            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mContext,
+                    mAccountKey);
+            if (credentials == null) return SingleResponse.getInstance();
+            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, credentials, true, true);
             if (twitter == null) {
                 return SingleResponse.getInstance();
             }
             try {
                 final ParcelableStatus result = ParcelableStatusUtils.fromStatus(twitter.retweetStatus(mStatusId),
                         mAccountKey, false);
+                ParcelableStatusUtils.updateExtraInformation(result, credentials,
+                        mUserColorNameManager);
                 Utils.setLastSeen(mContext, result.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
                 values.put(Statuses.MY_RETWEET_ID, result.id);
@@ -1571,7 +1584,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
                     mResolver.update(uri, values, where.getSQL(), whereArgs);
                 }
-
                 DataStoreUtils.updateActivityStatus(mResolver, mAccountKey, mStatusId, new DataStoreUtils.UpdateActivityAction() {
                     @Override
                     public void process(ParcelableActivity activity) {
