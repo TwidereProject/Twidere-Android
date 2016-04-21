@@ -69,7 +69,7 @@
     "consumer_secret": "5a797b92a22481be94c9c81058d02124"
   },
   {
-    "name": "Quitter.se",
+    "name": "Quitter.im",
     "api_url_format": "https://quitter.im/api/",
     "auth_type": "oauth",
     "same_oauth_url": true,
