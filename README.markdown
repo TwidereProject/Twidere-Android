@@ -71,6 +71,8 @@ Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
 
 Buy me a ~~bread~~ [game](http://steamcommunity.com/id/mariotaku/wishlist) or anything you want :)
 
+[帮我支付宝账户里随便加点钱](https://twitter.com/xmxsuperstar/status/724094631621750785)
+
 ---
 
 ## License ##
