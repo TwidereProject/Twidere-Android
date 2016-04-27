@@ -290,7 +290,7 @@ public class ThemeUtils implements Constants {
 
     public static int getActionBarAlpha(final int alpha) {
         final int normalizedAlpha = TwidereMathUtils.clamp(alpha, 0, 0xFF);
-        final int delta = (ThemeBackgroundPreference.MAX_ALPHA - normalizedAlpha);
+        final int delta = ThemeBackgroundPreference.MAX_ALPHA - normalizedAlpha;
         return TwidereMathUtils.clamp(ThemeBackgroundPreference.MAX_ALPHA - delta / 2,
                 ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA);
     }

@@ -157,6 +157,7 @@ public final class DummyItemAdapter implements IStatusesAdapter<Object>,
         return textSize;
     }
 
+    @Override
     @Nullable
     public UserClickListener getUserClickListener() {
         return userClickListener;

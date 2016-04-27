@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
@@ -32,12 +33,10 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
  */
 public class StatusAdapterLinkClickHandler<D> extends OnLinkClickHandler {
 
-    private final IStatusesAdapter<D> adapter;
+    private IStatusesAdapter<D> adapter;
 
-    public StatusAdapterLinkClickHandler(IStatusesAdapter<D> adapter,
-                                         SharedPreferencesWrapper preferences) {
-        super(adapter.getContext(), null, preferences);
-        this.adapter = adapter;
+    public StatusAdapterLinkClickHandler(Context context, SharedPreferencesWrapper preferences) {
+        super(context, null, preferences);
     }
 
     @Override
@@ -64,5 +63,9 @@ public class StatusAdapterLinkClickHandler<D> extends OnLinkClickHandler {
             return current != null && !current.open_browser;
         }
         return super.isMedia(link, extraId);
+    }
+
+    public void setAdapter(IStatusesAdapter<D> adapter) {
+        this.adapter = adapter;
     }
 }

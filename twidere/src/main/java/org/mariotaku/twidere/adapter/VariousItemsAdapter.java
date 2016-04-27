@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
+import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
@@ -39,7 +40,10 @@ public class VariousItemsAdapter extends LoadMoreSupportAdapter<RecyclerView.Vie
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
-        mDummyAdapter = new DummyItemAdapter(context, new TwidereLinkify(null), this);
+        final StatusAdapterLinkClickHandler<Object> handler = new StatusAdapterLinkClickHandler<>(context,
+                mPreferences);
+        mDummyAdapter = new DummyItemAdapter(context, new TwidereLinkify(handler), this);
+        handler.setAdapter(mDummyAdapter);
         mDummyAdapter.updateOptions();
         setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
     }
