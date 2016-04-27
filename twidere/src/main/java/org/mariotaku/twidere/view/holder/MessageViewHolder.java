@@ -65,6 +65,19 @@ public class MessageViewHolder extends ViewHolder {
         textColorSecondaryInverse = a.getColor(R.styleable.MessageViewHolder_android_textColorSecondaryInverse, 0);
         a.recycle();
         messageContent = (MessageBubbleView) itemView.findViewById(R.id.message_content);
+        messageContent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                itemView.getParent().showContextMenuForChild(itemView);
+                return true;
+            }
+        });
+        messageContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemView.getParent().showContextMenuForChild(itemView);
+            }
+        });
         textView = (TextView) itemView.findViewById(R.id.text);
         time = (TextView) itemView.findViewById(R.id.time);
         mediaContainer = (CardMediaContainer) itemView.findViewById(R.id.media_preview_container);

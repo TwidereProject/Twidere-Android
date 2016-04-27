@@ -46,7 +46,6 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            android:textIsSelectable="true"
             tools:text="@string/sample_status_text"/>
 
         <TextView

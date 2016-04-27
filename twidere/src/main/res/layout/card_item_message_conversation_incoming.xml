@@ -38,7 +38,6 @@
         android:layout_gravity="start"
         android:layout_toEndOf="@+id/profile_image"
         android:layout_toRightOf="@+id/profile_image"
-        android:clickable="true"
         app:bubbleColor="?colorAccent"
         app:caretHeight="8dp"
         app:caretPosition="topStart"

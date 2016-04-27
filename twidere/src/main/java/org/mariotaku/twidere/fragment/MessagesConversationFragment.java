@@ -33,6 +33,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -48,6 +49,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Property;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -110,6 +112,7 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.ComposeEditText;
+import org.mariotaku.twidere.view.ExtendedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -342,6 +345,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         mUsersSearchList.setVisibility(View.GONE);
         mUsersSearchProgress.setVisibility(View.GONE);
 
+        registerForContextMenu(mMessagesListView);
+
         mQueryTextChanged = false;
         mTextChanged = false;
     }
@@ -415,8 +420,12 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             case R.id.delete_all: {
                 final ParcelableCredentials account = mAccount;
                 if (account == null || mRecipient == null) return true;
-                mTwitterWrapper.destroyMessageConversationAsync(account.account_key,
-                        mRecipient.key.getId());
+                Bundle args = new Bundle();
+                args.putParcelable(EXTRA_ACCOUNT, account);
+                args.putParcelable(EXTRA_USER, mRecipient);
+                DialogFragment df = new DeleteConversationConfirmDialogFragment();
+                df.setArguments(args);
+                df.show(getFragmentManager(), "delete_conversation_confirm");
                 return true;
             }
         }
@@ -526,6 +535,43 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         mAdapter.setCursor(cursor);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (menuInfo == null) return;
+        final MenuInflater inflater = new MenuInflater(getContext());
+        final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
+                (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
+        ParcelableDirectMessage message = mAdapter.getDirectMessage(contextMenuInfo.getPosition());
+        menu.setHeaderTitle(message.text_unescaped);
+        inflater.inflate(R.menu.action_direct_message, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (!getUserVisibleHint()) return false;
+        final ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
+        final ExtendedRecyclerView.ContextMenuInfo contextMenuInfo =
+                (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
+        ParcelableDirectMessage message = mAdapter.getDirectMessage(contextMenuInfo.getPosition());
+        if (message == null) return false;
+        switch (item.getItemId()) {
+            case R.id.copy: {
+                ClipboardUtils.setText(getContext(), message.text_plain);
+                return true;
+            }
+            case R.id.delete: {
+                Bundle args = new Bundle();
+                args.putParcelable(EXTRA_ACCOUNT, mAccount);
+                args.putParcelable(EXTRA_MESSAGE, message);
+                DeleteMessageConfirmDialogFragment df = new DeleteMessageConfirmDialogFragment();
+                df.setArguments(args);
+                df.show(getFragmentManager(), "delete_message_confirm");
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -916,6 +962,35 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                     final AsyncTwitterWrapper twitter = mTwitterWrapper;
                     if (account == null || user == null || twitter == null) return;
                     twitter.destroyMessageConversationAsync(account.account_key, user.key.getId());
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public static class DeleteMessageConfirmDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.delete_message_confirm_message);
+            builder.setPositiveButton(android.R.string.ok, this);
+            builder.setNegativeButton(android.R.string.cancel, null);
+            return builder.create();
+        }
+
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: {
+                    final Bundle args = getArguments();
+                    final ParcelableCredentials account = args.getParcelable(EXTRA_ACCOUNT);
+                    final ParcelableDirectMessage message = args.getParcelable(EXTRA_MESSAGE);
+                    final AsyncTwitterWrapper twitter = mTwitterWrapper;
+                    if (account == null || message == null || twitter == null) return;
+                    twitter.destroyDirectMessageAsync(account.account_key, message.id);
                     break;
                 }
             }

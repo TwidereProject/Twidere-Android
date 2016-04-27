@@ -690,6 +690,7 @@
     <string name="invalid_list_name">Must start with a letter and can consist only letters, numbers, \"-\", or \"_\".</string>
     <string name="delete_conversation">Delete conversation</string>
     <string name="delete_conversation_confirm_message">Delete all messages of this conversation?</string>
+    <string name="delete_message_confirm_message">Delete this message?</string>
     <string name="name_first_summary_on">Display name first</string>
     <string name="name_first_summary_off">Display \@screenname first</string>
     <string name="comment_hint">Comment…</string>
@@ -796,4 +797,5 @@
     <string name="error_title_device_incompatible">Incompatible device</string>
     <string name="error_message_device_incompatible">This device is not compatible with Twidere, upgrade to latest Android OS is recommended.\nYou can send information below to help me report this issue to device manufacturer.</string>
     <string name="password_sign_in_twitter_only">Password sign in (Twitter only)</string>
+    <string name="direct_messages_next">DM next</string>
 </resources>

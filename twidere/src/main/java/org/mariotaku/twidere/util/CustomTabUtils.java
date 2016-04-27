@@ -87,14 +87,13 @@ public class CustomTabUtils implements Constants {
                 ExtraConfiguration.newBoolean(EXTRA_MENTIONS_ONLY, R.string.mentions_only, false)));
 
         if (BuildConfig.DEBUG) {
-            CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
-                    MessagesEntriesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
-                    CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
-        } else {
-            CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
-                    DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
+            CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES_NEXT, new CustomTabConfiguration(
+                    MessagesEntriesFragment.class, R.string.direct_messages_next, R.drawable.ic_action_message,
                     CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
         }
+        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.DIRECT_MESSAGES, new CustomTabConfiguration(
+                DirectMessagesFragment.class, R.string.direct_messages, R.drawable.ic_action_message,
+                CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 2, false));
 
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.TRENDS_SUGGESTIONS, new CustomTabConfiguration(
                 TrendsSuggestionsFragment.class, R.string.trends, R.drawable.ic_action_hashtag,

@@ -135,7 +135,6 @@ import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.ItemsListFragment;
 import org.mariotaku.twidere.fragment.ListsFragment;
 import org.mariotaku.twidere.fragment.MessagesConversationFragment;
-import org.mariotaku.twidere.fragment.MessagesEntriesFragment;
 import org.mariotaku.twidere.fragment.MutesUsersListFragment;
 import org.mariotaku.twidere.fragment.PublicTimelineFragment;
 import org.mariotaku.twidere.fragment.SavedSearchesListFragment;
@@ -618,11 +617,7 @@ public final class Utils implements Constants {
                 break;
             }
             case LINK_ID_DIRECT_MESSAGES: {
-                if (BuildConfig.DEBUG) {
-                    fragment = new MessagesEntriesFragment();
-                } else {
-                    fragment = new DirectMessagesFragment();
-                }
+                fragment = new DirectMessagesFragment();
                 break;
             }
             case LINK_ID_INTERACTIONS: {
