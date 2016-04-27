@@ -79,7 +79,7 @@ dependencies {
     androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     apt 'com.google.dagger:dagger-compiler:2.1'
-    apt "com.github.mariotaku.ObjectCursor:processor:0.9.8"
+    apt "com.github.mariotaku.ObjectCursor:processor:0.9.9"
 
     compile('com.github.mariotaku:app-theme-engine:1efc6237e1@aar') {
         transitive = true
@@ -149,7 +149,7 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.6'
-    compile 'com.github.mariotaku.ObjectCursor:core:0.9.8'
+    compile 'com.github.mariotaku.ObjectCursor:core:0.9.9'
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.4'
     compile 'com.github.mariotaku:AbstractTask:0.9.1'
 }
