@@ -80,7 +80,7 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     private List<ParcelableActivity> mData;
     private final boolean mIsByFriends;
     private ActivityAdapterListener mActivityAdapterListener;
-    private String[] mFilteredUserIds;
+    private UserKey[] mFilteredUserIds;
     private boolean mFollowingOnly;
     private boolean mMentionsOnly;
 

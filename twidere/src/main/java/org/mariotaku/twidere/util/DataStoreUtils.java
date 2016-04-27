@@ -292,18 +292,18 @@ public class DataStoreUtils implements Constants {
 
 
     @NonNull
-    public static String[] getFilteredUserIds(Context context) {
-        if (context == null) return new String[0];
+    public static UserKey[] getFilteredUserIds(Context context) {
+        if (context == null) return new UserKey[0];
         final ContentResolver resolver = context.getContentResolver();
         final String[] projection = {Filters.Users.USER_KEY};
         final Cursor cur = resolver.query(Filters.Users.CONTENT_URI, projection, null, null, null);
-        if (cur == null) return new String[0];
+        if (cur == null) return new UserKey[0];
         try {
-            final String[] ids = new String[cur.getCount()];
+            final UserKey[] ids = new UserKey[cur.getCount()];
             cur.moveToFirst();
             int i = 0;
             while (!cur.isAfterLast()) {
-                ids[i] = cur.getString(0);
+                ids[i] = UserKey.valueOf(cur.getString(0));
                 cur.moveToNext();
                 i++;
             }

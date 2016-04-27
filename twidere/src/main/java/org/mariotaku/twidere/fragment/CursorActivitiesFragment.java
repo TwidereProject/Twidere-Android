@@ -409,21 +409,21 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
 
         @Override
         protected ObjectCursor<ParcelableActivity> createObjectCursor(Cursor cursor, ObjectCursor.CursorIndices<ParcelableActivity> indices) {
-            final String[] filteredUserIds = DataStoreUtils.getFilteredUserIds(getContext());
+            final UserKey[] filteredUserIds = DataStoreUtils.getFilteredUserIds(getContext());
             return new ActivityCursor(cursor, indices, filteredUserIds);
         }
 
         public static class ActivityCursor extends ObjectCursor<ParcelableActivity> {
 
-            private final String[] filteredUserIds;
+            private final UserKey[] filteredUserIds;
 
             public ActivityCursor(Cursor cursor, CursorIndices<ParcelableActivity> indies,
-                                  String[] filteredUserIds) {
+                                  UserKey[] filteredUserIds) {
                 super(cursor, indies);
                 this.filteredUserIds = filteredUserIds;
             }
 
-            public String[] getFilteredUserIds() {
+            public UserKey[] getFilteredUserIds() {
                 return filteredUserIds;
             }
 
