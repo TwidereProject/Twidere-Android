@@ -127,12 +127,14 @@ public class ParcelableLocation implements Parcelable {
     }
 
     public static final Creator<ParcelableLocation> CREATOR = new Creator<ParcelableLocation>() {
+        @Override
         public ParcelableLocation createFromParcel(Parcel source) {
             ParcelableLocation target = new ParcelableLocation();
             ParcelableLocationParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableLocation[] newArray(int size) {
             return new ParcelableLocation[size];
         }

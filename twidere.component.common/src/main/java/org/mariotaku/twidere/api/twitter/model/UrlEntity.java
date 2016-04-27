@@ -19,14 +19,19 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/3/31.
  */
+@ParcelablePlease
 @JsonObject
-public class UrlEntity {
+public class UrlEntity implements Parcelable {
     @JsonField(name = "indices", typeConverter = IndicesConverter.class)
     Indices indices;
     @JsonField(name = "display_url")
@@ -66,4 +71,28 @@ public class UrlEntity {
     public String getUrl() {
         return url;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        UrlEntityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<UrlEntity> CREATOR = new Creator<UrlEntity>() {
+        @Override
+        public UrlEntity createFromParcel(Parcel source) {
+            UrlEntity target = new UrlEntity();
+            UrlEntityParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public UrlEntity[] newArray(int size) {
+            return new UrlEntity[size];
+        }
+    };
 }

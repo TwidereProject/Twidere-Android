@@ -19,11 +19,14 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,8 +37,9 @@ import java.util.Map;
 /**
  * Created by mariotaku on 15/3/31.
  */
+@ParcelablePlease
 @JsonObject
-public class MediaEntity extends UrlEntity {
+public class MediaEntity extends UrlEntity implements Parcelable {
     @JsonField(name = "id")
     long id;
 
@@ -154,8 +158,9 @@ public class MediaEntity extends UrlEntity {
     }
 
 
+    @ParcelablePlease
     @JsonObject
-    public static class Feature {
+    public static class Feature implements Parcelable {
         @JsonField(name = "faces")
         Face[] faces;
 
@@ -166,8 +171,9 @@ public class MediaEntity extends UrlEntity {
                     '}';
         }
 
+        @ParcelablePlease
         @JsonObject
-        public static class Face {
+        public static class Face implements Parcelable {
             @JsonField(name = "x")
             int x;
             @JsonField(name = "y")
@@ -202,12 +208,60 @@ public class MediaEntity extends UrlEntity {
             public int getWidth() {
                 return width;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                MediaEntity$Feature$FaceParcelablePlease.writeToParcel(this, dest, flags);
+            }
+
+            public static final Creator<Face> CREATOR = new Creator<Face>() {
+                @Override
+                public Face createFromParcel(Parcel source) {
+                    Face target = new Face();
+                    MediaEntity$Feature$FaceParcelablePlease.readFromParcel(target, source);
+                    return target;
+                }
+
+                @Override
+                public Face[] newArray(int size) {
+                    return new Face[size];
+                }
+            };
         }
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            MediaEntity$FeatureParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<Feature> CREATOR = new Creator<Feature>() {
+            @Override
+            public Feature createFromParcel(Parcel source) {
+                Feature target = new Feature();
+                MediaEntity$FeatureParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            @Override
+            public Feature[] newArray(int size) {
+                return new Feature[size];
+            }
+        };
     }
 
+    @ParcelablePlease
     @JsonObject
-    public static class VideoInfo {
+    public static class VideoInfo implements Parcelable {
 
         @JsonField(name = "duration")
         long duration;
@@ -237,8 +291,9 @@ public class MediaEntity extends UrlEntity {
             return duration;
         }
 
+        @ParcelablePlease
         @JsonObject
-        public static class Variant {
+        public static class Variant implements Parcelable {
             @JsonField(name = "bitrate")
             long bitrate;
             @JsonField(name = "content_type")
@@ -266,29 +321,78 @@ public class MediaEntity extends UrlEntity {
             public long getBitrate() {
                 return bitrate;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                MediaEntity$VideoInfo$VariantParcelablePlease.writeToParcel(this, dest, flags);
+            }
+
+            public static final Creator<Variant> CREATOR = new Creator<Variant>() {
+                @Override
+                public Variant createFromParcel(Parcel source) {
+                    Variant target = new Variant();
+                    MediaEntity$VideoInfo$VariantParcelablePlease.readFromParcel(target, source);
+                    return target;
+                }
+
+                @Override
+                public Variant[] newArray(int size) {
+                    return new Variant[size];
+                }
+            };
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            MediaEntity$VideoInfoParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<VideoInfo> CREATOR = new Creator<VideoInfo>() {
+            @Override
+            public VideoInfo createFromParcel(Parcel source) {
+                VideoInfo target = new VideoInfo();
+                MediaEntity$VideoInfoParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            @Override
+            public VideoInfo[] newArray(int size) {
+                return new VideoInfo[size];
+            }
+        };
     }
 
-    @StringDef({Size.THUMB, Size.SMALL, Size.MEDIUM, Size.LARGE})
+    @StringDef({ScaleType.THUMB, ScaleType.SMALL, ScaleType.MEDIUM, ScaleType.LARGE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SizeType {
     }
 
-    @IntDef({Size.FIT, Size.CROP})
+    @IntDef({ScaleType.FIT, ScaleType.CROP})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ScaleType {
+        int CROP = 101;
+        int FIT = 100;
+        String THUMB = "thumb";
+        String SMALL = "small";
+        String MEDIUM = "medium";
+        String LARGE = "large";
     }
 
 
+    @ParcelablePlease
     @JsonObject
-    public static class Size {
+    public static class Size implements Parcelable {
 
-        public static final String THUMB = "thumb";
-        public static final String SMALL = "small";
-        public static final String MEDIUM = "medium";
-        public static final String LARGE = "large";
-        public static final int FIT = 100;
-        public static final int CROP = 101;
         @JsonField(name = "w")
         int width;
         @JsonField(name = "h")
@@ -317,5 +421,53 @@ public class MediaEntity extends UrlEntity {
                     ", resize='" + resize + '\'' +
                     '}';
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            MediaEntity$SizeParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<Size> CREATOR = new Creator<Size>() {
+            @Override
+            public Size createFromParcel(Parcel source) {
+                Size target = new Size();
+                MediaEntity$SizeParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            @Override
+            public Size[] newArray(int size) {
+                return new Size[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        MediaEntityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<MediaEntity> CREATOR = new Creator<MediaEntity>() {
+        @Override
+        public MediaEntity createFromParcel(Parcel source) {
+            MediaEntity target = new MediaEntity();
+            MediaEntityParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public MediaEntity[] newArray(int size) {
+            return new MediaEntity[size];
+        }
+    };
 }

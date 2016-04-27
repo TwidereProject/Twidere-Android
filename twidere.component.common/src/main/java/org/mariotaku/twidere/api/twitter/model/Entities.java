@@ -19,16 +19,21 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import java.util.Arrays;
 
 /**
  * Created by mariotaku on 15/3/31.
  */
+@ParcelablePlease
 @JsonObject
-public class Entities {
+public class Entities implements Parcelable {
     @JsonField(name = "hashtags")
     HashtagEntity[] hashtags;
 
@@ -41,11 +46,11 @@ public class Entities {
     @JsonField(name = "media")
     MediaEntity[] media;
 
-    public org.mariotaku.twidere.api.twitter.model.HashtagEntity[] getHashtags() {
+    public HashtagEntity[] getHashtags() {
         return hashtags;
     }
 
-    public org.mariotaku.twidere.api.twitter.model.UserMentionEntity[] getUserMentions() {
+    public UserMentionEntity[] getUserMentions() {
         return userMentions;
     }
 
@@ -66,4 +71,28 @@ public class Entities {
                 ", media=" + Arrays.toString(media) +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        EntitiesParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Entities> CREATOR = new Creator<Entities>() {
+        @Override
+        public Entities createFromParcel(Parcel source) {
+            Entities target = new Entities();
+            EntitiesParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public Entities[] newArray(int size) {
+            return new Entities[size];
+        }
+    };
 }

@@ -71,12 +71,14 @@ public class UpdateStatusActionExtra implements ActionExtra {
     }
 
     public static final Creator<UpdateStatusActionExtra> CREATOR = new Creator<UpdateStatusActionExtra>() {
+        @Override
         public UpdateStatusActionExtra createFromParcel(Parcel source) {
             UpdateStatusActionExtra target = new UpdateStatusActionExtra();
             UpdateStatusActionExtraParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public UpdateStatusActionExtra[] newArray(int size) {
             return new UpdateStatusActionExtra[size];
         }

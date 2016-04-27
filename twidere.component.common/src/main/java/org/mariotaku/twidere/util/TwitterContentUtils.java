@@ -24,9 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.mariotaku.twidere.api.twitter.model.Status;
 import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.common.R;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 

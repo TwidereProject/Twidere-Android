@@ -16,12 +16,14 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 public class StatusNetAccountExtra implements Parcelable, AccountExtras {
 
     public static final Creator<StatusNetAccountExtra> CREATOR = new Creator<StatusNetAccountExtra>() {
+        @Override
         public StatusNetAccountExtra createFromParcel(Parcel source) {
             StatusNetAccountExtra target = new StatusNetAccountExtra();
             StatusNetAccountExtraParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public StatusNetAccountExtra[] newArray(int size) {
             return new StatusNetAccountExtra[size];
         }

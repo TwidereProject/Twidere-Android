@@ -101,12 +101,14 @@ public class ParcelableAccount implements Parcelable {
     public boolean is_dummy;
 
     public static final Creator<ParcelableAccount> CREATOR = new Creator<ParcelableAccount>() {
+        @Override
         public ParcelableAccount createFromParcel(Parcel source) {
             ParcelableAccount target = new ParcelableAccount();
             ParcelableAccountParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableAccount[] newArray(int size) {
             return new ParcelableAccount[size];
         }

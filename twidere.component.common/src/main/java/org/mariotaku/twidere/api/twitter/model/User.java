@@ -20,11 +20,14 @@
 package org.mariotaku.twidere.api.twitter.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
@@ -34,8 +37,9 @@ import java.util.Date;
 /**
  * Created by mariotaku on 15/3/31.
  */
+@ParcelablePlease
 @JsonObject
-public class User extends TwitterResponseObject implements Comparable<User> {
+public class User extends TwitterResponseObject implements Comparable<User>, Parcelable {
 
     @JsonField(name = "id")
     String id;
@@ -600,4 +604,28 @@ public class User extends TwitterResponseObject implements Comparable<User> {
     void onJsonParseComplete() throws IOException {
         if (id == null || screenName == null) throw new IOException("Malformed User object");
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        UserParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            User target = new User();
+            UserParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

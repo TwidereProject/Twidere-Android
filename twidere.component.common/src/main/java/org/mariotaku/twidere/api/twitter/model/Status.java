@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -26,6 +28,8 @@ import android.text.TextUtils;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.api.fanfou.model.Photo;
 import org.mariotaku.twidere.api.gnusocial.model.Attachment;
@@ -39,9 +43,10 @@ import java.util.Date;
 /**
  * Created by mariotaku on 15/5/5.
  */
+@ParcelablePlease
 @JsonObject
 public class Status extends TwitterResponseObject implements Comparable<Status>, TwitterResponse,
-        ExtendedEntitySupport {
+        ExtendedEntitySupport, Parcelable {
 
     @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
@@ -170,6 +175,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "location")
     String location;
 
+    @ParcelableNoThanks
     private transient long sortId = -1;
 
 
@@ -495,10 +501,58 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     }
 
 
+    @ParcelablePlease
     @JsonObject
-    public static class CurrentUserRetweet {
+    public static class CurrentUserRetweet implements Parcelable {
         @JsonField(name = "id")
         String id;
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            Status$CurrentUserRetweetParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<CurrentUserRetweet> CREATOR = new Creator<CurrentUserRetweet>() {
+            @Override
+            public CurrentUserRetweet createFromParcel(Parcel source) {
+                CurrentUserRetweet target = new CurrentUserRetweet();
+                Status$CurrentUserRetweetParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            @Override
+            public CurrentUserRetweet[] newArray(int size) {
+                return new CurrentUserRetweet[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        StatusParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Status> CREATOR = new Creator<Status>() {
+        @Override
+        public Status createFromParcel(Parcel source) {
+            Status target = new Status();
+            StatusParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public Status[] newArray(int size) {
+            return new Status[size];
+        }
+    };
 }

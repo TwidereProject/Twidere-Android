@@ -1,7 +1,11 @@
 package org.mariotaku.twidere.api.statusnet.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
@@ -10,8 +14,9 @@ import java.util.Date;
 /**
  * Created by mariotaku on 16/3/4.
  */
+@ParcelablePlease
 @JsonObject
-public class Group {
+public class Group implements Parcelable {
 
     @JsonField(name = "modified", typeConverter = TwitterDateConverter.class)
     Date modified;
@@ -154,4 +159,28 @@ public class Group {
     public int hashCode() {
         return id.hashCode();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        GroupParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Group> CREATOR = new Creator<Group>() {
+        @Override
+        public Group createFromParcel(Parcel source) {
+            Group target = new Group();
+            GroupParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public Group[] newArray(int size) {
+            return new Group[size];
+        }
+    };
 }

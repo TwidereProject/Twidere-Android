@@ -19,6 +19,11 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+
 import org.mariotaku.restfu.http.ValueMap;
 
 /**
@@ -26,7 +31,8 @@ import org.mariotaku.restfu.http.ValueMap;
  *
  * @author Yusuke Yamamoto - yusuke at mac.com
  */
-public class GeoLocation implements ValueMap {
+@ParcelablePlease
+public class GeoLocation implements ValueMap, Parcelable {
 
     double latitude;
     double longitude;
@@ -40,6 +46,10 @@ public class GeoLocation implements ValueMap {
     public GeoLocation(final double latitude, final double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public GeoLocation() {
+
     }
 
 
@@ -106,4 +116,28 @@ public class GeoLocation implements ValueMap {
     public String[] keys() {
         return new String[]{"lat", "long"};
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        GeoLocationParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<GeoLocation> CREATOR = new Creator<GeoLocation>() {
+        @Override
+        public GeoLocation createFromParcel(Parcel source) {
+            GeoLocation target = new GeoLocation();
+            GeoLocationParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public GeoLocation[] newArray(int size) {
+            return new GeoLocation[size];
+        }
+    };
 }

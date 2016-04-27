@@ -77,7 +77,7 @@ public class ParcelableMediaUtils {
         media.end = entity.getEnd();
         media.type = ParcelableMediaUtils.getTypeInt(entity.getType());
         media.alt_text = entity.getAltText();
-        final MediaEntity.Size size = entity.getSizes().get(MediaEntity.Size.LARGE);
+        final MediaEntity.Size size = entity.getSizes().get(MediaEntity.ScaleType.LARGE);
         if (size != null) {
             media.width = size.getWidth();
             media.height = size.getHeight();

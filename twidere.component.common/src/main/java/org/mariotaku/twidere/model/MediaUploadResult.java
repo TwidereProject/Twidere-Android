@@ -28,12 +28,14 @@ public class MediaUploadResult implements Parcelable {
     public String extras;
 
     public static final Creator<MediaUploadResult> CREATOR = new Creator<MediaUploadResult>() {
+        @Override
         public MediaUploadResult createFromParcel(Parcel source) {
             MediaUploadResult target = new MediaUploadResult();
             MediaUploadResultParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public MediaUploadResult[] newArray(int size) {
             return new MediaUploadResult[size];
         }

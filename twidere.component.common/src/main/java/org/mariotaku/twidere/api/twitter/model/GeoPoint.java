@@ -19,17 +19,22 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-
-import org.mariotaku.twidere.api.twitter.model.GeoLocation;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/5/7.
  */
+@ParcelablePlease
 @JsonObject
-public class GeoPoint {
+public class GeoPoint implements Parcelable {
 
+    @ParcelableNoThanks
     private volatile GeoLocation geoLocation;
 
     @JsonField(name = "coordinates")
@@ -44,4 +49,27 @@ public class GeoPoint {
         return geoLocation = new GeoLocation(coordinates[0], coordinates[1]);
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        GeoPointParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<GeoPoint> CREATOR = new Creator<GeoPoint>() {
+        @Override
+        public GeoPoint createFromParcel(Parcel source) {
+            GeoPoint target = new GeoPoint();
+            GeoPointParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public GeoPoint[] newArray(int size) {
+            return new GeoPoint[size];
+        }
+    };
 }

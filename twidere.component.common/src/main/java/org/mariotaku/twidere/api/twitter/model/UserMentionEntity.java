@@ -19,14 +19,19 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/3/31.
  */
+@ParcelablePlease
 @JsonObject
-public class UserMentionEntity {
+public class UserMentionEntity implements Parcelable {
     @JsonField(name = "indices", typeConverter = IndicesConverter.class)
     Indices indices;
     @JsonField(name = "id")
@@ -35,16 +40,6 @@ public class UserMentionEntity {
     String name;
     @JsonField(name = "screen_name")
     String screenName;
-
-    @Override
-    public String toString() {
-        return "UserMentionEntity{" +
-                "indices=" + indices +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", screenName='" + screenName + '\'' +
-                '}';
-    }
 
     public int getEnd() {
         return indices.getEnd();
@@ -66,4 +61,37 @@ public class UserMentionEntity {
         return indices.getStart();
     }
 
+    @Override
+    public String toString() {
+        return "UserMentionEntity{" +
+                "indices=" + indices +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", screenName='" + screenName + '\'' +
+                '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        UserMentionEntityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<UserMentionEntity> CREATOR = new Creator<UserMentionEntity>() {
+        @Override
+        public UserMentionEntity createFromParcel(Parcel source) {
+            UserMentionEntity target = new UserMentionEntity();
+            UserMentionEntityParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public UserMentionEntity[] newArray(int size) {
+            return new UserMentionEntity[size];
+        }
+    };
 }

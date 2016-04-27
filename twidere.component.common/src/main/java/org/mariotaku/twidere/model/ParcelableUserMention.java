@@ -85,12 +85,14 @@ public class ParcelableUserMention implements Parcelable {
     }
 
     public static final Creator<ParcelableUserMention> CREATOR = new Creator<ParcelableUserMention>() {
+        @Override
         public ParcelableUserMention createFromParcel(Parcel source) {
             ParcelableUserMention target = new ParcelableUserMention();
             ParcelableUserMentionParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableUserMention[] newArray(int size) {
             return new ParcelableUserMention[size];
         }

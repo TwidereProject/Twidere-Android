@@ -85,12 +85,14 @@ public class Draft implements Parcelable {
     }
 
     public static final Creator<Draft> CREATOR = new Creator<Draft>() {
+        @Override
         public Draft createFromParcel(Parcel source) {
             Draft target = new Draft();
             DraftParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public Draft[] newArray(int size) {
             return new Draft[size];
         }

@@ -176,12 +176,14 @@ public class ParcelableDirectMessage implements Parcelable, Comparable<Parcelabl
     }
 
     public static final Creator<ParcelableDirectMessage> CREATOR = new Creator<ParcelableDirectMessage>() {
+        @Override
         public ParcelableDirectMessage createFromParcel(Parcel source) {
             ParcelableDirectMessage target = new ParcelableDirectMessage();
             ParcelableDirectMessageParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableDirectMessage[] newArray(int size) {
             return new ParcelableDirectMessage[size];
         }

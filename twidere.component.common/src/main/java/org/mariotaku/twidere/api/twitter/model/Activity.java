@@ -19,9 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.text.TextUtils;
+
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.api.twitter.annotation.NoObfuscate;
 
@@ -33,8 +37,9 @@ import java.util.Date;
 /**
  * Twitter Activity object
  */
+@ParcelablePlease
 @NoObfuscate
-public class Activity extends TwitterResponseObject implements TwitterResponse, Comparable<Activity> {
+public class Activity extends TwitterResponseObject implements TwitterResponse, Comparable<Activity>,Parcelable {
 
     @Action
     String action;
@@ -219,4 +224,28 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
 
         String[] MENTION_ACTIONS = {MENTION, REPLY, QUOTE};
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ActivityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Activity> CREATOR = new Creator<Activity>() {
+        @Override
+        public Activity createFromParcel(Parcel source) {
+            Activity target = new Activity();
+            ActivityParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public Activity[] newArray(int size) {
+            return new Activity[size];
+        }
+    };
 }

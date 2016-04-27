@@ -182,12 +182,14 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     public String nickname;
 
     public static final Creator<ParcelableUser> CREATOR = new Creator<ParcelableUser>() {
+        @Override
         public ParcelableUser createFromParcel(Parcel source) {
             ParcelableUser target = new ParcelableUser();
             ParcelableUserParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public ParcelableUser[] newArray(int size) {
             return new ParcelableUser[size];
         }
@@ -359,12 +361,14 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         }
 
         public static final Creator<Extras> CREATOR = new Creator<Extras>() {
+            @Override
             public Extras createFromParcel(Parcel source) {
                 Extras target = new Extras();
                 ParcelableUser$ExtrasParcelablePlease.readFromParcel(target, source);
                 return target;
             }
 
+            @Override
             public Extras[] newArray(int size) {
                 return new Extras[size];
             }

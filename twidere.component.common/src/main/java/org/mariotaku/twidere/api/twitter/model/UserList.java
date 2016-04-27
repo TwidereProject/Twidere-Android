@@ -19,11 +19,14 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
@@ -34,8 +37,9 @@ import java.util.Date;
 /**
  * Created by mariotaku on 15/4/7.
  */
+@ParcelablePlease
 @JsonObject
-public class UserList extends TwitterResponseObject implements Comparable<UserList>, TwitterResponse {
+public class UserList extends TwitterResponseObject implements Comparable<UserList>, TwitterResponse, Parcelable {
     @JsonField(name = "id")
     String id;
 
@@ -153,4 +157,28 @@ public class UserList extends TwitterResponseObject implements Comparable<UserLi
         String PRIVATE = "private";
 
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        UserListParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<UserList> CREATOR = new Creator<UserList>() {
+        @Override
+        public UserList createFromParcel(Parcel source) {
+            UserList target = new UserList();
+            UserListParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public UserList[] newArray(int size) {
+            return new UserList[size];
+        }
+    };
 }

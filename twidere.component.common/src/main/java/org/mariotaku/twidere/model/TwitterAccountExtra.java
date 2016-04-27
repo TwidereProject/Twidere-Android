@@ -16,12 +16,14 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 public class TwitterAccountExtra implements Parcelable, AccountExtras {
 
     public static final Creator<TwitterAccountExtra> CREATOR = new Creator<TwitterAccountExtra>() {
+        @Override
         public TwitterAccountExtra createFromParcel(Parcel source) {
             TwitterAccountExtra target = new TwitterAccountExtra();
             TwitterAccountExtraParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public TwitterAccountExtra[] newArray(int size) {
             return new TwitterAccountExtra[size];
         }

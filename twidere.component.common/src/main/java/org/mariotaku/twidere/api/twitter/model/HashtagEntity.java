@@ -19,14 +19,19 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/3/31.
  */
+@ParcelablePlease
 @JsonObject
-public class HashtagEntity {
+public class HashtagEntity implements Parcelable {
 
     @JsonField(name = "text")
     String text;
@@ -44,4 +49,36 @@ public class HashtagEntity {
     public String getText() {
         return text;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "HashtagEntity{" +
+                "text='" + text + '\'' +
+                ", indices=" + indices +
+                '}';
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        HashtagEntityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<HashtagEntity> CREATOR = new Creator<HashtagEntity>() {
+        @Override
+        public HashtagEntity createFromParcel(Parcel source) {
+            HashtagEntity target = new HashtagEntity();
+            HashtagEntityParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public HashtagEntity[] newArray(int size) {
+            return new HashtagEntity[size];
+        }
+    };
 }

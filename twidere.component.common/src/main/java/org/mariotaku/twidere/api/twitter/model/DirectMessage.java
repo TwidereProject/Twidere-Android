@@ -19,9 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.api.twitter.util.TwitterDateConverter;
 
@@ -31,8 +35,10 @@ import java.util.Date;
 /**
  * Created by mariotaku on 15/5/7.
  */
+@ParcelablePlease
 @JsonObject
-public class DirectMessage extends TwitterResponseObject implements TwitterResponse, EntitySupport {
+public class DirectMessage extends TwitterResponseObject implements TwitterResponse, EntitySupport,
+        Parcelable {
 
     @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
@@ -114,6 +120,31 @@ public class DirectMessage extends TwitterResponseObject implements TwitterRespo
 
     @OnJsonParseComplete
     void onJsonParseComplete() throws IOException {
-        if (id == null || recipient == null || sender == null) throw new IOException("Malformed DirectMessage object");
+        if (id == null || recipient == null || sender == null)
+            throw new IOException("Malformed DirectMessage object");
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        DirectMessageParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<DirectMessage> CREATOR = new Creator<DirectMessage>() {
+        @Override
+        public DirectMessage createFromParcel(Parcel source) {
+            DirectMessage target = new DirectMessage();
+            DirectMessageParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public DirectMessage[] newArray(int size) {
+            return new DirectMessage[size];
+        }
+    };
 }

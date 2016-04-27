@@ -75,12 +75,14 @@ public class StatusShortenResult implements Parcelable {
     }
 
     public static final Creator<StatusShortenResult> CREATOR = new Creator<StatusShortenResult>() {
+        @Override
         public StatusShortenResult createFromParcel(Parcel source) {
             StatusShortenResult target = new StatusShortenResult();
             StatusShortenResultParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public StatusShortenResult[] newArray(int size) {
             return new StatusShortenResult[size];
         }

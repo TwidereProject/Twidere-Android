@@ -19,10 +19,13 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,8 +33,9 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by mariotaku on 15/7/8.
  */
+@ParcelablePlease
 @JsonObject
-public class ExtendedProfile {
+public class ExtendedProfile implements Parcelable {
 
     @JsonField(name = "id")
     long id;
@@ -46,8 +50,9 @@ public class ExtendedProfile {
         return birthdate;
     }
 
+    @ParcelablePlease
     @JsonObject
-    public static class Birthdate {
+    public static class Birthdate implements Parcelable {
 
         @JsonField(name = "day")
         int day;
@@ -93,5 +98,53 @@ public class ExtendedProfile {
             String PUBLIC = "public";
 
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            ExtendedProfile$BirthdateParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<Birthdate> CREATOR = new Creator<Birthdate>() {
+            @Override
+            public Birthdate createFromParcel(Parcel source) {
+                Birthdate target = new Birthdate();
+                ExtendedProfile$BirthdateParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            @Override
+            public Birthdate[] newArray(int size) {
+                return new Birthdate[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ExtendedProfileParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<ExtendedProfile> CREATOR = new Creator<ExtendedProfile>() {
+        @Override
+        public ExtendedProfile createFromParcel(Parcel source) {
+            ExtendedProfile target = new ExtendedProfile();
+            ExtendedProfileParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public ExtendedProfile[] newArray(int size) {
+            return new ExtendedProfile[size];
+        }
+    };
 }

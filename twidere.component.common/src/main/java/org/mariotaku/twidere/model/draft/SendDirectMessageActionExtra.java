@@ -36,12 +36,14 @@ public class SendDirectMessageActionExtra implements ActionExtra {
     }
 
     public static final Creator<SendDirectMessageActionExtra> CREATOR = new Creator<SendDirectMessageActionExtra>() {
+        @Override
         public SendDirectMessageActionExtra createFromParcel(Parcel source) {
             SendDirectMessageActionExtra target = new SendDirectMessageActionExtra();
             SendDirectMessageActionExtraParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
+        @Override
         public SendDirectMessageActionExtra[] newArray(int size) {
             return new SendDirectMessageActionExtra[size];
         }

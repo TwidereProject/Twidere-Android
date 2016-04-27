@@ -23,8 +23,6 @@ import android.graphics.Color;
 
 import org.mariotaku.twidere.TwidereConstants;
 
-import java.util.Locale;
-
 import static android.text.TextUtils.isEmpty;
 
 public final class ParseUtils implements TwidereConstants {

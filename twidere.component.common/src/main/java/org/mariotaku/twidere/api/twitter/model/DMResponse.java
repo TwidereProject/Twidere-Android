@@ -1,19 +1,24 @@
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by mariotaku on 16/3/1.
  */
+@ParcelablePlease
 @JsonObject
-public class DMResponse {
+public class DMResponse implements Parcelable {
 
     @JsonField(name = "status")
     @Status
@@ -31,10 +36,10 @@ public class DMResponse {
     long lastSeenEvent;
 
     @JsonField(name = "users")
-    Map<String, User> users;
+    HashMap<String, User> users;
 
     @JsonField(name = "conversations")
-    Map<String, Conversation> conversations;
+    HashMap<String, Conversation> conversations;
 
     @JsonField(name = "entries")
     Entry[] entries;
@@ -82,15 +87,17 @@ public class DMResponse {
         String AT_END = "AT_END";
     }
 
+    @ParcelablePlease
     @JsonObject
-    public static class Entry {
+    public static class Entry implements Parcelable {
 
         @JsonField(name = "message")
         Message message;
 
 
+        @ParcelablePlease
         @JsonObject
-        public static class Message {
+        public static class Message implements Parcelable {
 
             @JsonField(name = "id")
             long id;
@@ -195,12 +202,59 @@ public class DMResponse {
                 }
             }
 
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                DMResponse$Entry$MessageParcelablePlease.writeToParcel(this, dest, flags);
+            }
+
+            public static final Creator<Message> CREATOR = new Creator<Message>() {
+                @Override
+                public Message createFromParcel(Parcel source) {
+                    Message target = new Message();
+                    DMResponse$Entry$MessageParcelablePlease.readFromParcel(target, source);
+                    return target;
+                }
+
+                @Override
+                public Message[] newArray(int size) {
+                    return new Message[size];
+                }
+            };
         }
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            DMResponse$EntryParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<Entry> CREATOR = new Creator<Entry>() {
+            @Override
+            public Entry createFromParcel(Parcel source) {
+                Entry target = new Entry();
+                DMResponse$EntryParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            @Override
+            public Entry[] newArray(int size) {
+                return new Entry[size];
+            }
+        };
     }
 
+    @ParcelablePlease
     @JsonObject
-    public static class Conversation {
+    public static class Conversation implements Parcelable {
 
         @JsonField(name = "conversation_id")
         String conversationId;
@@ -221,7 +275,8 @@ public class DMResponse {
         @JsonField(name = "sort_timestamp")
         long sortTimestamp;
         @JsonField(name = "status")
-        Status status;
+        @Status
+        String status;
         @JsonField(name = "type")
         Type type;
 
@@ -259,8 +314,9 @@ public class DMResponse {
             }
         }
 
+        @ParcelablePlease
         @JsonObject
-        public static class Participant {
+        public static class Participant implements Parcelable {
 
             @JsonField(name = "user_id")
             long userId;
@@ -268,6 +324,78 @@ public class DMResponse {
             public long getUserId() {
                 return userId;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                DMResponse$Conversation$ParticipantParcelablePlease.writeToParcel(this, dest, flags);
+            }
+
+            public static final Creator<Participant> CREATOR = new Creator<Participant>() {
+                @Override
+                public Participant createFromParcel(Parcel source) {
+                    Participant target = new Participant();
+                    DMResponse$Conversation$ParticipantParcelablePlease.readFromParcel(target, source);
+                    return target;
+                }
+
+                @Override
+                public Participant[] newArray(int size) {
+                    return new Participant[size];
+                }
+            };
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            DMResponse$ConversationParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<Conversation> CREATOR = new Creator<Conversation>() {
+            @Override
+            public Conversation createFromParcel(Parcel source) {
+                Conversation target = new Conversation();
+                DMResponse$ConversationParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            @Override
+            public Conversation[] newArray(int size) {
+                return new Conversation[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        DMResponseParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<DMResponse> CREATOR = new Creator<DMResponse>() {
+        @Override
+        public DMResponse createFromParcel(Parcel source) {
+            DMResponse target = new DMResponse();
+            DMResponseParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public DMResponse[] newArray(int size) {
+            return new DMResponse[size];
+        }
+    };
 }

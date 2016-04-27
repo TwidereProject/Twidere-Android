@@ -19,14 +19,19 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/12/25.
  */
+@ParcelablePlease
 @JsonObject
-public class Contributor {
+public class Contributor implements Parcelable {
     @JsonField(name = "id")
     long id;
     @JsonField(name = "screen_name")
@@ -39,4 +44,36 @@ public class Contributor {
     public String getScreenName() {
         return screenName;
     }
+
+    @Override
+    public String toString() {
+        return "Contributor{" +
+                "id=" + id +
+                ", screenName='" + screenName + '\'' +
+                '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ContributorParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Contributor> CREATOR = new Creator<Contributor>() {
+        @Override
+        public Contributor createFromParcel(Parcel source) {
+            Contributor target = new Contributor();
+            ContributorParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public Contributor[] newArray(int size) {
+            return new Contributor[size];
+        }
+    };
 }
