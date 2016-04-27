@@ -66,7 +66,7 @@ import org.mariotaku.twidere.util.support.ViewSupport;
 public class ThemeUtils implements Constants {
 
     public static final int ACCENT_COLOR_THRESHOLD = 192;
-    public static final int DARK_COLOR_THRESHOLD = 64;
+    public static final int DARK_COLOR_THRESHOLD = 128;
 
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY = {android.R.attr.textColorPrimary};
 
