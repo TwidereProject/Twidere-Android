@@ -53,7 +53,6 @@ script: ./gradlew build --no-daemon --stacktrace
 
 deploy:
   provider: releases
-  prerelease: true
   api_key:
     secure: WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M=
   file_glob: true
