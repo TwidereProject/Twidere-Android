@@ -6,11 +6,13 @@ import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+
+import org.mariotaku.twidere.api.twitter.model.util.ParcelMapBagger;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,10 +38,12 @@ public class DMResponse implements Parcelable {
     long lastSeenEvent;
 
     @JsonField(name = "users")
-    HashMap<String, User> users;
+    @Bagger(UserMapBagger.class)
+    Map<String, User> users;
 
     @JsonField(name = "conversations")
-    HashMap<String, Conversation> conversations;
+    @Bagger(ConversationMapBagger.class)
+    Map<String, Conversation> conversations;
 
     @JsonField(name = "entries")
     Entry[] entries;
@@ -278,7 +282,8 @@ public class DMResponse implements Parcelable {
         @Status
         String status;
         @JsonField(name = "type")
-        Type type;
+        @Type
+        String type;
 
         public Participant[] getParticipants() {
             return participants;
@@ -304,14 +309,9 @@ public class DMResponse implements Parcelable {
             return notificationsDisabled;
         }
 
-        public enum Type {
-            ONE_TO_ONE("one_to_one"), GROUP_DM("group_dm");
-
-            private final String literal;
-
-            Type(String literal) {
-                this.literal = literal;
-            }
+        @StringDef({Type.ONE_TO_ONE, Type.GROUP_DM})
+        public @interface Type {
+            String ONE_TO_ONE = "one_to_one", GROUP_DM = "group_dm";
         }
 
         @ParcelablePlease
@@ -398,4 +398,16 @@ public class DMResponse implements Parcelable {
             return new DMResponse[size];
         }
     };
+
+    public static class UserMapBagger extends ParcelMapBagger<User> {
+        public UserMapBagger() {
+            super(User.class);
+        }
+    }
+
+    public static class ConversationMapBagger extends ParcelMapBagger<Conversation> {
+        public ConversationMapBagger() {
+            super(Conversation.class);
+        }
+    }
 }

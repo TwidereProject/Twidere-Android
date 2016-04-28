@@ -26,12 +26,14 @@ import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+
+import org.mariotaku.twidere.api.twitter.model.util.ParcelMapBagger;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -61,7 +63,8 @@ public class MediaEntity extends UrlEntity implements Parcelable {
     @Type
     String type;
     @JsonField(name = "sizes")
-    HashMap<String, Size> sizes;
+    @Bagger(SizeMapBagger.class)
+    Map<String, Size> sizes;
     @JsonField(name = "source_status_id")
     long sourceStatusId;
     @JsonField(name = "source_user_id")
@@ -69,7 +72,8 @@ public class MediaEntity extends UrlEntity implements Parcelable {
     @JsonField(name = "video_info")
     VideoInfo videoInfo;
     @JsonField(name = "features")
-    HashMap<String, Feature> features;
+    @Bagger(FeaturesMapBagger.class)
+    Map<String, Feature> features;
     @JsonField(name = "ext_alt_text")
     String altText;
 
@@ -470,4 +474,16 @@ public class MediaEntity extends UrlEntity implements Parcelable {
             return new MediaEntity[size];
         }
     };
+
+    public static class SizeMapBagger extends ParcelMapBagger<Size> {
+        public SizeMapBagger() {
+            super(Size.class);
+        }
+    }
+
+    public static class FeaturesMapBagger extends ParcelMapBagger<Feature> {
+        public FeaturesMapBagger() {
+            super(Feature.class);
+        }
+    }
 }
