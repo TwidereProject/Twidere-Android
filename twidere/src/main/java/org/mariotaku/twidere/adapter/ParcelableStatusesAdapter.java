@@ -221,14 +221,16 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
 
     @Override
     public boolean setData(List<ParcelableStatus> data) {
-        mData = data;
+        boolean changed = true;
         if (data instanceof ObjectCursor || data == null || data.isEmpty()) {
             mLastItemFiltered = false;
         } else {
             mLastItemFiltered = data.get(data.size() - 1).is_filtered;
+            changed = !data.equals(mData);
         }
+        mData = data;
         notifyDataSetChanged();
-        return true;
+        return changed;
     }
 
     public List<ParcelableStatus> getData() {

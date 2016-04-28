@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
+import org.mariotaku.commons.parcel.ParcelUtils;
 import org.mariotaku.twidere.api.twitter.Twitter;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -37,7 +38,6 @@ import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.Nullables;
-import org.mariotaku.twidere.util.ParcelUtils;
 import org.mariotaku.twidere.util.TwitterAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 

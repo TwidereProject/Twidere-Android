@@ -33,6 +33,7 @@ import android.view.KeyEvent;
 
 import com.squareup.otto.Subscribe;
 
+import org.mariotaku.commons.parcel.ParcelUtils;
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
@@ -45,7 +46,6 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
-import org.mariotaku.twidere.util.ParcelUtils;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
 import org.mariotaku.twidere.view.holder.UserViewHolder;
 
@@ -227,7 +227,7 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
             final ParcelableUsersAdapter adapter = getAdapter();
             final int position = findPosition(adapter, event.getAccountKey(), event.getUserKey());
             final List<ParcelableUser> data = adapter.getData();
-            if (position < 0 || position >= data.size()) return;
+            if (data == null || position < 0 || position >= data.size()) return;
             if (shouldRemoveUser(position, event)) {
                 data.remove(position);
                 adapter.notifyItemRemoved(position);

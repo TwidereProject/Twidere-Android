@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,19 +115,21 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
     @Override
     public void onLoadFinished(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
         final StaggeredGridParcelableStatusesAdapter adapter = getAdapter();
-        adapter.setData(data);
-        if (!(loader instanceof IExtendedLoader) || ((IExtendedLoader) loader).isFromUser()) {
-            adapter.setLoadMoreSupportedPosition(hasMoreData(data) ? IndicatorPosition.END : IndicatorPosition.NONE);
+        boolean changed = adapter.setData(data);
+        if (((IExtendedLoader) loader).isFromUser() && loader instanceof MediaTimelineLoader) {
+            String maxId = ((MediaTimelineLoader) loader).getMaxId();
+            String sinceId = ((MediaTimelineLoader) loader).getSinceId();
+            if (TextUtils.isEmpty(sinceId) && !TextUtils.isEmpty(maxId)) {
+                if (data != null && !data.isEmpty()) {
+                    adapter.setLoadMoreSupportedPosition(changed ? IndicatorPosition.END : IndicatorPosition.NONE);
+                }
+            } else {
+                adapter.setLoadMoreSupportedPosition(IndicatorPosition.END);
+            }
         }
-        if (loader instanceof IExtendedLoader) {
-            ((IExtendedLoader) loader).setFromUser(false);
-        }
+        ((IExtendedLoader) loader).setFromUser(false);
         showContent();
         setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
-    }
-
-    private boolean hasMoreData(List<ParcelableStatus> data) {
-        return true;
     }
 
     @Override
