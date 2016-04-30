@@ -788,7 +788,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 }
             }
             if (table == null) return null;
-            final Cursor c = mDatabaseWrapper.query(table, projection, selection, selectionArgs, null, null, sortOrder);
+            final Cursor c = mDatabaseWrapper.query(table, projection, selection, selectionArgs,
+                    null, null, sortOrder);
             setNotificationUri(c, Utils.getNotificationUri(tableId, uri));
             return c;
         } catch (final SQLException e) {

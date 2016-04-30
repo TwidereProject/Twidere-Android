@@ -23,6 +23,8 @@ import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

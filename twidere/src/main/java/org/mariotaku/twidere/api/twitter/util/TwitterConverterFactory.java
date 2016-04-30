@@ -35,7 +35,7 @@ import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.api.twitter.model.ResponseCode;
 import org.mariotaku.twidere.api.twitter.model.TwitterResponse;
-import org.mariotaku.twidere.util.LoganSquareMapperFinder;
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

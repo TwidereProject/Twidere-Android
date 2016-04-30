@@ -29,9 +29,9 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.model.util.LoganSquareCursorFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeysConverter;

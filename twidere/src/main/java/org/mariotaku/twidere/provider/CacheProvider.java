@@ -23,7 +23,7 @@ import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.CacheMetadata;
 import org.mariotaku.twidere.task.SaveFileTask;
-import org.mariotaku.twidere.util.LoganSquareMapperFinder;
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 

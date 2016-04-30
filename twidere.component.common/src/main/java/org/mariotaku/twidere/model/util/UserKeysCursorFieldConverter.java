@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.model.util;
 
+import org.mariotaku.commons.objectcursor.AbsArrayCursorFieldConverter;
 import org.mariotaku.twidere.model.UserKey;
 
 /**

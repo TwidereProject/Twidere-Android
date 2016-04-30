@@ -20,6 +20,7 @@ import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.adapter.VariousItemsAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
+import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.IntentUtils;
@@ -32,6 +33,10 @@ import org.mariotaku.twidere.view.holder.UserViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.util.List;
+
+import edu.tsinghua.hotmobi.HotMobiLogger;
+import edu.tsinghua.hotmobi.model.MediaEvent;
+import edu.tsinghua.hotmobi.model.TimelineType;
 
 /**
  * Created by mariotaku on 16/3/20.
@@ -76,6 +81,19 @@ public class ItemsListFragment extends AbsContentListRecyclerViewFragment<Variou
                 final View view = getLayoutManager().findViewByPosition(position);
                 if (view == null) return;
                 getRecyclerView().showContextMenuForChild(view);
+            }
+
+            @Override
+            public void onMediaClick(IStatusViewHolder holder, View view, ParcelableMedia media, int statusPosition) {
+                final ParcelableStatus status = dummyItemAdapter.getStatus(statusPosition);
+                if (status == null || media == null) return;
+                IntentUtils.openMedia(getActivity(), status, media, null,
+                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
+                // BEGIN HotMobi
+                final MediaEvent event = MediaEvent.create(getActivity(), status, media,
+                        TimelineType.OTHER, dummyItemAdapter.isMediaPreviewEnabled());
+                HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
+                // END HotMobi
             }
         });
         dummyItemAdapter.setUserClickListener(new IUsersAdapter.SimpleUserClickListener() {

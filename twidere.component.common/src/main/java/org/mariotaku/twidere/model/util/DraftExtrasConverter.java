@@ -12,7 +12,7 @@ import org.mariotaku.twidere.model.draft.ActionExtra;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
-import org.mariotaku.twidere.util.LoganSquareMapperFinder;
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;

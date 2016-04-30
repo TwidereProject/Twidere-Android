@@ -11,7 +11,7 @@ import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.UploaderMediaItem;
-import org.mariotaku.twidere.util.LoganSquareMapperFinder;
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -26,6 +26,7 @@ public abstract class MediaUploaderService extends Service {
 
     private final MediaUploaderStub mBinder = new MediaUploaderStub(this);
 
+    @Override
     public final IBinder onBind(final Intent intent) {
         return mBinder;
     }

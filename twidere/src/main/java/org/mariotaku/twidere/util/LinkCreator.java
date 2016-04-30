@@ -129,7 +129,7 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
-    private static Uri getFanfouStatusLink(String id) {
+    static Uri getFanfouStatusLink(String id) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_HTTP);
         builder.authority(AUTHORITY_FANFOU);
@@ -138,7 +138,7 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
-    private static Uri getFanfouUserLink(String id) {
+    static Uri getFanfouUserLink(String id) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_HTTP);
         builder.authority(AUTHORITY_FANFOU);

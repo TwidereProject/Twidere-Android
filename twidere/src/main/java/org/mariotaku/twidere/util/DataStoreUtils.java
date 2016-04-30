@@ -36,6 +36,7 @@ import android.text.TextUtils;
 import com.bluelinelabs.logansquare.JsonMapper;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;

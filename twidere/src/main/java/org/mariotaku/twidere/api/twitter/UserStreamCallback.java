@@ -37,7 +37,7 @@ import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.api.twitter.model.UserList;
 import org.mariotaku.twidere.api.twitter.model.Warning;
 import org.mariotaku.twidere.api.twitter.util.CRLFLineReader;
-import org.mariotaku.twidere.util.LoganSquareMapperFinder;
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -11,7 +11,7 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
-import org.mariotaku.twidere.util.LoganSquareMapperFinder;
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -24,6 +24,7 @@ import java.lang.ref.WeakReference;
 public abstract class StatusShortenerService extends Service {
     private final StatusShortenerStub mBinder = new StatusShortenerStub(this);
 
+    @Override
     public final IBinder onBind(final Intent intent) {
         return mBinder;
     }

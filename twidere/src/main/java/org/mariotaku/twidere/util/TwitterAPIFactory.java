@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -61,8 +62,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.text.TextUtils.isEmpty;
 
 /**
  * Created by mariotaku on 15/5/7.
@@ -254,7 +253,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         final String apiUrlFormat;
         final boolean sameOAuthSigningUrl = credentials.same_oauth_signing_url;
         final boolean noVersionSuffix = credentials.no_version_suffix;
-        if (!isEmpty(credentials.api_url_format)) {
+        if (!TextUtils.isEmpty(credentials.api_url_format)) {
             apiUrlFormat = credentials.api_url_format;
         } else {
             apiUrlFormat = DEFAULT_TWITTER_API_URL_FORMAT;
@@ -295,6 +294,7 @@ public class TwitterAPIFactory implements TwidereConstants {
         return new Endpoint(endpointUrl);
     }
 
+    @SuppressLint("SwitchIntDef")
     @Nullable
     public static Authorization getAuthorization(@Nullable ParcelableCredentials credentials) {
         if (credentials == null) return null;
@@ -316,7 +316,7 @@ public class TwitterAPIFactory implements TwidereConstants {
                 final String username = credentials.basic_auth_username;
                 final String loginName = username != null ? username : screenName;
                 final String password = credentials.basic_auth_password;
-                if (isEmpty(loginName) || isEmpty(password)) return null;
+                if (TextUtils.isEmpty(loginName) || TextUtils.isEmpty(password)) return null;
                 return new BasicAuthorization(loginName, password);
             }
         }
@@ -471,7 +471,8 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     private static boolean isAsciiLetterOrDigit(int codePoint) {
-        return ('A' <= codePoint && codePoint <= 'Z') || ('a' <= codePoint && codePoint <= 'z') || '0' <= codePoint && codePoint <= '9';
+        return 'A' <= codePoint && codePoint <= 'Z' || 'a' <= codePoint && codePoint <= 'z'
+                || '0' <= codePoint && codePoint <= '9';
     }
 
     @NonNull

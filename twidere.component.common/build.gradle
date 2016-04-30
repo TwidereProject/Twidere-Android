@@ -44,5 +44,7 @@ dependencies {
     compile 'com.github.mariotaku.RestFu:library:0.9.27'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.7'
+    compile 'com.github.mariotaku.CommonsLibrary:objectcursor:0.9.4'
+    compile 'com.github.mariotaku.CommonsLibrary:logansquare:0.9.4'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
