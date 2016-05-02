@@ -117,7 +117,7 @@ public class ContentScrollHandler {
         mScrollState = scrollState;
     }
 
-    protected void handleScroll(int dy, int scrollState, int idleState) {
+    protected void handleScroll(int dy, int scrollState, int oldState, int idleState) {
         if (mContentListSupport instanceof Fragment) {
             if (((Fragment) mContentListSupport).getContext() == null) return;
         }
@@ -130,7 +130,7 @@ public class ContentScrollHandler {
             mContentListSupport.setControlVisible(mReversed ^ dy < 0);
             mScrollSum = 0;
         }
-        if (scrollState == idleState) {
+        if (scrollState == idleState && oldState != scrollState) {
             postNotifyScrollStateChanged();
         }
     }

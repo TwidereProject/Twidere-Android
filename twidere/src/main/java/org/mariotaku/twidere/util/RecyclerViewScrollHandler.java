@@ -14,6 +14,7 @@ import org.mariotaku.twidere.util.ContentScrollHandler.ViewCallback;
 public class RecyclerViewScrollHandler extends RecyclerView.OnScrollListener {
 
     final ContentScrollHandler mScrollHandler;
+    private int mOldState = RecyclerView.SCROLL_STATE_IDLE;
 
     public RecyclerViewScrollHandler(@NonNull ContentListSupport contentListSupport, @Nullable ViewCallback viewCallback) {
         mScrollHandler = new ContentScrollHandler(contentListSupport, viewCallback);
@@ -39,7 +40,8 @@ public class RecyclerViewScrollHandler extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         final int scrollState = recyclerView.getScrollState();
-        mScrollHandler.handleScroll(dy, scrollState, RecyclerView.SCROLL_STATE_IDLE);
+        mScrollHandler.handleScroll(dy, scrollState, mOldState, RecyclerView.SCROLL_STATE_IDLE);
+        mOldState = scrollState;
     }
 
     public static class RecyclerViewCallback implements ViewCallback {

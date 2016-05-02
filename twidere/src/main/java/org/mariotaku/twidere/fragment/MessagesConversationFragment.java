@@ -491,6 +491,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (account != null) {
             mAccount = account;
             updateRecipientInfo();
+            updateAccount();
         }
     }
 
@@ -634,7 +635,17 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         AsyncTaskUtils.executeTask(new SetReadStateTask(getActivity(), account, recipient));
         updateActionBar();
         updateRecipientInfo();
+        updateAccount();
         mEditText.requestFocus();
+    }
+
+    private void updateAccount() {
+        if (mAccount == null) return;
+        if (Utils.isOfficialCredentials(getContext(), mAccount)) {
+            mAddImageButton.setVisibility(View.VISIBLE);
+        } else {
+            mAddImageButton.setVisibility(View.GONE);
+        }
     }
 
     public boolean isShowingConversation() {

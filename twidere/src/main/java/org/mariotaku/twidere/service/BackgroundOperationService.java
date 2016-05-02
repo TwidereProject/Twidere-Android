@@ -464,32 +464,50 @@ public class BackgroundOperationService extends IntentService implements Constan
         if (twitter == null || twitterUpload == null) return SingleResponse.getInstance();
         try {
             final ParcelableDirectMessage directMessage;
-            if (USER_TYPE_FANFOU_COM.equals(credentials.account_type)) {
-                if (imageUri != null) {
-                    throw new TwitterException("Can't send image DM on Fanfou");
-                }
-                final DirectMessage dm = twitter.sendFanfouDirectMessage(recipientId, text, null);
-                directMessage = ParcelableDirectMessageUtils.fromDirectMessage(dm, accountKey, true);
-            } else {
-                if (imageUri != null) {
-                    final String path = getImagePathFromUri(this, Uri.parse(imageUri));
-                    if (path == null) throw new FileNotFoundException();
-                    final BitmapFactory.Options o = new BitmapFactory.Options();
-                    o.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(path, o);
-                    final File file = new File(path);
-                    BitmapUtils.downscaleImageIfNeeded(file, 100);
-                    final ContentLengthInputStream is = new ContentLengthInputStream(file);
-                    is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager, builder, text));
-//                final MediaUploadResponse uploadResp = twitter.uploadMedia(file.getName(), is, o.outMimeType);
-                    final MediaUploadResponse uploadResp = twitterUpload.uploadMedia(file);
-                    directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text,
-                            uploadResp.getId()), accountKey, true);
-                    if (!file.delete()) {
-                        Log.d(LOGTAG, String.format("unable to delete %s", path));
+            switch (ParcelableAccountUtils.getAccountType(credentials)) {
+                case ParcelableAccount.Type.FANFOU: {
+                    if (imageUri != null) {
+                        throw new TwitterException("Can't send image DM on Fanfou");
                     }
-                } else {
-                    directMessage = ParcelableDirectMessageUtils.fromDirectMessage(twitter.sendDirectMessage(recipientId, text), accountKey, true);
+                    final DirectMessage dm = twitter.sendFanfouDirectMessage(recipientId, text);
+                    directMessage = ParcelableDirectMessageUtils.fromDirectMessage(dm, accountKey, true);
+                    break;
+                }
+                default: {
+                    if (imageUri != null) {
+                        final String path = getImagePathFromUri(this, Uri.parse(imageUri));
+                        if (path == null) throw new FileNotFoundException();
+                        final BitmapFactory.Options o = new BitmapFactory.Options();
+                        o.inJustDecodeBounds = true;
+                        BitmapFactory.decodeFile(path, o);
+                        final File file = new File(path);
+                        BitmapUtils.downscaleImageIfNeeded(file, 100);
+                        ContentLengthInputStream is = null;
+                        FileBody body = null;
+                        try {
+                            is = new ContentLengthInputStream(file);
+                            is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager,
+                                    builder, text));
+                            body = new FileBody(is, file.getName(), file.length(),
+                                    ContentType.parse(o.outMimeType));
+                            final MediaUploadResponse uploadResp = twitterUpload.uploadMedia(body);
+                            final DirectMessage response = twitter.sendDirectMessage(recipientId,
+                                    text, uploadResp.getId());
+                            directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
+                                    accountKey, true);
+                        } finally {
+                            Utils.closeSilently(is);
+                            Utils.closeSilently(body);
+                        }
+                        if (!file.delete()) {
+                            Log.d(LOGTAG, String.format("unable to delete %s", path));
+                        }
+                    } else {
+                        final DirectMessage response = twitter.sendDirectMessage(recipientId, text);
+                        directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
+                                accountKey, true);
+                    }
+                    break;
                 }
             }
             Utils.setLastSeen(this, new UserKey(recipientId, accountKey.getHost()),
