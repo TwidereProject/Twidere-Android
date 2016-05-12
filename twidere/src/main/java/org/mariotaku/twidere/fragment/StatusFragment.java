@@ -1602,15 +1602,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             @Override
             public boolean onLinkClick(final String link, final String orig, final UserKey accountKey,
                                        long extraId, int type, boolean sensitive, int start, int end) {
-                final ParcelableStatus status = adapter.getStatus();
-                ParcelableMedia current;
-                if ((current = ParcelableMediaUtils.findByUrl(status.media, link)) != null &&
-                        !current.open_browser) {
-                    expandOrOpenMedia(current);
-                    return true;
-                }
-                if ((current = ParcelableMediaUtils.findByUrl(status.quoted_media, link)) != null &&
-                        !current.open_browser) {
+                ParcelableMedia current = getCurrentMedia(link, (int) extraId);
+                if (current != null && !current.open_browser) {
                     expandOrOpenMedia(current);
                     return true;
                 }
@@ -1624,6 +1617,18 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     return;
                 }
                 adapter.setDetailMediaExpanded(true);
+            }
+
+            @Override
+            protected boolean isMedia(String link, long extraId) {
+                final ParcelableMedia current = getCurrentMedia(link, (int) extraId);
+                return current != null && !current.open_browser;
+            }
+
+            private ParcelableMedia getCurrentMedia(String link, int extraId) {
+                final ParcelableStatus status = adapter.getStatus(extraId);
+                final ParcelableMedia[] media = ParcelableMediaUtils.getAllMedia(status);
+                return StatusLinkClickHandler.findByLink(media, link);
             }
         }
 

@@ -798,4 +798,5 @@
     <string name="error_message_device_incompatible">This device is not compatible with Twidere, upgrade to latest Android OS is recommended.\nYou can send information below to help me report this issue to device manufacturer.</string>
     <string name="password_sign_in_twitter_only">Password sign in (Twitter only)</string>
     <string name="direct_messages_next">DM next</string>
+    <string name="plus_service_name">Twidere ∞</string>
 </resources>

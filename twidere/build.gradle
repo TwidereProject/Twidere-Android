@@ -1,9 +1,12 @@
 import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'androidsvgdrawable'
+
+// START Non-free services
+apply plugin: 'io.fabric'
+// END Non-free services
 
 buildscript {
     repositories {
@@ -93,6 +96,8 @@ dependencies {
     compile project(':twidere.component.nyan')
 
     googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
+    googleCompile 'com.google.android.gms:play-services-auth:8.4.0'
+    googleCompile 'com.google.android.gms:play-services-measurement:8.4.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
     googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
@@ -186,3 +191,7 @@ task svgToMipmap(type: SvgDrawableTask) {
 
     outputType = 'mipmap'
 }
+
+// START Non-free services
+apply plugin: 'com.google.gms.google-services'
+// END Non-free services

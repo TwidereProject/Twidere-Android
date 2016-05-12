@@ -73,6 +73,7 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ComposeActivity;
 import org.mariotaku.twidere.activity.HomeActivity;
+import org.mariotaku.twidere.activity.PlusServiceDashboardActivity;
 import org.mariotaku.twidere.activity.QuickSearchBarActivity;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -700,6 +701,12 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             }
             case R.id.filters: {
                 IntentUtils.openFilters(getActivity());
+                closeAccountsDrawer();
+                break;
+            }
+            case R.id.plus_service: {
+                final Intent intent = new Intent(getActivity(), PlusServiceDashboardActivity.class);
+                startActivity(intent);
                 closeAccountsDrawer();
                 break;
             }

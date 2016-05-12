@@ -395,7 +395,6 @@
             <intent-filter>
                 <data android:scheme="http"/>
                 <data android:scheme="https"/>
-
                 <data android:host="twitter.com"/>
                 <data android:host="www.twitter.com"/>
                 <data android:host="mobile.twitter.com"/>
@@ -451,6 +450,14 @@
             android:name=".activity.IncompatibleAlertActivity"
             android:label="@string/error_title_device_incompatible"
             android:theme="@android:style/Theme.DeviceDefault.Dialog"/>
+        <activity
+            android:name=".activity.PlusServiceDashboardActivity"
+            android:label="@string/plus_service_name"
+            android:theme="@style/Theme.Twidere"/>
+        <activity
+            android:name=".activity.PlusServiceSignInActivity"
+            android:label="@string/sign_in"
+            android:theme="@style/Theme.Twidere"/>
 
         <service
             android:name=".service.RefreshService"
@@ -543,6 +550,7 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

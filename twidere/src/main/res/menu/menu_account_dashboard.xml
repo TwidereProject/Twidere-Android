@@ -48,6 +48,12 @@
             android:icon="@drawable/ic_action_speaker_muted"
             android:title="@string/filters"/>
         <item
+            android:id="@id/plus_service"
+            android:enabled="@bool/is_debug"
+            android:icon="@drawable/ic_action_infinity"
+            android:title="@string/plus_service_name"
+            android:visible="@bool/is_debug"/>
+        <item
             android:id="@id/settings"
             android:icon="@drawable/ic_action_settings"
             android:title="@string/settings"/>

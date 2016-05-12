@@ -82,4 +82,5 @@
     <item name="info" type="id"/>
     <item name="messages" type="id"/>
     <item name="interactions" type="id"/>
+    <item name="plus_service" type="id"/>
 </resources>
