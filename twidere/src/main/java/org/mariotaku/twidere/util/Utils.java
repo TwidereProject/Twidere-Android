@@ -138,7 +138,6 @@ import org.mariotaku.twidere.fragment.MessagesConversationFragment;
 import org.mariotaku.twidere.fragment.MutesUsersListFragment;
 import org.mariotaku.twidere.fragment.PublicTimelineFragment;
 import org.mariotaku.twidere.fragment.SavedSearchesListFragment;
-import org.mariotaku.twidere.fragment.ScheduledStatusesFragment;
 import org.mariotaku.twidere.fragment.SearchFragment;
 import org.mariotaku.twidere.fragment.StatusFavoritersListFragment;
 import org.mariotaku.twidere.fragment.StatusFragment;
@@ -598,10 +597,6 @@ public final class Utils implements Constants {
             }
             case LINK_ID_MUTES_USERS: {
                 fragment = new MutesUsersListFragment();
-                break;
-            }
-            case LINK_ID_SCHEDULED_STATUSES: {
-                fragment = new ScheduledStatusesFragment();
                 break;
             }
             case LINK_ID_DIRECT_MESSAGES_CONVERSATION: {

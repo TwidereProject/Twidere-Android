@@ -19,14 +19,19 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/5/13.
  */
+@ParcelablePlease
 @JsonObject
-public class TimeZone {
+public class TimeZone implements Parcelable {
 
     @JsonField(name = "utc_offset")
     int utcOffset;
@@ -46,4 +51,26 @@ public class TimeZone {
     public String getTzInfoName() {
         return tzInfoName;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        TimeZoneParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<TimeZone> CREATOR = new Creator<TimeZone>() {
+        public TimeZone createFromParcel(Parcel source) {
+            TimeZone target = new TimeZone();
+            TimeZoneParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public TimeZone[] newArray(int size) {
+            return new TimeZone[size];
+        }
+    };
 }

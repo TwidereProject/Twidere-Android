@@ -19,14 +19,19 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/5/10.
  */
+@ParcelablePlease
 @JsonObject
-public class Trend {
+public class Trend implements Parcelable {
 
     @JsonField(name = "name")
     String name;
@@ -55,4 +60,28 @@ public class Trend {
                 ", query='" + query + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        TrendParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Trend> CREATOR = new Creator<Trend>() {
+        @Override
+        public Trend createFromParcel(Parcel source) {
+            Trend target = new Trend();
+            TrendParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public Trend[] newArray(int size) {
+            return new Trend[size];
+        }
+    };
 }

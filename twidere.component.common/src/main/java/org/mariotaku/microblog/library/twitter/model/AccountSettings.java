@@ -19,14 +19,19 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/5/13.
  */
+@ParcelablePlease
 @JsonObject
-public class AccountSettings extends TwitterResponseObject {
+public class AccountSettings extends TwitterResponseObject implements Parcelable {
 
     @JsonField(name = "geo_enabled")
     boolean geoEnabled;
@@ -59,4 +64,25 @@ public class AccountSettings extends TwitterResponseObject {
         return geoEnabled;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        AccountSettingsParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<AccountSettings> CREATOR = new Creator<AccountSettings>() {
+        public AccountSettings createFromParcel(Parcel source) {
+            AccountSettings target = new AccountSettings();
+            AccountSettingsParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public AccountSettings[] newArray(int size) {
+            return new AccountSettings[size];
+        }
+    };
 }

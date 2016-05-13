@@ -25,10 +25,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.text.TextUtils;
 
+import com.bluelinelabs.logansquare.JsonMapper;
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
+import org.mariotaku.commons.logansquare.JsonStringConverter;
 import org.mariotaku.microblog.library.annotation.NoObfuscate;
+import org.mariotaku.microblog.library.twitter.util.TwitterDateConverter;
 
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
@@ -38,23 +46,42 @@ import java.util.Date;
  * Twitter Activity object
  */
 @ParcelablePlease
-@NoObfuscate
-public class Activity extends TwitterResponseObject implements TwitterResponse, Comparable<Activity>,Parcelable {
+@JsonObject
+public class Activity extends TwitterResponseObject implements TwitterResponse, Comparable<Activity>,
+        Parcelable {
+
+    private static final JsonMapper<User> USER_JSON_MAPPER = LoganSquare.mapperFor(User.class);
+    private static final JsonMapper<Status> STATUS_JSON_MAPPER = LoganSquare.mapperFor(Status.class);
+    private static final JsonMapper<UserList> USER_LIST_JSON_MAPPER = LoganSquare.mapperFor(UserList.class);
 
     @Action
+    @JsonField(name = "action")
     String action;
-    String rawAction;
 
+    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
     Date createdAt;
 
+    @JsonField(name = "sources")
     User[] sources;
+    @JsonField(name = "targets", typeConverter = JsonStringConverter.class)
+    String rawTargets;
+    @JsonField(name = "sources", typeConverter = JsonStringConverter.class)
+    String rawTargetObjects;
     User[] targetUsers;
     User[] targetObjectUsers;
     Status[] targetObjectStatuses, targetStatuses;
     UserList[] targetUserLists, targetObjectUserLists;
-    String maxPosition = null, minPosition = null;
+    @JsonField(name = "max_position")
+    String maxPosition = null;
+    @JsonField(name = "min_position")
+    String minPosition = null;
     long maxSortPosition = -1, minSortPosition = -1;
-    int targetObjectsSize, targetsSize, sourcesSize;
+    @JsonField(name = "target_objects_size")
+    int targetObjectsSize;
+    @JsonField(name = "targets_size")
+    int targetsSize;
+    @JsonField(name = "sources_size")
+    int sourcesSize;
 
     Activity() {
     }
@@ -63,16 +90,8 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         return targetObjectUsers;
     }
 
-    @Override
-    public int compareTo(@NonNull final Activity another) {
-        final Date thisDate = getCreatedAt(), thatDate = another.getCreatedAt();
-        if (thisDate == null || thatDate == null) return 0;
-        return thisDate.compareTo(thatDate);
-    }
-
-    public
     @Action
-    String getAction() {
+    public String getAction() {
         return action;
     }
 
@@ -133,10 +152,16 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
     }
 
     @Override
+    public int compareTo(@NonNull final Activity another) {
+        final Date thisDate = getCreatedAt(), thatDate = another.getCreatedAt();
+        if (thisDate == null || thatDate == null) return 0;
+        return thisDate.compareTo(thatDate);
+    }
+
+    @Override
     public String toString() {
         return "Activity{" +
                 "action='" + action + '\'' +
-                ", rawAction='" + rawAction + '\'' +
                 ", createdAt=" + createdAt +
                 ", sources=" + Arrays.toString(sources) +
                 ", targetUsers=" + Arrays.toString(targetUsers) +
@@ -155,6 +180,71 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
                 "} " + super.toString();
     }
 
+    @OnJsonParseComplete
+    void onParseComplete() throws IOException {
+        if (action == null) throw new IOException();
+        switch (action) {
+            case Activity.Action.FAVORITE:
+            case Activity.Action.REPLY:
+            case Activity.Action.RETWEET:
+            case Activity.Action.QUOTE:
+            case Activity.Action.FAVORITED_RETWEET:
+            case Activity.Action.RETWEETED_RETWEET:
+            case Activity.Action.RETWEETED_MENTION:
+            case Activity.Action.FAVORITED_MENTION:
+            case Activity.Action.MEDIA_TAGGED:
+            case Activity.Action.FAVORITED_MEDIA_TAGGED:
+            case Activity.Action.RETWEETED_MEDIA_TAGGED: {
+                targetStatuses = STATUS_JSON_MAPPER.parseList(rawTargets).toArray(new Status[targetsSize]);
+                break;
+            }
+            case Activity.Action.FOLLOW:
+            case Activity.Action.MENTION:
+            case Activity.Action.LIST_MEMBER_ADDED: {
+                targetUsers = USER_JSON_MAPPER.parseList(rawTargets).toArray(new User[targetsSize]);
+                break;
+            }
+            case Activity.Action.LIST_CREATED: {
+                targetUserLists = USER_LIST_JSON_MAPPER.parseList(rawTargets).toArray(new UserList[targetsSize]);
+                break;
+            }
+        }
+        switch (action) {
+            case Activity.Action.FAVORITE:
+            case Activity.Action.FOLLOW:
+            case Activity.Action.MENTION:
+            case Activity.Action.REPLY:
+            case Activity.Action.RETWEET:
+            case Activity.Action.LIST_CREATED:
+            case Activity.Action.QUOTE: {
+                targetObjectStatuses = STATUS_JSON_MAPPER.parseList(rawTargetObjects).toArray(new Status[targetObjectsSize]);
+                break;
+            }
+            case Activity.Action.LIST_MEMBER_ADDED: {
+                targetObjectUserLists = USER_LIST_JSON_MAPPER.parseList(rawTargetObjects).toArray(new UserList[targetObjectsSize]);
+                break;
+            }
+            case Activity.Action.FAVORITED_RETWEET:
+            case Activity.Action.RETWEETED_RETWEET:
+            case Activity.Action.RETWEETED_MENTION:
+            case Activity.Action.FAVORITED_MENTION:
+            case Activity.Action.MEDIA_TAGGED:
+            case Activity.Action.FAVORITED_MEDIA_TAGGED:
+            case Activity.Action.RETWEETED_MEDIA_TAGGED: {
+                targetObjectUsers = USER_JSON_MAPPER.parseList(rawTargetObjects).toArray(new User[targetObjectsSize]);
+                break;
+            }
+        }
+        try {
+            maxSortPosition = Long.parseLong(maxPosition);
+            minSortPosition = Long.parseLong(minPosition);
+        } catch (NumberFormatException e) {
+            final long time = createdAt != null ? createdAt.getTime() : -1;
+            maxSortPosition = time;
+            minSortPosition = time;
+        }
+    }
+
     public static Activity fromMention(String twitterId, Status status) {
         final Activity activity = new Activity();
 
@@ -164,14 +254,12 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
 
         if (TextUtils.equals(status.getInReplyToUserId(), twitterId)) {
             activity.action = Action.REPLY;
-            activity.rawAction = "reply";
             activity.targetStatuses = new Status[]{status};
 
             //TODO set target statuses (in reply to status)
             activity.targetObjectStatuses = new Status[0];
         } else {
             activity.action = Action.MENTION;
-            activity.rawAction = "mention";
             activity.targetObjectStatuses = new Status[]{status};
 
             // TODO set target users (mentioned users)

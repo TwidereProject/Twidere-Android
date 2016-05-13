@@ -19,14 +19,19 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/5/10.
  */
+@ParcelablePlease
 @JsonObject
-public class Language {
+public class Language implements Parcelable {
     @JsonField(name = "name")
     String name;
     @JsonField(name = "code")
@@ -54,4 +59,26 @@ public class Language {
                 ", status='" + status + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        LanguageParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Language> CREATOR = new Creator<Language>() {
+        public Language createFromParcel(Parcel source) {
+            Language target = new Language();
+            LanguageParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public Language[] newArray(int size) {
+            return new Language[size];
+        }
+    };
 }
