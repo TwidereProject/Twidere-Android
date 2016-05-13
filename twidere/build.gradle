@@ -79,10 +79,11 @@ repositories {
 dependencies {
 //    wearApp project(':twidere.wear')
     apt 'com.bluelinelabs:logansquare-compiler:1.3.7'
-    androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     apt 'com.google.dagger:dagger-compiler:2.1'
-    apt "com.github.mariotaku.ObjectCursor:processor:0.9.9"
+    apt 'com.github.mariotaku.ObjectCursor:processor:0.9.9'
+
+    androidTestApt 'com.bluelinelabs:logansquare-compiler:1.3.7'
 
     compile('com.github.mariotaku:app-theme-engine:1efc6237e1@aar') {
         transitive = true
