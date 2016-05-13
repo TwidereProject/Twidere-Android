@@ -21,11 +21,11 @@ package org.mariotaku.twidere.loader;
 
 import android.content.Context;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.PageableResponseList;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.UserList;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 
@@ -45,7 +45,7 @@ public class UserListMembershipsLoader extends BaseUserListsLoader {
     }
 
     @Override
-    public PageableResponseList<UserList> getUserLists(final MicroBlog twitter) throws TwitterException {
+    public PageableResponseList<UserList> getUserLists(final MicroBlog twitter) throws MicroBlogException {
         if (twitter == null) return null;
         final Paging paging = new Paging();
         paging.cursor(getCursor());

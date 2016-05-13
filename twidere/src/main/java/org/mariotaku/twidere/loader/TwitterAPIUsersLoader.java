@@ -24,9 +24,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -52,22 +52,22 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
     @Override
     public List<ParcelableUser> loadInBackground() {
         if (mAccountKey == null) {
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new MicroBlogException("No Account"));
         }
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(),
                 mAccountKey);
         if (credentials == null) {
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new MicroBlogException("No Account"));
         }
         final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), credentials, true,
                 true);
         if (twitter == null)
-            return ListResponse.getListInstance(new TwitterException("No Account"));
+            return ListResponse.getListInstance(new MicroBlogException("No Account"));
         final List<ParcelableUser> data = getData();
         final List<User> users;
         try {
             users = getUsers(twitter, credentials);
-        } catch (final TwitterException e) {
+        } catch (final MicroBlogException e) {
             Log.w(LOGTAG, e);
             return ListResponse.getListInstance(data);
         }
@@ -90,5 +90,5 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
 
     @NonNull
     protected abstract List<User> getUsers(@NonNull MicroBlog twitter,
-                                           @NonNull ParcelableCredentials credentials) throws TwitterException;
+                                           @NonNull ParcelableCredentials credentials) throws MicroBlogException;
 }

@@ -26,8 +26,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.SavedSearch;
 import org.mariotaku.twidere.model.UserKey;
 
 /**

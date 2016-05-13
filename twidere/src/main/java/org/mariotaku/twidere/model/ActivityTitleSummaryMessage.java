@@ -13,7 +13,7 @@ import android.text.Spanned;
 import android.text.style.StyleSpan;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;

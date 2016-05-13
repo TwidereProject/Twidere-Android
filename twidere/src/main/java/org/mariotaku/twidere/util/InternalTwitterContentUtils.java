@@ -11,15 +11,15 @@ import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
 import org.mariotaku.restfu.http.MultiValueMap;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.EntitySupport;
-import org.mariotaku.twidere.api.twitter.model.ExtendedEntitySupport;
-import org.mariotaku.twidere.api.twitter.model.MediaEntity;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.UrlEntity;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.DirectMessage;
+import org.mariotaku.microblog.library.twitter.model.EntitySupport;
+import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport;
+import org.mariotaku.microblog.library.twitter.model.MediaEntity;
+import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.UrlEntity;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
@@ -44,7 +44,7 @@ public class InternalTwitterContentUtils {
     private InternalTwitterContentUtils() {
     }
 
-    public static <T extends List<? extends Status>> T getStatusesWithQuoteData(MicroBlog twitter, @NonNull T list) throws TwitterException {
+    public static <T extends List<? extends Status>> T getStatusesWithQuoteData(MicroBlog twitter, @NonNull T list) throws MicroBlogException {
         MultiValueMap<Status> quotes = new MultiValueMap<>();
         // Phase 1: collect all statuses contains a status link, and put it in the map
         for (Status status : list) {

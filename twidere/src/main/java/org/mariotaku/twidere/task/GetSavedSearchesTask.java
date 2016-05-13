@@ -9,10 +9,10 @@ import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.SavedSearch;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
@@ -46,7 +46,7 @@ public class GetSavedSearchesTask extends AbstractTask<UserKey[], SingleResponse
                 final String[] whereArgs = {accountKey.toString()};
                 cr.delete(SavedSearches.CONTENT_URI, where.getSQL(), whereArgs);
                 ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values);
-            } catch (TwitterException e) {
+            } catch (MicroBlogException e) {
                 if (BuildConfig.DEBUG) {
                     Log.w(LOGTAG, e);
                 }

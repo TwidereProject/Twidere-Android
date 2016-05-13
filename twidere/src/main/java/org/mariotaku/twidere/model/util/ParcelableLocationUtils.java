@@ -3,7 +3,7 @@ package org.mariotaku.twidere.model.util;
 import android.location.Location;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.twidere.api.twitter.model.GeoLocation;
+import org.mariotaku.microblog.library.twitter.model.GeoLocation;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.util.InternalParseUtils;
 

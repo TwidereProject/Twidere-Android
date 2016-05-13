@@ -30,9 +30,9 @@ import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
@@ -230,13 +230,13 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                 publishProgress(LogText.LINEBREAK);
                 testTwitter("verify_credentials", twitter, new TwitterTest() {
                     @Override
-                    public void execute(MicroBlog twitter) throws TwitterException {
+                    public void execute(MicroBlog twitter) throws MicroBlogException {
                         twitter.verifyCredentials();
                     }
                 });
                 testTwitter("get_home_timeline", twitter, new TwitterTest() {
                     @Override
-                    public void execute(MicroBlog twitter) throws TwitterException {
+                    public void execute(MicroBlog twitter) throws MicroBlogException {
                         twitter.getHomeTimeline(new Paging().count(1));
                     }
                 });
@@ -309,14 +309,14 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                 test.execute(twitter);
                 publishProgress(new LogText(String.format(Locale.US, "OK (%d ms)",
                         SystemClock.uptimeMillis() - start), LogText.State.OK));
-            } catch (TwitterException e) {
+            } catch (MicroBlogException e) {
                 publishProgress(new LogText("ERROR: " + e.getMessage(), LogText.State.ERROR));
             }
             publishProgress(LogText.LINEBREAK);
         }
 
         interface TwitterTest {
-            void execute(MicroBlog twitter) throws TwitterException;
+            void execute(MicroBlog twitter) throws MicroBlogException;
         }
 
 

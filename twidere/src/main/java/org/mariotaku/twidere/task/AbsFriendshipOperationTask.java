@@ -8,9 +8,9 @@ import com.squareup.otto.Bus;
 
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -91,7 +91,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
             final ParcelableUser parcelableUser = ParcelableUserUtils.fromUser(user, args.accountKey);
             succeededWorker(twitter, credentials, args, parcelableUser);
             return SingleResponse.getInstance(parcelableUser, null);
-        } catch (final TwitterException e) {
+        } catch (final MicroBlogException e) {
             return SingleResponse.getInstance(null, e);
         }
     }
@@ -99,7 +99,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
     @NonNull
     protected abstract User perform(@NonNull MicroBlog twitter,
                                     @NonNull ParcelableCredentials credentials,
-                                    @NonNull Arguments args) throws TwitterException;
+                                    @NonNull Arguments args) throws MicroBlogException;
 
     protected abstract void succeededWorker(@NonNull MicroBlog twitter,
                                             @NonNull ParcelableCredentials credentials,

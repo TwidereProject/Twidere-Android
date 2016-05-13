@@ -27,7 +27,7 @@ import com.twitter.Extractor;
 
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;

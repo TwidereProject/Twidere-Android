@@ -31,8 +31,8 @@ import android.widget.ListView;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.twidere.adapter.SavedSearchesAdapter;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.SavedSearch;
 import org.mariotaku.twidere.loader.SavedSearchesLoader;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent;

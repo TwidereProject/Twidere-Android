@@ -7,8 +7,8 @@ import android.support.v4.util.ArrayMap;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.api.twitter.model.CardEntity;
-import org.mariotaku.twidere.api.twitter.util.ThreadLocalSimpleDateFormat;
+import org.mariotaku.microblog.library.twitter.model.CardEntity;
+import org.mariotaku.microblog.library.twitter.util.ThreadLocalSimpleDateFormat;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.UserKey;
 

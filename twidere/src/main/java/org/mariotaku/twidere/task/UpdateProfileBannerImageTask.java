@@ -9,9 +9,9 @@ import com.squareup.otto.Bus;
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
@@ -77,7 +77,7 @@ public class UpdateProfileBannerImageTask<ResultHandler> extends AbstractTask<Ob
             }
             final User user = twitter.verifyCredentials();
             return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey));
-        } catch (TwitterException | IOException e) {
+        } catch (MicroBlogException | IOException e) {
             return SingleResponse.getInstance(e);
         }
     }

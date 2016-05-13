@@ -4,11 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.task.twitter.GetStatusesTask;
 import org.mariotaku.twidere.util.ErrorInfoStore;
@@ -27,7 +27,7 @@ public class GetHomeTimelineTask extends GetStatusesTask {
     @NonNull
     @Override
     public ResponseList<Status> getStatuses(final MicroBlog twitter, final Paging paging)
-            throws TwitterException {
+            throws MicroBlogException {
         return twitter.getHomeTimeline(paging);
     }
 

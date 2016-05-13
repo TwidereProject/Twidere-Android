@@ -54,10 +54,10 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.AccountSelectorActivity;
 import org.mariotaku.twidere.activity.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.UserList;
+import org.mariotaku.microblog.library.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -491,7 +491,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 } else
                     return SingleResponse.getInstance();
                 return SingleResponse.getInstance(ParcelableUserListUtils.from(list, mAccountKey));
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }

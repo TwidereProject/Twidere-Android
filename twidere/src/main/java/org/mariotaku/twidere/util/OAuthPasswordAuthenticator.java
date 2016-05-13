@@ -42,9 +42,9 @@ import org.mariotaku.restfu.http.mime.FormBody;
 import org.mariotaku.restfu.http.mime.SimpleBody;
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.TwitterOAuth;
-import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth;
+import org.mariotaku.microblog.library.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.util.net.SimpleCookieJar;
 
 import java.io.IOException;
@@ -87,7 +87,7 @@ public class OAuthPasswordAuthenticator implements Constants {
         final OAuthToken requestToken;
         try {
             requestToken = oauth.getRequestToken(OAUTH_CALLBACK_OOB);
-        } catch (final TwitterException e) {
+        } catch (final MicroBlogException e) {
             if (e.isCausedByNetworkIssue()) throw new AuthenticationException(e);
             throw new AuthenticityTokenException(e);
         }
@@ -113,7 +113,7 @@ public class OAuthPasswordAuthenticator implements Constants {
                 throw new LoginVerificationException();
             }
             return oauth.getAccessToken(requestToken, authorizeResponseData.oauthPin);
-        } catch (final IOException | NullPointerException | TwitterException e) {
+        } catch (final IOException | NullPointerException | MicroBlogException e) {
             throw new AuthenticationException(e);
         }
     }

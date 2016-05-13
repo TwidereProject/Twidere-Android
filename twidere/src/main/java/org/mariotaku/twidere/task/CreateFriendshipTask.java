@@ -6,9 +6,9 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -27,7 +27,7 @@ public class CreateFriendshipTask extends AbsFriendshipOperationTask {
 
     @NonNull
     @Override
-    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args) throws TwitterException {
+    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args) throws MicroBlogException {
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
             case ParcelableAccount.Type.FANFOU: {
                 return twitter.createFanfouFriendship(args.userKey.getId());
@@ -46,8 +46,8 @@ public class CreateFriendshipTask extends AbsFriendshipOperationTask {
     protected void showErrorMessage(@NonNull Arguments params, @Nullable Exception exception) {
         if (USER_TYPE_FANFOU_COM.equals(params.accountKey.getHost())) {
             // Fanfou returns 403 for follow request
-            if (exception instanceof TwitterException) {
-                TwitterException te = (TwitterException) exception;
+            if (exception instanceof MicroBlogException) {
+                MicroBlogException te = (MicroBlogException) exception;
                 if (te.getStatusCode() == 403 && !TextUtils.isEmpty(te.getErrorMessage())) {
                     Utils.showErrorMessage(context, te.getErrorMessage(), false);
                     return;

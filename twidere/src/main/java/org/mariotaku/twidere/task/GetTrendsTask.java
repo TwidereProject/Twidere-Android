@@ -9,9 +9,9 @@ import android.support.annotation.NonNull;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Trends;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Trends;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.TrendsRefreshedEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -42,7 +42,7 @@ public abstract class GetTrendsTask extends AbstractTask<Object, Object, Object>
         this.mAccountId = accountKey;
     }
 
-    public abstract List<Trends> getTrends(@NonNull MicroBlog twitter) throws TwitterException;
+    public abstract List<Trends> getTrends(@NonNull MicroBlog twitter) throws MicroBlogException;
 
     @Override
     public Object doLongOperation(final Object param) {
@@ -52,7 +52,7 @@ public abstract class GetTrendsTask extends AbstractTask<Object, Object, Object>
             final List<Trends> trends = getTrends(twitter);
             storeTrends(mContext.getContentResolver(), getContentUri(), trends);
             return null;
-        } catch (final TwitterException e) {
+        } catch (final MicroBlogException e) {
             return null;
         }
     }

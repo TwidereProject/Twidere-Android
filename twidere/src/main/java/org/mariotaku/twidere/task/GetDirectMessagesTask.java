@@ -12,12 +12,12 @@ import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.DirectMessage;
+import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
@@ -56,7 +56,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
     }
 
     public abstract ResponseList<DirectMessage> getDirectMessages(MicroBlog twitter, Paging paging)
-            throws TwitterException;
+            throws MicroBlogException;
 
     protected abstract Uri getDatabaseUri();
 
@@ -97,7 +97,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
                 result.add(new TwitterWrapper.MessageListResponse(accountKey, maxId, sinceId, messages));
                 storeMessages(accountKey, messages, isOutgoing(), true);
                 errorInfoStore.remove(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 if (e.getErrorCode() == ErrorInfo.NO_DIRECT_MESSAGE_PERMISSION) {
                     errorInfoStore.put(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey,
                             ErrorInfoStore.CODE_NO_DM_PERMISSION);

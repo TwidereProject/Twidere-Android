@@ -25,11 +25,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.SearchQuery;
-import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.SearchQuery;
+import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -62,8 +62,8 @@ public class TweetSearchLoader extends MicroBlogAPIStatusesLoader {
     @Override
     public List<? extends Status> getStatuses(@NonNull final MicroBlog microBlog,
                                               @NonNull final ParcelableCredentials credentials,
-                                              @NonNull final Paging paging) throws TwitterException {
-        if (mQuery == null) throw new TwitterException("Empty query");
+                                              @NonNull final Paging paging) throws MicroBlogException {
+        if (mQuery == null) throw new MicroBlogException("Empty query");
         final String processedQuery = processQuery(credentials, mQuery);
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
             case ParcelableAccount.Type.TWITTER: {
@@ -78,7 +78,7 @@ public class TweetSearchLoader extends MicroBlogAPIStatusesLoader {
                 return microBlog.searchPublicTimeline(processedQuery, paging);
             }
         }
-        throw new TwitterException("Not implemented");
+        throw new MicroBlogException("Not implemented");
     }
 
     @NonNull

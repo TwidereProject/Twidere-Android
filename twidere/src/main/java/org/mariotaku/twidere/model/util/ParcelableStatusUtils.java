@@ -9,12 +9,12 @@ import android.text.TextUtils;
 import android.text.style.URLSpan;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.statusnet.model.Attention;
-import org.mariotaku.twidere.api.twitter.model.GeoLocation;
-import org.mariotaku.twidere.api.twitter.model.Place;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserMentionEntity;
+import org.mariotaku.microblog.library.statusnet.model.Attention;
+import org.mariotaku.microblog.library.twitter.model.GeoLocation;
+import org.mariotaku.microblog.library.twitter.model.Place;
+import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.microblog.library.twitter.model.UserMentionEntity;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableLocation;
 import org.mariotaku.twidere.model.ParcelableStatus;

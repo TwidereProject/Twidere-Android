@@ -2,9 +2,9 @@ package org.mariotaku.twidere.util;
 
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.junit.Test;
-import org.mariotaku.twidere.api.twitter.model.CursorTimestampResponse;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.CursorTimestampResponse;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.Status;
 
 import java.util.List;
 

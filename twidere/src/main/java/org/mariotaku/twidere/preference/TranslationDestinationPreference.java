@@ -38,10 +38,10 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Language;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Language;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.text.Collator;
@@ -166,7 +166,7 @@ public class TranslationDestinationPreference extends Preference implements Cons
             try {
                 mSelectedLanguageCode = twitter.getAccountSettings().getLanguage();
                 return twitter.getLanguages();
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 Log.w(LOGTAG, e);
             }
             return null;

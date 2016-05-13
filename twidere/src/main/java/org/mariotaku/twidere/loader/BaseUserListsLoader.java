@@ -24,11 +24,11 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.CursorSupport;
-import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
-import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.CursorSupport;
+import org.mariotaku.microblog.library.twitter.model.PageableResponseList;
+import org.mariotaku.microblog.library.twitter.model.UserList;
 import org.mariotaku.twidere.loader.iface.ICursorSupportLoader;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
@@ -74,7 +74,7 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
         return mPrevCursor;
     }
 
-    public abstract List<UserList> getUserLists(final MicroBlog twitter) throws TwitterException;
+    public abstract List<UserList> getUserLists(final MicroBlog twitter) throws MicroBlogException;
 
     @Override
     public List<ParcelableUserList> loadInBackground() {
@@ -82,7 +82,7 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
         List<UserList> listLoaded = null;
         try {
             listLoaded = getUserLists(twitter);
-        } catch (final TwitterException e) {
+        } catch (final MicroBlogException e) {
             Log.w(LOGTAG, e);
         }
         if (listLoaded != null) {

@@ -35,7 +35,7 @@ import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
-import org.mariotaku.twidere.api.twitter.model.Activity;
+import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.fragment.CursorActivitiesFragment;
 import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;

@@ -14,11 +14,11 @@ import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Activity;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Activity;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.RefreshTaskParam;
@@ -119,7 +119,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
                     saveReadPosition(accountKey, credentials, twitter);
                 }
                 errorInfoStore.remove(getErrorInfoKey(), accountKey);
-            } catch (TwitterException e) {
+            } catch (MicroBlogException e) {
                 if (BuildConfig.DEBUG) {
                     Log.w(LOGTAG, e);
                 }
@@ -220,7 +220,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     protected abstract ResponseList<Activity> getActivities(@NonNull final MicroBlog twitter,
                                                             @NonNull final ParcelableCredentials credentials,
                                                             @NonNull final Paging paging)
-            throws TwitterException;
+            throws MicroBlogException;
 
     @Override
     public void afterExecute(Object result) {

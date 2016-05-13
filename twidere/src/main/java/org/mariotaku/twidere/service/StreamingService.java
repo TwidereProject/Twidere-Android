@@ -26,15 +26,15 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.TwitterUserStream;
-import org.mariotaku.twidere.api.twitter.UserStreamCallback;
-import org.mariotaku.twidere.api.twitter.model.DeletionEvent;
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.api.twitter.model.Warning;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.TwitterUserStream;
+import org.mariotaku.microblog.library.twitter.UserStreamCallback;
+import org.mariotaku.microblog.library.twitter.model.DeletionEvent;
+import org.mariotaku.microblog.library.twitter.model.DirectMessage;
+import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.microblog.library.twitter.model.UserList;
+import org.mariotaku.microblog.library.twitter.model.Warning;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -273,9 +273,9 @@ public class StreamingService extends Service implements Constants {
 
         @Override
         public void onException(final Throwable ex) {
-            if (ex instanceof TwitterException) {
-                Log.w(LOGTAG, String.format("Error %d", ((TwitterException) ex).getStatusCode()), ex);
-                final HttpResponse response = ((TwitterException) ex).getHttpResponse();
+            if (ex instanceof MicroBlogException) {
+                Log.w(LOGTAG, String.format("Error %d", ((MicroBlogException) ex).getStatusCode()), ex);
+                final HttpResponse response = ((MicroBlogException) ex).getHttpResponse();
                 if (response != null) {
                     try {
                         final Body body = response.getBody();

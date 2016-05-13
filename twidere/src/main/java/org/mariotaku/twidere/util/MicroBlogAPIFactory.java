@@ -34,19 +34,19 @@ import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterCaps;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.TwitterOAuth;
-import org.mariotaku.twidere.api.twitter.TwitterOAuth2;
-import org.mariotaku.twidere.api.twitter.TwitterUpload;
-import org.mariotaku.twidere.api.twitter.TwitterUserStream;
-import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
-import org.mariotaku.twidere.api.twitter.auth.EmptyAuthorization;
-import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
-import org.mariotaku.twidere.api.twitter.auth.OAuthEndpoint;
-import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
-import org.mariotaku.twidere.api.twitter.util.TwitterConverterFactory;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.TwitterCaps;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth2;
+import org.mariotaku.microblog.library.twitter.TwitterUpload;
+import org.mariotaku.microblog.library.twitter.TwitterUserStream;
+import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
+import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
+import org.mariotaku.microblog.library.twitter.auth.OAuthAuthorization;
+import org.mariotaku.microblog.library.twitter.auth.OAuthEndpoint;
+import org.mariotaku.microblog.library.twitter.auth.OAuthToken;
+import org.mariotaku.microblog.library.twitter.util.TwitterConverterFactory;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -166,7 +166,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     public static <T> T getInstance(final Context context, final Endpoint endpoint,
                                     final Authorization auth, final Map<String, String> extraRequestParams,
                                     final Class<T> cls, boolean twitterExtraQueries) {
-        final RestAPIFactory<TwitterException> factory = new RestAPIFactory<>();
+        final RestAPIFactory<MicroBlogException> factory = new RestAPIFactory<>();
         final String userAgent;
         if (auth instanceof OAuthAuthorization) {
             final String consumerKey = ((OAuthAuthorization) auth).getConsumerKey();
@@ -523,7 +523,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         }
     }
 
-    public static class TwidereExceptionFactory implements ExceptionFactory<TwitterException> {
+    public static class TwidereExceptionFactory implements ExceptionFactory<MicroBlogException> {
 
         private final TwitterConverterFactory converterFactory;
 
@@ -532,10 +532,10 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         }
 
         @Override
-        public TwitterException newException(Throwable cause, HttpRequest request, HttpResponse response) {
-            final TwitterException te;
+        public MicroBlogException newException(Throwable cause, HttpRequest request, HttpResponse response) {
+            final MicroBlogException te;
             if (cause != null) {
-                te = new TwitterException(cause);
+                te = new MicroBlogException(cause);
             } else {
                 te = parseTwitterException(response);
             }
@@ -545,22 +545,22 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         }
 
 
-        public TwitterException parseTwitterException(HttpResponse resp) {
+        public MicroBlogException parseTwitterException(HttpResponse resp) {
             try {
-                return (TwitterException) converterFactory.forResponse(TwitterException.class).convert(resp);
+                return (MicroBlogException) converterFactory.forResponse(MicroBlogException.class).convert(resp);
             } catch (JsonParseException e) {
-                return new TwitterException("Malformed JSON Data", e);
+                return new MicroBlogException("Malformed JSON Data", e);
             } catch (IOException e) {
-                return new TwitterException("IOException while throwing exception", e);
+                return new MicroBlogException("IOException while throwing exception", e);
             } catch (RestConverter.ConvertException e) {
-                return new TwitterException(e);
-            } catch (TwitterException e) {
+                return new MicroBlogException(e);
+            } catch (MicroBlogException e) {
                 return e;
             }
         }
     }
 
-    private static class TwidereRestRequestFactory implements RestRequest.Factory<TwitterException> {
+    private static class TwidereRestRequestFactory implements RestRequest.Factory<MicroBlogException> {
         private final Map<String, String> extraRequestParams;
 
         public TwidereRestRequestFactory(Map<String, String> extraRequestParams) {
@@ -568,9 +568,9 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         }
 
         @Override
-        public RestRequest create(RestMethod<TwitterException> restMethod,
-                                  RestConverter.Factory<TwitterException> factory,
-                                  ValueMap valuePool) throws RestConverter.ConvertException, IOException, TwitterException {
+        public RestRequest create(RestMethod<MicroBlogException> restMethod,
+                                  RestConverter.Factory<MicroBlogException> factory,
+                                  ValueMap valuePool) throws RestConverter.ConvertException, IOException, MicroBlogException {
             final HttpMethod method = restMethod.getMethod();
             final String path = restMethod.getPath();
             final MultiValueMap<String> headers = restMethod.getHeaders(valuePool);

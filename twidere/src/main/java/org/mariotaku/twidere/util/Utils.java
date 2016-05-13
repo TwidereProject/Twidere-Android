@@ -119,12 +119,12 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.GeoLocation;
-import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
-import org.mariotaku.twidere.api.twitter.model.Relationship;
-import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.GeoLocation;
+import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
+import org.mariotaku.microblog.library.twitter.model.Relationship;
+import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.twidere.fragment.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.DraftsFragment;
@@ -927,11 +927,11 @@ public final class Utils implements Constants {
     public static ParcelableStatus findStatus(@NonNull final Context context,
                                               @NonNull final UserKey accountKey,
                                               @NonNull final String statusId)
-            throws TwitterException {
+            throws MicroBlogException {
         final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
         if (cached != null) return cached;
         final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, accountKey, true);
-        if (twitter == null) throw new TwitterException("Account does not exist");
+        if (twitter == null) throw new MicroBlogException("Account does not exist");
         final Status status = twitter.showStatus(statusId);
         final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
@@ -1206,16 +1206,16 @@ public final class Utils implements Constants {
 
     public static String getErrorMessage(final Context context, final CharSequence action, final Throwable t) {
         if (context == null) return null;
-        if (t instanceof TwitterException)
-            return getTwitterErrorMessage(context, action, (TwitterException) t);
+        if (t instanceof MicroBlogException)
+            return getTwitterErrorMessage(context, action, (MicroBlogException) t);
         else if (t != null) return getErrorMessage(context, trimLineBreak(t.getMessage()));
         return context.getString(R.string.error_unknown_error);
     }
 
     public static String getErrorMessage(final Context context, final Throwable t) {
         if (t == null) return null;
-        if (context != null && t instanceof TwitterException)
-            return getTwitterErrorMessage(context, (TwitterException) t);
+        if (context != null && t instanceof MicroBlogException)
+            return getTwitterErrorMessage(context, (MicroBlogException) t);
         return t.getMessage();
     }
 
@@ -1502,7 +1502,7 @@ public final class Utils implements Constants {
     }
 
     public static String getTwitterErrorMessage(final Context context, final CharSequence action,
-                                                final TwitterException te) {
+                                                final MicroBlogException te) {
         if (context == null) return null;
         if (te == null) return context.getString(R.string.error_unknown_error);
         if (te.exceededRateLimitation()) {
@@ -1530,7 +1530,7 @@ public final class Utils implements Constants {
             return getErrorMessage(context, action, trimLineBreak(te.getMessage()));
     }
 
-    public static String getTwitterErrorMessage(final Context context, final TwitterException te) {
+    public static String getTwitterErrorMessage(final Context context, final MicroBlogException te) {
         if (te == null) return null;
         if (StatusCodeMessageUtils.containsTwitterError(te.getErrorCode()))
             return StatusCodeMessageUtils.getTwitterErrorMessage(context, te.getErrorCode());
@@ -1842,8 +1842,8 @@ public final class Utils implements Constants {
     public static void showErrorMessage(final Context context, final CharSequence action,
                                         final Throwable t, final boolean longMessage) {
         if (context == null) return;
-        if (t instanceof TwitterException) {
-            showTwitterErrorMessage(context, action, (TwitterException) t, longMessage);
+        if (t instanceof MicroBlogException) {
+            showTwitterErrorMessage(context, action, (MicroBlogException) t, longMessage);
             return;
         }
         showErrorMessage(context, getErrorMessage(context, action, t), longMessage);
@@ -1913,7 +1913,7 @@ public final class Utils implements Constants {
     }
 
     public static void showTwitterErrorMessage(final Context context, final CharSequence action,
-                                               final TwitterException te, final boolean long_message) {
+                                               final MicroBlogException te, final boolean long_message) {
         if (context == null) return;
         final String message;
         if (te != null) {
@@ -2040,7 +2040,7 @@ public final class Utils implements Constants {
         return pm.getDrawable(info.packageName, info.metaData.getInt(key), info.applicationInfo);
     }
 
-    private static boolean isErrorCodeMessageSupported(final TwitterException te) {
+    private static boolean isErrorCodeMessageSupported(final MicroBlogException te) {
         if (te == null) return false;
         return StatusCodeMessageUtils.containsHttpStatus(te.getStatusCode())
                 || StatusCodeMessageUtils.containsTwitterError(te.getErrorCode());

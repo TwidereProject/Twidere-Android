@@ -13,7 +13,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.mariotaku.twidere.api.twitter.model.MediaEntity;
+import org.mariotaku.microblog.library.twitter.model.MediaEntity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

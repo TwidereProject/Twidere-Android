@@ -52,10 +52,10 @@ import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.ThemedImagePickerActivity;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.ProfileUpdate;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment;
 import org.mariotaku.twidere.loader.ParcelableUserLoader;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -504,7 +504,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
                         ParcelableUserUtils.fromUser(user, mAccountKey));
                 response.getExtras().putParcelable(EXTRA_ACCOUNT, credentials);
                 return response;
-            } catch (TwitterException e) {
+            } catch (MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }

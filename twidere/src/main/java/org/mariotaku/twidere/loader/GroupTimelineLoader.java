@@ -24,11 +24,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
@@ -54,12 +54,12 @@ public class GroupTimelineLoader extends MicroBlogAPIStatusesLoader {
     @Override
     protected ResponseList<Status> getStatuses(@NonNull final MicroBlog microBlog,
                                                @NonNull final ParcelableCredentials credentials,
-                                               @NonNull final Paging paging) throws TwitterException {
+                                               @NonNull final Paging paging) throws MicroBlogException {
         if (mGroupId != null)
             return microBlog.getGroupStatuses(mGroupId, paging);
         else if (mGroupName != null)
             return microBlog.getGroupStatusesByName(mGroupName, paging);
-        throw new TwitterException("No group name or id given");
+        throw new MicroBlogException("No group name or id given");
     }
 
     @WorkerThread

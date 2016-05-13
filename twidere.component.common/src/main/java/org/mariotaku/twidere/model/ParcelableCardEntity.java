@@ -32,7 +32,7 @@ import com.hannesdorfmann.parcelableplease.annotation.Bagger;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
-import org.mariotaku.twidere.api.twitter.model.CardEntity;
+import org.mariotaku.microblog.library.twitter.model.CardEntity;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 
 import java.util.Arrays;

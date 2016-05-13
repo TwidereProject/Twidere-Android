@@ -9,9 +9,9 @@ import android.support.annotation.Nullable;
 
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
@@ -32,7 +32,7 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
     @NonNull
     @Override
     protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials,
-                           @NonNull Arguments args) throws TwitterException {
+                           @NonNull Arguments args) throws MicroBlogException {
         return twitter.createMute(args.userKey.getId());
     }
 

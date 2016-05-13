@@ -22,11 +22,11 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.User;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
@@ -48,12 +48,12 @@ public class GroupMembersLoader extends CursorSupportUsersLoader {
     @NonNull
     @Override
     public ResponseList<User> getCursoredUsers(@NonNull final MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging)
-            throws TwitterException {
+            throws MicroBlogException {
         if (mGroupId != null)
             return twitter.getGroupMembers(mGroupId, paging);
         else if (mGroupName != null)
             return twitter.getGroupMembersByName(mGroupName, paging);
-        throw new TwitterException("list_id or list_name and user_id (or screen_name) required");
+        throw new MicroBlogException("list_id or list_name and user_id (or screen_name) required");
     }
 
 }

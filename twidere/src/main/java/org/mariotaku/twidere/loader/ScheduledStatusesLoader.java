@@ -22,10 +22,10 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.ScheduledStatus;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ScheduledStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
@@ -65,7 +65,7 @@ public class ScheduledStatusesLoader extends AsyncTaskLoader<List<ScheduledStatu
         }
         try {
             return twitter.getScheduledStatuses(paging, mStates);
-        } catch (TwitterException e) {
+        } catch (MicroBlogException e) {
             return null;
         }
     }

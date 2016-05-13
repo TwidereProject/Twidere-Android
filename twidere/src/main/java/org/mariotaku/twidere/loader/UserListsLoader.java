@@ -21,10 +21,10 @@ package org.mariotaku.twidere.loader;
 
 import android.content.Context;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.UserList;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.UserList;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 
@@ -45,7 +45,7 @@ public class UserListsLoader extends BaseUserListsLoader {
     }
 
     @Override
-    public ResponseList<UserList> getUserLists(final MicroBlog twitter) throws TwitterException {
+    public ResponseList<UserList> getUserLists(final MicroBlog twitter) throws MicroBlogException {
         if (twitter == null) return null;
         if (mUserKey != null) {
             return twitter.getUserLists(mUserKey.getId(), mReverse);

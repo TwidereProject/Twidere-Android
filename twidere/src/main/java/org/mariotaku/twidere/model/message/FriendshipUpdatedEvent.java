@@ -22,7 +22,7 @@ package org.mariotaku.twidere.model.message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.mariotaku.twidere.api.twitter.model.Relationship;
+import org.mariotaku.microblog.library.twitter.model.Relationship;
 import org.mariotaku.twidere.model.UserKey;
 
 /**

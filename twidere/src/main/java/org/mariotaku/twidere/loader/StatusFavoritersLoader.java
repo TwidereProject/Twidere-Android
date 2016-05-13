@@ -22,10 +22,10 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.IDs;
-import org.mariotaku.twidere.api.twitter.model.Paging;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.IDs;
+import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
@@ -45,7 +45,7 @@ public class StatusFavoritersLoader extends CursorSupportUsersLoader {
 
     @NonNull
     @Override
-    protected IDs getIDs(@NonNull final MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
+    protected IDs getIDs(@NonNull final MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws MicroBlogException {
         return twitter.getStatusActivitySummary(mStatusId).getFavoriters();
     }
 

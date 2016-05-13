@@ -41,10 +41,10 @@ import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.TwitterOAuth;
-import org.mariotaku.twidere.api.twitter.auth.OAuthAuthorization;
-import org.mariotaku.twidere.api.twitter.auth.OAuthToken;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth;
+import org.mariotaku.microblog.library.twitter.auth.OAuthAuthorization;
+import org.mariotaku.microblog.library.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
@@ -246,7 +246,7 @@ public class BrowserSignInActivity extends BaseActivity {
                 final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(mActivity, endpoint,
                         auth, TwitterOAuth.class);
                 return SingleResponse.getInstance(oauth.getRequestToken(OAUTH_CALLBACK_OOB));
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }

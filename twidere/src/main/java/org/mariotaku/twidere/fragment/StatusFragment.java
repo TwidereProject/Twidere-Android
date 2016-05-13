@@ -93,11 +93,11 @@ import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.TranslationResult;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.TranslationResult;
 import org.mariotaku.twidere.loader.ConversationLoader;
 import org.mariotaku.twidere.loader.ParcelableStatusLoader;
 import org.mariotaku.twidere.menu.FavoriteItemProvider;
@@ -887,7 +887,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 }
                 final String statusId = status.is_retweet ? status.retweet_id : status.id;
                 return SingleResponse.getInstance(twitter.showTranslation(statusId, dest));
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }
@@ -2545,7 +2545,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     activityCursor.close();
                 }
                 return activitySummary;
-            } catch (TwitterException e) {
+            } catch (MicroBlogException e) {
                 return null;
             }
         }

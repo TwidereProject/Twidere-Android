@@ -26,11 +26,11 @@ import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import org.mariotaku.commons.parcel.ParcelUtils;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.SearchQuery;
-import org.mariotaku.twidere.api.twitter.model.Status;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.SearchQuery;
+import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -67,7 +67,7 @@ public class ConversationLoader extends MicroBlogAPIStatusesLoader {
     @Override
     public List<Status> getStatuses(@NonNull final MicroBlog microBlog,
                                     @NonNull final ParcelableCredentials credentials,
-                                    @NonNull final Paging paging) throws TwitterException {
+                                    @NonNull final Paging paging) throws MicroBlogException {
         mCanLoadAllReplies = false;
         final ParcelableStatus status = mStatus;
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
@@ -101,7 +101,7 @@ public class ConversationLoader extends MicroBlogAPIStatusesLoader {
     protected List<Status> showConversationCompat(@NonNull final MicroBlog twitter,
                                                   @NonNull final ParcelableCredentials credentials,
                                                   @NonNull final ParcelableStatus status,
-                                                  final boolean loadReplies) throws TwitterException {
+                                                  final boolean loadReplies) throws MicroBlogException {
         final List<Status> statuses = new ArrayList<>();
         final String maxId = getMaxId(), sinceId = getSinceId();
         final long maxSortId = getMaxSortId(), sinceSortId = getSinceSortId();
@@ -133,7 +133,7 @@ public class ConversationLoader extends MicroBlogAPIStatusesLoader {
                             statuses.add(item);
                         }
                     }
-                } catch (TwitterException e) {
+                } catch (MicroBlogException e) {
                     // Ignore for now
                 }
             }

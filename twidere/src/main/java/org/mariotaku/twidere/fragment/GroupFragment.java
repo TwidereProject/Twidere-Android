@@ -14,9 +14,9 @@ import android.support.v4.content.Loader;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
-import org.mariotaku.twidere.api.statusnet.model.Group;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
+import org.mariotaku.microblog.library.statusnet.model.Group;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.twidere.model.ParcelableGroup;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
@@ -150,7 +150,7 @@ public class GroupFragment extends AbsToolbarTabPagesFragment implements
                 }
                 return SingleResponse.getInstance(ParcelableGroupUtils.from(group, mAccountKey, 0,
                         group.isMember()));
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }

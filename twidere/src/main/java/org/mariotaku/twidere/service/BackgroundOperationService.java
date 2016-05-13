@@ -54,16 +54,16 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
-import org.mariotaku.twidere.api.fanfou.model.PhotoStatusUpdate;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.TwitterUpload;
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
-import org.mariotaku.twidere.api.twitter.model.MediaUploadResponse;
-import org.mariotaku.twidere.api.twitter.model.NewMediaMetadata;
-import org.mariotaku.twidere.api.twitter.model.Status;
-import org.mariotaku.twidere.api.twitter.model.StatusUpdate;
+import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.TwitterUpload;
+import org.mariotaku.microblog.library.twitter.model.DirectMessage;
+import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
+import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse;
+import org.mariotaku.microblog.library.twitter.model.NewMediaMetadata;
+import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.StatusUpdate;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftCursorIndices;
@@ -409,8 +409,8 @@ public class BackgroundOperationService extends IntentService implements Constan
             } else if (failed) {
                 // If the status is a duplicate, there's no need to save it to
                 // drafts.
-                if (exception instanceof TwitterException
-                        && ((TwitterException) exception).getErrorCode() == ErrorInfo.STATUS_IS_DUPLICATE) {
+                if (exception instanceof MicroBlogException
+                        && ((MicroBlogException) exception).getErrorCode() == ErrorInfo.STATUS_IS_DUPLICATE) {
                     showErrorMessage(getString(R.string.status_is_duplicate), false);
                 } else {
                     final ContentValues accountIdsValues = new ContentValues();
@@ -467,7 +467,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             switch (ParcelableAccountUtils.getAccountType(credentials)) {
                 case ParcelableAccount.Type.FANFOU: {
                     if (imageUri != null) {
-                        throw new TwitterException("Can't send image DM on Fanfou");
+                        throw new MicroBlogException("Can't send image DM on Fanfou");
                     }
                     final DirectMessage dm = twitter.sendFanfouDirectMessage(recipientId, text);
                     directMessage = ParcelableDirectMessageUtils.fromDirectMessage(dm, accountKey, true);
@@ -516,7 +516,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             return SingleResponse.getInstance(directMessage);
         } catch (final IOException e) {
             return SingleResponse.getInstance(e);
-        } catch (final TwitterException e) {
+        } catch (final MicroBlogException e) {
             return SingleResponse.getInstance(e);
         }
     }
@@ -722,7 +722,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                             uploader.callback(uploadResult, result);
                         }
                         results.add(SingleResponse.getInstance(result));
-                    } catch (final TwitterException e) {
+                    } catch (final MicroBlogException e) {
                         Log.w(LOGTAG, e);
                         final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
                         results.add(response);
@@ -814,7 +814,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);
             }
-        } catch (final TwitterException e) {
+        } catch (final MicroBlogException e) {
             if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);
             }

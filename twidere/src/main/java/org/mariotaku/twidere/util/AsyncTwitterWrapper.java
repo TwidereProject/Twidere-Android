@@ -42,19 +42,19 @@ import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.MicroBlog;
-import org.mariotaku.twidere.api.twitter.TwitterException;
-import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
-import org.mariotaku.twidere.api.twitter.model.DirectMessage;
-import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
-import org.mariotaku.twidere.api.twitter.model.FriendshipUpdate;
-import org.mariotaku.twidere.api.twitter.model.Paging;
-import org.mariotaku.twidere.api.twitter.model.Relationship;
-import org.mariotaku.twidere.api.twitter.model.ResponseList;
-import org.mariotaku.twidere.api.twitter.model.SavedSearch;
-import org.mariotaku.twidere.api.twitter.model.User;
-import org.mariotaku.twidere.api.twitter.model.UserList;
-import org.mariotaku.twidere.api.twitter.model.UserListUpdate;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.http.HttpResponseCode;
+import org.mariotaku.microblog.library.twitter.model.DirectMessage;
+import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
+import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.Relationship;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.microblog.library.twitter.model.SavedSearch;
+import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.microblog.library.twitter.model.UserList;
+import org.mariotaku.microblog.library.twitter.model.UserListUpdate;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
@@ -498,7 +498,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mContext, accountKey, true);
                 try {
                     return SingleResponse.getInstance(twitter.updateFriendship(userId, update));
-                } catch (TwitterException e) {
+                } catch (MicroBlogException e) {
                     return SingleResponse.getInstance(e);
                 }
             }
@@ -532,7 +532,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     if (!Utils.isOfficialCredentials(mContext, accountId)) continue;
                     try {
                         twitter.setActivitiesAboutMeUnread(cursor);
-                    } catch (TwitterException e) {
+                    } catch (MicroBlogException e) {
                         if (BuildConfig.DEBUG) {
                             Log.w(LOGTAG, e);
                         }
@@ -591,7 +591,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 }
                 final User user = twitter.verifyCredentials();
                 return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey));
-            } catch (TwitterException | IOException e) {
+            } catch (MicroBlogException | IOException e) {
                 return SingleResponse.getInstance(e);
             }
         }
@@ -637,7 +637,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final UserList result = twitter.addUserListMembers(mListId, UserKey.getIds(userIds));
                 final ParcelableUserList list = ParcelableUserListUtils.from(result, mAccountKey);
                 return SingleResponse.getInstance(list, null);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(null, e);
             }
         }
@@ -767,7 +767,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     }
                 });
                 return SingleResponse.getInstance(result);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 if (BuildConfig.DEBUG) {
                     Log.w(LOGTAG, e);
                 }
@@ -849,7 +849,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     try {
                         final User user = twitter.createBlock(userId);
                         blockedUsers.add(user.getId());
-                    } catch (final TwitterException e) {
+                    } catch (final MicroBlogException e) {
                         deleteCaches(blockedUsers);
                         return ListResponse.getListInstance(e);
                     }
@@ -890,7 +890,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return null;
             try {
                 return SingleResponse.getInstance(twitter.createSavedSearch(mQuery));
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }
@@ -903,7 +903,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             } else if (result.hasException()) {
                 final Exception exception = result.getException();
                 // https://github.com/TwidereProject/Twidere-Android/issues/244
-                if (exception instanceof TwitterException && ((TwitterException) exception).getStatusCode() == 403) {
+                if (exception instanceof MicroBlogException && ((MicroBlogException) exception).getStatusCode() == 403) {
                     final String desc = mContext.getString(R.string.saved_searches_already_saved_hint);
                     Utils.showErrorMessage(mContext, R.string.action_saving_search, desc, false);
                 } else {
@@ -934,7 +934,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final UserList userList = twitter.createUserListSubscription(mListId);
                 final ParcelableUserList list = ParcelableUserListUtils.from(userList, mAccountKey);
                 return SingleResponse.getInstance(list);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }
@@ -982,7 +982,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 userListUpdate.setDescription(mDescription);
                 final UserList list = twitter.createUserList(userListUpdate);
                 return SingleResponse.getInstance(ParcelableUserListUtils.from(list, mAccountKey), null);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(null, e);
             }
         }
@@ -1028,7 +1028,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final UserList userList = twitter.deleteUserListMembers(mUserListId, UserKey.getIds(userIds));
                 final ParcelableUserList list = ParcelableUserListUtils.from(userList, mAccountKey);
                 return SingleResponse.getInstance(list, null);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(null, e);
             }
         }
@@ -1082,8 +1082,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         private boolean isMessageNotFound(final Exception e) {
-            if (!(e instanceof TwitterException)) return false;
-            final TwitterException te = (TwitterException) e;
+            if (!(e instanceof MicroBlogException)) return false;
+            final MicroBlogException te = (MicroBlogException) e;
             return te.getErrorCode() == ErrorInfo.PAGE_NOT_FOUND
                     || te.getStatusCode() == HttpResponseCode.NOT_FOUND;
         }
@@ -1096,7 +1096,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final DirectMessage message = twitter.destroyDirectMessage(mMessageId);
                 deleteMessages();
                 return SingleResponse.getInstance(message, null);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 if (isMessageNotFound(e)) {
                     deleteMessages();
                 }
@@ -1144,8 +1144,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         private boolean isMessageNotFound(final Exception e) {
-            if (!(e instanceof TwitterException)) return false;
-            final TwitterException te = (TwitterException) e;
+            if (!(e instanceof MicroBlogException)) return false;
+            final MicroBlogException te = (MicroBlogException) e;
             return te.getErrorCode() == ErrorInfo.PAGE_NOT_FOUND
                     || te.getStatusCode() == HttpResponseCode.NOT_FOUND;
         }
@@ -1158,7 +1158,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 twitter.destroyDirectMessagesConversation(mAccountKey.getId(), mUserId);
                 deleteMessages(mAccountKey, mUserId);
                 return SingleResponse.getInstance();
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 if (isMessageNotFound(e)) {
                     deleteMessages(mAccountKey, mUserId);
                 }
@@ -1245,7 +1245,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     }
                 });
                 return SingleResponse.getInstance(result);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }
@@ -1304,7 +1304,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 return SingleResponse.getInstance(twitter.destroySavedSearch(mSearchId));
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }
@@ -1343,13 +1343,13 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     true);
             if (twitter == null) return SingleResponse.getInstance();
             ParcelableStatus status = null;
-            TwitterException exception = null;
+            MicroBlogException exception = null;
             try {
                 status = ParcelableStatusUtils.fromStatus(twitter.destroyStatus(mStatusId),
                         mAccountKey, false);
                 ParcelableStatusUtils.updateExtraInformation(status, credentials,
                         mUserColorNameManager);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 exception = e;
             }
             if (status != null || (exception != null && exception.getErrorCode() == ErrorInfo.STATUS_NOT_FOUND)) {
@@ -1408,7 +1408,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final UserList userList = twitter.destroyUserListSubscription(mListId);
                 final ParcelableUserList list = ParcelableUserListUtils.from(userList, mAccountKey);
                 return SingleResponse.getInstance(list, null);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(null, e);
             }
         }
@@ -1449,7 +1449,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final UserList userList = twitter.destroyUserList(mListId);
                 final ParcelableUserList list = ParcelableUserListUtils.from(userList, mAccountKey);
                 return SingleResponse.getInstance(list);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }
@@ -1478,7 +1478,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         public ResponseList<DirectMessage> getDirectMessages(final MicroBlog twitter, final Paging paging)
-                throws TwitterException {
+                throws MicroBlogException {
             return twitter.getDirectMessages(paging);
         }
 
@@ -1509,7 +1509,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         public ResponseList<DirectMessage> getDirectMessages(final MicroBlog twitter, final Paging paging)
-                throws TwitterException {
+                throws MicroBlogException {
             return twitter.getSentDirectMessages(paging);
         }
 
@@ -1605,7 +1605,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     }
                 });
                 return SingleResponse.getInstance(result);
-            } catch (final TwitterException e) {
+            } catch (final MicroBlogException e) {
                 return SingleResponse.getInstance(e);
             }
         }
@@ -1665,7 +1665,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 try {
                     final UserList list = twitter.updateUserList(listId, update);
                     return SingleResponse.getInstance(ParcelableUserListUtils.from(list, mAccountKey));
-                } catch (final TwitterException e) {
+                } catch (final MicroBlogException e) {
                     return SingleResponse.getInstance(e);
                 }
             }
