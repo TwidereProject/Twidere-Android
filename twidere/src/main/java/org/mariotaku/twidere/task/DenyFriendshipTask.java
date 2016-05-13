@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -26,7 +26,7 @@ public class DenyFriendshipTask extends AbsFriendshipOperationTask {
 
     @NonNull
     @Override
-    protected User perform(@NonNull Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args) throws TwitterException {
+    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args) throws TwitterException {
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
             case ParcelableAccount.Type.FANFOU: {
                 return twitter.denyFanfouFriendship(args.userKey.getId());
@@ -36,7 +36,7 @@ public class DenyFriendshipTask extends AbsFriendshipOperationTask {
     }
 
     @Override
-    protected void succeededWorker(@NonNull Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args, @NonNull ParcelableUser user) {
+    protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args, @NonNull ParcelableUser user) {
         Utils.setLastSeen(context, user.key, -1);
     }
 

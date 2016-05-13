@@ -69,7 +69,7 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.api.statusnet.model.StatusNetConfig;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
 import org.mariotaku.twidere.api.twitter.auth.BasicAuthorization;
@@ -101,7 +101,7 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.LoginVerificationEx
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -372,7 +372,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             openBrowserLogin();
             return;
         }
-        final OAuthToken consumerKey = TwitterAPIFactory.getOAuthToken(mConsumerKey, mConsumerSecret);
+        final OAuthToken consumerKey = MicroBlogAPIFactory.getOAuthToken(mConsumerKey, mConsumerSecret);
         final String apiUrlFormat = TextUtils.isEmpty(mAPIUrlFormat) ? DEFAULT_TWITTER_API_URL_FORMAT : mAPIUrlFormat;
         final String username = String.valueOf(mEditUsername.getText());
         final String password = String.valueOf(mEditPassword.getText());
@@ -388,7 +388,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         }
         setDefaultAPI();
         final String verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER);
-        final OAuthToken consumerKey = TwitterAPIFactory.getOAuthToken(mConsumerKey, mConsumerSecret);
+        final OAuthToken consumerKey = MicroBlogAPIFactory.getOAuthToken(mConsumerKey, mConsumerSecret);
         final OAuthToken requestToken = new OAuthToken(intent.getStringExtra(EXTRA_REQUEST_TOKEN),
                 intent.getStringExtra(EXTRA_REQUEST_TOKEN_SECRET));
         final String apiUrlFormat = TextUtils.isEmpty(mAPIUrlFormat) ? DEFAULT_TWITTER_API_URL_FORMAT : mAPIUrlFormat;
@@ -528,7 +528,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
     }
 
     @NonNull
-    private static Pair<String, String> detectAccountType(Twitter twitter, User user) {
+    private static Pair<String, String> detectAccountType(MicroBlog twitter, User user) {
         try {
             // Get StatusNet specific resource
             StatusNetConfig config = twitter.getStatusNetConfig();
@@ -629,9 +629,9 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         protected SignInResponse doInBackground(final Object... params) {
             try {
                 final String versionSuffix = noVersionSuffix ? null : "1.1";
-                Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
+                Endpoint endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
                         sameOauthSigningUrl);
-                final TwitterOAuth oauth = TwitterAPIFactory.getInstance(context, endpoint,
+                final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(context, endpoint,
                         new OAuthAuthorization(consumerKey.getOauthToken(),
                                 consumerKey.getOauthTokenSecret()), TwitterOAuth.class);
                 final OAuthToken accessToken;
@@ -642,10 +642,10 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 }
                 final OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(),
                         consumerKey.getOauthTokenSecret(), accessToken);
-                endpoint = TwitterAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", versionSuffix,
+                endpoint = MicroBlogAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", versionSuffix,
                         sameOauthSigningUrl);
-                final Twitter twitter = TwitterAPIFactory.getInstance(context, endpoint, auth,
-                        Twitter.class);
+                final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, endpoint, auth,
+                        MicroBlog.class);
                 final User user = twitter.verifyCredentials();
                 int color = analyseUserProfileColor(user);
                 final Pair<String, String> accountType = detectAccountType(twitter, user);
@@ -716,11 +716,11 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         private SignInResponse authOAuth() throws AuthenticationException, TwitterException {
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
-            Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
+            Endpoint endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
                     sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(),
                     consumerKey.getOauthTokenSecret());
-            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth,
+            final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
                     TwitterOAuth.class);
             final OAuthPasswordAuthenticator authenticator = new OAuthPasswordAuthenticator(oauth,
                     verificationCallback, userAgent);
@@ -734,11 +734,11 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         private SignInResponse authxAuth() throws TwitterException {
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
-            Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
+            Endpoint endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
                     sameOAuthSigningUrl);
             OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(),
                     consumerKey.getOauthTokenSecret());
-            final TwitterOAuth oauth = TwitterAPIFactory.getInstance(activity, endpoint, auth,
+            final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
                     TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password);
             final String userId = accessToken.getUserId();
@@ -751,11 +751,11 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
             final String versionSuffix = noVersionSuffix ? null : "1.1";
-            final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api",
+            final Endpoint endpoint = new Endpoint(MicroBlogAPIFactory.getApiUrl(apiUrlFormat, "api",
                     versionSuffix));
             final Authorization auth = new BasicAuthorization(username, password);
-            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth,
-                    Twitter.class);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
+                    MicroBlog.class);
             User user;
             try {
                 user = twitter.verifyCredentials();
@@ -785,11 +785,11 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             final SignInActivity activity = activityRef.get();
             if (activity == null) return new SignInResponse(false, false, null);
             final String versionSuffix = noVersionSuffix ? null : "1.1";
-            final Endpoint endpoint = new Endpoint(TwitterAPIFactory.getApiUrl(apiUrlFormat, "api",
+            final Endpoint endpoint = new Endpoint(MicroBlogAPIFactory.getApiUrl(apiUrlFormat, "api",
                     versionSuffix));
             final Authorization auth = new EmptyAuthorization();
-            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth,
-                    Twitter.class);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
+                    MicroBlog.class);
             final User user = twitter.verifyCredentials();
             final String userId = user.getId();
             if (userId == null) return new SignInResponse(false, false, null);
@@ -810,10 +810,10 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 throws TwitterException {
             final OAuthAuthorization auth = new OAuthAuthorization(consumerKey.getOauthToken(),
                     consumerKey.getOauthTokenSecret(), accessToken);
-            final Endpoint endpoint = TwitterAPIFactory.getOAuthRestEndpoint(apiUrlFormat,
+            final Endpoint endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat,
                     sameOAuthSigningUrl, noVersionSuffix);
-            final Twitter twitter = TwitterAPIFactory.getInstance(activity, endpoint, auth,
-                    Twitter.class);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
+                    MicroBlog.class);
             final User user = twitter.verifyCredentials();
             int color = analyseUserProfileColor(user);
             final Pair<String, String> accountType = detectAccountType(twitter, user);

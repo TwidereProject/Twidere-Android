@@ -57,7 +57,7 @@ import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.support.ViewSupport;
 
 import java.util.Date;
@@ -164,7 +164,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                         final CardDataMap cardData = new CardDataMap();
                         cardData.putLong("original_tweet_id", NumberUtils.toLong(status.id));
                         cardData.putString("card_uri", card.url);
-                        cardData.putString("cards_platform", TwitterAPIFactory.CARDS_PLATFORM_ANDROID_12);
+                        cardData.putString("cards_platform", MicroBlogAPIFactory.CARDS_PLATFORM_ANDROID_12);
                         cardData.putString("response_card_name", card.name);
                         cardData.putString("selected_choice", String.valueOf(i + 1));
                         AbstractTask<CardDataMap, ParcelableCardEntity, CardPollFragment> task
@@ -179,7 +179,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                             public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) {
                                 final Context context = getContext();
                                 if (context == null) return null;
-                                final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(context,
+                                final TwitterCaps caps = MicroBlogAPIFactory.getTwitterInstance(context,
                                         card.account_key, true, true, TwitterCaps.class);
                                 if (caps == null) return null;
                                 try {
@@ -347,13 +347,13 @@ public class CardPollFragment extends BaseSupportFragment implements
 
         @Override
         public ParcelableCardEntity loadInBackground() {
-            final TwitterCaps caps = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountKey,
+            final TwitterCaps caps = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountKey,
                     true, true, TwitterCaps.class);
             if (caps == null) return null;
             try {
                 final CardDataMap params = new CardDataMap();
                 params.putString("card_uri", mCardUri);
-                params.putString("cards_platform", TwitterAPIFactory.CARDS_PLATFORM_ANDROID_12);
+                params.putString("cards_platform", MicroBlogAPIFactory.CARDS_PLATFORM_ANDROID_12);
                 params.putString("response_card_name", mCardName);
                 final CardEntity card = caps.getPassThrough(params).getCard();
                 if (card == null || card.getName() == null) {

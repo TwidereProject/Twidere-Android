@@ -40,7 +40,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.http.HttpResponseCode;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -58,7 +58,7 @@ import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -299,7 +299,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
 
         @Override
         protected SingleResponse<List<ParcelableUserList>> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountKey, false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mActivity, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
@@ -363,7 +363,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
 
         @Override
         protected SingleResponse<List<ParcelableUser>> doInBackground(final Object... params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, mAccountKey, false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mActivity, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Paging paging = new Paging();

@@ -9,7 +9,7 @@ import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
@@ -17,7 +17,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
 /**
@@ -36,7 +36,7 @@ public class GetSavedSearchesTask extends AbstractTask<UserKey[], SingleResponse
     public SingleResponse<Object> doLongOperation(UserKey[] params) {
         final ContentResolver cr = mContext.getContentResolver();
         for (UserKey accountKey : params) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountKey, true);
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mContext, accountKey, true);
             if (twitter == null) continue;
             try {
                 final ResponseList<SavedSearch> searches = twitter.getSavedSearches();

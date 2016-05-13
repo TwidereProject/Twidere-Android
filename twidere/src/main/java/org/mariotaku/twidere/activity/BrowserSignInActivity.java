@@ -49,7 +49,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.webkit.DefaultWebViewClient;
 
 import java.io.IOException;
@@ -240,10 +240,10 @@ public class BrowserSignInActivity extends BaseActivity {
                 return SingleResponse.getInstance();
             }
             try {
-                final Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat,
+                final Endpoint endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat,
                         mSameOAuthSigningUrl);
                 final Authorization auth = new OAuthAuthorization(mConsumerKey, mConsumerSecret);
-                final TwitterOAuth oauth = TwitterAPIFactory.getInstance(mActivity, endpoint,
+                final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(mActivity, endpoint,
                         auth, TwitterOAuth.class);
                 return SingleResponse.getInstance(oauth.getRequestToken(OAUTH_CALLBACK_OOB));
             } catch (final TwitterException e) {
@@ -257,7 +257,7 @@ public class BrowserSignInActivity extends BaseActivity {
             if (result.hasData()) {
                 final OAuthToken token = result.getData();
                 mActivity.setRequestToken(token);
-                final Endpoint endpoint = TwitterAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat, true);
+                final Endpoint endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat, true);
                 mActivity.loadUrl(endpoint.construct("/oauth/authorize", new String[]{"oauth_token", token.getOauthToken()}));
             } else {
                 if (BuildConfig.DEBUG && result.hasException()) {

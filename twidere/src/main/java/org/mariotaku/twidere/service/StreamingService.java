@@ -48,7 +48,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -145,9 +145,9 @@ public class StreamingService extends Service implements Constants {
             final AccountPreferences preferences = activatedPreferences[i];
             if (!preferences.isStreamingEnabled()) continue;
             final ParcelableCredentials account = accountsList.get(i);
-            final Endpoint endpoint = TwitterAPIFactory.getEndpoint(account, TwitterUserStream.class);
-            final Authorization authorization = TwitterAPIFactory.getAuthorization(account);
-            final TwitterUserStream twitter = TwitterAPIFactory.getInstance(this, endpoint, authorization, TwitterUserStream.class);
+            final Endpoint endpoint = MicroBlogAPIFactory.getEndpoint(account, TwitterUserStream.class);
+            final Authorization authorization = MicroBlogAPIFactory.getAuthorization(account);
+            final TwitterUserStream twitter = MicroBlogAPIFactory.getInstance(this, endpoint, authorization, TwitterUserStream.class);
             final TwidereUserStreamCallback callback = new TwidereUserStreamCallback(this, account);
             mCallbacks.put(account.account_key, callback);
             new Thread() {

@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -35,7 +35,7 @@ import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
-public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
+public class UserFavoritesLoader extends MicroBlogAPIStatusesLoader {
 
     private final UserKey mUserKey;
     private final String mUserScreenName;
@@ -52,11 +52,11 @@ public class UserFavoritesLoader extends TwitterAPIStatusesLoader {
 
     @NonNull
     @Override
-    public ResponseList<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
+    public ResponseList<Status> getStatuses(@NonNull final MicroBlog microBlog, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
         if (mUserKey != null) {
-            return twitter.getFavorites(mUserKey.getId(), paging);
+            return microBlog.getFavorites(mUserKey.getId(), paging);
         } else if (mUserScreenName != null) {
-            return twitter.getFavoritesByScreenName(mUserScreenName, paging);
+            return microBlog.getFavoritesByScreenName(mUserScreenName, paging);
         }
         throw new TwitterException("Null user");
     }

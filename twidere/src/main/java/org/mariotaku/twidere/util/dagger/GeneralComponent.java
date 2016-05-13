@@ -39,9 +39,9 @@ import org.mariotaku.twidere.fragment.BasePreferenceFragment;
 import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
 import org.mariotaku.twidere.fragment.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.MessagesConversationFragment;
+import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader;
 import org.mariotaku.twidere.loader.ParcelableStatusLoader;
 import org.mariotaku.twidere.loader.ParcelableUserLoader;
-import org.mariotaku.twidere.loader.TwitterAPIStatusesLoader;
 import org.mariotaku.twidere.preference.AccountsListPreference;
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference;
 import org.mariotaku.twidere.provider.CacheProvider;
@@ -123,7 +123,7 @@ public interface GeneralComponent {
 
     void inject(CacheProvider provider);
 
-    void inject(TwitterAPIStatusesLoader loader);
+    void inject(MicroBlogAPIStatusesLoader loader);
 
     void inject(MediaViewerActivity activity);
 

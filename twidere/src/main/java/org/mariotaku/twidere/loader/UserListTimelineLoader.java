@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -36,7 +36,7 @@ import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 
 import java.util.List;
 
-public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
+public class UserListTimelineLoader extends MicroBlogAPIStatusesLoader {
 
     private final UserKey mUserKey;
     private final String mScreenName, mListName;
@@ -55,15 +55,15 @@ public class UserListTimelineLoader extends TwitterAPIStatusesLoader {
 
     @NonNull
     @Override
-    protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
+    protected ResponseList<Status> getStatuses(@NonNull final MicroBlog microBlog, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
         if (mListId != null)
-            return twitter.getUserListStatuses(mListId, paging);
+            return microBlog.getUserListStatuses(mListId, paging);
         else if (mListName == null)
             throw new TwitterException("No list name or id given");
         else if (mUserKey != null)
-            return twitter.getUserListStatuses(mListName.replace(' ', '-'), mUserKey.getId(), paging);
+            return microBlog.getUserListStatuses(mListName.replace(' ', '-'), mUserKey.getId(), paging);
         else if (mScreenName != null)
-            return twitter.getUserListStatuses(mListName.replace(' ', '-'), mScreenName, paging);
+            return microBlog.getUserListStatuses(mListName.replace(' ', '-'), mScreenName, paging);
         throw new TwitterException("User id or screen name is required for list name");
     }
 

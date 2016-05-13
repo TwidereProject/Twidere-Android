@@ -42,10 +42,10 @@ import android.widget.TextView;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Location;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -269,7 +269,7 @@ public class TrendsLocationPreference extends Preference implements Constants {
 
         @Override
         protected SimpleArrayMap<Location, List<Location>> doInBackground(final Object... args) {
-            final Twitter twitter = TwitterAPIFactory.getDefaultTwitterInstance(getContext(), false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getDefaultTwitterInstance(getContext(), false);
             if (twitter == null) return null;
             try {
                 LocationsMap map = new LocationsMap(Locale.getDefault());

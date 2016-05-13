@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.api.twitter.model;
 
 import org.mariotaku.restfu.http.HttpResponse;
-import org.mariotaku.twidere.api.twitter.annotation.NoObfuscate;
+import org.mariotaku.twidere.api.annotation.NoObfuscate;
 import org.mariotaku.twidere.api.twitter.util.InternalParseUtil;
 
 import java.util.AbstractList;

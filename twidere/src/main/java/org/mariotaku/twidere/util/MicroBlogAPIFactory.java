@@ -34,7 +34,7 @@ import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterCaps;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.TwitterOAuth;
@@ -66,7 +66,7 @@ import java.util.regex.Pattern;
 /**
  * Created by mariotaku on 15/5/7.
  */
-public class TwitterAPIFactory implements TwidereConstants {
+public class MicroBlogAPIFactory implements TwidereConstants {
 
     public static final String CARDS_PLATFORM_ANDROID_12 = "Android-12";
 
@@ -87,18 +87,18 @@ public class TwitterAPIFactory implements TwidereConstants {
         sConstantPoll.put("include_ext_alt_text", "true");
     }
 
-    private TwitterAPIFactory() {
+    private MicroBlogAPIFactory() {
     }
 
     @WorkerThread
-    public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities) {
+    public static MicroBlog getDefaultTwitterInstance(final Context context, final boolean includeEntities) {
         if (context == null) return null;
         return getDefaultTwitterInstance(context, includeEntities, true);
     }
 
     @WorkerThread
-    public static Twitter getDefaultTwitterInstance(final Context context, final boolean includeEntities,
-                                                    final boolean includeRetweets) {
+    public static MicroBlog getDefaultTwitterInstance(final Context context, final boolean includeEntities,
+                                                      final boolean includeRetweets) {
         if (context == null) return null;
         final UserKey accountKey = Utils.getDefaultAccountKey(context);
         if (accountKey == null) return null;
@@ -106,26 +106,26 @@ public class TwitterAPIFactory implements TwidereConstants {
     }
 
     @WorkerThread
-    public static Twitter getTwitterInstance(@NonNull final Context context,
-                                             @NonNull final UserKey accountKey,
-                                             final boolean includeEntities) {
+    public static MicroBlog getTwitterInstance(@NonNull final Context context,
+                                               @NonNull final UserKey accountKey,
+                                               final boolean includeEntities) {
         return getTwitterInstance(context, accountKey, includeEntities, true);
     }
 
     @Nullable
     @WorkerThread
-    public static Twitter getTwitterInstance(@NonNull final Context context,
-                                             @NonNull final UserKey accountKey,
-                                             final boolean includeEntities,
-                                             final boolean includeRetweets) {
-        return getTwitterInstance(context, accountKey, includeEntities, includeRetweets, Twitter.class);
+    public static MicroBlog getTwitterInstance(@NonNull final Context context,
+                                               @NonNull final UserKey accountKey,
+                                               final boolean includeEntities,
+                                               final boolean includeRetweets) {
+        return getTwitterInstance(context, accountKey, includeEntities, includeRetweets, MicroBlog.class);
     }
 
     @Nullable
-    public static Twitter getTwitterInstance(@NonNull final Context context,
-                                             @NonNull final ParcelableCredentials credentials,
-                                             final boolean includeEntities, final boolean includeRetweets) {
-        return getTwitterInstance(context, credentials, includeEntities, includeRetweets, Twitter.class);
+    public static MicroBlog getTwitterInstance(@NonNull final Context context,
+                                               @NonNull final ParcelableCredentials credentials,
+                                               final boolean includeEntities, final boolean includeRetweets) {
+        return getTwitterInstance(context, credentials, includeEntities, includeRetweets, MicroBlog.class);
     }
 
 
@@ -245,7 +245,7 @@ public class TwitterAPIFactory implements TwidereConstants {
     static <T> T getInstance(final Context context, final ParcelableCredentials credentials,
                              final Map<String, String> extraRequestParams, final Class<T> cls) {
         if (credentials == null) return null;
-        return TwitterAPIFactory.getInstance(context, getEndpoint(credentials, cls), credentials,
+        return MicroBlogAPIFactory.getInstance(context, getEndpoint(credentials, cls), credentials,
                 extraRequestParams, cls);
     }
 
@@ -259,7 +259,7 @@ public class TwitterAPIFactory implements TwidereConstants {
             apiUrlFormat = DEFAULT_TWITTER_API_URL_FORMAT;
         }
         final String domain, versionSuffix;
-        if (Twitter.class.isAssignableFrom(cls)) {
+        if (MicroBlog.class.isAssignableFrom(cls)) {
             domain = "api";
             versionSuffix = noVersionSuffix ? null : "/1.1/";
         } else if (TwitterUpload.class.isAssignableFrom(cls)) {

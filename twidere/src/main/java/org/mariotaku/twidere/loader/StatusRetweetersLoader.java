@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.IDs;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -45,7 +45,7 @@ public class StatusRetweetersLoader extends CursorSupportUsersLoader {
 
     @NonNull
     @Override
-    protected IDs getIDs(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
+    protected IDs getIDs(@NonNull final MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
         return twitter.getRetweetersIDs(mStatusId, paging);
     }
 

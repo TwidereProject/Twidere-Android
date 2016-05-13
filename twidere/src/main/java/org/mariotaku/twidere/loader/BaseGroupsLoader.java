@@ -25,7 +25,7 @@ import android.util.Log;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.api.statusnet.model.Group;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.CursorSupport;
 import org.mariotaku.twidere.api.twitter.model.PageableResponseList;
@@ -33,7 +33,7 @@ import org.mariotaku.twidere.loader.iface.ICursorSupportLoader;
 import org.mariotaku.twidere.model.ParcelableGroup;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableGroupUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 
 import java.util.Collections;
@@ -74,11 +74,11 @@ public abstract class BaseGroupsLoader extends AsyncTaskLoader<List<ParcelableGr
         return mPrevCursor;
     }
 
-    public abstract List<Group> getGroups(final Twitter twitter) throws TwitterException;
+    public abstract List<Group> getGroups(final MicroBlog twitter) throws TwitterException;
 
     @Override
     public List<ParcelableGroup> loadInBackground() {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
         List<Group> listLoaded = null;
         try {
             listLoaded = getGroups(twitter);

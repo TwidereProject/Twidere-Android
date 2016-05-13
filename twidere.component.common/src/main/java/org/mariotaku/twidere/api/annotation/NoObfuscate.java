@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.api.twitter.annotation;
+package org.mariotaku.twidere.api.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -23,7 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.CursorSupport;
 import org.mariotaku.twidere.api.twitter.model.IDs;
@@ -105,7 +105,7 @@ public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
 
 
     @NonNull
-    protected List<User> getCursoredUsers(@NonNull final Twitter twitter,
+    protected List<User> getCursoredUsers(@NonNull final MicroBlog twitter,
                                           @NonNull final ParcelableCredentials credentials,
                                           @NonNull final Paging paging)
             throws TwitterException {
@@ -113,14 +113,14 @@ public abstract class CursorSupportUsersLoader extends TwitterAPIUsersLoader
     }
 
     @NonNull
-    protected IDs getIDs(@NonNull final Twitter twitter, @NonNull final ParcelableCredentials credentials,
+    protected IDs getIDs(@NonNull final MicroBlog twitter, @NonNull final ParcelableCredentials credentials,
                          @NonNull final Paging paging) throws TwitterException {
         throw new UnsupportedOperationException();
     }
 
     @NonNull
     @Override
-    protected final List<User> getUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials) throws TwitterException {
+    protected final List<User> getUsers(@NonNull final MicroBlog twitter, @NonNull ParcelableCredentials credentials) throws TwitterException {
         final Paging paging = new Paging();
         paging.count(getCount());
         if (getCursor() > 0) {

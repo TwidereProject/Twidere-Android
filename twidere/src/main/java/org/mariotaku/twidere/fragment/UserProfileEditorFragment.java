@@ -52,7 +52,7 @@ import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.ThemedImagePickerActivity;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ProfileUpdate;
 import org.mariotaku.twidere.api.twitter.model.User;
@@ -72,7 +72,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper.UpdateProfileImageTask;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterValidatorMETLengthChecker;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.Utils;
@@ -481,7 +481,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         protected SingleResponse<ParcelableUser> doLongOperation(final Object params) {
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mActivity, mAccountKey);
             if (credentials == null) return SingleResponse.getInstance();
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mActivity, credentials,
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mActivity, credentials,
                     true, true);
             if (twitter == null) return SingleResponse.getInstance();
             try {

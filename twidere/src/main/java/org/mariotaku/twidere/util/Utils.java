@@ -119,7 +119,7 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.GeoLocation;
 import org.mariotaku.twidere.api.twitter.model.RateLimitStatus;
@@ -930,7 +930,7 @@ public final class Utils implements Constants {
             throws TwitterException {
         final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
         if (cached != null) return cached;
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, accountKey, true);
         if (twitter == null) throw new TwitterException("Account does not exist");
         final Status status = twitter.showStatus(statusId);
         final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),

@@ -9,7 +9,7 @@ import com.squareup.otto.Bus;
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -17,7 +17,7 @@ import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
@@ -69,7 +69,7 @@ public class UpdateProfileBackgroundImageTask<ResultHandler> extends AbstractTas
     @Override
     protected SingleResponse<ParcelableUser> doLongOperation(final Object params) {
         try {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, mAccountKey,
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mContext, mAccountKey,
                     true);
             TwitterWrapper.updateProfileBackgroundImage(mContext, twitter, mImageUri, mTile,
                     mDeleteImage);

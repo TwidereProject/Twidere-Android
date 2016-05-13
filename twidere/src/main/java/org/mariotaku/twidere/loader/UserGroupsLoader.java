@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 
 import org.mariotaku.twidere.api.statusnet.model.Group;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.model.ParcelableGroup;
@@ -43,7 +43,7 @@ public class UserGroupsLoader extends BaseGroupsLoader {
     }
 
     @Override
-    public ResponseList<Group> getGroups(final Twitter twitter) throws TwitterException {
+    public ResponseList<Group> getGroups(final MicroBlog twitter) throws TwitterException {
         if (twitter == null) return null;
         if (mUserKey != null) {
             return twitter.getGroups(mUserKey.getId());

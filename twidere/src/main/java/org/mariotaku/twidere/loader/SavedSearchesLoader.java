@@ -23,12 +23,12 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
 import org.mariotaku.twidere.api.twitter.model.SavedSearch;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
 
@@ -43,7 +43,7 @@ public class SavedSearchesLoader extends AsyncTaskLoader<ResponseList<SavedSearc
 
     @Override
     public ResponseList<SavedSearch> loadInBackground() {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), mAccountId,
+        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountId,
                 false);
         if (twitter == null) return null;
         try {

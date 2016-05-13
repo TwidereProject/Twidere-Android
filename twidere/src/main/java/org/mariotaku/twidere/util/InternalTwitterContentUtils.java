@@ -11,7 +11,7 @@ import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
 import org.mariotaku.restfu.http.MultiValueMap;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.EntitySupport;
@@ -44,7 +44,7 @@ public class InternalTwitterContentUtils {
     private InternalTwitterContentUtils() {
     }
 
-    public static <T extends List<? extends Status>> T getStatusesWithQuoteData(Twitter twitter, @NonNull T list) throws TwitterException {
+    public static <T extends List<? extends Status>> T getStatusesWithQuoteData(MicroBlog twitter, @NonNull T list) throws TwitterException {
         MultiValueMap<Status> quotes = new MultiValueMap<>();
         // Phase 1: collect all statuses contains a status link, and put it in the map
         for (Status status : list) {

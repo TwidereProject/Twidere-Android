@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Trends;
 import org.mariotaku.twidere.model.UserKey;
@@ -25,7 +25,7 @@ public class GetLocalTrendsTask extends GetTrendsTask {
     }
 
     @Override
-    public List<Trends> getTrends(@NonNull final Twitter twitter) throws TwitterException {
+    public List<Trends> getTrends(@NonNull final MicroBlog twitter) throws TwitterException {
         return twitter.getLocationTrends(woeid);
     }
 

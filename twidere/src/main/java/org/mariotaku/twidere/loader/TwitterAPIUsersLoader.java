@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ListResponse;
@@ -33,7 +33,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +59,7 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         if (credentials == null) {
             return ListResponse.getListInstance(new TwitterException("No Account"));
         }
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(getContext(), credentials, true,
+        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), credentials, true,
                 true);
         if (twitter == null)
             return ListResponse.getListInstance(new TwitterException("No Account"));
@@ -89,6 +89,6 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
     }
 
     @NonNull
-    protected abstract List<User> getUsers(@NonNull Twitter twitter,
+    protected abstract List<User> getUsers(@NonNull MicroBlog twitter,
                                            @NonNull ParcelableCredentials credentials) throws TwitterException;
 }

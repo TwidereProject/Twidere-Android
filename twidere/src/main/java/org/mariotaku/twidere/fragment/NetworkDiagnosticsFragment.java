@@ -30,7 +30,7 @@ import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -38,7 +38,7 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 import org.mariotaku.twidere.util.net.TwidereDns;
@@ -161,7 +161,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
 
             for (UserKey accountKey : DataStoreUtils.getAccountKeys(mContext)) {
                 final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mContext, accountKey);
-                final Twitter twitter = TwitterAPIFactory.getTwitterInstance(mContext, accountKey, false);
+                final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mContext, accountKey, false);
                 if (credentials == null || twitter == null) continue;
                 publishProgress(new LogText("Testing connection for account " + accountKey));
                 publishProgress(LogText.LINEBREAK);
@@ -173,7 +173,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
 
                 publishProgress(new LogText("Testing DNS functionality"));
                 publishProgress(LogText.LINEBREAK);
-                final Endpoint endpoint = TwitterAPIFactory.getEndpoint(credentials, Twitter.class);
+                final Endpoint endpoint = MicroBlogAPIFactory.getEndpoint(credentials, MicroBlog.class);
                 final Uri uri = Uri.parse(endpoint.getUrl());
                 final String host = uri.getHost();
                 if (host != null) {
@@ -191,9 +191,9 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
 
                 final String baseUrl;
                 if (credentials.api_url_format != null) {
-                    baseUrl = TwitterAPIFactory.getApiBaseUrl(credentials.api_url_format, "api");
+                    baseUrl = MicroBlogAPIFactory.getApiBaseUrl(credentials.api_url_format, "api");
                 } else {
-                    baseUrl = TwitterAPIFactory.getApiBaseUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api");
+                    baseUrl = MicroBlogAPIFactory.getApiBaseUrl(DEFAULT_TWITTER_API_URL_FORMAT, "api");
                 }
                 RestHttpClient client = RestAPIFactory.getRestClient(twitter).getRestClient();
                 HttpResponse response = null;
@@ -230,13 +230,13 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                 publishProgress(LogText.LINEBREAK);
                 testTwitter("verify_credentials", twitter, new TwitterTest() {
                     @Override
-                    public void execute(Twitter twitter) throws TwitterException {
+                    public void execute(MicroBlog twitter) throws TwitterException {
                         twitter.verifyCredentials();
                     }
                 });
                 testTwitter("get_home_timeline", twitter, new TwitterTest() {
                     @Override
-                    public void execute(Twitter twitter) throws TwitterException {
+                    public void execute(MicroBlog twitter) throws TwitterException {
                         twitter.getHomeTimeline(new Paging().count(1));
                     }
                 });
@@ -302,7 +302,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
             publishProgress(LogText.LINEBREAK);
         }
 
-        private void testTwitter(String name, Twitter twitter, TwitterTest test) {
+        private void testTwitter(String name, MicroBlog twitter, TwitterTest test) {
             publishProgress(new LogText(String.format("Testing %s...", name)));
             try {
                 final long start = SystemClock.uptimeMillis();
@@ -316,7 +316,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
         }
 
         interface TwitterTest {
-            void execute(Twitter twitter) throws TwitterException;
+            void execute(MicroBlog twitter) throws TwitterException;
         }
 
 

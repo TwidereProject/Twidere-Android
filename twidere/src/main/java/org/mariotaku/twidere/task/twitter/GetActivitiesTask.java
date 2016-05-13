@@ -14,7 +14,7 @@ import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Activity;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -32,7 +32,7 @@ import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
@@ -83,7 +83,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                     accountKey);
             if (credentials == null) continue;
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, credentials, true,
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, true,
                     true);
             if (twitter == null) continue;
             final Paging paging = new Paging();
@@ -215,9 +215,9 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
     }
 
     protected abstract void saveReadPosition(@NonNull final UserKey accountId,
-                                             ParcelableCredentials credentials, @NonNull final Twitter twitter);
+                                             ParcelableCredentials credentials, @NonNull final MicroBlog twitter);
 
-    protected abstract ResponseList<Activity> getActivities(@NonNull final Twitter twitter,
+    protected abstract ResponseList<Activity> getActivities(@NonNull final MicroBlog twitter,
                                                             @NonNull final ParcelableCredentials credentials,
                                                             @NonNull final Paging paging)
             throws TwitterException;

@@ -17,25 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.view;
+package org.mariotaku.twidere.api;
 
-import android.support.annotation.NonNull;
+import org.mariotaku.twidere.api.fanfou.Fanfou;
+import org.mariotaku.twidere.api.statusnet.StatusNet;
+import org.mariotaku.twidere.api.twitter.Twitter;
 
-import com.rengwuxian.materialedittext.validation.METValidator;
-
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
-
-/**
- * Created by mariotaku on 15/9/3.
- */
-public class ConsumerKeySecretValidator extends METValidator {
-    public ConsumerKeySecretValidator(String errorMessage) {
-        super(errorMessage);
-    }
-
-    @Override
-    public boolean isValid(@NonNull CharSequence text, boolean isEmpty) {
-        return MicroBlogAPIFactory.isValidConsumerKeySecret(text);
-    }
-
+public interface MicroBlog extends Twitter, StatusNet, Fanfou {
 }

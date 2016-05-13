@@ -8,7 +8,7 @@ import com.squareup.otto.Bus;
 
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -20,7 +20,7 @@ import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -84,7 +84,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                 args.accountKey);
         if (credentials == null) return SingleResponse.getInstance();
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, credentials, false, false);
+        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, false, false);
         if (twitter == null) return SingleResponse.getInstance();
         try {
             final User user = perform(twitter, credentials, args);
@@ -97,11 +97,11 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
     }
 
     @NonNull
-    protected abstract User perform(@NonNull Twitter twitter,
+    protected abstract User perform(@NonNull MicroBlog twitter,
                                     @NonNull ParcelableCredentials credentials,
                                     @NonNull Arguments args) throws TwitterException;
 
-    protected abstract void succeededWorker(@NonNull Twitter twitter,
+    protected abstract void succeededWorker(@NonNull MicroBlog twitter,
                                             @NonNull ParcelableCredentials credentials,
                                             @NonNull Arguments args,
                                             @NonNull ParcelableUser user);

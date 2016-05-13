@@ -31,7 +31,7 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
@@ -47,7 +47,7 @@ import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
@@ -67,7 +67,7 @@ import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 
-public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader {
+public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoader {
 
     @Nullable
     private final UserKey mAccountKey;
@@ -85,12 +85,12 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     @Inject
     protected UserColorNameManager mUserColorNameManager;
 
-    public TwitterAPIStatusesLoader(@NonNull final Context context,
-                                    @Nullable final UserKey accountKey,
-                                    final String sinceId, final String maxId,
-                                    @Nullable final List<ParcelableStatus> data,
-                                    @Nullable final String[] savedStatusesArgs,
-                                    final int tabPosition, final boolean fromUser, boolean loadingMore) {
+    public MicroBlogAPIStatusesLoader(@NonNull final Context context,
+                                      @Nullable final UserKey accountKey,
+                                      final String sinceId, final String maxId,
+                                      @Nullable final List<ParcelableStatus> data,
+                                      @Nullable final String[] savedStatusesArgs,
+                                      final int tabPosition, final boolean fromUser, boolean loadingMore) {
         super(context, data, tabPosition, fromUser);
         GeneralComponentHelper.build(context).inject(this);
         mAccountKey = accountKey;
@@ -130,7 +130,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             }
         }
         if (!isFromUser()) return ListResponse.getListInstance(data);
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, credentials, true,
+        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, true,
                 true);
         if (twitter == null) {
             return ListResponse.getListInstance(new TwitterException("No Account"));
@@ -142,7 +142,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
             final Paging paging = new Paging();
             processPaging(credentials, loadItemLimit, paging);
             statuses = getStatuses(twitter, credentials, paging);
-            if (TwitterAPIFactory.isTwitterCredentials(credentials) &&
+            if (MicroBlogAPIFactory.isTwitterCredentials(credentials) &&
                     !Utils.isOfficialCredentials(context, credentials)) {
                 InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
             }
@@ -221,7 +221,7 @@ public abstract class TwitterAPIStatusesLoader extends ParcelableStatusesLoader 
     }
 
     @NonNull
-    protected abstract List<? extends Status> getStatuses(@NonNull Twitter twitter,
+    protected abstract List<? extends Status> getStatuses(@NonNull MicroBlog microBlog,
                                                           @NonNull ParcelableCredentials credentials,
                                                           @NonNull Paging paging) throws TwitterException;
 

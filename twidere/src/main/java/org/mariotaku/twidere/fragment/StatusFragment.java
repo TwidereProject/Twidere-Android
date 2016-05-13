@@ -93,7 +93,7 @@ import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.Status;
@@ -152,7 +152,7 @@ import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereMathUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
@@ -869,7 +869,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         protected SingleResponse<TranslationResult> doInBackground(ParcelableStatus... params) {
             final ParcelableStatus status = params[0];
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, status.account_key,
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, status.account_key,
                     true);
             final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                     Context.MODE_PRIVATE);
@@ -2479,7 +2479,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (credentials == null || !ParcelableAccount.Type.TWITTER.equals(ParcelableAccountUtils.getAccountType(credentials))) {
                 return null;
             }
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, mAccountKey, false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, mAccountKey, false);
             if (twitter == null) return null;
             final Paging paging = new Paging();
             paging.setCount(10);

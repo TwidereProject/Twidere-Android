@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.api.twitter.model;
 
-import org.mariotaku.twidere.api.twitter.annotation.NoObfuscate;
+import org.mariotaku.twidere.api.annotation.NoObfuscate;
 
 /**
  * Response list supports cursor pagination

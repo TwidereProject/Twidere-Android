@@ -12,7 +12,7 @@ import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.ErrorInfo;
@@ -25,7 +25,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
@@ -55,7 +55,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
         GeneralComponentHelper.build(context).inject(this);
     }
 
-    public abstract ResponseList<DirectMessage> getDirectMessages(Twitter twitter, Paging paging)
+    public abstract ResponseList<DirectMessage> getDirectMessages(MicroBlog twitter, Paging paging)
             throws TwitterException;
 
     protected abstract Uri getDatabaseUri();
@@ -70,7 +70,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         for (final UserKey accountKey : accountKeys) {
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, true);
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, accountKey, true);
             if (twitter == null) continue;
             try {
                 final Paging paging = new Paging();

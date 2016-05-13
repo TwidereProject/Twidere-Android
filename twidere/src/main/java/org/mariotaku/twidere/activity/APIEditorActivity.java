@@ -57,7 +57,7 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -141,7 +141,7 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
     }
 
     private boolean checkApiUrl() {
-        return TwitterAPIFactory.verifyApiFormat(String.valueOf(mEditAPIUrlFormat.getText()));
+        return MicroBlogAPIFactory.verifyApiFormat(String.valueOf(mEditAPIUrlFormat.getText()));
     }
 
     @Override

@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -37,7 +37,7 @@ import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import java.util.List;
 
 
-public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
+public class RetweetsOfMeLoader extends MicroBlogAPIStatusesLoader {
 
     public RetweetsOfMeLoader(final Context context, final UserKey accountKey,
                               final String sinceId, final String maxId,
@@ -49,8 +49,8 @@ public class RetweetsOfMeLoader extends TwitterAPIStatusesLoader {
 
     @NonNull
     @Override
-    protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
-        return twitter.getRetweetsOfMe(paging);
+    protected ResponseList<Status> getStatuses(@NonNull final MicroBlog microBlog, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging) throws TwitterException {
+        return microBlog.getRetweetsOfMe(paging);
     }
 
     @WorkerThread

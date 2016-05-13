@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.User;
@@ -43,7 +43,7 @@ public class UserBlocksLoader extends CursorSupportUsersLoader {
 
     @NonNull
     @Override
-    protected final List<User> getCursoredUsers(@NonNull final Twitter twitter,
+    protected final List<User> getCursoredUsers(@NonNull final MicroBlog twitter,
                                                 @NonNull ParcelableCredentials credentials,
                                                 @NonNull final Paging paging)
             throws TwitterException {

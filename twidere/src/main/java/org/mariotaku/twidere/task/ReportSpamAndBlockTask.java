@@ -3,7 +3,7 @@ package org.mariotaku.twidere.task;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -19,7 +19,7 @@ public class ReportSpamAndBlockTask extends CreateUserBlockTask {
 
     @NonNull
     @Override
-    protected User perform(@NonNull Twitter twitter, @NonNull ParcelableCredentials credentials,
+    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials,
                            @NonNull Arguments args) throws TwitterException {
         return twitter.reportSpam(args.userKey.getId());
     }

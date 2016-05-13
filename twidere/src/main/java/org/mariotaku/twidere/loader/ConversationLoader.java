@@ -26,7 +26,7 @@ import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import org.mariotaku.commons.parcel.ParcelUtils;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.SearchQuery;
@@ -38,13 +38,13 @@ import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.Nullables;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConversationLoader extends TwitterAPIStatusesLoader {
+public class ConversationLoader extends MicroBlogAPIStatusesLoader {
 
     @NonNull
     private final ParcelableStatus mStatus;
@@ -65,7 +65,7 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
 
     @NonNull
     @Override
-    public List<Status> getStatuses(@NonNull final Twitter twitter,
+    public List<Status> getStatuses(@NonNull final MicroBlog microBlog,
                                     @NonNull final ParcelableCredentials credentials,
                                     @NonNull final Paging paging) throws TwitterException {
         mCanLoadAllReplies = false;
@@ -75,30 +75,30 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
                 final boolean isOfficial = Utils.isOfficialCredentials(getContext(), credentials);
                 mCanLoadAllReplies = isOfficial;
                 if (isOfficial) {
-                    return twitter.showConversation(status.id, paging);
+                    return microBlog.showConversation(status.id, paging);
                 } else {
-                    return showConversationCompat(twitter, credentials, status, true);
+                    return showConversationCompat(microBlog, credentials, status, true);
                 }
             }
             case ParcelableAccount.Type.STATUSNET: {
                 mCanLoadAllReplies = true;
                 if (status.extras != null && status.extras.statusnet_conversation_id != null) {
-                    return twitter.getStatusNetConversation(status.extras.statusnet_conversation_id,
+                    return microBlog.getStatusNetConversation(status.extras.statusnet_conversation_id,
                             paging);
                 }
-                return twitter.showConversation(status.id, paging);
+                return microBlog.showConversation(status.id, paging);
             }
             case ParcelableAccount.Type.FANFOU: {
                 mCanLoadAllReplies = true;
-                return twitter.getContextTimeline(status.id, paging);
+                return microBlog.getContextTimeline(status.id, paging);
             }
         }
         // Set to true because there's no conversation support on this platform
         mCanLoadAllReplies = true;
-        return showConversationCompat(twitter, credentials, status, false);
+        return showConversationCompat(microBlog, credentials, status, false);
     }
 
-    protected List<Status> showConversationCompat(@NonNull final Twitter twitter,
+    protected List<Status> showConversationCompat(@NonNull final MicroBlog twitter,
                                                   @NonNull final ParcelableCredentials credentials,
                                                   @NonNull final ParcelableStatus status,
                                                   final boolean loadReplies) throws TwitterException {
@@ -121,7 +121,7 @@ public class ConversationLoader extends TwitterAPIStatusesLoader {
             // Load replies
             if ((sinceId != null && sinceSortId > status.sort_id) || noSinceMaxId) {
                 SearchQuery query = new SearchQuery();
-                if (TwitterAPIFactory.isTwitterCredentials(credentials)) {
+                if (MicroBlogAPIFactory.isTwitterCredentials(credentials)) {
                     query.query("to:" + status.user_screen_name);
                 } else {
                     query.query("@" + status.user_screen_name);

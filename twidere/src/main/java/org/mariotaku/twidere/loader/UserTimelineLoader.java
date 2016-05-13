@@ -26,7 +26,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -38,7 +38,7 @@ import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 
 import java.util.List;
 
-public class UserTimelineLoader extends TwitterAPIStatusesLoader {
+public class UserTimelineLoader extends MicroBlogAPIStatusesLoader {
 
     @Nullable
     private final UserKey mUserId;
@@ -57,13 +57,13 @@ public class UserTimelineLoader extends TwitterAPIStatusesLoader {
 
     @NonNull
     @Override
-    protected ResponseList<Status> getStatuses(@NonNull final Twitter twitter,
+    protected ResponseList<Status> getStatuses(@NonNull final MicroBlog microBlog,
                                                @NonNull ParcelableCredentials credentials,
                                                @NonNull final Paging paging) throws TwitterException {
         if (mUserId != null) {
-            return twitter.getUserTimeline(mUserId.getId(), paging);
+            return microBlog.getUserTimeline(mUserId.getId(), paging);
         } else if (mUserScreenName != null) {
-            return twitter.getUserTimelineByScreenName(mUserScreenName, paging);
+            return microBlog.getUserTimelineByScreenName(mUserScreenName, paging);
         } else {
             throw new TwitterException("Invalid user");
         }

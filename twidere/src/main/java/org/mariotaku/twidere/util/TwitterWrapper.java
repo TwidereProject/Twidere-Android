@@ -31,7 +31,7 @@ import android.webkit.MimeTypeMap;
 import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.DirectMessage;
 import org.mariotaku.twidere.api.twitter.model.Paging;
@@ -71,7 +71,7 @@ public class TwitterWrapper implements Constants {
 
     public static SingleResponse<Boolean> deleteProfileBannerImage(final Context context,
                                                                    final UserKey accountKey) {
-        final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, accountKey, false);
+        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, accountKey, false);
         if (twitter == null) return new SingleResponse<>(false, null);
         try {
             twitter.removeProfileBannerImage();
@@ -111,7 +111,7 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User showUser(final Twitter twitter, final String id, final String screenName,
+    public static User showUser(final MicroBlog twitter, final String id, final String screenName,
                                 final String accountType) throws TwitterException {
         if (id != null) {
             if (ParcelableAccount.Type.FANFOU.equals(accountType)) {
@@ -128,7 +128,7 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User showUserAlternative(final Twitter twitter, final String id,
+    public static User showUserAlternative(final MicroBlog twitter, final String id,
                                            final String screenName)
             throws TwitterException {
         final String searchScreenName;
@@ -162,7 +162,7 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User tryShowUser(final Twitter twitter, final String id, final String screenName,
+    public static User tryShowUser(final MicroBlog twitter, final String id, final String screenName,
                                    String accountType)
             throws TwitterException {
         try {
@@ -176,7 +176,7 @@ public class TwitterWrapper implements Constants {
         }
     }
 
-    public static void updateProfileBannerImage(final Context context, final Twitter twitter,
+    public static void updateProfileBannerImage(final Context context, final MicroBlog twitter,
                                                 final Uri imageUri, final boolean deleteImage)
             throws IOException, TwitterException {
         FileBody fileBody = null;
@@ -195,7 +195,7 @@ public class TwitterWrapper implements Constants {
     }
 
     public static void updateProfileBackgroundImage(@NonNull final Context context,
-                                                    @NonNull final Twitter twitter,
+                                                    @NonNull final MicroBlog twitter,
                                                     @NonNull final Uri imageUri,
                                                     final boolean tile,
                                                     final boolean deleteImage)
@@ -215,7 +215,7 @@ public class TwitterWrapper implements Constants {
         }
     }
 
-    public static User updateProfileImage(final Context context, final Twitter twitter,
+    public static User updateProfileImage(final Context context, final MicroBlog twitter,
                                           final Uri imageUri, final boolean deleteImage)
             throws IOException, TwitterException {
         FileBody fileBody = null;

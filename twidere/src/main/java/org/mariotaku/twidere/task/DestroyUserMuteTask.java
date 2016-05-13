@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -26,13 +26,13 @@ public class DestroyUserMuteTask extends AbsFriendshipOperationTask {
 
     @NonNull
     @Override
-    protected User perform(@NonNull Twitter twitter, @NonNull ParcelableCredentials credentials,
+    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials,
                            @NonNull Arguments args) throws TwitterException {
         return twitter.destroyMute(args.userKey.getId());
     }
 
     @Override
-    protected void succeededWorker(@NonNull Twitter twitter,
+    protected void succeededWorker(@NonNull MicroBlog twitter,
                                    @NonNull ParcelableCredentials credentials,
                                    @NonNull Arguments args, @NonNull ParcelableUser user) {
         final ContentResolver resolver = context.getContentResolver();

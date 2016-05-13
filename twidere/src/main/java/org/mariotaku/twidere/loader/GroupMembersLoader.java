@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -47,7 +47,7 @@ public class GroupMembersLoader extends CursorSupportUsersLoader {
 
     @NonNull
     @Override
-    public ResponseList<User> getCursoredUsers(@NonNull final Twitter twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging)
+    public ResponseList<User> getCursoredUsers(@NonNull final MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull final Paging paging)
             throws TwitterException {
         if (mGroupId != null)
             return twitter.getGroupMembers(mGroupId, paging);

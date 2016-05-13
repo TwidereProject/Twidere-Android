@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.util.List;
 import java.util.Locale;
@@ -46,7 +46,7 @@ public class UserMentionsLoader extends TweetSearchLoader {
         final UserKey accountKey = getAccountKey();
         if (accountKey == null) return query;
         final String screenName = query.startsWith("@") ? query.substring(1) : query;
-        if (TwitterAPIFactory.isTwitterCredentials(getContext(), accountKey)) {
+        if (MicroBlogAPIFactory.isTwitterCredentials(getContext(), accountKey)) {
             return String.format(Locale.ROOT, "to:%s exclude:retweets", screenName);
         }
         return String.format(Locale.ROOT, "@%s -RT", screenName);

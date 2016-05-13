@@ -27,7 +27,7 @@ import android.text.TextUtils;
 
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
-import org.mariotaku.twidere.api.twitter.annotation.NoObfuscate;
+import org.mariotaku.twidere.api.annotation.NoObfuscate;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

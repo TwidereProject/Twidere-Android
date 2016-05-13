@@ -17,7 +17,7 @@ import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.api.twitter.Twitter;
+import org.mariotaku.twidere.api.MicroBlog;
 import org.mariotaku.twidere.api.twitter.TwitterException;
 import org.mariotaku.twidere.api.twitter.model.Paging;
 import org.mariotaku.twidere.api.twitter.model.ResponseList;
@@ -38,7 +38,7 @@ import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.TwitterAPIFactory;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
@@ -77,7 +77,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     }
 
     @NonNull
-    public abstract ResponseList<Status> getStatuses(Twitter twitter, Paging paging)
+    public abstract ResponseList<Status> getStatuses(MicroBlog twitter, Paging paging)
             throws TwitterException;
 
     @NonNull
@@ -112,7 +112,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                     accountKey);
             if (credentials == null) continue;
-            final Twitter twitter = TwitterAPIFactory.getTwitterInstance(context, credentials,
+            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials,
                     true, true);
             if (twitter == null) continue;
             try {
