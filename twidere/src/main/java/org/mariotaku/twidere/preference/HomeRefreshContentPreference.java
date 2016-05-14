@@ -41,12 +41,12 @@ public class HomeRefreshContentPreference extends MultiSelectListPreference impl
 
     @Override
     protected boolean[] getDefaults() {
-        return new boolean[]{true, true, true};
+        return new boolean[]{true, true, true, true};
     }
 
     @Override
     protected String[] getKeys() {
-        return new String[]{KEY_HOME_REFRESH_MENTIONS, KEY_HOME_REFRESH_DIRECT_MESSAGES, KEY_HOME_REFRESH_TRENDS};
+        return new String[]{KEY_HOME_REFRESH_MENTIONS, KEY_HOME_REFRESH_DIRECT_MESSAGES, KEY_HOME_REFRESH_TRENDS, KEY_HOME_REFRESH_SAVED_SEARCHES};
     }
 
     @Override

@@ -26,6 +26,7 @@
         <item>@string/mentions</item>
         <item>@string/inbox</item>
         <item>@string/trends</item>
+        <item>@string/saved_searches</item>
     </string-array>
     <string-array name="entries_image_preload_option">
         <item>@string/profile_images</item>
