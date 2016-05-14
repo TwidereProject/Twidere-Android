@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -82,22 +83,8 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
         builder.setView(R.layout.dialog_status_quote_retweet);
         builder.setTitle(R.string.retweet_quote_confirm_title);
-        builder.setPositiveButton(R.string.retweet, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int which) {
-                final Dialog dialog = (Dialog) dialogInterface;
-                final ComposeEditText editComment = (ComposeEditText) dialog.findViewById(R.id.edit_comment);
-                if (editComment.length() > 0) {
-                    retweetOrQuote(mTwitterWrapper, credentials, status);
-                } else if (isMyRetweet(status)) {
-                    mTwitterWrapper.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
-                } else if (useQuote(!status.user_is_protected, credentials)) {
-                    retweetOrQuote(mTwitterWrapper, credentials, status);
-                } else {
-                    TwidereBugReporter.logException(new IllegalStateException(status.toString()));
-                }
-            }
-        });
+        builder.setPositiveButton(R.string.retweet, null);
+        builder.setNegativeButton(android.R.string.cancel, null);
         builder.setNeutralButton(R.string.quote, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -109,29 +96,38 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
                 startActivity(intent);
             }
         });
-        builder.setNegativeButton(android.R.string.cancel, null);
 
         final Dialog dialog = builder.create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-                Dialog dialog = (Dialog) dialogInterface;
+                final AlertDialog dialog = (AlertDialog) dialogInterface;
+
+
+                final View itemContent = dialog.findViewById(R.id.item_content);
+                final StatusTextCountView textCountView = (StatusTextCountView) dialog.findViewById(R.id.comment_text_count);
+                final View itemMenu = dialog.findViewById(R.id.item_menu);
+                final View actionButtons = dialog.findViewById(R.id.action_buttons);
+                final View commentContainer = dialog.findViewById(R.id.comment_container);
+                final ComposeEditText editComment = (ComposeEditText) dialog.findViewById(R.id.edit_comment);
+                final View commentMenu = dialog.findViewById(R.id.comment_menu);
+                assert itemContent != null && textCountView != null && itemMenu != null
+                        && actionButtons != null && commentContainer != null && editComment != null
+                        && commentMenu != null;
+
                 final DummyItemAdapter adapter = new DummyItemAdapter(context);
                 adapter.setShouldShowAccountsColor(true);
-                final IStatusViewHolder holder = new StatusViewHolder(adapter, dialog.findViewById(R.id.item_content));
+                final IStatusViewHolder holder = new StatusViewHolder(adapter, itemContent);
                 holder.displayStatus(status, false, true);
-
-
-                final StatusTextCountView textCountView = (StatusTextCountView) dialog.findViewById(R.id.comment_text_count);
 
                 textCountView.setMaxLength(TwidereValidator.getTextLimit(credentials));
 
-                dialog.findViewById(R.id.item_menu).setVisibility(View.GONE);
-                dialog.findViewById(R.id.action_buttons).setVisibility(View.GONE);
-                dialog.findViewById(R.id.item_content).setFocusable(false);
+                itemMenu.setVisibility(View.GONE);
+                actionButtons.setVisibility(View.GONE);
+                itemContent.setFocusable(false);
                 final boolean useQuote = useQuote(!status.user_is_protected, credentials);
-                dialog.findViewById(R.id.comment_container).setVisibility(useQuote ? View.VISIBLE : View.GONE);
-                final ComposeEditText editComment = (ComposeEditText) dialog.findViewById(R.id.edit_comment);
+
+                commentContainer.setVisibility(useQuote ? View.VISIBLE : View.GONE);
                 editComment.setAccountKey(status.account_key);
 
                 final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
@@ -143,12 +139,13 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
                     @Override
                     public boolean onHitEnter() {
-                        final AsyncTwitterWrapper twitter = mTwitterWrapper;
                         final ParcelableStatus status = getStatus();
-                        if (twitter == null || status == null) return false;
-                        retweetOrQuote(twitter, credentials, status);
-                        dismiss();
-                        return true;
+                        if (status == null) return false;
+                        if (retweetOrQuote(credentials, status, true)) {
+                            dismiss();
+                            return true;
+                        }
+                        return false;
                     }
                 }, sendByEnter);
                 enterHandler.addTextChangedListener(new TextWatcher() {
@@ -167,7 +164,6 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
 
                     }
                 });
-                final View commentMenu = dialog.findViewById(R.id.comment_menu);
 
                 mPopupMenu = new PopupMenu(context, commentMenu, Gravity.NO_GRAVITY,
                         R.attr.actionOverflowMenuStyle, 0);
@@ -193,6 +189,25 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
                     }
                 });
 
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean dismissDialog = false;
+                        if (editComment.length() > 0) {
+                            dismissDialog = retweetOrQuote(credentials, status, true);
+                        } else if (isMyRetweet(status)) {
+                            mTwitterWrapper.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
+                            dismissDialog = true;
+                        } else if (useQuote(!status.user_is_protected, credentials)) {
+                            dismissDialog = retweetOrQuote(credentials, status, true);
+                        } else {
+                            TwidereBugReporter.logException(new IllegalStateException(status.toString()));
+                        }
+                        if (dismissDialog) {
+                            dismiss();
+                        }
+                    }
+                });
 
                 updateTextCount(dialog, editComment.getText(), status, credentials);
             }
@@ -230,9 +245,12 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         return args.getParcelable(EXTRA_STATUS);
     }
 
-    private void retweetOrQuote(AsyncTwitterWrapper twitter, ParcelableAccount account, ParcelableStatus status) {
+    @CheckResult
+    private boolean retweetOrQuote(ParcelableAccount account, ParcelableStatus status,
+                                   boolean showProtectedConfirmation) {
+        AsyncTwitterWrapper twitter = mTwitterWrapper;
         final Dialog dialog = getDialog();
-        if (dialog == null) return;
+        if (dialog == null || twitter == null) return false;
         final EditText editComment = (EditText) dialog.findViewById(R.id.edit_comment);
         if (useQuote(editComment.length() > 0, account)) {
             final Menu menu = mPopupMenu.getMenu();
@@ -247,10 +265,17 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
             switch (ParcelableAccountUtils.getAccountType(account)) {
                 case ParcelableAccount.Type.FANFOU: {
                     if (!status.is_quote || !quoteOriginalStatus) {
+                        if (status.user_is_protected && showProtectedConfirmation) {
+                            QuoteProtectedStatusWarnFragment.show(this, account, status);
+                            return false;
+                        }
+                        update.repost_status_id = status.id;
                         commentText = getString(R.string.fanfou_repost_format, editingComment,
                                 status.user_screen_name, status.text_plain);
-                        update.repost_status_id = status.id;
                     } else {
+                        if (status.quoted_user_is_protected && showProtectedConfirmation) {
+                            return false;
+                        }
                         commentText = getString(R.string.fanfou_repost_format, editingComment,
                                 status.quoted_user_screen_name, status.quoted_text_plain);
                         update.repost_status_id = status.quoted_id;
@@ -277,6 +302,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         } else {
             twitter.retweetStatusAsync(status.account_key, status.id);
         }
+        return true;
     }
 
     private boolean useQuote(boolean preCondition, ParcelableAccount account) {
@@ -290,5 +316,50 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
         f.setArguments(args);
         f.show(fm, FRAGMENT_TAG);
         return f;
+    }
+
+
+    public static class QuoteProtectedStatusWarnFragment extends BaseSupportDialogFragment implements
+            DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(final DialogInterface dialog, final int which) {
+            final RetweetQuoteDialogFragment fragment = (RetweetQuoteDialogFragment) getParentFragment();
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: {
+                    final Bundle args = getArguments();
+                    ParcelableAccount account = args.getParcelable(EXTRA_ACCOUNT);
+                    ParcelableStatus status = args.getParcelable(EXTRA_STATUS);
+                    if (fragment.retweetOrQuote(account, status, false)) {
+                        fragment.dismiss();
+                    }
+                    break;
+                }
+            }
+
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(final Bundle savedInstanceState) {
+            final Context context = getActivity();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage(R.string.quote_protected_status_warning_message);
+            builder.setPositiveButton(R.string.send_anyway, this);
+            builder.setNegativeButton(android.R.string.cancel, null);
+            return builder.create();
+        }
+
+        public static QuoteProtectedStatusWarnFragment show(RetweetQuoteDialogFragment pf,
+                                                            ParcelableAccount account,
+                                                            ParcelableStatus status) {
+            QuoteProtectedStatusWarnFragment f = new QuoteProtectedStatusWarnFragment();
+            Bundle args = new Bundle();
+            args.putParcelable(EXTRA_ACCOUNT, account);
+            args.putParcelable(EXTRA_STATUS, status);
+            f.setArguments(args);
+            f.show(pf.getChildFragmentManager(), "quote_protected_status_warning");
+            return f;
+        }
     }
 }
