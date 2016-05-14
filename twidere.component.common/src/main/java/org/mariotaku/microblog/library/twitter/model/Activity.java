@@ -65,12 +65,14 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
     User[] sources;
     @JsonField(name = "targets", typeConverter = JsonStringConverter.class)
     String rawTargets;
-    @JsonField(name = "sources", typeConverter = JsonStringConverter.class)
+    @JsonField(name = "target_objects", typeConverter = JsonStringConverter.class)
     String rawTargetObjects;
+
     User[] targetUsers;
     User[] targetObjectUsers;
     Status[] targetObjectStatuses, targetStatuses;
     UserList[] targetUserLists, targetObjectUserLists;
+
     @JsonField(name = "max_position")
     String maxPosition = null;
     @JsonField(name = "min_position")
@@ -182,7 +184,7 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
 
     @OnJsonParseComplete
     void onParseComplete() throws IOException {
-        if (action == null) throw new IOException();
+        if (action == null) throw new IOException("Malformed Activity object");
         switch (action) {
             case Activity.Action.FAVORITE:
             case Activity.Action.REPLY:

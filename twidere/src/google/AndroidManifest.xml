@@ -16,5 +16,14 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCVdCIMFFxdNqHnCPrJ9yKUzoTfs8jhYGc"/>
 
+        <activity
+            android:name="org.mariotaku.twidere.activity.PlusServiceGoogleSignInActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Twidere.NoDisplay">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.PLUS_SERVICE_SIGN_IN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
