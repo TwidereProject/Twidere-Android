@@ -3,60 +3,73 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1458458261000)
+--- twidere/build.gradle	(date 1463193773000)
 +++ twidere/build.gradle	(revision )
-@@ -1,17 +1,17 @@
- import fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask
+@@ -5,19 +5,19 @@
+ apply plugin: 'androidsvgdrawable'
  
- apply plugin: 'com.android.application'
+ // START Non-FOSS component
 -apply plugin: 'io.fabric'
 +//apply plugin: 'io.fabric'
- apply plugin: 'com.neenbedankt.android-apt'
- apply plugin: 'androidsvgdrawable'
+ // END Non-FOSS component
  
  buildscript {
      repositories {
+         // START Non-FOSS component
 -        maven { url 'https://maven.fabric.io/public' }
 +//        maven { url 'https://maven.fabric.io/public' }
+         // END Non-FOSS component
      }
  
      dependencies {
+         // START Non-FOSS component
 -        classpath 'io.fabric.tools:gradle:1.21.5'
 +//        classpath 'io.fabric.tools:gradle:1.21.5'
+         // END Non-FOSS component
      }
  }
- 
-@@ -41,7 +41,7 @@
-     }
+@@ -49,7 +49,7 @@
  
      productFlavors {
+         // START Non-FOSS component
 -        google {}
 +//        google {}
+         // END Non-FOSS component
          fdroid {}
      }
-     buildTypes {
-@@ -68,7 +68,7 @@
- 
+@@ -79,7 +79,7 @@
  repositories {
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
+     // START Non-FOSS component
 -    maven { url 'https://maven.fabric.io/public' }
 +//    maven { url 'https://maven.fabric.io/public' }
+     // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
- 
-@@ -91,10 +91,10 @@
-     compile project(':twidere.component.common')
+@@ -105,12 +105,12 @@
      compile project(':twidere.component.nyan')
  
+     // START Non-FOSS component
 -    googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
+-    googleCompile 'com.google.android.gms:play-services-auth:8.4.0'
+-    googleCompile 'com.google.android.gms:play-services-measurement:8.4.0'
 -    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
 -    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
 -    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
 +//    googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
++//    googleCompile 'com.google.android.gms:play-services-auth:8.4.0'
++//    googleCompile 'com.google.android.gms:play-services-measurement:8.4.0'
 +//    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
 +//    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
 +//    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
+     // END Non-FOSS component
  
      fdroidCompile 'org.osmdroid:osmdroid-android:5.1'
+@@ -204,5 +204,5 @@
+ }
  
+ // START Non-FOSS component
+-apply plugin: 'com.google.gms.google-services'
++//apply plugin: 'com.google.gms.google-services'
+ // END Non-FOSS component
 \ No newline at end of file
