@@ -19,26 +19,26 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Queries;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.User;
 
 @Queries({@KeyValue(key = "include_entities", valueKey = "include_entities")})
 public interface PrivateFriendsFollowersResources extends PrivateResources {
 
     @POST("/friendships/accept.json")
-    User acceptFriendship(@Param("user_id") long userId) throws MicroBlogException;
+    User acceptFriendship(@Param("user_id") String userId) throws MicroBlogException;
 
     @POST("/friendships/accept.json")
-    User acceptFriendship(@Param("screen_name") String screenName) throws MicroBlogException;
+    User acceptFriendshipByScreenName(@Param("screen_name") String screenName) throws MicroBlogException;
 
     @POST("/friendships/deny.json")
-    User denyFriendship(@Param("user_id") long userId) throws MicroBlogException;
+    User denyFriendship(@Param("user_id") String userId) throws MicroBlogException;
 
     @POST("/friendships/deny.json")
-    User denyFriendship(@Param("screen_name") String screenName) throws MicroBlogException;
+    User denyFriendshipByScreenName(@Param("screen_name") String screenName) throws MicroBlogException;
 
 }
