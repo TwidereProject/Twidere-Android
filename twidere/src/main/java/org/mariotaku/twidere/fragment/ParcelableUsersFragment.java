@@ -234,12 +234,10 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
             } else {
                 ParcelableUser adapterUser = data.get(position);
                 ParcelableUser eventUser = event.getUser();
-                if (eventUser != null) {
-                    if (adapterUser.account_key.equals(eventUser.account_key)) {
-                        ParcelableUser clone = ParcelUtils.clone(eventUser);
-                        clone.position = adapterUser.position;
-                        data.set(position, clone);
-                    }
+                if (eventUser != null && adapterUser.account_key.equals(eventUser.account_key)) {
+                    ParcelableUser clone = ParcelUtils.clone(eventUser);
+                    clone.position = adapterUser.position;
+                    data.set(position, clone);
                 }
                 adapter.notifyItemChanged(position);
             }

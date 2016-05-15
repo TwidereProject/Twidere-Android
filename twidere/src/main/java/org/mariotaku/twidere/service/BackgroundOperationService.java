@@ -427,10 +427,8 @@ public class BackgroundOperationService extends IntentService implements Constan
                 if (item.media != null) {
                     for (final ParcelableMediaUpdate media : item.media) {
                         final String path = getImagePathFromUri(this, Uri.parse(media.uri));
-                        if (path != null) {
-                            if (!new File(path).delete()) {
-                                Log.d(LOGTAG, String.format("unable to delete %s", path));
-                            }
+                        if (path != null && !new File(path).delete()) {
+                            Log.d(LOGTAG, String.format("unable to delete %s", path));
                         }
                     }
                 }

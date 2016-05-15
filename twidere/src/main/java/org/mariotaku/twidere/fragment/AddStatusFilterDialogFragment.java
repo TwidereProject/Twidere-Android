@@ -116,14 +116,12 @@ public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment {
                             values.put(Filters.Keywords.VALUE, "#" + keyword);
                             keywordValues.add(values);
                         }
-                    } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
-                        if (value != null) {
-                            final String source = ParseUtils.parseString(value);
-                            sources.add(source);
-                            final ContentValues values = new ContentValues();
-                            values.put(Filters.Sources.VALUE, source);
-                            sourceValues.add(values);
-                        }
+                    } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE && value != null) {
+                        final String source = ParseUtils.parseString(value);
+                        sources.add(source);
+                        final ContentValues values = new ContentValues();
+                        values.put(Filters.Sources.VALUE, source);
+                        sourceValues.add(values);
                     }
                 }
                 final ContentResolver resolver = getContentResolver();

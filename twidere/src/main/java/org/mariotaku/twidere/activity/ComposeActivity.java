@@ -501,20 +501,18 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
                 final float x = ev.getRawX(), y = ev.getRawY();
-                if (isAccountSelectorVisible()) {
-                    if (!TwidereViewUtils.hitView(x, y, mAccountSelectorButton)) {
-                        boolean clickedItem = false;
-                        final RecyclerView.LayoutManager layoutManager = mAccountSelector.getLayoutManager();
-                        for (int i = 0, j = layoutManager.getChildCount(); i < j; i++) {
-                            if (TwidereViewUtils.hitView(x, y, layoutManager.getChildAt(i))) {
-                                clickedItem = true;
-                                break;
-                            }
+                if (isAccountSelectorVisible() && !TwidereViewUtils.hitView(x, y, mAccountSelectorButton)) {
+                    boolean clickedItem = false;
+                    final RecyclerView.LayoutManager layoutManager = mAccountSelector.getLayoutManager();
+                    for (int i = 0, j = layoutManager.getChildCount(); i < j; i++) {
+                        if (TwidereViewUtils.hitView(x, y, layoutManager.getChildAt(i))) {
+                            clickedItem = true;
+                            break;
                         }
-                        if (!clickedItem) {
-                            setAccountSelectorVisible(false);
-                            return true;
-                        }
+                    }
+                    if (!clickedItem) {
+                        setAccountSelectorVisible(false);
+                        return true;
                     }
                 }
                 break;

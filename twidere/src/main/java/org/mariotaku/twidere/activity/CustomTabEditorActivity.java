@@ -402,10 +402,8 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
         } else if (value instanceof ParcelableUserList && args instanceof UserListArguments) {
             final ParcelableUserList userList = (ParcelableUserList) value;
             ((UserListArguments) args).setListId(userList.id);
-        } else if (value instanceof CharSequence) {
-            if (args instanceof TextQueryArguments) {
-                ((TextQueryArguments) args).setQuery(value.toString());
-            }
+        } else if (value instanceof CharSequence && args instanceof TextQueryArguments) {
+            ((TextQueryArguments) args).setQuery(value.toString());
         }
     }
 
