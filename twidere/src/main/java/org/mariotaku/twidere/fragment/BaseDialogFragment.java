@@ -39,7 +39,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
-public class BaseSupportDialogFragment extends DialogFragment implements Constants {
+public class BaseDialogFragment extends DialogFragment implements Constants {
 
     @Inject
     protected AsyncTwitterWrapper mTwitterWrapper;

@@ -51,7 +51,7 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
-import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.model.CustomAPIConfig;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -283,7 +283,7 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
         mEditConsumerSecret.setText(apiConfig.getConsumerSecret());
     }
 
-    public static class LoadDefaultsChooserDialogFragment extends BaseSupportDialogFragment
+    public static class LoadDefaultsChooserDialogFragment extends BaseDialogFragment
             implements DialogInterface.OnClickListener, LoaderManager.LoaderCallbacks<List<CustomAPIConfig>> {
         private ArrayAdapter<CustomAPIConfig> mAdapter;
 

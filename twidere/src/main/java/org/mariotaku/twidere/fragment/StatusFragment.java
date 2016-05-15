@@ -276,7 +276,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                         public void onClick(View widget) {
                             final FragmentActivity activity = getActivity();
                             if (activity == null || activity.isFinishing()) return;
-                            SupportMessageDialogFragment.show(activity,
+                            MessageDialogFragment.show(activity,
                                     getString(R.string.cant_load_all_replies_explanation),
                                     "cant_load_all_replies_explanation");
                         }
@@ -825,7 +825,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 UserFragment.Referral.TIMELINE_STATUS);
     }
 
-    public static final class LoadSensitiveImageConfirmDialogFragment extends BaseSupportDialogFragment implements
+    public static final class LoadSensitiveImageConfirmDialogFragment extends BaseDialogFragment implements
             DialogInterface.OnClickListener {
 
         @Override

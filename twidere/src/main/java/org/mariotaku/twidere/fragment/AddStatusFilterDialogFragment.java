@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AddStatusFilterDialogFragment extends BaseSupportDialogFragment {
+public class AddStatusFilterDialogFragment extends BaseDialogFragment {
 
     public static final String FRAGMENT_TAG = "add_status_filter";
 

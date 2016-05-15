@@ -258,7 +258,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
         mode.setTitle(getResources().getQuantityString(R.plurals.Nitems_selected, count, count));
     }
 
-    public static final class AddItemFragment extends BaseSupportDialogFragment implements OnClickListener {
+    public static final class AddItemFragment extends BaseDialogFragment implements OnClickListener {
 
         @Override
         public void onClick(final DialogInterface dialog, final int which) {

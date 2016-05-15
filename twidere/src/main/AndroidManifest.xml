@@ -454,10 +454,6 @@
             android:name=".activity.PlusServiceDashboardActivity"
             android:label="@string/plus_service_name"
             android:theme="@style/Theme.Twidere"/>
-        <activity
-            android:name=".activity.PlusServiceSignInActivity"
-            android:label="@string/sign_in"
-            android:theme="@style/Theme.Twidere"/>
 
         <service
             android:name=".service.RefreshService"

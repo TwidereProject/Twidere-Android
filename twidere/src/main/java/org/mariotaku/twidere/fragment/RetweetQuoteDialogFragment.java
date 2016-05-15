@@ -65,7 +65,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
 
-public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implements Constants {
+public class RetweetQuoteDialogFragment extends BaseDialogFragment implements Constants {
 
     public static final String FRAGMENT_TAG = "retweet_quote";
     private PopupMenu mPopupMenu;
@@ -319,7 +319,7 @@ public class RetweetQuoteDialogFragment extends BaseSupportDialogFragment implem
     }
 
 
-    public static class QuoteProtectedStatusWarnFragment extends BaseSupportDialogFragment implements
+    public static class QuoteProtectedStatusWarnFragment extends BaseDialogFragment implements
             DialogInterface.OnClickListener {
 
         @Override

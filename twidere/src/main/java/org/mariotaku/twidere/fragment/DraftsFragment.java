@@ -310,7 +310,7 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
         mode.setTitle(getResources().getQuantityString(R.plurals.Nitems_selected, count, count));
     }
 
-    public static class DeleteDraftsConfirmDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
+    public static class DeleteDraftsConfirmDialogFragment extends BaseDialogFragment implements OnClickListener {
 
         @Override
         public void onClick(final DialogInterface dialog, final int which) {
@@ -384,7 +384,7 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            final SupportProgressDialogFragment f = SupportProgressDialogFragment.show(mActivity,
+            final ProgressDialogFragment f = ProgressDialogFragment.show(mActivity,
                     FRAGMENT_TAG_DELETING_DRAFTS);
             f.setCancelable(false);
         }

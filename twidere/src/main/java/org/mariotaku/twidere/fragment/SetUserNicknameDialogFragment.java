@@ -36,7 +36,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.ParseUtils;
 
-public class SetUserNicknameDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
+public class SetUserNicknameDialogFragment extends BaseDialogFragment implements OnClickListener {
 
     private static final String FRAGMENT_TAG_SET_USER_NICKNAME = "set_user_nickname";
     private EditText mEditText;

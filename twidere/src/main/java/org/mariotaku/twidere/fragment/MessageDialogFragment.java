@@ -28,11 +28,11 @@ import android.support.v4.app.FragmentActivity;
 /**
  * Created by mariotaku on 14-6-24.
  */
-public class SupportMessageDialogFragment extends BaseSupportDialogFragment {
+public class MessageDialogFragment extends BaseDialogFragment {
     private static final String EXTRA_MESSAGE = "message";
 
-    public static SupportMessageDialogFragment show(FragmentActivity activity, String message, String tag) {
-        SupportMessageDialogFragment df = new SupportMessageDialogFragment();
+    public static MessageDialogFragment show(FragmentActivity activity, String message, String tag) {
+        MessageDialogFragment df = new MessageDialogFragment();
         Bundle args = new Bundle();
         args.putString(EXTRA_MESSAGE, message);
         df.setArguments(args);
@@ -40,8 +40,8 @@ public class SupportMessageDialogFragment extends BaseSupportDialogFragment {
         return df;
     }
 
-    public static SupportMessageDialogFragment create(String message) {
-        SupportMessageDialogFragment df = new SupportMessageDialogFragment();
+    public static MessageDialogFragment create(String message) {
+        MessageDialogFragment df = new MessageDialogFragment();
         Bundle args = new Bundle();
         args.putString(EXTRA_MESSAGE, message);
         df.setArguments(args);

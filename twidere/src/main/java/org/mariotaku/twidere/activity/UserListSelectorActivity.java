@@ -48,7 +48,7 @@ import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.microblog.library.twitter.model.UserList;
 import org.mariotaku.twidere.fragment.CreateUserListDialogFragment;
-import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -339,7 +339,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
 
         @Override
         protected void onPreExecute() {
-            final SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+            final ProgressDialogFragment df = new ProgressDialogFragment();
             df.setCancelable(false);
             mActivity.showDialogFragment(df, FRAGMENT_TAG_GET_USER_LISTS);
         }
@@ -389,7 +389,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
 
         @Override
         protected void onPreExecute() {
-            final SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+            final ProgressDialogFragment df = new ProgressDialogFragment();
             df.setCancelable(false);
             mActivity.showDialogFragment(df, FRAGMENT_TAG_SEARCH_USERS);
         }

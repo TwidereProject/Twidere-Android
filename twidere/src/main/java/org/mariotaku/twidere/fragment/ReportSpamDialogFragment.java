@@ -32,7 +32,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
-public class ReportSpamDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
+public class ReportSpamDialogFragment extends BaseDialogFragment implements DialogInterface.OnClickListener {
 
     public static final String FRAGMENT_TAG = "create_user_block";
 

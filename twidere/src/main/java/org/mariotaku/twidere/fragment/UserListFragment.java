@@ -366,7 +366,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
         }
     }
 
-    public static class EditUserListDialogFragment extends BaseSupportDialogFragment implements
+    public static class EditUserListDialogFragment extends BaseDialogFragment implements
             DialogInterface.OnClickListener {
 
         private String mName, mDescription;

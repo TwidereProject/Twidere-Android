@@ -33,7 +33,7 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.Utils;
 
-public class SensitiveContentWarningDialogFragment extends BaseSupportDialogFragment implements
+public class SensitiveContentWarningDialogFragment extends BaseDialogFragment implements
         DialogInterface.OnClickListener {
 
     @Override

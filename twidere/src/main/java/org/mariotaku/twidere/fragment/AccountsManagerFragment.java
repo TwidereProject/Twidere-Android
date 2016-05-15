@@ -304,7 +304,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         mAdapter.notifyDataSetChanged();
     }
 
-    public static final class AccountDeletionDialogFragment extends BaseSupportDialogFragment implements
+    public static final class AccountDeletionDialogFragment extends BaseDialogFragment implements
             DialogInterface.OnClickListener {
 
         @Override

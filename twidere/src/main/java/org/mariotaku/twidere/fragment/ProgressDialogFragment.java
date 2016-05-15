@@ -27,7 +27,7 @@ import android.support.v4.app.FragmentActivity;
 
 import org.mariotaku.twidere.R;
 
-public class SupportProgressDialogFragment extends BaseSupportDialogFragment {
+public class ProgressDialogFragment extends BaseDialogFragment {
 
 	@NonNull
     @Override
@@ -37,9 +37,9 @@ public class SupportProgressDialogFragment extends BaseSupportDialogFragment {
 		return dialog;
 	}
 
-	public static SupportProgressDialogFragment show(final FragmentActivity activity, final String tag) {
+	public static ProgressDialogFragment show(final FragmentActivity activity, final String tag) {
 		if (activity == null) return null;
-		final SupportProgressDialogFragment f = new SupportProgressDialogFragment();
+		final ProgressDialogFragment f = new ProgressDialogFragment();
 		f.show(activity.getSupportFragmentManager(), tag);
 		return f;
 	}

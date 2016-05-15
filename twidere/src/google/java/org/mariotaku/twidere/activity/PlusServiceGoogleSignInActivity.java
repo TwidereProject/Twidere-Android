@@ -15,7 +15,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 /**
  * Created by mariotaku on 16/5/14.
  */
-public class PlusServiceGoogleSignInActivity extends BaseActivity implements
+public class PlusServiceGoogleSignInActivity extends BasePlusServiceSignInActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_GOOGLE_SIGN_IN = 101;
@@ -72,6 +72,7 @@ public class PlusServiceGoogleSignInActivity extends BaseActivity implements
         } else {
             // TODO Signed out, show unauthenticated UI.
         }
+        finish();
     }
 
 }

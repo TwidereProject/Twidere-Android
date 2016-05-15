@@ -799,4 +799,8 @@
     <string name="password_sign_in_twitter_only">Password sign in (Twitter only)</string>
     <string name="direct_messages_next">DM next</string>
     <string name="plus_service_name">Twidere ∞</string>
+    <string name="sign_in_service_google_id">Google ID</string>
+    <string name="sign_in_service_twitter">Twitter</string>
+    <string name="sign_in_service_email">Email</string>
+    <string name="sign_in_with_ellip">Sign in with…</string>
 </resources>

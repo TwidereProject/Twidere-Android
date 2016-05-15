@@ -49,7 +49,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.model.CustomTabConfiguration;
 import org.mariotaku.twidere.model.CustomTabConfiguration.ExtraConfiguration;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -434,7 +434,7 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
         return INTENT_ACTION_EDIT_TAB.equals(getIntent().getAction());
     }
 
-    public static class SecondaryFieldEditTextDialogFragment extends BaseSupportDialogFragment implements
+    public static class SecondaryFieldEditTextDialogFragment extends BaseDialogFragment implements
             DialogInterface.OnClickListener {
         private static final String FRAGMENT_TAG_EDIT_SECONDARY_FIELD = "edit_secondary_field";
         private EditText mEditText;

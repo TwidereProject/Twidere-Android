@@ -34,7 +34,7 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.text.validator.UserListNameValidator;
 import org.mariotaku.twidere.util.ParseUtils;
 
-public class CreateUserListDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
+public class CreateUserListDialogFragment extends BaseDialogFragment implements DialogInterface.OnClickListener {
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {

@@ -179,7 +179,7 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
         mode.setTitle(getResources().getQuantityString(R.plurals.Nitems_selected, count, count));
     }
 
-    public static class AddMappingDialogFragment extends BaseSupportDialogFragment implements OnClickListener,
+    public static class AddMappingDialogFragment extends BaseDialogFragment implements OnClickListener,
             TextWatcher, OnCheckedChangeListener {
 
 

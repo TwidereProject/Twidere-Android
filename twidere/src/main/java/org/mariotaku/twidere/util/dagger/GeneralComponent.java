@@ -36,7 +36,7 @@ import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
-import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
+import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.MessagesConversationFragment;
 import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader;
@@ -77,7 +77,7 @@ public interface GeneralComponent {
 
     void inject(MultiSelectEventHandler object);
 
-    void inject(BaseSupportDialogFragment object);
+    void inject(BaseDialogFragment object);
 
     void inject(RefreshService object);
 

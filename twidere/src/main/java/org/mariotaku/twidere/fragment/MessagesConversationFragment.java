@@ -951,7 +951,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         }
     }
 
-    public static class DeleteConversationConfirmDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
+    public static class DeleteConversationConfirmDialogFragment extends BaseDialogFragment implements DialogInterface.OnClickListener {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -980,7 +980,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     }
 
 
-    public static class DeleteMessageConfirmDialogFragment extends BaseSupportDialogFragment implements DialogInterface.OnClickListener {
+    public static class DeleteMessageConfirmDialogFragment extends BaseDialogFragment implements DialogInterface.OnClickListener {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {

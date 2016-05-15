@@ -26,7 +26,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
-import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 
 import java.io.File;
 
@@ -47,7 +47,7 @@ public abstract class ProgressSaveFileTask extends SaveFileTask {
         ((IExtendedActivity) context).executeAfterFragmentResumed(new IExtendedActivity.Action() {
             @Override
             public void execute(IExtendedActivity activity) {
-                final DialogFragment fragment = new SupportProgressDialogFragment();
+                final DialogFragment fragment = new ProgressDialogFragment();
                 fragment.setCancelable(false);
                 fragment.show(((FragmentActivity) activity).getSupportFragmentManager(), PROGRESS_FRAGMENT_TAG);
             }

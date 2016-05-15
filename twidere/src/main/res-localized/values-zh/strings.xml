@@ -739,4 +739,5 @@
   <string name="provider_loadaverage_org">LoadAverage.org</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
+
 </resources>

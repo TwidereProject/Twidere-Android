@@ -75,7 +75,7 @@ import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewer
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
-import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
@@ -480,7 +480,7 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
                 activity.executeAfterFragmentResumed(new IExtendedActivity.Action() {
                     @Override
                     public void execute(IExtendedActivity activity) {
-                        final DialogFragment fragment = new SupportProgressDialogFragment();
+                        final DialogFragment fragment = new ProgressDialogFragment();
                         fragment.setCancelable(false);
                         fragment.show(((FragmentActivity) activity).getSupportFragmentManager(), PROGRESS_FRAGMENT_TAG);
                     }

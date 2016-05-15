@@ -30,7 +30,7 @@ import android.support.v7.app.AlertDialog;
 
 import org.mariotaku.twidere.R;
 
-public class PhishingLinkWarningDialogFragment extends BaseSupportDialogFragment implements OnClickListener {
+public class PhishingLinkWarningDialogFragment extends BaseDialogFragment implements OnClickListener {
 
     @Override
     public void onClick(final DialogInterface dialog, final int which) {

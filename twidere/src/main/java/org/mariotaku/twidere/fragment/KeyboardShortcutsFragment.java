@@ -127,7 +127,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
 
     }
 
-    public static class ResetKeyboardShortcutConfirmDialogFragment extends BaseSupportDialogFragment
+    public static class ResetKeyboardShortcutConfirmDialogFragment extends BaseDialogFragment
             implements OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {

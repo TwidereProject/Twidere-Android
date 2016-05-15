@@ -58,7 +58,7 @@ import java.util.regex.Pattern;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
-public class FileSelectorDialogFragment extends BaseSupportDialogFragment implements LoaderCallbacks<List<File>>,
+public class FileSelectorDialogFragment extends BaseDialogFragment implements LoaderCallbacks<List<File>>,
         OnClickListener, OnItemClickListener {
 
     private FilesAdapter mAdapter;

@@ -109,8 +109,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter;
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter;
-import org.mariotaku.twidere.fragment.BaseSupportDialogFragment;
-import org.mariotaku.twidere.fragment.SupportProgressDialogFragment;
+import org.mariotaku.twidere.fragment.BaseDialogFragment;
+import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftValuesCreator;
@@ -1549,7 +1549,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             if (!visible && f instanceof DialogFragment) {
                 ((DialogFragment) f).dismiss();
             } else if (visible) {
-                SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+                ProgressDialogFragment df = new ProgressDialogFragment();
                 df.show(fm, DISCARD_STATUS_DIALOG_FRAGMENT_TAG);
                 df.setCancelable(false);
             }
@@ -2055,7 +2055,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         }
     }
 
-    public static class RetweetProtectedStatusWarnFragment extends BaseSupportDialogFragment implements
+    public static class RetweetProtectedStatusWarnFragment extends BaseDialogFragment implements
             DialogInterface.OnClickListener {
 
         @Override

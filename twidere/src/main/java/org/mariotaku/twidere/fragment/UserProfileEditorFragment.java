@@ -423,7 +423,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             @Override
             public void execute(IBaseFragment fragment) {
                 final FragmentManager fm = getChildFragmentManager();
-                SupportProgressDialogFragment df = new SupportProgressDialogFragment();
+                ProgressDialogFragment df = new ProgressDialogFragment();
                 df.show(fm, UPDATE_PROFILE_DIALOG_FRAGMENT_TAG);
                 df.setCancelable(false);
             }
@@ -552,7 +552,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             mFragment.executeAfterFragmentResumed(new Action() {
                 @Override
                 public void execute(IBaseFragment fragment) {
-                    final DialogFragment df = SupportProgressDialogFragment.show(mFragment.getActivity(), DIALOG_FRAGMENT_TAG);
+                    final DialogFragment df = ProgressDialogFragment.show(mFragment.getActivity(), DIALOG_FRAGMENT_TAG);
                     df.setCancelable(false);
                 }
             });

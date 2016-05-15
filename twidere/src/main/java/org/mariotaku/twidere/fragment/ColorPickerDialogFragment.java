@@ -33,7 +33,7 @@ import org.mariotaku.twidere.fragment.iface.IDialogFragmentCallback;
 
 import me.uucky.colorpicker.ColorPickerDialog;
 
-public final class ColorPickerDialogFragment extends BaseSupportDialogFragment implements
+public final class ColorPickerDialogFragment extends BaseDialogFragment implements
         DialogInterface.OnClickListener {
 
     private ColorPickerDialog.Controller mController;
