@@ -28,8 +28,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 195
-        versionName "3.1.6.2"
+        versionCode 196
+        versionName "3.1.7"
         multiDexEnabled true
 
         generatedDensities = []
