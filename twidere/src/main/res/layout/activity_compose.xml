@@ -72,7 +72,7 @@
                     android:singleLine="false"
                     tools:minLines="@integer/media_compose_min_lines"/>
 
-                <android.support.v7.widget.RecyclerView
+                <org.mariotaku.twidere.view.ExtendedRecyclerView
                     android:id="@+id/attached_media_preview"
                     android:layout_width="match_parent"
                     android:layout_height="128dp"

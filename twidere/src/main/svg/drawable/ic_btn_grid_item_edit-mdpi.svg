@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_btn_grid_item_edit-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Miscellaneous" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_btn_grid_item_edit-mdpi">
+            <rect id="Rectangle-3" fill-opacity="0.8" fill="#000000" x="1" y="2" width="16" height="14" rx="2"></rect>
+            <path d="M4,11.916956 L4,14 L6.08304402,14 L12.2266352,7.85640883 L10.1435912,5.77336481 L4,11.916956 L4,11.916956 Z M13.8375226,6.24552146 C14.0541591,6.02888488 14.0541591,5.67893348 13.8375226,5.4622969 L12.5377031,4.16247743 C12.3210665,3.94584086 11.9711151,3.94584086 11.7544785,4.16247743 L10.7379531,5.17900292 L12.8209971,7.26204694 L13.8375226,6.24552146 L13.8375226,6.24552146 Z" id="Shape" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

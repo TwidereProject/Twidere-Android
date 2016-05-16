@@ -152,7 +152,7 @@ public class ExtendedRecyclerView extends RecyclerView {
         }
         final int position = getChildLayoutPosition(originalView);
         if (position == RecyclerView.NO_POSITION) return false;
-        mContextMenuInfo = new ContextMenuInfo(position);
+        mContextMenuInfo = new ContextMenuInfo(getId(), position);
         return super.showContextMenuForChild(originalView);
     }
 
@@ -175,10 +175,16 @@ public class ExtendedRecyclerView extends RecyclerView {
     }
 
     public static class ContextMenuInfo implements ContextMenu.ContextMenuInfo {
+        private final int recyclerViewId;
         private final int position;
 
-        public ContextMenuInfo(int position) {
+        public ContextMenuInfo(int recyclerViewId, int position) {
+            this.recyclerViewId = recyclerViewId;
             this.position = position;
+        }
+
+        public int getRecyclerViewId() {
+            return recyclerViewId;
         }
 
         public int getPosition() {

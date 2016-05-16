@@ -56,4 +56,28 @@
             android:scaleType="center"
             android:src="@drawable/ic_btn_grid_item_remove"/>
     </com.lnikkila.extendedtouchview.ExtendedTouchView>
+
+    <com.lnikkila.extendedtouchview.ExtendedTouchView
+        android:id="@+id/edit"
+        style="?borderlessButtonStyle"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="@dimen/element_spacing_minus_mlarge"
+        android:layout_marginEnd="@dimen/element_spacing_minus_mlarge"
+        android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/edit"
+        app:touchHeight="@dimen/element_size_normal"
+        app:touchWidth="@dimen/element_size_normal">
+
+        <ImageView
+            android:layout_width="@dimen/element_size_small"
+            android:layout_height="@dimen/element_size_small"
+            android:layout_gravity="center"
+            android:contentDescription="@string/edit"
+            android:scaleType="center"
+            android:src="@drawable/ic_btn_grid_item_edit"/>
+    </com.lnikkila.extendedtouchview.ExtendedTouchView>
 </org.mariotaku.twidere.view.SquareFrameLayout>

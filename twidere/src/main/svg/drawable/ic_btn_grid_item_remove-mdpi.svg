@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 3.6 (26304) - http://www.bohemiancoding.com/sketch -->
-    <title>ic_btn_grid_item_remove</title>
+    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_btn_grid_item_remove-mdpi</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Miscellaneous" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="ic_btn_grid_item_remove">
-            <circle id="Oval-2" fill="#FFFFFF" cx="9" cy="9" r="8"></circle>
-            <path d="M8.07106781,8.07106781 L4.07106781,8.07106781 L4.07106781,10.0710678 L8.07106781,10.0710678 L8.07106781,14.0710678 L10.0710678,14.0710678 L10.0710678,10.0710678 L14.0710678,10.0710678 L14.0710678,8.07106781 L10.0710678,8.07106781 L10.0710678,4.07106781 L8.07106781,4.07106781 L8.07106781,8.07106781 Z" id="Combined-Shape" fill="#000000" transform="translate(9.071068, 9.071068) rotate(-315.000000) translate(-9.071068, -9.071068) "></path>
+        <g id="ic_btn_grid_item_remove-mdpi">
+            <circle id="Oval-5" fill-opacity="0.8" fill="#000000" cx="9" cy="9" r="8"></circle>
+            <path d="M8.07106781,8.07106781 L4.07106781,8.07106781 L4.07106781,10.0710678 L8.07106781,10.0710678 L8.07106781,14.0710678 L10.0710678,14.0710678 L10.0710678,10.0710678 L14.0710678,10.0710678 L14.0710678,8.07106781 L10.0710678,8.07106781 L10.0710678,4.07106781 L8.07106781,4.07106781 L8.07106781,8.07106781 Z" id="Combined-Shape" fill="#FFFFFF" transform="translate(9.071068, 9.071068) rotate(-315.000000) translate(-9.071068, -9.071068) "></path>
         </g>
     </g>
 </svg>

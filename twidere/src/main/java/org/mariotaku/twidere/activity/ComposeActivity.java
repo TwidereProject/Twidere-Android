@@ -75,6 +75,7 @@ import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -86,6 +87,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +95,8 @@ import android.widget.Toast;
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
 import com.afollestad.appthemeengine.util.ATEUtil;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperToast.Duration;
 import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
@@ -154,6 +158,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.view.BadgeView;
 import org.mariotaku.twidere.view.CheckableLinearLayout;
 import org.mariotaku.twidere.view.ComposeEditText;
+import org.mariotaku.twidere.view.ExtendedRecyclerView;
 import org.mariotaku.twidere.view.IconActionView;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.StatusTextCountView;
@@ -715,6 +720,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mAttachedMediaPreview.setLayoutManager(layoutManager);
         mAttachedMediaPreview.setAdapter(mMediaPreviewAdapter);
+        registerForContextMenu(mAttachedMediaPreview);
         mItemTouchHelper.attachToRecyclerView(mAttachedMediaPreview);
         final int previewGridSpacing = getResources().getDimensionPixelSize(R.dimen.element_spacing_small);
         mAttachedMediaPreview.addItemDecoration(new PreviewGridItemDecoration(previewGridSpacing));
@@ -797,6 +803,37 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         return super.dispatchKeyEvent(event);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v == mAttachedMediaPreview) {
+            menu.setHeaderTitle(R.string.edit_media);
+            getMenuInflater().inflate(R.menu.menu_attached_media_edit, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
+        if (menuInfo instanceof ExtendedRecyclerView.ContextMenuInfo) {
+            final ExtendedRecyclerView.ContextMenuInfo itemMenuInfo =
+                    (ExtendedRecyclerView.ContextMenuInfo) menuInfo;
+            switch (itemMenuInfo.getRecyclerViewId()) {
+                case R.id.attached_media_preview: {
+                    final int position = itemMenuInfo.getPosition();
+                    final ParcelableMediaUpdate mediaUpdate = mMediaPreviewAdapter.getItem(position);
+                    Bundle args = new Bundle();
+                    args.putString(EXTRA_TEXT, mediaUpdate.alt_text);
+                    args.putInt(EXTRA_POSITION, position);
+                    EditAltTextDialogFragment df = new EditAltTextDialogFragment();
+                    df.setArguments(args);
+                    df.show(getSupportFragmentManager(), "edit_alt_text");
+                    return true;
+                }
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
+
     private void setupEditText() {
         final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
         EditTextEnterHandler.attach(mEditText, new ComposeEnterListener(this), sendByEnter);
@@ -847,11 +884,6 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             }
         });
         mEditText.setCustomSelectionActionModeCallback(this);
-    }
-
-    @Override
-    protected void onTitleChanged(final CharSequence title, final int color) {
-        super.onTitleChanged(title, color);
     }
 
     @Override
@@ -1150,7 +1182,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     }
 
     private boolean handleReplyIntent(final ParcelableStatus status) {
-        if (status == null || status.id == null) return false;
+        if (status == null) return false;
         final ParcelableAccount account = ParcelableAccountUtils.getAccount(this, status.account_key);
         if (account == null) return false;
         int selectionStart = 0;
@@ -1945,6 +1977,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     static class MediaPreviewAdapter extends ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>
             implements SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
 
+        final ComposeActivity mActivity;
         final LayoutInflater mInflater;
 
         final SimpleItemTouchHelperCallback.OnStartDragListener mDragStartListener;
@@ -1952,6 +1985,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         public MediaPreviewAdapter(final ComposeActivity activity, SimpleItemTouchHelperCallback.OnStartDragListener listener) {
             super(activity);
             setHasStableIds(true);
+            mActivity = activity;
             mInflater = LayoutInflater.from(activity);
             mDragStartListener = listener;
         }
@@ -2013,31 +2047,41 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             notifyItemMoved(fromPosition, toPosition);
             return true;
         }
+
+        public void setAltText(int position, String altText) {
+            mData.get(position).alt_text = altText;
+            notifyDataSetChanged();
+        }
     }
 
     static class MediaPreviewViewHolder extends ViewHolder implements OnLongClickListener, OnClickListener {
 
-        final ImageView image;
-        final View remove;
+        final ImageView imageView;
+        final View removeView;
+        final View editView;
         MediaPreviewAdapter adapter;
 
         public MediaPreviewViewHolder(View itemView) {
             super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.image);
+            removeView = itemView.findViewById(R.id.remove);
+            editView = itemView.findViewById(R.id.edit);
+
             itemView.setOnLongClickListener(this);
-            image = (ImageView) itemView.findViewById(R.id.image);
-            remove = itemView.findViewById(R.id.remove);
-            remove.setOnClickListener(this);
+            itemView.setOnClickListener(this);
+            removeView.setOnClickListener(this);
+            editView.setOnClickListener(this);
         }
 
         public void displayMedia(MediaPreviewAdapter adapter, ParcelableMediaUpdate media) {
-            adapter.getMediaLoader().displayPreviewImage(media.uri, image);
+            adapter.getMediaLoader().displayPreviewImage(media.uri, imageView);
         }
 
         @Override
         public boolean onLongClick(View v) {
             if (adapter == null) return false;
             adapter.onStartDrag(this);
-            return true;
+            return false;
         }
 
         public void setAdapter(final MediaPreviewAdapter adapter) {
@@ -2050,9 +2094,54 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             switch (v.getId()) {
                 case R.id.remove: {
                     adapter.remove(getLayoutPosition());
+                    break;
+                }
+                case R.id.edit: {
+                    itemView.getParent().showContextMenuForChild(itemView);
+                    break;
                 }
             }
         }
+    }
+
+    public static class EditAltTextDialogFragment extends BaseDialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
+            builder.title(R.string.edit_description);
+            builder.customView(R.layout.dialog_compose_edit_alt_text, true);
+            builder.negativeText(android.R.string.cancel);
+            builder.positiveText(android.R.string.ok);
+            builder.neutralText(R.string.clear);
+            builder.onNeutral(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    ((ComposeActivity) getActivity()).setMediaAltText(getArguments().getInt(EXTRA_POSITION), null);
+                }
+            });
+            builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    final EditText editText = (EditText) dialog.findViewById(R.id.edit_text);
+                    ((ComposeActivity) getActivity()).setMediaAltText(getArguments().getInt(EXTRA_POSITION),
+                            ParseUtils.parseString(editText.getText()));
+                }
+            });
+            builder.showListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialog) {
+                    MaterialDialog materialDialog = ((MaterialDialog) dialog);
+                    final EditText editText = (EditText) materialDialog.findViewById(R.id.edit_text);
+                    editText.setText(getArguments().getString(EXTRA_TEXT));
+                }
+            });
+            return builder.build();
+        }
+    }
+
+    private void setMediaAltText(int position, String altText) {
+        mMediaPreviewAdapter.setAltText(position, altText);
     }
 
     public static class RetweetProtectedStatusWarnFragment extends BaseDialogFragment implements
