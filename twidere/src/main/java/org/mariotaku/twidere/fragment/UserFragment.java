@@ -88,6 +88,10 @@ import com.squareup.otto.Subscribe;
 import org.apache.commons.lang3.ObjectUtils;
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.abstask.library.TaskStarter;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate;
+import org.mariotaku.microblog.library.twitter.model.Relationship;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.AccountSelectorActivity;
@@ -96,10 +100,6 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.LinkHandlerActivity;
 import org.mariotaku.twidere.activity.UserListSelectorActivity;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
-import org.mariotaku.microblog.library.MicroBlog;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate;
-import org.mariotaku.microblog.library.twitter.model.Relationship;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment;
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface;
@@ -110,6 +110,7 @@ import org.mariotaku.twidere.loader.ParcelableUserLoader;
 import org.mariotaku.twidere.model.CachedRelationship;
 import org.mariotaku.twidere.model.CachedRelationshipValuesCreator;
 import org.mariotaku.twidere.model.ConsumerKeyType;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -122,6 +123,7 @@ import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
@@ -139,11 +141,11 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.TwidereMathUtils;
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.UserColorNameManager.UserColorChangedListener;
 import org.mariotaku.twidere.util.UserColorNameManager.UserNicknameChangedListener;
@@ -223,6 +225,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     // Data fields
     private ParcelableUser mUser;
+    private ParcelableAccount mAccount;
     private UserRelationship mRelationship;
     private Locale mLocale;
     private boolean mGetUserInfoLoaderInitialized, mGetFriendShipLoaderInitialized;
@@ -307,7 +310,8 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mCardContent.setVisibility(View.VISIBLE);
                 mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
-                displayUser(user);
+                ParcelableAccount account = data.getExtras().getParcelable(EXTRA_ACCOUNT);
+                displayUser(user, account);
                 if (user.is_cache) {
                     final Bundle args = new Bundle();
                     args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key);
@@ -321,7 +325,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mCardContent.setVisibility(View.VISIBLE);
                 mHeaderErrorContainer.setVisibility(View.GONE);
                 mProgressContainer.setVisibility(View.GONE);
-                displayUser(mUser);
+                displayUser(mUser, mAccount);
                 updateOptionsMenuVisibility();
             } else {
                 if (data.hasException()) {
@@ -331,7 +335,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 mCardContent.setVisibility(View.GONE);
                 mHeaderErrorContainer.setVisibility(View.VISIBLE);
                 mProgressContainer.setVisibility(View.GONE);
-                displayUser(null);
+                displayUser(null, null);
                 updateOptionsMenuVisibility();
             }
         }
@@ -516,10 +520,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     }
 
     @UiThread
-    public void displayUser(final ParcelableUser user) {
+    public void displayUser(final ParcelableUser user, ParcelableAccount account) {
         final FragmentActivity activity = getActivity();
         if (activity == null) return;
         mUser = user;
+        mAccount = account;
         if (user == null || user.key == null) {
             mProfileImageView.setVisibility(View.GONE);
             mProfileTypeView.setVisibility(View.GONE);
@@ -676,8 +681,9 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Subscribe
     public void notifyProfileUpdated(ProfileUpdatedEvent event) {
         final ParcelableUser user = getUser();
+        // TODO check account status
         if (user == null || !user.equals(event.user)) return;
-        displayUser(event.user);
+        displayUser(event.user, mAccount);
     }
 
     @Subscribe
@@ -910,6 +916,12 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         MenuUtils.setMenuItemAvailability(menu, R.id.mute_user, !isMyself);
         MenuUtils.setMenuItemAvailability(menu, R.id.report_spam, !isMyself);
         MenuUtils.setMenuItemAvailability(menu, R.id.enable_retweets, !isMyself);
+        if (mAccount != null) {
+            MenuUtils.setMenuItemAvailability(menu, R.id.add_to_list, TextUtils.equals(ParcelableAccount.Type.TWITTER,
+                    ParcelableAccountUtils.getAccountType(mAccount)));
+        } else {
+            MenuUtils.setMenuItemAvailability(menu, R.id.add_to_list, false);
+        }
 
         final UserRelationship userRelationship = mRelationship;
         if (userRelationship != null) {
@@ -1396,13 +1408,13 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     @Override
     public void onUserNicknameChanged(@NonNull UserKey userId, String nick) {
         if (mUser == null || !mUser.key.equals(userId)) return;
-        displayUser(mUser);
+        displayUser(mUser, mAccount);
     }
 
     @Override
     public void onUserColorChanged(@NonNull UserKey userId, int color) {
         if (mUser == null || !mUser.key.equals(userId)) return;
-        displayUser(mUser);
+        displayUser(mUser, mAccount);
     }
 
     @Override
