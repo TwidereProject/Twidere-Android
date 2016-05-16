@@ -657,7 +657,7 @@
   <string name="server_address">Adresse du serveur</string>
   <string name="security_key">Clé de sécurité</string>
   <string name="hide_card_actions">Cacher les actions de carte</string>
-  <string name="drafts_hint_messages">Vos tweets non-lus sont sauvés ici</string>
+  <string name="drafts_hint_messages">Vos tweets non-envoyés sont sauvés ici</string>
   <string name="keyboard_shortcuts">Raccourcis clavier</string>
   <string name="keyboard_shortcut_hint">Pressez les touches</string>
   <string name="conflicts_with_name">En conflit avec <xliff:g id="name">%s</xliff:g></string>
