@@ -143,7 +143,6 @@ dependencies {
     compile 'com.commonsware.cwac:layouts:0.4.2'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.pnikosis:materialish-progress:1.7'
-    compile 'com.github.johnpersano:supertoasts:1.3.4.1@aar'
     compile 'com.github.mariotaku:MessageBubbleView:1.2'
     compile 'com.github.mariotaku:DragSortListView:0.6.1'
     compile 'com.github.uucky:ColorPicker-Android:0.9.7@aar'

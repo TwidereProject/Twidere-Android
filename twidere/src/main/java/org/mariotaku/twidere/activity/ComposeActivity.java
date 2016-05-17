@@ -97,9 +97,6 @@ import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
 import com.afollestad.appthemeengine.util.ATEUtil;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.github.johnpersano.supertoasts.SuperToast.Duration;
-import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
 import com.twitter.Extractor;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -208,6 +205,13 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     private AsyncTask<Object, Object, ?> mTask;
     private SupportMenuInflater mMenuInflater;
     private ItemTouchHelper mItemTouchHelper;
+
+    private final Runnable mBackTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mNavigateBackPressed = false;
+        }
+    };
 
     // Views
     private RecyclerView mAttachedMediaPreview;
@@ -892,14 +896,9 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         if (ACTION_NAVIGATION_BACK.equals(action)) {
             if (mEditText.length() == 0 && !mTextChanged) {
                 if (!mNavigateBackPressed) {
-                    final SuperToast toast = SuperToast.create(this, getString(R.string.press_again_to_close), Duration.SHORT);
-                    toast.setOnDismissListener(new OnDismissListener() {
-                        @Override
-                        public void onDismiss(View view) {
-                            mNavigateBackPressed = false;
-                        }
-                    });
-                    toast.show();
+                    Toast.makeText(this, getString(R.string.press_again_to_close), Toast.LENGTH_SHORT).show();
+                    mEditText.removeCallbacks(mBackTimeoutRunnable);
+                    mEditText.postDelayed(mBackTimeoutRunnable, 2000);
                 } else {
                     onBackPressed();
                 }
