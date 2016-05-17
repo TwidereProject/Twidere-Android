@@ -65,7 +65,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
  
      fdroidCompile 'org.osmdroid:osmdroid-android:5.1'
-@@ -204,5 +204,5 @@
+@@ -203,5 +203,5 @@
  }
  
  // START Non-FOSS component
