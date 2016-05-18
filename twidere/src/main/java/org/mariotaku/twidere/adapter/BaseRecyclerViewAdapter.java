@@ -97,4 +97,11 @@ public abstract class BaseRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     public final BidiFormatter getBidiFormatter() {
         return mBidiFormatter;
     }
+
+    public int findPositionByItemId(long itemId) {
+        for (int i = 0, j = getItemCount(); i < j; i++) {
+            if (getItemId(i) == itemId) return i;
+        }
+        return RecyclerView.NO_POSITION;
+    }
 }

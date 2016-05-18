@@ -81,7 +81,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private boolean mShowInReplyTo;
     private boolean mShowAccountsColor;
     private List<ParcelableStatus> mData;
-    private int mShowingActionCardPosition = RecyclerView.NO_POSITION;
+    private long mShowingActionCardId = RecyclerView.NO_ID;
     private boolean mLastItemFiltered;
 
     public ParcelableStatusesAdapter(Context context, boolean compact) {
@@ -302,15 +302,19 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     @Override
     public boolean isCardActionsShown(int position) {
         if (position == RecyclerView.NO_POSITION) return mShowCardActions;
-        return mShowCardActions || mShowingActionCardPosition == position;
+        return mShowCardActions || mShowingActionCardId == getItemId(position);
     }
 
     @Override
     public void showCardActions(int position) {
-        if (mShowingActionCardPosition != RecyclerView.NO_POSITION) {
-            notifyItemChanged(mShowingActionCardPosition);
+        if (mShowingActionCardId != RecyclerView.NO_ID) {
+            final int pos = findPositionByItemId(mShowingActionCardId);
+            if (pos != RecyclerView.NO_POSITION) {
+                notifyItemChanged(pos);
+            }
+
         }
-        mShowingActionCardPosition = position;
+        mShowingActionCardId = getItemId(position);
         if (position != RecyclerView.NO_POSITION) {
             notifyItemChanged(position);
         }
