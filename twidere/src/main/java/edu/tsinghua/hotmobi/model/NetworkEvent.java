@@ -42,7 +42,7 @@ public class NetworkEvent extends BaseEvent implements Parcelable {
     @ParcelableThisPlease
     int networkType;
 
-    public static NetworkEvent create(Context context) {
+    public static NetworkEvent create(@NonNull Context context) {
         final NetworkEvent event = new NetworkEvent();
         event.markStart(context);
         event.setNetworkType(getActivateNetworkType(context));

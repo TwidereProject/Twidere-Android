@@ -85,6 +85,11 @@ import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.TranslationResult;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
@@ -93,11 +98,6 @@ import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
-import org.mariotaku.microblog.library.MicroBlog;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.Paging;
-import org.mariotaku.microblog.library.twitter.model.Status;
-import org.mariotaku.microblog.library.twitter.model.TranslationResult;
 import org.mariotaku.twidere.loader.ConversationLoader;
 import org.mariotaku.twidere.loader.ParcelableStatusLoader;
 import org.mariotaku.twidere.menu.FavoriteItemProvider;
@@ -140,6 +140,7 @@ import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.MenuUtils;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.MultiSelectManager;
 import org.mariotaku.twidere.util.Nullables;
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper;
@@ -152,7 +153,6 @@ import org.mariotaku.twidere.util.StatusLinkClickHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwidereMathUtils;
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
@@ -546,6 +546,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     @Override
     public void onLoadFinished(final Loader<SingleResponse<ParcelableStatus>> loader,
                                final SingleResponse<ParcelableStatus> data) {
+        final FragmentActivity activity = getActivity();
+        if (activity == null) return;
         if (data.hasData()) {
             final ReadPosition readPosition = saveReadPosition();
             final ParcelableStatus status = data.getData();
@@ -566,7 +568,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     mLayoutManager.scrollToPositionWithOffset(position, 0);
                 }
 
-                final TweetEvent event = TweetEvent.create(getActivity(), status, TimelineType.OTHER);
+                final TweetEvent event = TweetEvent.create(activity, status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.OPEN);
                 mStatusEvent = event;
             } else if (readPosition != null) {

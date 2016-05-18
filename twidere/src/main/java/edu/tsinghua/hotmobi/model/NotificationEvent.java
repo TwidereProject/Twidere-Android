@@ -75,7 +75,7 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
     public NotificationEvent() {
     }
 
-    public static NotificationEvent create(Context context, @Action String action, long postTime,
+    public static NotificationEvent create(@NonNull  Context context, @Action String action, long postTime,
                                            long respondTime, String type, String accountId, long itemId,
                                            long itemUserId, boolean itemUserFollowing) {
         final NotificationEvent event = new NotificationEvent();
@@ -93,14 +93,14 @@ public class NotificationEvent extends BaseEvent implements Parcelable {
         return event;
     }
 
-    public static NotificationEvent deleted(Context context, long postTime, String type,
+    public static NotificationEvent deleted(@NonNull  Context context, long postTime, String type,
                                             UserKey accountKey, long itemId, long itemUserId,
                                             boolean itemUserFollowing) {
         return create(context, Action.DELETE, System.currentTimeMillis(), postTime, type, accountKey.getId(),
                 itemId, itemUserId, itemUserFollowing);
     }
 
-    public static NotificationEvent open(Context context, long postTime, String type, String accountId,
+    public static NotificationEvent open(@NonNull  Context context, long postTime, String type, String accountId,
                                          long itemId, long itemUserId, boolean itemUserFollowing) {
         return create(context, Action.OPEN, System.currentTimeMillis(), postTime, type, accountId,
                 itemId, itemUserId, itemUserFollowing);

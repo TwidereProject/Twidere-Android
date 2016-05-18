@@ -49,7 +49,7 @@ public class LinkEvent extends BaseEvent implements Parcelable {
 
     }
 
-    public static LinkEvent create(Context context, String link, int typeInt) {
+    public static LinkEvent create(@NonNull Context context, String link, int typeInt) {
         final LinkEvent event = new LinkEvent();
         event.markStart(context);
         event.setLink(link);

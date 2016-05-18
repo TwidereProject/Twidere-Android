@@ -88,7 +88,7 @@ public class MediaDownloadEvent extends BaseEvent implements Parcelable {
                 "} " + super.toString();
     }
 
-    public static MediaDownloadEvent create(Context context, ParcelableMedia media, long nonce) {
+    public static MediaDownloadEvent create(@NonNull Context context, ParcelableMedia media, long nonce) {
         final MediaDownloadEvent event = new MediaDownloadEvent();
         event.markStart(context);
         event.setMedia(media);
