@@ -20,13 +20,13 @@
 package org.mariotaku.microblog.library.twitter;
 
 
+import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Extra;
 import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.auth.OAuthToken;
+import org.mariotaku.restfu.oauth.OAuthToken;
 
 /**
  * Created by mariotaku on 15/2/4.

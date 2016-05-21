@@ -64,6 +64,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
+import org.mariotaku.restfu.oauth.OAuthAuthorization;
+import org.mariotaku.restfu.oauth.OAuthToken;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
@@ -74,8 +76,6 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.TwitterOAuth;
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.OAuthAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.OAuthToken;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
