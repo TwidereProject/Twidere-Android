@@ -54,7 +54,9 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
         final ParcelableUsersAdapter adapter = super.onCreateAdapter(context, compact);
         final Bundle args = getArguments();
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
-        if (accountKey != null && USER_TYPE_FANFOU_COM.equals(accountKey.getHost()) &&
+        if (accountKey == null) {
+            adapter.setRequestClickListener(null);
+        } else if (USER_TYPE_FANFOU_COM.equals(accountKey.getHost()) ||
                 Utils.isOfficialCredentials(context, accountKey)) {
             adapter.setRequestClickListener(this);
         } else {

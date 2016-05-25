@@ -103,8 +103,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.abstask.library.TaskStarter;
+import org.mariotaku.commons.io.StreamUtils;
 import org.mariotaku.multivalueswitch.library.MultiValueSwitch;
-import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
@@ -584,7 +584,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         final Draft draft = new Draft();
 
         draft.action_type = getDraftAction(getIntent().getAction());
-        draft.account_ids = mAccountsAdapter.getSelectedAccountKeys();
+        draft.account_keys = mAccountsAdapter.getSelectedAccountKeys();
         draft.text = text;
         final UpdateStatusActionExtra extra = new UpdateStatusActionExtra();
         extra.setInReplyToStatus(mInReplyToStatus);
@@ -1028,7 +1028,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         mEditText.setText(draft.text);
         final int selectionEnd = mEditText.length();
         mEditText.setSelection(selectionEnd);
-        mAccountsAdapter.setSelectedAccountIds(draft.account_ids);
+        mAccountsAdapter.setSelectedAccountIds(draft.account_keys);
         if (draft.media != null) {
             addMedia(Arrays.asList(draft.media));
         }
@@ -1517,7 +1517,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     private void updateTextCount() {
         if (mSendTextCountView == null || mEditText == null) return;
         final String textOrig = ParseUtils.parseString(mEditText.getText());
-        final String text = hasMedia() && textOrig != null ? mImageUploaderUsed ? Utils.getImageUploadStatus(this,
+        final String text = hasMedia() && textOrig != null ? mImageUploaderUsed ? Utils.getMediaUploadStatus(this,
                 new String[]{FAKE_IMAGE_LINK}, textOrig) : textOrig + " " + FAKE_IMAGE_LINK : textOrig;
         final int validatedCount = text != null ? mValidator.getTweetLength(text) : 0;
         mSendTextCountView.setTextCount(validatedCount);
@@ -1759,7 +1759,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
                     is = resolver.openInputStream(source);
                     os = resolver.openOutputStream(destination);
                     if (is == null || os == null) throw new FileNotFoundException();
-                    RestFuUtils.copyStream(is, os);
+                    StreamUtils.copy(is, os, null, null);
                     if (ContentResolver.SCHEME_FILE.equals(source.getScheme()) && mDeleteSrc) {
                         final File file = new File(source.getPath());
                         if (!file.delete()) {

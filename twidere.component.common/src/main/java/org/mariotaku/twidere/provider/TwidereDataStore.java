@@ -571,9 +571,7 @@ public interface TwidereDataStore {
          * Account IDs of unsent status.<br>
          * Type: TEXT
          */
-        String ACCOUNT_IDS = "account_ids";
-
-        String ACCOUNT_KEYS = "account_keys";
+        String ACCOUNT_KEYS = "account_ids";
 
         String LOCATION = "location";
 
@@ -589,7 +587,7 @@ public interface TwidereDataStore {
 
         String ACTION_EXTRAS = "action_extras";
 
-        String[] COLUMNS = {_ID, TEXT, ACCOUNT_IDS, LOCATION, MEDIA,
+        String[] COLUMNS = {_ID, TEXT, ACCOUNT_KEYS, LOCATION, MEDIA,
                 IN_REPLY_TO_STATUS_ID, IS_POSSIBLY_SENSITIVE, TIMESTAMP, ACTION_TYPE, ACTION_EXTRAS};
 
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,

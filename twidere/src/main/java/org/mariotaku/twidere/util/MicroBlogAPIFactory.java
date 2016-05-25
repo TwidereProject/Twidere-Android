@@ -102,50 +102,50 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         if (context == null) return null;
         final UserKey accountKey = Utils.getDefaultAccountKey(context);
         if (accountKey == null) return null;
-        return getTwitterInstance(context, accountKey, includeEntities, includeRetweets);
+        return getInstance(context, accountKey, includeEntities, includeRetweets);
     }
 
     @WorkerThread
-    public static MicroBlog getTwitterInstance(@NonNull final Context context,
-                                               @NonNull final UserKey accountKey,
-                                               final boolean includeEntities) {
-        return getTwitterInstance(context, accountKey, includeEntities, true);
+    public static MicroBlog getInstance(@NonNull final Context context,
+                                        @NonNull final UserKey accountKey,
+                                        final boolean includeEntities) {
+        return getInstance(context, accountKey, includeEntities, true);
     }
 
     @Nullable
     @WorkerThread
-    public static MicroBlog getTwitterInstance(@NonNull final Context context,
-                                               @NonNull final UserKey accountKey,
-                                               final boolean includeEntities,
-                                               final boolean includeRetweets) {
-        return getTwitterInstance(context, accountKey, includeEntities, includeRetweets, MicroBlog.class);
+    public static MicroBlog getInstance(@NonNull final Context context,
+                                        @NonNull final UserKey accountKey,
+                                        final boolean includeEntities,
+                                        final boolean includeRetweets) {
+        return getInstance(context, accountKey, includeEntities, includeRetweets, MicroBlog.class);
     }
 
     @Nullable
-    public static MicroBlog getTwitterInstance(@NonNull final Context context,
-                                               @NonNull final ParcelableCredentials credentials,
-                                               final boolean includeEntities, final boolean includeRetweets) {
-        return getTwitterInstance(context, credentials, includeEntities, includeRetweets, MicroBlog.class);
+    public static MicroBlog getInstance(@NonNull final Context context,
+                                        @NonNull final ParcelableCredentials credentials,
+                                        final boolean includeEntities, final boolean includeRetweets) {
+        return getInstance(context, credentials, includeEntities, includeRetweets, MicroBlog.class);
     }
 
 
     @Nullable
     @WorkerThread
-    public static <T> T getTwitterInstance(@NonNull final Context context,
-                                           @NonNull final UserKey accountKey,
-                                           final boolean includeEntities,
-                                           final boolean includeRetweets,
-                                           @NonNull Class<T> cls) {
+    public static <T> T getInstance(@NonNull final Context context,
+                                    @NonNull final UserKey accountKey,
+                                    final boolean includeEntities,
+                                    final boolean includeRetweets,
+                                    @NonNull Class<T> cls) {
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context, accountKey);
         if (credentials == null) return null;
-        return getTwitterInstance(context, credentials, includeEntities, includeRetweets, cls);
+        return getInstance(context, credentials, includeEntities, includeRetweets, cls);
     }
 
     @Nullable
-    public static <T> T getTwitterInstance(@NonNull final Context context,
-                                           @NonNull final ParcelableCredentials credentials,
-                                           final boolean includeEntities, final boolean includeRetweets,
-                                           @NonNull Class<T> cls) {
+    public static <T> T getInstance(@NonNull final Context context,
+                                    @NonNull final ParcelableCredentials credentials,
+                                    final boolean includeEntities, final boolean includeRetweets,
+                                    @NonNull Class<T> cls) {
         final HashMap<String, String> extraParams = new HashMap<>();
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
             case ParcelableAccount.Type.FANFOU: {

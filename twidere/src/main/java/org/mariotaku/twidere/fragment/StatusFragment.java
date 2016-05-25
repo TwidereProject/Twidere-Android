@@ -871,7 +871,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         protected SingleResponse<TranslationResult> doInBackground(ParcelableStatus... params) {
             final ParcelableStatus status = params[0];
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, status.account_key,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, status.account_key,
                     true);
             final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                     Context.MODE_PRIVATE);
@@ -2481,7 +2481,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             if (credentials == null || !ParcelableAccount.Type.TWITTER.equals(ParcelableAccountUtils.getAccountType(credentials))) {
                 return null;
             }
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, mAccountKey, false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey, false);
             if (twitter == null) return null;
             final Paging paging = new Paging();
             paging.setCount(10);

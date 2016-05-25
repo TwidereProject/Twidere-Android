@@ -43,7 +43,7 @@ public class SavedSearchesLoader extends AsyncTaskLoader<ResponseList<SavedSearc
 
     @Override
     public ResponseList<SavedSearch> loadInBackground() {
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountId,
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(getContext(), mAccountId,
                 false);
         if (twitter == null) return null;
         try {

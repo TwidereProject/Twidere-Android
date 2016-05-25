@@ -16,7 +16,7 @@ public class ParcelableStatusUpdateUtils implements Constants {
 
     public static ParcelableStatusUpdate fromDraftItem(final Context context, final Draft draft) {
         ParcelableStatusUpdate statusUpdate = new ParcelableStatusUpdate();
-        statusUpdate.accounts = ParcelableAccountUtils.getAccounts(context, draft.account_ids);
+        statusUpdate.accounts = ParcelableAccountUtils.getAccounts(context, draft.account_keys);
         statusUpdate.text = draft.text;
         statusUpdate.location = draft.location;
         statusUpdate.media = draft.media;

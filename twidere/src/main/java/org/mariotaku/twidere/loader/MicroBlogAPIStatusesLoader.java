@@ -130,7 +130,7 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
             }
         }
         if (!isFromUser()) return ListResponse.getListInstance(data);
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, true,
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, true,
                 true);
         if (twitter == null) {
             return ListResponse.getListInstance(new MicroBlogException("No Account"));

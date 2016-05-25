@@ -925,7 +925,7 @@ public final class Utils implements Constants {
             throws MicroBlogException {
         final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
         if (cached != null) return cached;
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, accountKey, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey, true);
         if (twitter == null) throw new MicroBlogException("Account does not exist");
         final Status status = twitter.showStatus(statusId);
         final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
@@ -1284,7 +1284,7 @@ public final class Utils implements Constants {
         return null;
     }
 
-    public static String getImageUploadStatus(@NonNull final Context context,
+    public static String getMediaUploadStatus(@NonNull final Context context,
                                               @Nullable final CharSequence[] links,
                                               @Nullable final CharSequence text) {
         if (ArrayUtils.isEmpty(links) || text == null) return ParseUtils.parseString(text);

@@ -78,7 +78,7 @@ public abstract class BaseGroupsLoader extends AsyncTaskLoader<List<ParcelableGr
 
     @Override
     public List<ParcelableGroup> loadInBackground() {
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(getContext(), mAccountId, true);
         List<Group> listLoaded = null;
         try {
             listLoaded = getGroups(twitter);

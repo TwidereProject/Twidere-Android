@@ -40,30 +40,35 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.twitter.Extractor;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.abstask.library.ManualTaskStarter;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate;
+import org.mariotaku.microblog.library.twitter.TwitterUpload;
+import org.mariotaku.microblog.library.twitter.model.DirectMessage;
+import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
+import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse;
+import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse.ProcessingInfo;
+import org.mariotaku.microblog.library.twitter.model.NewMediaMetadata;
+import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.StatusUpdate;
 import org.mariotaku.restfu.http.ContentType;
+import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.restfu.http.mime.FileBody;
+import org.mariotaku.restfu.http.mime.SimpleBody;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MainActivity;
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
-import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate;
-import org.mariotaku.microblog.library.MicroBlog;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.TwitterUpload;
-import org.mariotaku.microblog.library.twitter.model.DirectMessage;
-import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
-import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse;
-import org.mariotaku.microblog.library.twitter.model.NewMediaMetadata;
-import org.mariotaku.microblog.library.twitter.model.Status;
-import org.mariotaku.microblog.library.twitter.model.StatusUpdate;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftCursorIndices;
@@ -92,17 +97,18 @@ import org.mariotaku.twidere.preference.ServicePickerPreference;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask;
 import org.mariotaku.twidere.util.AbsServiceInterface;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.MediaUploaderInterface;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.StatusShortenerInterface;
 import org.mariotaku.twidere.util.TwidereListUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream;
@@ -116,6 +122,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -125,7 +132,6 @@ import edu.tsinghua.hotmobi.model.TweetEvent;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;
 import static org.mariotaku.twidere.util.Utils.getImagePathFromUri;
-import static org.mariotaku.twidere.util.Utils.getImageUploadStatus;
 
 public class BackgroundOperationService extends IntentService implements Constants {
 
@@ -141,6 +147,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     TwidereValidator mValidator;
     @Inject
     Extractor mExtractor;
+    private static final long BULK_SIZE = 128 * 1024; // 128KiB
 
 
     public BackgroundOperationService() {
@@ -268,10 +275,10 @@ public class BackgroundOperationService extends IntentService implements Constan
                 if (item.action_extras instanceof SendDirectMessageActionExtra) {
                     recipientId = ((SendDirectMessageActionExtra) item.action_extras).getRecipientId();
                 }
-                if (ArrayUtils.isEmpty(item.account_ids) || recipientId == null) {
+                if (ArrayUtils.isEmpty(item.account_keys) || recipientId == null) {
                     return;
                 }
-                final UserKey accountKey = item.account_ids[0];
+                final UserKey accountKey = item.account_keys[0];
                 final String imageUri = ArrayUtils.isEmpty(item.media) ? null : item.media[0].uri;
                 sendMessage(accountKey, recipientId, item.text, imageUri);
                 break;
@@ -350,7 +357,32 @@ public class BackgroundOperationService extends IntentService implements Constan
             return;
         @Draft.Action
         final String actionType = intent.getStringExtra(EXTRA_ACTION);
-        updateStatuses(actionType, statuses);
+        for (ParcelableStatusUpdate item : statuses) {
+            UpdateStatusTask task = new UpdateStatusTask(this, new UpdateStatusTask.StateCallback() {
+
+                @Override
+                public void onStartUploadingMedia() {
+
+                }
+
+                @Override
+                public void onUploadingProgressChanged(int index, long current, long total) {
+
+                }
+
+                @Override
+                public void onShorteningStatus() {
+
+                }
+
+                @Override
+                public void onUpdatingStatus() {
+
+                }
+            });
+            task.setParams(Pair.create(actionType, item));
+            UpdateStatusTask.UpdateStatusResult result = ManualTaskStarter.invokeExecute(task);
+        }
     }
 
     private void updateStatuses(@Draft.Action final String actionType, final ParcelableStatusUpdate... statuses) {
@@ -360,7 +392,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             mNotificationManager.notify(NOTIFICATION_ID_UPDATE_STATUS,
                     updateUpdateStatusNotification(this, builder, 0, item));
             final Draft draft = new Draft();
-            draft.account_ids = ParcelableAccountUtils.getAccountKeys(item.accounts);
+            draft.account_keys = ParcelableAccountUtils.getAccountKeys(item.accounts);
             if (actionType != null) {
                 draft.action_type = actionType;
             } else {
@@ -409,12 +441,11 @@ public class BackgroundOperationService extends IntentService implements Constan
             } else if (failed) {
                 // If the status is a duplicate, there's no need to save it to
                 // drafts.
-                if (exception instanceof MicroBlogException
-                        && ((MicroBlogException) exception).getErrorCode() == ErrorInfo.STATUS_IS_DUPLICATE) {
+                if (isDuplicate(exception)) {
                     showErrorMessage(getString(R.string.status_is_duplicate), false);
                 } else {
                     final ContentValues accountIdsValues = new ContentValues();
-                    accountIdsValues.put(Drafts.ACCOUNT_IDS, TwidereListUtils.toString(failedAccountIds, ',', false));
+                    accountIdsValues.put(Drafts.ACCOUNT_KEYS, TwidereListUtils.toString(failedAccountIds, ',', false));
                     resolver.update(Drafts.CONTENT_URI, accountIdsValues, where.getSQL(), null);
                     showErrorMessage(R.string.action_updating_status, exception, true);
                     final ContentValues notifValues = new ContentValues();
@@ -449,6 +480,11 @@ public class BackgroundOperationService extends IntentService implements Constan
         mNotificationManager.cancel(NOTIFICATION_ID_UPDATE_STATUS);
     }
 
+    private boolean isDuplicate(Exception exception) {
+        return exception instanceof MicroBlogException
+                && ((MicroBlogException) exception).getErrorCode() == ErrorInfo.STATUS_IS_DUPLICATE;
+    }
+
 
     private SingleResponse<ParcelableDirectMessage> sendDirectMessage(final NotificationCompat.Builder builder,
                                                                       final UserKey accountKey,
@@ -458,8 +494,8 @@ public class BackgroundOperationService extends IntentService implements Constan
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(this,
                 accountKey);
         if (credentials == null) return SingleResponse.getInstance();
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(this, credentials, true, true);
-        final TwitterUpload twitterUpload = MicroBlogAPIFactory.getTwitterInstance(this, credentials,
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(this, credentials, true, true);
+        final TwitterUpload twitterUpload = MicroBlogAPIFactory.getInstance(this, credentials,
                 true, true, TwitterUpload.class);
         if (twitter == null || twitterUpload == null) return SingleResponse.getInstance();
         try {
@@ -490,7 +526,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                                     builder, text));
                             body = new FileBody(is, file.getName(), file.length(),
                                     ContentType.parse(o.outMimeType));
-                            final MediaUploadResponse uploadResp = twitterUpload.uploadMedia(body);
+                            final MediaUploadResponse uploadResp = uploadMedia(twitterUpload, body);
                             final DirectMessage response = twitter.sendDirectMessage(recipientId,
                                     text, uploadResp.getId());
                             directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
@@ -625,7 +661,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(this,
                             account.account_key);
                     // Get Twitter instance corresponding to account
-                    final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(this,
+                    final MicroBlog twitter = MicroBlogAPIFactory.getInstance(this,
                             account.account_key, true, true);
 
                     // Shouldn't happen
@@ -639,7 +675,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     MediaUploadResult uploadResult = null;
                     if (uploader != null && hasMedia) {
                         try {
-                            uploadResult = uploader.upload(statusUpdate,
+                            uploadResult = uploader.upload(statusUpdate, account.account_key,
                                     UploaderMediaItem.getFromStatusUpdate(this, statusUpdate));
                         } catch (final Exception e) {
                             throw new UploadException(getString(R.string.error_message_media_upload_failed));
@@ -652,7 +688,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                             throw new UploadException(uploadResult.error_message);
 
                         // Replace status text to uploaded
-                        statusText = getImageUploadStatus(this, uploadResult.media_uris,
+                        statusText = Utils.getMediaUploadStatus(this, uploadResult.media_uris,
                                 statusText);
                     }
 
@@ -785,7 +821,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                 }
                 return true;
             } else {
-                final TwitterUpload upload = MicroBlogAPIFactory.getTwitterInstance(this, credentials,
+                final TwitterUpload upload = MicroBlogAPIFactory.getInstance(this, credentials,
                         true, true, TwitterUpload.class);
                 if (upload == null) {
                     throw new UpdateStatusException("Twitter instance is null");
@@ -798,7 +834,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                     final MediaUploadResponse uploadResp;
                     try {
                         body = getBodyFromMedia(resolver, builder, media, statusUpdate);
-                        uploadResp = upload.uploadMedia(body);
+                        uploadResp = uploadMedia(upload, body);
                         if (!TextUtils.isEmpty(media.alt_text)) {
                             upload.createMetadata(new NewMediaMetadata(uploadResp.getId(),
                                     media.alt_text));
@@ -823,6 +859,55 @@ public class BackgroundOperationService extends IntentService implements Constan
             return true;
         }
         return false;
+    }
+
+
+    private MediaUploadResponse uploadMedia(final TwitterUpload upload, Body body) throws IOException, MicroBlogException {
+        final String mediaType = body.contentType().getContentType();
+        final long length = body.length();
+        final InputStream stream = body.stream();
+        MediaUploadResponse response = upload.initUploadMedia(mediaType, length, null);
+        final int segments = length == 0 ? 0 : (int) (length / BULK_SIZE + 1);
+        for (int segmentIndex = 0; segmentIndex < segments; segmentIndex++) {
+            final int currentBulkSize = (int) Math.min(BULK_SIZE, length - segmentIndex * BULK_SIZE);
+            final SimpleBody bulk = new SimpleBody(ContentType.OCTET_STREAM, null, currentBulkSize,
+                    stream);
+            upload.appendUploadMedia(response.getId(), segmentIndex, bulk);
+        }
+        response = upload.finalizeUploadMedia(response.getId());
+        for (ProcessingInfo info = response.getProcessingInfo(); shouldWaitForProcess(info); info = response.getProcessingInfo()) {
+            final long checkAfterSecs = info.getCheckAfterSecs();
+            if (checkAfterSecs <= 0) {
+                break;
+            }
+            try {
+                Thread.sleep(TimeUnit.SECONDS.toMillis(checkAfterSecs));
+            } catch (InterruptedException e) {
+                break;
+            }
+            response = upload.getUploadMediaStatus(response.getId());
+        }
+        ProcessingInfo info = response.getProcessingInfo();
+        if (info != null && ProcessingInfo.State.FAILED.equals(info.getState())) {
+            final MicroBlogException exception = new MicroBlogException();
+            ErrorInfo errorInfo = info.getError();
+            if (errorInfo != null) {
+                exception.setErrors(new ErrorInfo[]{errorInfo});
+            }
+            throw exception;
+        }
+        return response;
+    }
+
+    private boolean shouldWaitForProcess(ProcessingInfo info) {
+        if (info == null) return false;
+        switch (info.getState()) {
+            case ProcessingInfo.State.PENDING:
+            case ProcessingInfo.State.IN_PROGRESS:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private FileBody getBodyFromMedia(final ContentResolver resolver, final Builder builder,

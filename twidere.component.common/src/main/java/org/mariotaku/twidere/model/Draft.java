@@ -43,8 +43,8 @@ import java.lang.annotation.RetentionPolicy;
 public class Draft implements Parcelable {
 
     @ParcelableThisPlease
-    @CursorField(value = Drafts.ACCOUNT_IDS, converter = UserKeysCursorFieldConverter.class)
-    public UserKey[] account_ids;
+    @CursorField(value = Drafts.ACCOUNT_KEYS, converter = UserKeysCursorFieldConverter.class)
+    public UserKey[] account_keys;
     @ParcelableThisPlease
     @CursorField(value = Drafts._ID, excludeWrite = true)
     public long _id;

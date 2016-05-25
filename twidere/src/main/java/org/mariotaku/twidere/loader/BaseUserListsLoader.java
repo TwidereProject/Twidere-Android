@@ -78,7 +78,7 @@ public abstract class BaseUserListsLoader extends AsyncTaskLoader<List<Parcelabl
 
     @Override
     public List<ParcelableUserList> loadInBackground() {
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountId, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(getContext(), mAccountId, true);
         List<UserList> listLoaded = null;
         try {
             listLoaded = getUserLists(twitter);

@@ -84,7 +84,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                 args.accountKey);
         if (credentials == null) return SingleResponse.getInstance();
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, false, false);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, false, false);
         if (twitter == null) return SingleResponse.getInstance();
         try {
             final User user = perform(twitter, credentials, args);

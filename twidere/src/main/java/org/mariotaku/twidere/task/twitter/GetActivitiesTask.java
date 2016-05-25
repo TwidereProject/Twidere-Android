@@ -83,7 +83,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                     accountKey);
             if (credentials == null) continue;
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, true,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, true,
                     true);
             if (twitter == null) continue;
             final Paging paging = new Paging();

@@ -69,7 +69,7 @@ public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
         final DraftViewHolder holder = (DraftViewHolder) view.getTag();
-        final long[] accountIds = TwidereArrayUtils.parseLongArray(cursor.getString(mIndices.account_ids), ',');
+        final long[] accountIds = TwidereArrayUtils.parseLongArray(cursor.getString(mIndices.account_keys), ',');
         final String text = cursor.getString(mIndices.text);
         final ParcelableMediaUpdate[] mediaUpdates = JsonSerializer.parseArray(cursor.getString(mIndices.media),
                 ParcelableMediaUpdate.class);

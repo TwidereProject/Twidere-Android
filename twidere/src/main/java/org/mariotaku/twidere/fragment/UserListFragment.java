@@ -477,7 +477,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 final ParcelableUserList cache = mExtras.getParcelable(EXTRA_USER_LIST);
                 if (cache != null) return SingleResponse.getInstance(cache);
             }
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountKey,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(getContext(), mAccountKey,
                     true);
             if (twitter == null) return SingleResponse.getInstance();
             try {

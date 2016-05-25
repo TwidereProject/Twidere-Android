@@ -108,7 +108,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 return SingleResponse.getInstance(user);
             }
         }
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, true, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, true, true);
         if (twitter == null) return SingleResponse.getInstance();
         if (mLoadFromCache) {
             final Expression where;

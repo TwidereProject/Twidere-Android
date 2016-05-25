@@ -481,7 +481,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         protected SingleResponse<ParcelableUser> doLongOperation(final Object params) {
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(mActivity, mAccountKey);
             if (credentials == null) return SingleResponse.getInstance();
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mActivity, credentials,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mActivity, credentials,
                     true, true);
             if (twitter == null) return SingleResponse.getInstance();
             try {

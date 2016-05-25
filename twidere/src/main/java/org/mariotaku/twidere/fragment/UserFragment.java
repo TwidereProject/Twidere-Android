@@ -1787,7 +1787,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     return SingleResponse.getInstance(new UserRelationship(mUser, isFiltering));
                 }
             }
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, mAccountKey, false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey, false);
             if (twitter == null) {
                 return SingleResponse.getInstance(new MicroBlogException("No Account"));
             }

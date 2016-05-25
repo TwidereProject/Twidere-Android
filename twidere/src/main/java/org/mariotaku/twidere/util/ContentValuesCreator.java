@@ -156,7 +156,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         final ContentValues values = new ContentValues();
         values.put(Drafts.ACTION_TYPE, Draft.Action.SEND_DIRECT_MESSAGE);
         values.put(Drafts.TEXT, text);
-        values.put(Drafts.ACCOUNT_IDS, accountKey.toString());
+        values.put(Drafts.ACCOUNT_KEYS, accountKey.toString());
         values.put(Drafts.TIMESTAMP, System.currentTimeMillis());
         if (imageUri != null) {
             final ParcelableMediaUpdate[] mediaArray = {new ParcelableMediaUpdate(imageUri, 0)};

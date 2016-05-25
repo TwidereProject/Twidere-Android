@@ -69,7 +69,7 @@ public class UpdateProfileBackgroundImageTask<ResultHandler> extends AbstractTas
     @Override
     protected SingleResponse<ParcelableUser> doLongOperation(final Object params) {
         try {
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mContext, mAccountKey,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, mAccountKey,
                     true);
             TwitterWrapper.updateProfileBackgroundImage(mContext, twitter, mImageUri, mTile,
                     mDeleteImage);

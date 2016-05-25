@@ -12,6 +12,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.UploaderMediaItem;
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -32,7 +33,7 @@ public abstract class MediaUploaderService extends Service {
     }
 
     protected abstract MediaUploadResult upload(ParcelableStatusUpdate status,
-                                                UploaderMediaItem[] media);
+                                                UserKey currentAccount, UploaderMediaItem[] media);
 
     protected abstract boolean callback(MediaUploadResult result, ParcelableStatus status);
 
@@ -50,13 +51,15 @@ public abstract class MediaUploaderService extends Service {
         }
 
         @Override
-        public String upload(String statusJson, String mediaJson) throws RemoteException {
+        public String upload(String statusJson, String currentAccount, String mediaJson) throws RemoteException {
             try {
                 final ParcelableStatusUpdate statusUpdate = LoganSquareMapperFinder.mapperFor(ParcelableStatusUpdate.class)
                         .parse(statusJson);
                 final List<UploaderMediaItem> media = LoganSquareMapperFinder.mapperFor(UploaderMediaItem.class)
                         .parseList(mediaJson);
-                final MediaUploadResult shorten = mService.get().upload(statusUpdate, media.toArray(new UploaderMediaItem[media.size()]));
+                final MediaUploadResult shorten = mService.get().upload(statusUpdate,
+                        UserKey.valueOf(currentAccount),
+                        media.toArray(new UploaderMediaItem[media.size()]));
                 return LoganSquareMapperFinder.mapperFor(MediaUploadResult.class).serialize(shorten);
             } catch (IOException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {

@@ -112,7 +112,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                     accountKey);
             if (credentials == null) continue;
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials,
                     true, true);
             if (twitter == null) continue;
             try {

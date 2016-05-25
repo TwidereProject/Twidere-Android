@@ -291,10 +291,10 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
                     if (item.action_extras instanceof SendDirectMessageActionExtra) {
                         recipientId = ((SendDirectMessageActionExtra) item.action_extras).getRecipientId();
                     }
-                    if (ArrayUtils.isEmpty(item.account_ids) || recipientId == null) {
+                    if (ArrayUtils.isEmpty(item.account_keys) || recipientId == null) {
                         continue;
                     }
-                    final UserKey accountId = item.account_ids[0];
+                    final UserKey accountId = item.account_keys[0];
                     final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
                     twitter.sendDirectMessageAsync(accountId, recipientId, item.text, imageUri);
                     break;
