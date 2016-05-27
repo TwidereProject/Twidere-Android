@@ -62,6 +62,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.statusnet.model.StatusNetConfig;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth;
+import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
+import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
 import org.mariotaku.restfu.oauth.OAuthAuthorization;
@@ -70,14 +78,6 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
-import org.mariotaku.microblog.library.statusnet.model.StatusNetConfig;
-import org.mariotaku.microblog.library.MicroBlog;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.TwitterOAuth;
-import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
-import org.mariotaku.microblog.library.twitter.model.Paging;
-import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -93,6 +93,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
@@ -101,7 +102,6 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.LoginVerificationEx
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -741,7 +741,17 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
                     TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password);
-            final String userId = accessToken.getUserId();
+            String userId = accessToken.getUserId();
+            if (userId == null) {
+                // Trying to fix up userId if accessToken doesn't contain one.
+                auth = new OAuthAuthorization(consumerKey.getOauthToken(),
+                        consumerKey.getOauthTokenSecret(), accessToken);
+                endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl,
+                        noVersionSuffix);
+                MicroBlog microBlog = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
+                        MicroBlog.class);
+                userId = microBlog.verifyCredentials().getId();
+            }
             if (userId == null) return new SignInResponse(false, false, null);
             return getOAuthSignInResponse(activity, accessToken, userId,
                     AuthType.XAUTH);

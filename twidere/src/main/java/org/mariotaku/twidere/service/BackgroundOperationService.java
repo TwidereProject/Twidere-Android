@@ -31,6 +31,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
@@ -333,12 +334,14 @@ public class BackgroundOperationService extends IntentService implements Constan
         for (final ParcelableStatusUpdate item : statuses) {
             final UpdateStatusTask task = new UpdateStatusTask(context, new UpdateStatusTask.StateCallback() {
 
+                @WorkerThread
                 @Override
                 public void onStartUploadingMedia() {
                     startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
                             builder, 0, item));
                 }
 
+                @WorkerThread
                 @Override
                 public void onUploadingProgressChanged(int index, long current, long total) {
                     int progress = (int) (current * 100 / total);
@@ -346,16 +349,44 @@ public class BackgroundOperationService extends IntentService implements Constan
                             builder, progress, item));
                 }
 
+                @WorkerThread
                 @Override
                 public void onShorteningStatus() {
                     startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
                             builder, 0, item));
                 }
 
+                @WorkerThread
                 @Override
                 public void onUpdatingStatus() {
                     startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
                             builder, 0, item));
+                }
+
+                @Override
+                public void afterExecute(Context handler, UpdateStatusTask.UpdateStatusResult result) {
+                    boolean failed = false;
+                    if (result.exception != null) {
+                        Toast.makeText(context, result.exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        failed = true;
+                    } else for (MicroBlogException e : result.exceptions) {
+                        if (e != null) {
+                            // Show error
+                            Toast.makeText(context, R.string.status_not_updated, Toast.LENGTH_SHORT).show();
+                            failed = true;
+                            break;
+                        }
+                    }
+                    if (failed) {
+                        // TODO show draft notification
+                    } else {
+                        Toast.makeText(context, R.string.status_updated, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void beforeExecute() {
+
                 }
             });
             task.setParams(Pair.create(actionType, item));
