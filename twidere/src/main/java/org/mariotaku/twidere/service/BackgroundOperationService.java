@@ -26,7 +26,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -76,7 +75,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
@@ -84,11 +82,9 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereValidator;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.io.ContentLengthInputStream;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -335,7 +331,7 @@ public class BackgroundOperationService extends IntentService implements Constan
         startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
                 builder, 0, null));
         for (final ParcelableStatusUpdate item : statuses) {
-            UpdateStatusTask task = new UpdateStatusTask(context, new UpdateStatusTask.StateCallback() {
+            final UpdateStatusTask task = new UpdateStatusTask(context, new UpdateStatusTask.StateCallback() {
 
                 @Override
                 public void onStartUploadingMedia() {
@@ -363,16 +359,28 @@ public class BackgroundOperationService extends IntentService implements Constan
                 }
             });
             task.setParams(Pair.create(actionType, item));
-            UpdateStatusTask.UpdateStatusResult result = ManualTaskStarter.invokeExecute(task);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ManualTaskStarter.invokeBeforeExecute(task);
+                }
+            });
+
+            final UpdateStatusTask.UpdateStatusResult result = ManualTaskStarter.invokeExecute(task);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ManualTaskStarter.invokeAfterExecute(task, result);
+                }
+            });
+
             if (result.exception != null) {
                 Log.w(LOGTAG, result.exception);
-            } else {
-                for (ParcelableStatus status : result.statuses) {
-                    if (status == null) continue;
-                    final TweetEvent event = TweetEvent.create(context, status, TimelineType.OTHER);
-                    event.setAction(TweetEvent.Action.TWEET);
-                    HotMobiLogger.getInstance(context).log(status.account_key, event);
-                }
+            } else for (ParcelableStatus status : result.statuses) {
+                if (status == null) continue;
+                final TweetEvent event = TweetEvent.create(context, status, TimelineType.OTHER);
+                event.setAction(TweetEvent.Action.TWEET);
+                HotMobiLogger.getInstance(context).log(status.account_key, event);
             }
         }
         if (mPreferences.getBoolean(KEY_REFRESH_AFTER_TWEET)) {
@@ -413,32 +421,26 @@ public class BackgroundOperationService extends IntentService implements Constan
                 }
                 default: {
                     if (imageUri != null) {
-                        final String path = getImagePathFromUri(this, Uri.parse(imageUri));
-                        if (path == null) throw new FileNotFoundException();
-                        final BitmapFactory.Options o = new BitmapFactory.Options();
-                        o.inJustDecodeBounds = true;
-                        BitmapFactory.decodeFile(path, o);
-                        final File file = new File(path);
-                        BitmapUtils.downscaleImageIfNeeded(file, 100);
-                        ContentLengthInputStream is = null;
+                        final Uri mediaUri = Uri.parse(imageUri);
                         FileBody body = null;
                         try {
-                            is = new ContentLengthInputStream(file);
-                            is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager,
-                                    builder, text));
-                            body = new FileBody(is, file.getName(), file.length(),
-                                    ContentType.parse(o.outMimeType));
+                            body = UpdateStatusTask.getBodyFromMedia(getContentResolver(), mediaUri,
+                                    new MessageMediaUploadListener(this, mNotificationManager,
+                                            builder, text));
                             final MediaUploadResponse uploadResp = uploadMedia(twitterUpload, body);
                             final DirectMessage response = twitter.sendDirectMessage(recipientId,
                                     text, uploadResp.getId());
                             directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
                                     accountKey, true);
                         } finally {
-                            Utils.closeSilently(is);
                             Utils.closeSilently(body);
                         }
-                        if (!file.delete()) {
-                            Log.d(LOGTAG, String.format("unable to delete %s", path));
+                        final String path = getImagePathFromUri(this, mediaUri);
+                        if (path != null) {
+                            final File file = new File(path);
+                            if (!file.delete()) {
+                                Log.d(LOGTAG, String.format("unable to delete %s", path));
+                            }
                         }
                     } else {
                         final DirectMessage response = twitter.sendDirectMessage(recipientId, text);

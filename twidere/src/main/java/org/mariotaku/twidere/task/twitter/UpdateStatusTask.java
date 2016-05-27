@@ -117,8 +117,12 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
         uploadMedia(uploader, update, pendingUpdate);
         shortenStatus(shortener, update, pendingUpdate);
 
-        final UpdateStatusResult result = requestUpdateStatus(update, pendingUpdate);
-
+        final UpdateStatusResult result;
+        try {
+            result = requestUpdateStatus(update, pendingUpdate);
+        } catch (IOException e) {
+            return new UpdateStatusResult(new UpdateStatusException(e));
+        }
 
         mediaUploadCallback(uploader, pendingUpdate, result);
         statusShortenCallback(shortener, pendingUpdate, result);
@@ -223,16 +227,17 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
     }
 
     @NonNull
-    private UpdateStatusResult requestUpdateStatus(ParcelableStatusUpdate statusUpdate, PendingStatusUpdate pendingUpdate) {
+    private UpdateStatusResult requestUpdateStatus(ParcelableStatusUpdate statusUpdate, PendingStatusUpdate pendingUpdate) throws IOException {
 
         stateCallback.onUpdatingStatus();
 
         UpdateStatusResult result = new UpdateStatusResult(new ParcelableStatus[pendingUpdate.length],
-                new Exception[pendingUpdate.length]);
+                new MicroBlogException[pendingUpdate.length]);
 
         for (int i = 0; i < pendingUpdate.length; i++) {
             final ParcelableAccount account = statusUpdate.accounts[i];
             MicroBlog microBlog = MicroBlogAPIFactory.getInstance(context, account.account_key, true);
+            Body body = null;
             try {
                 switch (ParcelableAccountUtils.getAccountType(account)) {
                     case ParcelableAccount.Type.FANFOU: {
@@ -240,15 +245,15 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
                         if (!ArrayUtils.isEmpty(statusUpdate.media)) {
                             // Fanfou only allow one photo
                             if (statusUpdate.media.length > 1) {
-                                result.exceptions[i] = new UpdateStatusException(
+                                result.exceptions[i] = new MicroBlogException(
                                         context.getString(R.string.error_too_many_photos_fanfou));
                                 break;
                             }
-                            final Body body = getBodyFromMedia(context.getContentResolver(),
-                                    statusUpdate.media[0], new ContentLengthInputStream.ReadListener() {
+                            body = getBodyFromMedia(context.getContentResolver(),
+                                    Uri.parse(statusUpdate.media[0].uri), new ContentLengthInputStream.ReadListener() {
                                         @Override
                                         public void onRead(long length, long position) {
-
+                                            stateCallback.onUploadingProgressChanged(-1, position, length);
                                         }
                                     });
                             PhotoStatusUpdate photoUpdate = new PhotoStatusUpdate(body,
@@ -277,8 +282,8 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
                 }
             } catch (MicroBlogException e) {
                 result.exceptions[i] = e;
-            } catch (IOException e) {
-                result.exceptions[i] = e;
+            } finally {
+                Utils.closeSilently(body);
             }
         }
         return result;
@@ -441,9 +446,10 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
             ParcelableMediaUpdate media = update.media[i];
             final MediaUploadResponse resp;
             //noinspection TryWithIdenticalCatches
+            Body body = null;
             try {
                 final int index = i;
-                final Body body = getBodyFromMedia(context.getContentResolver(), media, new ContentLengthInputStream.ReadListener() {
+                body = getBodyFromMedia(context.getContentResolver(), Uri.parse(media.uri), new ContentLengthInputStream.ReadListener() {
                     @Override
                     public void onRead(long length, long position) {
                         stateCallback.onUploadingProgressChanged(index, position, length);
@@ -458,6 +464,8 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
                 throw new UploadException(e);
             } catch (MicroBlogException e) {
                 throw new UploadException(e);
+            } finally {
+                Utils.closeSilently(body);
             }
             mediaIds[i] = resp.getId();
         }
@@ -504,14 +512,14 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
     }
 
 
-    private FileBody getBodyFromMedia(final ContentResolver resolver,
-                                      final ParcelableMediaUpdate media,
-                                      final ContentLengthInputStream.ReadListener readListener) throws IOException {
-        final Uri mediaUri = Uri.parse(media.uri);
+    public static FileBody getBodyFromMedia(@NonNull final ContentResolver resolver,
+                                            @NonNull final Uri mediaUri,
+                                            @NonNull final ContentLengthInputStream.ReadListener
+                                                    readListener) throws IOException {
         final String mediaType = resolver.getType(mediaUri);
         final InputStream is = resolver.openInputStream(mediaUri);
         if (is == null) {
-            throw new FileNotFoundException(media.uri);
+            throw new FileNotFoundException(mediaUri.toString());
         }
         final long length = is.available();
         final ContentLengthInputStream cis = new ContentLengthInputStream(is, length);
@@ -602,11 +610,11 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
         @NonNull
         public final ParcelableStatus[] statuses;
         @NonNull
-        public final Exception[] exceptions;
+        public final MicroBlogException[] exceptions;
 
         public final UpdateStatusException exception;
 
-        public UpdateStatusResult(@NonNull ParcelableStatus[] statuses, @NonNull Exception[] exceptions) {
+        public UpdateStatusResult(@NonNull ParcelableStatus[] statuses, @NonNull MicroBlogException[] exceptions) {
             this.statuses = statuses;
             this.exceptions = exceptions;
             this.exception = null;
@@ -615,7 +623,7 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
         public UpdateStatusResult(UpdateStatusException exception) {
             this.exception = exception;
             this.statuses = new ParcelableStatus[0];
-            this.exceptions = new Exception[0];
+            this.exceptions = new MicroBlogException[0];
         }
     }
 
