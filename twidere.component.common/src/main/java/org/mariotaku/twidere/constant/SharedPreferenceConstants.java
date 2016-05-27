@@ -274,8 +274,6 @@ public interface SharedPreferenceConstants {
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_PEBBLE_NOTIFICATIONS = "pebble_notifications";
 
-    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
-    String KEY_COMPACT_CARDS = "compact_cards";
     @Preference(type = STRING, hasDefault = true, defaultString = VALUE_COMPOSE_NOW_ACTION_COMPOSE)
     String KEY_COMPOSE_NOW_ACTION = "compose_now_action";
 
