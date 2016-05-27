@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import org.mariotaku.twidere.model.ParcelableActivityTableInfo;
+import org.mariotaku.twidere.model.ParcelableDirectMessageTableInfo;
 import org.mariotaku.twidere.model.ParcelableStatusTableInfo;
 
 @SuppressWarnings("unused")
@@ -252,11 +253,9 @@ public interface TwidereDataStore {
 
         String DESCRIPTION_PLAIN = "description_plain";
 
-        String DESCRIPTION_HTML = "description_html";
-
         String DESCRIPTION_UNESCAPED = "description_unescaped";
 
-        String DESCRIPTION_EXPANDED = "description_expanded";
+        String DESCRIPTION_SPANS = "description_spans";
 
         String LOCATION = "location";
 
@@ -306,7 +305,7 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, USER_KEY, CREATED_AT, NAME, SCREEN_NAME, DESCRIPTION_PLAIN, LOCATION,
                 URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, PROFILE_BACKGROUND_URL, IS_PROTECTED,
                 IS_VERIFIED, IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT,
-                FAVORITES_COUNT, LISTED_COUNT, MEDIA_COUNT, DESCRIPTION_HTML, DESCRIPTION_EXPANDED,
+                FAVORITES_COUNT, LISTED_COUNT, MEDIA_COUNT, DESCRIPTION_SPANS,
                 URL_EXPANDED, BACKGROUND_COLOR, LINK_COLOR, TEXT_COLOR, LAST_SEEN,
                 DESCRIPTION_UNESCAPED, EXTRAS};
 
@@ -315,7 +314,7 @@ public interface TwidereDataStore {
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
                 TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN,
                 TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
+                TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
                 TYPE_TEXT, TYPE_TEXT};
 
     }
@@ -404,9 +403,9 @@ public interface TwidereDataStore {
 
         String IS_OUTGOING = "is_outgoing";
 
-        String TEXT_HTML = "text_html";
         String TEXT_PLAIN = "text_plain";
         String TEXT_UNESCAPED = "text_unescaped";
+        String SPANS = "spans";
         String SENDER_NAME = "sender_name";
         String RECIPIENT_NAME = "recipient_name";
         String SENDER_SCREEN_NAME = "sender_screen_name";
@@ -416,13 +415,8 @@ public interface TwidereDataStore {
 
         String MEDIA_JSON = "media_json";
 
-        String[] COLUMNS = {_ID, ACCOUNT_KEY, MESSAGE_ID, MESSAGE_TIMESTAMP,
-                SENDER_ID, RECIPIENT_ID, CONVERSATION_ID, IS_OUTGOING, TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED,
-                SENDER_NAME, RECIPIENT_NAME, SENDER_SCREEN_NAME, RECIPIENT_SCREEN_NAME, SENDER_PROFILE_IMAGE_URL,
-                RECIPIENT_PROFILE_IMAGE_URL, MEDIA_JSON, INSERTED_DATE};
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT,
-                TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, INSERTED_DATE_TYPE};
+        String[] COLUMNS = ParcelableDirectMessageTableInfo.COLUMNS;
+        String[] TYPES = ParcelableDirectMessageTableInfo.TYPES;
 
         String DEFAULT_SORT_ORDER = MESSAGE_ID + " DESC";
 
@@ -460,7 +454,7 @@ public interface TwidereDataStore {
             String NAME = "name";
             String SCREEN_NAME = "screen_name";
             String PROFILE_IMAGE_URL = "profile_image_url";
-            String TEXT_HTML = DirectMessages.TEXT_HTML;
+            String TEXT_UNESCAPED = "text_unescaped";
             String CONVERSATION_ID = "conversation_id";
 
             int IDX__ID = 0;
@@ -471,7 +465,7 @@ public interface TwidereDataStore {
             int IDX_NAME = 5;
             int IDX_SCREEN_NAME = 6;
             int IDX_PROFILE_IMAGE_URL = 7;
-            int IDX_TEXT = 8;
+            int IDX_TEXT_UNESCAPED = 8;
             int IDX_CONVERSATION_ID = 9;
         }
 

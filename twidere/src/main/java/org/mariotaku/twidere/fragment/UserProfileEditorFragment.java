@@ -258,7 +258,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             displayUser(user);
             mEditName.setText(savedInstanceState.getString(EXTRA_NAME, user.name));
             mEditLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, user.location));
-            mEditDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, user.description_expanded));
+            mEditDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, ParcelableUserUtils.getExpandedDescription(user)));
             mEditUrl.setText(savedInstanceState.getString(EXTRA_URL, user.url_expanded));
         } else {
             getUserInfo();
@@ -359,7 +359,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             mProgressContainer.setVisibility(View.GONE);
             mEditProfileContent.setVisibility(View.VISIBLE);
             mEditName.setText(user.name);
-            mEditDescription.setText(user.description_expanded);
+            mEditDescription.setText(ParcelableUserUtils.getExpandedDescription(user));
             mEditLocation.setText(user.location);
             mEditUrl.setText(isEmpty(user.url_expanded) ? user.url : user.url_expanded);
             mMediaLoader.displayProfileImage(mProfileImageView, user);
@@ -515,7 +515,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             if (mLinkColor != orig.link_color) return true;
             if (mBackgroundColor != orig.background_color) return true;
             if (!stringEquals(mName, orig.name)) return true;
-            if (!stringEquals(mDescription, isEmpty(orig.description_expanded) ? orig.description_plain : orig.description_expanded))
+            if (!stringEquals(mDescription, ParcelableUserUtils.getExpandedDescription(orig)))
                 return true;
             if (!stringEquals(mLocation, orig.location)) return true;
             if (!stringEquals(mUrl, isEmpty(orig.url_expanded) ? orig.url : orig.url_expanded))

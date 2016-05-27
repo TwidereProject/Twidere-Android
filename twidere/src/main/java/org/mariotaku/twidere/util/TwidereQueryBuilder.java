@@ -222,7 +222,7 @@ public class TwidereQueryBuilder {
                     new Column(ConversationEntries.NAME),
                     new Column(ConversationEntries.SCREEN_NAME),
                     new Column(ConversationEntries.PROFILE_IMAGE_URL),
-                    new Column(ConversationEntries.TEXT_HTML),
+                    new Column(ConversationEntries.TEXT_UNESCAPED),
                     new Column(ConversationEntries.CONVERSATION_ID)));
             final SQLSelectQuery.Builder entryIds = new SQLSelectQuery.Builder();
             entryIds.select(new Columns(new Column(DirectMessages._ID),
@@ -233,7 +233,7 @@ public class TwidereQueryBuilder {
                     new Column(DirectMessages.SENDER_NAME, ConversationEntries.NAME),
                     new Column(DirectMessages.SENDER_SCREEN_NAME, ConversationEntries.SCREEN_NAME),
                     new Column(DirectMessages.SENDER_PROFILE_IMAGE_URL, ConversationEntries.PROFILE_IMAGE_URL),
-                    new Column(DirectMessages.TEXT_HTML),
+                    new Column(DirectMessages.TEXT_UNESCAPED),
                     new Column(DirectMessages.SENDER_ID, ConversationEntries.CONVERSATION_ID)));
             entryIds.from(new Tables(Inbox.TABLE_NAME));
             entryIds.union();
@@ -245,7 +245,7 @@ public class TwidereQueryBuilder {
                     new Column(DirectMessages.RECIPIENT_NAME, ConversationEntries.NAME),
                     new Column(DirectMessages.RECIPIENT_SCREEN_NAME, ConversationEntries.SCREEN_NAME),
                     new Column(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, ConversationEntries.PROFILE_IMAGE_URL),
-                    new Column(DirectMessages.TEXT_HTML),
+                    new Column(DirectMessages.TEXT_UNESCAPED),
                     new Column(DirectMessages.RECIPIENT_ID, ConversationEntries.CONVERSATION_ID)));
             entryIds.from(new Tables(Outbox.TABLE_NAME));
             qb.from(entryIds.build());

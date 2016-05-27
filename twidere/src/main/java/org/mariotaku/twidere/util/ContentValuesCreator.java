@@ -38,7 +38,6 @@ import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageValuesCreator;
-import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
@@ -48,11 +47,10 @@ import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
-import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
+import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends;
-import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
@@ -82,37 +80,8 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createDirectMessage(final DirectMessage message,
                                                     final UserKey accountKey,
                                                     final boolean isOutgoing) {
-        if (message == null) return null;
-        final ContentValues values = new ContentValues();
-        final User sender = message.getSender(), recipient = message.getRecipient();
-        if (sender == null || recipient == null) return null;
-        final String sender_profile_image_url = TwitterContentUtils.getProfileImageUrl(sender);
-        final String recipient_profile_image_url = TwitterContentUtils.getProfileImageUrl(recipient);
-        values.put(DirectMessages.ACCOUNT_KEY, accountKey.toString());
-        values.put(DirectMessages.MESSAGE_ID, message.getId());
-        values.put(DirectMessages.MESSAGE_TIMESTAMP, message.getCreatedAt().getTime());
-        values.put(DirectMessages.SENDER_ID, sender.getId());
-        values.put(DirectMessages.RECIPIENT_ID, recipient.getId());
-        if (isOutgoing) {
-            values.put(DirectMessages.CONVERSATION_ID, recipient.getId());
-        } else {
-            values.put(DirectMessages.CONVERSATION_ID, sender.getId());
-        }
-        final String text_html = InternalTwitterContentUtils.formatDirectMessageText(message);
-        values.put(DirectMessages.TEXT_HTML, text_html);
-        values.put(DirectMessages.TEXT_PLAIN, message.getText());
-        values.put(DirectMessages.TEXT_UNESCAPED, HtmlEscapeHelper.toPlainText(text_html));
-        values.put(DirectMessages.IS_OUTGOING, isOutgoing);
-        values.put(DirectMessages.SENDER_NAME, sender.getName());
-        values.put(DirectMessages.SENDER_SCREEN_NAME, sender.getScreenName());
-        values.put(DirectMessages.RECIPIENT_NAME, recipient.getName());
-        values.put(DirectMessages.RECIPIENT_SCREEN_NAME, recipient.getScreenName());
-        values.put(DirectMessages.SENDER_PROFILE_IMAGE_URL, sender_profile_image_url);
-        values.put(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL, recipient_profile_image_url);
-        final ParcelableMedia[] mediaArray = ParcelableMediaUtils.fromEntities(message);
-        values.put(DirectMessages.MEDIA_JSON, JsonSerializer.serialize(Arrays.asList(mediaArray),
-                ParcelableMedia.class));
-        return values;
+        return ParcelableDirectMessageValuesCreator.create(ParcelableDirectMessageUtils.fromDirectMessage(message,
+                accountKey, isOutgoing));
     }
 
     public static ContentValues createDirectMessage(final ParcelableDirectMessage message) {

@@ -58,7 +58,7 @@ import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -125,6 +125,7 @@ import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -133,7 +134,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -553,16 +553,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mProfileTypeView.setVisibility(View.GONE);
         }
         mScreenNameView.setText(String.format("@%s", user.screen_name));
-        mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
         final TwidereLinkify linkify = new TwidereLinkify(this);
-        if (user.description_html != null) {
-            final Spannable text = HtmlSpanBuilder.fromHtml(user.description_html);
+        if (user.description_unescaped != null) {
+            final SpannableStringBuilder text = SpannableStringBuilder.valueOf(user.description_unescaped);
+            ParcelableStatusUtils.applySpans(text, user.description_spans);
             linkify.applyAllLinks(text, user.account_key, false, false);
             mDescriptionView.setText(text);
         } else {
             mDescriptionView.setText(user.description_plain);
             Linkify.addLinks(mDescriptionView, Linkify.WEB_URLS);
         }
+        mDescriptionContainer.setVisibility(mDescriptionView.length() > 0 ? View.VISIBLE : View.GONE);
 
         mLocationContainer.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
         mLocationView.setText(user.location);

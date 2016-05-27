@@ -250,10 +250,10 @@ public class InternalTwitterContentUtils {
                 }
             }
         }
-        return HtmlEscapeHelper.toPlainText(builder.build());
+        return builder.buildWithIndices().first;
     }
 
-    public static String formatUserDescription(final User user) {
+    public static Pair<String, SpanItem[]> formatUserDescription(final User user) {
         if (user == null) return null;
         final String text = user.getDescription();
         if (text == null) return null;
@@ -267,7 +267,7 @@ public class InternalTwitterContentUtils {
                 }
             }
         }
-        return builder.build();
+        return builder.buildWithIndices();
     }
 
     public static String unescapeTwitterStatusText(final CharSequence text) {
@@ -275,14 +275,14 @@ public class InternalTwitterContentUtils {
         return UNESCAPE_TWITTER_RAW_TEXT.translate(text);
     }
 
-    public static String formatDirectMessageText(final DirectMessage message) {
+    public static Pair<String, SpanItem[]> formatDirectMessageText(final DirectMessage message) {
         if (message == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, true);
         parseEntities(builder, message, null);
-        return builder.build();
+        return builder.buildWithIndices();
     }
 
-    public static Pair<String, List<SpanItem>> formatStatusTextWithIndices(final Status status) {
+    public static Pair<String, SpanItem[]> formatStatusTextWithIndices(final Status status) {
         if (status == null) return null;
         //TODO handle twitter video url
 
