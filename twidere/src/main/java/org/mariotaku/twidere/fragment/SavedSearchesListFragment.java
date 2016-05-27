@@ -30,9 +30,9 @@ import android.widget.ListView;
 
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.twidere.adapter.SavedSearchesAdapter;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.SavedSearch;
+import org.mariotaku.twidere.adapter.SavedSearchesAdapter;
 import org.mariotaku.twidere.loader.SavedSearchesLoader;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent;
@@ -78,7 +78,7 @@ public class SavedSearchesListFragment extends AbsContentListViewFragment<SavedS
 
     @NonNull
     @Override
-    protected SavedSearchesAdapter onCreateAdapter(Context context, boolean compact) {
+    protected SavedSearchesAdapter onCreateAdapter(Context context) {
         return new SavedSearchesAdapter(getActivity());
     }
 

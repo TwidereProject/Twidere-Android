@@ -72,7 +72,6 @@ import org.mariotaku.mediaviewer.library.IMediaViewerActivity;
 import org.mariotaku.mediaviewer.library.MediaDownloader;
 import org.mariotaku.mediaviewer.library.MediaViewerFragment;
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
@@ -106,7 +105,7 @@ import edu.tsinghua.hotmobi.model.MediaDownloadEvent;
 import pl.droidsonroids.gif.GifTextureView;
 import pl.droidsonroids.gif.InputSource;
 
-public final class MediaViewerActivity extends BaseActivity implements Constants, IExtendedActivity,
+public final class MediaViewerActivity extends BaseActivity implements IExtendedActivity,
         ATEToolbarCustomizer, IMediaViewerActivity {
 
     private static final int REQUEST_SHARE_MEDIA = 201;

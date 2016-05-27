@@ -99,8 +99,8 @@ public class MessageViewHolder extends ViewHolder {
         textView.setText(text);
         time.setText(Utils.formatToLongTimeString(context, timestamp));
         mediaContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
-        mediaContainer.displayMedia(media, loader, accountKey, getLayoutPosition(), true,
-                adapter.getOnMediaClickListener(), adapter.getMediaLoadingHandler());
+        mediaContainer.displayMedia(loader, adapter.getOnMediaClickListener(), adapter.getMediaLoadingHandler(), media, accountKey, getLayoutPosition(), true
+        );
     }
 
     public void setMessageColor(int color) {

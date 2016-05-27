@@ -28,6 +28,6 @@
     android:paddingLeft="@dimen/element_spacing_large"
     android:paddingRight="@dimen/element_spacing_large">
 
-    <include layout="@layout/card_item_status_common"/>
+    <include layout="@layout/card_item_status_compact"/>
 
 </ScrollView>

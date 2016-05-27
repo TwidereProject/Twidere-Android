@@ -35,8 +35,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
-public class NotificationTypePreference extends DialogPreference implements Constants,
-        IDialogPreference {
+public class NotificationTypePreference extends DialogPreference implements
+        Constants, IDialogPreference {
 
     private final int mDefaultValue;
 

@@ -27,12 +27,11 @@ import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.SavedSearch;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
-import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
-
-public class SavedSearchesLoader extends AsyncTaskLoader<ResponseList<SavedSearch>> {
+public class SavedSearchesLoader extends AsyncTaskLoader<ResponseList<SavedSearch>> implements Constants {
 
     private final UserKey mAccountId;
 

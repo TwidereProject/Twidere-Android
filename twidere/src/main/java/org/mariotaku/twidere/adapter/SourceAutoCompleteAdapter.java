@@ -26,12 +26,11 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.TextView;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.util.HtmlEscapeHelper;
 
-public class SourceAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
+public class SourceAutoCompleteAdapter extends SimpleCursorAdapter {
 
     private static final String[] COLUMNS = new String[]{CachedStatuses._ID, CachedStatuses.SOURCE};
     private static final String[] FROM = new String[0];

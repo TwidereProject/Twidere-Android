@@ -26,16 +26,16 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.util.MenuUtils;
 
+import static org.mariotaku.twidere.Constants.MENU_GROUP_STATUS_SHARE;
 import static org.mariotaku.twidere.util.Utils.createStatusShareIntent;
 
 /**
  * Created by mariotaku on 14/12/7.
  */
-public class SupportStatusShareProvider extends ActionProvider implements Constants {
+public class SupportStatusShareProvider extends ActionProvider {
 
     private final Context mContext;
     private ParcelableStatus mStatus;

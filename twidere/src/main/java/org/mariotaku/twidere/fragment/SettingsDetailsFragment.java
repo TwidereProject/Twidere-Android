@@ -27,11 +27,10 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceScreen;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.SettingsActivity;
 import org.mariotaku.twidere.util.Utils;
 
-public class SettingsDetailsFragment extends BasePreferenceFragment implements Constants,
+public class SettingsDetailsFragment extends BasePreferenceFragment implements
         OnSharedPreferenceChangeListener {
 
 

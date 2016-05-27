@@ -599,7 +599,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     }
 
     @Override
-    protected void setupRecyclerView(Context context, final boolean compact) {
+    protected void setupRecyclerView(Context context) {
         final RecyclerView recyclerView = getRecyclerView();
         final ParcelableActivitiesAdapter adapter = getAdapter();
         // Dividers are drawn on bottom of view
@@ -612,26 +612,9 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
                     return false;
                 }
                 final int itemViewType = adapter.getItemViewType(childPos);
-                if (compact) {
-                    return itemViewType != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY;
-                }
-                if (shouldUseDividerFor(itemViewType)) {
-                    if (shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
-                        return true;
-                    }
-                }
-                return false;
+                return itemViewType != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY;
             }
 
-            private boolean shouldUseDividerFor(int itemViewType) {
-                switch (itemViewType) {
-                    case ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_TITLE_SUMMARY:
-                    case ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_GAP:
-                        return true;
-                    default:
-                        return false;
-                }
-            }
         });
     }
 

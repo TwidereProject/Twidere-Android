@@ -7,11 +7,11 @@ import android.util.Log;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.R;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;

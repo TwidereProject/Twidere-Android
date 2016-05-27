@@ -22,10 +22,11 @@ package org.mariotaku.twidere.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 
-public class TimelineSyncPreference extends ServicePickerPreference implements Constants {
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTENSION_SYNC_TIMELINE;
+
+public class TimelineSyncPreference extends ServicePickerPreference {
 
 	public TimelineSyncPreference(final Context context) {
 		this(context, null);

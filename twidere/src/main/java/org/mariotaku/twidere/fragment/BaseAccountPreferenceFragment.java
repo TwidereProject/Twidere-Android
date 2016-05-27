@@ -35,11 +35,10 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
 
-public abstract class BaseAccountPreferenceFragment extends BasePreferenceFragment implements Constants,
+public abstract class BaseAccountPreferenceFragment extends BasePreferenceFragment implements
         OnCheckedChangeListener, OnSharedPreferenceChangeListener {
 
     @Override

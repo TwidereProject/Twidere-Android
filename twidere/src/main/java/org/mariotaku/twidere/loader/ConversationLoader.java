@@ -37,8 +37,8 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
-import org.mariotaku.twidere.util.Nullables;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.Nullables;
 import org.mariotaku.twidere.util.Utils;
 
 import java.util.ArrayList;

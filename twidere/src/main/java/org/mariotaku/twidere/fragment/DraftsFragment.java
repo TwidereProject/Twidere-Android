@@ -60,7 +60,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.model.Draft;
@@ -81,7 +80,7 @@ import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultTextSize;
 
-public class DraftsFragment extends BaseSupportFragment implements Constants, LoaderCallbacks<Cursor>,
+public class DraftsFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
         OnItemClickListener, MultiChoiceModeListener {
 
     private ContentResolver mResolver;

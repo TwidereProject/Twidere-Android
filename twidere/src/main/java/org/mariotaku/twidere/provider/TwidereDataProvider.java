@@ -66,6 +66,7 @@ import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -81,7 +82,6 @@ import org.mariotaku.twidere.activity.HomeActivity;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.NotificationType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
@@ -162,8 +162,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public final class TwidereDataProvider extends ContentProvider implements Constants, OnSharedPreferenceChangeListener,
-        LazyLoadCallback {
+public final class TwidereDataProvider extends ContentProvider implements Constants,
+        OnSharedPreferenceChangeListener, LazyLoadCallback {
 
     public static final String TAG_OLDEST_MESSAGES = "oldest_messages";
     private static final Pattern PATTERN_SCREEN_NAME = Pattern.compile("(?i)[@\uFF20]?([a-z0-9_]{1,20})");

@@ -36,14 +36,13 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.ParseUtils;
-import org.mariotaku.twidere.util.PermissionsManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExtensionsListLoader extends AsyncTaskLoader<List<ExtensionsListLoader.ExtensionInfo>> implements
-        Constants {
+public class ExtensionsListLoader extends AsyncTaskLoader<List<ExtensionsListLoader.ExtensionInfo>>
+        implements Constants {
 
     private PackageIntentReceiver mPackageObserver;
     private final InterestingConfigChanges mLastConfig = new InterestingConfigChanges();
@@ -125,7 +124,7 @@ public class ExtensionsListLoader extends AsyncTaskLoader<List<ExtensionsListLoa
             final Bundle meta = info.metaData;
             final String permissionString = meta.getString(METADATA_KEY_EXTENSION_PERMISSIONS);
             permissions = permissionString != null ? permissionString
-                    .split(PermissionsManager.SEPARATOR_PERMISSION_REGEX) : null;
+                    .split(SEPARATOR_PERMISSION_REGEX) : null;
             settings = meta.getString(METADATA_KEY_EXTENSION_SETTINGS);
             icon = info.loadIcon(pm);
             pname = info.packageName;

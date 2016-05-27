@@ -40,6 +40,9 @@ import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTENSION_UPLOAD_MEDIA;
+
 public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUploader> {
     protected MediaUploaderInterface(Context context, String uploaderName, Bundle metaData) {
         super(context, uploaderName, metaData);

@@ -363,7 +363,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         final View view = getView();
         assert view != null;
         final Context context = view.getContext();
-        final boolean compact = Utils.isCompactCards(context);
         Utils.setNdefPushMessageCallback(getActivity(), new CreateNdefMessageCallback() {
             @Override
             public NdefMessage createNdefMessage(NfcEvent event) {
@@ -374,12 +373,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 });
             }
         });
-        mStatusAdapter = new StatusAdapter(this, compact);
+        mStatusAdapter = new StatusAdapter(this);
         mLayoutManager = new StatusListLinearLayoutManager(context, mRecyclerView);
         mItemDecoration = new StatusDividerItemDecoration(context, mStatusAdapter, mLayoutManager.getOrientation());
-        if (compact) {
-            mRecyclerView.addItemDecoration(mItemDecoration);
-        }
+        mRecyclerView.addItemDecoration(mItemDecoration);
         mLayoutManager.setRecycleChildrenOnDetach(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setClipToPadding(false);
@@ -1693,10 +1690,8 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private final int[] mItemCounts;
 
         private final boolean mNameFirst;
-        private final int mCardLayoutResource;
         private final int mTextSize;
         private final int mCardBackgroundColor;
-        private final boolean mIsCompact;
         private final int mProfileImageStyle;
         private final int mMediaPreviewStyle;
         private final int mLinkHighlightingStyle;
@@ -1718,7 +1713,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         private int mReplyStart;
         private int mShowingActionCardPosition;
 
-        public StatusAdapter(StatusFragment fragment, boolean compact) {
+        public StatusAdapter(StatusFragment fragment) {
             super(fragment.getContext());
             setHasStableIds(true);
             final Context context = fragment.getActivity();
@@ -1740,18 +1735,12 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
             mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
             mLinkHighlightingStyle = Utils.getLinkHighlightingStyleInt(mPreferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
-            mIsCompact = compact;
             mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
             mDisplayMediaPreview = Utils.isMediaPreviewEnabled(context, mPreferences);
             mSensitiveContentEnabled = mPreferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false);
             mShowCardActions = !mPreferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false);
             mUseStarsForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
             mShowAbsoluteTime = mPreferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME);
-            if (compact) {
-                mCardLayoutResource = R.layout.card_item_status_compact;
-            } else {
-                mCardLayoutResource = R.layout.card_item_status;
-            }
             final StatusAdapterLinkClickHandler<List<ParcelableStatus>> listener = new StatusAdapterLinkClickHandler<>(context,
                     mPreferences);
             listener.setAdapter(this);
@@ -2017,20 +2006,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     if (mStatusViewHolder != null) {
                         return mStatusViewHolder;
                     }
-                    final View view;
-                    if (mIsCompact) {
-                        view = mInflater.inflate(R.layout.header_status_compact, parent, false);
-                        final View cardView = view.findViewById(R.id.compact_card);
-                        cardView.setBackgroundColor(mCardBackgroundColor);
-                    } else {
-                        view = mInflater.inflate(R.layout.header_status, parent, false);
-                        final CardView cardView = (CardView) view.findViewById(R.id.card);
-                        cardView.setCardBackgroundColor(mCardBackgroundColor);
-                    }
+                    final View view = mInflater.inflate(R.layout.header_status_compact, parent, false);
+                    final View cardView = view.findViewById(R.id.compact_card);
+                    cardView.setBackgroundColor(mCardBackgroundColor);
                     return new DetailStatusViewHolder(this, view);
                 }
                 case VIEW_TYPE_LIST_STATUS: {
-                    final View view = mInflater.inflate(mCardLayoutResource, parent, false);
+                    final View view = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
                     final CardView cardView = (CardView) view.findViewById(R.id.card);
                     if (cardView != null) {
                         cardView.setCardBackgroundColor(mCardBackgroundColor);
@@ -2659,13 +2641,5 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             return true;
         }
 
-        private boolean shouldDrawDivider(int viewType) {
-            switch (viewType) {
-                case StatusAdapter.VIEW_TYPE_LIST_STATUS:
-                case StatusAdapter.VIEW_TYPE_DETAIL_STATUS:
-                    return true;
-            }
-            return false;
-        }
     }
 }

@@ -6,13 +6,12 @@ import android.content.Context;
 import android.util.Log;
 
 import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.SavedSearch;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
@@ -20,11 +19,12 @@ import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+
 /**
  * Created by mariotaku on 16/2/13.
  */
-public class GetSavedSearchesTask extends AbstractTask<UserKey[], SingleResponse<Object>, Object>
-        implements Constants {
+public class GetSavedSearchesTask extends AbstractTask<UserKey[], SingleResponse<Object>, Object> {
 
     private final Context mContext;
 

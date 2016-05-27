@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -31,7 +32,7 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 /**
  * Created by mariotaku on 15/4/6.
  */
-public class StatusAdapterLinkClickHandler<D> extends OnLinkClickHandler {
+public class StatusAdapterLinkClickHandler<D> extends OnLinkClickHandler implements Constants {
 
     private IStatusesAdapter<D> adapter;
 

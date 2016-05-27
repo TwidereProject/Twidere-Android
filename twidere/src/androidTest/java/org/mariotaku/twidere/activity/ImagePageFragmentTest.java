@@ -3,7 +3,6 @@ package org.mariotaku.twidere.activity;
 import android.net.Uri;
 
 import org.junit.Test;
-import org.mariotaku.twidere.activity.MediaViewerActivity;
 
 import static org.junit.Assert.assertEquals;
 

@@ -2,7 +2,6 @@ package org.mariotaku.twidere.model.util;
 
 import android.content.Context;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
@@ -10,7 +9,7 @@ import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 /**
  * Created by mariotaku on 16/2/12.
  */
-public class ParcelableStatusUpdateUtils implements Constants {
+public class ParcelableStatusUpdateUtils {
     private ParcelableStatusUpdateUtils() {
     }
 

@@ -46,8 +46,8 @@ import org.mariotaku.twidere.view.holder.MessageViewHolder;
 
 import java.lang.ref.WeakReference;
 
-public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHolder> implements Constants,
-        IDirectMessagesAdapter {
+public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHolder> implements
+        Constants, IDirectMessagesAdapter {
 
     private static final int ITEM_VIEW_TYPE_MESSAGE_OUTGOING = 1;
     private static final int ITEM_VIEW_TYPE_MESSAGE_INCOMING = 2;

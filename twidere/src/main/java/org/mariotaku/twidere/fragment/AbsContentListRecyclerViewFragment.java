@@ -38,11 +38,9 @@ public abstract class AbsContentListRecyclerViewFragment<A extends LoadMoreSuppo
     private DividerItemDecoration mItemDecoration;
 
     @Override
-    protected void setupRecyclerView(Context context, boolean compact) {
-        if (compact) {
-            mItemDecoration = new DividerItemDecoration(context, getLayoutManager().getOrientation());
-            getRecyclerView().addItemDecoration(mItemDecoration);
-        }
+    protected void setupRecyclerView(Context context) {
+        mItemDecoration = new DividerItemDecoration(context, getLayoutManager().getOrientation());
+        getRecyclerView().addItemDecoration(mItemDecoration);
     }
 
     @Override

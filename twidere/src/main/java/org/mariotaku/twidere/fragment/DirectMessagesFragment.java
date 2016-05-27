@@ -95,7 +95,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
     @NonNull
     @Override
-    protected MessageEntriesAdapter onCreateAdapter(Context context, boolean compact) {
+    protected MessageEntriesAdapter onCreateAdapter(Context context) {
         return new MessageEntriesAdapter(context);
     }
 

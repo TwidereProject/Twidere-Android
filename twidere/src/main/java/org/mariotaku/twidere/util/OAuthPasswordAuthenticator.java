@@ -44,7 +44,6 @@ import org.mariotaku.restfu.http.mime.FormBody;
 import org.mariotaku.restfu.http.mime.SimpleBody;
 import org.mariotaku.restfu.oauth.OAuthToken;
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.net.SimpleCookieJar;
 
 import java.io.IOException;
@@ -57,7 +56,9 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
-public class OAuthPasswordAuthenticator implements Constants {
+import static org.mariotaku.twidere.TwidereConstants.OAUTH_CALLBACK_OOB;
+
+public class OAuthPasswordAuthenticator {
 
     private static final IAttoParser PARSER = new MarkupAttoParser();
 

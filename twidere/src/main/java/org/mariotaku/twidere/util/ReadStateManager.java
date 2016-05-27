@@ -26,7 +26,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.NotificationType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
@@ -35,7 +34,9 @@ import org.mariotaku.twidere.util.collection.CompactHashSet;
 
 import java.util.Set;
 
-public class ReadStateManager implements Constants {
+import static org.mariotaku.twidere.TwidereConstants.TIMELINE_POSITIONS_PREFERENCES_NAME;
+
+public class ReadStateManager {
 
     private final SharedPreferencesWrapper mPreferences;
 

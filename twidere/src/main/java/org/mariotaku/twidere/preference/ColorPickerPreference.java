@@ -39,14 +39,16 @@ import android.widget.ImageView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 import org.mariotaku.twidere.util.TwidereColorUtils;
 
 import me.uucky.colorpicker.ColorPickerDialog;
 
-public class ColorPickerPreference extends DialogPreference implements Constants,
+import static org.mariotaku.twidere.Constants.PRESET_COLORS;
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+
+public class ColorPickerPreference extends DialogPreference implements
         IDialogPreference {
 
     private int mDefaultValue = Color.WHITE;

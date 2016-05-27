@@ -35,7 +35,6 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ExtensionsAdapter;
 import org.mariotaku.twidere.loader.ExtensionsListLoader;
@@ -45,7 +44,7 @@ import org.mariotaku.twidere.util.PermissionsManager;
 
 import java.util.List;
 
-public class ExtensionsListFragment extends BaseListFragment implements Constants, LoaderCallbacks<List<ExtensionInfo>> {
+public class ExtensionsListFragment extends BaseListFragment implements LoaderCallbacks<List<ExtensionInfo>> {
 
     private ExtensionsAdapter mAdapter;
     private PackageManager mPackageManager;

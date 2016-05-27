@@ -37,6 +37,7 @@ import com.bluelinelabs.logansquare.JsonMapper;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
+import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
@@ -50,7 +51,6 @@ import org.mariotaku.sqliteqb.library.Tables;
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;

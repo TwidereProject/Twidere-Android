@@ -25,11 +25,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
 
-public class UsageStatisticsActivity extends BaseActivity implements Constants {
+public class UsageStatisticsActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {

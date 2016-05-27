@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
-import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
@@ -20,6 +19,7 @@ import org.mariotaku.microblog.library.twitter.model.MediaEntity;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.UrlEntity;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
@@ -278,22 +278,31 @@ public class InternalTwitterContentUtils {
     public static String formatDirectMessageText(final DirectMessage message) {
         if (message == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, true);
-        parseEntities(builder, message);
-        return builder.build();
-    }
-
-    public static String formatStatusText(final Status status) {
-        if (status == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, true);
-        parseEntities(builder, status);
+        parseEntities(builder, message, null);
         return builder.build();
     }
 
     public static Pair<String, List<SpanItem>> formatStatusTextWithIndices(final Status status) {
         if (status == null) return null;
         //TODO handle twitter video url
-        final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, false);
-        parseEntities(builder, status);
+
+        String text = status.getFullText();
+        CodePointArray source;
+        int[] range = null;
+        if (text == null) {
+            text = status.getText();
+            source = new CodePointArray(text);
+        } else {
+            range = status.getDisplayTextRange();
+            if (range != null && range.length == 2) {
+                source = new CodePointArray(text).subCodePointArray(range[0], range[1]);
+            } else {
+                range = null;
+                source = new CodePointArray(text);
+            }
+        }
+        final HtmlBuilder builder = new HtmlBuilder(source, false, true, false);
+        parseEntities(builder, status, range);
         return builder.buildWithIndices();
     }
 
@@ -301,7 +310,7 @@ public class InternalTwitterContentUtils {
         return TextUtils.isEmpty(entity.getMediaUrlHttps()) ? entity.getMediaUrl() : entity.getMediaUrlHttps();
     }
 
-    private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
+    private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities, @Nullable int[] range) {
         // Format media.
         MediaEntity[] mediaEntities = null;
         if (entities instanceof ExtendedEntitySupport) {
@@ -310,25 +319,40 @@ public class InternalTwitterContentUtils {
         if (mediaEntities == null) {
             mediaEntities = entities.getMediaEntities();
         }
+        int[] startEnd = new int[2];
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
-                final int start = mediaEntity.getStart(), end = mediaEntity.getEnd();
                 final String mediaUrl = getMediaUrl(mediaEntity);
-                if (mediaUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(mediaEntity.getExpandedUrl(), mediaEntity.getDisplayUrl(), start, end);
+                if (mediaUrl != null && getStartEndForEntity(mediaEntity, range, startEnd)) {
+                    builder.addLink(mediaEntity.getExpandedUrl(), mediaEntity.getDisplayUrl(),
+                            startEnd[0], startEnd[1]);
                 }
             }
         }
         final UrlEntity[] urlEntities = entities.getUrlEntities();
         if (urlEntities != null) {
             for (final UrlEntity urlEntity : urlEntities) {
-                final int start = urlEntity.getStart(), end = urlEntity.getEnd();
                 final String expandedUrl = urlEntity.getExpandedUrl();
-                if (expandedUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(expandedUrl, urlEntity.getDisplayUrl(), start, end);
+                if (expandedUrl != null && getStartEndForEntity(urlEntity, range, startEnd)) {
+                    builder.addLink(expandedUrl, urlEntity.getDisplayUrl(), startEnd[0],
+                            startEnd[1]);
                 }
             }
         }
+    }
+
+    private static boolean getStartEndForEntity(UrlEntity entity, @Nullable int[] range,
+                                                @NonNull int[] out) {
+        int offset = 0;
+        if (range != null) {
+            offset = range[0];
+        }
+        out[0] = entity.getStart() - offset;
+        out[1] = entity.getEnd() - offset;
+        if (range != null) {
+            return out[0] >= 0 && out[1] <= range[1] && out[0] <= out[1];
+        }
+        return true;
     }
 
     public static String getOriginalId(@NonNull ParcelableStatus status) {

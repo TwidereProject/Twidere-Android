@@ -47,7 +47,6 @@ import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport;
 import org.mariotaku.twidere.util.ListViewScrollHandler;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
-import org.mariotaku.twidere.util.Utils;
 
 /**
  * Created by mariotaku on 15/4/16.
@@ -155,13 +154,12 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
         final View view = getView();
         assert view != null;
         final Context context = view.getContext();
-        final boolean compact = Utils.isCompactCards(context);
         final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
         final int colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(colorRes);
-        mAdapter = onCreateAdapter(context, compact);
+        mAdapter = onCreateAdapter(context);
         mListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -221,7 +219,7 @@ public abstract class AbsContentListViewFragment<A extends ListAdapter> extends 
     }
 
     @NonNull
-    protected abstract A onCreateAdapter(Context context, boolean compact);
+    protected abstract A onCreateAdapter(Context context);
 
     protected final void showContent() {
         mErrorContainer.setVisibility(View.GONE);

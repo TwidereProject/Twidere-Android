@@ -27,6 +27,8 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_USERS;
+
 public class IntentExtrasUsersLoader extends ParcelableUsersLoader {
 
 	private final Bundle mExtras;

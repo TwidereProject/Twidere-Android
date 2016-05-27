@@ -27,7 +27,6 @@ import android.widget.CompoundButton;
 
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -43,7 +42,7 @@ import org.mariotaku.twidere.view.holder.AccountViewHolder;
 
 import javax.inject.Inject;
 
-public class AccountsAdapter extends SimpleDragSortCursorAdapter implements Constants, IBaseAdapter {
+public class AccountsAdapter extends SimpleDragSortCursorAdapter implements IBaseAdapter {
 
     @Inject
     MediaLoaderWrapper mImageLoader;

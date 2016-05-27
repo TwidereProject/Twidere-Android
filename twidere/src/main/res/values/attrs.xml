@@ -12,6 +12,7 @@
         <attr name="cardItemBackgroundColor" format="color"/>
         <attr name="quoteIndicatorBackgroundColor" format="color"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
+        <attr name="mediaLabelBackground" format="color"/>
         <attr name="ateThemeKey" format="string"/>
     </declare-styleable>
     <declare-styleable name="ColorLabelView">

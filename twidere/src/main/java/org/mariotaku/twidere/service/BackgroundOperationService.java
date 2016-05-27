@@ -96,9 +96,6 @@ import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.TimelineType;
 import edu.tsinghua.hotmobi.model.TweetEvent;
 
-import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;
-import static org.mariotaku.twidere.util.Utils.getImagePathFromUri;
-
 public class BackgroundOperationService extends IntentService implements Constants {
 
 
@@ -299,7 +296,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
             showOkMessage(R.string.direct_message_sent, false);
         } else {
-            final ContentValues values = createMessageDraft(accountId, recipientId, text, imageUri);
+            final ContentValues values = ContentValuesCreator.createMessageDraft(accountId, recipientId, text, imageUri);
             resolver.insert(Drafts.CONTENT_URI, values);
             showErrorMessage(R.string.action_sending_direct_message, result.getException(), true);
         }
@@ -466,7 +463,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                         } finally {
                             Utils.closeSilently(body);
                         }
-                        final String path = getImagePathFromUri(this, mediaUri);
+                        final String path = Utils.getImagePathFromUri(this, mediaUri);
                         if (path != null) {
                             final File file = new File(path);
                             if (!file.delete()) {

@@ -22,8 +22,8 @@ package org.mariotaku.twidere.util;
 import android.content.Context;
 import android.util.SparseIntArray;
 
-import org.mariotaku.twidere.R;
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
+import org.mariotaku.twidere.R;
 
 public class StatusCodeMessageUtils {
 

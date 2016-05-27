@@ -236,8 +236,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     @NonNull
     @Override
-    protected ListParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ListParcelableStatusesAdapter(context, compact);
+    protected ListParcelableStatusesAdapter onCreateAdapter(final Context context) {
+        return new ListParcelableStatusesAdapter(context);
     }
 
     @Override

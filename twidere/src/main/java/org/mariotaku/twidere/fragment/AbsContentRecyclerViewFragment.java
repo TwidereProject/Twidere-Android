@@ -46,10 +46,9 @@ import org.mariotaku.twidere.util.RecyclerViewScrollHandler;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView;
-import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
 
 /**
  * Created by mariotaku on 15/10/26.
@@ -215,13 +214,12 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         final View view = getView();
         assert view != null;
         final Context context = view.getContext();
-        final boolean compact = Utils.isCompactCards(context);
         final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
         final int colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(colorRes);
-        mAdapter = onCreateAdapter(context, compact);
+        mAdapter = onCreateAdapter(context);
         mLayoutManager = onCreateLayoutManager(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
@@ -247,7 +245,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
             });
         }
-        setupRecyclerView(context, compact);
+        setupRecyclerView(context);
         mRecyclerView.setAdapter(mAdapter);
 
         mScrollListener = new RecyclerViewScrollHandler(this, new RecyclerViewScrollHandler.RecyclerViewCallback(mRecyclerView));
@@ -255,7 +253,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mRecyclerView.setOnTouchListener(mScrollListener.getOnTouchListener());
     }
 
-    protected abstract void setupRecyclerView(Context context, boolean compact);
+    protected abstract void setupRecyclerView(Context context);
 
     @NonNull
     protected abstract L onCreateLayoutManager(Context context);
@@ -320,7 +318,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     }
 
     @NonNull
-    protected abstract A onCreateAdapter(Context context, boolean compact);
+    protected abstract A onCreateAdapter(Context context);
 
     protected final void showContent() {
         mErrorContainer.setVisibility(View.GONE);

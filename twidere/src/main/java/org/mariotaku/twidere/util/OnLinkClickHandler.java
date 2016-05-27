@@ -27,7 +27,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.activity.WebLinkHandlerActivity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.fragment.UserFragment;
@@ -40,7 +39,10 @@ import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.LinkEvent;
 
-public class OnLinkClickHandler implements OnLinkClickListener, Constants {
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API;
+
+public class OnLinkClickHandler implements OnLinkClickListener {
 
     @NonNull
     protected final Context context;

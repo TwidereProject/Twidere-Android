@@ -71,6 +71,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final TextView statusInfoLabel;
     private final ShortTimeView timeView;
     private final CardMediaContainer mediaPreview, quoteMediaPreview;
+    private final View mediaLabel, quoteMediaLabel;
     private final IconActionView replyIconView, retweetIconView, favoriteIconView;
     private final TextView replyCountView, retweetCountView, favoriteCountView;
     private final View replyView, retweetView, favoriteView;
@@ -79,11 +80,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final View actionButtons;
     private final View itemMenu;
     private final View profileImageSpace;
-    private final View statusInfoSpace;
     @Nullable
     private final View statusContentUpperSpace, statusContentLowerSpace;
     @Nullable
     private final View textMediaSpace, quotedTextMediaSpace;
+    @Nullable
+    private final View mediaLabelSpace, quotedMediaLabelSpace;
     private final EventListener eventListener;
 
     private StatusClickListener statusClickListener;
@@ -104,10 +106,11 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         statusInfoLabel = (TextView) itemView.findViewById(R.id.status_info_label);
         timeView = (ShortTimeView) itemView.findViewById(R.id.time);
         profileImageSpace = itemView.findViewById(R.id.profile_image_space);
-        statusInfoSpace = itemView.findViewById(R.id.status_info_space);
 
         mediaPreview = (CardMediaContainer) itemView.findViewById(R.id.media_preview);
         quoteMediaPreview = (CardMediaContainer) itemView.findViewById(R.id.quoted_media_preview);
+        mediaLabel = itemView.findViewById(R.id.media_label);
+        quoteMediaLabel = itemView.findViewById(R.id.quoted_media_label);
 
         quoteIndicator = (ForegroundColorView) itemView.findViewById(R.id.quote_indicator);
 
@@ -128,8 +131,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
         statusContentUpperSpace = itemView.findViewById(R.id.status_content_upper_space);
         statusContentLowerSpace = itemView.findViewById(R.id.status_content_lower_space);
-        textMediaSpace = itemView.findViewById(R.id.text_media_space);
-        quotedTextMediaSpace = itemView.findViewById(R.id.quoted_text_media_space);
+
+        textMediaSpace = null;
+        quotedTextMediaSpace = null;
+
+        mediaLabelSpace = null;
+        quotedMediaLabelSpace = null;
         //TODO
         // profileImageView.setSelectorColor(ThemeUtils.getUserHighlightColor(itemView.getContext()));
 
@@ -144,9 +151,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         profileImageView.setVisibility(profileImageEnabled ? View.VISIBLE : View.GONE);
         if (profileImageSpace != null) {
             profileImageSpace.setVisibility(profileImageEnabled ? View.VISIBLE : View.GONE);
-        }
-        if (statusInfoSpace != null) {
-            statusInfoSpace.setVisibility(profileImageEnabled ? View.VISIBLE : View.GONE);
         }
         if (statusContentUpperSpace != null) {
             statusContentUpperSpace.setVisibility(View.VISIBLE);
@@ -311,10 +315,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         nameView.setName(UserColorNameManager.decideNickname(status.user_nickname, status.user_name));
         nameView.setScreenName("@" + status.user_screen_name);
 
-        if (statusInfoSpace != null) {
-            statusInfoSpace.setVisibility(View.VISIBLE);
-        }
-
         if (adapter.isProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
             if (profileImageSpace != null) {
@@ -343,36 +343,86 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             itemContent.drawEnd();
         }
 
-        if (adapter.isMediaPreviewEnabled() && (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive)) {
-            mediaPreview.setStyle(adapter.getMediaPreviewStyle());
-            quoteMediaPreview.setStyle(adapter.getMediaPreviewStyle());
+        final boolean hasQuotedMedia = !ArrayUtils.isEmpty(status.quoted_media);
+        final boolean hasPrimaryMedia = !hasQuotedMedia && !ArrayUtils.isEmpty(status.media);
 
-            final boolean showQuotedMedia = !ArrayUtils.isEmpty(status.quoted_media);
-            final boolean showMedia = !showQuotedMedia && !ArrayUtils.isEmpty(status.media);
 
-            mediaPreview.setVisibility(showMedia ? View.VISIBLE : View.GONE);
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(!status.is_quote && (showMedia || showCardActions) ?
-                        View.GONE : View.VISIBLE);
-            }
-            quoteMediaPreview.setVisibility(showQuotedMedia ? View.VISIBLE : View.GONE);
-            if (quotedTextMediaSpace != null) {
-                quotedTextMediaSpace.setVisibility(!status.is_quote || showQuotedMedia ?
-                        View.GONE : View.VISIBLE);
-            }
-
-            mediaPreview.displayMedia(status.media, loader, status.account_key, -1, this,
-                    adapter.getMediaLoadingHandler());
-            quoteMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1, this,
-                    adapter.getMediaLoadingHandler());
-        } else {
+        if (!hasPrimaryMedia && !hasQuotedMedia) {
+            // No media, hide all related views
+            mediaLabel.setVisibility(View.GONE);
+            quoteMediaLabel.setVisibility(View.GONE);
             mediaPreview.setVisibility(View.GONE);
             quoteMediaPreview.setVisibility(View.GONE);
+
             if (textMediaSpace != null) {
                 textMediaSpace.setVisibility(showCardActions && !status.is_quote ? View.GONE : View.VISIBLE);
             }
             if (quotedTextMediaSpace != null) {
                 quotedTextMediaSpace.setVisibility(status.is_quote ? View.VISIBLE : View.GONE);
+            }
+
+            if (mediaLabelSpace != null) {
+                mediaLabelSpace.setVisibility(View.GONE);
+            }
+            if (quotedMediaLabelSpace != null) {
+                quotedMediaLabelSpace.setVisibility(View.GONE);
+            }
+        } else {
+            if (textMediaSpace != null) {
+                textMediaSpace.setVisibility(!status.is_quote && (hasPrimaryMedia || showCardActions) ?
+                        View.GONE : View.VISIBLE);
+            }
+            if (quotedTextMediaSpace != null) {
+                quotedTextMediaSpace.setVisibility(!status.is_quote || hasQuotedMedia ?
+                        View.GONE : View.VISIBLE);
+            }
+
+            if (!adapter.isSensitiveContentEnabled() && status.is_possibly_sensitive) {
+                // Sensitive content, show label instead of media view
+                mediaLabel.setVisibility(hasPrimaryMedia ? View.VISIBLE : View.GONE);
+                quoteMediaLabel.setVisibility(hasQuotedMedia ? View.VISIBLE : View.GONE);
+
+                mediaPreview.setVisibility(View.GONE);
+                quoteMediaPreview.setVisibility(View.GONE);
+
+            } else if (!adapter.isMediaPreviewEnabled()) {
+                // Media preview disabled, just show label
+                mediaLabel.setVisibility(hasPrimaryMedia ? View.VISIBLE : View.GONE);
+                quoteMediaLabel.setVisibility(hasQuotedMedia ? View.VISIBLE : View.GONE);
+
+                if (mediaLabelSpace != null) {
+                    mediaLabelSpace.setVisibility(hasPrimaryMedia && !showCardActions ? View.VISIBLE : View.GONE);
+                }
+                if (quotedMediaLabelSpace != null) {
+                    quotedMediaLabelSpace.setVisibility(hasQuotedMedia && !showCardActions ? View.VISIBLE : View.GONE);
+                }
+
+                mediaPreview.setVisibility(View.GONE);
+                quoteMediaPreview.setVisibility(View.GONE);
+
+            } else {
+                // Show media
+
+                mediaLabel.setVisibility(View.GONE);
+                quoteMediaLabel.setVisibility(View.GONE);
+
+                if (mediaLabelSpace != null) {
+                    mediaLabelSpace.setVisibility(View.GONE);
+                }
+                if (quotedMediaLabelSpace != null) {
+                    quotedMediaLabelSpace.setVisibility(View.GONE);
+                }
+
+                mediaPreview.setStyle(adapter.getMediaPreviewStyle());
+                quoteMediaPreview.setStyle(adapter.getMediaPreviewStyle());
+
+                mediaPreview.setVisibility(hasPrimaryMedia ? View.VISIBLE : View.GONE);
+                quoteMediaPreview.setVisibility(hasQuotedMedia ? View.VISIBLE : View.GONE);
+
+                mediaPreview.displayMedia(status.media, loader, status.account_key, -1, this,
+                        adapter.getMediaLoadingHandler());
+                quoteMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1, this,
+                        adapter.getMediaLoadingHandler());
             }
         }
 

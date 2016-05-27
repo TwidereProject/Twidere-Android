@@ -60,13 +60,13 @@ public abstract class ParcelableGroupsFragment extends AbsContentListRecyclerVie
 
     @NonNull
     @Override
-    protected final ParcelableGroupsAdapter onCreateAdapter(Context context, boolean compact) {
+    protected final ParcelableGroupsAdapter onCreateAdapter(Context context) {
         return new ParcelableGroupsAdapter(context);
     }
 
     @Override
-    protected void setupRecyclerView(Context context, boolean compact) {
-        super.setupRecyclerView(context, true);
+    protected void setupRecyclerView(Context context) {
+        super.setupRecyclerView(context);
     }
 
     @Nullable

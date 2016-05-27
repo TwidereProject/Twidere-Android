@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.annotation.Preference;
 
 import java.lang.reflect.Field;
@@ -14,7 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class SharedPreferencesWrapper implements Constants, SharedPreferences {
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+
+public class SharedPreferencesWrapper implements SharedPreferences {
 
     private final Context mContext;
     private final SharedPreferences mPreferences;

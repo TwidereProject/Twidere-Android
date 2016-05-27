@@ -68,7 +68,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private final int mMediaPreviewStyle;
     @TwidereLinkify.HighlightStyle
     private final int mLinkHighlightingStyle;
-    private final boolean mCompactCards;
+    private final boolean mCompactCards = true;
     private final boolean mNameFirst;
     private final boolean mDisplayMediaPreview;
     private final boolean mDisplayProfileImage;
@@ -84,14 +84,13 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private long mShowingActionCardId = RecyclerView.NO_ID;
     private boolean mLastItemFiltered;
 
-    public ParcelableStatusesAdapter(Context context, boolean compact) {
+    public ParcelableStatusesAdapter(Context context) {
         super(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context),
                 ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mLoadingHandler = new MediaLoadingHandler(getProgressViewIds());
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mLinkHighlightingStyle = Utils.getLinkHighlightingStyleInt(mPreferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
@@ -348,7 +347,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW_TYPE_STATUS: {
-                return (RecyclerView.ViewHolder) onCreateStatusViewHolder(parent, mCompactCards);
+                return (RecyclerView.ViewHolder) onCreateStatusViewHolder(parent);
             }
             case ITEM_VIEW_TYPE_GAP: {
                 final View view = mInflater.inflate(R.layout.card_item_gap, parent, false);
@@ -374,7 +373,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     }
 
     @NonNull
-    protected abstract IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent, boolean compact);
+    protected abstract IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent);
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {

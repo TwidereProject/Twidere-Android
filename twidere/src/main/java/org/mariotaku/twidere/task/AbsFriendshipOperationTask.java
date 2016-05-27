@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
@@ -19,8 +18,8 @@ import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -30,7 +29,7 @@ import javax.inject.Inject;
  * Created by mariotaku on 16/3/11.
  */
 public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriendshipOperationTask.Arguments,
-        SingleResponse<ParcelableUser>, Object> implements Constants {
+        SingleResponse<ParcelableUser>, Object> {
 
     protected final Context context;
     @FriendshipTaskEvent.Action

@@ -31,6 +31,11 @@ public final class CodePointArray {
     private final int[] codePoints;
     private final int length;
 
+    CodePointArray(int[] codePoints, int length) {
+        this.codePoints = codePoints;
+        this.length = length;
+    }
+
     public CodePointArray(@NonNull final CharSequence cs) {
         final int inputLength = cs.length();
         codePoints = new int[inputLength];
@@ -70,7 +75,17 @@ public final class CodePointArray {
         return sb.toString();
     }
 
+    @NonNull
+    public CodePointArray subCodePointArray(int start, int end) {
+        return new CodePointArray(ArrayUtils.subarray(codePoints, start, end), end - start);
+    }
+
     public int[] subarray(int start, int end) {
         return ArrayUtils.subarray(codePoints, start, end);
+    }
+
+    @Override
+    public String toString() {
+        return substring(0, length);
     }
 }

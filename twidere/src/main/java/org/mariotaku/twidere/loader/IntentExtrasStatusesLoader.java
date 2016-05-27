@@ -28,6 +28,8 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUSES;
+
 public class IntentExtrasStatusesLoader extends ParcelableStatusesLoader {
 
     private final Bundle mExtras;

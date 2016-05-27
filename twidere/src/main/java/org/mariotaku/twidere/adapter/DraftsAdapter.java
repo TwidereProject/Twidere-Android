@@ -27,14 +27,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
-import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -47,7 +45,9 @@ import org.mariotaku.twidere.view.holder.DraftViewHolder;
 
 import javax.inject.Inject;
 
-public class DraftsAdapter extends SimpleCursorAdapter implements Constants {
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_MEDIA_PREVIEW_STYLE;
+
+public class DraftsAdapter extends SimpleCursorAdapter {
 
     @Inject
     MediaLoaderWrapper mImageLoader;

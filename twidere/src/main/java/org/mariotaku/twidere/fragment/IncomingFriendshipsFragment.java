@@ -50,8 +50,8 @@ public class IncomingFriendshipsFragment extends CursorSupportUsersListFragment 
 
     @NonNull
     @Override
-    protected ParcelableUsersAdapter onCreateAdapter(Context context, boolean compact) {
-        final ParcelableUsersAdapter adapter = super.onCreateAdapter(context, compact);
+    protected ParcelableUsersAdapter onCreateAdapter(Context context) {
+        final ParcelableUsersAdapter adapter = super.onCreateAdapter(context);
         final Bundle args = getArguments();
         final UserKey accountKey = args.getParcelable(EXTRA_ACCOUNT_KEY);
         if (accountKey == null) {

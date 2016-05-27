@@ -29,6 +29,10 @@ import android.support.v4.app.FragmentManager;
 
 import org.mariotaku.twidere.fragment.PhishingLinkWarningDialogFragment;
 
+import static org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_URI;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_PHISHING_LINK_WARNING;
+
 public class DirectMessageOnLinkClickHandler extends OnLinkClickHandler {
 
     private static final String[] SHORT_LINK_SERVICES = new String[]{"bit.ly", "ow.ly", "tinyurl.com", "goo.gl",

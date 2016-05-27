@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util;
 import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.Relationship;
 import org.mariotaku.microblog.library.twitter.model.SavedSearch;
@@ -30,6 +29,7 @@ import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.Trend;
 import org.mariotaku.microblog.library.twitter.model.Trends;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.CachedRelationship;
 import org.mariotaku.twidere.model.CachedRelationshipValuesCreator;
 import org.mariotaku.twidere.model.Draft;
@@ -60,8 +60,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText;
 
 public final class ContentValuesCreator implements TwidereConstants {
     private ContentValuesCreator() {
@@ -103,7 +101,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         final String text_html = InternalTwitterContentUtils.formatDirectMessageText(message);
         values.put(DirectMessages.TEXT_HTML, text_html);
         values.put(DirectMessages.TEXT_PLAIN, message.getText());
-        values.put(DirectMessages.TEXT_UNESCAPED, toPlainText(text_html));
+        values.put(DirectMessages.TEXT_UNESCAPED, HtmlEscapeHelper.toPlainText(text_html));
         values.put(DirectMessages.IS_OUTGOING, isOutgoing);
         values.put(DirectMessages.SENDER_NAME, sender.getName());
         values.put(DirectMessages.SENDER_SCREEN_NAME, sender.getScreenName());

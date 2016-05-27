@@ -41,7 +41,6 @@ import android.widget.EditText;
 
 import com.twitter.Validator;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.model.Draft;
@@ -65,7 +64,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
 
-public class RetweetQuoteDialogFragment extends BaseDialogFragment implements Constants {
+public class RetweetQuoteDialogFragment extends BaseDialogFragment {
 
     public static final String FRAGMENT_TAG = "retweet_quote";
     private static final boolean SHOW_PROTECTED_CONFIRM = Boolean.parseBoolean("false");

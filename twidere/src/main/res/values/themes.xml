@@ -18,6 +18,7 @@
         <item name="menuIconColor">@color/action_icon_light</item>
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
+        <item name="mediaLabelBackground">#505050</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">dark</item>

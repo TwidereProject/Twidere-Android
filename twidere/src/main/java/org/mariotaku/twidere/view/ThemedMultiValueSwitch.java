@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.afollestad.appthemeengine.ATE;
-import com.afollestad.appthemeengine.ATEActivity;
 import com.afollestad.appthemeengine.inflation.ViewInterface;
 import com.afollestad.appthemeengine.tagprocessors.TagProcessor;
 import com.afollestad.appthemeengine.util.ATEUtil;

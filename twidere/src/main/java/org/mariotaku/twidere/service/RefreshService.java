@@ -45,6 +45,7 @@ import org.mariotaku.twidere.receiver.PowerStateReceiver;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.util.Arrays;
@@ -53,12 +54,6 @@ import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.model.BatteryRecord;
 import edu.tsinghua.hotmobi.model.ScreenEvent;
-
-import static org.mariotaku.twidere.util.Utils.getDefaultAccountKey;
-import static org.mariotaku.twidere.util.Utils.hasAutoRefreshAccounts;
-import static org.mariotaku.twidere.util.Utils.isBatteryOkay;
-import static org.mariotaku.twidere.util.Utils.isNetworkAvailable;
-import static org.mariotaku.twidere.util.Utils.shouldStopAutoRefreshOnBatteryLow;
 
 public class RefreshService extends Service implements Constants {
 
@@ -267,7 +262,7 @@ public class RefreshService extends Service implements Constants {
         registerReceiver(mPowerStateReceiver, batteryFilter);
         registerReceiver(mScreenStateReceiver, screenFilter);
         PowerStateReceiver.setServiceReceiverStarted(true);
-        if (hasAutoRefreshAccounts(this)) {
+        if (Utils.hasAutoRefreshAccounts(this)) {
             startAutoRefresh();
         } else {
             stopSelf();
@@ -280,7 +275,7 @@ public class RefreshService extends Service implements Constants {
         unregisterReceiver(mScreenStateReceiver);
         unregisterReceiver(mPowerStateReceiver);
         unregisterReceiver(mStateReceiver);
-        if (hasAutoRefreshAccounts(this)) {
+        if (Utils.hasAutoRefreshAccounts(this)) {
             // Auto refresh enabled, so I will try to start service after it was
             // stopped.
             startService(new Intent(this, getClass()));
@@ -289,11 +284,11 @@ public class RefreshService extends Service implements Constants {
     }
 
     protected boolean isAutoRefreshAllowed() {
-        return isNetworkAvailable(this) && (isBatteryOkay(this) || !shouldStopAutoRefreshOnBatteryLow(this));
+        return Utils.isNetworkAvailable(this) && (Utils.isBatteryOkay(this) || !Utils.shouldStopAutoRefreshOnBatteryLow(this));
     }
 
     private void getLocalTrends(final UserKey[] accountIds) {
-        final UserKey account_id = getDefaultAccountKey(this);
+        final UserKey account_id = Utils.getDefaultAccountKey(this);
         final int woeid = mPreferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1);
         mTwitterWrapper.getLocalTrendsAsync(account_id, woeid);
     }

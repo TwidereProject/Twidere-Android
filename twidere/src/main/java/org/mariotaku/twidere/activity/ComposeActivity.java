@@ -1516,9 +1516,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
 
     private void updateTextCount() {
         if (mSendTextCountView == null || mEditText == null) return;
-        final String textOrig = ParseUtils.parseString(mEditText.getText());
-        final String text = hasMedia() && textOrig != null ? mImageUploaderUsed ? Utils.getMediaUploadStatus(this,
-                new String[]{FAKE_IMAGE_LINK}, textOrig) : textOrig + " " + FAKE_IMAGE_LINK : textOrig;
+        final String text = ParseUtils.parseString(mEditText.getText());
         final int validatedCount = text != null ? mValidator.getTweetLength(text) : 0;
         mSendTextCountView.setTextCount(validatedCount);
     }
