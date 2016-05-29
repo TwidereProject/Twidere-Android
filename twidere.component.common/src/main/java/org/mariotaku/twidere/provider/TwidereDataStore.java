@@ -23,9 +23,11 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import org.mariotaku.twidere.model.DraftTableInfo;
 import org.mariotaku.twidere.model.ParcelableActivityTableInfo;
 import org.mariotaku.twidere.model.ParcelableDirectMessageTableInfo;
 import org.mariotaku.twidere.model.ParcelableStatusTableInfo;
+import org.mariotaku.twidere.model.ParcelableUserTableInfo;
 
 @SuppressWarnings("unused")
 public interface TwidereDataStore {
@@ -302,20 +304,11 @@ public interface TwidereDataStore {
 
         String EXTRAS = "extras";
 
-        String[] COLUMNS = {_ID, USER_KEY, CREATED_AT, NAME, SCREEN_NAME, DESCRIPTION_PLAIN, LOCATION,
-                URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, PROFILE_BACKGROUND_URL, IS_PROTECTED,
-                IS_VERIFIED, IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT,
-                FAVORITES_COUNT, LISTED_COUNT, MEDIA_COUNT, DESCRIPTION_SPANS,
-                URL_EXPANDED, BACKGROUND_COLOR, LINK_COLOR, TEXT_COLOR, LAST_SEEN,
-                DESCRIPTION_UNESCAPED, EXTRAS};
+        String[] COLUMNS = ParcelableUserTableInfo.COLUMNS;
 
         String[] BASIC_COLUMNS = {_ID, USER_KEY, NAME, SCREEN_NAME, PROFILE_IMAGE_URL};
 
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_TEXT, TYPE_TEXT};
+        String[] TYPES = ParcelableUserTableInfo.TYPES;
 
     }
 
@@ -581,11 +574,9 @@ public interface TwidereDataStore {
 
         String ACTION_EXTRAS = "action_extras";
 
-        String[] COLUMNS = {_ID, TEXT, ACCOUNT_KEYS, LOCATION, MEDIA,
-                IN_REPLY_TO_STATUS_ID, IS_POSSIBLY_SENSITIVE, TIMESTAMP, ACTION_TYPE, ACTION_EXTRAS};
+        String[] COLUMNS = DraftTableInfo.COLUMNS;
 
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_INT, TYPE_INT, TYPE_BOOLEAN, TYPE_INT, TYPE_TEXT, TYPE_TEXT};
+        String[] TYPES = DraftTableInfo.TYPES;
 
     }
 
