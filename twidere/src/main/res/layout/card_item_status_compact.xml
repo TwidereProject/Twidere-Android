@@ -22,8 +22,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:background="?cardItemBackgroundColor">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -173,7 +172,7 @@
                 tools:text="@string/sample_status_text"
                 tools:visibility="visible"/>
 
-            <TextView
+            <org.mariotaku.twidere.view.ActionIconThemedTextView
                 android:id="@+id/media_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -183,9 +182,9 @@
                 android:layout_alignStart="@+id/text"
                 android:layout_below="@+id/text"
                 android:layout_marginTop="@dimen/element_spacing_xsmall"
-                android:gravity="center"
-                android:minHeight="@dimen/element_size_normal"
-                android:padding="@dimen/element_spacing_normal"
+                android:drawableLeft="@drawable/ic_action_gallery"
+                android:drawableStart="@drawable/ic_action_gallery"
+                android:gravity="center_vertical"
                 android:text="@string/media"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textStyle="bold"/>
@@ -254,7 +253,7 @@
                 tools:text="@string/sample_status_text"
                 tools:visibility="visible"/>
 
-            <TextView
+            <org.mariotaku.twidere.view.ActionIconThemedTextView
                 android:id="@+id/quoted_media_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -262,9 +261,9 @@
                 android:layout_marginTop="@dimen/element_spacing_xsmall"
                 android:layout_toEndOf="@+id/quote_indicator"
                 android:layout_toRightOf="@+id/quote_indicator"
-                android:gravity="center"
-                android:minHeight="@dimen/element_size_normal"
-                android:padding="@dimen/element_spacing_normal"
+                android:drawableLeft="@drawable/ic_action_gallery"
+                android:drawableStart="@drawable/ic_action_gallery"
+                android:gravity="center_vertical"
                 android:text="@string/media"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textStyle="bold"/>

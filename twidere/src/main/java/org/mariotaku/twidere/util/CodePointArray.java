@@ -88,4 +88,12 @@ public final class CodePointArray {
     public String toString() {
         return substring(0, length);
     }
+
+    public int charCount(int start, int end) {
+        int count = 0;
+        for (int i = start; i < end; i++) {
+            count += Character.charCount(codePoints[i]);
+        }
+        return count;
+    }
 }

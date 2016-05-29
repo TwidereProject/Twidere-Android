@@ -272,15 +272,23 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                     status.quoted_user_name));
             quotedNameView.setScreenName("@" + status.quoted_user_screen_name);
 
+            int quotedDisplayEnd = -1;
+            if (status.extras.quoted_display_text_range != null) {
+                quotedDisplayEnd = status.extras.quoted_display_text_range[1];
+            }
+            final CharSequence text;
             if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                final SpannableStringBuilder text = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
-                ParcelableStatusUtils.applySpans(text, status.quoted_spans);
-                linkify.applyAllLinks(text, status.account_key, getLayoutPosition(),
+                text = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
+                ParcelableStatusUtils.applySpans((Spannable) text, status.quoted_spans);
+                linkify.applyAllLinks((Spannable) text, status.account_key, getLayoutPosition(),
                         status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(),
                         skipLinksInText);
-                quotedTextView.setText(text);
             } else {
-                final String text = status.quoted_text_unescaped;
+                text = status.quoted_text_unescaped;
+            }
+            if (quotedDisplayEnd != -1 && quotedDisplayEnd <= text.length()) {
+                quotedTextView.setText(text.subSequence(0, quotedDisplayEnd));
+            } else {
                 quotedTextView.setText(text);
             }
 
@@ -426,15 +434,25 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             }
         }
 
+        int displayEnd = -1;
+        if (status.extras.display_text_range != null) {
+            displayEnd = status.extras.display_text_range[1];
+        }
+
+        final CharSequence text;
         if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-            final SpannableStringBuilder text = SpannableStringBuilder.valueOf(status.text_unescaped);
-            ParcelableStatusUtils.applySpans(text, status.spans);
-            linkify.applyAllLinks(text, status.account_key, getLayoutPosition(),
+            text = SpannableStringBuilder.valueOf(status.text_unescaped);
+            ParcelableStatusUtils.applySpans((Spannable) text, status.spans);
+            linkify.applyAllLinks((Spannable) text, status.account_key, getLayoutPosition(),
                     status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(),
                     skipLinksInText);
-            textView.setText(text);
         } else {
-            textView.setText(status.text_unescaped);
+            text = status.text_unescaped;
+        }
+        if (displayEnd != -1 && displayEnd <= text.length()) {
+            textView.setText(text.subSequence(0, displayEnd));
+        } else {
+            textView.setText(text);
         }
 
         if (replyCount > 0) {

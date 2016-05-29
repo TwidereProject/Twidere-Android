@@ -236,25 +236,8 @@ public class InternalTwitterContentUtils {
             return "ipad_retina";
     }
 
-    public static String formatExpandedUserDescription(final User user) {
-        if (user == null) return null;
-        final String text = user.getDescription();
-        if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
-        final UrlEntity[] urls = user.getDescriptionEntities();
-        if (urls != null) {
-            for (final UrlEntity url : urls) {
-                final String expanded_url = url.getExpandedUrl();
-                if (expanded_url != null) {
-                    builder.addLink(expanded_url, expanded_url, url.getStart(), url.getEnd());
-                }
-            }
-        }
-        return builder.buildWithIndices().first;
-    }
-
-    public static Pair<String, SpanItem[]> formatUserDescription(final User user) {
-        if (user == null) return null;
+    @Nullable
+    public static Pair<String, SpanItem[]> formatUserDescription(@NonNull final User user) {
         final String text = user.getDescription();
         if (text == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
@@ -270,20 +253,21 @@ public class InternalTwitterContentUtils {
         return builder.buildWithIndices();
     }
 
+    @Nullable
     public static String unescapeTwitterStatusText(final CharSequence text) {
         if (text == null) return null;
         return UNESCAPE_TWITTER_RAW_TEXT.translate(text);
     }
 
-    public static Pair<String, SpanItem[]> formatDirectMessageText(final DirectMessage message) {
-        if (message == null) return null;
+    @NonNull
+    public static Pair<String, SpanItem[]> formatDirectMessageText(@NonNull final DirectMessage message) {
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, true);
-        parseEntities(builder, message, null);
+        parseEntities(builder, message);
         return builder.buildWithIndices();
     }
 
-    public static Pair<String, SpanItem[]> formatStatusTextWithIndices(final Status status) {
-        if (status == null) return null;
+    @NonNull
+    public static StatusTextWithIndices formatStatusTextWithIndices(@NonNull final Status status) {
         //TODO handle twitter video url
 
         String text = status.getFullText();
@@ -294,23 +278,35 @@ public class InternalTwitterContentUtils {
             source = new CodePointArray(text);
         } else {
             range = status.getDisplayTextRange();
-            if (range != null && range.length == 2) {
-                source = new CodePointArray(text).subCodePointArray(range[0], range[1]);
-            } else {
-                range = null;
-                source = new CodePointArray(text);
-            }
+            source = new CodePointArray(text);
         }
         final HtmlBuilder builder = new HtmlBuilder(source, false, true, false);
-        parseEntities(builder, status, range);
-        return builder.buildWithIndices();
+        parseEntities(builder, status);
+        StatusTextWithIndices textWithIndices = new StatusTextWithIndices();
+        final Pair<String, SpanItem[]> pair = builder.buildWithIndices();
+        textWithIndices.text = pair.first;
+        textWithIndices.spans = pair.second;
+        if (range != null && range.length == 2) {
+            final int length = source.length();
+            textWithIndices.range = new int[2];
+            textWithIndices.range[0] = source.charCount(0, range[0]);
+            textWithIndices.range[1] = pair.first.length() - source.charCount(range[1], length);
+        }
+        return textWithIndices;
+    }
+
+    public static class StatusTextWithIndices {
+        public String text;
+        public SpanItem[] spans;
+        @Nullable
+        public int[] range;
     }
 
     public static String getMediaUrl(MediaEntity entity) {
         return TextUtils.isEmpty(entity.getMediaUrlHttps()) ? entity.getMediaUrl() : entity.getMediaUrlHttps();
     }
 
-    private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities, @Nullable int[] range) {
+    private static void parseEntities(final HtmlBuilder builder, final EntitySupport entities) {
         // Format media.
         MediaEntity[] mediaEntities = null;
         if (entities instanceof ExtendedEntitySupport) {
@@ -323,7 +319,7 @@ public class InternalTwitterContentUtils {
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
                 final String mediaUrl = getMediaUrl(mediaEntity);
-                if (mediaUrl != null && getStartEndForEntity(mediaEntity, range, startEnd)) {
+                if (mediaUrl != null && getStartEndForEntity(mediaEntity, startEnd)) {
                     builder.addLink(mediaEntity.getExpandedUrl(), mediaEntity.getDisplayUrl(),
                             startEnd[0], startEnd[1]);
                 }
@@ -333,7 +329,7 @@ public class InternalTwitterContentUtils {
         if (urlEntities != null) {
             for (final UrlEntity urlEntity : urlEntities) {
                 final String expandedUrl = urlEntity.getExpandedUrl();
-                if (expandedUrl != null && getStartEndForEntity(urlEntity, range, startEnd)) {
+                if (expandedUrl != null && getStartEndForEntity(urlEntity, startEnd)) {
                     builder.addLink(expandedUrl, urlEntity.getDisplayUrl(), startEnd[0],
                             startEnd[1]);
                 }
@@ -341,17 +337,9 @@ public class InternalTwitterContentUtils {
         }
     }
 
-    private static boolean getStartEndForEntity(UrlEntity entity, @Nullable int[] range,
-                                                @NonNull int[] out) {
-        int offset = 0;
-        if (range != null) {
-            offset = range[0];
-        }
-        out[0] = entity.getStart() - offset;
-        out[1] = entity.getEnd() - offset;
-        if (range != null) {
-            return out[0] >= 0 && out[1] <= range[1] && out[0] <= out[1];
-        }
+    private static boolean getStartEndForEntity(UrlEntity entity, @NonNull int[] out) {
+        out[0] = entity.getStart();
+        out[1] = entity.getEnd();
         return true;
     }
 

@@ -543,6 +543,14 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         @JsonField(name = "user_statusnet_profile_url")
         @ParcelableThisPlease
         public String user_statusnet_profile_url;
+        @JsonField(name = "display_text_range")
+        @ParcelableThisPlease
+        @Nullable
+        public int[] display_text_range;
+        @JsonField(name = "quoted_display_text_range")
+        @ParcelableThisPlease
+        @Nullable
+        public int[] quoted_display_text_range;
 
         @Override
         public int describeContents() {

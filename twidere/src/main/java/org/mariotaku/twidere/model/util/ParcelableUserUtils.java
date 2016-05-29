@@ -45,8 +45,10 @@ public class ParcelableUserUtils implements TwidereConstants {
         obj.screen_name = user.getScreenName();
         obj.description_plain = user.getDescription();
         final Pair<String, SpanItem[]> userDescription = InternalTwitterContentUtils.formatUserDescription(user);
-        obj.description_unescaped = userDescription.first;
-        obj.description_spans = userDescription.second;
+        if (userDescription != null) {
+            obj.description_unescaped = userDescription.first;
+            obj.description_spans = userDescription.second;
+        }
         obj.location = user.getLocation();
         obj.profile_image_url = TwitterContentUtils.getProfileImageUrl(user);
         obj.profile_banner_url = user.getProfileBannerImageUrl();
