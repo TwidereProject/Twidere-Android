@@ -103,6 +103,8 @@ public class HtmlBuilder {
             final SpanItem item = new SpanItem();
             item.start = spanStart;
             item.end = sb.length();
+            item.orig_start = start;
+            item.orig_end = end;
             if (spec instanceof LinkSpec) {
                 item.link = ((LinkSpec) spec).link;
             }

@@ -287,12 +287,40 @@ public class InternalTwitterContentUtils {
         textWithIndices.text = pair.first;
         textWithIndices.spans = pair.second;
         if (range != null && range.length == 2) {
-            final int length = source.length();
             textWithIndices.range = new int[2];
-            textWithIndices.range[0] = source.charCount(0, range[0]);
-            textWithIndices.range[1] = pair.first.length() - source.charCount(range[1], length);
+            textWithIndices.range[0] = getResultRangeLength(source, pair.second, 0, range[0]);
+            textWithIndices.range[1] = pair.first.length() - getResultRangeLength(source,
+                    pair.second, range[1], source.length());
         }
         return textWithIndices;
+    }
+
+    /**
+     * @param spans Ordered spans
+     * @param start orig_start
+     * @param end   orig_end
+     */
+    @NonNull
+    static List<SpanItem> findByOrigRange(SpanItem[] spans, int start, int end) {
+        List<SpanItem> result = new ArrayList<>();
+        for (SpanItem span : spans) {
+            if (span.orig_start >= start && span.orig_end <= end) {
+                result.add(span);
+            }
+        }
+        return result;
+    }
+
+    static int getResultRangeLength(CodePointArray source, SpanItem[] spans, int origStart, int origEnd) {
+        List<SpanItem> findResult = findByOrigRange(spans, origStart, origEnd);
+        if (findResult.isEmpty()) {
+            return source.charCount(origStart, origEnd);
+        }
+        SpanItem first = findResult.get(0), last = findResult.get(findResult.size() - 1);
+        if (first.orig_start == -1 || last.orig_end == -1)
+            return source.charCount(origStart, origEnd);
+        return source.charCount(origStart, first.orig_start) + (last.end - first.start)
+                + source.charCount(first.orig_end, origEnd);
     }
 
     public static class StatusTextWithIndices {
