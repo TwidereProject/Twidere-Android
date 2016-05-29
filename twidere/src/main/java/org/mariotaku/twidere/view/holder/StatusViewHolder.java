@@ -172,15 +172,18 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         final boolean showCardActions = isCardActionsShown();
         if (adapter.isMediaPreviewEnabled()) {
             mediaPreview.setVisibility(View.VISIBLE);
+            mediaLabel.setVisibility(View.GONE);
             if (textMediaSpace != null) {
                 textMediaSpace.setVisibility(View.GONE);
             }
         } else {
             mediaPreview.setVisibility(View.GONE);
+            mediaLabel.setVisibility(View.VISIBLE);
             if (textMediaSpace != null) {
                 textMediaSpace.setVisibility(showCardActions ? View.GONE : View.VISIBLE);
             }
         }
+        quoteMediaLabel.setVisibility(View.GONE);
         actionButtons.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
         itemMenu.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
         if (statusContentLowerSpace != null) {
