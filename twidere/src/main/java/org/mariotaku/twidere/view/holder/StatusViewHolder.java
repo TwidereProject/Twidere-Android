@@ -9,8 +9,11 @@ import android.support.v4.text.BidiFormatter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -31,6 +34,7 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UnitConvertUtils;
@@ -52,7 +56,7 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 /**
  * IDE gives me warning if I don't change default comment, so I wrote this XD
- * <p/>
+ * <p>
  * Created by mariotaku on 14/11/19.
  */
 public class StatusViewHolder extends ViewHolder implements Constants, IStatusViewHolder {
@@ -72,6 +76,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final ShortTimeView timeView;
     private final CardMediaContainer mediaPreview, quoteMediaPreview;
     private final View mediaLabel, quoteMediaLabel;
+    private final TextView mediaLabelText, quoteMediaLabelText;
     private final IconActionView replyIconView, retweetIconView, favoriteIconView;
     private final TextView replyCountView, retweetCountView, favoriteCountView;
     private final View replyView, retweetView, favoriteView;
@@ -111,6 +116,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         quoteMediaPreview = (CardMediaContainer) itemView.findViewById(R.id.quoted_media_preview);
         mediaLabel = itemView.findViewById(R.id.media_label);
         quoteMediaLabel = itemView.findViewById(R.id.quoted_media_label);
+        mediaLabelText = (TextView) itemView.findViewById(R.id.media_label_text);
+        quoteMediaLabelText = (TextView) itemView.findViewById(R.id.quoted_media_label_text);
 
         quoteIndicator = (ForegroundColorView) itemView.findViewById(R.id.quote_indicator);
 
@@ -267,35 +274,61 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         boolean skipLinksInText = status.extras != null && status.extras.support_entities;
         if (status.is_quote) {
 
-            quotedNameView.setVisibility(View.VISIBLE);
-            quotedTextView.setVisibility(View.VISIBLE);
             quoteIndicator.setVisibility(View.VISIBLE);
 
-            quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
-                    status.quoted_user_name));
-            quotedNameView.setScreenName("@" + status.quoted_user_screen_name);
+            boolean quoteContentAvailable = status.quoted_text_plain != null
+                    && status.quoted_text_unescaped != null;
+            if (quoteContentAvailable) {
 
-            int quotedDisplayEnd = -1;
-            if (status.extras.quoted_display_text_range != null) {
-                quotedDisplayEnd = status.extras.quoted_display_text_range[1];
-            }
-            final CharSequence text;
-            if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                text = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
-                ParcelableStatusUtils.applySpans((Spannable) text, status.quoted_spans);
-                linkify.applyAllLinks((Spannable) text, status.account_key, getLayoutPosition(),
-                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(),
-                        skipLinksInText);
+                quotedNameView.setVisibility(View.VISIBLE);
+                quotedTextView.setVisibility(View.VISIBLE);
+
+                quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
+                        status.quoted_user_name));
+                quotedNameView.setScreenName("@" + status.quoted_user_screen_name);
+
+                int quotedDisplayEnd = -1;
+                if (status.extras.quoted_display_text_range != null) {
+                    quotedDisplayEnd = status.extras.quoted_display_text_range[1];
+                }
+                final CharSequence quotedText;
+                if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+                    quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
+                    ParcelableStatusUtils.applySpans((Spannable) quotedText, status.quoted_spans);
+                    linkify.applyAllLinks((Spannable) quotedText, status.account_key, getLayoutPosition(),
+                            status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(),
+                            skipLinksInText);
+                } else {
+                    quotedText = status.quoted_text_unescaped;
+                }
+                if (quotedDisplayEnd == 0 || quotedText.length() == 0) {
+                    // No text
+                    final SpannableString string = SpannableString.valueOf(context.getString(R.string.no_status_content_text));
+                    string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                            android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
+                            string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    quotedTextView.setText(string);
+                } else if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length()) {
+                    quotedTextView.setText(quotedText.subSequence(0, quotedDisplayEnd));
+                } else {
+                    quotedTextView.setText(quotedText);
+                }
+
+                quoteIndicator.setColor(status.quoted_user_color);
             } else {
-                text = status.quoted_text_unescaped;
-            }
-            if (quotedDisplayEnd != -1 && quotedDisplayEnd <= text.length()) {
-                quotedTextView.setText(text.subSequence(0, quotedDisplayEnd));
-            } else {
-                quotedTextView.setText(text);
+                quotedNameView.setVisibility(View.GONE);
+                quotedTextView.setVisibility(View.VISIBLE);
+
+                // Not available
+                final SpannableString string = SpannableString.valueOf(context.getString(R.string.status_not_available_text));
+                string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                        android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
+                        string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                quotedTextView.setText(string);
+
+                quoteIndicator.setColor(0);
             }
 
-            quoteIndicator.setColor(status.quoted_user_color);
             itemContent.drawStart(status.user_color);
         } else {
 
@@ -452,7 +485,14 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         } else {
             text = status.text_unescaped;
         }
-        if (displayEnd != -1 && displayEnd <= text.length()) {
+        if (displayEnd == 0 || text.length() == 0) {
+            // No text
+            final SpannableString string = SpannableString.valueOf(context.getString(R.string.no_status_content_text));
+            string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                    android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
+                    string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setText(string);
+        } else if (displayEnd != -1 && displayEnd <= text.length()) {
             textView.setText(text.subSequence(0, displayEnd));
         } else {
             textView.setText(text);
@@ -556,6 +596,10 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         quotedNameView.setSecondaryTextSize(textSize * 0.85f);
         timeView.setTextSize(textSize * 0.85f);
         statusInfoLabel.setTextSize(textSize * 0.75f);
+
+        mediaLabelText.setTextSize(textSize * 0.95f);
+        quoteMediaLabelText.setTextSize(textSize * 0.95f);
+
         replyCountView.setTextSize(textSize);
         retweetCountView.setTextSize(textSize);
         favoriteCountView.setTextSize(textSize);

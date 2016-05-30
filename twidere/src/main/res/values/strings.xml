@@ -804,4 +804,6 @@
     <string name="sign_in_service_email">Email</string>
     <string name="sign_in_with_ellip">Sign in with…</string>
     <string name="edit_description">Edit description</string>
+    <string name="no_status_content_text">No content</string>
+    <string name="status_not_available_text">Tweet not available</string>
 </resources>

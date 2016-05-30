@@ -61,11 +61,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -1000,32 +1002,67 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             final boolean skipLinksInText = status.extras != null && status.extras.support_entities;
             if (status.is_quote) {
 
-                quoteOriginalLink.setVisibility(View.VISIBLE);
-                quotedNameView.setVisibility(View.VISIBLE);
-                quotedTextView.setVisibility(View.VISIBLE);
                 quoteIndicator.setVisibility(View.VISIBLE);
 
-                quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
-                        status.quoted_user_name));
-                quotedNameView.setScreenName(String.format("@%s", status.quoted_user_screen_name));
-                quotedNameView.updateText(formatter);
+                boolean quoteContentAvailable = status.quoted_text_plain != null
+                        && status.quoted_text_unescaped != null;
 
-                final SpannableStringBuilder quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
-                ParcelableStatusUtils.applySpans(quotedText, status.quoted_spans);
-                linkify.applyAllLinks(quotedText, status.account_key, layoutPosition,
-                        status.is_possibly_sensitive, skipLinksInText);
-                quotedTextView.setText(quotedText);
+                if (quoteContentAvailable) {
+                    quoteOriginalLink.setVisibility(View.VISIBLE);
+                    quotedNameView.setVisibility(View.VISIBLE);
+                    quotedTextView.setVisibility(View.VISIBLE);
 
-                quoteIndicator.setColor(status.user_color);
-                profileContainer.drawStart(status.quoted_user_color);
+                    quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
+                            status.quoted_user_name));
+                    quotedNameView.setScreenName(String.format("@%s", status.quoted_user_screen_name));
+                    quotedNameView.updateText(formatter);
+
+
+                    int quotedDisplayEnd = -1;
+                    if (status.extras.quoted_display_text_range != null) {
+                        quotedDisplayEnd = status.extras.quoted_display_text_range[1];
+                    }
+
+                    final SpannableStringBuilder quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
+                    ParcelableStatusUtils.applySpans(quotedText, status.quoted_spans);
+                    linkify.applyAllLinks(quotedText, status.account_key, layoutPosition,
+                            status.is_possibly_sensitive, skipLinksInText);
+                    if (quotedDisplayEnd == 0 || quotedText.length() == 0) {
+                        // No text
+                        final SpannableString string = SpannableString.valueOf(context.getString(R.string.no_status_content_text));
+                        string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                                android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
+                                string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        quotedTextView.setText(string);
+                    } else if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length()) {
+                        quotedTextView.setText(quotedText.subSequence(0, quotedDisplayEnd));
+                    } else {
+                        quotedTextView.setText(quotedText);
+                    }
+
+                    quoteIndicator.setColor(status.quoted_user_color);
+                } else {
+                    quoteOriginalLink.setVisibility(View.GONE);
+                    quotedNameView.setVisibility(View.GONE);
+                    quotedTextView.setVisibility(View.VISIBLE);
+
+                    // Not available
+                    final SpannableString string = SpannableString.valueOf(context.getString(R.string.status_not_available_text));
+                    string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                            android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
+                            string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    quotedTextView.setText(string);
+
+                    quoteIndicator.setColor(0);
+                }
             } else {
                 quoteOriginalLink.setVisibility(View.GONE);
                 quotedNameView.setVisibility(View.GONE);
                 quotedTextView.setVisibility(View.GONE);
                 quoteIndicator.setVisibility(View.GONE);
-
-                profileContainer.drawStart(status.user_color);
             }
+
+            profileContainer.drawStart(status.user_color);
 
             final long timestamp;
 
@@ -1064,11 +1101,28 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             }
             timeSourceView.setMovementMethod(LinkMovementMethod.getInstance());
 
+            int displayEnd = -1;
+            if (status.extras.display_text_range != null) {
+                displayEnd = status.extras.display_text_range[1];
+            }
+
             final SpannableStringBuilder text = SpannableStringBuilder.valueOf(status.text_unescaped);
             ParcelableStatusUtils.applySpans(text, status.spans);
             linkify.applyAllLinks(text, status.account_key, layoutPosition,
                     status.is_possibly_sensitive, skipLinksInText);
-            textView.setText(text);
+
+            if (displayEnd == 0 || text.length() == 0) {
+                // No text
+                final SpannableString string = SpannableString.valueOf(context.getString(R.string.no_status_content_text));
+                string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                        android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
+                        string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textView.setText(string);
+            } else if (displayEnd != -1 && displayEnd <= text.length()) {
+                textView.setText(text.subSequence(0, displayEnd));
+            } else {
+                textView.setText(text);
+            }
 
             final ParcelableLocation location;
             final String placeFullName;

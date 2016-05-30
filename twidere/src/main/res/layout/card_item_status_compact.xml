@@ -195,6 +195,7 @@
                     tools:tint="?android:textColorSecondary"/>
 
                 <TextView
+                    android:id="@+id/media_label_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -227,19 +228,27 @@
                 android:id="@+id/quote_indicator"
                 android:layout_width="@dimen/element_spacing_small"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/quote_indicator_anchor"
-                android:layout_alignTop="@+id/quoted_name"
+                android:layout_above="@+id/quote_indicator_anchor_bottom"
+                android:layout_below="@+id/quote_indicator_anchor_top"
                 android:layout_marginEnd="@dimen/element_spacing_normal"
                 android:layout_marginRight="@dimen/element_spacing_normal"
                 android:background="?quoteIndicatorBackgroundColor"
                 android:visibility="gone"
                 tools:visibility="visible"/>
 
+            <android.support.v4.widget.Space
+                android:id="@+id/quote_indicator_anchor_top"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/media_preview"
+                android:layout_marginTop="@dimen/element_spacing_small"
+                android:visibility="visible"/>
+
             <org.mariotaku.twidere.view.NameView
                 android:id="@+id/quoted_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/media_preview"
+                android:layout_below="@+id/quote_indicator_anchor_top"
                 android:layout_marginTop="@dimen/element_spacing_small"
                 android:layout_toEndOf="@+id/quote_indicator"
                 android:layout_toRightOf="@+id/quote_indicator"
@@ -250,7 +259,7 @@
                 app:nv_primaryTextColor="?android:textColorPrimary"
                 app:nv_primaryTextStyle="bold"
                 app:nv_secondaryTextColor="?android:textColorSecondary"
-                tools:visibility="visible"/>
+                tools:visibility="g"/>
 
             <org.mariotaku.twidere.view.TimelineContentTextView
                 android:id="@+id/quoted_text"
@@ -289,6 +298,7 @@
                     tools:tint="?android:textColorSecondary"/>
 
                 <TextView
+                    android:id="@+id/quoted_media_label_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -316,7 +326,7 @@
             </org.mariotaku.twidere.view.CardMediaContainer>
 
             <android.support.v4.widget.Space
-                android:id="@+id/quote_indicator_anchor"
+                android:id="@+id/quote_indicator_anchor_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_below="@+id/quoted_media_preview"

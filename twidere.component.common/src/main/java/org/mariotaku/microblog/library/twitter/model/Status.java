@@ -144,6 +144,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "repost_status")
     Status repostStatus;
 
+    @JsonField(name = "repost_status_id")
+    String repostStatusId;
+
     @JsonField(name = "card")
     CardEntity card;
 
@@ -279,12 +282,6 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     public boolean isRetweet() {
         return retweetedStatus != null;
     }
-
-
-    public boolean isQuote() {
-        return quotedStatus != null;
-    }
-
 
     public boolean isRetweetedByMe() {
         return currentUserRetweet != null;
@@ -533,7 +530,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         }
         if (quotedStatus == null && repostStatus != null) {
             quotedStatus = repostStatus;
-            quotedStatusId = repostStatus.id;
+            quotedStatusId = repostStatusId;
             isQuoteStatus = true;
         }
     }

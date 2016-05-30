@@ -74,7 +74,8 @@ public class ParcelableStatusUtils {
         }
 
         final Status quoted = orig.getQuotedStatus();
-        result.is_quote = orig.isQuote();
+        result.is_quote = orig.isQuoteStatus();
+        result.quoted_id = orig.getQuotedStatusId();
         if (quoted != null) {
             final User quotedUser = quoted.getUser();
             result.quoted_id = quoted.getId();
