@@ -365,6 +365,9 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
         if (statusUpdate.repost_status_id != null) {
             status.setRepostStatusId(statusUpdate.repost_status_id);
         }
+        if (statusUpdate.attachment_url != null) {
+            status.setAttachmentUrl(statusUpdate.attachment_url);
+        }
         if (statusUpdate.location != null) {
             status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location));
             status.displayCoordinates(statusUpdate.display_coordinates);

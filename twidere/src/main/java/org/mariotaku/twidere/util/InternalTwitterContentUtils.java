@@ -44,46 +44,6 @@ public class InternalTwitterContentUtils {
     private InternalTwitterContentUtils() {
     }
 
-    public static <T extends List<? extends Status>> T getStatusesWithQuoteData(MicroBlog twitter, @NonNull T list) throws MicroBlogException {
-        MultiValueMap<Status> quotes = new MultiValueMap<>();
-        // Phase 1: collect all statuses contains a status link, and put it in the map
-        for (Status status : list) {
-            if (status.isQuote()) continue;
-            final UrlEntity[] entities = status.getUrlEntities();
-            if (entities == null || entities.length <= 0) continue;
-            // Seems Twitter will find last status link for quote target, so we search backward
-            for (int i = entities.length - 1; i >= 0; i--) {
-                final Matcher m = PATTERN_TWITTER_STATUS_LINK.matcher(entities[i].getExpandedUrl());
-                if (!m.matches()) continue;
-                final String quoteId = m.group(3);
-                if (!TextUtils.isEmpty(quoteId)) {
-                    quotes.add(quoteId, status);
-                }
-                break;
-            }
-        }
-        // Phase 2: look up quoted tweets. Each lookup can fetch up to 100 tweets, so we split quote
-        // ids into batches
-        final Set<String> keySet = quotes.keySet();
-        final String[] quoteIds = keySet.toArray(new String[keySet.size()]);
-        for (int currentBulkIdx = 0, totalLength = quoteIds.length; currentBulkIdx < totalLength;
-             currentBulkIdx += TWITTER_BULK_QUERY_COUNT) {
-            final int currentBulkCount = Math.min(totalLength, currentBulkIdx + TWITTER_BULK_QUERY_COUNT) - currentBulkIdx;
-            final String[] ids = new String[currentBulkCount];
-            System.arraycopy(quoteIds, currentBulkIdx, ids, 0, currentBulkCount);
-            // Lookup quoted statuses, then set each status into original status
-            for (Status quoted : twitter.lookupStatuses(ids)) {
-                final List<Status> orig = quotes.get(quoted.getId());
-                // This set shouldn't be null here, add null check to make inspector happy.
-                if (orig == null) continue;
-                for (Status status : orig) {
-                    Status.setQuotedStatus(status, quoted);
-                }
-            }
-        }
-        return list;
-    }
-
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
                                      final String textPlain, final String quotedTextPlain,
                                      final SpanItem[] spans, final SpanItem[] quotedSpans,

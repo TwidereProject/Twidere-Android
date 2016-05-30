@@ -60,6 +60,9 @@ public class ParcelableStatusUpdate implements Parcelable {
     @JsonField(name = "repost_status_id")
     @ParcelableThisPlease
     public String repost_status_id;
+    @JsonField(name = "attachment_url")
+    @ParcelableThisPlease
+    public String attachment_url;
 
     public ParcelableStatusUpdate() {
     }

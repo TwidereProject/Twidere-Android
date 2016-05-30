@@ -36,7 +36,6 @@ import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
-import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterWrapper;
@@ -149,7 +148,6 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
                     sinceId = null;
                 }
                 final List<Status> statuses = getStatuses(twitter, paging);
-                InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
                 storeStatus(accountKey, credentials, statuses, sinceId, maxId, sinceSortId,
                         maxSortId, loadItemLimit, false);
                 // TODO cache related data and preload

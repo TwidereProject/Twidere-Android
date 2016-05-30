@@ -135,6 +135,12 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "quoted_status")
     Status quotedStatus;
 
+    @JsonField(name = "is_quote_status")
+    boolean isQuoteStatus;
+
+    @JsonField(name = "quoted_status_id_str")
+    String quotedStatusId;
+
     @JsonField(name = "repost_status")
     Status repostStatus;
 
@@ -436,6 +442,14 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return displayTextRange;
     }
 
+    public boolean isQuoteStatus() {
+        return isQuoteStatus;
+    }
+
+    public String getQuotedStatusId() {
+        return quotedStatusId;
+    }
+
     @Override
     public int compareTo(@NonNull final Status that) {
         final long diff = getSortId() - that.getSortId();
@@ -519,12 +533,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         }
         if (quotedStatus == null && repostStatus != null) {
             quotedStatus = repostStatus;
+            quotedStatusId = repostStatus.id;
+            isQuoteStatus = true;
         }
-    }
-
-    public static void setQuotedStatus(Status status, Status quoted) {
-        if (status == null) return;
-        status.quotedStatus = quoted;
     }
 
 

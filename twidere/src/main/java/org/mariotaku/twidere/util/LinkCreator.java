@@ -76,6 +76,7 @@ public class LinkCreator implements Constants {
         return builder.build();
     }
 
+    @NonNull
     public static Uri getStatusWebLink(ParcelableStatus status) {
         if (status.extras != null && !TextUtils.isEmpty(status.extras.external_url)) {
             return Uri.parse(status.extras.external_url);
@@ -111,7 +112,8 @@ public class LinkCreator implements Constants {
         return getTwitterUserLink(user.screen_name);
     }
 
-    static Uri getTwitterStatusLink(String screenName, String statusId) {
+    @NonNull
+    static Uri getTwitterStatusLink(@NonNull String screenName, @NonNull String statusId) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME_HTTPS);
         builder.authority(AUTHORITY_TWITTER);

@@ -43,13 +43,11 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
-import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.io.File;
@@ -142,10 +140,6 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
             final Paging paging = new Paging();
             processPaging(credentials, loadItemLimit, paging);
             statuses = getStatuses(twitter, credentials, paging);
-            if (MicroBlogAPIFactory.isTwitterCredentials(credentials) &&
-                    !Utils.isOfficialCredentials(context, credentials)) {
-                InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
-            }
         } catch (final MicroBlogException e) {
             // mHandler.post(new ShowErrorRunnable(e));
             if (BuildConfig.DEBUG) {
