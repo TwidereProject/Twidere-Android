@@ -63,7 +63,7 @@ public class UserMediaTimelineFragment extends AbsContentRecyclerViewFragment<St
     }
 
     @Override
-    protected void setupRecyclerView(Context context) {
+    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
 
     }
 

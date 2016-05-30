@@ -245,7 +245,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
             });
         }
-        setupRecyclerView(context);
+        setupRecyclerView(context, mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
         mScrollListener = new RecyclerViewScrollHandler(this, new RecyclerViewScrollHandler.RecyclerViewCallback(mRecyclerView));
@@ -253,7 +253,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mRecyclerView.setOnTouchListener(mScrollListener.getOnTouchListener());
     }
 
-    protected abstract void setupRecyclerView(Context context);
+    protected abstract void setupRecyclerView(Context context, RecyclerView recyclerView);
 
     @NonNull
     protected abstract L onCreateLayoutManager(Context context);

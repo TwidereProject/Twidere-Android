@@ -599,8 +599,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     }
 
     @Override
-    protected void setupRecyclerView(Context context) {
-        final RecyclerView recyclerView = getRecyclerView();
+    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
         final ParcelableActivitiesAdapter adapter = getAdapter();
         // Dividers are drawn on bottom of view
         recyclerView.addItemDecoration(new DividerItemDecoration(context, getLayoutManager().getOrientation()) {

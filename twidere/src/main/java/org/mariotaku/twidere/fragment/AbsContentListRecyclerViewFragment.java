@@ -23,6 +23,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -38,7 +39,7 @@ public abstract class AbsContentListRecyclerViewFragment<A extends LoadMoreSuppo
     private DividerItemDecoration mItemDecoration;
 
     @Override
-    protected void setupRecyclerView(Context context) {
+    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
         mItemDecoration = new DividerItemDecoration(context, getLayoutManager().getOrientation());
         getRecyclerView().addItemDecoration(mItemDecoration);
     }

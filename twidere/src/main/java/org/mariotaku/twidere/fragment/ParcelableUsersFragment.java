@@ -195,8 +195,8 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
                                                                         final boolean fromUser);
 
     @Override
-    protected void setupRecyclerView(Context context) {
-        super.setupRecyclerView(context);
+    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
+        super.setupRecyclerView(context, recyclerView);
     }
 
     private int findPosition(ParcelableUsersAdapter adapter, UserKey accountKey, UserKey userKey) {

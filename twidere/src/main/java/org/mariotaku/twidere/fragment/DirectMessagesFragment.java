@@ -281,13 +281,6 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
         adapter.setListener(this);
 
-        final DividerItemDecoration itemDecoration = new DividerItemDecoration(viewContext, layoutManager.getOrientation());
-        final Resources res = viewContext.getResources();
-        final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 3
-                + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
-        itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
-        itemDecoration.setDecorationEndOffset(1);
-        recyclerView.addItemDecoration(itemDecoration);
         getLoaderManager().initLoader(0, null, this);
         showProgress();
     }
@@ -342,6 +335,18 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
                 mNotificationManager.cancel(tag, NOTIFICATION_ID_DIRECT_MESSAGES);
             }
         }
+    }
+
+    @Override
+    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
+        final Resources res = context.getResources();
+        final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 3
+                + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
+        itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
+        itemDecoration.setDecorationEndOffset(1);
+        recyclerView.addItemDecoration(itemDecoration);
     }
 
     @NonNull
