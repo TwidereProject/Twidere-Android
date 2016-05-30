@@ -3,7 +3,6 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.text.BidiFormatter;
 import android.support.v7.widget.RecyclerView;
@@ -85,12 +84,10 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final View actionButtons;
     private final View itemMenu;
     private final View profileImageSpace;
-    @Nullable
     private final View statusContentUpperSpace, statusContentLowerSpace;
-    @Nullable
-    private final View textMediaSpace, quotedTextMediaSpace;
-    @Nullable
+    private View textMediaSpace, quotedTextMediaSpace;
     private final View mediaLabelSpace, quotedMediaLabelSpace;
+    private final View quoteIndicatorAnchorTop, quoteIndicatorAnchorBottom;
     private final EventListener eventListener;
 
     private StatusClickListener statusClickListener;
@@ -139,8 +136,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         statusContentUpperSpace = itemView.findViewById(R.id.status_content_upper_space);
         statusContentLowerSpace = itemView.findViewById(R.id.status_content_lower_space);
 
-        textMediaSpace = null;
-        quotedTextMediaSpace = null;
+        quoteIndicatorAnchorTop = itemView.findViewById(R.id.quote_indicator_anchor_top);
+        quoteIndicatorAnchorBottom = itemView.findViewById(R.id.quote_indicator_anchor_bottom);
 
         mediaLabelSpace = null;
         quotedMediaLabelSpace = null;
@@ -275,6 +272,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         if (status.is_quote) {
 
             quoteIndicator.setVisibility(View.VISIBLE);
+            quoteIndicatorAnchorTop.setVisibility(View.VISIBLE);
+            quoteIndicatorAnchorBottom.setVisibility(View.VISIBLE);
 
             boolean quoteContentAvailable = status.quoted_text_plain != null
                     && status.quoted_text_unescaped != null;
@@ -332,6 +331,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             itemContent.drawStart(status.user_color);
         } else {
 
+            quoteIndicatorAnchorTop.setVisibility(View.GONE);
+            quoteIndicatorAnchorBottom.setVisibility(View.GONE);
             quotedNameView.setVisibility(View.GONE);
             quotedTextView.setVisibility(View.GONE);
             quoteIndicator.setVisibility(View.GONE);

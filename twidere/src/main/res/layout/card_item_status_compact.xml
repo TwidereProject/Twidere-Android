@@ -259,7 +259,7 @@
                 app:nv_primaryTextColor="?android:textColorPrimary"
                 app:nv_primaryTextStyle="bold"
                 app:nv_secondaryTextColor="?android:textColorSecondary"
-                tools:visibility="g"/>
+                tools:visibility="visible"/>
 
             <org.mariotaku.twidere.view.TimelineContentTextView
                 android:id="@+id/quoted_text"
