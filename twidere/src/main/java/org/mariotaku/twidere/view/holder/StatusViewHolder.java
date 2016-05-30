@@ -85,8 +85,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final View itemMenu;
     private final View profileImageSpace;
     private final View statusContentUpperSpace, statusContentLowerSpace;
-    private View textMediaSpace, quotedTextMediaSpace;
-    private final View mediaLabelSpace, quotedMediaLabelSpace;
+    private final View mediaLabelSpace = null, quotedMediaLabelSpace = null;
     private final View quoteIndicatorAnchorTop, quoteIndicatorAnchorBottom;
     private final EventListener eventListener;
 
@@ -139,8 +138,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         quoteIndicatorAnchorTop = itemView.findViewById(R.id.quote_indicator_anchor_top);
         quoteIndicatorAnchorBottom = itemView.findViewById(R.id.quote_indicator_anchor_bottom);
 
-        mediaLabelSpace = null;
-        quotedMediaLabelSpace = null;
         //TODO
         // profileImageView.setSelectorColor(ThemeUtils.getUserHighlightColor(itemView.getContext()));
 
@@ -177,15 +174,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         if (adapter.isMediaPreviewEnabled()) {
             mediaPreview.setVisibility(View.VISIBLE);
             mediaLabel.setVisibility(View.GONE);
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(View.GONE);
-            }
         } else {
             mediaPreview.setVisibility(View.GONE);
             mediaLabel.setVisibility(View.VISIBLE);
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(showCardActions ? View.GONE : View.VISIBLE);
-            }
         }
         quoteMediaLabel.setVisibility(View.GONE);
         actionButtons.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
@@ -194,9 +185,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             statusContentLowerSpace.setVisibility(showCardActions ? View.GONE : View.VISIBLE);
         }
         quoteMediaPreview.setVisibility(View.GONE);
-        if (quotedTextMediaSpace != null) {
-            quotedTextMediaSpace.setVisibility(View.GONE);
-        }
         mediaPreview.displayMedia(R.drawable.nyan_stars_background);
         extraTypeView.setImageResource(R.drawable.ic_action_gallery);
     }
@@ -399,28 +387,7 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             mediaPreview.setVisibility(View.GONE);
             quoteMediaPreview.setVisibility(View.GONE);
 
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(showCardActions && !status.is_quote ? View.GONE : View.VISIBLE);
-            }
-            if (quotedTextMediaSpace != null) {
-                quotedTextMediaSpace.setVisibility(status.is_quote ? View.VISIBLE : View.GONE);
-            }
-
-            if (mediaLabelSpace != null) {
-                mediaLabelSpace.setVisibility(View.GONE);
-            }
-            if (quotedMediaLabelSpace != null) {
-                quotedMediaLabelSpace.setVisibility(View.GONE);
-            }
         } else {
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(!status.is_quote && (hasPrimaryMedia || showCardActions) ?
-                        View.GONE : View.VISIBLE);
-            }
-            if (quotedTextMediaSpace != null) {
-                quotedTextMediaSpace.setVisibility(!status.is_quote || hasQuotedMedia ?
-                        View.GONE : View.VISIBLE);
-            }
 
             if (!adapter.isSensitiveContentEnabled() && status.is_possibly_sensitive) {
                 // Sensitive content, show label instead of media view
@@ -435,13 +402,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
                 mediaLabel.setVisibility(hasPrimaryMedia ? View.VISIBLE : View.GONE);
                 quoteMediaLabel.setVisibility(hasQuotedMedia ? View.VISIBLE : View.GONE);
 
-                if (mediaLabelSpace != null) {
-                    mediaLabelSpace.setVisibility(hasPrimaryMedia && !showCardActions ? View.VISIBLE : View.GONE);
-                }
-                if (quotedMediaLabelSpace != null) {
-                    quotedMediaLabelSpace.setVisibility(hasQuotedMedia && !showCardActions ? View.VISIBLE : View.GONE);
-                }
-
                 mediaPreview.setVisibility(View.GONE);
                 quoteMediaPreview.setVisibility(View.GONE);
 
@@ -450,13 +410,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
                 mediaLabel.setVisibility(View.GONE);
                 quoteMediaLabel.setVisibility(View.GONE);
-
-                if (mediaLabelSpace != null) {
-                    mediaLabelSpace.setVisibility(View.GONE);
-                }
-                if (quotedMediaLabelSpace != null) {
-                    quotedMediaLabelSpace.setVisibility(View.GONE);
-                }
 
                 mediaPreview.setStyle(adapter.getMediaPreviewStyle());
                 quoteMediaPreview.setStyle(adapter.getMediaPreviewStyle());

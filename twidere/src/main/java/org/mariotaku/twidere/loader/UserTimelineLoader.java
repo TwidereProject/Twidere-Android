@@ -72,7 +72,6 @@ public class UserTimelineLoader extends MicroBlogAPIStatusesLoader {
     @WorkerThread
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        if (true) return false;
         final UserKey accountId = getAccountKey();
         if (accountId != null && mUserId != null && TextUtils.equals(accountId.getId(), mUserId.getId()))
             return false;
