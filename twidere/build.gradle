@@ -204,5 +204,5 @@ task svgToMipmap(type: SvgDrawableTask) {
 }
 
 // START Non-FOSS component
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
 // END Non-FOSS component
