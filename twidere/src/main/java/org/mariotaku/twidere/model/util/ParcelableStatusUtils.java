@@ -47,7 +47,6 @@ public class ParcelableStatusUtils {
 
     public static ParcelableStatus fromStatus(final Status orig, final UserKey accountKey,
                                               final boolean isGap) {
-
         final ParcelableStatus result = new ParcelableStatus();
         result.is_gap = isGap;
         result.account_key = accountKey;
@@ -63,7 +62,9 @@ public class ParcelableStatusUtils {
         final Status retweetedStatus = orig.getRetweetedStatus();
         result.is_retweet = orig.isRetweet();
         result.retweeted = orig.wasRetweeted();
+        final Status status;
         if (retweetedStatus != null) {
+            status = retweetedStatus;
             final User retweetUser = orig.getUser();
             result.retweet_id = retweetedStatus.getId();
             result.retweet_timestamp = getTime(retweetedStatus.getCreatedAt());
@@ -71,11 +72,15 @@ public class ParcelableStatusUtils {
             result.retweeted_by_user_name = retweetUser.getName();
             result.retweeted_by_user_screen_name = retweetUser.getScreenName();
             result.retweeted_by_user_profile_image = TwitterContentUtils.getProfileImageUrl(retweetUser);
+
+            result.extras.retweeted_external_url = retweetedStatus.getExternalUrl();
+        } else {
+            status = orig;
         }
 
-        final Status quoted = orig.getQuotedStatus();
-        result.is_quote = orig.isQuoteStatus();
-        result.quoted_id = orig.getQuotedStatusId();
+        final Status quoted = status.getQuotedStatus();
+        result.is_quote = status.isQuoteStatus();
+        result.quoted_id = status.getQuotedStatusId();
         if (quoted != null) {
             final User quotedUser = quoted.getUser();
             result.quoted_id = quoted.getId();
@@ -111,30 +116,14 @@ public class ParcelableStatusUtils {
             result.quoted_user_is_verified = quotedUser.isVerified();
         }
 
-        final Status status;
-        if (retweetedStatus != null) {
-            status = retweetedStatus;
-            result.extras.retweeted_external_url = retweetedStatus.getExternalUrl();
-            result.reply_count = retweetedStatus.getReplyCount();
-            result.retweet_count = retweetedStatus.getRetweetCount();
-            result.favorite_count = retweetedStatus.getFavoriteCount();
+        result.reply_count = status.getReplyCount();
+        result.retweet_count = status.getRetweetCount();
+        result.favorite_count = status.getFavoriteCount();
 
-
-            result.in_reply_to_name = getInReplyToName(retweetedStatus);
-            result.in_reply_to_screen_name = retweetedStatus.getInReplyToScreenName();
-            result.in_reply_to_status_id = retweetedStatus.getInReplyToStatusId();
-            result.in_reply_to_user_id = getInReplyToUserId(retweetedStatus, accountKey);
-        } else {
-            status = orig;
-            result.reply_count = orig.getReplyCount();
-            result.retweet_count = orig.getRetweetCount();
-            result.favorite_count = orig.getFavoriteCount();
-
-            result.in_reply_to_name = getInReplyToName(orig);
-            result.in_reply_to_screen_name = orig.getInReplyToScreenName();
-            result.in_reply_to_status_id = orig.getInReplyToStatusId();
-            result.in_reply_to_user_id = getInReplyToUserId(orig, accountKey);
-        }
+        result.in_reply_to_name = getInReplyToName(status);
+        result.in_reply_to_screen_name = status.getInReplyToScreenName();
+        result.in_reply_to_status_id = status.getInReplyToStatusId();
+        result.in_reply_to_user_id = getInReplyToUserId(status, accountKey);
 
         final User user = status.getUser();
         result.user_key = UserKeyUtils.fromUser(user);
