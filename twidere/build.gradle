@@ -82,6 +82,8 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     // END Non-FOSS component
     flatDir { dirs "$projectDir/lib" }
+
+    maven { url 'https://raw.github.com/emojidex/emojidex-android/master/EmojidexAndroidLibrary/repository' }
 }
 
 dependencies {
@@ -169,6 +171,8 @@ dependencies {
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.4'
     compile 'com.github.mariotaku:AbstractTask:0.9.1'
     compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.4'
+
+    compile 'org.genshin:emojidexandroid-lib:0.0.4'
 }
 
 task svgToDrawable(type: SvgDrawableTask) {
