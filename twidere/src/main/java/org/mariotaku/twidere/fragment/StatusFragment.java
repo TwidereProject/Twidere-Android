@@ -1027,17 +1027,16 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                     ParcelableStatusUtils.applySpans(quotedText, status.quoted_spans);
                     linkify.applyAllLinks(quotedText, status.account_key, layoutPosition,
                             status.is_possibly_sensitive, skipLinksInText);
-                    if (quotedDisplayEnd == 0 || quotedText.length() == 0) {
-                        // No text
-                        final SpannableString string = SpannableString.valueOf(context.getString(R.string.no_status_content_text));
-                        string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
-                                android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
-                                string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        quotedTextView.setText(string);
-                    } else if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length()) {
+                    if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length()) {
                         quotedTextView.setText(quotedText.subSequence(0, quotedDisplayEnd));
                     } else {
                         quotedTextView.setText(quotedText);
+                    }
+                    if (quotedTextView.length() == 0) {
+                        // No text
+                        quotedTextView.setVisibility(View.GONE);
+                    } else {
+                        quotedTextView.setVisibility(View.VISIBLE);
                     }
 
                     quoteIndicator.setColor(status.quoted_user_color);
@@ -1111,17 +1110,16 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
             linkify.applyAllLinks(text, status.account_key, layoutPosition,
                     status.is_possibly_sensitive, skipLinksInText);
 
-            if (displayEnd == 0 || text.length() == 0) {
-                // No text
-                final SpannableString string = SpannableString.valueOf(context.getString(R.string.no_status_content_text));
-                string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
-                        android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
-                        string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                textView.setText(string);
-            } else if (displayEnd != -1 && displayEnd <= text.length()) {
+            if (displayEnd != -1 && displayEnd <= text.length()) {
                 textView.setText(text.subSequence(0, displayEnd));
             } else {
                 textView.setText(text);
+            }
+            if (textView.length() == 0) {
+                // No text
+                textView.setVisibility(View.GONE);
+            } else {
+                textView.setVisibility(View.VISIBLE);
             }
 
             final ParcelableLocation location;
