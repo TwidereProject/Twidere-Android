@@ -49,10 +49,10 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String ACCOUNT_PREFERENCES_NAME_PREFIX = "account_preferences_";
     String KEYBOARD_SHORTCUTS_PREFERENCES_NAME = "keyboard_shortcuts_preferences";
 
-    String TWITTER_CONSUMER_KEY_LEGACY = "uAFVpMhBntJutfVj6abfA";
-    String TWITTER_CONSUMER_SECRET_LEGACY = "JARXkJTfxo0F8MyctYy9bUmrLISjo8vXAHsZHYuk2E";
-    String TWITTER_CONSUMER_KEY = "i5XtSVfoWjLjKlnrvhiLPMZC0";
-    String TWITTER_CONSUMER_SECRET = "sQncmZ2atQR6tKbqnnAtqjrECqN8k6FD4p4OoNS0XTDkUz3HGH";
+    String TWITTER_CONSUMER_KEY_LEGACY = "eGhsWfndW5tqIDAR10BxhYCZX";
+    String TWITTER_CONSUMER_SECRET_LEGACY = "CVB2nVrXUn7xUVjzVHph2Mr5b4ynR9iDZMqXyKwBKqHInZixN9";
+    String TWITTER_CONSUMER_KEY = "eGhsWfndW5tqIDAR10BxhYCZX";
+    String TWITTER_CONSUMER_SECRET = "CVB2nVrXUn7xUVjzVHph2Mr5b4ynR9iDZMqXyKwBKqHInZixN9";
 
     String DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/";
 
