@@ -374,10 +374,15 @@ public interface TwidereDataStore {
 
     interface Messages extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
 
-        interface Entries extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
+        interface Conversations extends BaseColumns, AccountSupportColumns {
             String CONVERSATION_ID = "conversation_id";
-            String UPDATED_AT = "updated_at";
-            String TEXT_CONTENT = "text_content";
+            String TEXT_UNESCAPED = "text_unescaped";
+            String LAST_SEND_AT = "last_send_at";
+            String MEDIA_JSON = "media_json";
+            String PARTICIPANTS = "participants";
+            String SENDER_KEY = "sender_key";
+            String RECIPIENT_KEY = "recipient_key";
+            String REQUEST_CURSOR = "request_cursor";
         }
     }
 
