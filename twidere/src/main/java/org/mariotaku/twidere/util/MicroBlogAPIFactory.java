@@ -77,7 +77,6 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     static {
         sConstantPoll.put("include_cards", "true");
         sConstantPoll.put("cards_platform", CARDS_PLATFORM_ANDROID_12);
-        sConstantPoll.put("include_entities", "true");
         sConstantPoll.put("include_my_retweet", "true");
         sConstantPoll.put("include_rts", "true");
         sConstantPoll.put("include_reply_count", "true");
