@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -41,8 +42,6 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.HttpRequest;
@@ -290,7 +289,7 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
             final Context context = getContext();
             List<CustomAPIConfig> configs = CustomAPIConfig.listDefault(context);
             mAdapter = new CustomAPIConfigArrayAdapter(context, configs);
-            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setAdapter(mAdapter, this);
             if (!BuildConfig.DEBUG) {
                 getLoaderManager().initLoader(0, null, this);

@@ -1152,22 +1152,24 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
-            builder.positiveText(R.string.sign_in);
-            builder.negativeText(android.R.string.cancel);
-            builder.customView(R.layout.dialog_password_sign_in, true);
-            builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    EditText editUsername = (EditText) dialog.findViewById(R.id.username);
-                    EditText editPassword = (EditText) dialog.findViewById(R.id.password);
+                public void onClick(DialogInterface dialog, int which) {
+                    AlertDialog alertDialog = (AlertDialog) dialog;
+                    EditText editUsername = (EditText) alertDialog.findViewById(R.id.username);
+                    EditText editPassword = (EditText) alertDialog.findViewById(R.id.password);
                     SignInActivity activity = (SignInActivity) getActivity();
                     activity.setUsernamePassword(String.valueOf(editUsername.getText()),
                             String.valueOf(editPassword.getText()));
                     activity.doLogin();
                 }
             });
-            builder.showListener(new DialogInterface.OnShowListener() {
+            builder.setNegativeButton(android.R.string.cancel, null);
+            builder.setView(R.layout.dialog_password_sign_in);
+
+            final AlertDialog alertDialog = builder.create();
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
                 @Override
                 public void onShow(DialogInterface dialog) {
@@ -1197,7 +1199,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                     editPassword.addTextChangedListener(textWatcher);
                 }
             });
-            return builder.build();
+            return alertDialog;
         }
     }
 
