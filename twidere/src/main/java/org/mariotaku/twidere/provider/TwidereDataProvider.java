@@ -66,6 +66,7 @@ import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -81,7 +82,6 @@ import org.mariotaku.twidere.activity.HomeActivity;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.NotificationType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
@@ -1382,6 +1382,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 new OrderBy(Activities.TIMESTAMP, false).getSQL());
         if (c == null) return;
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        final StringBuilder pebbleNotificationStringBuilder = new StringBuilder();
         try {
             final int count = c.getCount();
             if (count == 0) return;
@@ -1404,6 +1405,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             while (c.moveToNext()) {
                 if (messageLines == 5) {
                     style.addLine(resources.getString(R.string.and_N_more, count - c.getPosition()));
+                    pebbleNotificationStringBuilder.append(resources.getString(R.string.and_N_more, count - c.getPosition()));
                     break;
                 }
                 final ParcelableActivity activity = ci.newObject(c);
@@ -1434,8 +1436,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     final CharSequence summary = message.getSummary();
                     if (TextUtils.isEmpty(summary)) {
                         style.addLine(message.getTitle());
+                        pebbleNotificationStringBuilder.append(message.getTitle());
                     } else {
                         style.addLine(SpanFormatter.format(resources.getString(R.string.title_summary_line_format),
+                                message.getTitle(), summary));
+                        pebbleNotificationStringBuilder.append(SpanFormatter.format(resources.getString(R.string.title_summary_line_format),
                                 message.getTitle(), summary));
                     }
                     messageLines++;
@@ -1460,6 +1465,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final int notificationId = Utils.getNotificationId(NOTIFICATION_ID_INTERACTIONS_TIMELINE,
                 accountKey);
         mNotificationManager.notify("interactions", notificationId, builder.build());
+
+        Utils.sendPebbleNotification(context, pebbleNotificationStringBuilder.toString());
+
     }
 
     private PendingIntent getContentIntent(final Context context, @CustomTabType final String type,
@@ -1643,7 +1651,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             applyNotificationPreferences(builder, pref, pref.getDirectMessagesNotificationType());
             try {
                 nm.notify("messages_" + accountKey, NOTIFICATION_ID_DIRECT_MESSAGES, builder.build());
-                Utils.sendPebbleNotification(context, notificationContent);
+                if ( messagesCount == 1 && usersCount == 1 )
+                {
+                    // Single message, display content instead saying 'one message from foo'
+                    //TODO: Which variable contains message content?
+                    //Utils.sendPebbleNotification(context, );
+                }
+                else // Do in the traditional way
+                    Utils.sendPebbleNotification(context, notificationContent);
             } catch (SecurityException e) {
                 // Silently ignore
             }
