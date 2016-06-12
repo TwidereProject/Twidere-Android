@@ -1570,6 +1570,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Cursor userCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME,
                 userProjection, filteredSelection, selectionArgs, DirectMessages.SENDER_ID, null,
                 DirectMessages.DEFAULT_SORT_ORDER);
+
+        final StringBuilder pebbleNotificationBuilder = new StringBuilder();
+
         //noinspection TryFinallyCanBeTryWithResources
         try {
             final int usersCount = userCursor.getCount();
@@ -1617,6 +1620,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     sb.append(' ');
                     sb.append(messageCursor.getString(messageIndices.text_unescaped));
                     style.addLine(sb);
+                    pebbleNotificationBuilder.append(mUserColorNameManager.getUserNickname(messageCursor.getString(idxUserId),
+                            mNameFirst ? messageCursor.getString(messageIndices.sender_name) :
+                                    messageCursor.getString(messageIndices.sender_screen_name)));
+                    pebbleNotificationBuilder.append(": ");
+                    pebbleNotificationBuilder.append(messageCursor.getString(messageIndices.text_unescaped));
+                    pebbleNotificationBuilder.append("\n");
                 }
                 final long userId = messageCursor.getLong(messageIndices.sender_id);
                 final long messageId = messageCursor.getLong(messageIndices.id);
@@ -1651,14 +1660,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             applyNotificationPreferences(builder, pref, pref.getDirectMessagesNotificationType());
             try {
                 nm.notify("messages_" + accountKey, NOTIFICATION_ID_DIRECT_MESSAGES, builder.build());
-                if ( messagesCount == 1 && usersCount == 1 )
-                {
-                    // Single message, display content instead saying 'one message from foo'
-                    //TODO: Which variable contains message content?
-                    //Utils.sendPebbleNotification(context, );
-                }
-                else // Do in the traditional way
-                    Utils.sendPebbleNotification(context, notificationContent);
+
+                //TODO: Pebble notification - Only notify about recently added DMs, not previous ones?
+                Utils.sendPebbleNotification(context, pebbleNotificationBuilder.toString());
             } catch (SecurityException e) {
                 // Silently ignore
             }
