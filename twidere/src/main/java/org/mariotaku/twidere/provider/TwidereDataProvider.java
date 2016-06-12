@@ -1437,11 +1437,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     if (TextUtils.isEmpty(summary)) {
                         style.addLine(message.getTitle());
                         pebbleNotificationStringBuilder.append(message.getTitle());
+                        pebbleNotificationStringBuilder.append("\n");
                     } else {
                         style.addLine(SpanFormatter.format(resources.getString(R.string.title_summary_line_format),
                                 message.getTitle(), summary));
-                        pebbleNotificationStringBuilder.append(SpanFormatter.format(resources.getString(R.string.title_summary_line_format),
-                                message.getTitle(), summary));
+                        pebbleNotificationStringBuilder.append(message.getTitle());
+                        pebbleNotificationStringBuilder.append(": ");
+                        pebbleNotificationStringBuilder.append(message.getSummary());
+                        pebbleNotificationStringBuilder.append("\n");
                     }
                     messageLines++;
                 }
