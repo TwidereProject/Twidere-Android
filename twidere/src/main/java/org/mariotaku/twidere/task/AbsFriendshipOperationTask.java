@@ -61,7 +61,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
     }
 
     @Override
-    protected final void afterExecute(SingleResponse<ParcelableUser> result) {
+    protected final void afterExecute(Object callback, SingleResponse<ParcelableUser> result) {
         final Arguments params = getParams();
         twitter.removeUpdatingRelationshipId(params.accountKey, params.userKey);
         final FriendshipTaskEvent event = new FriendshipTaskEvent(action, params.accountKey,

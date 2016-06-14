@@ -603,8 +603,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected void afterExecute(SingleResponse<ParcelableUser> result) {
-            super.afterExecute(result);
+        protected void afterExecute(ResultHandler handler, SingleResponse<ParcelableUser> result) {
+            super.afterExecute(handler, result);
             if (result.hasData()) {
                 Utils.showOkMessage(mContext, R.string.profile_image_updated, false);
                 mBus.post(new ProfileUpdatedEvent(result.getData()));

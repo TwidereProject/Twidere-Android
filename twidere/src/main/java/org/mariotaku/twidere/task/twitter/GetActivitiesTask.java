@@ -224,7 +224,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             throws MicroBlogException;
 
     @Override
-    public void afterExecute(Object result) {
+    public void afterExecute(Object handler, Object result) {
         context.getContentResolver().notifyChange(getContentUri(), null);
         bus.post(new GetActivitiesTaskEvent(getContentUri(), false, null));
     }

@@ -391,7 +391,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
         mFollowingYouIndicator.setVisibility(userRelationship.followed_by ? View.VISIBLE : View.GONE);
 
-        final CacheUserInfoRunnable task = new CacheUserInfoRunnable(getContext().getApplicationContext());
+        final CacheUserInfoTask task = new CacheUserInfoTask(getContext().getApplicationContext());
         task.setParams(Pair.create(user, userRelationship));
         TaskStarter.execute(task);
         mFollowButton.setVisibility(View.VISIBLE);
@@ -1849,11 +1849,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     }
 
-    private static class CacheUserInfoRunnable extends AbstractTask<Pair<ParcelableUser,
+    private static class CacheUserInfoTask extends AbstractTask<Pair<ParcelableUser,
             ? extends CachedRelationship>, Object, Object> {
         private final Context context;
 
-        public CacheUserInfoRunnable(Context context) {
+        public CacheUserInfoTask(Context context) {
             this.context = context;
         }
 
