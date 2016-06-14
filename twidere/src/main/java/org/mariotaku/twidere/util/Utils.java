@@ -2227,12 +2227,33 @@ public final class Utils implements Constants {
      * @param message String
      */
     public static void sendPebbleNotification(final Context context, final String message) {
+        sendPebbleNotification(context, null, message);
+    }
+
+    /**
+     * Send Notifications to Pebble smartwatches
+     *
+     * @param context Context
+     * @param title String
+     * @param message String
+     */
+    public static void sendPebbleNotification(final Context context, final String title, final String message)
+    {
+        String appName;
+
+        if ( title == null)
+        {
+            appName = context.getString(R.string.app_name);
+        }
+        else
+        {
+            appName = context.getString(R.string.app_name) + " - " + title;
+        }
+
         if (context == null || TextUtils.isEmpty(message)) return;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
 
         if (prefs.getBoolean(KEY_PEBBLE_NOTIFICATIONS, false)) {
-
-            final String appName = context.getString(R.string.app_name);
 
             final List<PebbleMessage> messages = new ArrayList<>();
             messages.add(new PebbleMessage(appName, message));
@@ -2244,6 +2265,7 @@ public final class Utils implements Constants {
 
             context.getApplicationContext().sendBroadcast(intent);
         }
+
     }
 
     @Nullable
