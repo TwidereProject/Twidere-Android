@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -337,8 +338,9 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
         }
     }
 
+    @Nullable
     @Override
-    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context, RecyclerView recyclerView, LinearLayoutManager layoutManager) {
         final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
                 ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
         final Resources res = context.getResources();
@@ -346,7 +348,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
                 + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
         itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
         itemDecoration.setDecorationEndOffset(1);
-        recyclerView.addItemDecoration(itemDecoration);
+        return itemDecoration;
     }
 
     @NonNull

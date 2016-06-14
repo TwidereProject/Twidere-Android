@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,6 +48,7 @@ import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.constant.IntentConstants;
@@ -365,6 +367,22 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         if (status == null) return;
         handleStatusActionClick(context, getFragmentManager(), mTwitterWrapper,
                 (StatusViewHolder) holder, status, id);
+    }
+
+
+    @Nullable
+    @Override
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context, RecyclerView recyclerView, LinearLayoutManager layoutManager) {
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
+        final Resources res = context.getResources();
+        if (getAdapter().isProfileImageEnabled()) {
+            final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2
+                    + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
+            itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
+        }
+        itemDecoration.setDecorationEndOffset(1);
+        return itemDecoration;
     }
 
     public static void handleStatusActionClick(Context context, FragmentManager fm,

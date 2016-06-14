@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,11 +68,13 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     @SuppressWarnings("NullableProblems")
     @NonNull
     private A mAdapter;
+    @Nullable
+    private ItemDecoration mItemDecoration;
 
     // Callbacks and listeners
     private SimpleDrawerCallback mDrawerCallback;
-    protected RecyclerViewScrollHandler mScrollListener;
 
+    protected RecyclerViewScrollHandler mScrollListener;
     // Data fields
     private Rect mSystemWindowsInsets = new Rect();
 
@@ -253,7 +256,12 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mRecyclerView.setOnTouchListener(mScrollListener.getOnTouchListener());
     }
 
-    protected abstract void setupRecyclerView(Context context, RecyclerView recyclerView);
+    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
+        mItemDecoration = createItemDecoration(context, recyclerView, getLayoutManager());
+        if (mItemDecoration != null) {
+            recyclerView.addItemDecoration(mItemDecoration);
+        }
+    }
 
     @NonNull
     protected abstract L onCreateLayoutManager(Context context);
@@ -319,6 +327,19 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
     @NonNull
     protected abstract A onCreateAdapter(Context context);
+
+
+    @Nullable
+    protected ItemDecoration createItemDecoration(Context context,
+                                                  RecyclerView recyclerView,
+                                                  L layoutManager) {
+        return null;
+    }
+
+    @Nullable
+    public final ItemDecoration getItemDecoration() {
+        return mItemDecoration;
+    }
 
     protected final void showContent() {
         mErrorContainer.setVisibility(View.GONE);
