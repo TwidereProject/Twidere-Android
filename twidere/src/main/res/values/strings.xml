@@ -806,4 +806,5 @@
     <string name="edit_description">Edit description</string>
     <string name="no_status_content_text">No content</string>
     <string name="status_not_available_text">Tweet not available</string>
+    <string name="share_link">Share link</string>
 </resources>
