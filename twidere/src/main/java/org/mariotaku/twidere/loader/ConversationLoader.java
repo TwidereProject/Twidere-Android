@@ -56,7 +56,7 @@ public class ConversationLoader extends MicroBlogAPIStatusesLoader {
                               final long sinceSortId, final long maxSortId,
                               final List<ParcelableStatus> data, final boolean fromUser,
                               final boolean loadingMore) {
-        super(context, status.account_key, sinceId, maxId, data, null, -1, fromUser, loadingMore);
+        super(context, status.account_key, sinceId, maxId, -1, data, null, -1, fromUser, loadingMore);
         mStatus = Nullables.assertNonNull(ParcelUtils.clone(status));
         mSinceSortId = sinceSortId;
         mMaxSortId = maxSortId;

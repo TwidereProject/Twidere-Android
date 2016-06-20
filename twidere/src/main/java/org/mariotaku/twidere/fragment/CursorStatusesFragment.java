@@ -70,22 +70,8 @@ import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     @Override
-    protected void onLoadingFinished() {
-        final UserKey[] accountKeys = getAccountKeys();
-        final ParcelableStatusesAdapter adapter = getAdapter();
-        if (adapter.getItemCount() > 0) {
-            showContent();
-        } else if (accountKeys.length > 0) {
-            final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
-                    mErrorInfoStore.get(getErrorInfoKey(), accountKeys[0]));
-            if (errorInfo != null) {
-                showEmpty(errorInfo.getIcon(), errorInfo.getMessage());
-            } else {
-                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
-            }
-        } else {
-            showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
-        }
+    protected void onStatusesLoaded(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
+        showContentOrError();
     }
 
     private ContentObserver mContentObserver;
@@ -126,6 +112,24 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
         return new CursorStatusesBusCallback();
     }
 
+    private void showContentOrError() {
+        final UserKey[] accountKeys = getAccountKeys();
+        final ParcelableStatusesAdapter adapter = getAdapter();
+        if (adapter.getItemCount() > 0) {
+            showContent();
+        } else if (accountKeys.length > 0) {
+            final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
+                    mErrorInfoStore.get(getErrorInfoKey(), accountKeys[0]));
+            if (errorInfo != null) {
+                showEmpty(errorInfo.getIcon(), errorInfo.getMessage());
+            } else {
+                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
+            }
+        } else {
+            showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
+        }
+    }
+
 
     protected class CursorStatusesBusCallback {
 
@@ -136,7 +140,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
             if (!event.running) {
                 setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
                 setRefreshEnabled(true);
-                onLoadingFinished();
+                showContentOrError();
             }
         }
 

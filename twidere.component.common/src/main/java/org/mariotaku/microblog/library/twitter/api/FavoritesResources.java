@@ -19,17 +19,16 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
-import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.KeyValue;
-import org.mariotaku.restfu.annotation.param.Param;
-import org.mariotaku.restfu.annotation.param.Queries;
-import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Queries;
+import org.mariotaku.restfu.annotation.param.Query;
 
 @SuppressWarnings("RedundantThrows")
 @Queries(template = StatusAnnotationTemplate.class)
@@ -45,8 +44,8 @@ public interface FavoritesResources {
     ResponseList<Status> getFavorites() throws MicroBlogException;
 
     @GET("/favorites/list.json")
-    ResponseList<Status> getFavorites(@Query("user_id") String userId, @Query({"since_id", "max_id", "count"}) Paging paging) throws MicroBlogException;
+    ResponseList<Status> getFavorites(@Query("user_id") String userId, @Query Paging paging) throws MicroBlogException;
 
     @GET("/favorites/list.json")
-    ResponseList<Status> getFavoritesByScreenName(@Query("screen_name") String screenName, @Query({"since_id", "max_id", "count"}) Paging paging) throws MicroBlogException;
+    ResponseList<Status> getFavoritesByScreenName(@Query("screen_name") String screenName, @Query Paging paging) throws MicroBlogException;
 }

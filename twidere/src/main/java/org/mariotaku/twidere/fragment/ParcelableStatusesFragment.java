@@ -24,15 +24,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 
 import com.squareup.otto.Subscribe;
 
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter;
+import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader;
 import org.mariotaku.twidere.model.BaseRefreshTaskParam;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.RefreshTaskParam;
@@ -139,11 +143,23 @@ public abstract class ParcelableStatusesFragment extends AbsStatusesFragment {
     }
 
     @Override
-    protected void onLoadingFinished() {
-        showContent();
+    protected void onStatusesLoaded(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
         setRefreshEnabled(true);
         setRefreshing(false);
         setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
+        final ParcelableStatusesAdapter adapter = getAdapter();
+        if (adapter.getItemCount() > 0) {
+            showContent();
+        } else if (loader instanceof MicroBlogAPIStatusesLoader) {
+            MicroBlogException e = ((MicroBlogAPIStatusesLoader) loader).getException();
+            if (e != null) {
+                showError(R.drawable.ic_info_error_generic, Utils.getErrorMessage(getContext(), e));
+            } else {
+                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
+            }
+        } else {
+            showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
+        }
     }
 
 

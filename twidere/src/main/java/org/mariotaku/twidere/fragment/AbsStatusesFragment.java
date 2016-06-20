@@ -320,7 +320,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);
         }
-        onLoadingFinished();
+        onStatusesLoaded(loader, data);
     }
 
     @Override
@@ -574,7 +574,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     protected abstract Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context, final Bundle args,
                                                                              final boolean fromUser);
 
-    protected abstract void onLoadingFinished();
+    protected abstract void onStatusesLoaded(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data);
 
     protected final void saveReadPosition(int position) {
         final String readPositionTag = getReadPositionTagWithAccounts();

@@ -61,7 +61,7 @@ public class MediaTimelineLoader extends MicroBlogAPIStatusesLoader {
                                @Nullable final String screenName, final String sinceId, final String maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, final boolean fromUser, boolean loadingMore) {
-        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser,
+        super(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs, tabPosition, fromUser,
                 loadingMore);
         mUserKey = userKey;
         mUserScreenName = screenName;

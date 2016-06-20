@@ -29,9 +29,12 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 
 import java.util.List;
 
@@ -42,9 +45,10 @@ public class UserFavoritesLoader extends MicroBlogAPIStatusesLoader {
 
     public UserFavoritesLoader(final Context context, final UserKey accountKey, final UserKey userKey,
                                final String screenName, final String sinceId, final String maxId,
+                               final int page,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, boolean fromUser, boolean loadingMore) {
-        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser,
+        super(context, accountKey, sinceId, maxId, page, data, savedStatusesArgs, tabPosition, fromUser,
                 loadingMore);
         mUserKey = userKey;
         mUserScreenName = screenName;
@@ -64,6 +68,25 @@ public class UserFavoritesLoader extends MicroBlogAPIStatusesLoader {
     @WorkerThread
     @Override
     protected boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status) {
-        return false;
+        return InternalTwitterContentUtils.isFiltered(database, status, false);
+    }
+
+
+    @Override
+    protected void processPaging(@NonNull ParcelableCredentials credentials, int loadItemLimit, @NonNull Paging paging) {
+        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+            case ParcelableAccount.Type.FANFOU: {
+                paging.setCount(loadItemLimit);
+                final int page = getPage();
+                if (page > 0) {
+                    paging.setPage(page);
+                }
+                break;
+            }
+            default: {
+                super.processPaging(credentials, loadItemLimit, paging);
+                break;
+            }
+        }
     }
 }
