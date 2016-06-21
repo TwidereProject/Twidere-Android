@@ -54,6 +54,7 @@ import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.FixedLinearLayoutManager;
@@ -83,7 +84,6 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -848,7 +848,7 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             final Context context = getActivity();
-            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(android.R.string.dialog_alert_title);
             builder.setMessage(R.string.sensitive_content_warning);
             builder.setPositiveButton(android.R.string.ok, this);

@@ -28,15 +28,12 @@ public class ListParcelableStatusesAdapter extends ParcelableStatusesAdapter {
     @NonNull
     @Override
     protected IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent) {
-        return createStatusViewHolder(this, getInflater(), parent, getCardBackgroundColor());
+        return createStatusViewHolder(this, getInflater(), parent);
     }
 
     public static StatusViewHolder createStatusViewHolder(IStatusesAdapter<?> adapter,
-                                                          LayoutInflater inflater, ViewGroup parent,
-                                                          int cardBackgroundColor) {
+                                                          LayoutInflater inflater, ViewGroup parent) {
         final View view = inflater.inflate(R.layout.card_item_status_compact, parent, false);
-        final View itemContent = view.findViewById(R.id.item_content);
-        itemContent.setBackgroundColor(cardBackgroundColor);
         final StatusViewHolder holder = new StatusViewHolder(adapter, view);
         holder.setOnClickListeners();
         holder.setupViewOptions();

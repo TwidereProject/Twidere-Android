@@ -38,7 +38,6 @@ import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.CardMediaContainer;
@@ -60,7 +59,6 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
     private final TwidereLinkify mLinkify;
-    private final int mCardBackgroundColor;
     private final int mTextSize;
     @ShapedImageView.ShapeStyle
     private final int mProfileImageStyle;
@@ -68,7 +66,6 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private final int mMediaPreviewStyle;
     @TwidereLinkify.HighlightStyle
     private final int mLinkHighlightingStyle;
-    private final boolean mCompactCards = true;
     private final boolean mNameFirst;
     private final boolean mDisplayMediaPreview;
     private final boolean mDisplayProfileImage;
@@ -86,8 +83,6 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
 
     public ParcelableStatusesAdapter(Context context) {
         super(context);
-        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context),
-                ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mLoadingHandler = new MediaLoadingHandler(getProgressViewIds());
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
@@ -366,10 +361,6 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
 
     protected LayoutInflater getInflater() {
         return mInflater;
-    }
-
-    protected int getCardBackgroundColor() {
-        return mCardBackgroundColor;
     }
 
     @NonNull

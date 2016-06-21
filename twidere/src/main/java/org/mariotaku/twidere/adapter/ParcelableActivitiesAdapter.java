@@ -251,11 +251,8 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW_TYPE_STATUS: {
-                final View view = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
-                final View itemContent = view.findViewById(R.id.item_content);
-                itemContent.setBackgroundColor(mCardBackgroundColor);
-                final StatusViewHolder holder = new StatusViewHolder(mStatusAdapterDelegate, view);
-                holder.setupViewOptions();
+                final StatusViewHolder holder = ListParcelableStatusesAdapter.createStatusViewHolder(mStatusAdapterDelegate,
+                        mInflater, parent);
                 holder.setStatusClickListener(mEventListener);
                 return holder;
             }

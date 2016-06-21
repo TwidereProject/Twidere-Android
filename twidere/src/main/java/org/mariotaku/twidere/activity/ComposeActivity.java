@@ -21,7 +21,6 @@ package org.mariotaku.twidere.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
@@ -52,6 +51,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
@@ -95,8 +95,6 @@ import android.widget.Toast;
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
 import com.afollestad.appthemeengine.util.ATEUtil;
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.twitter.Extractor;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -2105,35 +2103,34 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
-            builder.title(R.string.edit_description);
-            builder.customView(R.layout.dialog_compose_edit_alt_text, true);
-            builder.negativeText(android.R.string.cancel);
-            builder.positiveText(android.R.string.ok);
-            builder.neutralText(R.string.clear);
-            builder.onNeutral(new MaterialDialog.SingleButtonCallback() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(R.string.edit_description);
+            builder.setView(R.layout.dialog_compose_edit_alt_text);
+            builder.setNegativeButton(android.R.string.cancel, null);
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    ((ComposeActivity) getActivity()).setMediaAltText(getArguments().getInt(EXTRA_POSITION), null);
-                }
-            });
-            builder.onPositive(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    final EditText editText = (EditText) dialog.findViewById(R.id.edit_text);
+                public void onClick(DialogInterface dialog, int which) {
+                    final EditText editText = (EditText) ((Dialog) dialog).findViewById(R.id.edit_text);
                     ((ComposeActivity) getActivity()).setMediaAltText(getArguments().getInt(EXTRA_POSITION),
                             ParseUtils.parseString(editText.getText()));
                 }
             });
-            builder.showListener(new DialogInterface.OnShowListener() {
+            builder.setNeutralButton(R.string.clear, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ((ComposeActivity) getActivity()).setMediaAltText(getArguments().getInt(EXTRA_POSITION), null);
+                }
+            });
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
-                    MaterialDialog materialDialog = ((MaterialDialog) dialog);
+                    Dialog materialDialog = ((Dialog) dialog);
                     final EditText editText = (EditText) materialDialog.findViewById(R.id.edit_text);
                     editText.setText(getArguments().getString(EXTRA_TEXT));
                 }
             });
-            return builder.build();
+            return dialog;
         }
     }
 

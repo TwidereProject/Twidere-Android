@@ -51,7 +51,7 @@ public class VariousItemsAdapter extends LoadMoreSupportAdapter<RecyclerView.Vie
         switch (viewType) {
             case VIEW_TYPE_STATUS: {
                 return ListParcelableStatusesAdapter.createStatusViewHolder(mDummyAdapter,
-                        mInflater, parent, mCardBackgroundColor);
+                        mInflater, parent);
             }
             case VIEW_TYPE_USER: {
                 return ParcelableUsersAdapter.createUserViewHolder(mDummyAdapter, mInflater, parent,

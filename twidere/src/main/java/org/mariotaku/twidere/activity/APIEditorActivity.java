@@ -358,14 +358,14 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
 
         private class CustomAPIConfigArrayAdapter extends ArrayAdapter<CustomAPIConfig> {
             public CustomAPIConfigArrayAdapter(Context context, List<CustomAPIConfig> defaultItems) {
-                super(context, R.layout.md_listitem, defaultItems);
+                super(context, android.R.layout.simple_list_item_1, defaultItems);
             }
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 final View view = super.getView(position, convertView, parent);
                 CustomAPIConfig config = getItem(position);
-                ((TextView) view.findViewById(com.afollestad.materialdialogs.R.id.title)).setText(config.getLocalizedName(getContext()));
+                ((TextView) view.findViewById(android.R.id.text1)).setText(config.getLocalizedName(getContext()));
                 return view;
             }
         }

@@ -57,9 +57,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.internal.MDButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.mariotaku.microblog.library.MicroBlog;
@@ -1153,12 +1150,14 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setView(R.layout.dialog_password_sign_in);
             builder.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     AlertDialog alertDialog = (AlertDialog) dialog;
                     EditText editUsername = (EditText) alertDialog.findViewById(R.id.username);
                     EditText editPassword = (EditText) alertDialog.findViewById(R.id.password);
+                    assert editUsername != null && editPassword != null;
                     SignInActivity activity = (SignInActivity) getActivity();
                     activity.setUsernamePassword(String.valueOf(editUsername.getText()),
                             String.valueOf(editPassword.getText()));
@@ -1166,16 +1165,16 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, null);
-            builder.setView(R.layout.dialog_password_sign_in);
 
             final AlertDialog alertDialog = builder.create();
             alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
                 @Override
                 public void onShow(DialogInterface dialog) {
-                    final MaterialDialog materialDialog = (MaterialDialog) dialog;
+                    final AlertDialog materialDialog = (AlertDialog) dialog;
                     final EditText editUsername = (EditText) materialDialog.findViewById(R.id.username);
                     final EditText editPassword = (EditText) materialDialog.findViewById(R.id.password);
+                    assert editUsername != null && editPassword != null;
                     TextWatcher textWatcher = new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1184,7 +1183,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            MDButton button = materialDialog.getActionButton(DialogAction.POSITIVE);
+                            Button button = materialDialog.getButton(DialogInterface.BUTTON_POSITIVE);
                             if (button == null) return;
                             button.setEnabled(editUsername.length() > 0 && editPassword.length() > 0);
                         }
