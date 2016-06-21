@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -599,25 +600,6 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     }
 
     @Override
-    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
-        final ParcelableActivitiesAdapter adapter = getAdapter();
-        // Dividers are drawn on bottom of view
-        recyclerView.addItemDecoration(new DividerItemDecoration(context, getLayoutManager().getOrientation()) {
-
-            @Override
-            protected boolean isDividerEnabled(int childPos) {
-                // Don't draw for last item
-                if (childPos == RecyclerView.NO_POSITION || childPos == adapter.getItemCount() - 1) {
-                    return false;
-                }
-                final int itemViewType = adapter.getItemViewType(childPos);
-                return itemViewType != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY;
-            }
-
-        });
-    }
-
-    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if (!getUserVisibleHint() || menuInfo == null) return;
         final ParcelableActivitiesAdapter adapter = getAdapter();
@@ -662,6 +644,39 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         }
         return false;
     }
+
+
+    @Nullable
+    @Override
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context, final RecyclerView recyclerView, final LinearLayoutManager layoutManager) {
+        final ParcelableActivitiesAdapter adapter = getAdapter();
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
+        final Resources res = context.getResources();
+        if (adapter.isProfileImageEnabled()) {
+            final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2
+                    + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
+            itemDecoration.setPadding(new DividerItemDecoration.Padding() {
+                @Override
+                public boolean get(int position, Rect rect) {
+                    final int itemViewType = adapter.getItemViewType(position);
+                    boolean nextItemIsStatus = false;
+                    if (position < adapter.getItemCount() - 1) {
+                        nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS;
+                    }
+                    if (nextItemIsStatus && itemViewType == ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                        rect.left = decorPaddingLeft;
+                    } else {
+                        rect.left = 0;
+                    }
+                    return true;
+                }
+            });
+        }
+        itemDecoration.setDecorationEndOffset(1);
+        return itemDecoration;
+    }
+
 
     private String getCurrentReadPositionTag() {
         final String tag = getReadPositionTagWithAccounts();

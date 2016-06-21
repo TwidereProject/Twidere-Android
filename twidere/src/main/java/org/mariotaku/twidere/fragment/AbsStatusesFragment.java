@@ -372,14 +372,30 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
 
     @Nullable
     @Override
-    protected RecyclerView.ItemDecoration createItemDecoration(Context context, RecyclerView recyclerView, LinearLayoutManager layoutManager) {
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context, final RecyclerView recyclerView, final LinearLayoutManager layoutManager) {
+        final ParcelableStatusesAdapter adapter = getAdapter();
         final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
                 ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
         final Resources res = context.getResources();
-        if (getAdapter().isProfileImageEnabled()) {
+        if (adapter.isProfileImageEnabled()) {
             final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2
                     + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
-            itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
+            itemDecoration.setPadding(new DividerItemDecoration.Padding() {
+                @Override
+                public boolean get(int position, Rect rect) {
+                    final int itemViewType = adapter.getItemViewType(position);
+                    boolean nextItemIsStatus = false;
+                    if (position < adapter.getItemCount() - 1) {
+                        nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableStatusesAdapter.ITEM_VIEW_TYPE_STATUS;
+                    }
+                    if (nextItemIsStatus && itemViewType == ParcelableStatusesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                        rect.left = decorPaddingLeft;
+                    } else {
+                        rect.left = 0;
+                    }
+                    return true;
+                }
+            });
         }
         itemDecoration.setDecorationEndOffset(1);
         return itemDecoration;

@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId "org.mariotaku.twidere.donate.nyanwp"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 3
         versionName "1.2"
     }
