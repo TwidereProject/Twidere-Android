@@ -1004,11 +1004,13 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
                 quoteIndicator.setVisibility(View.VISIBLE);
 
+                boolean originalIdAvailable = !TextUtils.isEmpty(status.quoted_id);
                 boolean quoteContentAvailable = status.quoted_text_plain != null
                         && status.quoted_text_unescaped != null;
 
+                quoteOriginalLink.setVisibility(originalIdAvailable ? View.VISIBLE : View.GONE);
+
                 if (quoteContentAvailable) {
-                    quoteOriginalLink.setVisibility(View.VISIBLE);
                     quotedNameView.setVisibility(View.VISIBLE);
                     quotedTextView.setVisibility(View.VISIBLE);
 
@@ -1041,7 +1043,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
                     quoteIndicator.setColor(status.quoted_user_color);
                 } else {
-                    quoteOriginalLink.setVisibility(View.GONE);
                     quotedNameView.setVisibility(View.GONE);
                     quotedTextView.setVisibility(View.VISIBLE);
 
