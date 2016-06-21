@@ -165,7 +165,7 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.6'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.9'
-    compile 'com.github.mariotaku:MultiValueSwitch:0.9.4'
+    compile 'com.github.mariotaku:MultiValueSwitch:0.9.6'
     compile 'com.github.mariotaku:AbstractTask:0.9.2'
     compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.8'
     compile 'com.github.mariotaku.CommonsLibrary:io:0.9.8'

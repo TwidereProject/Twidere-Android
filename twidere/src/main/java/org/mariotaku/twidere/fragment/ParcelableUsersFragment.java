@@ -20,6 +20,8 @@
 package org.mariotaku.twidere.fragment;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,7 +36,9 @@ import android.view.KeyEvent;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.commons.parcel.ParcelUtils;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter;
+import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter;
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener;
@@ -194,9 +198,35 @@ public abstract class ParcelableUsersFragment extends AbsContentListRecyclerView
                                                                         @NonNull final Bundle args,
                                                                         final boolean fromUser);
 
+    @Nullable
     @Override
-    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
-        super.setupRecyclerView(context, recyclerView);
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context, RecyclerView recyclerView, LinearLayoutManager layoutManager) {
+        final ParcelableUsersAdapter adapter = getAdapter();
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
+        final Resources res = context.getResources();
+        if (adapter.isProfileImageEnabled()) {
+            final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2
+                    + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
+            itemDecoration.setPadding(new DividerItemDecoration.Padding() {
+                @Override
+                public boolean get(int position, Rect rect) {
+                    final int itemViewType = adapter.getItemViewType(position);
+                    boolean nextItemIsUser = false;
+                    if (position < adapter.getItemCount() - 1) {
+                        nextItemIsUser = adapter.getItemViewType(position + 1) == ParcelableUsersAdapter.ITEM_VIEW_TYPE_USER;
+                    }
+                    if (nextItemIsUser && itemViewType == ParcelableUsersAdapter.ITEM_VIEW_TYPE_USER) {
+                        rect.left = decorPaddingLeft;
+                    } else {
+                        rect.left = 0;
+                    }
+                    return true;
+                }
+            });
+        }
+        itemDecoration.setDecorationEndOffset(1);
+        return itemDecoration;
     }
 
     private int findPosition(ParcelableUsersAdapter adapter, UserKey accountKey, UserKey userKey) {
