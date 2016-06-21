@@ -24,7 +24,7 @@ android:
 sudo: false
 
 jdk:
-  - openjdk7
+  - openjdk8
 
 env:
   global:
