@@ -28,7 +28,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 
@@ -67,19 +66,21 @@ import java.util.List;
 import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 
 /**
+ * Displays statuses from database
  * Created by mariotaku on 14/12/3.
  */
 public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
 
     @Override
     protected void onLoadingFinished() {
-        final UserKey[] accountIds = getAccountKeys();
+        final UserKey[] accountKeys = getAccountKeys();
+        assert accountKeys != null;
         final ParcelableActivitiesAdapter adapter = getAdapter();
         if (adapter.getItemCount() > 0) {
             showContent();
-        } else if (accountIds.length > 0) {
+        } else if (accountKeys.length > 0) {
             final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
-                    mErrorInfoStore.get(getErrorInfoKey(), accountIds[0]));
+                    mErrorInfoStore.get(getErrorInfoKey(), accountKeys[0]));
             if (errorInfo != null) {
                 showEmpty(errorInfo.getIcon(), errorInfo.getMessage());
             } else {
@@ -105,6 +106,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         final String table = getTableNameByUri(uri);
         final String sortOrder = getSortOrder();
         final UserKey[] accountKeys = getAccountKeys();
+        assert accountKeys != null;
         final Expression accountWhere = Expression.in(new Column(Activities.ACCOUNT_KEY),
                 new ArgsArray(accountKeys.length));
         final Expression filterWhere = getFiltersWhere(table), where;
@@ -129,18 +131,20 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         return new CursorActivitiesBusCallback();
     }
 
+    @Nullable
     @Override
     protected UserKey[] getAccountKeys() {
+        final Context context = getContext();
+        if (context == null) return null;
         final Bundle args = getArguments();
-        final UserKey[] accountKeys = Utils.getAccountKeys(getContext(), args);
+        final UserKey[] accountKeys = Utils.getAccountKeys(context, args);
         if (accountKeys != null) {
             return accountKeys;
         }
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof HomeActivity) {
-            return ((HomeActivity) activity).getActivatedAccountKeys();
+        if (context instanceof HomeActivity) {
+            return ((HomeActivity) context).getActivatedAccountKeys();
         }
-        return DataStoreUtils.getActivatedAccountKeys(getActivity());
+        return DataStoreUtils.getActivatedAccountKeys(context);
     }
 
     @Override
@@ -196,7 +200,9 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
             @NonNull
             @Override
             public UserKey[] getAccountKeysWorker() {
-                return CursorActivitiesFragment.this.getAccountKeys();
+                final UserKey[] accountKeys = CursorActivitiesFragment.this.getAccountKeys();
+                assert accountKeys != null;
+                return accountKeys;
             }
 
             @Nullable
@@ -233,7 +239,9 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
             @NonNull
             @Override
             public UserKey[] getAccountKeysWorker() {
-                return CursorActivitiesFragment.this.getAccountKeys();
+                final UserKey[] accountKeys = CursorActivitiesFragment.this.getAccountKeys();
+                assert accountKeys != null;
+                return accountKeys;
             }
 
             @Nullable
@@ -280,8 +288,11 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            for (UserKey accountKey : getAccountKeys()) {
+        Context context = getContext();
+        if (context != null && isVisibleToUser) {
+            final UserKey[] accountKeys = getAccountKeys();
+            assert accountKeys != null;
+            for (UserKey accountKey : accountKeys) {
                 mTwitterWrapper.clearNotificationAsync(getNotificationType(), accountKey);
             }
         }

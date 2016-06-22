@@ -214,8 +214,6 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
         if (status != null) {
             IntentUtils.openStatus(getContext(), status, null);
-        } else {
-
         }
     }
 
@@ -547,16 +545,12 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         return new StatusesBusCallback();
     }
 
+    @Nullable
     protected abstract UserKey[] getAccountKeys();
 
     protected List<ParcelableActivity> getAdapterData() {
         final ParcelableActivitiesAdapter adapter = getAdapter();
         return adapter.getData();
-    }
-
-    protected void setAdapterData(List<ParcelableActivity> data) {
-        final ParcelableActivitiesAdapter adapter = getAdapter();
-        adapter.setData(data);
     }
 
     @ReadPositionTag
@@ -573,23 +567,26 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     protected abstract void onLoadingFinished();
 
     protected void saveReadPosition(int position) {
+        if (getContext() == null) return;
         final String readPositionTag = getReadPositionTagWithAccounts();
         if (readPositionTag == null) return;
         if (position == RecyclerView.NO_POSITION) return;
         final ParcelableActivitiesAdapter adapter = getAdapter();
-        final ParcelableActivity activity = adapter.getActivity(position);
-        if (activity == null) return;
-        if (mReadStateManager.setPosition(readPositionTag, activity.timestamp)) {
-            mTwitterWrapper.setActivitiesAboutMeUnreadAsync(getAccountKeys(), activity.timestamp);
+        final ParcelableActivity item = adapter.getActivity(position);
+        if (item == null) return;
+        final UserKey[] accountKeys = getAccountKeys();
+        assert accountKeys != null;
+        if (mReadStateManager.setPosition(readPositionTag, item.timestamp)) {
+            mTwitterWrapper.setActivitiesAboutMeUnreadAsync(accountKeys, item.timestamp);
         }
 
-        for (UserKey accountKey : getAccountKeys()) {
+        for (UserKey accountKey : accountKeys) {
             final String tag = Utils.getReadPositionTagWithAccounts(getReadPositionTag(),
                     accountKey);
-            mReadStateManager.setPosition(tag, activity.timestamp);
+            mReadStateManager.setPosition(tag, item.timestamp);
         }
 
-        mReadStateManager.setPosition(getCurrentReadPositionTag(), activity.timestamp, true);
+        mReadStateManager.setPosition(getCurrentReadPositionTag(), item.timestamp, true);
     }
 
     @NonNull

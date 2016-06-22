@@ -449,8 +449,7 @@ public class DataStoreUtils implements Constants {
     }
 
     @NonNull
-    public static UserKey[] getActivatedAccountKeys(final Context context) {
-        if (context == null) return new UserKey[0];
+    public static UserKey[] getActivatedAccountKeys(@NonNull final Context context) {
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
                 new String[]{Accounts.ACCOUNT_KEY}, Accounts.IS_ACTIVATED + " = 1", null, null);
         if (cur == null) return new UserKey[0];
