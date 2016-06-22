@@ -42,6 +42,7 @@ import org.mariotaku.twidere.activity.HomeActivity;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader;
+import org.mariotaku.twidere.model.ParameterizedExpression;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -115,13 +116,13 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         }
         final String[] accountSelectionArgs = TwidereArrayUtils.toStringArray(accountKeys, 0,
                 accountKeys.length);
-        final Where expression = processWhere(where, accountSelectionArgs);
+        final ParameterizedExpression expression = processWhere(where, accountSelectionArgs);
         final String selection = expression.getSQL();
         final ParcelableActivitiesAdapter adapter = getAdapter();
         adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Activities.COLUMNS;
-        return new CursorActivitiesLoader(context, uri, projection, selection, expression.whereArgs,
-                sortOrder, fromUser);
+        return new CursorActivitiesLoader(context, uri, projection, selection,
+                expression.getParameters(), sortOrder, fromUser);
     }
 
     @Override
@@ -300,8 +301,8 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
     protected abstract boolean isFilterEnabled();
 
     @NonNull
-    protected Where processWhere(@NonNull final Expression where, @NonNull final String[] whereArgs) {
-        return new Where(where, whereArgs);
+    protected ParameterizedExpression processWhere(@NonNull final Expression where, @NonNull final String[] whereArgs) {
+        return new ParameterizedExpression(where, whereArgs);
     }
 
     protected abstract void updateRefreshState();
@@ -386,20 +387,6 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
 
         }
 
-    }
-
-    public static class Where {
-        Expression where;
-        String[] whereArgs;
-
-        public Where(@NonNull Expression where, @Nullable String[] whereArgs) {
-            this.where = where;
-            this.whereArgs = whereArgs;
-        }
-
-        public String getSQL() {
-            return where.getSQL();
-        }
     }
 
     public static class CursorActivitiesLoader extends ExtendedObjectCursorLoader<ParcelableActivity> {

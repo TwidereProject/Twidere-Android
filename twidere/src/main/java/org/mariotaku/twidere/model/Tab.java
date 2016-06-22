@@ -14,6 +14,7 @@ import org.mariotaku.twidere.model.tab.argument.TabArguments;
 import org.mariotaku.twidere.model.tab.argument.TextQueryArguments;
 import org.mariotaku.twidere.model.tab.argument.UserArguments;
 import org.mariotaku.twidere.model.tab.argument.UserListArguments;
+import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.model.util.TabArgumentsFieldConverter;
@@ -194,12 +195,17 @@ public class Tab {
         TabExtras base;
         @JsonField(name = "interactions")
         InteractionsTabExtras interactions;
+        @JsonField(name = "home")
+        HomeTabExtras home;
 
         public static InternalExtras from(TabExtras extras) {
             if (extras == null) return null;
             InternalExtras result = new InternalExtras();
             if (extras instanceof InteractionsTabExtras) {
                 result.interactions = (InteractionsTabExtras) extras;
+            }
+            if (extras instanceof HomeTabExtras) {
+                result.home = (HomeTabExtras) extras;
             } else {
                 result.base = extras;
             }
@@ -209,6 +215,8 @@ public class Tab {
         public TabExtras getExtras() {
             if (interactions != null) {
                 return interactions;
+            } else if (home != null) {
+                return home;
             } else {
                 return base;
             }

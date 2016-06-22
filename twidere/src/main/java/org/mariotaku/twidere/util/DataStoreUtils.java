@@ -26,6 +26,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -60,6 +61,7 @@ import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserFollowState;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -466,22 +468,39 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static int getStatusesCount(@NonNull final Context context, final Uri uri, final long compare,
+    public static int getStatusesCount(@NonNull final Context context, final Uri uri,
+                                       @Nullable final Bundle extraArgs, final long compare,
                                        String compareColumn, boolean greaterThan, UserKey... accountKeys) {
         if (accountKeys == null) {
             accountKeys = getActivatedAccountKeys(context);
         }
-        final Expression selection = Expression.and(
-                Expression.inArgs(new Column(Statuses.ACCOUNT_KEY), accountKeys.length),
-                greaterThan ? Expression.greaterThanArgs(compareColumn) : Expression.lesserThanArgs(compareColumn),
-                buildStatusFilterWhereClause(getTableNameByUri(uri), null)
-        );
-        final String[] whereArgs = new String[accountKeys.length + 1];
-        for (int i = 0; i < accountKeys.length; i++) {
-            whereArgs[i] = accountKeys[i].toString();
+
+        List<Expression> expressions = new ArrayList<>();
+        List<String> expressionArgs = new ArrayList<>();
+
+        expressions.add(Expression.inArgs(new Column(Statuses.ACCOUNT_KEY), accountKeys.length));
+        for (UserKey accountKey : accountKeys) {
+            expressionArgs.add(accountKey.toString());
         }
-        whereArgs[accountKeys.length] = String.valueOf(compare);
-        return queryCount(context, uri, selection.getSQL(), whereArgs);
+
+        if (greaterThan) {
+            expressions.add(Expression.greaterThanArgs(compareColumn));
+        } else {
+            expressions.add(Expression.lesserThanArgs(compareColumn));
+        }
+        expressionArgs.add(String.valueOf(compare));
+
+        expressions.add(buildStatusFilterWhereClause(getTableNameByUri(uri), null));
+
+        if (extraArgs != null) {
+            Parcelable extras = extraArgs.getParcelable(EXTRA_EXTRAS);
+            if (extras instanceof HomeTabExtras) {
+                processTabExtras(expressions, expressionArgs, (HomeTabExtras) extras);
+            }
+        }
+
+        Expression selection = Expression.and(expressions.toArray(new Expression[expressions.size()]));
+        return queryCount(context, uri, selection.getSQL(), expressionArgs.toArray(new String[expressionArgs.size()]));
     }
 
     public static int getActivitiesCount(final Context context, final Uri uri, final long compare,
@@ -1061,6 +1080,20 @@ public class DataStoreUtils implements Constants {
         final String[] activityWhereArgs = {accountKey.toString(), statusId, statusId};
         for (final Uri uri : ACTIVITIES_URIS) {
             updateActivity(resolver, uri, activityWhere, activityWhereArgs, action);
+        }
+    }
+
+    public static void processTabExtras(List<Expression> expressions, List<String> expressionArgs, HomeTabExtras extras) {
+        if (extras.isHideRetweets()) {
+            expressions.add(Expression.equalsArgs(Statuses.IS_RETWEET));
+            expressionArgs.add("0");
+        }
+        if (extras.isHideQuotes()) {
+            expressions.add(Expression.equalsArgs(Statuses.IS_QUOTE));
+            expressionArgs.add("0");
+        }
+        if (extras.isHideReplies()) {
+            expressions.add(Expression.isNull(new Column(Statuses.IN_REPLY_TO_STATUS_ID)));
         }
     }
 

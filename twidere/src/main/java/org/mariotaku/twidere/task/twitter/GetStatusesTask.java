@@ -224,7 +224,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         deleteWhereArgs[0] = accountKey.toString();
         int olderCount = -1;
         if (minPositionKey > 0) {
-            olderCount = DataStoreUtils.getStatusesCount(context, uri, minPositionKey,
+            olderCount = DataStoreUtils.getStatusesCount(context, uri, null, minPositionKey,
                     Statuses.POSITION_KEY, false, accountKey);
         }
         final int rowsDeleted = resolver.delete(writeUri, deleteWhere, deleteWhereArgs);

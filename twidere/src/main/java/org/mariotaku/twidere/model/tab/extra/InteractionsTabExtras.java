@@ -59,6 +59,14 @@ public class InteractionsTabExtras extends TabExtras implements Parcelable {
         InteractionsTabExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    @Override
+    public String toString() {
+        return "InteractionsTabExtras{" +
+                "myFollowingOnly=" + myFollowingOnly +
+                ", mentionsOnly=" + mentionsOnly +
+                "} " + super.toString();
+    }
+
     public static final Creator<InteractionsTabExtras> CREATOR = new Creator<InteractionsTabExtras>() {
         @Override
         public InteractionsTabExtras createFromParcel(Parcel source) {

@@ -988,7 +988,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
                                 true, ReadPositionTag.HOME_TIMELINE, accountKeys);
                         final long position = mReadStateManager.getPosition(tagWithAccounts);
                         final int count = DataStoreUtils.getStatusesCount(mContext, Statuses.CONTENT_URI,
-                                position, Statuses.STATUS_TIMESTAMP, true, accountKeys);
+                                spec.args, position, Statuses.STATUS_TIMESTAMP, true, accountKeys);
                         result.put(i, count);
                         publishProgress(new TabBadge(i, count));
                         break;

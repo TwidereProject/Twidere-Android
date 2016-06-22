@@ -193,6 +193,9 @@ public interface IntentConstants {
     String EXTRA_CURRENT_MEDIA = "current_media";
     String EXTRA_EXTRAS = "extras";
     String EXTRA_MY_FOLLOWING_ONLY = "my_following_only";
+    String EXTRA_HIDE_RETWEETS = "hide_retweets";
+    String EXTRA_HIDE_QUOTES = "hide_quotes";
+    String EXTRA_HIDE_REPLIES = "hide_replies";
     String EXTRA_MENTIONS_ONLY = "mentions_only";
     String EXTRA_CHANGED = "changed";
     String EXTRA_NOTIFY_CHANGE = "notify_change";

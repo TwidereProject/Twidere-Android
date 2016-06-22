@@ -40,6 +40,7 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader;
+import org.mariotaku.twidere.model.ParameterizedExpression;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.SimpleRefreshTaskParam;
@@ -96,14 +97,15 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
         } else {
             where = accountWhere;
         }
-        final String selection = processWhere(where).getSQL();
         final ParcelableStatusesAdapter adapter = getAdapter();
         adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Statuses.COLUMNS;
         final String[] selectionArgs = TwidereArrayUtils.toStringArray(accountKeys, 0,
                 accountKeys.length);
+        final ParameterizedExpression expression = processWhere(where, selectionArgs);
         return new ExtendedObjectCursorLoader<>(context, ParcelableStatusCursorIndices.class, uri,
-                projection, selection, selectionArgs, sortOrder, fromUser);
+                projection, expression.getSQL(), expression.getParameters(),
+                sortOrder, fromUser);
     }
 
     @Override
@@ -358,8 +360,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     protected abstract boolean isFilterEnabled();
 
-    protected Expression processWhere(final Expression where) {
-        return where;
+    protected ParameterizedExpression processWhere(@NonNull final Expression where, @NonNull final String[] whereArgs) {
+        return new ParameterizedExpression(where, whereArgs);
     }
 
     protected abstract void updateRefreshState();

@@ -807,4 +807,7 @@
     <string name="no_status_content_text">No content</string>
     <string name="status_not_available_text">Tweet not available</string>
     <string name="share_link">Share link</string>
+    <string name="hide_retweets">Hide retweets</string>
+    <string name="hide_quotes">Hide quotes</string>
+    <string name="hide_replies">Hide replies</string>
 </resources>
