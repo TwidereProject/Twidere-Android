@@ -329,8 +329,8 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     @Override
     public void setUserVisibleHint(final boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        final FragmentActivity activity = getActivity();
-        if (isVisibleToUser && activity != null) {
+        final Context context = getContext();
+        if (isVisibleToUser && context != null) {
             for (UserKey accountKey : getAccountKeys()) {
                 final String tag = "messages_" + accountKey;
                 mNotificationManager.cancel(tag, NOTIFICATION_ID_DIRECT_MESSAGES);

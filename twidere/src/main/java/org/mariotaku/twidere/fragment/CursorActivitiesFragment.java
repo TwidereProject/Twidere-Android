@@ -74,7 +74,6 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
     @Override
     protected void onLoadingFinished() {
         final UserKey[] accountKeys = getAccountKeys();
-        assert accountKeys != null;
         final ParcelableActivitiesAdapter adapter = getAdapter();
         if (adapter.getItemCount() > 0) {
             showContent();
@@ -106,7 +105,6 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         final String table = getTableNameByUri(uri);
         final String sortOrder = getSortOrder();
         final UserKey[] accountKeys = getAccountKeys();
-        assert accountKeys != null;
         final Expression accountWhere = Expression.in(new Column(Activities.ACCOUNT_KEY),
                 new ArgsArray(accountKeys.length));
         final Expression filterWhere = getFiltersWhere(table), where;
@@ -131,11 +129,11 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         return new CursorActivitiesBusCallback();
     }
 
-    @Nullable
+    @NonNull
     @Override
     protected UserKey[] getAccountKeys() {
         final Context context = getContext();
-        if (context == null) return null;
+        assert context != null;
         final Bundle args = getArguments();
         final UserKey[] accountKeys = Utils.getAccountKeys(context, args);
         if (accountKeys != null) {
@@ -200,9 +198,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
             @NonNull
             @Override
             public UserKey[] getAccountKeysWorker() {
-                final UserKey[] accountKeys = CursorActivitiesFragment.this.getAccountKeys();
-                assert accountKeys != null;
-                return accountKeys;
+                return CursorActivitiesFragment.this.getAccountKeys();
             }
 
             @Nullable
@@ -239,9 +235,7 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
             @NonNull
             @Override
             public UserKey[] getAccountKeysWorker() {
-                final UserKey[] accountKeys = CursorActivitiesFragment.this.getAccountKeys();
-                assert accountKeys != null;
-                return accountKeys;
+                return CursorActivitiesFragment.this.getAccountKeys();
             }
 
             @Nullable
@@ -291,7 +285,6 @@ public abstract class CursorActivitiesFragment extends AbsActivitiesFragment {
         Context context = getContext();
         if (context != null && isVisibleToUser) {
             final UserKey[] accountKeys = getAccountKeys();
-            assert accountKeys != null;
             for (UserKey accountKey : accountKeys) {
                 mTwitterWrapper.clearNotificationAsync(getNotificationType(), accountKey);
             }

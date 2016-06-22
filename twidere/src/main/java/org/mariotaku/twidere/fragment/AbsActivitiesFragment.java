@@ -545,7 +545,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         return new StatusesBusCallback();
     }
 
-    @Nullable
+    @NonNull
     protected abstract UserKey[] getAccountKeys();
 
     protected List<ParcelableActivity> getAdapterData() {

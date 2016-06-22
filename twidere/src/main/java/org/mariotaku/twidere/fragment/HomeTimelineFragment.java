@@ -19,9 +19,9 @@
 
 package org.mariotaku.twidere.fragment;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.model.RefreshTaskParam;
@@ -82,8 +82,8 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
     @Override
     public void setUserVisibleHint(final boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        final FragmentActivity activity = getActivity();
-        if (isVisibleToUser && activity != null) {
+        final Context context = getContext();
+        if (isVisibleToUser && context != null) {
             for (UserKey accountId : getAccountKeys()) {
                 final String tag = "home_" + accountId;
                 mNotificationManager.cancel(tag, NOTIFICATION_ID_HOME_TIMELINE);

@@ -420,8 +420,7 @@ public class DataStoreUtils implements Constants {
         return getAccountScreenNames(context, null);
     }
 
-    public static String[] getAccountScreenNames(final Context context, @Nullable final UserKey[] accountKeys) {
-        if (context == null) return new String[0];
+    public static String[] getAccountScreenNames(@NonNull final Context context, @Nullable final UserKey[] accountKeys) {
         final String[] cols = new String[]{Accounts.SCREEN_NAME};
         final String where;
         final String[] whereArgs;
@@ -467,9 +466,8 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static int getStatusesCount(final Context context, final Uri uri, final long compare,
+    public static int getStatusesCount(@NonNull final Context context, final Uri uri, final long compare,
                                        String compareColumn, boolean greaterThan, UserKey... accountKeys) {
-        if (context == null) return 0;
         if (accountKeys == null) {
             accountKeys = getActivatedAccountKeys(context);
         }

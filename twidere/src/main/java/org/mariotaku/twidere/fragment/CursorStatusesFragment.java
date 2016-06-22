@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 
 import com.squareup.otto.Subscribe;
@@ -189,15 +188,15 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
     @Override
     protected UserKey[] getAccountKeys() {
         final Bundle args = getArguments();
-        final UserKey[] accountKeys = Utils.getAccountKeys(getContext(), args);
+        final Context context = getContext();
+        final UserKey[] accountKeys = Utils.getAccountKeys(context, args);
         if (accountKeys != null) {
             return accountKeys;
         }
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof HomeActivity) {
-            return ((HomeActivity) activity).getActivatedAccountKeys();
+        if (context instanceof HomeActivity) {
+            return ((HomeActivity) context).getActivatedAccountKeys();
         }
-        return DataStoreUtils.getActivatedAccountKeys(getActivity());
+        return DataStoreUtils.getActivatedAccountKeys(context);
     }
 
     @Override
@@ -343,7 +342,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        final Context context = getContext();
+        if (context != null && isVisibleToUser) {
             for (UserKey accountId : getAccountKeys()) {
                 mTwitterWrapper.clearNotificationAsync(getNotificationType(), accountId);
             }
