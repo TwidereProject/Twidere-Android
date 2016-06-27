@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -51,6 +50,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.TintTypedArray;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseIntArray;
 import android.view.Gravity;
@@ -111,6 +111,8 @@ import java.util.List;
 
 public class HomeActivity extends BaseActivity implements OnClickListener, OnPageChangeListener,
         SupportFragmentCallback, OnLongClickListener, DrawerLayout.DrawerListener {
+    private static final int[] HOME_AS_UP_ATTRS = {android.support.v7.appcompat.R.attr.homeAsUpIndicator};
+
     private final Handler mHandler = new Handler();
 
     private final ContentObserver mAccountChangeObserver = new AccountChangeObserver(this, mHandler);
@@ -156,8 +158,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
 
         @Override
         public Drawable getThemeUpIndicator() {
-            final int[] attrs = {android.support.v7.appcompat.R.attr.homeAsUpIndicator};
-            final TypedArray a = obtainStyledAttributes(attrs);
+            final TintTypedArray a = TintTypedArray.obtainStyledAttributes(
+                    getActionBarThemedContext(), null, HOME_AS_UP_ATTRS);
             final Drawable result = a.getDrawable(0);
             a.recycle();
             return result;

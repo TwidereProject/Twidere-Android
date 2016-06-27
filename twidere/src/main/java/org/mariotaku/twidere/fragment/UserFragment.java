@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment;
 import android.animation.ArgbEvaluator;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -61,7 +60,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -969,6 +967,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        final Context context = getContext();
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
         final UserRelationship userRelationship = mRelationship;
@@ -1099,33 +1098,31 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 return true;
             }
             case R.id.user_mentions: {
-                IntentUtils.openUserMentions(getActivity(), user.account_key, user.screen_name);
+                IntentUtils.openUserMentions(context, user.account_key, user.screen_name);
                 return true;
             }
             case R.id.saved_searches: {
-                IntentUtils.openSavedSearches(getActivity(), user.account_key);
+                IntentUtils.openSavedSearches(context, user.account_key);
                 return true;
             }
             case R.id.scheduled_statuses: {
-                IntentUtils.openScheduledStatuses(getActivity(), user.account_key);
+                IntentUtils.openScheduledStatuses(context, user.account_key);
                 return true;
             }
             case R.id.open_in_browser: {
                 final Uri uri = LinkCreator.getUserWebLink(user);
                 final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setPackage(IntentUtils.getDefaultBrowserPackage(getContext(), uri, true));
-                startActivity(intent);
+                intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri, true));
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    startActivity(intent);
+                }
                 return true;
             }
             default: {
-                if (item.getIntent() != null) {
-                    try {
-                        startActivity(item.getIntent());
-                    } catch (final ActivityNotFoundException e) {
-                        Log.w(LOGTAG, e);
-                        return false;
-                    }
+                final Intent intent = item.getIntent();
+                if (intent != null && intent.resolveActivity(context.getPackageManager()) != null) {
+                    startActivity(intent);
                 }
                 break;
             }
