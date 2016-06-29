@@ -53,8 +53,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:layout_gravity="start|center_vertical"
-        android:layout_toEndOf="@id/profile_image"
-        android:layout_toRightOf="@id/profile_image"
+        android:layout_toEndOf="@id/profileImage"
+        android:layout_toRightOf="@id/profileImage"
         android:gravity="center_vertical"
         android:orientation="vertical">
 

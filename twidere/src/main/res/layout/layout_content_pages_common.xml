@@ -25,19 +25,19 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/pages_content"
+        android:id="@+id/pagesContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <org.mariotaku.twidere.view.ExtendedViewPager
-            android:id="@+id/view_pager"
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_tabs"/>
+            android:layout_below="@+id/toolbarTabs"/>
 
         <org.mariotaku.twidere.view.TabPagerIndicator
-            android:id="@+id/toolbar_tabs"
+            android:id="@+id/toolbarTabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_size_normal"
             android:outlineProvider="background"
@@ -51,16 +51,16 @@
             tools:listitem="@layout/layout_tab_item"/>
 
         <View
-            android:id="@+id/pager_window_overlay"
+            android:id="@+id/pagerWindowOverlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/view_pager"
-            android:layout_alignTop="@+id/view_pager"
+            android:layout_alignBottom="@+id/viewPager"
+            android:layout_alignTop="@+id/viewPager"
             android:background="?android:windowContentOverlay"/>
     </RelativeLayout>
 
     <FrameLayout
-        android:id="@+id/pages_error_container"
+        android:id="@+id/pagesErrorContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -73,14 +73,14 @@
             android:padding="@dimen/element_spacing_large">
 
             <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/pages_error_icon"
+                android:id="@+id/pagesErrorIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:color="?android:textColorSecondary"
                 android:src="@drawable/ic_info_error_generic"/>
 
             <TextView
-                android:id="@+id/pages_error_text"
+                android:id="@+id/pagesErrorText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -89,7 +89,7 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/error_window_overlay"
+            android:id="@+id/errorWindowOverlay"
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_spacing_normal"
             android:layout_gravity="top"

@@ -205,7 +205,7 @@ public class DraftsFragment extends BaseSupportFragment implements LoaderCallbac
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mResolver = getContentResolver();
-        mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
+        mTextSize = preferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
         mAdapter = new DraftsAdapter(getActivity());
         mListView.setAdapter(mAdapter);
         mListView.setEmptyView(mEmptyView);
@@ -220,7 +220,7 @@ public class DraftsFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public void onStart() {
-        final AsyncTwitterWrapper twitter = mTwitterWrapper;
+        final AsyncTwitterWrapper twitter = twitterWrapper;
         if (twitter != null) {
             twitter.clearNotificationAsync(NOTIFICATION_ID_DRAFTS);
         }
@@ -230,7 +230,7 @@ public class DraftsFragment extends BaseSupportFragment implements LoaderCallbac
     @Override
     public void onResume() {
         super.onResume();
-        final float text_size = mPreferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
+        final float text_size = preferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(getActivity()));
         mAdapter.setTextSize(text_size);
         if (mTextSize != text_size) {
             mTextSize = text_size;
@@ -268,7 +268,7 @@ public class DraftsFragment extends BaseSupportFragment implements LoaderCallbac
     }
 
     private boolean sendDrafts(final List<Draft> list) {
-        final AsyncTwitterWrapper twitter = mTwitterWrapper;
+        final AsyncTwitterWrapper twitter = twitterWrapper;
         if (twitter == null) return false;
         for (final Draft item : list) {
             if (TextUtils.isEmpty(item.action_type)) {

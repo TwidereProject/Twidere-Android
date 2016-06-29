@@ -119,7 +119,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         statusesCountView.setText(getLocalizedNumber(locale, user.statuses_count));
         followersCountView.setText(getLocalizedNumber(locale, user.followers_count));
         friendsCountView.setText(getLocalizedNumber(locale, user.friends_count));
-        if (adapter.isProfileImageEnabled()) {
+        if (adapter.getProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
             loader.displayProfileImage(profileImageView, user);
         } else {

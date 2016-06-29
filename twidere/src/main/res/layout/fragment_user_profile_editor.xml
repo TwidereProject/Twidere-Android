@@ -87,7 +87,7 @@
                     tools:visibility="visible">
 
                     <org.mariotaku.twidere.view.ForegroundImageView
-                        android:id="@+id/profile_banner"
+                        android:id="@+id/profileBanner"
                         android:layout_width="@dimen/element_size_mlarge"
                         android:layout_height="@dimen/element_size_mlarge"
                         android:layout_gravity="center"

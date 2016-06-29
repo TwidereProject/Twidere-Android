@@ -17,7 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <RelativeLayout
-    android:id="@+id/card_content"
+    android:id="@+id/cardContent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -30,7 +30,7 @@
     android:splitMotionEvents="false">
 
     <TextView
-        android:id="@+id/retweeted_by"
+        android:id="@+id/retweetedBy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
@@ -47,16 +47,16 @@
         tools:text="Retweeted by Mariotaku"/>
 
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
-        android:id="@+id/profile_container"
+        android:id="@+id/profileContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/retweeted_by"
+        android:layout_below="@+id/retweetedBy"
         android:background="?selectableItemBackground"
         android:padding="@dimen/element_spacing_small"
         app:ignorePadding="true">
 
         <org.mariotaku.twidere.view.ProfileImageView
-            android:id="@+id/profile_image"
+            android:id="@+id/profileImage"
             style="?profileImageStyle"
             android:layout_width="@dimen/icon_size_card_details"
             android:layout_height="@dimen/icon_size_card_details"
@@ -71,12 +71,12 @@
             tools:src="@mipmap/ic_launcher"/>
 
         <ImageView
-            android:id="@+id/profile_type"
+            android:id="@+id/profileType"
             android:layout_width="@dimen/icon_size_profile_type_detail"
             android:layout_height="@dimen/icon_size_profile_type_detail"
-            android:layout_alignBottom="@id/profile_image"
-            android:layout_alignEnd="@id/profile_image"
-            android:layout_alignRight="@id/profile_image"
+            android:layout_alignBottom="@+id/profileImage"
+            android:layout_alignEnd="@+id/profileImage"
+            android:layout_alignRight="@+id/profileImage"
             android:layout_marginBottom="@dimen/element_spacing_minus_small"
             android:layout_marginEnd="@dimen/element_spacing_minus_small"
             android:layout_marginRight="@dimen/element_spacing_minus_small"
@@ -86,13 +86,13 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/profile_image"
-            android:layout_alignTop="@id/profile_image"
+            android:layout_alignBottom="@+id/profileImage"
+            android:layout_alignTop="@+id/profileImage"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/profile_image"
-            android:layout_toLeftOf="@+id/follow_indicator"
-            android:layout_toRightOf="@id/profile_image"
-            android:layout_toStartOf="@+id/follow_indicator"
+            android:layout_toEndOf="@+id/profileImage"
+            android:layout_toLeftOf="@+id/followIndicator"
+            android:layout_toRightOf="@+id/profileImage"
+            android:layout_toStartOf="@+id/followIndicator"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingEnd="4dp"
@@ -110,7 +110,7 @@
                 app:nv_twoLine="false"/>
 
             <org.mariotaku.twidere.view.TimelineContentTextView
-                android:id="@+id/time_source"
+                android:id="@+id/timeSource"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/element_spacing_small"
@@ -122,7 +122,7 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/follow_indicator"
+            android:id="@+id/followIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -138,7 +138,7 @@
                 android:text="@string/follow"/>
 
             <ProgressBar
-                android:id="@+id/follow_info_progress"
+                android:id="@+id/followInfoProgress"
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -153,9 +153,9 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/profile_container"
-        android:layout_alignStart="@+id/profile_container"
-        android:layout_below="@id/profile_container"
+        android:layout_alignLeft="@+id/profileContainer"
+        android:layout_alignStart="@+id/profileContainer"
+        android:layout_below="@+id/profileContainer"
         android:layout_marginBottom="@dimen/element_spacing_small"
         android:layout_marginTop="@dimen/element_spacing_small"
         android:paddingLeft="@dimen/element_spacing_normal"
@@ -168,7 +168,7 @@
         tools:visibility="visible"/>
 
     <LinearLayout
-        android:id="@+id/translate_container"
+        android:id="@+id/translateContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text"
@@ -176,7 +176,7 @@
         android:visibility="gone">
 
         <org.mariotaku.twidere.view.ActionIconThemedTextView
-            android:id="@+id/translate_label"
+            android:id="@+id/translateLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
@@ -192,7 +192,7 @@
             android:textColor="?android:textColorSecondary"/>
 
         <TextView
-            android:id="@+id/translate_result"
+            android:id="@+id/translateResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/element_spacing_normal"
@@ -203,11 +203,11 @@
     </LinearLayout>
 
     <org.mariotaku.twidere.view.ForegroundColorView
-        android:id="@+id/quote_indicator"
+        android:id="@+id/quoteIndicator"
         android:layout_width="@dimen/element_spacing_small"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/quote_indicator_anchor_bottom"
-        android:layout_alignTop="@+id/quote_indicator_anchor_top"
+        android:layout_alignBottom="@+id/quoteIndicatorAnchorBottom"
+        android:layout_alignTop="@+id/quoteIndicatorAnchorTop"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
         android:background="?quoteIndicatorBackgroundColor"
@@ -215,20 +215,20 @@
         tools:visibility="visible"/>
 
     <android.support.v4.widget.Space
-        android:id="@+id/quote_indicator_anchor_top"
+        android:id="@+id/quoteIndicatorAnchorTop"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/translate_container"
+        android:layout_below="@+id/translateContainer"
         android:layout_marginTop="@dimen/element_spacing_normal"
         android:visibility="visible"/>
 
     <org.mariotaku.twidere.view.NameView
-        android:id="@+id/quoted_name"
+        android:id="@+id/quotedName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quote_indicator_anchor_top"
-        android:layout_toEndOf="@+id/quote_indicator"
-        android:layout_toRightOf="@+id/quote_indicator"
+        android:layout_below="@+id/quoteIndicatorAnchorTop"
+        android:layout_toEndOf="@+id/quoteIndicator"
+        android:layout_toRightOf="@+id/quoteIndicator"
         android:background="?selectableItemBackground"
         android:clickable="true"
         android:gravity="center_vertical"
@@ -243,13 +243,13 @@
         tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.TimelineContentTextView
-        android:id="@+id/quoted_text"
+        android:id="@+id/quotedText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quoted_name"
+        android:layout_below="@+id/quotedName"
         android:layout_margin="@dimen/element_spacing_normal"
-        android:layout_toEndOf="@+id/quote_indicator"
-        android:layout_toRightOf="@+id/quote_indicator"
+        android:layout_toEndOf="@+id/quoteIndicator"
+        android:layout_toRightOf="@+id/quoteIndicator"
         android:singleLine="false"
         android:tag="font_family|user"
         android:textAppearance="?android:textAppearanceMedium"
@@ -259,16 +259,16 @@
         tools:visibility="visible"/>
 
     <FrameLayout
-        android:id="@+id/media_preview_container"
+        android:id="@+id/mediaPreviewContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quoted_text"
-        android:layout_toEndOf="@+id/quote_indicator"
-        android:layout_toRightOf="@+id/quote_indicator"
+        android:layout_below="@+id/quotedText"
+        android:layout_toEndOf="@+id/quoteIndicator"
+        android:layout_toRightOf="@+id/quoteIndicator"
         tools:visibility="visible">
 
         <org.mariotaku.twidere.view.CardMediaContainer
-            android:id="@+id/media_preview"
+            android:id="@+id/mediaPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -283,7 +283,7 @@
         </org.mariotaku.twidere.view.CardMediaContainer>
 
         <LinearLayout
-            android:id="@+id/media_preview_load"
+            android:id="@+id/mediaPreviewLoad"
             android:layout_width="match_parent"
             android:layout_height="@dimen/action_button_size"
             android:layout_gravity="center"
@@ -309,21 +309,21 @@
     </FrameLayout>
 
     <org.mariotaku.twidere.view.TwitterCardContainer
-        android:id="@+id/twitter_card"
+        android:id="@+id/twitterCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/media_preview_container"
-        android:layout_toEndOf="@+id/quote_indicator"
-        android:layout_toRightOf="@+id/quote_indicator"
+        android:layout_below="@+id/mediaPreviewContainer"
+        android:layout_toEndOf="@+id/quoteIndicator"
+        android:layout_toRightOf="@+id/quoteIndicator"
         android:visibility="gone"/>
 
     <org.mariotaku.twidere.view.ActionIconThemedTextView
-        android:id="@+id/location_view"
+        android:id="@+id/locationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/twitter_card"
-        android:layout_toEndOf="@+id/quote_indicator"
-        android:layout_toRightOf="@+id/quote_indicator"
+        android:layout_below="@+id/twitterCard"
+        android:layout_toEndOf="@+id/quoteIndicator"
+        android:layout_toRightOf="@+id/quoteIndicator"
         android:background="?selectableItemBackground"
         android:drawableLeft="@drawable/ic_indicator_location"
         android:drawablePadding="4dp"
@@ -337,12 +337,12 @@
         android:textColor="?android:textColorSecondary"/>
 
     <org.mariotaku.twidere.view.ActionIconThemedTextView
-        android:id="@+id/quote_original_link"
+        android:id="@+id/quoteOriginalLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/location_view"
-        android:layout_toEndOf="@+id/quote_indicator"
-        android:layout_toRightOf="@+id/quote_indicator"
+        android:layout_below="@+id/locationView"
+        android:layout_toEndOf="@+id/quoteIndicator"
+        android:layout_toRightOf="@+id/quoteIndicator"
         android:background="?selectableItemBackground"
         android:drawableLeft="@drawable/ic_indicator_twitter"
         android:drawablePadding="4dp"
@@ -356,17 +356,17 @@
         android:textColor="?android:textColorSecondary"/>
 
     <android.support.v4.widget.Space
-        android:id="@+id/quote_indicator_anchor_bottom"
+        android:id="@+id/quoteIndicatorAnchorBottom"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/quote_original_link"
+        android:layout_below="@+id/quoteOriginalLink"
         android:visibility="visible"/>
 
     <LinearLayout
-        android:id="@+id/counts_users_height_holder"
+        android:id="@+id/countsUsersHeightHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quote_indicator_anchor_bottom"
+        android:layout_below="@+id/quoteIndicatorAnchorBottom"
         android:orientation="horizontal"
         android:visibility="invisible"
         tools:visibility="visible">
@@ -377,11 +377,11 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/counts_users"
+        android:id="@+id/countsUsers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/counts_users_height_holder"
-        android:layout_alignTop="@+id/counts_users_height_holder"
+        android:layout_alignBottom="@+id/countsUsersHeightHolder"
+        android:layout_alignTop="@+id/countsUsersHeightHolder"
         android:layout_marginLeft="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
         android:overScrollMode="never"
@@ -389,10 +389,10 @@
         tools:visibility="invisible"/>
 
     <android.support.v7.widget.TwidereActionMenuView
-        android:id="@+id/menu_bar"
+        android:id="@+id/menuBar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
-        android:layout_below="@+id/counts_users_height_holder"
+        android:layout_below="@+id/countsUsersHeightHolder"
         android:clipChildren="false"
         android:tag="ate_ignore"/>
 

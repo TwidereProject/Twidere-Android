@@ -137,7 +137,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             case R.id.profile_image: {
                 break;
             }
-            case R.id.profile_banner: {
+            case R.id.profileBanner: {
                 break;
             }
             case R.id.edit_profile_image: {
@@ -291,7 +291,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         mProgressContainer = view.findViewById(R.id.progress_container);
         mEditProfileContent = view.findViewById(R.id.edit_profile_content);
         mProfileImageView = (ImageView) view.findViewById(R.id.profile_image);
-        mProfileBannerView = (ImageView) view.findViewById(R.id.profile_banner);
+        mProfileBannerView = (ImageView) view.findViewById(R.id.profileBanner);
         mProfileBackgroundView = (ImageView) view.findViewById(R.id.profile_background);
         mEditName = (MaterialEditText) view.findViewById(R.id.name);
         mEditDescription = (MaterialEditText) view.findViewById(R.id.description);
@@ -362,10 +362,10 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
             mEditDescription.setText(ParcelableUserUtils.getExpandedDescription(user));
             mEditLocation.setText(user.location);
             mEditUrl.setText(isEmpty(user.url_expanded) ? user.url : user.url_expanded);
-            mMediaLoader.displayProfileImage(mProfileImageView, user);
+            mediaLoader.displayProfileImage(mProfileImageView, user);
             final int defWidth = getResources().getDisplayMetrics().widthPixels;
-            mMediaLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, defWidth);
-            mMediaLoader.displayImage(mProfileBackgroundView, user.profile_background_url);
+            mediaLoader.displayProfileBanner(mProfileBannerView, user.profile_banner_url, defWidth);
+            mediaLoader.displayImage(mProfileBackgroundView, user.profile_background_url);
             mLinkColor.setColor(user.link_color);
             mBackgroundColor.setColor(user.background_color);
             if (USER_TYPE_FANFOU_COM.equals(user.key.getHost())) {

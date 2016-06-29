@@ -21,14 +21,14 @@
        xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
-        android:id="@+id/progress_container"
+        android:id="@+id/progressContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/element_spacing_large"
         tools:visibility="gone">
 
         <ProgressBar
-            android:id="@+id/load_progress"
+            android:id="@+id/loadProgress"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
             android:layout_gravity="center"
@@ -36,7 +36,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/error_container"
+        android:id="@+id/errorContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -44,14 +44,14 @@
         android:visibility="gone">
 
         <org.mariotaku.twidere.view.IconActionView
-            android:id="@+id/error_icon"
+            android:id="@+id/errorIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:color="?android:textColorSecondary"
             android:src="@drawable/ic_info_error_generic"/>
 
         <TextView
-            android:id="@+id/error_text"
+            android:id="@+id/errorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -79,7 +79,6 @@ import org.mariotaku.twidere.activity.ThemedImagePickerActivity;
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter;
 import org.mariotaku.twidere.adapter.MessageConversationAdapter;
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
-import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter.MenuButtonClickListener;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.loader.UserSearchLoader;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -124,7 +123,7 @@ import me.uucky.colorpicker.internal.EffectViewHelper;
 import static org.mariotaku.twidere.util.Utils.buildDirectMessageConversationUri;
 
 public class MessagesConversationFragment extends BaseSupportFragment implements
-        LoaderCallbacks<Cursor>, OnClickListener, OnItemSelectedListener, MenuButtonClickListener,
+        LoaderCallbacks<Cursor>, OnClickListener, OnItemSelectedListener,
         PopupMenu.OnMenuItemClickListener, KeyboardShortcutCallback, TakeAllKeyboardShortcut {
 
     // Constants
@@ -359,7 +358,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mBus.register(this);
+        bus.register(this);
         updateEmptyText();
         mMessagesListView.addOnScrollListener(mScrollListener);
         mScrollListener.reset();
@@ -385,7 +384,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     @Override
     public void onStop() {
         mMessagesListView.removeOnScrollListener(mScrollListener);
-        mBus.unregister(this);
+        bus.unregister(this);
         if (mPopupMenu != null) {
             mPopupMenu.dismiss();
         }
@@ -506,12 +505,6 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     }
 
     @Override
-    public void onMenuButtonClick(final View button, final int position, final long id) {
-        mSelectedDirectMessage = mAdapter.findItem(id);
-        showMenu(button, mSelectedDirectMessage);
-    }
-
-    @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
         mAdapter.setCursor(null);
     }
@@ -522,7 +515,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (message != null) {
             switch (item.getItemId()) {
                 case R.id.delete: {
-                    mTwitterWrapper.destroyDirectMessageAsync(message.account_key, message.id);
+                    twitterWrapper.destroyDirectMessageAsync(message.account_key, message.id);
                     break;
                 }
                 case R.id.copy: {
@@ -706,7 +699,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         if (TextUtils.isEmpty(message)) {
             mEditText.setError(getString(R.string.error_message_no_content));
         } else {
-            mTwitterWrapper.sendDirectMessageAsync(account.account_key, recipient.key.getId(),
+            twitterWrapper.sendDirectMessageAsync(account.account_key, recipient.key.getId(),
                     message, mImageUri);
             mEditText.setText(null);
             mImageUri = null;
@@ -784,7 +777,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
                 sendDirectMessage();
                 return true;
             }
-        }, mPreferences.getBoolean(KEY_QUICK_SEND, false));
+        }, preferences.getBoolean(KEY_QUICK_SEND, false));
         mEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -800,7 +793,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 if (mSendButton == null || s == null) return;
-                mSendButton.setEnabled(mValidator.isValidDirectMessage(s.toString()));
+                mSendButton.setEnabled(validator.isValidDirectMessage(s.toString()));
             }
         });
     }
@@ -853,8 +846,8 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         final FragmentActivity activity = getActivity();
         if (activity == null) return;
         if (mRecipient != null) {
-            activity.setTitle(mUserColorNameManager.getDisplayName(mRecipient,
-                    mPreferences.getBoolean(KEY_NAME_FIRST)));
+            activity.setTitle(userColorNameManager.getDisplayName(mRecipient,
+                    preferences.getBoolean(KEY_NAME_FIRST)));
         } else {
             activity.setTitle(R.string.direct_messages);
         }
@@ -905,7 +898,7 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
         public CacheUserSearchLoader(MessagesConversationFragment fragment, UserKey accountKey,
                                      String query, boolean fromCache, boolean fromUser) {
             super(fragment.getContext(), accountKey, query, 0, null, fromUser);
-            mUserColorNameManager = fragment.mUserColorNameManager;
+            mUserColorNameManager = fragment.userColorNameManager;
             mFromCache = fromCache;
         }
 

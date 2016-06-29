@@ -46,7 +46,7 @@ import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
-import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
+import org.mariotaku.twidere.model.util.ParcelableActivityExtensionsKt;
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
@@ -166,7 +166,7 @@ public final class ContentValuesCreator implements TwidereConstants {
     public static ContentValues createActivity(final ParcelableActivity activity,
                                                ParcelableCredentials credentials, UserColorNameManager manager) {
         final ContentValues values = new ContentValues();
-        final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
+        final ParcelableStatus status = ParcelableActivityExtensionsKt.getActivityStatus(activity);
 
         activity.account_color = credentials.color;
 

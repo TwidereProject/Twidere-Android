@@ -76,7 +76,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
     public void displayMedia(@NonNull final int... imageRes) {
         for (int i = 0, j = getChildCount(), k = imageRes.length; i < j; i++) {
             final View child = getChildAt(i);
-            final ImageView imageView = (ImageView) child.findViewById(R.id.media_preview);
+            final ImageView imageView = (ImageView) child.findViewById(R.id.mediaPreview);
             final View progress = child.findViewById(R.id.media_preview_progress);
             progress.setVisibility(GONE);
             if (i < k) {
@@ -112,7 +112,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
         for (int i = 0, j = getChildCount(), k = mediaArray.length; i < j; i++) {
             final View child = getChildAt(i);
             child.setOnClickListener(clickListener);
-            final ImageView imageView = (ImageView) child.findViewById(R.id.media_preview);
+            final ImageView imageView = (ImageView) child.findViewById(R.id.mediaPreview);
             switch (mMediaPreviewStyle) {
                 case VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP: {
                     imageView.setScaleType(ScaleType.CENTER_CROP);

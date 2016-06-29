@@ -44,6 +44,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity;
 import org.mariotaku.twidere.activity.SignInActivity;
 import org.mariotaku.twidere.adapter.AccountsAdapter;
+import org.mariotaku.twidere.annotation.Referral;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -154,12 +155,12 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         final ParcelableAccount account = mAdapter.getAccount(position);
         if (account.account_user != null) {
             IntentUtils.openUserProfile(context, account.account_user, null,
-                    mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                    UserFragment.Referral.SELF_PROFILE);
+                    preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                    Referral.SELF_PROFILE);
         } else {
             IntentUtils.openUserProfile(context, account.account_key, account.account_key,
-                    account.screen_name, null, mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                    UserFragment.Referral.SELF_PROFILE);
+                    account.screen_name, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                    Referral.SELF_PROFILE);
         }
     }
 
@@ -218,7 +219,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
 
     @Override
     public void onDestroyView() {
-        mPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        preferences.unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroyView();
     }
 
@@ -227,7 +228,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         final FragmentActivity activity = getActivity();
-        mPreferences.registerOnSharedPreferenceChangeListener(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
         mAdapter = new AccountsAdapter(activity);
         Utils.configBaseAdapter(activity, mAdapter);
         mAdapter.setSortEnabled(true);

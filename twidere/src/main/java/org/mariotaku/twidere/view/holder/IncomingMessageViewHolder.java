@@ -44,7 +44,7 @@ public class IncomingMessageViewHolder extends MessageViewHolder {
     public void displayMessage(Cursor cursor, ParcelableDirectMessageCursorIndices indices) {
         super.displayMessage(cursor, indices);
         final MediaLoaderWrapper wrapper = adapter.getMediaLoader();
-        if (adapter.isProfileImageEnabled()) {
+        if (adapter.getProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
             wrapper.displayProfileImage(profileImageView, cursor.getString(indices.sender_profile_image_url));
         } else {

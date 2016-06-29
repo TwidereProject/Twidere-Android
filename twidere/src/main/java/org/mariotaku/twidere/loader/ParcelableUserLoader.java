@@ -36,7 +36,7 @@ import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.fragment.UserFragment;
+import org.mariotaku.twidere.annotation.Referral;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -154,7 +154,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
         }
         try {
             final User twitterUser;
-            if (mExtras != null && UserFragment.Referral.SELF_PROFILE.equals(mExtras.getString(EXTRA_REFERRAL))) {
+            if (mExtras != null && Referral.SELF_PROFILE.equals(mExtras.getString(EXTRA_REFERRAL))) {
                 twitterUser = twitter.verifyCredentials();
             } else {
                 String profileUrl = null;

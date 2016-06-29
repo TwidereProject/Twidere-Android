@@ -11,6 +11,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.twidere.annotation.Referral;
 import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
 
@@ -44,7 +45,7 @@ public class UserEvent extends BaseEvent implements Parcelable {
     long friendCount;
     @ParcelableThisPlease
     @JsonField(name = "referral")
-    @UserFragment.Referral
+    @Referral
     @Nullable
     String referral;
     public static final Creator<UserEvent> CREATOR = new Creator<UserEvent>() {
@@ -59,7 +60,7 @@ public class UserEvent extends BaseEvent implements Parcelable {
         }
     };
 
-    public static UserEvent create(Context context, @UserFragment.Referral @Nullable String referral) {
+    public static UserEvent create(Context context, @Referral @Nullable String referral) {
         UserEvent event = new UserEvent();
         event.markStart(context);
         event.referral = referral;

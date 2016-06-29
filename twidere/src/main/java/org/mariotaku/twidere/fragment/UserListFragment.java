@@ -113,7 +113,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        final AsyncTwitterWrapper twitter = mTwitterWrapper;
+        final AsyncTwitterWrapper twitter = twitterWrapper;
         switch (requestCode) {
             case REQUEST_SELECT_USER: {
                 final ParcelableUserList userList = mUserList;
@@ -188,12 +188,12 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
     @Override
     public void onStart() {
         super.onStart();
-        mBus.register(this);
+        bus.register(this);
     }
 
     @Override
     public void onStop() {
-        mBus.unregister(this);
+        bus.unregister(this);
         super.onStop();
     }
 
@@ -243,7 +243,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        final AsyncTwitterWrapper twitter = mTwitterWrapper;
+        final AsyncTwitterWrapper twitter = twitterWrapper;
         final ParcelableUserList userList = mUserList;
         if (twitter == null || userList == null) return false;
         switch (item.getItemId()) {
@@ -305,7 +305,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
     @Override
     public void onClick(final View view) {
         switch (view.getId()) {
-            case R.id.error_container: {
+            case R.id.errorContainer: {
                 getUserListInfo(true);
                 break;
             }
@@ -314,7 +314,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 if (userList == null) return;
                 IntentUtils.openUserProfile(getActivity(), userList.account_key,
                         userList.user_key, userList.user_screen_name, null,
-                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API), null);
+                        preferences.getBoolean(KEY_NEW_DOCUMENT_API), null);
                 break;
             }
         }

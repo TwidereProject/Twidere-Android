@@ -84,7 +84,7 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
             externalIndicator.setText(context.getString(R.string.external_group_host_format,
                     groupHost));
         }
-        if (adapter.isProfileImageEnabled()) {
+        if (adapter.getProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
             loader.displayProfileImage(profileImageView, group.homepage_logo);
         } else {

@@ -24,6 +24,7 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.MediaViewerActivity;
+import org.mariotaku.twidere.annotation.Referral;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment;
 import org.mariotaku.twidere.fragment.UserFragment;
@@ -65,7 +66,7 @@ public class IntentUtils implements Constants {
 
     public static void openUserProfile(@NonNull final Context context, @NonNull final ParcelableUser user,
                                        final Bundle activityOptions, final boolean newDocument,
-                                       @UserFragment.Referral final String referral) {
+                                       @Referral final String referral) {
         final Bundle extras = new Bundle();
         extras.putParcelable(EXTRA_USER, user);
         if (user.extras != null) {
@@ -89,7 +90,7 @@ public class IntentUtils implements Constants {
     public static void openUserProfile(@NonNull final Context context, @Nullable final UserKey accountKey,
                                        final UserKey userKey, final String screenName,
                                        final Bundle activityOptions, final boolean newDocument,
-                                       @UserFragment.Referral final String referral) {
+                                       @Referral final String referral) {
         final Intent intent = userProfile(accountKey, userKey, screenName, referral, null);
         if (intent == null) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
@@ -103,7 +104,7 @@ public class IntentUtils implements Constants {
     }
 
     public static Intent userProfile(@Nullable UserKey accountKey, UserKey userKey, String screenName,
-                                     @UserFragment.Referral String referral, String profileUrl) {
+                                     @Referral String referral, String profileUrl) {
         if (userKey == null && isEmpty(screenName)) return null;
         final Uri uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);

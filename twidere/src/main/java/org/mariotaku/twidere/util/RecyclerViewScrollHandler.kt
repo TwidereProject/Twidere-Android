@@ -1,0 +1,51 @@
+package org.mariotaku.twidere.util
+
+import android.support.v7.widget.RecyclerView
+import android.view.View
+
+import org.mariotaku.twidere.util.ContentScrollHandler.ContentListSupport
+import org.mariotaku.twidere.util.ContentScrollHandler.ViewCallback
+
+/**
+ * Created by mariotaku on 16/3/1.
+ */
+class RecyclerViewScrollHandler(contentListSupport: ContentListSupport, viewCallback: ViewCallback?) : RecyclerView.OnScrollListener() {
+
+    internal val scrollHandler: ContentScrollHandler
+    private var oldState = RecyclerView.SCROLL_STATE_IDLE
+
+    init {
+        scrollHandler = ContentScrollHandler(contentListSupport, viewCallback)
+    }
+
+    fun setReversed(inversed: Boolean) {
+        scrollHandler.setReversed(inversed)
+    }
+
+    fun setTouchSlop(touchSlop: Int) {
+        scrollHandler.setTouchSlop(touchSlop)
+    }
+
+    val onTouchListener: View.OnTouchListener
+        get() = scrollHandler.onTouchListener
+
+    override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+        scrollHandler.handleScrollStateChanged(newState, RecyclerView.SCROLL_STATE_IDLE)
+    }
+
+    override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        val scrollState = recyclerView!!.scrollState
+        scrollHandler.handleScroll(dy, scrollState, oldState, RecyclerView.SCROLL_STATE_IDLE)
+        oldState = scrollState
+    }
+
+    class RecyclerViewCallback(private val recyclerView: RecyclerView) : ViewCallback {
+
+        override val isComputingLayout: Boolean
+            get() = recyclerView.isComputingLayout
+
+        override fun post(runnable: Runnable) {
+            recyclerView.post(runnable)
+        }
+    }
+}

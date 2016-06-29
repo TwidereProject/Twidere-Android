@@ -14,6 +14,7 @@ import android.text.style.StyleSpan;
 
 import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.model.util.ParcelableActivityExtensionsKt;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;
@@ -200,7 +201,7 @@ public class ActivityTitleSummaryMessage {
             case Activity.Action.MENTION:
             case Activity.Action.REPLY:
             case Activity.Action.QUOTE: {
-                final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
+                final ParcelableStatus status = ParcelableActivityExtensionsKt.getActivityStatus(activity);
                 if (status == null) return null;
                 final SpannableString title = new SpannableString(manager.getDisplayName(status,
                         nameFirst));

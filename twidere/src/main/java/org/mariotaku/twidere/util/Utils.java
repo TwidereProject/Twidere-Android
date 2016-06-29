@@ -122,7 +122,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.CopyLinkActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
-import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.AccountsManagerFragment;
@@ -424,12 +423,6 @@ public final class Utils implements Constants {
         adapter.setDisplayNameFirst(pref.getBoolean(KEY_NAME_FIRST, true));
         adapter.setLinkHighlightOption(pref.getString(KEY_LINK_HIGHLIGHT_OPTION, VALUE_LINK_HIGHLIGHT_OPTION_NONE));
         adapter.setTextSize(pref.getInt(KEY_TEXT_SIZE, getDefaultTextSize(context)));
-        adapter.notifyDataSetChanged();
-    }
-
-    public static void configBaseCardAdapter(final Context context, final IBaseCardAdapter adapter) {
-        if (context == null) return;
-        configBaseAdapter(context, adapter);
         adapter.notifyDataSetChanged();
     }
 
@@ -2234,19 +2227,15 @@ public final class Utils implements Constants {
      * Send Notifications to Pebble smartwatches
      *
      * @param context Context
-     * @param title String
+     * @param title   String
      * @param message String
      */
-    public static void sendPebbleNotification(final Context context, final String title, final String message)
-    {
+    public static void sendPebbleNotification(final Context context, final String title, final String message) {
         String appName;
 
-        if ( title == null)
-        {
+        if (title == null) {
             appName = context.getString(R.string.app_name);
-        }
-        else
-        {
+        } else {
             appName = context.getString(R.string.app_name) + " - " + title;
         }
 

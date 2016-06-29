@@ -18,7 +18,7 @@
   -->
 
 <RelativeLayout
-    android:id="@+id/account_dashboard_header"
+    android:id="@+id/accountDashboardHeader"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -29,11 +29,11 @@
     tools:layout_width="280dp">
 
     <ViewSwitcher
-        android:id="@+id/account_profile_banner"
+        android:id="@+id/accountProfileBanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@id/profile_container"
-        android:layout_alignTop="@id/profile_container"
+        android:layout_alignBottom="@id/profileContainer"
+        android:layout_alignTop="@id/profileContainer"
         android:contentDescription="@string/profile_banner"
         android:focusable="false"
         android:foreground="@color/drawer_banner_foreground"
@@ -41,7 +41,7 @@
         tools:background="@drawable/nyan_stars_background"/>
 
     <FrameLayout
-        android:id="@+id/profile_container"
+        android:id="@+id/profileContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="false"
@@ -57,7 +57,7 @@
             android:paddingTop="@dimen/element_spacing_normal">
 
             <org.mariotaku.twidere.view.ProfileImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/profileImage"
                 style="?profileImageStyle"
                 android:layout_width="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
@@ -69,16 +69,16 @@
                 tools:src="@mipmap/ic_launcher"/>
 
             <org.mariotaku.twidere.view.ExtendedRecyclerView
-                android:id="@+id/other_accounts_list"
+                android:id="@+id/otherAccountsList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/profile_image"
+                android:layout_alignBottom="@id/profileImage"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignTop="@id/profile_image"
+                android:layout_alignTop="@id/profileImage"
                 android:layout_marginBottom="@dimen/element_spacing_large"
-                android:layout_toEndOf="@id/profile_image"
-                android:layout_toRightOf="@id/profile_image"
+                android:layout_toEndOf="@id/profileImage"
+                android:layout_toRightOf="@id/profileImage"
                 android:focusable="false"
                 tools:listitem="@layout/adapter_item_dashboard_account"
                 tools:paddingStart="@dimen/element_spacing_large"
@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
-                android:layout_below="@id/profile_image"
+                android:layout_below="@id/profileImage"
                 android:baselineAligned="false"
                 android:focusable="false"
                 android:gravity="center_vertical"
@@ -113,7 +113,7 @@
                         tools:text="Name"/>
 
                     <TextView
-                        android:id="@+id/screen_name"
+                        android:id="@+id/screenName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:focusable="false"
@@ -132,7 +132,7 @@
                     tools:foreground="@drawable/ic_action_status_compose">
 
                     <android.support.v7.widget.ActionMenuView
-                        android:id="@+id/account_dashboard_menu"
+                        android:id="@+id/accountDashboardMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:focusable="true"
@@ -143,7 +143,7 @@
         </RelativeLayout>
 
         <ImageView
-            android:id="@+id/floating_profile_image_snapshot"
+            android:id="@+id/floatingProfileImageSnapshot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
@@ -153,11 +153,11 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/no_account_container"
+        android:id="@+id/noAccountContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/profile_container"
-        android:layout_alignTop="@+id/profile_container"
+        android:layout_alignBottom="@+id/profileContainer"
+        android:layout_alignTop="@+id/profileContainer"
         android:clickable="true"
         tools:visibility="gone">
 

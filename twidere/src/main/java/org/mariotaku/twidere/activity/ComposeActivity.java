@@ -1635,11 +1635,11 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
             mActivity = activity;
             mInflater = activity.getLayoutInflater();
             mSelection = new HashMap<>();
-            mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
+            mNameFirst = preferences.getBoolean(KEY_NAME_FIRST);
         }
 
         public MediaLoaderWrapper getImageLoader() {
-            return mMediaLoader;
+            return mediaLoader;
         }
 
         @Override

@@ -29,8 +29,8 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.activity.WebLinkHandlerActivity;
+import org.mariotaku.twidere.annotation.Referral;
 import org.mariotaku.twidere.app.TwidereApplication;
-import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
@@ -75,7 +75,7 @@ public class OnLinkClickHandler implements OnLinkClickListener {
             case TwidereLinkify.LINK_TYPE_MENTION: {
                 IntentUtils.openUserProfile(context, accountKey, null, link, null,
                         preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                        UserFragment.Referral.USER_MENTION);
+                        Referral.USER_MENTION);
                 return true;
             }
             case TwidereLinkify.LINK_TYPE_HASHTAG: {
@@ -116,7 +116,7 @@ public class OnLinkClickHandler implements OnLinkClickListener {
                                         final String screenName = orig.substring(1, length);
                                         IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(id),
                                                 screenName, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                                                UserFragment.Referral.USER_MENTION);
+                                                Referral.USER_MENTION);
                                         return true;
                                     }
                                 } else if (TwidereLinkify.isHashSymbol(ch) &&
@@ -155,7 +155,7 @@ public class OnLinkClickHandler implements OnLinkClickListener {
             case TwidereLinkify.LINK_TYPE_USER_ID: {
                 IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, null,
                         preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                        UserFragment.Referral.USER_MENTION);
+                        Referral.USER_MENTION);
                 return true;
             }
         }

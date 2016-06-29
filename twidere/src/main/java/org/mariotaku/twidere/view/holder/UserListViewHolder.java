@@ -73,11 +73,11 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
 
         itemContent.drawStart(manager.getUserColor(userList.user_key));
         nameView.setText(userList.name);
-        final boolean nameFirst = adapter.isNameFirst();
+        final boolean nameFirst = adapter.getNameFirst();
         final String createdByDisplayName = manager.getDisplayName(userList, nameFirst);
         createdByView.setText(context.getString(R.string.created_by, createdByDisplayName));
 
-        if (adapter.isProfileImageEnabled()) {
+        if (adapter.getProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
             loader.displayProfileImage(profileImageView, userList.user_profile_image_url);
         } else {

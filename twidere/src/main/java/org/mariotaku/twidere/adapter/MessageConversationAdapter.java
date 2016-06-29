@@ -71,11 +71,11 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
     public MessageConversationAdapter(final Context context) {
         super(context);
         mInflater = LayoutInflater.from(context);
-        mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null, mPreferences));
-        mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        mDisplayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
-        mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
+        mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null, preferences));
+        mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
+        mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
+        mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
+        mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mIncomingMessageColor = ThemeUtils.getUserAccentColor(context);
         mOutgoingMessageColor = ThemeUtils.getCardBackgroundColor(context,
@@ -160,7 +160,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
     }
 
     @Override
-    public boolean isProfileImageEnabled() {
+    public boolean getProfileImageEnabled() {
         return mDisplayProfileImage;
     }
 
@@ -209,7 +209,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         public void onMediaClick(View view, ParcelableMedia media, UserKey accountKey, long extraId) {
             final MessageConversationAdapter adapter = adapterRef.get();
             IntentUtils.openMedia(adapter.getContext(), adapter.getDirectMessage((int) extraId), media,
-                    null, adapter.mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
+                    null, adapter.preferences.getBoolean(KEY_NEW_DOCUMENT_API));
         }
 
     }

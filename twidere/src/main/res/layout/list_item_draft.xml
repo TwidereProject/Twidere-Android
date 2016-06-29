@@ -34,9 +34,9 @@
         android:id="@+id/media_preview_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/profile_container"
-        android:layout_alignStart="@+id/profile_container"
-        android:layout_below="@id/profile_container"
+        android:layout_alignLeft="@+id/profileContainer"
+        android:layout_alignStart="@+id/profileContainer"
+        android:layout_below="@id/profileContainer"
         android:layout_marginTop="@dimen/element_spacing_normal"
         android:horizontalSpacing="@dimen/element_spacing_xsmall"
         android:verticalSpacing="@dimen/element_spacing_xsmall">

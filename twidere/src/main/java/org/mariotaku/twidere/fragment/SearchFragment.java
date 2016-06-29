@@ -81,7 +81,7 @@ public class SearchFragment extends AbsToolbarTabPagesFragment implements Refres
         final String query = getQuery();
         switch (item.getItemId()) {
             case R.id.save: {
-                final AsyncTwitterWrapper twitter = mTwitterWrapper;
+                final AsyncTwitterWrapper twitter = twitterWrapper;
                 final Bundle args = getArguments();
                 if (twitter != null && args != null) {
                     twitter.createSavedSearchAsync(getAccountKey(), query);
