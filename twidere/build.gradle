@@ -94,9 +94,6 @@ dependencies {
     compile('com.github.mariotaku:app-theme-engine:1efc6237e1@aar') {
         transitive = true
     }
-    compile('com.github.mariotaku.material-dialogs:commons:bf2f2c5c57@aar') {
-        transitive = true
-    }
 
 
     compile project(':twidere.component.common')
