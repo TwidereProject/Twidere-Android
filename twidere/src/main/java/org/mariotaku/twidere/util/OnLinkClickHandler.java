@@ -23,6 +23,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.BadParcelableException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -195,10 +196,12 @@ public class OnLinkClickHandler implements OnLinkClickListener {
         intent.setClass(context, WebLinkHandlerActivity.class);
         intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey);
         intent.setExtrasClassLoader(TwidereApplication.class.getClassLoader());
-        try {
-            context.startActivity(intent);
-        } catch (final ActivityNotFoundException e) {
-            // TODO
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            try {
+                context.startActivity(intent);
+            } catch (final BadParcelableException e) {
+                // Ignore
+            }
         }
     }
 }

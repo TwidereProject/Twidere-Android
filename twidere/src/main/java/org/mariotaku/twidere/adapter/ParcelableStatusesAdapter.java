@@ -175,6 +175,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         if (dataPosition < 0 || dataPosition >= getRawStatusCount()) return -1;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor();
+            // TODO safe move to position using Kotlin extension
             if (!cursor.moveToPosition(dataPosition)) return -1;
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
             return cursor.getLong(indices.timestamp);
@@ -188,6 +189,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         if (dataPosition < 0 || dataPosition >= getRawStatusCount()) return -1;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor();
+            // TODO safe move to position using Kotlin extension
             if (!cursor.moveToPosition(dataPosition)) return -1;
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
             final long positionKey = cursor.getLong(indices.position_key);
@@ -206,6 +208,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         if (dataPosition < 0 || dataPosition >= getRawStatusCount()) return null;
         if (mData instanceof ObjectCursor) {
             final Cursor cursor = ((ObjectCursor) mData).getCursor();
+            // TODO safe move to position using Kotlin extension
             if (!cursor.moveToPosition(dataPosition)) return null;
             final ParcelableStatusCursorIndices indices = (ParcelableStatusCursorIndices) ((ObjectCursor) mData).getIndices();
             return UserKey.valueOf(cursor.getString(indices.account_key));
