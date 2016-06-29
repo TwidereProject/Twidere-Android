@@ -1189,15 +1189,17 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         if (!status.account_key.equals(status.user_key)) {
             selectionStart = mEditText.length();
         }
-        if (status.is_retweet) {
+        if (status.is_retweet && !TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
             mentions.add(status.retweeted_by_user_screen_name);
         }
-        if (status.is_quote) {
+        if (status.is_quote && !TextUtils.isEmpty(status.quoted_user_screen_name)) {
             mentions.add(status.quoted_user_screen_name);
         }
         if (!ArrayUtils.isEmpty(status.mentions)) {
             for (ParcelableUserMention mention : status.mentions) {
-                if (mention.key.equals(status.account_key)) continue;
+                if (mention.key.equals(status.account_key) || TextUtils.isEmpty(mention.screen_name)) {
+                    continue;
+                }
                 mentions.add(mention.screen_name);
             }
             mentions.addAll(mExtractor.extractMentionedScreennames(status.quoted_text_plain));

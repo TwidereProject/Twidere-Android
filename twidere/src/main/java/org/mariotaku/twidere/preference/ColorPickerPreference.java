@@ -27,6 +27,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -35,9 +36,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
@@ -109,7 +107,7 @@ public class ColorPickerPreference extends DialogPreference implements
     }
 
     public static final class ColorPickerPreferenceDialogFragment extends PreferenceDialogFragmentCompat
-            implements DialogInterface.OnShowListener, MaterialDialog.SingleButtonCallback {
+            implements DialogInterface.OnShowListener, DialogInterface.OnClickListener {
 
         private ColorPickerDialog.Controller mController;
 
@@ -127,15 +125,12 @@ public class ColorPickerPreference extends DialogPreference implements
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final ColorPickerPreference preference = (ColorPickerPreference) getPreference();
             final Context context = getContext();
-            final MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
-            builder.title(preference.getDialogTitle());
-            builder.customView(R.layout.cp__dialog_color_picker, false);
-
-            builder.positiveText(android.R.string.ok);
-            builder.negativeText(android.R.string.cancel);
-            builder.onPositive(this);
-            builder.onNegative(this);
-            Dialog dialog = builder.build();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(preference.getDialogTitle());
+            builder.setView(R.layout.cp__dialog_color_picker);
+            builder.setPositiveButton(android.R.string.ok, this);
+            builder.setNegativeButton(android.R.string.cancel, this);
+            Dialog dialog = builder.create();
             dialog.setOnShowListener(this);
             return dialog;
         }
@@ -166,20 +161,6 @@ public class ColorPickerPreference extends DialogPreference implements
             mController.setInitialColor(preference.getValue());
         }
 
-        @Override
-        public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
-            switch (dialogAction) {
-                case POSITIVE:
-                    onClick(materialDialog, DialogInterface.BUTTON_POSITIVE);
-                    break;
-                case NEUTRAL:
-                    onClick(materialDialog, DialogInterface.BUTTON_NEUTRAL);
-                    break;
-                case NEGATIVE:
-                    onClick(materialDialog, DialogInterface.BUTTON_NEGATIVE);
-                    break;
-            }
-        }
     }
 
 }

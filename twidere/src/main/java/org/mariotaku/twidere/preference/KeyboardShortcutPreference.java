@@ -15,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.ThemedPreferenceDialogFragmentCompat;
@@ -140,7 +139,7 @@ public class KeyboardShortcutPreference extends DialogPreference implements IDia
         }
 
         @Override
-        protected void onPrepareDialogBuilder(AlertDialogWrapper.Builder builder) {
+        protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
             builder.setNeutralButton(R.string.clear, this);

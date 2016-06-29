@@ -11,8 +11,6 @@ import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.view.View;
 import android.view.Window;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
-
 /**
  * Created by mariotaku on 16/3/15.
  */
@@ -24,7 +22,7 @@ public abstract class ThemedPreferenceDialogFragmentCompat extends PreferenceDia
         final Context context = getContext();
         final DialogPreference preference = getPreference();
         onClick(null, DialogInterface.BUTTON_NEGATIVE);
-        final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context)
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(preference.getDialogTitle())
                 .setIcon(preference.getDialogIcon())
                 .setPositiveButton(preference.getPositiveButtonText(), this)
@@ -46,11 +44,7 @@ public abstract class ThemedPreferenceDialogFragmentCompat extends PreferenceDia
     }
 
     @Override
-    protected final void onPrepareDialogBuilder(AlertDialog.Builder builder) {
-
-    }
-
-    protected void onPrepareDialogBuilder(AlertDialogWrapper.Builder builder) {
+    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
 
     }
 
