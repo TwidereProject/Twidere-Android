@@ -34,7 +34,7 @@
     tools:context=".adapter.MessageEntriesAdapter">
 
     <org.mariotaku.twidere.view.ShapedImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profileImage"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_card_list_item"
         android:layout_height="@dimen/icon_size_card_list_item"
