@@ -3,9 +3,9 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1467162711000)
+--- twidere/build.gradle	(date 1467263510000)
 +++ twidere/build.gradle	(revision )
-@@ -5,19 +5,19 @@
+@@ -6,7 +6,7 @@
  apply plugin: 'androidsvgdrawable'
  
  // START Non-FOSS component
@@ -14,7 +14,9 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  // END Non-FOSS component
  
  buildscript {
+@@ -15,13 +15,13 @@
      repositories {
+         jcenter()
          // START Non-FOSS component
 -        maven { url 'https://maven.fabric.io/public' }
 +//        maven { url 'https://maven.fabric.io/public' }
@@ -26,9 +28,9 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 -        classpath 'io.fabric.tools:gradle:1.21.5'
 +//        classpath 'io.fabric.tools:gradle:1.21.5'
          // END Non-FOSS component
-     }
- }
-@@ -47,7 +47,7 @@
+ 
+         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+@@ -50,7 +50,7 @@
  
      productFlavors {
          // START Non-FOSS component
@@ -37,8 +39,8 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -77,7 +77,7 @@
- repositories {
+@@ -82,7 +82,7 @@
+     mavenLocal()
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
      // START Non-FOSS component
 -    maven { url 'https://maven.fabric.io/public' }
@@ -46,7 +48,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -100,11 +100,11 @@
+@@ -103,11 +103,11 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
@@ -63,7 +65,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
  
      fdroidCompile 'org.osmdroid:osmdroid-android:5.1'
-@@ -199,5 +199,5 @@
+@@ -203,5 +203,5 @@
  }
  
  // START Non-FOSS component
