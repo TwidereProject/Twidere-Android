@@ -145,7 +145,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             val loader = ConversationLoader(activity, status!!, sinceId,
                     maxId, sinceSortId, maxSortId, adapter!!.getData(), true, loadingMore)
             // Setting comparator to null lets statuses sort ascending
-            loader.setComparator(null)
+            loader.comparator = null
             return loader
         }
 
@@ -294,7 +294,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
         val status = adapter!!.getStatus(statusPosition)
-        if (status == null || media == null) return
+        if (status == null) return
         IntentUtils.openMedia(activity, status, media, null,
                 preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API))
 
