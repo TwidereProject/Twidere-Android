@@ -462,15 +462,15 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
             }
         }
         final Menu menu = mNavigationView.getMenu();
-        MenuUtils.setMenuItemAvailability(menu, R.id.interactions, !hasInteractionsTab);
-        MenuUtils.setMenuItemAvailability(menu, R.id.messages, !hasDmTab);
+        MenuUtils.Companion.setMenuItemAvailability(menu, R.id.interactions, !hasInteractionsTab);
+        MenuUtils.Companion.setMenuItemAvailability(menu, R.id.messages, !hasDmTab);
 
         if (mUseStarsForLikes) {
-            MenuUtils.setMenuItemTitle(menu, R.id.favorites, R.string.favorites);
-            MenuUtils.setMenuItemIcon(menu, R.id.favorites, R.drawable.ic_action_star);
+            MenuUtils.Companion.setMenuItemTitle(menu, R.id.favorites, R.string.favorites);
+            MenuUtils.Companion.setMenuItemIcon(menu, R.id.favorites, R.drawable.ic_action_star);
         } else {
-            MenuUtils.setMenuItemTitle(menu, R.id.favorites, R.string.likes);
-            MenuUtils.setMenuItemIcon(menu, R.id.favorites, R.drawable.ic_action_heart);
+            MenuUtils.Companion.setMenuItemTitle(menu, R.id.favorites, R.string.likes);
+            MenuUtils.Companion.setMenuItemIcon(menu, R.id.favorites, R.drawable.ic_action_heart);
         }
         boolean hasLists = false, hasGroups = false, hasPublicTimeline = false;
         switch (ParcelableAccountUtils.getAccountType(account)) {
@@ -487,9 +487,9 @@ public class AccountsDashboardFragment extends BaseSupportFragment implements Lo
                 break;
             }
         }
-        MenuUtils.setMenuItemAvailability(menu, R.id.groups, hasGroups);
-        MenuUtils.setMenuItemAvailability(menu, R.id.lists, hasLists);
-        MenuUtils.setMenuItemAvailability(menu, R.id.public_timeline, hasPublicTimeline);
+        MenuUtils.Companion.setMenuItemAvailability(menu, R.id.groups, hasGroups);
+        MenuUtils.Companion.setMenuItemAvailability(menu, R.id.lists, hasLists);
+        MenuUtils.Companion.setMenuItemAvailability(menu, R.id.public_timeline, hasPublicTimeline);
     }
 
     private boolean hasAccountInTab(SupportTabSpec tab, UserKey accountId, boolean isActivated) {

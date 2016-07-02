@@ -34,6 +34,6 @@ public class GeneralComponentHelper {
     @NonNull
     public static GeneralComponent build(@NonNull Context context) {
         if (sGeneralComponent != null) return sGeneralComponent;
-        return sGeneralComponent = DaggerGeneralComponent.builder().applicationModule(ApplicationModule.get(context)).build();
+        return sGeneralComponent = DaggerGeneralComponent.builder().applicationModule(ApplicationModule.Companion.get(context)).build();
     }
 }

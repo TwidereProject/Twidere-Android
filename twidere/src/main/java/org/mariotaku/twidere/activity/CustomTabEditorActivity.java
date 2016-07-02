@@ -241,18 +241,18 @@ public class CustomTabEditorActivity extends BaseActivity implements OnClickList
         icon.setVisibility(displayProfileImage ? View.VISIBLE : View.GONE);
         if (value instanceof ParcelableUser) {
             final ParcelableUser user = (ParcelableUser) value;
-            text1.setText(mUserColorNameManager.getUserNickname(user.key, user.name));
+            text1.setText(userColorNameManager.getUserNickname(user.key, user.name));
             text2.setText(String.format("@%s", user.screen_name));
             if (displayProfileImage) {
-                mMediaLoader.displayProfileImage(icon, user);
+                mediaLoader.displayProfileImage(icon, user);
             }
         } else if (value instanceof ParcelableUserList) {
             final ParcelableUserList userList = (ParcelableUserList) value;
-            final String createdBy = mUserColorNameManager.getDisplayName(userList, displayName);
+            final String createdBy = userColorNameManager.getDisplayName(userList, displayName);
             text1.setText(userList.name);
             text2.setText(getString(R.string.created_by, createdBy));
             if (displayProfileImage) {
-                mMediaLoader.displayProfileImage(icon, userList.user_profile_image_url);
+                mediaLoader.displayProfileImage(icon, userList.user_profile_image_url);
             }
         } else if (value instanceof CharSequence) {
             text2.setVisibility(View.GONE);

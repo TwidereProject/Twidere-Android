@@ -18,7 +18,7 @@
   -->
 
 <org.mariotaku.twidere.view.HomeDrawerLayout
-    android:id="@+id/home_menu"
+    android:id="@+id/homeMenu"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         android:layout_height="match_parent"/>
 
     <fragment
-        android:id="@+id/left_drawer"
+        android:id="@+id/leftDrawer"
         class="org.mariotaku.twidere.fragment.AccountsDashboardFragment"
         android:layout_width="@dimen/drawer_width_home"
         android:layout_height="match_parent"

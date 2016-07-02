@@ -24,7 +24,7 @@
        android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/empty_tab_hint"
+        android:id="@+id/emptyTabHint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

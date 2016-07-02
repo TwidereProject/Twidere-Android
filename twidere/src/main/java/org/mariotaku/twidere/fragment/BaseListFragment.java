@@ -58,7 +58,7 @@ public class BaseListFragment extends ListFragment implements Constants, OnScrol
     }
 
     public final TwidereApplication getApplication() {
-        return TwidereApplication.getInstance(getActivity());
+        return TwidereApplication.Companion.getInstance(getActivity());
     }
 
     public final ContentResolver getContentResolver() {

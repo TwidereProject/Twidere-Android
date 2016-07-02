@@ -17,7 +17,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -45,25 +46,25 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
-            tools:text="Sample list" />
+            tools:text="Sample list"/>
 
         <TextView
-            android:id="@+id/created_by"
+            android:id="@+id/createdBy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/element_spacing_xsmall"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="Created by Mariotaku" />
+            tools:text="Created by Mariotaku"/>
     </LinearLayout>
 
     <org.mariotaku.twidere.view.ProfileImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profileImage"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_card_list_item"
         android:layout_height="@dimen/icon_size_card_list_item"
         android:layout_weight="0"
         android:contentDescription="@string/profile_image"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"/>
 </LinearLayout>

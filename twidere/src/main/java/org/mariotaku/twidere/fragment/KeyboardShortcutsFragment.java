@@ -133,7 +133,7 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
-                    mKeyboardShortcutsHandler.reset();
+                    keyboardShortcutsHandler.reset();
                     break;
                 }
             }

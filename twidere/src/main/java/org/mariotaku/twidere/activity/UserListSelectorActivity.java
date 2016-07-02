@@ -196,12 +196,12 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
     @Override
     protected void onStart() {
         super.onStart();
-        mBus.register(this);
+        bus.register(this);
     }
 
     @Override
     protected void onStop() {
-        mBus.unregister(this);
+        bus.unregister(this);
         super.onStop();
     }
 

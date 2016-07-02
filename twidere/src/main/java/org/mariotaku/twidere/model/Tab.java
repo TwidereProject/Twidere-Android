@@ -24,7 +24,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 /**
  * Created by mariotaku on 16/3/6.
  */
-@CursorObject(valuesCreator = true)
+@CursorObject(valuesCreator = true, tableInfo = true)
 @JsonObject
 public class Tab {
     @CursorField(value = Tabs._ID, excludeWrite = true)

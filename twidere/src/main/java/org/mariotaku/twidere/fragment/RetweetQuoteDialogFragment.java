@@ -130,7 +130,7 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment {
                 commentContainer.setVisibility(useQuote ? View.VISIBLE : View.GONE);
                 editComment.setAccountKey(status.account_key);
 
-                final boolean sendByEnter = mPreferences.getBoolean(KEY_QUICK_SEND);
+                final boolean sendByEnter = preferences.getBoolean(KEY_QUICK_SEND);
                 final EditTextEnterHandler enterHandler = EditTextEnterHandler.attach(editComment, new EditTextEnterHandler.EnterListener() {
                     @Override
                     public boolean shouldCallListener() {
@@ -176,7 +176,7 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment {
                 commentMenu.setOnTouchListener(mPopupMenu.getDragToOpenListener());
                 mPopupMenu.inflate(R.menu.menu_dialog_comment);
                 final Menu menu = mPopupMenu.getMenu();
-                MenuUtils.setMenuItemAvailability(menu, R.id.quote_original_status,
+                MenuUtils.Companion.setMenuItemAvailability(menu, R.id.quote_original_status,
                         status.retweet_id != null || status.quoted_id != null);
                 mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -196,7 +196,7 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment {
                         if (editComment.length() > 0) {
                             dismissDialog = retweetOrQuote(credentials, status, SHOW_PROTECTED_CONFIRM);
                         } else if (isMyRetweet(status)) {
-                            mTwitterWrapper.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
+                            twitterWrapper.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
                             dismissDialog = true;
                         } else if (useQuote(!status.user_is_protected, credentials)) {
                             dismissDialog = retweetOrQuote(credentials, status, SHOW_PROTECTED_CONFIRM);
@@ -235,7 +235,7 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment {
         }
         final StatusTextCountView textCountView = (StatusTextCountView) alertDialog.findViewById(R.id.comment_text_count);
         assert textCountView != null;
-        textCountView.setTextCount(mValidator.getTweetLength(s.toString()));
+        textCountView.setTextCount(validator.getTweetLength(s.toString()));
     }
 
     private ParcelableStatus getStatus() {
@@ -247,7 +247,7 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment {
     @CheckResult
     private boolean retweetOrQuote(ParcelableAccount account, ParcelableStatus status,
                                    boolean showProtectedConfirmation) {
-        AsyncTwitterWrapper twitter = mTwitterWrapper;
+        AsyncTwitterWrapper twitter = twitterWrapper;
         final Dialog dialog = getDialog();
         if (dialog == null || twitter == null) return false;
         final EditText editComment = (EditText) dialog.findViewById(R.id.edit_comment);

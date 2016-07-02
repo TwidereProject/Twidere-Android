@@ -40,7 +40,7 @@ public class DestroyUserListDialogFragment extends BaseDialogFragment implements
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 final ParcelableUserList userList = getUserList();
-                final AsyncTwitterWrapper twitter = mTwitterWrapper;
+                final AsyncTwitterWrapper twitter = twitterWrapper;
                 if (userList == null || twitter == null) return;
                 twitter.destroyUserListAsync(userList.account_key, userList.id);
                 break;

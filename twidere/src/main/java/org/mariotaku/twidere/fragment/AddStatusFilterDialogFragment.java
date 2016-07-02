@@ -59,20 +59,20 @@ public class AddStatusFilterDialogFragment extends BaseDialogFragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         mFilterItems = getFilterItemsInfo();
         final String[] entries = new String[mFilterItems.length];
-        final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
+        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
         for (int i = 0, j = entries.length; i < j; i++) {
             final FilterItemInfo info = mFilterItems[i];
             switch (info.type) {
                 case FilterItemInfo.FILTER_TYPE_USER:
-                    entries[i] = getString(R.string.user_filter_name, getName(mUserColorNameManager,
+                    entries[i] = getString(R.string.user_filter_name, getName(userColorNameManager,
                             info.value, nameFirst));
                     break;
                 case FilterItemInfo.FILTER_TYPE_KEYWORD:
-                    entries[i] = getString(R.string.keyword_filter_name, getName(mUserColorNameManager,
+                    entries[i] = getString(R.string.keyword_filter_name, getName(userColorNameManager,
                             info.value, nameFirst));
                     break;
                 case FilterItemInfo.FILTER_TYPE_SOURCE:
-                    entries[i] = getString(R.string.source_filter_name, getName(mUserColorNameManager,
+                    entries[i] = getString(R.string.source_filter_name, getName(userColorNameManager,
                             info.value, nameFirst));
                     break;
             }

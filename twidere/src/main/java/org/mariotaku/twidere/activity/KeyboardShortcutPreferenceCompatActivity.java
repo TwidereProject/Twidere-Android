@@ -68,12 +68,12 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseActivity imple
         switch (v.getId()) {
             case R.id.button_positive: {
                 if (mKeySpec == null) return;
-                mKeyboardShortcutsHandler.register(mKeySpec, getKeyAction());
+                keyboardShortcutsHandler.register(mKeySpec, getKeyAction());
                 finish();
                 break;
             }
             case R.id.button_neutral: {
-                mKeyboardShortcutsHandler.unregister(getKeyAction());
+                keyboardShortcutsHandler.unregister(getKeyAction());
                 finish();
                 break;
             }
@@ -106,10 +106,10 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseActivity imple
         }
         mKeySpec = spec;
         mKeysLabel.setText(spec.toKeyString());
-        final String oldAction = mKeyboardShortcutsHandler.findAction(spec);
+        final String oldAction = keyboardShortcutsHandler.findAction(spec);
         final KeyboardShortcutSpec copyOfSpec = spec.copy();
         copyOfSpec.setContextTag(null);
-        final String oldGeneralAction = mKeyboardShortcutsHandler.findAction(copyOfSpec);
+        final String oldGeneralAction = keyboardShortcutsHandler.findAction(copyOfSpec);
         if (!TextUtils.isEmpty(oldAction) && !keyAction.equals(oldAction)) {
             // Conflicts with keys in same context tag
             mConflictLabel.setVisibility(View.VISIBLE);

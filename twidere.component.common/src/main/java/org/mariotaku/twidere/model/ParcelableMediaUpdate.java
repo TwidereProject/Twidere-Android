@@ -3,6 +3,7 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -20,6 +21,7 @@ public class ParcelableMediaUpdate implements Parcelable {
     public int type;
 
     @JsonField(name = "alt_text")
+    @Nullable
     public String alt_text;
 
     public ParcelableMediaUpdate() {

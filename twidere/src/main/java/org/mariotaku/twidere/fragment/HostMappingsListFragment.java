@@ -214,7 +214,7 @@ public class HostMappingsListFragment extends BaseListFragment implements MultiC
                     final String host = ParseUtils.parseString(mEditHost.getText());
                     final String address = mCheckExclude.isChecked() ? host : ParseUtils.parseString(mEditAddress.getText());
                     if (isEmpty(host) || isEmpty(address)) return;
-                    final SharedPreferences prefs = getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME,
+                    final SharedPreferences prefs = getContext().getSharedPreferences(HOST_MAPPING_PREFERENCES_NAME,
                             Context.MODE_PRIVATE);
                     final SharedPreferences.Editor editor = prefs.edit();
                     editor.putString(host, address);

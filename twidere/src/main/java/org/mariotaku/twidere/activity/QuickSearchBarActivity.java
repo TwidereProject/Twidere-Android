@@ -169,14 +169,14 @@ public class QuickSearchBarActivity extends BaseActivity implements OnClickListe
             case SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM: {
                 IntentUtils.openUserProfile(this, getSelectedAccountKey(),
                         UserKey.valueOf(item.extra_id), item.summary, null,
-                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                        preferences.getBoolean(KEY_NEW_DOCUMENT_API),
                         Referral.DIRECT);
                 finish();
                 break;
             }
             case SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME: {
                 IntentUtils.openUserProfile(this, getSelectedAccountKey(), null, item.title, null,
-                        mPreferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.DIRECT);
+                        preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.DIRECT);
                 finish();
                 break;
             }
@@ -346,8 +346,8 @@ public class QuickSearchBarActivity extends BaseActivity implements OnClickListe
             super(activity, null, 0);
             mRemovedPositions = new SortableIntList();
             mActivity = activity;
-            mMediaLoader = activity.mMediaLoader;
-            mUserColorNameManager = activity.mUserColorNameManager;
+            mMediaLoader = activity.mediaLoader;
+            mUserColorNameManager = activity.userColorNameManager;
             mInflater = LayoutInflater.from(activity);
         }
 

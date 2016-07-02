@@ -119,7 +119,7 @@ public class UpdateStatusTask extends AbstractTask<Pair<String, ParcelableStatus
 
     @NonNull
     private UpdateStatusResult doUpdateStatus(ParcelableStatusUpdate update) throws UpdateStatusException {
-        final TwidereApplication app = TwidereApplication.getInstance(context);
+        final TwidereApplication app = TwidereApplication.Companion.getInstance(context);
         final MediaUploaderInterface uploader = getMediaUploader(app);
         final StatusShortenerInterface shortener = getStatusShortener(app);
 

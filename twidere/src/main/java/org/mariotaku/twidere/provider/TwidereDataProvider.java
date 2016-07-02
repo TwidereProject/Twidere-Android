@@ -604,8 +604,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     @Override
     public SQLiteDatabase onCreateSQLiteDatabase() {
-        final TwidereApplication app = TwidereApplication.getInstance(getContext());
-        final SQLiteOpenHelper helper = app.getSQLiteOpenHelper();
+        final TwidereApplication app = TwidereApplication.Companion.getInstance(getContext());
+        final SQLiteOpenHelper helper = app.getSqLiteOpenHelper();
         return helper.getWritableDatabase();
     }
 

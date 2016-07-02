@@ -346,10 +346,10 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         ViewCompat.setBackgroundTintList(mSignInButton, color);
 
 
-        final String consumerKey = mPreferences.getString(KEY_CONSUMER_KEY, null);
-        final String consumerSecret = mPreferences.getString(KEY_CONSUMER_SECRET, null);
+        final String consumerKey = preferences.getString(KEY_CONSUMER_KEY, null);
+        final String consumerSecret = preferences.getString(KEY_CONSUMER_SECRET, null);
         if (BuildConfig.SHOW_CUSTOM_TOKEN_DIALOG && savedInstanceState == null &&
-                !mPreferences.getBoolean(KEY_CONSUMER_KEY_SECRET_SET, false) &&
+                !preferences.getBoolean(KEY_CONSUMER_KEY_SECRET_SET, false) &&
                 !Utils.isCustomConsumerKeySecret(consumerKey, consumerSecret)) {
             final SetConsumerKeySecretDialogFragment df = new SetConsumerKeySecretDialogFragment();
             df.setCancelable(false);
@@ -396,14 +396,14 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
 
     private void setDefaultAPI() {
-        final long apiLastChange = mPreferences.getLong(KEY_API_LAST_CHANGE, mAPIChangeTimestamp);
+        final long apiLastChange = preferences.getLong(KEY_API_LAST_CHANGE, mAPIChangeTimestamp);
         final boolean defaultApiChanged = apiLastChange != mAPIChangeTimestamp;
-        final String apiUrlFormat = Utils.getNonEmptyString(mPreferences, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
-        final int authType = mPreferences.getInt(KEY_AUTH_TYPE, AuthType.OAUTH);
-        final boolean sameOAuthSigningUrl = mPreferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
-        final boolean noVersionSuffix = mPreferences.getBoolean(KEY_NO_VERSION_SUFFIX, false);
-        final String consumerKey = Utils.getNonEmptyString(mPreferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
-        final String consumerSecret = Utils.getNonEmptyString(mPreferences, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
+        final String apiUrlFormat = Utils.getNonEmptyString(preferences, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
+        final int authType = preferences.getInt(KEY_AUTH_TYPE, AuthType.OAUTH);
+        final boolean sameOAuthSigningUrl = preferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
+        final boolean noVersionSuffix = preferences.getBoolean(KEY_NO_VERSION_SUFFIX, false);
+        final String consumerKey = Utils.getNonEmptyString(preferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+        final String consumerSecret = Utils.getNonEmptyString(preferences, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
         if (TextUtils.isEmpty(mAPIUrlFormat) || defaultApiChanged) {
             mAPIUrlFormat = apiUrlFormat;
         }

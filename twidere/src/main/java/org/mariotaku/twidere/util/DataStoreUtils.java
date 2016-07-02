@@ -470,7 +470,8 @@ public class DataStoreUtils implements Constants {
 
     public static int getStatusesCount(@NonNull final Context context, final Uri uri,
                                        @Nullable final Bundle extraArgs, final long compare,
-                                       String compareColumn, boolean greaterThan, UserKey... accountKeys) {
+                                       String compareColumn, boolean greaterThan,
+                                       @Nullable UserKey[] accountKeys) {
         if (accountKeys == null) {
             accountKeys = getActivatedAccountKeys(context);
         }

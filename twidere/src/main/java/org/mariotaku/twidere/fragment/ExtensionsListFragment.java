@@ -104,9 +104,9 @@ public class ExtensionsListFragment extends BaseListFragment implements LoaderCa
         if (extensionInfo.pname != null && extensionInfo.settings != null) {
             final Intent intent = new Intent(INTENT_ACTION_EXTENSION_SETTINGS);
             intent.setClassName(extensionInfo.pname, extensionInfo.settings);
-            MenuUtils.setMenuItemAvailability(menu, R.id.settings, mPackageManager.queryIntentActivities(intent, 0).size() == 1);
+            MenuUtils.Companion.setMenuItemAvailability(menu, R.id.settings, mPackageManager.queryIntentActivities(intent, 0).size() == 1);
         } else {
-            MenuUtils.setMenuItemAvailability(menu, R.id.settings, false);
+            MenuUtils.Companion.setMenuItemAvailability(menu, R.id.settings, false);
         }
 
     }

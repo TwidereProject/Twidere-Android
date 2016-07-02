@@ -180,7 +180,7 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
             data.add(item);
         }
 
-        final SQLiteDatabase db = TwidereApplication.getInstance(context).getSQLiteDatabase();
+        final SQLiteDatabase db = TwidereApplication.Companion.getInstance(context).getSqLiteDatabase();
         final ParcelableStatus[] array = data.toArray(new ParcelableStatus[data.size()]);
         for (int i = 0, size = array.length; i < size; i++) {
             final ParcelableStatus status = array[i];

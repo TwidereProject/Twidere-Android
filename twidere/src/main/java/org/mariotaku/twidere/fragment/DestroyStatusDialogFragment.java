@@ -40,7 +40,7 @@ public class DestroyStatusDialogFragment extends BaseDialogFragment implements D
         switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
                 final ParcelableStatus status = getStatus();
-                final AsyncTwitterWrapper twitter = mTwitterWrapper;
+                final AsyncTwitterWrapper twitter = twitterWrapper;
                 if (status == null || twitter == null) return;
                 twitter.destroyStatusAsync(status.account_key, status.id);
                 break;

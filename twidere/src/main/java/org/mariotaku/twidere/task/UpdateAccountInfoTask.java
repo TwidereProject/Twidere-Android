@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -27,6 +26,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.JsonSerializer;
 
+import kotlin.Pair;
+
 /**
  * Created by mariotaku on 16/3/8.
  */
@@ -40,8 +41,8 @@ public class UpdateAccountInfoTask extends AbstractTask<Pair<ParcelableAccount, 
     @Override
     protected Object doLongOperation(Pair<ParcelableAccount, ParcelableUser> params) {
         final ContentResolver resolver = context.getContentResolver();
-        final ParcelableAccount account = params.first;
-        final ParcelableUser user = params.second;
+        final ParcelableAccount account = params.getFirst();
+        final ParcelableUser user = params.getSecond();
         if (account == null || user == null) return null;
         if (user.is_cache) {
             return null;

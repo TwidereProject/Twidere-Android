@@ -46,7 +46,7 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
             Log.d(RECEIVER_LOGTAG, String.format("Received Broadcast %s", intent));
         }
         if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) return;
-        final TwidereApplication application = TwidereApplication.getInstance(context);
+        final TwidereApplication application = TwidereApplication.Companion.getInstance(context);
 //        application.reloadConnectivitySettings();
         Utils.startRefreshServiceIfNeeded(application);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,

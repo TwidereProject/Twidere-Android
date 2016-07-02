@@ -118,7 +118,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             R.id.delete -> {
                 val where = Expression.`in`(Column(Filters._ID),
                         RawItemArray(listView.checkedItemIds))
-                contentResolver!!.delete(contentUri, where.sql, null)
+                contentResolver.delete(contentUri, where.sql, null)
             }
             R.id.inverse_selection -> {
                 val positions = listView.getCheckedItemPositions()
@@ -347,7 +347,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                     val resolver = contentResolver
                     val where = Expression.equalsArgs(Filters.Users.USER_KEY).sql
                     val whereArgs = arrayOf(user.key.toString())
-                    resolver!!.delete(Filters.Users.CONTENT_URI, where, whereArgs)
+                    resolver.delete(Filters.Users.CONTENT_URI, where, whereArgs)
                     resolver.insert(Filters.Users.CONTENT_URI, values)
                 }
             }
@@ -378,7 +378,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
         class FilterUsersListAdapter internal constructor(context: Context) : SimpleCursorAdapter(context, android.R.layout.simple_list_item_activated_2, null, arrayOfNulls<String>(0), IntArray(0), 0) {
 
-            private val mNameFirst: Boolean
+            private val nameFirst: Boolean
             @Inject
             lateinit var userColorNameManager: UserColorNameManager
             @Inject
@@ -389,7 +389,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
             init {
                 GeneralComponentHelper.build(context).inject(this)
-                mNameFirst = preferences.getBoolean(KEY_NAME_FIRST, true)
+                nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true)
             }
 
             override fun bindView(view: View, context: Context?, cursor: Cursor) {
@@ -400,7 +400,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 val name = cursor.getString(nameIdx)
                 val screenName = cursor.getString(screenNameIdx)
                 val displayName = userColorNameManager.getDisplayName(userId, name, screenName,
-                        mNameFirst)
+                        nameFirst)
                 text1.text = displayName
                 text2.text = userId.host
             }

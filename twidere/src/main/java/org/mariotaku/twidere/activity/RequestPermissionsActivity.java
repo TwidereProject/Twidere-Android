@@ -54,7 +54,7 @@ public class RequestPermissionsActivity extends BaseActivity implements OnClickL
     public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.accept: {
-                mPermissionsManager.accept(mCallingPackage, mPermissions);
+                permissionsManager.accept(mCallingPackage, mPermissions);
                 setResult(RESULT_OK);
                 finish();
                 break;
@@ -91,7 +91,7 @@ public class RequestPermissionsActivity extends BaseActivity implements OnClickL
             finish();
             return;
         }
-        if (mPermissionsManager.isDenied(caller)) {
+        if (permissionsManager.isDenied(caller)) {
             setResult(RESULT_CANCELED);
             finish();
             return;

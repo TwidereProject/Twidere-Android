@@ -42,7 +42,7 @@ public class DestroySavedSearchDialogFragment extends BaseDialogFragment impleme
             case DialogInterface.BUTTON_POSITIVE:
                 final UserKey accountKey = getAccountKey();
                 final long searchId = getSearchId();
-                final AsyncTwitterWrapper twitter = mTwitterWrapper;
+                final AsyncTwitterWrapper twitter = twitterWrapper;
                 if (searchId <= 0 || twitter == null) return;
                 twitter.destroySavedSearchAsync(accountKey, searchId);
                 break;

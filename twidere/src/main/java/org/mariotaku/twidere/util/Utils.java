@@ -853,7 +853,7 @@ public final class Utils implements Constants {
     @Nullable
     public static String getReadPositionTagWithAccounts(Context context, boolean activatedIfMissing,
                                                         @Nullable @ReadPositionTag String tag,
-                                                        UserKey... accountKeys) {
+                                                        @Nullable UserKey[] accountKeys) {
         if (tag == null) return null;
         if (ArrayUtils.isEmpty(accountKeys)) {
             final UserKey[] activatedIds = DataStoreUtils.getActivatedAccountKeys(context);
