@@ -71,7 +71,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     public UserViewHolder(final IUsersAdapter<?> adapter, final View itemView) {
         super(itemView);
         this.adapter = adapter;
-        itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
+        itemContent = (IColorLabelView) itemView.findViewById(R.id.itemContent);
         profileImageView = (ImageView) itemView.findViewById(R.id.profileImage);
         profileTypeView = (ImageView) itemView.findViewById(R.id.profileType);
         nameView = (NameView) itemView.findViewById(R.id.name);
@@ -173,7 +173,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.item_content: {
+            case R.id.itemContent: {
                 if (userClickListener == null) return;
                 userClickListener.onUserClick(this, getLayoutPosition());
                 break;
@@ -200,7 +200,7 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
     public boolean onLongClick(View v) {
         if (userClickListener == null) return false;
         switch (v.getId()) {
-            case R.id.item_content: {
+            case R.id.itemContent: {
                 return userClickListener.onUserLongClick(this, getLayoutPosition());
             }
         }

@@ -399,7 +399,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
             private val extras: Bundle?,
             private val accountKey: UserKey,
             private val listId: String?,
-            private val listName: String,
+            private val listName: String?,
             private val userKey: UserKey?,
             private val screenName: String?
     ) : AsyncTaskLoader<SingleResponse<ParcelableUserList>>(context) {
@@ -413,14 +413,20 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
                     true) ?: return SingleResponse.getInstance<ParcelableUserList>()
             try {
                 val list: UserList
-                if (listId != null) {
-                    list = twitter.showUserList(listId)
-                } else if (userKey != null) {
-                    list = twitter.showUserList(listName, userKey.id)
-                } else if (screenName != null) {
-                    list = twitter.showUserListByScrenName(listName, screenName)
-                } else
-                    return SingleResponse.getInstance<ParcelableUserList>()
+                when {
+                    listId != null -> {
+                        list = twitter.showUserList(listId)
+                    }
+                    listName != null && userKey != null -> {
+                        list = twitter.showUserList(listName, userKey.id)
+                    }
+                    listName != null && screenName != null -> {
+                        list = twitter.showUserListByScrenName(listName, screenName)
+                    }
+                    else -> {
+                        return SingleResponse.getInstance<ParcelableUserList>()
+                    }
+                }
                 return SingleResponse.getInstance(ParcelableUserListUtils.from(list, accountKey))
             } catch (e: MicroBlogException) {
                 return SingleResponse.getInstance<ParcelableUserList>(e)

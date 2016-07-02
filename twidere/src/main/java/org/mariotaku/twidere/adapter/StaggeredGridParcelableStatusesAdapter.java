@@ -129,7 +129,7 @@ public class StaggeredGridParcelableStatusesAdapter extends ParcelableStatusesAd
         public void onClick(View v) {
             if (listener == null) return;
             switch (v.getId()) {
-                case R.id.item_content: {
+                case R.id.itemContent: {
                     listener.onStatusClick(this, getLayoutPosition());
                     break;
                 }
@@ -147,7 +147,7 @@ public class StaggeredGridParcelableStatusesAdapter extends ParcelableStatusesAd
         @Override
         public void setStatusClickListener(StatusClickListener listener) {
             this.listener = listener;
-            itemView.findViewById(R.id.item_content).setOnClickListener(this);
+            itemView.findViewById(R.id.itemContent).setOnClickListener(this);
         }
 
         @Override

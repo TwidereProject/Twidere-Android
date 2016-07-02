@@ -104,7 +104,7 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment {
                 final AlertDialog dialog = (AlertDialog) dialogInterface;
 
 
-                final View itemContent = dialog.findViewById(R.id.item_content);
+                final View itemContent = dialog.findViewById(R.id.itemContent);
                 final StatusTextCountView textCountView = (StatusTextCountView) dialog.findViewById(R.id.comment_text_count);
                 final View itemMenu = dialog.findViewById(R.id.itemMenu);
                 final View actionButtons = dialog.findViewById(R.id.actionButtons);

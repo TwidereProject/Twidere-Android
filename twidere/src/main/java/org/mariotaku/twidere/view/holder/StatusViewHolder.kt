@@ -568,7 +568,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             val listener = holder.statusClickListener ?: return false
             val position = holder.layoutPosition
             when (v.id) {
-                R.id.item_content -> {
+                R.id.itemContent -> {
                     if (!holder.isCardActionsShown) {
                         holder.showCardActions()
                         return true

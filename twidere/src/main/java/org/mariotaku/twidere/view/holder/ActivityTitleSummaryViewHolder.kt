@@ -57,7 +57,7 @@ class ActivityTitleSummaryViewHolder(private val adapter: ParcelableActivitiesAd
 
     init {
 
-        itemContent = itemView.findViewById(R.id.item_content) as IColorLabelView
+        itemContent = itemView.findViewById(R.id.itemContent) as IColorLabelView
         activityTypeView = itemView.findViewById(R.id.activity_type) as IconActionView
         titleView = itemView.findViewById(R.id.title) as TextView
         summaryView = itemView.findViewById(R.id.summary) as TextView
@@ -168,7 +168,7 @@ class ActivityTitleSummaryViewHolder(private val adapter: ParcelableActivitiesAd
         if (mActivityEventListener == null) return
         val position = layoutPosition
         when (v.id) {
-            R.id.item_content -> {
+            R.id.itemContent -> {
                 mActivityEventListener!!.onActivityClick(this, position)
             }
         }

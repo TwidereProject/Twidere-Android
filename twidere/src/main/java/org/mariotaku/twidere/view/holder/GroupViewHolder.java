@@ -57,7 +57,7 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
 
     public GroupViewHolder(IGroupsAdapter<?> adapter, View itemView) {
         super(itemView);
-        itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
+        itemContent = (IColorLabelView) itemView.findViewById(R.id.itemContent);
         this.adapter = adapter;
         profileImageView = (ImageView) itemView.findViewById(R.id.profileImage);
         nameView = (NameView) itemView.findViewById(R.id.name);
@@ -105,7 +105,7 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
     public void onClick(View v) {
         if (groupClickListener == null) return;
         switch (v.getId()) {
-            case R.id.item_content: {
+            case R.id.itemContent: {
                 groupClickListener.onGroupClick(this, getLayoutPosition());
                 break;
             }
@@ -116,7 +116,7 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
     public boolean onLongClick(View v) {
         if (groupClickListener == null) return false;
         switch (v.getId()) {
-            case R.id.item_content: {
+            case R.id.itemContent: {
                 return groupClickListener.onGroupLongClick(this, getLayoutPosition());
             }
         }
