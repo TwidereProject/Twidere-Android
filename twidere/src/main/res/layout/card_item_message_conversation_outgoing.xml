@@ -25,7 +25,7 @@
     android:padding="8dp">
 
     <org.mariotaku.messagebubbleview.library.MessageBubbleView
-        android:id="@+id/message_content"
+        android:id="@+id/messageContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

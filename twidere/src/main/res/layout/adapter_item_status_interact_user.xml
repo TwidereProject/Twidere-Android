@@ -25,7 +25,7 @@
     android:layout_height="match_parent">
 
     <org.mariotaku.twidere.view.ProfileImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profileImage"
         style="?profileImageStyle"
         android:layout_width="@dimen/element_size_msmall"
         android:layout_height="@dimen/element_size_msmall"

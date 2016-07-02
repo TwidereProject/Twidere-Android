@@ -65,7 +65,7 @@ public class MessageViewHolder extends ViewHolder {
         textColorSecondary = a.getColor(R.styleable.MessageViewHolder_android_textColorSecondary, 0);
         textColorSecondaryInverse = a.getColor(R.styleable.MessageViewHolder_android_textColorSecondaryInverse, 0);
         a.recycle();
-        messageContent = (MessageBubbleView) itemView.findViewById(R.id.message_content);
+        messageContent = (MessageBubbleView) itemView.findViewById(R.id.messageContent);
         messageContent.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

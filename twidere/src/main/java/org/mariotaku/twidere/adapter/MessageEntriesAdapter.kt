@@ -79,7 +79,7 @@ class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolde
         //        final int position = tag instanceof Integer ? (Integer) tag : -1;
         //        if (position == -1) return;
         //        switch (view.getId()) {
-        //            case R.id.profile_image: {
+        //            case R.id.profileImage: {
         //                if (mContext instanceof Activity) {
         //                    final long account_id = getAccountKey(position);
         //                    final long user_id = getConversationId(position);

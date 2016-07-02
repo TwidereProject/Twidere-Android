@@ -30,7 +30,7 @@
     tools:context=".adapter.ParcelableUsersAdapter">
 
     <org.mariotaku.twidere.view.ProfileImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profileImage"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_card_list_item"
         android:layout_height="@dimen/icon_size_card_list_item"
@@ -41,7 +41,8 @@
         android:layout_marginRight="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image"
         android:scaleType="fitCenter"
-        tools:src="@mipmap/ic_launcher"/>
+        tools:src="@mipmap/ic_launcher"
+        android:contextClickable="true"/>
 
 
     <org.mariotaku.twidere.view.NameView
@@ -62,7 +63,7 @@
 
 
     <org.mariotaku.twidere.view.ActionIconThemedTextView
-        android:id="@+id/external_indicator"
+        android:id="@+id/externalIndicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
@@ -80,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_alignStart="@+id/name"
-        android:layout_below="@+id/external_indicator"
+        android:layout_below="@+id/externalIndicator"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"
@@ -96,7 +97,7 @@
         android:paddingTop="@dimen/element_spacing_small">
 
         <TextView
-            android:id="@+id/members_count"
+            android:id="@+id/membersCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -108,7 +109,7 @@
             tools:text="255"/>
 
         <TextView
-            android:id="@+id/admins_count"
+            android:id="@+id/adminsCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

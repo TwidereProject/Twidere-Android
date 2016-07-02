@@ -59,12 +59,12 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
         super(itemView);
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
         this.adapter = adapter;
-        profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
+        profileImageView = (ImageView) itemView.findViewById(R.id.profileImage);
         nameView = (NameView) itemView.findViewById(R.id.name);
-        externalIndicator = (TextView) itemView.findViewById(R.id.external_indicator);
+        externalIndicator = (TextView) itemView.findViewById(R.id.externalIndicator);
         descriptionView = (TextView) itemView.findViewById(R.id.description);
-        membersCountView = (TextView) itemView.findViewById(R.id.members_count);
-        adminsCountView = (TextView) itemView.findViewById(R.id.admins_count);
+        membersCountView = (TextView) itemView.findViewById(R.id.membersCount);
+        adminsCountView = (TextView) itemView.findViewById(R.id.adminsCount);
     }
 
     public void displayGroup(ParcelableGroup group) {

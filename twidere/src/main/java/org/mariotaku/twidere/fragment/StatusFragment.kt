@@ -1296,7 +1296,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
                 init {
                     itemView.setOnClickListener(this)
-                    profileImageView = itemView.findViewById(R.id.profile_image) as ImageView
+                    profileImageView = itemView.findViewById(R.id.profileImage) as ImageView
                 }
 
                 fun displayUser(item: ParcelableUser) {

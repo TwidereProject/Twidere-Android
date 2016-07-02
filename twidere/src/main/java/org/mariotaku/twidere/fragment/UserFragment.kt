@@ -334,7 +334,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             actionBar.subtitle = null
             return
         }
-        val spec = pagerAdapter!!.getTab(viewPager!!.currentItem)
+        val spec = pagerAdapter!!.getTab(viewPager.currentItem)
         assert(spec.type != null)
         when (spec.type) {
             TAB_TYPE_STATUSES -> {
@@ -401,14 +401,14 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         this.user = user
         mAccount = account
         if (user == null || user.key == null) {
-            profileImage!!.visibility = View.GONE
+            profileImage.visibility = View.GONE
             profileType!!.visibility = View.GONE
             if (activity is ATEActivity) {
                 setUiColor(Config.primaryColor(activity, activity.ateKey))
             }
             return
         }
-        profileImage!!.visibility = View.VISIBLE
+        profileImage.visibility = View.VISIBLE
         val resources = resources
         val lm = loaderManager
         lm.destroyLoader(LOADER_ID_USER)
@@ -456,8 +456,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         followersContainer.followersCount!!.text = Utils.getLocalizedNumber(mLocale, user.followers_count)
         friendsContainer.friendsCount!!.text = Utils.getLocalizedNumber(mLocale, user.friends_count)
 
-        listedContainer!!.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
-        groupsContainer!!.visibility = if (groupsCount < 0) View.GONE else View.VISIBLE
+        listedContainer.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
+        groupsContainer.visibility = if (groupsCount < 0) View.GONE else View.VISIBLE
 
         mediaLoader.displayOriginalProfileImage(profileImage, user)
         if (user.color != 0) {
@@ -470,8 +470,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (mBannerWidth > 0) mBannerWidth else defWidth
         val bannerUrl = ParcelableUserUtils.getProfileBannerUrl(user)
-        if (ObjectUtils.notEqual(profileBanner!!.tag, bannerUrl) || profileBanner!!.drawable == null) {
-            profileBanner!!.tag = bannerUrl
+        if (ObjectUtils.notEqual(profileBanner.tag, bannerUrl) || profileBanner.drawable == null) {
+            profileBanner.tag = bannerUrl
             mediaLoader.displayProfileBanner(profileBanner, bannerUrl, width)
         }
         val relationship = mRelationship
@@ -486,9 +486,9 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val currentDay = cal.get(Calendar.DAY_OF_MONTH)
         cal.timeInMillis = user.created_at
         if (cal.get(Calendar.MONTH) == currentMonth && cal.get(Calendar.DAY_OF_MONTH) == currentDay && !mHideBirthdayView) {
-            profileBirthdayBanner!!.visibility = View.VISIBLE
+            profileBirthdayBanner.visibility = View.VISIBLE
         } else {
-            profileBirthdayBanner!!.visibility = View.GONE
+            profileBirthdayBanner.visibility = View.GONE
         }
         updateTitleAlpha()
         invalidateOptionsMenu()
@@ -496,7 +496,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     }
 
     override fun getCurrentVisibleFragment(): Fragment? {
-        val currentItem = viewPager!!.currentItem
+        val currentItem = viewPager.currentItem
         if (currentItem < 0 || currentItem >= pagerAdapter!!.count) return null
         return pagerAdapter!!.instantiateItem(viewPager, currentItem) as Fragment
     }
@@ -632,48 +632,48 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
         userFragmentView.setWindowInsetsListener { left, top, right, bottom ->
             profileContentContainer!!.setPadding(0, top, 0, 0)
-            profileBannerSpace!!.statusBarHeight = top
+            profileBannerSpace.statusBarHeight = top
 
-            if (profileBannerSpace!!.toolbarHeight == 0) {
+            if (profileBannerSpace.toolbarHeight == 0) {
                 var toolbarHeight = toolbar.measuredHeight
                 if (toolbarHeight == 0) {
                     toolbarHeight = ThemeUtils.getActionBarHeight(context)
                 }
-                profileBannerSpace!!.toolbarHeight = toolbarHeight
+                profileBannerSpace.toolbarHeight = toolbarHeight
             }
         }
         profileContentContainer!!.setOnSizeChangedListener { view, w, h, oldw, oldh ->
             val toolbarHeight = toolbar.measuredHeight
             userProfileDrawer!!.setPadding(0, toolbarHeight, 0, 0)
-            profileBannerSpace!!.toolbarHeight = toolbarHeight
+            profileBannerSpace.toolbarHeight = toolbarHeight
         }
 
         userProfileDrawer!!.setDrawerCallback(this)
 
         pagerAdapter = SupportTabsAdapter(activity, childFragmentManager)
 
-        viewPager!!.offscreenPageLimit = 3
-        viewPager!!.adapter = pagerAdapter
-        toolbarTabs!!.setViewPager(viewPager)
-        toolbarTabs!!.setTabDisplayOption(TabPagerIndicator.LABEL)
-        toolbarTabs!!.setOnPageChangeListener(this)
+        viewPager.offscreenPageLimit = 3
+        viewPager.adapter = pagerAdapter
+        toolbarTabs.setViewPager(viewPager)
+        toolbarTabs.setTabDisplayOption(TabPagerIndicator.LABEL)
+        toolbarTabs.setOnPageChangeListener(this)
 
         followContainer.follow.setOnClickListener(this)
-        profileImage!!.setOnClickListener(this)
-        profileBanner!!.setOnClickListener(this)
-        listedContainer!!.setOnClickListener(this)
-        groupsContainer!!.setOnClickListener(this)
-        followersContainer!!.setOnClickListener(this)
-        friendsContainer!!.setOnClickListener(this)
+        profileImage.setOnClickListener(this)
+        profileBanner.setOnClickListener(this)
+        listedContainer.setOnClickListener(this)
+        groupsContainer.setOnClickListener(this)
+        followersContainer.setOnClickListener(this)
+        friendsContainer.setOnClickListener(this)
         errorIcon.setOnClickListener(this)
-        profileBirthdayBanner!!.setOnClickListener(this)
-        profileBanner!!.setOnSizeChangedListener(this)
-        profileBannerSpace!!.setOnTouchListener(this)
+        profileBirthdayBanner.setOnClickListener(this)
+        profileBanner.setOnSizeChangedListener(this)
+        profileBannerSpace.setOnTouchListener(this)
 
 
-        profileNameBackground!!.setBackgroundColor(mCardBackgroundColor)
-        profileDetailsContainer!!.setBackgroundColor(mCardBackgroundColor)
-        toolbarTabs!!.setBackgroundColor(mCardBackgroundColor)
+        profileNameBackground.setBackgroundColor(mCardBackgroundColor)
+        profileDetailsContainer.setBackgroundColor(mCardBackgroundColor)
+        toolbarTabs.setBackgroundColor(mCardBackgroundColor)
 
         val actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity)
         ViewCompat.setElevation(toolbarTabs, actionBarElevation)
@@ -734,9 +734,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
     @UiThread
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        val twitter = twitterWrapper
-        val user = user
-        if (user == null) return
+        val user = user ?: return
 
         val isMyself = user.account_key.maybeEquals(user.key)
         val mentionItem = menu!!.findItem(R.id.mention)
@@ -831,10 +829,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 if (userRelationship.filtering) {
                     val where = Expression.equalsArgs(Filters.Users.USER_KEY).sql
                     val whereArgs = arrayOf(user.key.toString())
-                    cr!!.delete(Filters.Users.CONTENT_URI, where, whereArgs)
+                    cr.delete(Filters.Users.CONTENT_URI, where, whereArgs)
                     Utils.showInfoMessage(activity, R.string.message_user_unmuted, false)
                 } else {
-                    cr!!.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.createFilteredUser(user))
+                    cr.insert(Filters.Users.CONTENT_URI, ContentValuesCreator.createFilteredUser(user))
                     Utils.showInfoMessage(activity, R.string.message_user_muted, false)
                 }
                 getFriendship()
@@ -975,14 +973,14 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 ACTION_NAVIGATION_PREVIOUS_TAB -> {
                     val previous = viewPager.currentItem - 1
                     if (previous >= 0 && previous < pagerAdapter!!.count) {
-                        viewPager!!.setCurrentItem(previous, true)
+                        viewPager.setCurrentItem(previous, true)
                     }
                     return true
                 }
                 ACTION_NAVIGATION_NEXT_TAB -> {
                     val next = viewPager.currentItem + 1
                     if (next >= 0 && next < pagerAdapter!!.count) {
-                        viewPager!!.setCurrentItem(next, true)
+                        viewPager.setCurrentItem(next, true)
                     }
                     return true
                 }
@@ -1074,7 +1072,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                     }
                 }
             }
-            R.id.profile_image -> {
+            R.id.profileImage -> {
                 val url = Utils.getOriginalTwitterProfileImage(user.profile_image_url)
                 val profileImage = ParcelableMediaUtils.image(url)
                 profileImage.type = ParcelableMedia.Type.IMAGE
@@ -1108,14 +1106,14 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 IntentUtils.openUserFriends(getActivity(), user.account_key, user.key,
                         user.screen_name)
             }
-            R.id.name_container -> {
+            R.id.nameContainer -> {
                 if (user.account_key == user.key) return
                 IntentUtils.openProfileEditor(getActivity(), user.account_key)
             }
             R.id.profileBirthdayBanner -> {
                 mHideBirthdayView = true
-                profileBirthdayBanner!!.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out))
-                profileBirthdayBanner!!.visibility = View.GONE
+                profileBirthdayBanner.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out))
+                profileBirthdayBanner.visibility = View.GONE
             }
         }
 
@@ -1175,10 +1173,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        if (profileBirthdayBanner!!.visibility == View.VISIBLE) {
-            return profileBirthdayBanner!!.dispatchTouchEvent(event)
+        if (profileBirthdayBanner.visibility == View.VISIBLE) {
+            return profileBirthdayBanner.dispatchTouchEvent(event)
         }
-        return profileBanner!!.dispatchTouchEvent(event)
+        return profileBanner.dispatchTouchEvent(event)
     }
 
     override fun scrollToStart(): Boolean {
@@ -1270,7 +1268,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         mActionBarBackground = ActionBarDrawable(shadow!!)
         if (!ThemeUtils.isWindowFloating(activity) && ThemeUtils.isTransparentBackground(activity.currentThemeBackgroundOption)) {
             //            mActionBarBackground.setAlpha(ThemeUtils.getActionBarAlpha(linkHandler.getCurrentThemeBackgroundAlpha()));
-            profileBanner!!.alpha = activity.currentThemeBackgroundAlpha / 255f
+            profileBanner.alpha = activity.currentThemeBackgroundAlpha / 255f
         }
         actionBar.setBackgroundDrawable(mActionBarBackground)
     }
@@ -1323,7 +1321,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val stackedTabColor = mPrimaryColor
 
 
-        val profileContentHeight = (profileNameContainer!!.height + profileDetailsContainer!!.height).toFloat()
+        val profileContentHeight = (profileNameContainer!!.height + profileDetailsContainer.height).toFloat()
         val tabOutlineAlphaFactor: Float
         if (offset - spaceHeight > 0) {
             tabOutlineAlphaFactor = 1f - TwidereMathUtils.clamp((offset - spaceHeight) / profileContentHeight, 0f, 1f)
@@ -1344,21 +1342,21 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val currentTabColor = sArgbEvaluator.evaluate(tabOutlineAlphaFactor,
                 stackedTabColor, mCardBackgroundColor) as Int
 
-        val tabBackground = toolbarTabs!!.background
+        val tabBackground = toolbarTabs.background
         (tabBackground as ColorDrawable).color = currentTabColor
         val tabItemIsDark = ThemeUtils.isLightColor(currentTabColor)
 
         if (mPreviousTabItemIsDark == 0 || (if (tabItemIsDark) 1 else -1) != mPreviousTabItemIsDark) {
             val tabContrastColor = ThemeUtils.getColorDependent(currentTabColor)
-            toolbarTabs!!.setIconColor(tabContrastColor)
-            toolbarTabs!!.setLabelColor(tabContrastColor)
+            toolbarTabs.setIconColor(tabContrastColor)
+            toolbarTabs.setLabelColor(tabContrastColor)
             if (Config.coloredActionBar(activity, activity.ateKey)) {
-                toolbarTabs!!.setStripColor(tabContrastColor)
+                toolbarTabs.setStripColor(tabContrastColor)
             } else {
-                toolbarTabs!!.setStripColor(ThemeUtils.getOptimalAccentColor(mUiColor,
+                toolbarTabs.setStripColor(ThemeUtils.getOptimalAccentColor(mUiColor,
                         tabContrastColor))
             }
-            toolbarTabs!!.updateAppearance()
+            toolbarTabs.updateAppearance()
         }
         mPreviousTabItemIsDark = if (tabItemIsDark) 1 else -1
 

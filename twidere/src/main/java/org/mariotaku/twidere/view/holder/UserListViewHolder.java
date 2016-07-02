@@ -98,7 +98,7 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
     public void onClick(View v) {
         if (userListClickListener == null) return;
         switch (v.getId()) {
-            case R.id.item_content: {
+            case R.id.itemContent: {
                 userListClickListener.onUserListClick(this, getLayoutPosition());
                 break;
             }
@@ -109,7 +109,7 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
     public boolean onLongClick(View v) {
         if (userListClickListener == null) return false;
         switch (v.getId()) {
-            case R.id.item_content: {
+            case R.id.itemContent: {
                 return userListClickListener.onUserListLongClick(this, getLayoutPosition());
             }
         }

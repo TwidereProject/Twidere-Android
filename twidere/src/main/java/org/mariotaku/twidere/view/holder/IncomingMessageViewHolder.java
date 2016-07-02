@@ -37,7 +37,7 @@ public class IncomingMessageViewHolder extends MessageViewHolder {
 
     public IncomingMessageViewHolder(MessageConversationAdapter adapter, View itemView) {
         super(adapter, itemView);
-        profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
+        profileImageView = (ImageView) itemView.findViewById(R.id.profileImage);
     }
 
     @Override

@@ -104,7 +104,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.profile_image: {
+            case R.id.profileImage: {
                 adapter.onUserProfileClick(getLayoutPosition());
                 break;
             }

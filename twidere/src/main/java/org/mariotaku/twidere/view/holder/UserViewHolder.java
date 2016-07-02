@@ -72,22 +72,22 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
         super(itemView);
         this.adapter = adapter;
         itemContent = (IColorLabelView) itemView.findViewById(R.id.item_content);
-        profileImageView = (ImageView) itemView.findViewById(R.id.profile_image);
-        profileTypeView = (ImageView) itemView.findViewById(R.id.profile_type);
+        profileImageView = (ImageView) itemView.findViewById(R.id.profileImage);
+        profileTypeView = (ImageView) itemView.findViewById(R.id.profileType);
         nameView = (NameView) itemView.findViewById(R.id.name);
-        externalIndicator = (TextView) itemView.findViewById(R.id.external_indicator);
+        externalIndicator = (TextView) itemView.findViewById(R.id.externalIndicator);
         descriptionView = (TextView) itemView.findViewById(R.id.description);
         locationView = (TextView) itemView.findViewById(R.id.location);
         urlView = (TextView) itemView.findViewById(R.id.url);
-        statusesCountView = (TextView) itemView.findViewById(R.id.statuses_count);
-        followersCountView = (TextView) itemView.findViewById(R.id.followers_count);
-        friendsCountView = (TextView) itemView.findViewById(R.id.friends_count);
-        actionsProgressContainer = itemView.findViewById(R.id.actions_progress_container);
-        actionsContainer = itemView.findViewById(R.id.actions_container);
-        acceptRequestButton = (ImageButton) itemView.findViewById(R.id.accept_request);
-        denyRequestButton = (ImageButton) itemView.findViewById(R.id.deny_request);
+        statusesCountView = (TextView) itemView.findViewById(R.id.statusesCount);
+        followersCountView = (TextView) itemView.findViewById(R.id.followersCount);
+        friendsCountView = (TextView) itemView.findViewById(R.id.friendsCount);
+        actionsProgressContainer = itemView.findViewById(R.id.actionsProgressContainer);
+        actionsContainer = itemView.findViewById(R.id.actionsContainer);
+        acceptRequestButton = (ImageButton) itemView.findViewById(R.id.acceptRequest);
+        denyRequestButton = (ImageButton) itemView.findViewById(R.id.denyRequest);
         followButton = (ImageButton) itemView.findViewById(R.id.follow);
-        processingRequestProgress = itemView.findViewById(R.id.processing_request);
+        processingRequestProgress = itemView.findViewById(R.id.processingRequest);
     }
 
     public void displayUser(ParcelableUser user) {
@@ -178,12 +178,12 @@ public class UserViewHolder extends ViewHolder implements OnClickListener, OnLon
                 userClickListener.onUserClick(this, getLayoutPosition());
                 break;
             }
-            case R.id.accept_request: {
+            case R.id.acceptRequest: {
                 if (requestClickListener == null) return;
                 requestClickListener.onAcceptClicked(this, getLayoutPosition());
                 break;
             }
-            case R.id.deny_request: {
+            case R.id.denyRequest: {
                 if (requestClickListener == null) return;
                 requestClickListener.onDenyClicked(this, getLayoutPosition());
                 break;
