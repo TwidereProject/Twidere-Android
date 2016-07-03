@@ -45,8 +45,22 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private val textView by lazy { itemView.text }
     private val nameView by lazy { itemView.name }
     private val itemMenu by lazy { itemView.itemMenu }
-
+    private val statusInfoLabel by lazy { itemView.statusInfoLabel }
+    private val statusInfoIcon by lazy { itemView.statusInfoIcon }
     private val extraTypeView by lazy { itemView.extraType }
+    private val quotedNameView by lazy { itemView.quotedName }
+    private val timeView by lazy { itemView.time }
+    private val replyCountView by lazy { itemView.replyCount }
+    private val retweetCountView by lazy { itemView.retweetCount }
+    private val quoteIndicator by lazy { itemView.quoteIndicator }
+    private val quoteIndicatorAnchorTop by lazy { itemView.quoteIndicatorAnchorTop }
+    private val quoteIndicatorAnchorBottom by lazy { itemView.quoteIndicatorAnchorBottom }
+    private val quotedTextView by lazy { itemView.quotedText }
+    private val actionButtons by lazy { itemView.actionButtons }
+    private val mediaLabel by lazy { itemView.mediaLabel }
+    private val quotedMediaLabel by lazy { itemView.quotedMediaLabel }
+    private val statusContentLowerSpace by lazy { itemView.statusContentLowerSpace }
+    private val quotedMediaPreview by lazy { itemView.quotedMediaPreview }
 
     private val eventListener: EventListener
 
@@ -63,6 +77,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     itemView.quotedMediaPreview)
         }
     }
+
 
     fun displaySampleStatus() {
         val profileImageEnabled = adapter.profileImageEnabled
@@ -81,20 +96,20 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         } else {
             textView.text = toPlainText(Constants.TWIDERE_PREVIEW_TEXT_HTML)
         }
-        itemView.time.setTime(System.currentTimeMillis())
+        timeView.setTime(System.currentTimeMillis())
         val showCardActions = isCardActionsShown
         if (adapter.mediaPreviewEnabled) {
             mediaPreview.visibility = View.VISIBLE
-            itemView.mediaLabel.visibility = View.GONE
+            mediaLabel.visibility = View.GONE
         } else {
             mediaPreview.visibility = View.GONE
-            itemView.mediaLabel.visibility = View.VISIBLE
+            mediaLabel.visibility = View.VISIBLE
         }
-        itemView.quotedMediaLabel.visibility = View.GONE
-        itemView.actionButtons.visibility = if (showCardActions) View.VISIBLE else View.GONE
+        quotedMediaLabel.visibility = View.GONE
+        actionButtons.visibility = if (showCardActions) View.VISIBLE else View.GONE
         itemMenu.visibility = if (showCardActions) View.VISIBLE else View.GONE
-        itemView.statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
-        itemView.quotedMediaPreview.visibility = View.GONE
+        statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
+        quotedMediaPreview.visibility = View.GONE
         mediaPreview.displayMedia(R.drawable.nyan_stars_background)
         extraTypeView.setImageResource(R.drawable.ic_action_gallery)
     }
@@ -103,6 +118,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         displayStatus(status, displayInReplyTo, true)
     }
 
+
+    private val iconActionView = itemView.favoriteIcon.isActivated
+
+    private val favoriteIcon = itemView.favoriteIcon
 
     override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
                                shouldDisplayExtraType: Boolean) {
@@ -115,42 +134,42 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         val nameFirst = adapter.nameFirst
         val showCardActions = isCardActionsShown
 
-        itemView.actionButtons.visibility = if (showCardActions) View.VISIBLE else View.GONE
+        actionButtons.visibility = if (showCardActions) View.VISIBLE else View.GONE
         itemMenu.visibility = if (showCardActions) View.VISIBLE else View.GONE
-        itemView.statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
+        statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
 
         val replyCount = status.reply_count
         val retweetCount: Long
         val favoriteCount: Long
 
         if (TwitterCardUtils.isPoll(status)) {
-            itemView.statusInfoLabel.setText(R.string.label_poll)
-            itemView.statusInfoIcon.setImageResource(R.drawable.ic_activity_action_poll)
-            itemView.statusInfoLabel.visibility = View.VISIBLE
-            itemView.statusInfoIcon.visibility = View.VISIBLE
+            statusInfoLabel.setText(R.string.label_poll)
+            statusInfoIcon.setImageResource(R.drawable.ic_activity_action_poll)
+            statusInfoLabel.visibility = View.VISIBLE
+            statusInfoIcon.visibility = View.VISIBLE
 
             statusContentUpperSpace.visibility = View.GONE
         } else if (status.retweet_id != null) {
             val retweetedBy = UserColorNameManager.decideDisplayName(status.retweet_user_nickname,
                     status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst)
-            itemView.statusInfoLabel.text = context.getString(R.string.name_retweeted, formatter.unicodeWrap(retweetedBy))
-            itemView.statusInfoIcon.setImageResource(R.drawable.ic_activity_action_retweet)
-            itemView.statusInfoLabel.visibility = View.VISIBLE
-            itemView.statusInfoIcon.visibility = View.VISIBLE
+            statusInfoLabel.text = context.getString(R.string.name_retweeted, formatter.unicodeWrap(retweetedBy))
+            statusInfoIcon.setImageResource(R.drawable.ic_activity_action_retweet)
+            statusInfoLabel.visibility = View.VISIBLE
+            statusInfoIcon.visibility = View.VISIBLE
 
             statusContentUpperSpace.visibility = View.GONE
         } else if (status.in_reply_to_status_id != null && status.in_reply_to_user_id != null && displayInReplyTo) {
             val inReplyTo = UserColorNameManager.decideDisplayName(status.in_reply_to_user_nickname,
                     status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst)
-            itemView.statusInfoLabel.text = context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo))
-            itemView.statusInfoIcon.setImageResource(R.drawable.ic_activity_action_reply)
-            itemView.statusInfoLabel.visibility = View.VISIBLE
-            itemView.statusInfoIcon.visibility = View.VISIBLE
+            statusInfoLabel.text = context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo))
+            statusInfoIcon.setImageResource(R.drawable.ic_activity_action_reply)
+            statusInfoLabel.visibility = View.VISIBLE
+            statusInfoIcon.visibility = View.VISIBLE
 
             statusContentUpperSpace.visibility = View.GONE
         } else {
-            itemView.statusInfoLabel.visibility = View.GONE
-            itemView.statusInfoIcon.visibility = View.GONE
+            statusInfoLabel.visibility = View.GONE
+            statusInfoIcon.visibility = View.GONE
 
             statusContentUpperSpace.visibility = View.VISIBLE
         }
@@ -158,19 +177,19 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         val skipLinksInText = status.extras != null && status.extras.support_entities
         if (status.is_quote) {
 
-            itemView.quoteIndicator.visibility = View.VISIBLE
-            itemView.quoteIndicatorAnchorTop.visibility = View.VISIBLE
-            itemView.quoteIndicatorAnchorBottom.visibility = View.VISIBLE
+            quoteIndicator.visibility = View.VISIBLE
+            quoteIndicatorAnchorTop.visibility = View.VISIBLE
+            quoteIndicatorAnchorBottom.visibility = View.VISIBLE
 
             val quoteContentAvailable = status.quoted_text_plain != null && status.quoted_text_unescaped != null
             if (quoteContentAvailable) {
 
-                itemView.quotedName.visibility = View.VISIBLE
-                itemView.quotedText.visibility = View.VISIBLE
+                quotedNameView.visibility = View.VISIBLE
+                quotedTextView.visibility = View.VISIBLE
 
-                itemView.quotedName.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
+                quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
                         status.quoted_user_name))
-                itemView.quotedName.setScreenName("@" + status.quoted_user_screen_name)
+                quotedNameView.setScreenName("@" + status.quoted_user_screen_name)
 
                 var quotedDisplayEnd = -1
                 if (status.extras.quoted_display_text_range != null) {
@@ -187,41 +206,41 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedText = status.quoted_text_unescaped
                 }
                 if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length) {
-                    itemView.quotedText.text = quotedText.subSequence(0, quotedDisplayEnd)
+                    quotedTextView.text = quotedText.subSequence(0, quotedDisplayEnd)
                 } else {
-                    itemView.quotedText.text = quotedText
+                    quotedTextView.text = quotedText
                 }
 
-                if (itemView.quotedText.length() == 0) {
+                if (quotedTextView.length() == 0) {
                     // No text
-                    itemView.quotedText.visibility = View.GONE
+                    quotedTextView.visibility = View.GONE
                 } else {
-                    itemView.quotedText.visibility = View.VISIBLE
+                    quotedTextView.visibility = View.VISIBLE
                 }
 
-                itemView.quoteIndicator.color = status.quoted_user_color
+                quoteIndicator.color = status.quoted_user_color
             } else {
-                itemView.quotedName.visibility = View.GONE
-                itemView.quotedText.visibility = View.VISIBLE
+                quotedNameView.visibility = View.GONE
+                quotedTextView.visibility = View.VISIBLE
 
                 // Not available
                 val string = SpannableString.valueOf(context.getString(R.string.status_not_available_text))
                 string.setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
                         android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
                         string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                itemView.quotedText.text = string
+                quotedTextView.text = string
 
-                itemView.quoteIndicator.color = 0
+                quoteIndicator.color = 0
             }
 
             itemContent.drawStart(status.user_color)
         } else {
 
-            itemView.quoteIndicatorAnchorTop.visibility = View.GONE
-            itemView.quoteIndicatorAnchorBottom.visibility = View.GONE
-            itemView.quotedName.visibility = View.GONE
-            itemView.quotedText.visibility = View.GONE
-            itemView.quoteIndicator.visibility = View.GONE
+            quoteIndicatorAnchorTop.visibility = View.GONE
+            quoteIndicatorAnchorBottom.visibility = View.GONE
+            quotedNameView.visibility = View.GONE
+            quotedTextView.visibility = View.GONE
+            quoteIndicator.visibility = View.GONE
 
             if (status.is_retweet) {
                 val retweetUserColor = status.retweet_user_color
@@ -239,9 +258,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
 
         if (status.is_retweet) {
-            itemView.time.setTime(status.retweet_timestamp)
+            timeView.setTime(status.retweet_timestamp)
         } else {
-            itemView.time.setTime(status.timestamp)
+            timeView.setTime(status.timestamp)
         }
         nameView.setName(UserColorNameManager.decideNickname(status.user_nickname, status.user_name))
         nameView.setScreenName("@${status.user_screen_name}")
@@ -250,14 +269,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             profileImageView.visibility = View.VISIBLE
             loader.displayProfileImage(profileImageView, status)
 
-            itemView.profileType.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
-            itemView.profileType.visibility = View.VISIBLE
+            profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
+            profileTypeView.visibility = View.VISIBLE
         } else {
-            itemView.profileImage.visibility = View.GONE
+            profileImageView.visibility = View.GONE
             loader.cancelDisplayTask(profileImageView)
 
-            itemView.profileType.setImageDrawable(null)
-            itemView.profileType.visibility = View.GONE
+            profileTypeView.setImageDrawable(null)
+            profileTypeView.visibility = View.GONE
         }
 
         if (adapter.showAccountsColor) {
@@ -272,44 +291,44 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         if (!hasPrimaryMedia && !hasQuotedMedia) {
             // No media, hide all related views
-            itemView.mediaLabel.visibility = View.GONE
-            itemView.quotedMediaLabel.visibility = View.GONE
+            mediaLabel.visibility = View.GONE
+            quotedMediaLabel.visibility = View.GONE
             mediaPreview.visibility = View.GONE
-            itemView.quotedMediaPreview.visibility = View.GONE
+            quotedMediaPreview.visibility = View.GONE
 
         } else {
 
             if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
                 // Sensitive content, show label instead of media view
-                itemView.mediaLabel.visibility = if (hasPrimaryMedia) View.VISIBLE else View.GONE
-                itemView.quotedMediaLabel.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
+                mediaLabel.visibility = if (hasPrimaryMedia) View.VISIBLE else View.GONE
+                quotedMediaLabel.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
 
                 mediaPreview.visibility = View.GONE
-                itemView.quotedMediaPreview.visibility = View.GONE
+                quotedMediaPreview.visibility = View.GONE
 
             } else if (!adapter.mediaPreviewEnabled) {
                 // Media preview disabled, just show label
-                itemView.mediaLabel.visibility = if (hasPrimaryMedia) View.VISIBLE else View.GONE
-                itemView.quotedMediaLabel.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
+                mediaLabel.visibility = if (hasPrimaryMedia) View.VISIBLE else View.GONE
+                quotedMediaLabel.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
 
                 mediaPreview.visibility = View.GONE
-                itemView.quotedMediaPreview.visibility = View.GONE
+                quotedMediaPreview.visibility = View.GONE
 
             } else {
                 // Show media
 
-                itemView.mediaLabel.visibility = View.GONE
-                itemView.quotedMediaLabel.visibility = View.GONE
+                mediaLabel.visibility = View.GONE
+                quotedMediaLabel.visibility = View.GONE
 
                 mediaPreview.setStyle(adapter.mediaPreviewStyle)
-                itemView.quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)
+                quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)
 
                 mediaPreview.visibility = if (hasPrimaryMedia) View.VISIBLE else View.GONE
-                itemView.quotedMediaPreview.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
+                quotedMediaPreview.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
 
                 mediaPreview.displayMedia(status.media, loader, status.account_key, -1, this,
                         adapter.mediaLoadingHandler)
-                itemView.quotedMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1, this,
+                quotedMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1, this,
                         adapter.mediaLoadingHandler)
             }
         }
@@ -343,11 +362,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
 
         if (replyCount > 0) {
-            itemView.replyCount.text = UnitConvertUtils.calculateProperCount(replyCount)
-            itemView.replyCount.visibility = View.VISIBLE
+            replyCountView.text = UnitConvertUtils.calculateProperCount(replyCount)
+            replyCountView.visibility = View.VISIBLE
         } else {
-            itemView.replyCount.text = null
-            itemView.replyCount.visibility = View.GONE
+            replyCountView.text = null
+            replyCountView.visibility = View.GONE
         }
 
         if (twitter.isDestroyingStatus(status.account_key, status.my_retweet_id)) {
@@ -362,18 +381,18 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
 
         if (retweetCount > 0) {
-            itemView.retweetCount.text = UnitConvertUtils.calculateProperCount(retweetCount)
-            itemView.retweetCount.visibility = View.VISIBLE
+            retweetCountView.text = UnitConvertUtils.calculateProperCount(retweetCount)
+            retweetCountView.visibility = View.VISIBLE
         } else {
-            itemView.retweetCount.text = null
-            itemView.retweetCount.visibility = View.GONE
+            retweetCountView.text = null
+            retweetCountView.visibility = View.GONE
         }
         if (twitter.isDestroyingFavorite(status.account_key, status.id)) {
-            itemView.favoriteIcon.isActivated = false
+            favoriteIcon.isActivated = false
             favoriteCount = Math.max(0, status.favorite_count - 1)
         } else {
             val creatingFavorite = twitter.isCreatingFavorite(status.account_key, status.id)
-            itemView.favoriteIcon.isActivated = creatingFavorite || status.is_favorite
+            favoriteIcon.isActivated = creatingFavorite || status.is_favorite
             favoriteCount = status.favorite_count + if (creatingFavorite) 1 else 0
         }
         if (favoriteCount > 0) {
@@ -391,7 +410,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
 
         nameView.updateText(formatter)
-        itemView.quotedName.updateText(formatter)
+        quotedNameView.updateText(formatter)
 
     }
 
@@ -418,19 +437,19 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     override fun setTextSize(textSize: Float) {
         nameView.setPrimaryTextSize(textSize)
-        itemView.quotedName.setPrimaryTextSize(textSize)
+        quotedNameView.setPrimaryTextSize(textSize)
         textView.textSize = textSize
-        itemView.quotedText.textSize = textSize
+        quotedTextView.textSize = textSize
         nameView.setSecondaryTextSize(textSize * 0.85f)
-        itemView.quotedName.setSecondaryTextSize(textSize * 0.85f)
-        itemView.time.textSize = textSize * 0.85f
-        itemView.statusInfoLabel.textSize = textSize * 0.75f
+        quotedNameView.setSecondaryTextSize(textSize * 0.85f)
+        timeView.textSize = textSize * 0.85f
+        statusInfoLabel.textSize = textSize * 0.75f
 
         itemView.mediaLabelText.textSize = textSize * 0.95f
         itemView.quotedMediaLabelText.textSize = textSize * 0.95f
 
-        itemView.replyCount.textSize = textSize
-        itemView.retweetCount.textSize = textSize
+        replyCountView.textSize = textSize
+        retweetCountView.textSize = textSize
         itemView.favoriteCount.textSize = textSize
     }
 
@@ -441,7 +460,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         val nameFirst = adapter.nameFirst
         nameView.setNameFirst(nameFirst)
-        itemView.quotedName.setNameFirst(nameFirst)
+        quotedNameView.setNameFirst(nameFirst)
 
         val favIcon: Int
         val favStyle: Int
@@ -460,15 +479,15 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         val drawable = LikeAnimationDrawable(icon,
                 itemView.favoriteCount.textColors.defaultColor, favColor, favStyle)
         drawable.mutate()
-        itemView.favoriteIcon.setImageDrawable(drawable)
-        itemView.time.setShowAbsoluteTime(adapter.isShowAbsoluteTime)
+        favoriteIcon.setImageDrawable(drawable)
+        timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime)
 
-        itemView.favoriteIcon.activatedColor = favColor
+        favoriteIcon.activatedColor = favColor
     }
 
     override fun playLikeAnimation(listener: LikeAnimationDrawable.OnLikedListener) {
         var handled = false
-        val drawable = itemView.favoriteIcon.drawable
+        val drawable = favoriteIcon.drawable
         if (drawable is LikeAnimationDrawable) {
             drawable.setOnLikedListener(listener)
             drawable.start()
@@ -548,7 +567,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 holder.itemMenu -> {
                     listener.onItemMenuClick(holder, v, position)
                 }
-                holder.itemView.profileImage -> {
+                holder.profileImageView -> {
                     listener.onUserProfileClick(holder, position)
                 }
                 holder.itemView.reply, holder.itemView.replyIcon, holder.itemView.replyCount -> {

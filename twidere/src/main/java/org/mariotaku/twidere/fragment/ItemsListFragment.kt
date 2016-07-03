@@ -54,7 +54,6 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
             }
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-                val context = getContext() ?: return
                 val status = dummyItemAdapter.getStatus(position) ?: return
                 AbsStatusesFragment.handleStatusActionClick(context, fragmentManager,
                         twitterWrapper, holder as StatusViewHolder, status, id)
@@ -67,8 +66,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
             }
 
             override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
-                val status = dummyItemAdapter.getStatus(statusPosition)
-                if (status == null || media == null) return
+                val status = dummyItemAdapter.getStatus(statusPosition) ?: return
                 IntentUtils.openMedia(activity, status, media, null,
                         preferences.getBoolean(KEY_NEW_DOCUMENT_API))
                 // BEGIN HotMobi
@@ -97,15 +95,15 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         return adapter
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<*>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<*>?> {
         return ItemsLoader(context, arguments)
     }
 
-    override fun onLoadFinished(loader: Loader<List<*>>, data: List<*>) {
+    override fun onLoadFinished(loader: Loader<List<*>?>, data: List<*>?) {
         adapter!!.setData(data)
     }
 
-    override fun onLoaderReset(loader: Loader<List<*>>) {
+    override fun onLoaderReset(loader: Loader<List<*>?>) {
         adapter!!.setData(null)
     }
 
