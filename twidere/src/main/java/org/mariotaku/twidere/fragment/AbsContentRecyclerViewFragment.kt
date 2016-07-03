@@ -129,20 +129,26 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     override var refreshing: Boolean
-        get () = false
-        set(refreshing) {
+        get () = swipeLayout.isRefreshing
+        set(value) {
             val currentRefreshing = swipeLayout.isRefreshing
             if (!currentRefreshing) {
                 updateRefreshProgressOffset()
             }
-            if (refreshing == currentRefreshing) return
-            val layoutRefreshing = refreshing && adapter?.loadMoreIndicatorPosition != ILoadMoreSupportAdapter.NONE
+            if (value == currentRefreshing) return
+            val layoutRefreshing = value && adapter?.loadMoreIndicatorPosition != ILoadMoreSupportAdapter.NONE
             swipeLayout.isRefreshing = layoutRefreshing
+        }
+
+    var refreshEnabled: Boolean
+        get() = swipeLayout.isEnabled
+        set(value) {
+            swipeLayout.isEnabled = value
         }
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         setLoadMoreIndicatorPosition(position)
-        setRefreshEnabled(position == ILoadMoreSupportAdapter.NONE)
+        refreshEnabled = position == ILoadMoreSupportAdapter.NONE
     }
 
     override fun onAttach(context: Context?) {
@@ -241,10 +247,6 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
 
     open fun setLoadMoreIndicatorPosition(@IndicatorPosition position: Long) {
         adapter?.loadMoreIndicatorPosition = position
-    }
-
-    fun setRefreshEnabled(enabled: Boolean) {
-        swipeLayout.isEnabled = enabled
     }
 
     override fun triggerRefresh(): Boolean {

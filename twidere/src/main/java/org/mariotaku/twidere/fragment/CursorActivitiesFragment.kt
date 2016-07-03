@@ -306,7 +306,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             refreshing = event.running
             if (!event.running) {
                 setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
-                setRefreshEnabled(true)
+                refreshEnabled = true
                 onLoadingFinished()
             }
         }

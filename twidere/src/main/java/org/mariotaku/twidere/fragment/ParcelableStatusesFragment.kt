@@ -126,7 +126,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
-        setRefreshEnabled(true)
+        refreshEnabled = true
         refreshing = false
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
         val adapter = adapter
@@ -197,10 +197,13 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         return true
     }
 
-    override var refreshing: Boolean = false
+    override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
             return loaderManager.hasRunningLoaders()
+        }
+        set(value) {
+            super.refreshing = value
         }
 
     override fun onSaveInstanceState(outState: Bundle?) {

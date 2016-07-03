@@ -40,7 +40,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         super.onActivityCreated(savedInstanceState)
         registerForContextMenu(recyclerView)
         loaderManager.initLoader(0, null, this)
-        setRefreshEnabled(false)
+        refreshEnabled = false
         showContent()
     }
 
@@ -107,8 +107,10 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         adapter!!.setData(null)
     }
 
-    override var refreshing: Boolean = false
+    override var refreshing: Boolean
         get() = false
+        set(value) {
+        }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
@@ -150,10 +152,10 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         return false
     }
 
-    class ItemsLoader(context: Context, private val mArguments: Bundle) : AsyncTaskLoader<List<*>>(context) {
+    class ItemsLoader(context: Context, private val arguments: Bundle) : AsyncTaskLoader<List<*>>(context) {
 
         override fun loadInBackground(): List<*> {
-            return mArguments.getParcelableArrayList<Parcelable>(EXTRA_ITEMS)
+            return arguments.getParcelableArrayList<Parcelable>(EXTRA_ITEMS)
         }
 
         override fun onStartLoading() {

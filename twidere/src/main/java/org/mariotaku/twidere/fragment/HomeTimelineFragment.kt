@@ -55,11 +55,6 @@ class HomeTimelineFragment : CursorStatusesFragment() {
         refreshing = twitter.isHomeTimelineRefreshing
     }
 
-    override var refreshing: Boolean = false
-        get() {
-            return twitterWrapper.isHomeTimelineRefreshing
-        }
-
     override fun getStatuses(param: RefreshTaskParam): Boolean {
         if (!param.hasMaxIds()) return twitterWrapper.refreshAll(param.accountKeys)
         return twitterWrapper.getHomeTimelineAsync(param)

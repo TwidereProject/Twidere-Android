@@ -34,10 +34,13 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
         layoutManager!!.scrollToPositionWithOffset(position, offset)
     }
 
-    override var refreshing: Boolean = false
+    override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
             return loaderManager.hasRunningLoaders()
+        }
+        set(value) {
+            super.refreshing = value
         }
 
 

@@ -96,11 +96,6 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         }
     }
 
-    override var refreshing: Boolean = false
-        get() {
-            return twitterWrapper.isReceivedDirectMessagesRefreshing || twitterWrapper.isSentDirectMessagesRefreshing
-        }
-
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
                                               keyCode: Int, repeatCount: Int,
                                               event: KeyEvent, metaState: Int): Boolean {
@@ -142,7 +137,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         adapter.loadMoreSupportedPosition = if (hasMoreData(cursor)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
         val accountIds = accountKeys
         adapter.setShowAccountsColor(accountIds.size > 1)
-        setRefreshEnabled(true)
+        refreshEnabled = true
 
         if (accountIds.size > 0) {
             val errorInfo = ErrorInfoStore.getErrorInfo(context,
@@ -181,7 +176,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         if (event.uri == Inbox.CONTENT_URI && !event.running) {
             refreshing = false
             setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
-            setRefreshEnabled(true)
+            refreshEnabled = true
         }
     }
 
@@ -335,7 +330,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
     private fun loadMoreMessages() {
         if (refreshing) return
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.END)
-        setRefreshEnabled(false)
+        refreshEnabled = false
         AsyncTaskUtils.executeTask(object : AsyncTask<Any, Any, Array<RefreshTaskParam>>() {
 
             override fun doInBackground(vararg params: Any): Array<RefreshTaskParam>? {

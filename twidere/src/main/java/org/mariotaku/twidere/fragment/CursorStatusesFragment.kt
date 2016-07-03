@@ -26,6 +26,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
 import com.squareup.otto.Subscribe
+import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.sqliteqb.library.ArgsArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
@@ -58,6 +59,11 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     abstract val isFilterEnabled: Boolean
     abstract val notificationType: Int
     abstract val contentUri: Uri
+    override var refreshing: Boolean
+        get() = swipeLayout.isRefreshing
+        set(value) {
+            super.refreshing = value
+        }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
         showContentOrError()
@@ -121,7 +127,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
             refreshing = event.running
             if (!event.running) {
                 setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
-                setRefreshEnabled(true)
+                refreshEnabled = true
                 showContentOrError()
             }
         }

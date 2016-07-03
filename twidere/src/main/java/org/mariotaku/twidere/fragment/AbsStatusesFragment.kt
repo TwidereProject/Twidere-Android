@@ -252,7 +252,7 @@ abstract class AbsStatusesFragment protected constructor() : AbsContentListRecyc
                 lastReadPositionKey = lastPositionKey
             }
         }
-        setRefreshEnabled(true)
+        refreshEnabled = true
         if (loader !is IExtendedLoader || loader.isFromUser) {
             if (hasMoreData(data)) {
                 adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END

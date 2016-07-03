@@ -268,7 +268,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
             }
         }
 
-        setRefreshEnabled(true)
+        refreshEnabled = true
         if (loader !is IExtendedLoader || loader.isFromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
             var pos = -1

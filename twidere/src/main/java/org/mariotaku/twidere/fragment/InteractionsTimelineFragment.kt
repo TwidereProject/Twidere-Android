@@ -90,7 +90,4 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
     @ReadPositionTag
     override val readPositionTag: String? = ReadPositionTag.ACTIVITIES_ABOUT_ME
 
-    override var refreshing: Boolean = false
-        get() = false
-
 }
